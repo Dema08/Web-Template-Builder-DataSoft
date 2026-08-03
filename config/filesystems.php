@@ -47,6 +47,17 @@ return [
             'report' => false,
         ],
 
+        // Dedicated disk for Website Builder media assets
+        // (logos, hero images, uploaded site media)
+        'websites' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/websites'),
+            'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/storage/websites',
+            'visibility' => 'public',
+            'throw' => false,
+            'report' => false,
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

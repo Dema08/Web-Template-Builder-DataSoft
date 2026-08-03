@@ -1,0 +1,6 @@
+export { default as Login } from './Login';
+export { default as Register } from './Register';
+export { default as Dashboard } from './Dashboard';
+export { default as Builder } from './Builder';
+export { default as Settings } from './Settings';
+export { default as Admin } from './Admin';
