@@ -13,6 +13,7 @@ export { default as Websites } from './user/Websites';
 export { default as Templates } from './user/Templates';
 export { default as Profile } from './user/Profile';
 export { default as Settings } from './user/Settings';
+export { default as Onboarding } from './user/Onboarding';
 
 // Auth Pages
 export { default as Login } from './auth/Login';

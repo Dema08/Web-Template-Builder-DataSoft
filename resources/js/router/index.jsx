@@ -1,22 +1,23 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AppLayout, GuestLayout, BuilderLayout } from '@layouts';
-import {
-    Login,
-    Register,
-    Dashboard,
-    Websites,
-    Templates,
-    Builder,
-    Settings,
-    Profile,
-    AdminDashboard,
-    AdminUsers,
-    AdminWebsites,
-    AdminTemplates,
-    AdminCategories,
-    AdminAnalytics,
-    AdminSettings,
-} from '@pages';
+    import {
+        Login,
+        Register,
+        Dashboard,
+        Websites,
+        Templates,
+        Builder,
+        Settings,
+        Profile,
+        AdminDashboard,
+        AdminUsers,
+        AdminWebsites,
+        AdminTemplates,
+        AdminCategories,
+        AdminAnalytics,
+        AdminSettings,
+        Onboarding,
+    } from '@pages';
 import { ProtectedRoute, GuestRoute } from './guards';
 import { ROUTES } from '@constants';
 
@@ -49,6 +50,7 @@ export default function AppRouter() {
                     <Route path={ROUTES.TEMPLATES} element={<Templates />} />
                     <Route path={ROUTES.PROFILE} element={<Profile />} />
                     <Route path={ROUTES.SETTINGS} element={<Settings />} />
+                    <Route path={ROUTES.ONBOARDING} element={<Onboarding />} />
 
                     {/* Dedicated Admin Panel Routes */}
                     <Route path={ROUTES.ADMIN} element={<AdminUsers />} />

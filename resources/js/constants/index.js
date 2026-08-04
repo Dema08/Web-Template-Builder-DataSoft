@@ -28,6 +28,7 @@ export const ROUTES = {
     ADMIN_CATEGORIES: '/admin/categories',
     ADMIN_ANALYTICS: '/admin/analytics',
     ADMIN_SETTINGS: '/admin/settings',
+    ONBOARDING: '/onboarding',
 };
 
 export const TOKEN_STORAGE_KEY = 'cpwb_access_token';

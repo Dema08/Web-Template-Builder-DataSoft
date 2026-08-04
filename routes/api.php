@@ -64,6 +64,15 @@ Route::prefix('v1')->group(function (): void {
             Route::post('/assets', [App\Domains\Media\Http\Controllers\MediaController::class, 'upload']);
         });
 
+        // Onboarding endpoints
+        Route::prefix('onboarding')->group(function (): void {
+            Route::get('/categories', [App\Http\Controllers\OnboardingController::class, 'getCategories']);
+            Route::get('/templates/{categoryId}', [App\Http\Controllers\OnboardingController::class, 'getTemplatesByCategory']);
+            Route::get('/template/{id}', [App\Http\Controllers\OnboardingController::class, 'getTemplate']);
+            Route::post('/check-slug', [App\Http\Controllers\OnboardingController::class, 'checkSlug']);
+            Route::post('/create', [App\Http\Controllers\OnboardingController::class, 'createWebsite']);
+        });
+
         // Admin-only endpoints
         Route::prefix('admin')->middleware('admin')->group(function (): void {
             Route::get('/users', [App\Domains\Admin\Http\Controllers\AdminUserController::class, 'index']);

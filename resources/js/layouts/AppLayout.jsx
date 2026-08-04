@@ -66,7 +66,7 @@ export default function AppLayout() {
                     {/* Sidebar Top Brand Header */}
                     <div
                         className={`flex items-center border-b border-slate-100 px-4 py-5 transition-all duration-300 ease-out ${
-                            isSidebarCollapsed ? 'justify-center' : 'justify-between gap-3'
+                            isSidebarCollapsed ? 'justify-center' : 'justify-center gap-3'
                         }`}
                     >
                         <div className="flex shrink-0 items-center justify-center">
@@ -93,15 +93,6 @@ export default function AppLayout() {
                                 </div>
                             </div>
                         )}
-
-                        <button
-                            type="button"
-                            aria-label={isSidebarCollapsed ? 'Show sidebar' : 'Hide sidebar'}
-                            onClick={() => setIsSidebarCollapsed((value) => !value)}
-                            className="shrink-0 rounded-full border border-slate-200 p-2 text-slate-500 transition hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50"
-                        >
-                            {isSidebarCollapsed ? <PanelLeftOpen className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
-                        </button>
                     </div>
 
                     {/* Navigation Items */}
@@ -162,7 +153,7 @@ export default function AppLayout() {
                                 type="button"
                                 aria-label={isSidebarCollapsed ? 'Show sidebar' : 'Hide sidebar'}
                                 onClick={() => setIsSidebarCollapsed((value) => !value)}
-                                className="rounded-full border border-slate-200 p-2 text-slate-500 transition hover:border-indigo-300 hover:text-indigo-600 lg:hidden"
+                                className="rounded-full border border-slate-200 p-2 text-slate-500 transition hover:border-indigo-300 hover:text-indigo-600"
                             >
                                 {isSidebarCollapsed ? <PanelLeftOpen className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
                             </button>

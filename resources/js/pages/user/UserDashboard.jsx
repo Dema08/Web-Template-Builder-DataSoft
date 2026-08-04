@@ -74,18 +74,30 @@ export default function UserDashboard() {
                     </div>
 
                     <div className="flex flex-wrap gap-3">
-                        <Link
-                            to={ROUTES.WEBSITES}
-                            className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 transition shadow-xs"
-                        >
-                            Preview
-                        </Link>
-                        <Link
-                            to={ROUTES.BUILDER}
-                            className="rounded-xl bg-indigo-600 px-5 py-2 text-xs font-bold text-white hover:bg-indigo-700 shadow-md shadow-indigo-600/20 transition"
-                        >
-                            Continue Editing
-                        </Link>
+                        {hasWebsite ? (
+                            <>
+                                <Link
+                                    to={ROUTES.WEBSITES}
+                                    className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 transition shadow-xs"
+                                >
+                                    Preview
+                                </Link>
+                                <Link
+                                    to={ROUTES.BUILDER}
+                                    className="rounded-xl bg-indigo-600 px-5 py-2 text-xs font-bold text-white hover:bg-indigo-700 shadow-md shadow-indigo-600/20 transition"
+                                >
+                                    Continue Editing
+                                </Link>
+                            </>
+                        ) : (
+                            <Link
+                                to={ROUTES.ONBOARDING}
+                                className="rounded-xl bg-indigo-600 px-5 py-2 text-xs font-bold text-white hover:bg-indigo-700 shadow-md shadow-indigo-600/20 transition"
+                            >
+                                <Sparkles className="h-4 w-4 inline mr-2" />
+                                Create Your Website
+                            </Link>
+                        )}
                     </div>
                 </div>
             </Card>
