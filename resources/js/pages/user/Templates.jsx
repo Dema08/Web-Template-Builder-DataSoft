@@ -7,8 +7,6 @@ import {
     ArrowRight,
     Check,
     Star,
-    Layers,
-    Layout,
     Laptop,
     Smartphone
 } from 'lucide-react';

@@ -193,7 +193,7 @@ export default function Register() {
                 {/* Footer Link */}
                 <div className="pt-6 text-center text-xs text-gray-500">
                     Already have an account?{' '}
-                    <Link to={ROUTES.REGISTER} className="font-bold text-blue-600 hover:text-blue-700">
+                    <Link to={ROUTES.LOGIN} className="font-bold text-blue-600 hover:text-blue-700">
                         Sign in
                     </Link>
                 </div>

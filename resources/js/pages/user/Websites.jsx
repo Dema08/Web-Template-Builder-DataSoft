@@ -7,13 +7,9 @@ import {
     ExternalLink,
     Edit3,
     Trash2,
-    Settings as SettingsIcon,
-    Filter,
     CheckCircle2,
     Clock,
-    Sparkles,
     Eye,
-    Layers
 } from 'lucide-react';
 import { useWebsite } from '@hooks';
 import { ROUTES } from '@constants';

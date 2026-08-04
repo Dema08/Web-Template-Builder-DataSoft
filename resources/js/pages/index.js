@@ -1,9 +1,8 @@
-export { default as Login } from './Login';
-export { default as Register } from './Register';
+// Role-based modules
+export * from './admin';
+export * from './user';
+export * from './auth';
+
+// Core entry pages
 export { default as Dashboard } from './Dashboard';
-export { default as Websites } from './Websites';
-export { default as Templates } from './Templates';
-export { default as Profile } from './Profile';
 export { default as Builder } from './Builder';
-export { default as Settings } from './Settings';
-export { default as Admin } from './Admin';

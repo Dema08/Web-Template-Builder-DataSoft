@@ -4,7 +4,7 @@ import { Users, Search, Plus, Shield, ShieldCheck, Mail, Calendar, MoreVertical,
 import { http } from '@api';
 import { Spinner, Alert } from '@components/ui';
 
-export default function Admin() {
+export default function AdminUsers() {
     const [search, setSearch] = useState('');
 
     const { data: users, isLoading, isError } = useQuery({

@@ -38,7 +38,6 @@ export default function Profile() {
         defaultValues: { current_password: '', password: '', password_confirmation: '' },
     });
 
-    // Stabilize reset and setUser with useCallback to avoid infinite re-render loop
     const stableReset = useCallback(
         (vals) => profileForm.reset(vals),
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -62,10 +61,10 @@ export default function Profile() {
     const avatarFallback = `https://ui-avatars.com/api/?name=${encodeURIComponent(profile?.name || 'User')}`;
 
     const websiteSummary = useMemo(() => ({
-        name: website?.name || 'Koperasi Maju Profile',
-        template: website?.template || 'Corporate Pro',
+        name: website?.name || 'DataSoft Corporate Profile',
+        template: website?.template || 'Corporate Pro v2',
         status: website?.is_published ? 'Published' : 'Draft',
-        slug: website?.subdomain || 'koperasimaju',
+        slug: website?.subdomain || 'datasoft',
     }), [website]);
 
     const onProfileSubmit = async (values) => {
@@ -85,7 +84,6 @@ export default function Profile() {
         const file = event.target.files?.[0];
         if (!file) return;
 
-        // Client-side validation
         const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
         if (!allowedTypes.includes(file.type)) {
             setStatusMessage('Only JPEG, PNG, and WebP images are allowed.');
@@ -100,30 +98,23 @@ export default function Profile() {
             return;
         }
 
-        // Show immediate local preview while uploading
         const tempPreview = URL.createObjectURL(file);
         setAvatarPreview(tempPreview);
         setStatusMessage(null);
 
         try {
-            // After upload succeeds, syncUser sets queryData with the updated user.
-            // useEffect will fire and call setAvatarPreview(profile.avatar) with the
-            // correct relative /storage/... URL returned by the server.
             const updatedUser = await uploadAvatar(file);
             if (updatedUser?.avatar) {
-                // Swap temp blob with real server URL immediately
                 setAvatarPreview(updatedUser.avatar);
             }
             setStatusMessage('Avatar updated successfully.');
             setStatusVariant('success');
         } catch (error) {
-            // Revert to old avatar on failure
             setAvatarPreview(profile?.avatar || null);
             const msg = error?.response?.data?.message || 'Unable to upload avatar. Please try again.';
             setStatusMessage(msg);
             setStatusVariant('error');
         } finally {
-            // Free the blob URL from memory
             URL.revokeObjectURL(tempPreview);
             event.target.value = '';
         }
@@ -166,20 +157,20 @@ export default function Profile() {
     }
 
     return (
-        <div className="mx-auto max-w-6xl p-6 lg:p-8">
-            <div className="mb-8 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+        <div className="mx-auto max-w-6xl p-6 lg:p-8 space-y-6">
+            <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
                 <div>
-                    <h1 className="text-3xl font-semibold text-slate-900">User Profile</h1>
+                    <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">User Profile</h1>
                     <p className="text-sm text-slate-500">Manage your personal account details and website identity.</p>
                 </div>
-                <div className="inline-flex items-center gap-2 rounded-full bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-700">
+                <div className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3.5 py-1 text-xs font-bold text-blue-700">
                     <Sparkles className="h-3.5 w-3.5" />
-                    Modern SaaS Profile
+                    DataSoft User Profile
                 </div>
             </div>
 
             {statusMessage && (
-                <div className="mb-6">
+                <div>
                     <Alert variant={statusVariant} title={statusVariant === 'success' ? 'Success' : 'Message'}>
                         {statusMessage}
                     </Alert>
@@ -197,12 +188,12 @@ export default function Profile() {
                                     event.currentTarget.onerror = null;
                                     event.currentTarget.src = avatarFallback;
                                 }}
-                                className="h-20 w-20 rounded-full object-cover ring-4 ring-indigo-50"
+                                className="h-20 w-20 rounded-full object-cover ring-4 ring-blue-50"
                             />
                             <button
                                 type="button"
                                 onClick={() => fileInputRef.current?.click()}
-                                className="absolute -bottom-1 -right-1 rounded-full bg-indigo-600 p-2 text-white shadow-lg hover:bg-indigo-700"
+                                className="absolute -bottom-1 -right-1 rounded-full bg-blue-600 p-2 text-white shadow-lg hover:bg-blue-700 transition"
                             >
                                 <Camera className="h-4 w-4" />
                             </button>
@@ -210,9 +201,9 @@ export default function Profile() {
                         </div>
 
                         <div className="min-w-0">
-                            <p className="text-lg font-semibold text-slate-900">{profile?.name || 'User'}</p>
+                            <p className="text-lg font-bold text-slate-900">{profile?.name || 'User'}</p>
                             <p className="text-sm text-slate-500">{profile?.email || 'email@example.com'}</p>
-                            <span className="mt-2 inline-flex rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
+                            <span className="mt-2 inline-flex rounded-full bg-slate-100 px-2.5 py-1 text-xs font-bold text-slate-700 uppercase tracking-wider">
                                 {profile?.role || 'user'}
                             </span>
                         </div>
@@ -263,8 +254,8 @@ export default function Profile() {
                 <div className="space-y-6">
                     <Card className="p-6">
                         <div className="mb-4 flex items-center gap-2">
-                            <Shield className="h-5 w-5 text-indigo-600" />
-                            <h2 className="text-lg font-semibold text-slate-900">Change Password</h2>
+                            <Shield className="h-5 w-5 text-blue-600" />
+                            <h2 className="text-lg font-bold text-slate-900">Change Password</h2>
                         </div>
 
                         <form onSubmit={passwordForm.handleSubmit(onPasswordSubmit)} className="space-y-4">
@@ -310,28 +301,28 @@ export default function Profile() {
 
                     <Card className="p-6">
                         <div className="mb-4 flex items-center gap-2">
-                            <Globe className="h-5 w-5 text-indigo-600" />
-                            <h2 className="text-lg font-semibold text-slate-900">Website Summary</h2>
+                            <Globe className="h-5 w-5 text-blue-600" />
+                            <h2 className="text-lg font-bold text-slate-900">Website Summary</h2>
                         </div>
 
                         <div className="space-y-3 text-sm">
                             <div className="flex justify-between gap-4">
                                 <span className="text-slate-500">Website Name</span>
-                                <span className="font-medium text-slate-900">{websiteSummary.name}</span>
+                                <span className="font-bold text-slate-900">{websiteSummary.name}</span>
                             </div>
                             <div className="flex justify-between gap-4">
                                 <span className="text-slate-500">Template</span>
-                                <span className="font-medium text-slate-900">{websiteSummary.template}</span>
+                                <span className="font-bold text-slate-900">{websiteSummary.template}</span>
                             </div>
                             <div className="flex justify-between gap-4">
                                 <span className="text-slate-500">Status</span>
-                                <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700">
+                                <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700">
                                     {websiteSummary.status}
                                 </span>
                             </div>
                             <div className="flex justify-between gap-4">
                                 <span className="text-slate-500">Slug</span>
-                                <span className="font-medium text-slate-900">{websiteSummary.slug}</span>
+                                <span className="font-bold text-slate-900">{websiteSummary.slug}</span>
                             </div>
                         </div>
                     </Card>
