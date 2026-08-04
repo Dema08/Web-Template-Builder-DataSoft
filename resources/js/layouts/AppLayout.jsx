@@ -21,6 +21,7 @@ import {
 import { useAuth } from '@hooks';
 import { ROUTES } from '@constants';
 import { Spinner } from '@components/ui';
+import { useBrandStore } from '@store';
 
 export default function AppLayout() {
     const { user, logout, isLoggingOut } = useAuth();
@@ -32,6 +33,8 @@ export default function AppLayout() {
     const firstName = user?.name?.split(' ')[0] || 'User';
     const profileAvatar = user?.avatar || null;
     const profileAvatarFallback = `https://ui-avatars.com/api/?name=${encodeURIComponent(firstName)}&background=6366f1&color=fff`;
+
+    const { brandName, brandBadge, brandColor, logoUrl, planLabel } = useBrandStore();
 
     const sidebarItems = isAdmin
         ? [
@@ -67,16 +70,26 @@ export default function AppLayout() {
                         }`}
                     >
                         <div className="flex shrink-0 items-center justify-center">
-                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-indigo-600 text-lg font-extrabold text-white shadow-lg shadow-indigo-500/25">
-                                DS
-                            </div>
+                            {logoUrl ? (
+                                <img src={logoUrl} alt={brandName} className="h-10 w-10 rounded-xl object-contain border border-slate-200 bg-white p-0.5 shadow-sm" />
+                            ) : (
+                                <div
+                                    className="h-10 w-10 rounded-xl flex items-center justify-center text-white font-extrabold text-sm shadow-md"
+                                    style={{ backgroundColor: brandColor }}
+                                >
+                                    {brandBadge || 'DS'}
+                                </div>
+                            )}
                         </div>
 
                         {!isSidebarCollapsed && (
                             <div className="min-w-0 flex-1">
-                                <div className="text-[15px] font-extrabold text-slate-900 tracking-tight">DataSoft</div>
-                                <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-indigo-600">
-                                    {isAdmin ? 'Admin Panel' : 'User Dashboard'}
+                                <div className="text-[15px] font-extrabold text-slate-900 tracking-tight">{brandName}</div>
+                                <div
+                                    className="text-[10px] font-bold uppercase tracking-[0.18em]"
+                                    style={{ color: brandColor }}
+                                >
+                                    {isAdmin ? 'Admin Panel' : planLabel}
                                 </div>
                             </div>
                         )}
