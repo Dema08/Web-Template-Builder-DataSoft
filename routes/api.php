@@ -43,6 +43,14 @@ Route::prefix('v1')->group(function (): void {
     // Authenticated application endpoints
     // -------------------------------------------------------------
     Route::middleware('auth:sanctum')->group(function (): void {
+        Route::prefix('user')->group(function (): void {
+            Route::get('/profile', [App\Domains\User\Http\Controllers\UserController::class, 'profile']);
+            Route::put('/profile', [App\Domains\User\Http\Controllers\UserController::class, 'updateProfile']);
+            Route::post('/avatar', [App\Domains\User\Http\Controllers\UserController::class, 'uploadAvatar']);
+            Route::delete('/avatar', [App\Domains\User\Http\Controllers\UserController::class, 'deleteAvatar']);
+            Route::put('/change-password', [App\Domains\User\Http\Controllers\UserController::class, 'changePassword']);
+        });
+
         // GET /api/v1/dashboard
         Route::get('/dashboard', [App\Domains\Admin\Http\Controllers\DashboardController::class, 'index']);
 

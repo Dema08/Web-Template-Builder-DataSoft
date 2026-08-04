@@ -51,6 +51,17 @@ class UserRepository extends BaseRepository
     }
 
     /**
+     * Check whether an email is already used by another user account.
+     */
+    public function emailExistsForOtherUser(string $email, int|string $exceptId): bool
+    {
+        return $this->query()
+            ->where('email', $email)
+            ->whereKeyNot($exceptId)
+            ->exists();
+    }
+
+    /**
      * Revoke all existing access tokens for the given user model.
      */
     public function revokeAllTokens(User $user): void

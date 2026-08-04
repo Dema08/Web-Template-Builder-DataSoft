@@ -5,6 +5,7 @@ namespace App\Domains\User\Resources;
 use App\Domains\User\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * UserResource
@@ -24,11 +25,15 @@ class UserResource extends JsonResource
         /** @var User $user */
         $user = $this->resource;
 
+        $avatar = $user->avatar
+            ? Storage::disk('public')->url($user->avatar)
+            : null;
+
         return [
             'id' => $user->id,
             'name' => $user->name,
             'email' => $user->email,
-            'avatar' => $user->avatar,
+            'avatar' => $avatar,
             'role' => $user->role?->value ?? 'user',
             'created_at' => $user->created_at?->toISOString(),
         ];

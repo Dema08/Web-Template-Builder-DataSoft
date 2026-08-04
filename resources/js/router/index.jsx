@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AppLayout, GuestLayout, BuilderLayout } from '@layouts';
-import { Login, Register, Dashboard, Builder, Settings, Admin } from '@pages';
+import { Login, Register, Dashboard, Builder, Settings, Admin, Profile } from '@pages';
 import { ProtectedRoute, GuestRoute } from './guards';
 import { ROUTES } from '@constants';
 
@@ -29,6 +29,7 @@ export default function AppRouter() {
                     }
                 >
                     <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
+                    <Route path={ROUTES.PROFILE} element={<Profile />} />
                     <Route path={ROUTES.SETTINGS} element={<Settings />} />
                     <Route path={ROUTES.ADMIN} element={<Admin />} />
                 </Route>
