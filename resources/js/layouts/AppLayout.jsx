@@ -27,8 +27,8 @@ export default function AppLayout() {
 
     const sidebarItems = [
         { label: 'Dashboard', icon: LayoutGrid, to: ROUTES.DASHBOARD },
-        { label: 'Websites', icon: Globe, to: ROUTES.BUILDER },
-        { label: 'Templates', icon: FileText, to: ROUTES.BUILDER },
+        { label: 'Websites', icon: Globe, to: ROUTES.WEBSITES },
+        { label: 'Templates', icon: FileText, to: ROUTES.TEMPLATES },
     ];
 
     if (isAdmin) {
@@ -58,7 +58,7 @@ export default function AppLayout() {
                                 className={({ isActive }) =>
                                     `py-1 border-b-2 transition-all ${
                                         isActive
-                                            ? 'border-blue-600 text-blue-600'
+                                            ? 'border-blue-600 text-blue-600 font-extrabold'
                                             : 'border-transparent text-slate-600 hover:text-slate-900'
                                     }`
                                 }
@@ -66,11 +66,11 @@ export default function AppLayout() {
                                 Dashboard
                             </NavLink>
                             <NavLink
-                                to={ROUTES.BUILDER}
+                                to={ROUTES.WEBSITES}
                                 className={({ isActive }) =>
                                     `py-1 border-b-2 transition-all ${
                                         isActive
-                                            ? 'border-blue-600 text-blue-600'
+                                            ? 'border-blue-600 text-blue-600 font-extrabold'
                                             : 'border-transparent text-slate-600 hover:text-slate-900'
                                     }`
                                 }
@@ -78,8 +78,14 @@ export default function AppLayout() {
                                 Websites
                             </NavLink>
                             <NavLink
-                                to={ROUTES.BUILDER}
-                                className="py-1 border-b-2 border-transparent text-slate-600 hover:text-slate-900 transition-all"
+                                to={ROUTES.TEMPLATES}
+                                className={({ isActive }) =>
+                                    `py-1 border-b-2 transition-all ${
+                                        isActive
+                                            ? 'border-blue-600 text-blue-600 font-extrabold'
+                                            : 'border-transparent text-slate-600 hover:text-slate-900'
+                                    }`
+                                }
                             >
                                 Templates
                             </NavLink>

@@ -1,0 +1,295 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import {
+    Sparkles,
+    Search,
+    Eye,
+    ArrowRight,
+    Check,
+    Star,
+    Layers,
+    Layout,
+    Laptop,
+    Smartphone
+} from 'lucide-react';
+import { ROUTES } from '@constants';
+import { toast } from '@store';
+
+export default function Templates() {
+    const navigate = useNavigate();
+    const [selectedCategory, setSelectedCategory] = useState('all');
+    const [searchQuery, setSearchQuery] = useState('');
+    const [previewModalTemplate, setPreviewModalTemplate] = useState(null);
+
+    const categories = [
+        { id: 'all', name: 'All Templates' },
+        { id: 'corporate', name: 'Corporate & Profile' },
+        { id: 'ecommerce', name: 'E-Commerce' },
+        { id: 'portfolio', name: 'Creative Portfolio' },
+        { id: 'saas', name: 'SaaS & Tech' },
+        { id: 'landing', name: 'Landing Page' },
+    ];
+
+    const templates = [
+        {
+            id: 'template-1',
+            title: 'DataSoft Enterprise Suite',
+            category: 'corporate',
+            badge: 'Popular',
+            rating: '4.9',
+            downloads: '2.4k',
+            description: 'Ultra-modern corporate company profile template tailored for technology and enterprise services.',
+            image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&auto=format&fit=crop&q=80',
+            features: ['Responsive 100%', 'SEO Optimized', 'Multi-language Ready', 'Dark Mode Accent'],
+        },
+        {
+            id: 'template-2',
+            title: 'Nexus Business Pro',
+            category: 'corporate',
+            badge: 'Featured',
+            rating: '4.8',
+            downloads: '1.9k',
+            description: 'Clean, minimalist corporate template focusing on clarity, corporate authority, and lead generation.',
+            image: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&auto=format&fit=crop&q=80',
+            features: ['Hero Video Support', 'Interactive Case Studies', 'Contact Form Integration'],
+        },
+        {
+            id: 'template-3',
+            title: 'EcoStore Commerce',
+            category: 'ecommerce',
+            badge: 'New',
+            rating: '4.9',
+            downloads: '850',
+            description: 'High-converting digital storefront template designed for catalog showcase and direct sales.',
+            image: 'https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=800&auto=format&fit=crop&q=80',
+            features: ['Product Grid', 'Cart Drawer', 'Payment Badge Section', 'Fast Loading'],
+        },
+        {
+            id: 'template-4',
+            title: 'Alpha SaaS Launchpad',
+            category: 'saas',
+            badge: 'Hot',
+            rating: '5.0',
+            downloads: '3.1k',
+            description: 'Sleek dark-mode landing page designed specifically for modern software products and startup apps.',
+            image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&auto=format&fit=crop&q=80',
+            features: ['Pricing Table', 'Feature Grid', 'Testimonial Carousel', 'Animated Gradient'],
+        },
+        {
+            id: 'template-5',
+            title: 'Creative Studio Horizon',
+            category: 'portfolio',
+            badge: 'Pro',
+            rating: '4.7',
+            downloads: '1.2k',
+            description: 'Aesthetic agency portfolio template featuring smooth visual grids and interactive showcase galleries.',
+            image: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=800&auto=format&fit=crop&q=80',
+            features: ['Masonry Grid', 'Filterable Portfolio', 'Client Logos Section'],
+        },
+        {
+            id: 'template-6',
+            title: 'Fintech Corporate Apex',
+            category: 'corporate',
+            badge: 'Enterprise',
+            rating: '4.9',
+            downloads: '1.5k',
+            description: 'Professional financial services template with security badge elements and high credibility layout.',
+            image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&auto=format&fit=crop&q=80',
+            features: ['Interactive Calculator', 'Team Section', 'Compliance Badges'],
+        },
+    ];
+
+    const filteredTemplates = templates.filter((tpl) => {
+        const matchesCat = selectedCategory === 'all' || tpl.category === selectedCategory;
+        const matchesSearch =
+            tpl.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            tpl.description.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchesCat && matchesSearch;
+    });
+
+    const handleUseTemplate = (tpl) => {
+        toast.success(`Loading "${tpl.title}" template into Builder...`, 'Template Selected');
+        navigate(ROUTES.BUILDER);
+    };
+
+    return (
+        <div className="p-6 sm:p-8 max-w-7xl mx-auto space-y-8">
+            {/* Page Header */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200/80 pb-6">
+                <div>
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-bold mb-2">
+                        <Sparkles className="h-3.5 w-3.5" />
+                        <span>DataSoft Template Library</span>
+                    </div>
+                    <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Template Gallery</h1>
+                    <p className="text-sm text-slate-500 mt-1">
+                        Select a professionally crafted DataSoft template to build your corporate web presence.
+                    </p>
+                </div>
+
+                {/* Search Bar */}
+                <div className="relative w-full md:w-80">
+                    <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                    <input
+                        type="text"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        placeholder="Search templates by keyword..."
+                        className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 shadow-xs transition"
+                    />
+                </div>
+            </div>
+
+            {/* Category Filter Tabs */}
+            <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+                {categories.map((cat) => (
+                    <button
+                        key={cat.id}
+                        type="button"
+                        onClick={() => setSelectedCategory(cat.id)}
+                        className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
+                            selectedCategory === cat.id
+                                ? 'bg-blue-600 text-white shadow-md shadow-blue-600/20'
+                                : 'bg-white text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-slate-200/70'
+                        }`}
+                    >
+                        {cat.name}
+                    </button>
+                ))}
+            </div>
+
+            {/* Template Cards Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredTemplates.map((tpl) => (
+                    <div
+                        key={tpl.id}
+                        className="bg-white rounded-3xl border border-slate-200/80 shadow-xs hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col group"
+                    >
+                        {/* Preview Image with Hover Overlay */}
+                        <div className="relative h-52 bg-slate-100 overflow-hidden border-b border-slate-100">
+                            <img
+                                src={tpl.image}
+                                alt={tpl.title}
+                                className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                            />
+                            <div className="absolute top-3 left-3 flex items-center gap-2">
+                                <span className="px-2.5 py-1 rounded-full bg-slate-900/80 text-white text-[10px] font-extrabold uppercase tracking-wider backdrop-blur-md">
+                                    {tpl.badge}
+                                </span>
+                            </div>
+
+                            <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-md px-2 py-0.5 rounded-full flex items-center gap-1 text-[11px] font-bold text-slate-800 shadow-xs">
+                                <Star className="h-3 w-3 text-amber-400 fill-amber-400" />
+                                <span>{tpl.rating}</span>
+                            </div>
+
+                            {/* Hover Overlay Buttons */}
+                            <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-xs opacity-0 group-hover:opacity-100 transition-all duration-200 flex items-center justify-center gap-3 p-4">
+                                <button
+                                    type="button"
+                                    onClick={() => setPreviewModalTemplate(tpl)}
+                                    className="px-4 py-2.5 bg-white text-slate-900 font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-lg hover:bg-slate-100 transition"
+                                >
+                                    <Eye className="h-3.5 w-3.5" />
+                                    <span>Preview</span>
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => handleUseTemplate(tpl)}
+                                    className="px-4 py-2.5 bg-blue-600 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-lg hover:bg-blue-700 transition"
+                                >
+                                    <span>Use Template</span>
+                                    <ArrowRight className="h-3.5 w-3.5" />
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Content */}
+                        <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
+                            <div>
+                                <h3 className="text-base font-extrabold text-slate-900 group-hover:text-blue-600 transition">
+                                    {tpl.title}
+                                </h3>
+                                <p className="text-xs text-slate-500 mt-1.5 leading-relaxed line-clamp-2">
+                                    {tpl.description}
+                                </p>
+                            </div>
+
+                            {/* Key Features Pill */}
+                            <div className="space-y-1.5 pt-2 border-t border-slate-100">
+                                {tpl.features.map((feat) => (
+                                    <div key={feat} className="flex items-center gap-2 text-[11px] text-slate-600 font-medium">
+                                        <Check className="h-3.5 w-3.5 text-blue-600 shrink-0" />
+                                        <span>{feat}</span>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Footer Action */}
+                            <button
+                                type="button"
+                                onClick={() => handleUseTemplate(tpl)}
+                                className="w-full py-2.5 px-4 bg-slate-50 hover:bg-blue-50 hover:text-blue-600 border border-slate-200/80 rounded-xl text-xs font-bold text-slate-700 transition flex items-center justify-center gap-2"
+                            >
+                                <span>Customize in DataSoft Builder</span>
+                                <ArrowRight className="h-3.5 w-3.5" />
+                            </button>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            {/* Template Live Preview Modal */}
+            {previewModalTemplate && (
+                <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+                    <div className="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl border border-slate-100 space-y-5 animate-in fade-in zoom-in-95 duration-150">
+                        <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                            <div>
+                                <h3 className="text-lg font-extrabold text-slate-900">{previewModalTemplate.title}</h3>
+                                <p className="text-xs text-slate-500">{previewModalTemplate.description}</p>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => setPreviewModalTemplate(null)}
+                                className="text-slate-400 hover:text-slate-600 p-1"
+                            >
+                                ✕
+                            </button>
+                        </div>
+
+                        <div className="relative rounded-2xl overflow-hidden border border-slate-200 max-h-80">
+                            <img
+                                src={previewModalTemplate.image}
+                                alt={previewModalTemplate.title}
+                                className="w-full h-full object-cover"
+                            />
+                        </div>
+
+                        <div className="flex items-center justify-between pt-3">
+                            <div className="flex items-center gap-4 text-xs font-bold text-slate-600">
+                                <span className="flex items-center gap-1">
+                                    <Laptop className="h-4 w-4 text-blue-600" /> Desktop Ready
+                                </span>
+                                <span className="flex items-center gap-1">
+                                    <Smartphone className="h-4 w-4 text-blue-600" /> Mobile Responsive
+                                </span>
+                            </div>
+
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setPreviewModalTemplate(null);
+                                    handleUseTemplate(previewModalTemplate);
+                                }}
+                                className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-md shadow-blue-600/20 transition flex items-center gap-2"
+                            >
+                                <span>Use This Template</span>
+                                <ArrowRight className="h-4 w-4" />
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+}

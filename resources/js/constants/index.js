@@ -15,6 +15,8 @@ export const ROUTES = {
     LOGIN: '/login',
     REGISTER: '/register',
     DASHBOARD: '/dashboard',
+    WEBSITES: '/websites',
+    TEMPLATES: '/templates',
     BUILDER: '/builder',
     PROFILE: '/profile',
     SETTINGS: '/settings',
