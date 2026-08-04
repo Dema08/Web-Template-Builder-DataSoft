@@ -19,10 +19,13 @@ const profileApi = {
         const formData = new FormData();
         formData.append('avatar', file);
 
-        // Do NOT set Content-Type manually — Axios detects FormData and adds the
-        // correct 'multipart/form-data; boundary=...' header automatically.
-        // Overriding it without a boundary causes the server to fail parsing the upload.
-        const { data } = await http.post('/user/avatar', formData);
+        // The Axios instance defaults to Content-Type: application/json.
+        // Setting Content-Type: undefined REMOVES the default header so the
+        // browser sets 'multipart/form-data; boundary=...' automatically.
+        // Without this, Laravel receives the request as JSON (no file) → 422 error.
+        const { data } = await http.post('/user/avatar', formData, {
+            headers: { 'Content-Type': undefined },
+        });
 
         return data.data;
     },
