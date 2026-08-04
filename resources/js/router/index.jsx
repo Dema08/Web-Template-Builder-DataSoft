@@ -1,6 +1,22 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AppLayout, GuestLayout, BuilderLayout } from '@layouts';
-import { Login, Register, Dashboard, Websites, Templates, Builder, Settings, AdminUsers, Profile } from '@pages';
+import {
+    Login,
+    Register,
+    Dashboard,
+    Websites,
+    Templates,
+    Builder,
+    Settings,
+    Profile,
+    AdminDashboard,
+    AdminUsers,
+    AdminWebsites,
+    AdminTemplates,
+    AdminCategories,
+    AdminAnalytics,
+    AdminSettings,
+} from '@pages';
 import { ProtectedRoute, GuestRoute } from './guards';
 import { ROUTES } from '@constants';
 
@@ -33,7 +49,16 @@ export default function AppRouter() {
                     <Route path={ROUTES.TEMPLATES} element={<Templates />} />
                     <Route path={ROUTES.PROFILE} element={<Profile />} />
                     <Route path={ROUTES.SETTINGS} element={<Settings />} />
+
+                    {/* Dedicated Admin Panel Routes */}
                     <Route path={ROUTES.ADMIN} element={<AdminUsers />} />
+                    <Route path={ROUTES.ADMIN_DASHBOARD} element={<AdminDashboard />} />
+                    <Route path={ROUTES.ADMIN_USERS} element={<AdminUsers />} />
+                    <Route path={ROUTES.ADMIN_WEBSITES} element={<AdminWebsites />} />
+                    <Route path={ROUTES.ADMIN_TEMPLATES} element={<AdminTemplates />} />
+                    <Route path={ROUTES.ADMIN_CATEGORIES} element={<AdminCategories />} />
+                    <Route path={ROUTES.ADMIN_ANALYTICS} element={<AdminAnalytics />} />
+                    <Route path={ROUTES.ADMIN_SETTINGS} element={<AdminSettings />} />
                 </Route>
 
                 {/* Authenticated builder routes (fullscreen) */}

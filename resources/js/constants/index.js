@@ -21,6 +21,13 @@ export const ROUTES = {
     PROFILE: '/profile',
     SETTINGS: '/settings',
     ADMIN: '/admin',
+    ADMIN_DASHBOARD: '/admin/dashboard',
+    ADMIN_USERS: '/admin/users',
+    ADMIN_WEBSITES: '/admin/websites',
+    ADMIN_TEMPLATES: '/admin/templates',
+    ADMIN_CATEGORIES: '/admin/categories',
+    ADMIN_ANALYTICS: '/admin/analytics',
+    ADMIN_SETTINGS: '/admin/settings',
 };
 
 export const TOKEN_STORAGE_KEY = 'cpwb_access_token';

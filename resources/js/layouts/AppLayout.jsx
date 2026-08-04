@@ -11,7 +11,9 @@ import {
     Plus,
     LogOut,
     UserCircle2,
-    ChevronDown
+    ChevronDown,
+    BarChart3,
+    Layers
 } from 'lucide-react';
 import { useAuth } from '@hooks';
 import { ROUTES } from '@constants';
@@ -25,17 +27,26 @@ export default function AppLayout() {
     const isAdmin = user?.role === 'admin';
     const firstName = user?.name?.split(' ')[0] || 'User';
 
-    const sidebarItems = [
-        { label: 'Dashboard', icon: LayoutGrid, to: ROUTES.DASHBOARD },
-        { label: 'Websites', icon: Globe, to: ROUTES.WEBSITES },
-        { label: 'Templates', icon: FileText, to: ROUTES.TEMPLATES },
-    ];
+    let sidebarItems = [];
 
     if (isAdmin) {
-        sidebarItems.push({ label: 'Users', icon: Users, to: ROUTES.ADMIN });
+        sidebarItems = [
+            { label: 'Dashboard', icon: LayoutGrid, to: ROUTES.DASHBOARD },
+            { label: 'All Websites', icon: Globe, to: ROUTES.ADMIN_WEBSITES },
+            { label: 'Manage Templates', icon: FileText, to: ROUTES.ADMIN_TEMPLATES },
+            { label: 'Categories', icon: Layers, to: ROUTES.ADMIN_CATEGORIES },
+            { label: 'User Management', icon: Users, to: ROUTES.ADMIN_USERS },
+            { label: 'Analytics', icon: BarChart3, to: ROUTES.ADMIN_ANALYTICS },
+            { label: 'System Settings', icon: SettingsIcon, to: ROUTES.ADMIN_SETTINGS },
+        ];
+    } else {
+        sidebarItems = [
+            { label: 'Dashboard', icon: LayoutGrid, to: ROUTES.DASHBOARD },
+            { label: 'My Websites', icon: Globe, to: ROUTES.WEBSITES },
+            { label: 'Templates', icon: FileText, to: ROUTES.TEMPLATES },
+            { label: 'Settings', icon: SettingsIcon, to: ROUTES.SETTINGS },
+        ];
     }
-
-    sidebarItems.push({ label: 'Settings', icon: SettingsIcon, to: ROUTES.SETTINGS });
 
     return (
         <div className="h-screen bg-[#f8fafc] flex flex-col font-sans text-slate-800 selection:bg-blue-600 selection:text-white overflow-hidden">
