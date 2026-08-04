@@ -19,9 +19,7 @@ const profileApi = {
         const formData = new FormData();
         formData.append('avatar', file);
 
-        const { data } = await http.post('/user/avatar', formData, {
-            headers: { 'Content-Type': 'multipart/form-data' },
-        });
+        const { data } = await http.post('/user/avatar', formData);
 
         return data.data;
     },

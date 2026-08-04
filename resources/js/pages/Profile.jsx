@@ -46,6 +46,8 @@ export default function Profile() {
         }
     }, [profile, profileForm, setUser]);
 
+    const avatarFallback = `https://ui-avatars.com/api/?name=${encodeURIComponent(profile?.name || 'User')}`;
+
     const websiteSummary = useMemo(() => ({
         name: website?.name || 'Koperasi Maju Profile',
         template: website?.template || 'Corporate Pro',
@@ -148,8 +150,12 @@ export default function Profile() {
                     <div className="mb-6 flex items-center gap-4">
                         <div className="relative">
                             <img
-                                src={avatarPreview || profile?.avatar || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(profile?.name || 'User')}
+                                src={avatarPreview || profile?.avatar || avatarFallback}
                                 alt="Avatar"
+                                onError={(event) => {
+                                    event.currentTarget.onerror = null;
+                                    event.currentTarget.src = avatarFallback;
+                                }}
                                 className="h-20 w-20 rounded-full object-cover ring-4 ring-indigo-50"
                             />
                             <button

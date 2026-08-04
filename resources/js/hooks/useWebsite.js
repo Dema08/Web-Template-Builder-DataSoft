@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { websiteApi } from '@api';
 import { QUERY_KEYS } from '@constants';
-import { useWebsiteStore } from '@store';
+import { useWebsiteStore, toast } from '@store';
 
 /**
  * Website builder hooks.
@@ -49,6 +49,11 @@ export function useWebsite() {
         onSuccess: (published) => {
             setWebsite(published);
             queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.WEBSITE] });
+            queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.DASHBOARD] });
+            toast.success('Website published successfully.', 'Publish complete');
+        },
+        onError: (error) => {
+            toast.error(error?.response?.data?.message || 'Unable to publish website.', 'Publish failed');
         },
         onSettled: () => setPublishing(false),
     });

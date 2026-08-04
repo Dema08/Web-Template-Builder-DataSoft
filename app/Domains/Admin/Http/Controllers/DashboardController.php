@@ -2,27 +2,26 @@
 
 namespace App\Domains\Admin\Http\Controllers;
 
+use App\Domains\Admin\Resources\DashboardResource;
+use App\Domains\Admin\Services\DashboardService;
 use App\Domains\Shared\Http\Controllers\BaseController;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
-/**
- * DashboardController
- *
- * Returns dashboard summary for the authenticated user.
- */
 class DashboardController extends BaseController
 {
-    public function index(): JsonResponse
+    public function __construct(protected DashboardService $dashboardService)
     {
-        return $this->success([
-            'stats' => [
-                'total_websites' => 1,
-                'published_websites' => 1,
-                'total_views' => 1248,
-            ],
-            'recent_activity' => [
-                ['action' => 'Website Created', 'timestamp' => now()->toIso8601String()],
-            ],
-        ], 'Dashboard summary retrieved');
+        //
+    }
+
+    public function index(Request $request): JsonResponse
+    {
+        $payload = $this->dashboardService->getDashboardPayload($request->user());
+
+        return $this->success(
+            new DashboardResource($payload),
+            'Dashboard retrieved successfully'
+        );
     }
 }
