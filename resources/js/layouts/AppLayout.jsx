@@ -56,10 +56,9 @@ export default function AppLayout() {
                             <NavLink
                                 to={ROUTES.DASHBOARD}
                                 className={({ isActive }) =>
-                                    `py-1 border-b-2 transition-all ${
-                                        isActive
-                                            ? 'border-blue-600 text-blue-600 font-extrabold'
-                                            : 'border-transparent text-slate-600 hover:text-slate-900'
+                                    `py-1 border-b-2 transition-all ${isActive
+                                        ? 'border-blue-600 text-blue-600 font-extrabold'
+                                        : 'border-transparent text-slate-600 hover:text-slate-900'
                                     }`
                                 }
                             >
@@ -68,10 +67,9 @@ export default function AppLayout() {
                             <NavLink
                                 to={ROUTES.WEBSITES}
                                 className={({ isActive }) =>
-                                    `py-1 border-b-2 transition-all ${
-                                        isActive
-                                            ? 'border-blue-600 text-blue-600 font-extrabold'
-                                            : 'border-transparent text-slate-600 hover:text-slate-900'
+                                    `py-1 border-b-2 transition-all ${isActive
+                                        ? 'border-blue-600 text-blue-600 font-extrabold'
+                                        : 'border-transparent text-slate-600 hover:text-slate-900'
                                     }`
                                 }
                             >
@@ -80,10 +78,9 @@ export default function AppLayout() {
                             <NavLink
                                 to={ROUTES.TEMPLATES}
                                 className={({ isActive }) =>
-                                    `py-1 border-b-2 transition-all ${
-                                        isActive
-                                            ? 'border-blue-600 text-blue-600 font-extrabold'
-                                            : 'border-transparent text-slate-600 hover:text-slate-900'
+                                    `py-1 border-b-2 transition-all ${isActive
+                                        ? 'border-blue-600 text-blue-600 font-extrabold'
+                                        : 'border-transparent text-slate-600 hover:text-slate-900'
                                     }`
                                 }
                             >
@@ -197,11 +194,10 @@ export default function AppLayout() {
                                     <NavLink
                                         key={label}
                                         to={to}
-                                        className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all relative ${
-                                            isActive
+                                        className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all relative ${isActive
                                                 ? 'bg-blue-50 text-blue-600 font-extrabold'
                                                 : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-                                        }`}
+                                            }`}
                                     >
                                         {isActive && (
                                             <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-1 bg-blue-600 rounded-r-full" />

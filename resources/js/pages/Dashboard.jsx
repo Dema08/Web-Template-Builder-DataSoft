@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
     Calendar,
@@ -23,7 +24,7 @@ export default function Dashboard() {
     const { data: dashboard, isLoading: isDashboardLoading } = useDashboard();
     const { website } = useWebsite();
 
-    if (isDashboardLoading) {
+    if (isLoading) {
         return (
             <div className="flex items-center justify-center p-20">
                 <Spinner size="lg" />
@@ -231,11 +232,10 @@ export default function Dashboard() {
                                     </td>
                                     <td className="py-4 px-6">
                                         <span
-                                            className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold ${
-                                                site.status === 'Published'
+                                            className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold ${site.status === 'Published'
                                                     ? 'bg-emerald-100/80 text-emerald-700'
                                                     : 'bg-slate-100 text-slate-600'
-                                            }`}
+                                                }`}
                                         >
                                             <span className={`h-1.5 w-1.5 rounded-full ${site.status === 'Published' ? 'bg-emerald-500' : 'bg-slate-400'}`} />
                                             {site.status}
