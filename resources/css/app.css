@@ -1,1 +1,207 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
 @import "tailwindcss";
+
+/* ============================================================
+ * DataSoft — Modern Dashboard Theme
+ * A cohesive, soft-contrast design system built on top of
+ * TailwindCSS. Uses a consistent palette, subtle elevation
+ * layers, and refined typography for a modern SaaS feel.
+ * ========================================================= */
+
+:root {
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --color-primary: 79, 70, 229;      /* indigo-600 */
+    --color-primary-hover: 69, 57, 205;
+    --color-accent: 37, 99, 246;       /* blue-600 */
+    --color-success: 16, 185, 129;     /* emerald-500 */
+    --color-warning: 245, 158, 11;     /* amber-500 */
+    --color-danger: 239, 68, 68;      /* red-500 */
+    --color-surface: 255, 255, 255;
+    --color-surface-alt: 250, 250, 252;
+    --color-surface-elevated: 255, 255, 255;
+    --color-border: 226, 232, 240;    /* slate-200 */
+    --color-border-soft: 231, 240, 252;
+    --color-text-primary: 15, 23, 42;  /* slate-900 */
+    --color-text-secondary: 100, 116, 139; /* slate-400 */
+    --color-text-tertiary: 148, 153, 169;  /* slate-500 */
+    --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.06), 0 2px 4px -2px rgb(0 0 0 / 0.04);
+    --shadow-elevated: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05), 0 8px 16px -4px rgb(0 0 0 / 0.05);
+    --shadow-blue: 0 4px 20px 0 rgb(37 99 246 / 0.12);
+}
+
+/* Apply the font family globally */
+html, body {
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================================
+ * Modern Surface & Card Styles
+ * ========================================================= */
+.ds-surface {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-card);
+}
+
+.ds-surface-elevated {
+    background-color: var(--color-surface-elevated);
+    border: 1px solid var(--color-border-soft);
+    box-shadow: var(--shadow-elevated);
+}
+
+.ds-card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-card);
+    border-radius: 1.25rem;
+}
+
+.ds-card-elevated {
+    background-color: var(--color-surface-elevated);
+    border: 1px solid var(--color-border-soft);
+    box-shadow: var(--shadow-elevated);
+    border-radius: 1.25rem;
+}
+
+/* ============================================================
+ * Gradient Accent Elements
+ * ========================================================= */
+.ds-gradient-text {
+    background: linear-gradient(135deg, rgb(79 70 229 / 1) 0%, rgb(37 99 246 / 1) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.ds-gradient-icon {
+    background: linear-gradient(135deg, rgb(79 70 229 / 1) 0%, rgb(37 99 246 / 1) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+}
+
+.ds-bg-gradient-primary {
+    background: linear-gradient(135deg, rgb(79 70 229 / 1) 0%, rgb(37 99 246 / 1) 100%);
+}
+
+.ds-bg-gradient-accent {
+    background: linear-gradient(135deg, rgb(37 99 246 / 1) 0%, rgb(79 70 229 / 1) 100%);
+}
+
+/* ============================================================
+ * Scrollbar Styling — Modern Thin Scrollbars
+ * ========================================================= */
+.ds-scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(203 213 225) transparent;
+}
+
+.ds-scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.ds-scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.ds-scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: rgb(148 153 169 / 0.5);
+    border-radius: 1rem;
+    border: 1px solid transparent;
+}
+
+/* ============================================================
+ * Typography Enhancements
+ * ========================================================= */
+.ds-heading {
+    color: var(--color-text-primary);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+}
+
+.ds-subheading {
+    color: var(--color-text-secondary);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.ds-caption {
+    font-size: 0.625rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.075em;
+}
+
+/* ============================================================
+ * Animation Presets
+ * ========================================================= */
+@keyframes ds-fade-in {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes ds-scale-in {
+    from { opacity: 0; transform: scale(0.96); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes ds-pulse-slow {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.ds-animate-fade-in {
+    animation: ds-fade-in 0.25s ease-out both;
+}
+
+.ds-animate-scale-in {
+    animation: ds-scale-in 0.2s ease-out both;
+}
+
+.ds-animate-pulse-slow {
+    animation: ds-pulse-slow 2s ease-in-out infinite;
+}
+
+/* ============================================================
+ * Input Fields — Modern Soft Style
+ * ========================================================= */
+.ds-input {
+    width: 100%;
+    border-radius: 0.75rem;
+    border: 1px solid rgb(226 232 240);
+    background-color: rgb(255 255 255);
+    padding: 0.625rem 0.875rem 0.625rem 0.875rem;
+    font-size: 0.75rem;
+    line-height: 1.25rem;
+    color: rgb(51 65 85);
+}
+
+.ds-input:focus {
+    outline: 2px solid transparent;
+    border-color: rgb(79 70 229);
+    box-shadow: 0 0 0 2px rgb(79 70 229 / 0.2);
+}
+
+.ds-input::placeholder {
+    color: rgb(148 153 169);
+}
+
+.ds-input-error {
+    border-color: rgb(239 68 68);
+}
+
+.ds-input-error:focus {
+    border-color: rgb(239 68 68);
+    box-shadow: 0 0 0 2px rgb(239 68 68 / 0.2);
+}
+
+/* ============================================================
+ * Selection
+ * ========================================================= */
+::selection {
+    background-color: rgb(79 70 229 / 0.15);
+    color: rgb(79 70 229);
+}

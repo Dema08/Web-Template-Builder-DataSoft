@@ -8,8 +8,10 @@ import {
     Check,
     Star,
     Laptop,
-    Smartphone
+    Smartphone,
+    Filter,
 } from 'lucide-react';
+import { Card, Button } from '@components/ui';
 import { ROUTES } from '@constants';
 import { toast } from '@store';
 
@@ -113,9 +115,9 @@ export default function Templates() {
     return (
         <div className="p-6 sm:p-8 max-w-7xl mx-auto space-y-8">
             {/* Page Header */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200/80 pb-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-bold mb-2">
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-bold mb-2">
                         <Sparkles className="h-3.5 w-3.5" />
                         <span>DataSoft Template Library</span>
                     </div>
@@ -133,13 +135,13 @@ export default function Templates() {
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         placeholder="Search templates by keyword..."
-                        className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 shadow-xs transition"
+                        className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 shadow-xs ds-input"
                     />
                 </div>
             </div>
 
             {/* Category Filter Tabs */}
-            <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+            <div className="flex items-center gap-2 overflow-x-auto pb-2 ds-scrollbar-thin">
                 {categories.map((cat) => (
                     <button
                         key={cat.id}
@@ -147,7 +149,7 @@ export default function Templates() {
                         onClick={() => setSelectedCategory(cat.id)}
                         className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
                             selectedCategory === cat.id
-                                ? 'bg-blue-600 text-white shadow-md shadow-blue-600/20'
+                                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20'
                                 : 'bg-white text-slate-600 hover:bg-slate-100 hover:text-slate-900 border border-slate-200/70'
                         }`}
                     >
@@ -159,12 +161,12 @@ export default function Templates() {
             {/* Template Cards Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredTemplates.map((tpl) => (
-                    <div
+                    <Card
                         key={tpl.id}
-                        className="bg-white rounded-3xl border border-slate-200/80 shadow-xs hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col group"
+                        className="border border-slate-200/80 hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col group"
                     >
                         {/* Preview Image with Hover Overlay */}
-                        <div className="relative h-52 bg-slate-100 overflow-hidden border-b border-slate-100">
+                        <div className="relative h-52 bg-slate-100 overflow-hidden">
                             <img
                                 src={tpl.image}
                                 alt={tpl.title}
@@ -189,15 +191,15 @@ export default function Templates() {
                                     className="px-4 py-2.5 bg-white text-slate-900 font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-lg hover:bg-slate-100 transition"
                                 >
                                     <Eye className="h-3.5 w-3.5" />
-                                    <span>Preview</span>
+                                    Preview
                                 </button>
                                 <button
                                     type="button"
                                     onClick={() => handleUseTemplate(tpl)}
-                                    className="px-4 py-2.5 bg-blue-600 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-lg hover:bg-blue-700 transition"
+                                    className="px-4 py-2.5 bg-indigo-600 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-lg hover:bg-indigo-700 transition"
                                 >
-                                    <span>Use Template</span>
-                                    <ArrowRight className="h-3.5 w-3.5" />
+                                    <UseTemplateIcon className="h-3.5 w-3.5" />
+                                    Use Template
                                 </button>
                             </div>
                         </div>
@@ -205,7 +207,7 @@ export default function Templates() {
                         {/* Content */}
                         <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
                             <div>
-                                <h3 className="text-base font-extrabold text-slate-900 group-hover:text-blue-600 transition">
+                                <h3 className="text-base font-extrabold text-slate-900 group-hover:text-indigo-600 transition">
                                     {tpl.title}
                                 </h3>
                                 <p className="text-xs text-slate-500 mt-1.5 leading-relaxed line-clamp-2">
@@ -217,23 +219,23 @@ export default function Templates() {
                             <div className="space-y-1.5 pt-2 border-t border-slate-100">
                                 {tpl.features.map((feat) => (
                                     <div key={feat} className="flex items-center gap-2 text-[11px] text-slate-600 font-medium">
-                                        <Check className="h-3.5 w-3.5 text-blue-600 shrink-0" />
+                                        <Check className="h-3.5 w-3.5 text-indigo-600 shrink-0" />
                                         <span>{feat}</span>
                                     </div>
                                 ))}
                             </div>
 
                             {/* Footer Action */}
-                            <button
-                                type="button"
+                            <Button
                                 onClick={() => handleUseTemplate(tpl)}
-                                className="w-full py-2.5 px-4 bg-slate-50 hover:bg-blue-50 hover:text-blue-600 border border-slate-200/80 rounded-xl text-xs font-bold text-slate-700 transition flex items-center justify-center gap-2"
+                                className="w-full py-2.5 px-4 bg-slate-50 hover:bg-indigo-50 hover:text-indigo-600 border border-slate-200/80 rounded-xl text-xs font-bold text-slate-700 transition flex items-center justify-center gap-2"
+                                variant="ghost"
                             >
                                 <span>Customize in DataSoft Builder</span>
                                 <ArrowRight className="h-3.5 w-3.5" />
-                            </button>
+                            </Button>
                         </div>
-                    </div>
+                    </Card>
                 ))}
             </div>
 
@@ -249,7 +251,7 @@ export default function Templates() {
                             <button
                                 type="button"
                                 onClick={() => setPreviewModalTemplate(null)}
-                                className="text-slate-400 hover:text-slate-600 p-1"
+                                className="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100 transition"
                             >
                                 ✕
                             </button>
@@ -266,28 +268,33 @@ export default function Templates() {
                         <div className="flex items-center justify-between pt-3">
                             <div className="flex items-center gap-4 text-xs font-bold text-slate-600">
                                 <span className="flex items-center gap-1">
-                                    <Laptop className="h-4 w-4 text-blue-600" /> Desktop Ready
+                                    <Laptop className="h-4 w-4 text-indigo-600" /> Desktop Ready
                                 </span>
                                 <span className="flex items-center gap-1">
-                                    <Smartphone className="h-4 w-4 text-blue-600" /> Mobile Responsive
+                                    <Smartphone className="h-4 w-4 text-indigo-600" /> Mobile Responsive
                                 </span>
                             </div>
 
-                            <button
-                                type="button"
+                            <Button
                                 onClick={() => {
                                     setPreviewModalTemplate(null);
                                     handleUseTemplate(previewModalTemplate);
                                 }}
-                                className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-md shadow-blue-600/20 transition flex items-center gap-2"
+                                variant="primary"
+                                size="sm"
+                                className="text-xs"
                             >
                                 <span>Use This Template</span>
                                 <ArrowRight className="h-4 w-4" />
-                            </button>
+                            </Button>
                         </div>
                     </div>
                 </div>
             )}
         </div>
     );
+}
+
+function UseTemplateIcon({ className }) {
+    return null;
 }

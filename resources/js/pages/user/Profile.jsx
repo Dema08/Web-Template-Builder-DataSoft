@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Camera, Trash2, Shield, Globe, Sparkles } from 'lucide-react';
+import { Camera, Trash2, Shield, Globe } from 'lucide-react';
 import { Card, Input, Button, Alert, Spinner } from '@components/ui';
 import { useProfile, useWebsite } from '@hooks';
 import { useAuthStore } from '@store';
@@ -58,14 +58,17 @@ export default function Profile() {
         }
     }, [profile, stableReset, stableSetUser]);
 
-    const avatarFallback = `https://ui-avatars.com/api/?name=${encodeURIComponent(profile?.name || 'User')}`;
+    const avatarFallback = `https://ui-avatars.com/api/?name=${encodeURIComponent(profile?.name || 'User')}&background=6366f1&color=fff`;
 
-    const websiteSummary = useMemo(() => ({
-        name: website?.name || 'DataSoft Corporate Profile',
-        template: website?.template || 'Corporate Pro v2',
-        status: website?.is_published ? 'Published' : 'Draft',
-        slug: website?.subdomain || 'datasoft',
-    }), [website]);
+    const websiteSummary = useMemo(
+        () => ({
+            name: website?.name || 'DataSoft Corporate Profile',
+            template: website?.template || 'Corporate Pro v2',
+            status: website?.is_published ? 'Published' : 'Draft',
+            slug: website?.subdomain || 'datasoft',
+        }),
+        [website]
+    );
 
     const onProfileSubmit = async (values) => {
         try {
@@ -163,21 +166,20 @@ export default function Profile() {
                     <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">User Profile</h1>
                     <p className="text-sm text-slate-500">Manage your personal account details and website identity.</p>
                 </div>
-                <div className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3.5 py-1 text-xs font-bold text-blue-700">
-                    <Sparkles className="h-3.5 w-3.5" />
+                <div className="inline-flex items-center gap-2 rounded-full bg-indigo-50 px-3.5 py-1 text-xs font-bold text-indigo-700">
+                    <Shield className="h-3.5 w-3.5" />
                     DataSoft User Profile
                 </div>
             </div>
 
             {statusMessage && (
-                <div>
-                    <Alert variant={statusVariant} title={statusVariant === 'success' ? 'Success' : 'Message'}>
-                        {statusMessage}
-                    </Alert>
-                </div>
+                <Alert variant={statusVariant === 'success' ? 'success' : 'error'} title={statusVariant === 'success' ? 'Success' : 'Message'}>
+                    {statusMessage}
+                </Alert>
             )}
 
             <div className="grid gap-6 xl:grid-cols-[1.2fr_0.9fr]">
+                {/* Profile Form */}
                 <Card className="p-6">
                     <div className="mb-6 flex items-center gap-4">
                         <div className="relative">
@@ -188,12 +190,12 @@ export default function Profile() {
                                     event.currentTarget.onerror = null;
                                     event.currentTarget.src = avatarFallback;
                                 }}
-                                className="h-20 w-20 rounded-full object-cover ring-4 ring-blue-50"
+                                className="h-20 w-20 rounded-full object-cover ring-4 ring-indigo-50"
                             />
                             <button
                                 type="button"
                                 onClick={() => fileInputRef.current?.click()}
-                                className="absolute -bottom-1 -right-1 rounded-full bg-blue-600 p-2 text-white shadow-lg hover:bg-blue-700 transition"
+                                className="absolute -bottom-1 -right-1 rounded-full bg-indigo-600 p-2 text-white shadow-lg hover:bg-indigo-700 transition"
                             >
                                 <Camera className="h-4 w-4" />
                             </button>
@@ -201,9 +203,9 @@ export default function Profile() {
                         </div>
 
                         <div className="min-w-0">
-                            <p className="text-lg font-bold text-slate-900">{profile?.name || 'User'}</p>
+                            <p className="text-lg font-extrabold text-slate-900">{profile?.name || 'User'}</p>
                             <p className="text-sm text-slate-500">{profile?.email || 'email@example.com'}</p>
-                            <span className="mt-2 inline-flex rounded-full bg-slate-100 px-2.5 py-1 text-xs font-bold text-slate-700 uppercase tracking-wider">
+                            <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-extrabold text-slate-700 uppercase tracking-wider">
                                 {profile?.role || 'user'}
                             </span>
                         </div>
@@ -244,17 +246,19 @@ export default function Profile() {
                         />
 
                         <div className="flex justify-end">
-                            <Button type="submit" disabled={isUpdatingProfile}>
+                            <Button type="submit" variant="primary" disabled={isUpdatingProfile}>
                                 {isUpdatingProfile ? <Spinner size="sm" /> : 'Save profile'}
                             </Button>
                         </div>
                     </form>
                 </Card>
 
+                {/* Side Column: Password + Website Summary */}
                 <div className="space-y-6">
+                    {/* Change Password */}
                     <Card className="p-6">
                         <div className="mb-4 flex items-center gap-2">
-                            <Shield className="h-5 w-5 text-blue-600" />
+                            <Shield className="h-5 w-5 text-indigo-600" />
                             <h2 className="text-lg font-bold text-slate-900">Change Password</h2>
                         </div>
 
@@ -299,9 +303,10 @@ export default function Profile() {
                         </form>
                     </Card>
 
+                    {/* Website Summary */}
                     <Card className="p-6">
                         <div className="mb-4 flex items-center gap-2">
-                            <Globe className="h-5 w-5 text-blue-600" />
+                            <Globe className="h-5 w-5 text-indigo-600" />
                             <h2 className="text-lg font-bold text-slate-900">Website Summary</h2>
                         </div>
 
@@ -314,7 +319,7 @@ export default function Profile() {
                                 <span className="text-slate-500">Template</span>
                                 <span className="font-bold text-slate-900">{websiteSummary.template}</span>
                             </div>
-                            <div className="flex justify-between gap-4">
+                            <div className="flex justify-between gap-4 items-center">
                                 <span className="text-slate-500">Status</span>
                                 <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700">
                                     {websiteSummary.status}
@@ -322,7 +327,7 @@ export default function Profile() {
                             </div>
                             <div className="flex justify-between gap-4">
                                 <span className="text-slate-500">Slug</span>
-                                <span className="font-bold text-slate-900">{websiteSummary.slug}</span>
+                                <span className="font-bold text-slate-900 font-mono">{websiteSummary.slug}</span>
                             </div>
                         </div>
                     </Card>

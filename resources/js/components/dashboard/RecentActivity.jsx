@@ -4,25 +4,25 @@ import { Card } from '@components/ui';
 export default function RecentActivity({ activities = [] }) {
     return (
         <Card className="p-6">
-            <div className="mb-5 flex items-center justify-between gap-3">
+            <div className="mb-6 flex items-center justify-between gap-3">
                 <div>
-                    <p className="text-sm font-medium text-slate-500">Recent Activity</p>
-                    <h2 className="text-2xl font-semibold text-slate-900">Latest activity</h2>
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Recent Activity</p>
+                    <h2 className="text-2xl font-extrabold text-slate-900 mt-1 tracking-tight">Latest activity</h2>
                 </div>
-                <div className="rounded-full bg-slate-100 p-2 text-slate-600">
+                <div className="rounded-full bg-slate-100 p-2.5 text-slate-500">
                     <Activity className="h-4 w-4" />
                 </div>
             </div>
 
             <div className="space-y-3">
                 {activities.slice(0, 10).map((activity, index) => (
-                    <div key={`${activity.action}-${index}`} className="flex items-start gap-3 rounded-2xl bg-slate-50 p-3">
-                        <div className="mt-1 h-2.5 w-2.5 rounded-full bg-indigo-500" />
+                    <div key={`${activity.action}-${index}`} className="flex items-start gap-3 rounded-xl bg-slate-50 p-3 border border-slate-100">
+                        <div className="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-indigo-500 ds-animate-pulse-slow" />
                         <div className="min-w-0 flex-1">
-                            <div className="text-sm font-semibold text-slate-900">{activity.action}</div>
-                            <div className="text-sm text-slate-500">{activity.description}</div>
+                            <div className="text-sm font-extrabold text-slate-900">{activity.action}</div>
+                            <div className="text-xs text-slate-500 mt-0.5">{activity.description}</div>
                         </div>
-                        <div className="whitespace-nowrap text-xs text-slate-400">{activity.created_at || 'Recently'}</div>
+                        <div className="whitespace-nowrap text-[10px] font-bold text-slate-400">{activity.created_at || 'Recently'}</div>
                     </div>
                 ))}
             </div>

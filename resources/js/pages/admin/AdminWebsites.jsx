@@ -1,19 +1,18 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import {
     Globe,
     Search,
     ExternalLink,
     Filter,
     MoreVertical,
-    CheckCircle2,
-    Clock,
     Eye,
     Shield,
     Trash2,
-    Ban,
-    Plus
+    Plus,
+    Edit3,
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Card } from '@components/ui';
 import { ROUTES } from '@constants';
 import { toast } from '@store';
 
@@ -102,7 +101,7 @@ export default function AdminWebsites() {
             {/* Admin Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-bold mb-2">
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-bold mb-2">
                         <Shield className="h-3.5 w-3.5" />
                         <span>Platform Administration</span>
                     </div>
@@ -115,35 +114,32 @@ export default function AdminWebsites() {
 
             {/* Admin KPI Stats */}
             <div className="grid grid-cols-1 sm:grid-cols-4 gap-5">
-                <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+                <Card className="p-5">
                     <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Hosted Sites</p>
                     <p className="text-2xl font-extrabold text-slate-900 mt-1">{websitesList.length}</p>
-                </div>
-
-                <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+                </Card>
+                <Card className="p-5">
                     <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Published Sites</p>
                     <p className="text-2xl font-extrabold text-emerald-600 mt-1">
                         {websitesList.filter((w) => w.status === 'Published').length}
                     </p>
-                </div>
-
-                <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+                </Card>
+                <Card className="p-5">
                     <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Draft Sites</p>
                     <p className="text-2xl font-extrabold text-amber-600 mt-1">
                         {websitesList.filter((w) => w.status === 'Draft').length}
                     </p>
-                </div>
-
-                <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+                </Card>
+                <Card className="p-5">
                     <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Suspended Sites</p>
                     <p className="text-2xl font-extrabold text-rose-600 mt-1">
                         {websitesList.filter((w) => w.status === 'Suspended').length}
                     </p>
-                </div>
+                </Card>
             </div>
 
             {/* Filter Toolbar */}
-            <div className="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-xs space-y-4">
+            <Card className="p-5 space-y-4">
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div className="relative w-full sm:w-80">
                         <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -152,7 +148,7 @@ export default function AdminWebsites() {
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             placeholder="Search by site name, domain, or owner..."
-                            className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 transition"
+                            className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input"
                         />
                     </div>
 
@@ -175,7 +171,7 @@ export default function AdminWebsites() {
                 </div>
 
                 {/* Websites Table */}
-                <div className="overflow-x-auto border-t border-slate-100 pt-4">
+                <div className="overflow-x-auto border-t border-slate-100 pt-4 ds-scrollbar-thin">
                     <table className="w-full text-left text-xs text-slate-600">
                         <thead className="bg-slate-50 text-slate-400 font-bold uppercase tracking-wider border-b border-slate-100">
                             <tr>
@@ -192,12 +188,12 @@ export default function AdminWebsites() {
                                 <tr key={site.id} className="hover:bg-slate-50/80 transition">
                                     <td className="py-4 px-4">
                                         <div className="flex items-center gap-3">
-                                            <div className="h-9 w-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+                                            <div className="h-9 w-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">
                                                 <Globe className="h-4 w-4 stroke-[2]" />
                                             </div>
                                             <div>
                                                 <p className="font-extrabold text-slate-900">{site.name}</p>
-                                                <p className="text-[11px] text-blue-600 font-semibold">{site.domain}</p>
+                                                <p className="text-[11px] text-indigo-600 font-semibold">{site.domain}</p>
                                             </div>
                                         </div>
                                     </td>
@@ -261,7 +257,7 @@ export default function AdminWebsites() {
                         </tbody>
                     </table>
                 </div>
-            </div>
+            </Card>
         </div>
     );
 }

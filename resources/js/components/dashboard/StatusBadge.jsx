@@ -7,8 +7,25 @@ export default function StatusBadge({ status, className = '' }) {
     };
 
     return (
-        <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-semibold ${palette[normalized] || palette.draft} ${className}`}>
-            {normalized === 'published' ? 'Published' : normalized === 'draft' ? 'Draft' : normalized.charAt(0).toUpperCase() + normalized.slice(1)}
+        <span
+            className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-[11px] font-bold ${
+                palette[normalized] || palette.draft
+            } ${className}`}
+        >
+            <span
+                className={`h-1.5 w-1.5 rounded-full ${
+                    normalized === 'published'
+                        ? 'bg-emerald-500'
+                        : normalized === 'draft'
+                        ? 'bg-amber-500'
+                        : 'bg-slate-400'
+                }`}
+            />
+            {normalized === 'published'
+                ? 'Published'
+                : normalized === 'draft'
+                ? 'Draft'
+                : normalized.charAt(0).toUpperCase() + normalized.slice(1)}
         </span>
     );
 }

@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Users, Search, Plus, Shield, ShieldCheck, Mail, Calendar, MoreVertical, Edit2, Trash2, KeyRound } from 'lucide-react';
+import { Users, Search, Plus, Shield, ShieldCheck, Mail, Calendar, Edit2, Trash2, KeyRound } from 'lucide-react';
 import { http } from '@api';
-import { Spinner, Alert } from '@components/ui';
+import { Spinner, Alert, Card } from '@components/ui';
 
 export default function AdminUsers() {
     const [search, setSearch] = useState('');
@@ -26,25 +26,27 @@ export default function AdminUsers() {
             {/* Header Title + Action Button */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">User Management</h1>
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-bold mb-2">
+                        <Shield className="h-3.5 w-3.5" />
+                        <span>User Management</span>
+                    </div>
+                    <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Registered Users</h1>
                     <p className="text-sm text-slate-500 mt-1">
                         Manage platform registered users, assign roles, and review access control.
                     </p>
                 </div>
 
-                <div className="flex items-center gap-3">
-                    <button
-                        type="button"
-                        className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-bold rounded-xl text-xs shadow-lg shadow-blue-600/25 transition-all"
-                    >
-                        <Plus className="h-4 w-4 stroke-[3]" />
-                        <span>Add New User</span>
-                    </button>
-                </div>
+                <button
+                    type="button"
+                    className="flex items-center justify-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-sm shadow-md shadow-indigo-600/20 transition-all"
+                >
+                    <Plus className="h-4 w-4 stroke-[3]" />
+                    <span>Add New User</span>
+                </button>
             </div>
 
             {/* Content Table Card */}
-            <div className="bg-white rounded-3xl border border-slate-200/80 shadow-xs overflow-hidden">
+            <Card className="overflow-hidden">
                 {/* Search Bar Row */}
                 <div className="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div className="relative w-full sm:w-80">
@@ -54,7 +56,7 @@ export default function AdminUsers() {
                             placeholder="Search by name or email..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 transition"
+                            className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 ds-input"
                         />
                     </div>
 
@@ -107,11 +109,11 @@ export default function AdminUsers() {
                                                 <span
                                                     className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold ${
                                                         isAdmin
-                                                            ? 'bg-blue-100 text-blue-700'
+                                                            ? 'bg-indigo-100 text-indigo-700'
                                                             : 'bg-slate-100 text-slate-700'
                                                     }`}
                                                 >
-                                                    {isAdmin ? <ShieldCheck className="h-3.5 w-3.5 text-blue-600" /> : <Users className="h-3.5 w-3.5 text-slate-500" />}
+                                                    {isAdmin ? <ShieldCheck className="h-3.5 w-3.5 text-indigo-600" /> : <Users className="h-3.5 w-3.5 text-slate-500" />}
                                                     {isAdmin ? 'Administrator' : 'User'}
                                                 </span>
                                             </td>
@@ -122,21 +124,21 @@ export default function AdminUsers() {
                                                 <div className="flex items-center justify-end gap-1">
                                                     <button
                                                         type="button"
-                                                        className="p-1.5 text-slate-400 hover:text-blue-600 rounded-lg hover:bg-blue-50 transition"
+                                                        className="p-1.5 text-slate-400 hover:text-indigo-600 rounded-xl hover:bg-indigo-50 transition"
                                                         title="Edit User"
                                                     >
                                                         <Edit2 className="h-4 w-4" />
                                                     </button>
                                                     <button
                                                         type="button"
-                                                        className="p-1.5 text-slate-400 hover:text-amber-600 rounded-lg hover:bg-amber-50 transition"
+                                                        className="p-1.5 text-slate-400 hover:text-amber-600 rounded-xl hover:bg-amber-50 transition"
                                                         title="Reset Password"
                                                     >
                                                         <KeyRound className="h-4 w-4" />
                                                     </button>
                                                     <button
                                                         type="button"
-                                                        className="p-1.5 text-slate-400 hover:text-red-600 rounded-lg hover:bg-red-50 transition"
+                                                        className="p-1.5 text-slate-400 hover:text-red-600 rounded-xl hover:bg-red-50 transition"
                                                         title="Delete User"
                                                     >
                                                         <Trash2 className="h-4 w-4" />
@@ -150,7 +152,7 @@ export default function AdminUsers() {
                         </table>
                     </div>
                 )}
-            </div>
+            </Card>
         </div>
     );
 }

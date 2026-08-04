@@ -6,3 +6,4 @@ export { default as Alert } from './Alert';
 export { default as Logo } from './Logo';
 export { default as Toast } from './Toast';
 export { default as EmptyState } from './EmptyState';
+export { default as StatusBadge } from '../dashboard/StatusBadge';

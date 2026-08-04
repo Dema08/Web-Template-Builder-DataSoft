@@ -1,10 +1,11 @@
 /**
- * Card — white rounded surface with soft shadow.
+ * Card — Modern elevated surface.
+ * Uses the shared design token classes for consistent shadow, border and radius.
  */
 export default function Card({ className = '', children, ...props }) {
     return (
         <div
-            className={`bg-white rounded-2xl border border-gray-200 shadow-sm ${className}`}
+            className={`ds-card ${className}`}
             {...props}
         >
             {children}

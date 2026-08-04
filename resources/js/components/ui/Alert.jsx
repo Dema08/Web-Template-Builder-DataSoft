@@ -12,8 +12,8 @@ const config = {
     },
     success: {
         icon: CheckCircle2,
-        classes: 'bg-green-50 text-green-700 border-green-200',
-        iconClasses: 'text-green-500',
+        classes: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+        iconClasses: 'text-emerald-500',
     },
     info: {
         icon: Info,
@@ -33,12 +33,12 @@ export default function Alert({ variant = 'error', title, children, className = 
     return (
         <div
             role="alert"
-            className={`flex items-start gap-3 rounded-lg border px-4 py-3 text-sm ${classes} ${className}`}
+            className={`flex items-start gap-3 rounded-xl border px-4 py-3 text-sm ${classes} ${className}`}
             {...props}
         >
             <Icon className={`mt-0.5 h-5 w-5 shrink-0 ${iconClasses}`} />
             <div className="min-w-0">
-                {title && <p className="font-medium">{title}</p>}
+                {title && <p className="font-semibold">{title}</p>}
                 {children && <div className={title ? 'mt-0.5' : ''}>{children}</div>}
             </div>
         </div>
