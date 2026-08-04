@@ -19,9 +19,10 @@ const profileApi = {
         const formData = new FormData();
         formData.append('avatar', file);
 
-        const { data } = await http.post('/user/avatar', formData, {
-            headers: { 'Content-Type': 'multipart/form-data' },
-        });
+        // Do NOT set Content-Type manually — Axios detects FormData and adds the
+        // correct 'multipart/form-data; boundary=...' header automatically.
+        // Overriding it without a boundary causes the server to fail parsing the upload.
+        const { data } = await http.post('/user/avatar', formData);
 
         return data.data;
     },

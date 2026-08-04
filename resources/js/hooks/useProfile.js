@@ -19,11 +19,13 @@ export function useProfile() {
     });
 
     const syncUser = (updatedUser) => {
-        // Update Zustand auth store so the header/sidebar reflects changes immediately
+        // Update Zustand auth store so storedUser reflects the latest data
         setUser(updatedUser);
-        // Update the query cache directly — no need to invalidate since we already
-        // have fresh data, and invalidating causes a race condition with useCurrentUser
+        // Update the profile query cache (['user'] key used by useProfile)
         queryClient.setQueryData([QUERY_KEYS.USER], updatedUser);
+        // CRITICAL: Also update the 'current-user' cache used by useCurrentUser/useAuth.
+        // Without this, the navbar still reads the old user from useCurrentUser's stale cache.
+        queryClient.setQueryData(['current-user'], updatedUser);
         return updatedUser;
     };
 
