@@ -83,7 +83,7 @@ export default function Profile() {
         const file = event.target.files?.[0];
         if (!file) return;
 
-        // Validate file type & size client-side before uploading
+        // Client-side validation
         const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
         if (!allowedTypes.includes(file.type)) {
             setStatusMessage('Only JPEG, PNG, and WebP images are allowed.');
@@ -98,32 +98,31 @@ export default function Profile() {
             return;
         }
 
-        // Show a temporary local preview immediately
+        // Show immediate local preview while uploading
         const tempPreview = URL.createObjectURL(file);
         setAvatarPreview(tempPreview);
         setStatusMessage(null);
 
         try {
-            // mutate (not mutateAsync) won't throw — error handled in onError callback of hook
-            const updatedUser = await uploadAvatar(file).catch((err) => {
-                throw err;
-            });
-            // If server returns updated user with new avatar URL, use it
+            // After upload succeeds, syncUser sets queryData with the updated user.
+            // useEffect will fire and call setAvatarPreview(profile.avatar) with the
+            // correct relative /storage/... URL returned by the server.
+            const updatedUser = await uploadAvatar(file);
             if (updatedUser?.avatar) {
-                URL.revokeObjectURL(tempPreview);
+                // Swap temp blob with real server URL immediately
                 setAvatarPreview(updatedUser.avatar);
             }
             setStatusMessage('Avatar updated successfully.');
             setStatusVariant('success');
         } catch (error) {
-            // Revert preview on failure
+            // Revert to old avatar on failure
             setAvatarPreview(profile?.avatar || null);
-            URL.revokeObjectURL(tempPreview);
-            const msg = error?.response?.data?.message || error?.message || 'Unable to upload avatar. Please try again.';
+            const msg = error?.response?.data?.message || 'Unable to upload avatar. Please try again.';
             setStatusMessage(msg);
             setStatusVariant('error');
         } finally {
-            // Always reset the file input so the same file can be re-selected
+            // Free the blob URL from memory
+            URL.revokeObjectURL(tempPreview);
             event.target.value = '';
         }
     };

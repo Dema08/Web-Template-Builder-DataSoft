@@ -5,7 +5,6 @@ namespace App\Domains\User\Resources;
 use App\Domains\User\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Storage;
 
 /**
  * UserResource
@@ -26,7 +25,7 @@ class UserResource extends JsonResource
         $user = $this->resource;
 
         $avatar = $user->avatar
-            ? Storage::disk('public')->url($user->avatar)
+            ? '/storage/' . ltrim($user->avatar, '/')
             : null;
 
         return [
