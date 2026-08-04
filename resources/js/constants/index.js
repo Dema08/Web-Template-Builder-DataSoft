@@ -5,7 +5,8 @@
 
 export const APP_NAME = import.meta.env.VITE_APP_NAME || 'Company Profile Website Builder';
 
-const DEFAULT_API_BASE_URL = import.meta.env.DEV ? 'http://localhost/api' : '/api';
+// Dynamically resolve API URL matching the current window origin to prevent CORS / host mismatch
+const DEFAULT_API_BASE_URL = typeof window !== 'undefined' ? `${window.location.origin}/api` : '/api';
 
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || DEFAULT_API_BASE_URL;
 export const API_VERSION = import.meta.env.VITE_API_VERSION || 'v1';

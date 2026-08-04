@@ -36,7 +36,7 @@ class UserFactory extends Factory
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
+            'password' => 'password', // User model auto-hashes via Attribute cast
             'avatar' => null,
             'role' => UserRole::User,
             'remember_token' => Str::random(10),

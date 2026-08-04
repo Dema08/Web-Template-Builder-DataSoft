@@ -45,7 +45,7 @@ class AuthService extends BaseService
             $user = $this->userRepository->createRegularUser([
                 'name' => $dto->getName(),
                 'email' => $dto->getEmail(),
-                'password' => $dto->getPassword(), // cast 'hashed' stores it safely
+                'password' => $dto->getPassword(), // User model auto-hashes via Attribute cast
             ]);
 
             $token = $user->createToken(
@@ -97,7 +97,7 @@ class AuthService extends BaseService
         }
 
         $user->update([
-            'password' => $dto->getNewPassword(), // 'hashed' cast applies
+            'password' => $dto->getNewPassword(), // User model auto-hashes via Attribute cast
         ]);
     }
 

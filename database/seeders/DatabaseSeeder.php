@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Domains\User\Models\User;
 use App\Domains\Shared\Enums\UserRole;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,11 +14,12 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Level 1 / Role Admin
+        // Note: User model auto-hashes 'password' via Attribute cast
         User::updateOrCreate(
             ['email' => 'admin@datasoft.id'],
             [
                 'name'              => 'Datasoft Administrator',
-                'password'          => Hash::make('password'),
+                'password'          => 'password',
                 'role'              => UserRole::Admin,
                 'email_verified_at' => now(),
             ]
@@ -30,18 +30,18 @@ class DatabaseSeeder extends Seeder
             ['email' => 'user@datasoft.id'],
             [
                 'name'              => 'Koperasi Maju User',
-                'password'          => Hash::make('password'),
+                'password'          => 'password',
                 'role'              => UserRole::User,
                 'email_verified_at' => now(),
             ]
         );
 
-        // Additional admin test user from upstream
+        // Additional admin test user
         User::updateOrCreate(
             ['email' => 'admin@example.com'],
             [
                 'name'              => 'Admin User',
-                'password'          => Hash::make('password'),
+                'password'          => 'password',
                 'role'              => UserRole::Admin,
                 'email_verified_at' => now(),
             ]

@@ -1,26 +1,28 @@
 import { useMutation } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
 import { authApi } from '@api';
-import { ROUTES } from '@constants';
 import { toast } from '@store';
 
 /**
  * useRegister
  *
- * Registers a new user, then redirects to the login page
- * (spec: registration does NOT auto-authenticate).
+ * Registers a new user, shows a success toast, then navigates to /login.
  */
 export function useRegister() {
-    const navigate = useNavigate();
-
     return useMutation({
         mutationFn: (payload) => authApi.register(payload),
         onSuccess: () => {
-            toast.success('Your account has been created. Please sign in.', 'Registration successful');
-            navigate(ROUTES.LOGIN, { replace: true });
+            toast.success('Akun Anda berhasil dibuat. Silakan login.', 'Registrasi Berhasil');
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 400);
         },
         onError: (error) => {
-            toast.error(error?.response?.data?.message || 'Unable to create account. Please try again.', 'Registration failed');
+            toast.error(
+                error?.response?.data?.errors?.email?.[0] ||
+                    error?.response?.data?.message ||
+                    'Gagal membuat akun. Silakan periksa kembali data Anda.',
+                'Registrasi Gagal'
+            );
         },
     });
 }

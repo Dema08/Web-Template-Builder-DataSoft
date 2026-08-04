@@ -12,8 +12,7 @@ const authApi = {
      */
     async register(payload) {
         const { data } = await http.post('/auth/register', payload);
-        // Registration returns a token but the flow redirects to /login,
-        // so we do NOT persist a session here.
+        // Registration does NOT auto-authenticate — user must login manually.
         return data.data;
     },
 
@@ -44,6 +43,13 @@ const authApi = {
     async me() {
         const { data } = await http.get('/auth/me');
         return data.data;
+    },
+
+    /**
+     * Alias for me() to prevent TypeError in hooks.
+     */
+    async user() {
+        return this.me();
     },
 
     _persistSession(session) {
