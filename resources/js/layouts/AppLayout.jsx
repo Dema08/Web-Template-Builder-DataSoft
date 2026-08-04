@@ -12,8 +12,7 @@ import {
     Plus,
     LogOut,
     UserCircle2,
-    ChevronDown,
-    Shield
+    ChevronDown
 } from 'lucide-react';
 import { useAuth } from '@hooks';
 import { ROUTES } from '@constants';
@@ -40,17 +39,17 @@ export default function AppLayout() {
     sidebarItems.push({ label: 'Settings', icon: SettingsIcon, to: ROUTES.SETTINGS });
 
     return (
-        <div className="min-h-screen bg-[#f8fafc] flex flex-col font-sans text-slate-800 selection:bg-blue-500 selection:text-white">
+        <div className="min-h-screen bg-[#f8fafc] flex flex-col font-sans text-slate-800 selection:bg-blue-600 selection:text-white">
             {/* Top Navbar */}
             <header className="sticky top-0 z-30 bg-white border-b border-slate-200/80 shadow-xs">
                 <div className="flex items-center justify-between px-6 py-3.5">
                     {/* Brand Logo + Top Links */}
                     <div className="flex items-center gap-8">
                         <Link to={ROUTES.DASHBOARD} className="flex items-center gap-2.5">
-                            <div className="h-9 w-9 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
-                                <Layers className="h-5 w-5" />
+                            <div className="h-9 w-9 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20 font-black text-sm tracking-tighter">
+                                DS
                             </div>
-                            <span className="text-xl font-extrabold text-blue-950 tracking-tight">CanvasBuilder</span>
+                            <span className="text-xl font-extrabold text-slate-900 tracking-tight">DataSoft</span>
                         </Link>
 
                         {/* Top Nav Links */}
@@ -95,7 +94,7 @@ export default function AppLayout() {
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                             <input
                                 type="text"
-                                placeholder="Search resources..."
+                                placeholder="Search DataSoft resources..."
                                 className="w-full pl-9 pr-4 py-2 bg-slate-100/80 border border-slate-200/60 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 transition"
                             />
                         </div>
@@ -137,7 +136,7 @@ export default function AppLayout() {
                                         <p className="text-sm font-bold text-slate-900 truncate">{user?.name || 'User'}</p>
                                         <p className="text-xs text-slate-500 truncate">{user?.email}</p>
                                         <div className="mt-1.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-blue-50 text-[10px] font-bold text-blue-700 uppercase tracking-wider">
-                                            {isAdmin ? 'Admin' : 'User'}
+                                            {isAdmin ? 'DataSoft Admin' : 'User'}
                                         </div>
                                     </div>
 
@@ -176,12 +175,12 @@ export default function AppLayout() {
                     <div>
                         {/* Organization Card */}
                         <div className="flex items-center gap-3 p-3 bg-slate-50/80 border border-slate-200/60 rounded-2xl mb-6">
-                            <div className="h-9 w-9 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold text-xs shadow-sm">
-                                <Layers className="h-5 w-5" />
+                            <div className="h-9 w-9 rounded-xl bg-blue-600 flex items-center justify-center text-white font-black text-xs shadow-sm">
+                                DS
                             </div>
                             <div className="min-w-0">
-                                <h3 className="text-sm font-extrabold text-slate-900 truncate">Acme Corp</h3>
-                                <span className="text-[10px] font-bold text-slate-400 tracking-wider uppercase">PREMIUM PLAN</span>
+                                <h3 className="text-sm font-extrabold text-slate-900 truncate">DataSoft Studio</h3>
+                                <span className="text-[10px] font-bold text-blue-600 tracking-wider uppercase">ENTERPRISE</span>
                             </div>
                         </div>
 
@@ -231,9 +230,9 @@ export default function AppLayout() {
                     {/* Footer */}
                     <footer className="mt-12 border-t border-slate-200/80 bg-white px-8 py-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
                         <div>
-                            <span className="font-bold text-slate-800">CanvasBuilder Pro</span>
+                            <span className="font-bold text-slate-800">DataSoft Profile Builder</span>
                             <span className="mx-2">•</span>
-                            <span>© 2024 CanvasBuilder Pro. All rights reserved.</span>
+                            <span>© 2026 PT DataSoft Solusindo. All rights reserved.</span>
                         </div>
                         <a href="#privacy" onClick={(e) => e.preventDefault()} className="hover:text-slate-800 underline font-medium">
                             Privacy Policy
