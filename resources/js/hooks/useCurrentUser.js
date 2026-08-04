@@ -13,7 +13,8 @@ export function useCurrentUser() {
     const setUser = useAuthStore((state) => state.setUser);
 
     return useQuery({
-        queryKey: [QUERY_KEYS.USER],
+        // Use a distinct key to avoid conflicting with useProfile which also uses ['user']
+        queryKey: ['current-user'],
         queryFn: async () => {
             const user = await authApi.me();
             setUser(user);

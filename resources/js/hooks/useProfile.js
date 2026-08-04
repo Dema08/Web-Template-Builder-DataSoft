@@ -19,9 +19,11 @@ export function useProfile() {
     });
 
     const syncUser = (updatedUser) => {
+        // Update Zustand auth store so the header/sidebar reflects changes immediately
         setUser(updatedUser);
+        // Update the query cache directly — no need to invalidate since we already
+        // have fresh data, and invalidating causes a race condition with useCurrentUser
         queryClient.setQueryData([QUERY_KEYS.USER], updatedUser);
-        queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER] });
         return updatedUser;
     };
 
