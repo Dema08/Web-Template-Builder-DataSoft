@@ -5,8 +5,10 @@
 
 export const APP_NAME = import.meta.env.VITE_APP_NAME || 'Company Profile Website Builder';
 
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
-export const API_VERSION = 'v1';
+const DEFAULT_API_BASE_URL = import.meta.env.DEV ? 'http://localhost/api' : '/api';
+
+export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || DEFAULT_API_BASE_URL;
+export const API_VERSION = import.meta.env.VITE_API_VERSION || 'v1';
 
 export const ROUTES = {
     LOGIN: '/login',

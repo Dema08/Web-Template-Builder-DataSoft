@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { authApi } from '@api';
 import { ROUTES } from '@constants';
-import { useAuthStore } from '@store';
+import { useAuthStore, toast } from '@store';
 
 /**
  * useLogin
@@ -18,7 +18,11 @@ export function useLogin() {
         mutationFn: (credentials) => authApi.login(credentials),
         onSuccess: (session) => {
             setSession(session);
+            toast.success(`Welcome back, ${session.user?.name?.split(' ')[0] || 'there'}!`, 'Signed in');
             navigate(ROUTES.DASHBOARD, { replace: true });
+        },
+        onError: (error) => {
+            toast.error(error?.response?.data?.message || 'Unable to sign in. Please try again.', 'Sign in failed');
         },
     });
 }

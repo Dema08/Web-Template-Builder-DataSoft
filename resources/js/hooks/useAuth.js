@@ -1,44 +1,24 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { authApi } from '@api';
-import { QUERY_KEYS, ROUTES } from '@constants';
-import { useAuthStore } from '@store';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
+import { authApi } from '@api';
+import { ROUTES } from '@constants';
+import { useAuthStore, toast } from '@store';
+import { useCurrentUser } from './useCurrentUser';
 
 /**
- * Auth hooks backed by TanStack Query + Zustand.
+ * useAuth
+ *
+ * Consolidated auth hook: hydrates the current user on mount,
+ * exposes logout, and reads the persisted session from Zustand.
+ * Login/register live in dedicated `useLogin` / `useRegister`.
  */
 export function useAuth() {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
-    const { setSession, clearSession, user } = useAuthStore();
+    const { user: storedUser, clearSession } = useAuthStore();
 
-    // Fetch the current user on mount / page refresh.
-    const { data: currentUser, isLoading, isError } = useQuery({
-        queryKey: [QUERY_KEYS.USER],
-        queryFn: () => authApi.user(),
-        staleTime: 5 * 60 * 1000, // 5 minutes
-        retry: false,
-    });
-
-    // Login mutation.
-    const loginMutation = useMutation({
-        mutationFn: (credentials) => authApi.login(credentials),
-        onSuccess: (session) => {
-            setSession(session);
-            queryClient.setQueryData([QUERY_KEYS.USER], session.user);
-            navigate(ROUTES.DASHBOARD);
-        },
-    });
-
-    // Register mutation.
-    const registerMutation = useMutation({
-        mutationFn: (payload) => authApi.register(payload),
-        onSuccess: (session) => {
-            setSession(session);
-            queryClient.setQueryData([QUERY_KEYS.USER], session.user);
-            navigate(ROUTES.DASHBOARD);
-        },
-    });
+    // Hydrate current user (only when authenticated).
+    const { data: currentUser, isLoading, isError } = useCurrentUser();
 
     // Logout mutation.
     const logoutMutation = useMutation({
@@ -46,22 +26,23 @@ export function useAuth() {
         onSuccess: () => {
             clearSession();
             queryClient.clear();
-            navigate(ROUTES.LOGIN);
+            toast.info('You have been signed out.', 'Logged out');
+            navigate(ROUTES.LOGIN, { replace: true });
+        },
+        onError: () => {
+            // Even if the API call fails, clear the local session.
+            clearSession();
+            queryClient.clear();
+            navigate(ROUTES.LOGIN, { replace: true });
         },
     });
 
     return {
-        user: currentUser ?? user,
+        user: currentUser ?? storedUser,
         isLoading,
         isError,
-        isAuthenticated: Boolean(currentUser ?? user),
-        login: loginMutation.mutate,
-        register: registerMutation.mutate,
-        logout: logoutMutation.mutate,
-        isLoggingIn: loginMutation.isPending,
-        isRegistering: registerMutation.isPending,
+        isAuthenticated: Boolean(currentUser ?? storedUser),
         isLoggingOut: logoutMutation.isPending,
-        loginError: loginMutation.error,
-        registerError: registerMutation.error,
+        logout: logoutMutation.mutate,
     };
 }

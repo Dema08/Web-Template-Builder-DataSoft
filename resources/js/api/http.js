@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_BASE_URL, TOKEN_STORAGE_KEY, HTTP_STATUS } from '@constants';
+import { API_BASE_URL, API_VERSION, TOKEN_STORAGE_KEY, HTTP_STATUS } from '@constants';
 import { useAuthStore } from '@store';
 
 /**
@@ -10,7 +10,7 @@ import { useAuthStore } from '@store';
  */
 
 const http = axios.create({
-    baseURL: `${API_BASE_URL}/${import.meta.env.VITE_API_VERSION || 'v1'}`,
+    baseURL: `${API_BASE_URL}/${API_VERSION}`,
     headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',

@@ -2,6 +2,8 @@ import { createRoot } from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import AppRouter from '@router';
+import { Toast } from '@components/ui';
+import { useCurrentUser } from '@hooks';
 import '../css/app.css';
 
 // Configure the global QueryClient.
@@ -18,10 +20,23 @@ const queryClient = new QueryClient({
     },
 });
 
+/**
+ * SessionHydrator
+ *
+ * On app mount, if a persisted session exists, re-fetch the current
+ * user from /auth/me to keep the store fresh after a browser refresh.
+ */
+function SessionHydrator() {
+    useCurrentUser();
+    return null;
+}
+
 function App() {
     return (
         <QueryClientProvider client={queryClient}>
+            <SessionHydrator />
             <AppRouter />
+            <Toast />
             {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
         </QueryClientProvider>
     );

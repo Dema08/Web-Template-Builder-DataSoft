@@ -1,7 +1,8 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import { LayoutDashboard, Globe, Settings, Shield, LogOut } from 'lucide-react';
 import { ROUTES } from '@constants';
-import { useAuthStore } from '@store';
+import { useAuth } from '@hooks';
+import { Spinner } from '@components/ui';
 
 const navItems = [
     { to: ROUTES.DASHBOARD, label: 'Dashboard', icon: LayoutDashboard },
@@ -11,8 +12,7 @@ const navItems = [
 ];
 
 export default function AppLayout() {
-    const user = useAuthStore((state) => state.user);
-    const clearSession = useAuthStore((state) => state.clearSession);
+    const { user, logout, isLoggingOut } = useAuth();
 
     const items = user?.role === 'admin' ? navItems : navItems.filter((item) => !item.adminOnly);
 
@@ -52,12 +52,13 @@ export default function AppLayout() {
                             <p className="text-xs text-gray-500 truncate">{user?.email}</p>
                         </div>
                         <button
-                            onClick={clearSession}
-                            className="p-2 text-gray-400 hover:text-gray-600"
+                            onClick={() => logout()}
+                            disabled={isLoggingOut}
+                            className="p-2 text-gray-400 hover:text-gray-600 disabled:opacity-50"
                             title="Logout"
                             aria-label="Logout"
                         >
-                            <LogOut className="h-5 w-5" />
+                            {isLoggingOut ? <Spinner size="sm" /> : <LogOut className="h-5 w-5" />}
                         </button>
                     </div>
                 </div>

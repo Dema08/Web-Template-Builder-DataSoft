@@ -2,6 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { authApi } from '@api';
 import { ROUTES } from '@constants';
+import { toast } from '@store';
 
 /**
  * useRegister
@@ -15,7 +16,11 @@ export function useRegister() {
     return useMutation({
         mutationFn: (payload) => authApi.register(payload),
         onSuccess: () => {
+            toast.success('Your account has been created. Please sign in.', 'Registration successful');
             navigate(ROUTES.LOGIN, { replace: true });
+        },
+        onError: (error) => {
+            toast.error(error?.response?.data?.message || 'Unable to create account. Please try again.', 'Registration failed');
         },
     });
 }
