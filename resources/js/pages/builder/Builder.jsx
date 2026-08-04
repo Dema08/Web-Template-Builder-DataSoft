@@ -9,15 +9,19 @@ import { Spinner } from '@components/ui';
 
 export default function Builder() {
     const editorRef = useRef(null);
+    const containerRef = useRef(null);
     const { content, isContentLoading, saveContent, isSaving } = useWebsite();
     const { setEditor, markDirty } = useWebsiteStore();
 
     // Initialize GrapesJS once on mount.
     useEffect(() => {
+        // Guard: don't re-init if already mounted
         if (editorRef.current) return;
+        // Guard: container must be in the DOM
+        if (!containerRef.current) return;
 
         const editor = grapesjs.init({
-            container: '#gjs',
+            container: containerRef.current,
             height: '100%',
             width: 'auto',
             storageManager: false, // We persist via our own API
@@ -42,8 +46,18 @@ export default function Builder() {
         editor.on('update', () => markDirty());
 
         return () => {
-            editor.destroy();
-            editorRef.current = null;
+            // Safely destroy GrapesJS without crashing React's DOM cleanup.
+            // GrapesJS internally calls removeChild which can fail if React
+            // has already unmounted the container — so we wrap in try/catch.
+            try {
+                if (editorRef.current) {
+                    editorRef.current.destroy();
+                }
+            } catch (_e) {
+                // Intentionally swallowed — GrapesJS DOM cleanup race with React.
+            } finally {
+                editorRef.current = null;
+            }
         };
     }, [setEditor, markDirty]);
 
@@ -52,14 +66,17 @@ export default function Builder() {
         if (!content || !editorRef.current) return;
 
         const editor = editorRef.current;
-        if (content?.components) {
-            editor.setComponents(content.components);
-        }
-        if (content?.styles) {
-            editor.setStyle(content.styles);
-        }
-        if (content?.html) {
-            editor.setComponents(content.html);
+        try {
+            if (content?.components) {
+                editor.setComponents(content.components);
+            } else if (content?.html) {
+                editor.setComponents(content.html);
+            }
+            if (content?.styles) {
+                editor.setStyle(content.styles);
+            }
+        } catch (_e) {
+            // Content load failed silently — editor may still be initializing
         }
     }, [content]);
 
@@ -97,14 +114,16 @@ export default function Builder() {
                 </button>
             </div>
 
-            {/* GrapesJS canvas */}
-            {isContentLoading ? (
-                <div className="flex-1 flex items-center justify-center bg-slate-50">
-                    <Spinner size="lg" />
-                </div>
-            ) : (
-                <div id="gjs" className="flex-1 overflow-hidden" />
-            )}
+            {/* GrapesJS canvas — always rendered, hidden during loading */}
+            <div className="flex-1 overflow-hidden relative">
+                {isContentLoading && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-slate-50 z-10">
+                        <Spinner size="lg" />
+                    </div>
+                )}
+                {/* Ref-based container instead of id="gjs" prevents React/GrapesJS DOM conflicts */}
+                <div ref={containerRef} className="w-full h-full" />
+            </div>
         </div>
     );
 }
