@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
     Calendar,
@@ -24,7 +23,7 @@ export default function Dashboard() {
     const { data: dashboard, isLoading: isDashboardLoading } = useDashboard();
     const { website } = useWebsite();
 
-    if (isLoading) {
+    if (isDashboardLoading) {
         return (
             <div className="flex items-center justify-center p-20">
                 <Spinner size="lg" />
