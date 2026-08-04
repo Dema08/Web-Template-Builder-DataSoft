@@ -7,9 +7,10 @@
 
         <title>{{ config('app.name', 'Company Profile Website Builder') }}</title>
 
+        @viteReactRefresh
         @vite(['resources/css/app.css', 'resources/js/app.jsx'])
     </head>
-    <body>
+    <body class="bg-gray-50 antialiased">
         <div id="app"></div>
     </body>
 </html>
