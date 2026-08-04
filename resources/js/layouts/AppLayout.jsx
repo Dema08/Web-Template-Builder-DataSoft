@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { NavLink, Outlet, Link, useLocation } from 'react-router-dom';
 import {
-    Layers,
     Search,
     Bell,
     LayoutGrid,
@@ -39,9 +38,9 @@ export default function AppLayout() {
     sidebarItems.push({ label: 'Settings', icon: SettingsIcon, to: ROUTES.SETTINGS });
 
     return (
-        <div className="min-h-screen bg-[#f8fafc] flex flex-col font-sans text-slate-800 selection:bg-blue-600 selection:text-white">
-            {/* Top Navbar */}
-            <header className="sticky top-0 z-30 bg-white border-b border-slate-200/80 shadow-xs">
+        <div className="h-screen bg-[#f8fafc] flex flex-col font-sans text-slate-800 selection:bg-blue-600 selection:text-white overflow-hidden">
+            {/* Top Navbar — Fixed Header */}
+            <header className="shrink-0 z-30 bg-white border-b border-slate-200/80 shadow-xs">
                 <div className="flex items-center justify-between px-6 py-3.5">
                     {/* Brand Logo + Top Links */}
                     <div className="flex items-center gap-8">
@@ -168,10 +167,10 @@ export default function AppLayout() {
                 </div>
             </header>
 
-            {/* Main Wrapper */}
-            <div className="flex-1 flex min-h-0">
-                {/* Left Sidebar */}
-                <aside className="w-64 bg-white border-r border-slate-200/80 p-5 flex flex-col justify-between shrink-0 hidden md:flex">
+            {/* Main Body Wrapper — Flex 1 and overflow hidden to pin sidebar */}
+            <div className="flex-1 flex min-h-0 overflow-hidden">
+                {/* Left Sidebar — Fixed in position, non-scrolling */}
+                <aside className="w-64 bg-white border-r border-slate-200/80 p-5 flex flex-col justify-between shrink-0 hidden md:flex overflow-y-auto">
                     <div>
                         {/* Organization Card */}
                         <div className="flex items-center gap-3 p-3 bg-slate-50/80 border border-slate-200/60 rounded-2xl mb-6">
@@ -221,7 +220,7 @@ export default function AppLayout() {
                     </div>
                 </aside>
 
-                {/* Content Outlet */}
+                {/* Content Outlet — Independent scrollable area */}
                 <main className="flex-1 min-w-0 overflow-y-auto bg-[#f8fafc] flex flex-col justify-between">
                     <div>
                         <Outlet />
