@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Camera, Trash2, Shield, Globe, Sparkles } from 'lucide-react';
 import { Card, Input, Button, Alert, Spinner } from '@components/ui';
@@ -38,13 +38,26 @@ export default function Profile() {
         defaultValues: { current_password: '', password: '', password_confirmation: '' },
     });
 
+    // Stabilize reset and setUser with useCallback to avoid infinite re-render loop
+    const stableReset = useCallback(
+        (vals) => profileForm.reset(vals),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        []
+    );
+
+    const stableSetUser = useCallback(
+        (u) => setUser(u),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        []
+    );
+
     useEffect(() => {
         if (profile) {
-            profileForm.reset({ name: profile.name || '', email: profile.email || '' });
+            stableReset({ name: profile.name || '', email: profile.email || '' });
             setAvatarPreview(profile.avatar || null);
-            setUser(profile);
+            stableSetUser(profile);
         }
-    }, [profile, profileForm, setUser]);
+    }, [profile, stableReset, stableSetUser]);
 
     const websiteSummary = useMemo(() => ({
         name: website?.name || 'Koperasi Maju Profile',
@@ -68,34 +81,63 @@ export default function Profile() {
 
     const onAvatarPick = async (event) => {
         const file = event.target.files?.[0];
+        if (!file) return;
 
-        if (!file) {
+        // Validate file type & size client-side before uploading
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+        if (!allowedTypes.includes(file.type)) {
+            setStatusMessage('Only JPEG, PNG, and WebP images are allowed.');
+            setStatusVariant('error');
+            event.target.value = '';
+            return;
+        }
+        if (file.size > 5 * 1024 * 1024) {
+            setStatusMessage('Image must be smaller than 5MB.');
+            setStatusVariant('error');
+            event.target.value = '';
             return;
         }
 
+        // Show a temporary local preview immediately
         const tempPreview = URL.createObjectURL(file);
         setAvatarPreview(tempPreview);
+        setStatusMessage(null);
 
         try {
-            await uploadAvatar(file);
+            // mutate (not mutateAsync) won't throw — error handled in onError callback of hook
+            const updatedUser = await uploadAvatar(file).catch((err) => {
+                throw err;
+            });
+            // If server returns updated user with new avatar URL, use it
+            if (updatedUser?.avatar) {
+                URL.revokeObjectURL(tempPreview);
+                setAvatarPreview(updatedUser.avatar);
+            }
             setStatusMessage('Avatar updated successfully.');
             setStatusVariant('success');
         } catch (error) {
-            setStatusMessage(error?.response?.data?.message || 'Unable to upload avatar.');
+            // Revert preview on failure
+            setAvatarPreview(profile?.avatar || null);
+            URL.revokeObjectURL(tempPreview);
+            const msg = error?.response?.data?.message || error?.message || 'Unable to upload avatar. Please try again.';
+            setStatusMessage(msg);
             setStatusVariant('error');
         } finally {
+            // Always reset the file input so the same file can be re-selected
             event.target.value = '';
         }
     };
 
     const onDeleteAvatar = async () => {
+        setStatusMessage(null);
         try {
             await deleteAvatar();
             setAvatarPreview(null);
             setStatusMessage('Avatar removed successfully.');
             setStatusVariant('success');
         } catch (error) {
-            setStatusMessage(error?.response?.data?.message || 'Unable to delete avatar.');
+            const msg = error?.response?.data?.message || error?.message || 'Unable to delete avatar.';
+            setStatusMessage(msg);
             setStatusVariant('error');
         }
     };
