@@ -121,7 +121,7 @@ export default function AppLayout() {
                     {/* Sidebar Bottom Action Buttons */}
                     <div className="space-y-3 px-4 pb-6 pt-2 border-t border-slate-100">
                         <Link
-                            to={ROUTES.BUILDER}
+                            to={ROUTES.ONBOARDING}
                             className={`flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-3 text-xs font-extrabold text-white transition hover:bg-indigo-700 shadow-md shadow-indigo-600/20 ${
                                 isSidebarCollapsed ? 'px-2' : ''
                             }`}

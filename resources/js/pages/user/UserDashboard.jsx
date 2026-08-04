@@ -44,7 +44,7 @@ export default function UserDashboard() {
     const firstName = dashboardUser?.name?.split(' ')[0] || 'User';
     const website = dashboard?.website;
     const quickActions = dashboard?.quick_actions || [
-        { label: 'Edit Content', description: 'Update page text & images', href: ROUTES.BUILDER, icon: 'sparkles' },
+        { label: 'Edit Content', description: 'Update page text & images', href: ROUTES.ONBOARDING, icon: 'sparkles' },
         { label: 'Site Settings', description: 'Configure subdomain & SEO', href: ROUTES.SETTINGS, icon: 'layout-grid' },
         { label: 'Pick Template', description: 'Switch layout design', href: ROUTES.TEMPLATES, icon: 'user-circle' },
     ];
@@ -184,7 +184,7 @@ export default function UserDashboard() {
                         {quickActions.map((action) => (
                             <Link
                                 key={action.label}
-                                to={action.href || ROUTES.BUILDER}
+                                to={action.href || ROUTES.ONBOARDING}
                                 className="group relative rounded-2xl border border-slate-200 bg-slate-50 p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-indigo-200 hover:bg-white hover:shadow-md flex flex-col text-center"
                             >
                                 <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-white text-lg shadow-sm ring-1 ring-slate-200 group-hover:ring-indigo-200 mx-auto">
