@@ -31,11 +31,11 @@ export default function UserDashboard() {
 
     if (isError) {
         return (
-            <div className="p-6">
-                <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-sm text-red-700 font-semibold">
-                    {error?.response?.data?.message || 'Unable to load dashboard right now.'}
+                <div className="p-6">
+                    <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-sm text-red-700 font-semibold">
+                        {error?.response?.data?.message || 'Unable to load dashboard right now.'}
+                    </div>
                 </div>
-            </div>
         );
     }
 
@@ -59,14 +59,14 @@ export default function UserDashboard() {
             <Card className="p-6 lg:p-8">
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                     <div className="space-y-3">
-                        <div className="inline-flex items-center gap-2 rounded-full bg-indigo-50 px-3 py-1 text-xs font-bold text-indigo-700">
+                        <div className="inline-flex items-center gap-2 rounded-full bg-indigo-100 px-3 py-1 text-xs font-bold text-indigo-900 dark:bg-indigo-900/30 dark:text-indigo-200">
                             <Sparkles className="h-3.5 w-3.5" />
                             Dashboard overview
                         </div>
-                        <h1 className="text-2xl font-extrabold text-slate-900 sm:text-3xl tracking-tight">
+                        <h1 className="text-2xl font-extrabold text-[rgb(var(--color-text-primary))] sm:text-3xl tracking-tight">
                             Welcome back, {firstName}!
                         </h1>
-                        <p className="mt-1 text-sm text-slate-500 lg:text-base max-w-lg">
+                        <p className="mt-1 text-sm text-[rgb(var(--color-text-secondary))] lg:text-base max-w-lg">
                             {hasWebsite
                                 ? 'Your website is ready for updates, publishing, and review.'
                                 : 'Create your first website and start shaping your brand story.'}
@@ -78,7 +78,7 @@ export default function UserDashboard() {
                             <>
                                 <Link
                                     to={ROUTES.WEBSITES}
-                                    className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 transition shadow-xs"
+                                    className="rounded-xl border border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface))] px-4 py-2 text-xs font-bold text-[rgb(var(--color-text-primary))] hover:bg-[rgb(var(--color-surface-alt))] transition shadow-xs"
                                 >
                                     Preview
                                 </Link>
@@ -109,28 +109,28 @@ export default function UserDashboard() {
                     <div>
                         <div className="mb-4 flex items-center justify-between gap-4">
                             <div>
-                                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Website Summary</p>
-                                <h2 className="text-2xl font-extrabold text-slate-900 mt-1">{website?.name || 'DataSoft Profile'}</h2>
+                                <p className="text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Website Summary</p>
+                                <h2 className="text-2xl font-extrabold text-[rgb(var(--color-text-primary))] mt-1">{website?.name || 'DataSoft Profile'}</h2>
                             </div>
-                            <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-700">
+                            <span className="rounded-full bg-[rgb(var(--color-surface-alt))] px-3 py-1 text-xs font-bold text-[rgb(var(--color-text-primary))]">
                                 {website?.is_published ? 'Published' : 'Draft'}
                             </span>
                         </div>
 
                         <div className="grid gap-4 md:grid-cols-2 mt-4">
-                            <div className="rounded-xl bg-slate-50 p-4 border border-slate-100">
-                                <div className="text-[10px] uppercase tracking-widest font-bold text-slate-400">Template</div>
-                                <div className="mt-1.5 text-base font-extrabold text-slate-900">{website?.template || 'Corporate Pro v2'}</div>
+                            <div className="rounded-xl bg-[rgb(var(--color-surface-alt))] p-4 border border-[rgb(var(--color-border))]">
+                                <div className="text-[10px] uppercase tracking-widest font-bold text-[rgb(var(--color-text-tertiary))]">Template</div>
+                                <div className="mt-1.5 text-base font-extrabold text-[rgb(var(--color-text-primary))]">{website?.template || 'Corporate Pro v2'}</div>
                             </div>
-                            <div className="rounded-xl bg-slate-50 p-4 border border-slate-100">
-                                <div className="text-[10px] uppercase tracking-widest font-bold text-slate-400">Slug</div>
-                                <div className="mt-1.5 text-base font-extrabold text-slate-900">{website?.slug || website?.subdomain || 'datasoft'}</div>
+                            <div className="rounded-xl bg-[rgb(var(--color-surface-alt))] p-4 border border-[rgb(var(--color-border))]">
+                                <div className="text-[10px] uppercase tracking-widest font-bold text-[rgb(var(--color-text-tertiary))]">Slug</div>
+                                <div className="mt-1.5 text-base font-extrabold text-[rgb(var(--color-text-primary))]">{website?.slug || website?.subdomain || 'datasoft'}</div>
                             </div>
-                            <div className="rounded-xl bg-slate-50 p-4 md:col-span-2 border border-slate-100">
+                            <div className="rounded-xl bg-[rgb(var(--color-surface-alt))] p-4 md:col-span-2 border border-[rgb(var(--color-border))]">
                                 <div className="flex items-center justify-between gap-3">
                                     <div>
-                                        <div className="text-[10px] uppercase tracking-widest font-bold text-slate-400">Last updated</div>
-                                        <div className="mt-1.5 text-base font-extrabold text-slate-900">{website?.updated_at || website?.created_at || 'Just now'}</div>
+                                        <div className="text-[10px] uppercase tracking-widest font-bold text-[rgb(var(--color-text-tertiary))]">Last updated</div>
+                                        <div className="mt-1.5 text-base font-extrabold text-[rgb(var(--color-text-primary))]">{website?.updated_at || website?.created_at || 'Just now'}</div>
                                     </div>
                                     <a
                                         href={`http://${website?.subdomain || 'datasoft'}.datasoft.id`}
@@ -176,22 +176,22 @@ export default function UserDashboard() {
                 {/* Quick Actions */}
                 <Card className="p-6">
                     <div className="mb-6">
-                        <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Quick Actions</p>
-                        <h2 className="text-2xl font-extrabold text-slate-900 mt-1 tracking-tight">Launch faster</h2>
-                        <p className="text-xs text-slate-500 mt-1.5">Common tasks to publish & optimize your site</p>
+                        <p className="text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Quick Actions</p>
+                        <h2 className="text-2xl font-extrabold text-[rgb(var(--color-text-primary))] mt-1 tracking-tight">Launch faster</h2>
+                        <p className="text-xs text-[rgb(var(--color-text-secondary))] mt-1.5">Common tasks to publish & optimize your site</p>
                     </div>
                     <div className="grid gap-4 sm:grid-cols-3">
                         {quickActions.map((action) => (
                             <Link
                                 key={action.label}
                                 to={action.href || ROUTES.ONBOARDING}
-                                className="group relative rounded-2xl border border-slate-200 bg-slate-50 p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-indigo-200 hover:bg-white hover:shadow-md flex flex-col text-center"
+                                className="group relative rounded-2xl border border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface-alt))] p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-indigo-200 hover:bg-[rgb(var(--color-surface))] hover:shadow-md flex flex-col text-center"
                             >
-                                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-white text-lg shadow-sm ring-1 ring-slate-200 group-hover:ring-indigo-200 mx-auto">
+                                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-[rgb(var(--color-surface))] text-lg shadow-sm ring-1 ring-[rgb(var(--color-border))] group-hover:ring-indigo-200 mx-auto">
                                     ✨
                                 </div>
-                                <div className="text-base font-extrabold text-slate-900 group-hover:text-indigo-600 transition">{action.label}</div>
-                                <p className="mt-1 text-xs text-slate-500 font-medium flex-1">{action.description}</p>
+                                <div className="text-base font-extrabold text-[rgb(var(--color-text-primary))] group-hover:text-indigo-600 transition">{action.label}</div>
+                                <p className="mt-1 text-xs text-[rgb(var(--color-text-secondary))] font-medium flex-1">{action.description}</p>
                                 <div className="mt-4 inline-flex items-center gap-2 text-xs font-bold text-indigo-600">
                                     <span>Open</span> <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" />
                                 </div>
@@ -204,10 +204,10 @@ export default function UserDashboard() {
                 <Card className="p-6">
                     <div className="mb-6 flex items-center justify-between gap-3">
                         <div>
-                            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Recent Activity</p>
-                            <h2 className="text-2xl font-extrabold text-slate-900 mt-1 tracking-tight">Latest activity</h2>
+                            <p className="text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Recent Activity</p>
+                            <h2 className="text-2xl font-extrabold text-[rgb(var(--color-text-primary))] mt-1 tracking-tight">Latest activity</h2>
                         </div>
-                        <div className="rounded-full bg-slate-100 p-2.5 text-slate-500">
+                        <div className="rounded-full bg-[rgb(var(--color-surface-alt))] p-2.5 text-[rgb(var(--color-text-tertiary))]">
                             <Activity className="h-4 w-4" />
                         </div>
                     </div>
@@ -216,14 +216,14 @@ export default function UserDashboard() {
                         {activities.slice(0, 4).map((activity, index) => (
                             <div
                                 key={`${activity.action}-${index}`}
-                                className="flex items-start gap-3 rounded-xl bg-slate-50 p-3 border border-slate-100"
+                                className="flex items-start gap-3 rounded-xl bg-[rgb(var(--color-surface-alt))] p-3 border border-[rgb(var(--color-border))]"
                             >
                                 <div className="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-indigo-500" />
                                 <div className="min-w-0 flex-1">
-                                    <div className="text-xs font-extrabold text-slate-900">{activity.action}</div>
-                                    <div className="text-xs text-slate-500 mt-0.5">{activity.description}</div>
+                                    <div className="text-xs font-extrabold text-[rgb(var(--color-text-primary))]">{activity.action}</div>
+                                    <div className="text-xs text-[rgb(var(--color-text-secondary))] mt-0.5">{activity.description}</div>
                                 </div>
-                                <div className="whitespace-nowrap text-[10px] font-bold text-slate-400">
+                                <div className="whitespace-nowrap text-[10px] font-bold text-[rgb(var(--color-text-tertiary))]">
                                     {activity.created_at || 'Recently'}
                                 </div>
                             </div>
@@ -235,7 +235,7 @@ export default function UserDashboard() {
             {/* Section 4: Template Library */}
             <Card className="p-6">
                 <div className="mb-6 flex items-center justify-between">
-                    <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">Template Library</h2>
+                    <h2 className="text-2xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">Template Library</h2>
                     <Link to={ROUTES.TEMPLATES} className="flex items-center gap-1 text-xs font-bold text-indigo-600 hover:text-indigo-700 transition">
                         <span>Browse All</span> <ChevronRight className="h-4 w-4" />
                     </Link>
@@ -245,20 +245,20 @@ export default function UserDashboard() {
                     {templateCards.map((card) => (
                         <div
                             key={card.title}
-                            className="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xs hover:shadow-md transition-all duration-200"
+                            className="group overflow-hidden rounded-2xl border border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface))] shadow-xs hover:shadow-md transition-all duration-200"
                         >
                             <div className={`h-44 bg-gradient-to-br ${card.accent} p-4`}>
                                 <div className="flex h-full items-center justify-center rounded-xl border border-white/70 bg-white/40 backdrop-blur-sm group-hover:scale-105 transition-transform duration-300">
                                     <div className="grid w-full grid-cols-3 gap-2 p-3">
-                                        <div className="col-span-2 h-8 rounded bg-slate-100" />
-                                        <div className="h-8 rounded bg-slate-200" />
-                                        <div className="col-span-3 h-16 rounded bg-white/80" />
+                                        <div className="col-span-2 h-8 rounded bg-[rgb(var(--color-surface-alt))]" />
+                                        <div className="h-8 rounded bg-[rgb(var(--color-border))]" />
+                                        <div className="col-span-3 h-16 rounded bg-[rgb(var(--color-surface))]/80" />
                                     </div>
                                 </div>
                             </div>
                             <div className="p-4 space-y-1">
-                                <div className="text-sm font-extrabold text-slate-900 group-hover:text-indigo-600 transition">{card.title}</div>
-                                <div className="text-xs font-semibold text-slate-400">{card.subtitle}</div>
+                                <div className="text-sm font-extrabold text-[rgb(var(--color-text-primary))] group-hover:text-indigo-600 transition">{card.title}</div>
+                                <div className="text-xs font-semibold text-[rgb(var(--color-text-tertiary))]">{card.subtitle}</div>
                             </div>
                         </div>
                     ))}

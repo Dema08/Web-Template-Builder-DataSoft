@@ -6,7 +6,7 @@ import { Outlet } from 'react-router-dom';
  */
 export default function BuilderLayout() {
     return (
-        <div className="h-screen w-screen overflow-hidden bg-white">
+        <div className="h-screen w-screen overflow-hidden bg-[rgb(var(--color-surface))]">
             <Outlet />
         </div>
     );

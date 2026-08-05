@@ -30,38 +30,55 @@
     --shadow-blue: 0 4px 20px 0 rgb(37 99 246 / 0.12);
 }
 
+.dark {
+    --color-surface: 15, 23, 42;      /* slate-900 */
+    --color-surface-alt: 30, 41, 59;  /* slate-800 */
+    --color-surface-elevated: 30, 41, 59; /* slate-800 */
+    --color-border: 51, 65, 85;       /* slate-700 */
+    --color-border-soft: 71, 85, 105; /* slate-600 */
+    --color-text-primary: 248, 250, 252; /* slate-50 */
+    --color-text-secondary: 148, 163, 184; /* slate-400 */
+    --color-text-tertiary: 100, 116, 139;  /* slate-500 */
+    --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.2);
+    --shadow-elevated: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3), 0 8px 16px -4px rgb(0 0 0 / 0.2);
+    --shadow-blue: 0 4px 20px 0 rgb(37 99 246 / 0.25);
+}
+
 /* Apply the font family globally */
 html, body {
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-color: rgb(var(--color-surface));
+    color: rgb(var(--color-text-primary));
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* ============================================================
  * Modern Surface & Card Styles
  * ========================================================= */
 .ds-surface {
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
+    background-color: rgb(var(--color-surface));
+    border: 1px solid rgb(var(--color-border));
     box-shadow: var(--shadow-card);
 }
 
 .ds-surface-elevated {
-    background-color: var(--color-surface-elevated);
-    border: 1px solid var(--color-border-soft);
+    background-color: rgb(var(--color-surface-elevated));
+    border: 1px solid rgb(var(--color-border-soft));
     box-shadow: var(--shadow-elevated);
 }
 
 .ds-card {
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
+    background-color: rgb(var(--color-surface));
+    border: 1px solid rgb(var(--color-border));
     box-shadow: var(--shadow-card);
     border-radius: 1.25rem;
 }
 
 .ds-card-elevated {
-    background-color: var(--color-surface-elevated);
-    border: 1px solid var(--color-border-soft);
+    background-color: rgb(var(--color-surface-elevated));
+    border: 1px solid rgb(var(--color-border-soft));
     box-shadow: var(--shadow-elevated);
     border-radius: 1.25rem;
 }
@@ -117,13 +134,13 @@ html, body {
  * Typography Enhancements
  * ========================================================= */
 .ds-heading {
-    color: var(--color-text-primary);
+    color: rgb(var(--color-text-primary));
     font-weight: 800;
     letter-spacing: -0.025em;
 }
 
 .ds-subheading {
-    color: var(--color-text-secondary);
+    color: rgb(var(--color-text-secondary));
     font-weight: 600;
     letter-spacing: -0.01em;
 }
@@ -171,12 +188,12 @@ html, body {
 .ds-input {
     width: 100%;
     border-radius: 0.75rem;
-    border: 1px solid rgb(226 232 240);
-    background-color: rgb(255 255 255);
+    border: 1px solid rgb(var(--color-border));
+    background-color: rgb(var(--color-surface));
     padding: 0.625rem 0.875rem 0.625rem 0.875rem;
     font-size: 0.75rem;
     line-height: 1.25rem;
-    color: rgb(51 65 85);
+    color: rgb(var(--color-text-primary));
 }
 
 .ds-input:focus {

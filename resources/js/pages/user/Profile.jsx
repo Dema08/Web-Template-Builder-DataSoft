@@ -163,10 +163,10 @@ export default function Profile() {
         <div className="mx-auto max-w-6xl p-6 lg:p-8 space-y-6">
             <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
                 <div>
-                    <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">User Profile</h1>
-                    <p className="text-sm text-slate-500">Manage your personal account details and website identity.</p>
+                    <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">User Profile</h1>
+                    <p className="text-sm text-[rgb(var(--color-text-secondary))]">Manage your personal account details and website identity.</p>
                 </div>
-                <div className="inline-flex items-center gap-2 rounded-full bg-indigo-50 px-3.5 py-1 text-xs font-bold text-indigo-700">
+                <div className="inline-flex items-center gap-2 rounded-full bg-indigo-100 px-3.5 py-1 text-xs font-bold text-indigo-900 dark:bg-indigo-900/30 dark:text-indigo-200">
                     <Shield className="h-3.5 w-3.5" />
                     DataSoft User Profile
                 </div>
@@ -203,9 +203,9 @@ export default function Profile() {
                         </div>
 
                         <div className="min-w-0">
-                            <p className="text-lg font-extrabold text-slate-900">{profile?.name || 'User'}</p>
-                            <p className="text-sm text-slate-500">{profile?.email || 'email@example.com'}</p>
-                            <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-extrabold text-slate-700 uppercase tracking-wider">
+                            <p className="text-lg font-extrabold text-[rgb(var(--color-text-primary))]">{profile?.name || 'User'}</p>
+                            <p className="text-sm text-[rgb(var(--color-text-secondary))]">{profile?.email || 'email@example.com'}</p>
+                            <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-[rgb(var(--color-surface-alt))] px-2.5 py-1 text-xs font-extrabold text-[rgb(var(--color-text-primary))] uppercase tracking-wider">
                                 {profile?.role || 'user'}
                             </span>
                         </div>
@@ -259,7 +259,7 @@ export default function Profile() {
                     <Card className="p-6">
                         <div className="mb-4 flex items-center gap-2">
                             <Shield className="h-5 w-5 text-indigo-600" />
-                            <h2 className="text-lg font-bold text-slate-900">Change Password</h2>
+                            <h2 className="text-lg font-bold text-[rgb(var(--color-text-primary))]">Change Password</h2>
                         </div>
 
                         <form onSubmit={passwordForm.handleSubmit(onPasswordSubmit)} className="space-y-4">
@@ -307,27 +307,27 @@ export default function Profile() {
                     <Card className="p-6">
                         <div className="mb-4 flex items-center gap-2">
                             <Globe className="h-5 w-5 text-indigo-600" />
-                            <h2 className="text-lg font-bold text-slate-900">Website Summary</h2>
+                            <h2 className="text-lg font-bold text-[rgb(var(--color-text-primary))]">Website Summary</h2>
                         </div>
 
                         <div className="space-y-3 text-sm">
                             <div className="flex justify-between gap-4">
-                                <span className="text-slate-500">Website Name</span>
-                                <span className="font-bold text-slate-900">{websiteSummary.name}</span>
+                                <span className="text-[rgb(var(--color-text-secondary))]">Website Name</span>
+                                <span className="font-bold text-[rgb(var(--color-text-primary))]">{websiteSummary.name}</span>
                             </div>
                             <div className="flex justify-between gap-4">
-                                <span className="text-slate-500">Template</span>
-                                <span className="font-bold text-slate-900">{websiteSummary.template}</span>
+                                <span className="text-[rgb(var(--color-text-secondary))]">Template</span>
+                                <span className="font-bold text-[rgb(var(--color-text-primary))]">{websiteSummary.template}</span>
                             </div>
                             <div className="flex justify-between gap-4 items-center">
-                                <span className="text-slate-500">Status</span>
+                                <span className="text-[rgb(var(--color-text-secondary))]">Status</span>
                                 <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700">
                                     {websiteSummary.status}
                                 </span>
                             </div>
                             <div className="flex justify-between gap-4">
-                                <span className="text-slate-500">Slug</span>
-                                <span className="font-bold text-slate-900 font-mono">{websiteSummary.slug}</span>
+                                <span className="text-[rgb(var(--color-text-secondary))]">Slug</span>
+                                <span className="font-bold text-[rgb(var(--color-text-primary))] font-mono">{websiteSummary.slug}</span>
                             </div>
                         </div>
                     </Card>

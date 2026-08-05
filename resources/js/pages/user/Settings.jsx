@@ -1,14 +1,24 @@
-import { useState } from 'react';
-import { Bell, BellOff, Globe, Shield, Save } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Bell, BellOff, Shield, Save, Sun, Moon } from 'lucide-react';
 import { Card, Button, Spinner } from '@components/ui';
 import { toast } from '@store';
 
 export default function Settings() {
     const [notifications, setNotifications] = useState(true);
-    const [darkMode, setDarkMode] = useState(false);
-    const [language, setLanguage] = useState('en');
-    const [timezone, setTimezone] = useState('Asia/Jakarta');
+    const [darkMode, setDarkMode] = useState(() => {
+        return localStorage.getItem('theme') === 'dark';
+    });
     const [isSaving, setIsSaving] = useState(false);
+
+    useEffect(() => {
+        if (darkMode) {
+            document.documentElement.classList.add('dark');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+            localStorage.setItem('theme', 'light');
+        }
+    }, [darkMode]);
 
     const handleSave = async (e) => {
         e.preventDefault();
@@ -28,27 +38,27 @@ export default function Settings() {
         <div className="max-w-3xl mx-auto p-6 lg:p-8 space-y-8">
             {/* Page Header */}
             <div>
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-bold mb-2">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-100 text-indigo-900 text-xs font-bold mb-2 dark:bg-indigo-900/40 dark:text-indigo-100">
                     <Shield className="h-3.5 w-3.5" />
                     <span>Account Settings</span>
                 </div>
-                <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Settings</h1>
-                <p className="text-sm text-slate-500 mt-1">
-                    Manage your account preferences, notification controls, and language settings.
+                <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">Settings</h1>
+                <p className="text-sm text-[rgb(var(--color-text-secondary))] mt-1">
+                    Manage your account preferences and notification controls.
                 </p>
             </div>
 
             <form onSubmit={handleSave} className="space-y-6">
                 {/* Preferences Section */}
                 <Card className="p-6 sm:p-8 space-y-6">
-                    <h2 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
+                    <h2 className="text-base font-extrabold text-[rgb(var(--color-text-primary))] flex items-center gap-2">
                         <Bell className="h-4 w-4 text-indigo-600" /> Notifications
                     </h2>
 
-                    <div className="flex items-center justify-between py-4 border-b border-slate-100">
+                    <div className="flex items-center justify-between py-4 border-b border-[rgb(var(--color-border))]">
                         <div>
-                            <p className="text-sm font-bold text-slate-900">Email Notifications</p>
-                            <p className="text-xs text-slate-500 mt-0.5">Receive weekly activity and update notifications by email.</p>
+                            <p className="text-sm font-bold text-[rgb(var(--color-text-primary))]">Email Notifications</p>
+                            <p className="text-xs text-[rgb(var(--color-text-secondary))] mt-0.5">Receive weekly activity and update notifications by email.</p>
                         </div>
                         <label className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none cursor-pointer">
                             <input
@@ -57,7 +67,7 @@ export default function Settings() {
                                 onChange={(e) => setNotifications(e.target.checked)}
                                 className="sr-only"
                             />
-                            <span className="absolute inset-0 rounded-full bg-slate-300" />
+                            <span className="absolute inset-0 rounded-full bg-slate-300 dark:bg-slate-600" />
                             <span
                                 className={`absolute top-1 left-1 h-4 w-4 transform rounded-full bg-white transition ${
                                     notifications ? 'translate-x-5 bg-indigo-600' : ''
@@ -65,11 +75,18 @@ export default function Settings() {
                               />
                         </label>
                     </div>
+                </Card>
+
+                {/* Appearance Section */}
+                <Card className="p-6 sm:p-8 space-y-6">
+                    <h2 className="text-base font-extrabold text-[rgb(var(--color-text-primary))] flex items-center gap-2">
+                        {darkMode ? <Moon className="h-4 w-4 text-indigo-600" /> : <Sun className="h-4 w-4 text-indigo-600" />} Appearance
+                    </h2>
 
                     <div className="flex items-center justify-between py-2">
                         <div>
-                            <p className="text-sm font-bold text-slate-900">Push / Browser Notifications</p>
-                            <p className="text-xs text-slate-500 mt-0.5">Enable web push notifications for real-time updates.</p>
+                            <p className="text-sm font-bold text-[rgb(var(--color-text-primary))]">Dark Mode</p>
+                            <p className="text-xs text-[rgb(var(--color-text-secondary))] mt-0.5">Switch between light and dark theme</p>
                         </div>
                         <label className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none cursor-pointer">
                             <input
@@ -78,50 +95,13 @@ export default function Settings() {
                                 onChange={(e) => setDarkMode(e.target.checked)}
                                 className="sr-only"
                             />
-                            <span className="absolute inset-0 rounded-full bg-slate-300" />
+                            <span className="absolute inset-0 rounded-full bg-slate-300 dark:bg-slate-600" />
                             <span
                                 className={`absolute top-1 left-1 h-4 w-4 transform rounded-full bg-white transition ${
                                     darkMode ? 'translate-x-5 bg-indigo-600' : ''
                                 }`}
                               />
                         </label>
-                    </div>
-                </Card>
-
-                {/* Language & Region */}
-                <Card className="p-6 sm:p-8 space-y-6">
-                    <h2 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
-                        <Globe className="h-4 w-4 text-indigo-600" /> Language & Region
-                    </h2>
-
-                    <div className="grid gap-5 sm:grid-cols-2">
-                        <div>
-                            <label className="block text-xs font-bold text-slate-700 mb-1.5">Language</label>
-                            <select
-                                value={language}
-                                onChange={(e) => setLanguage(e.target.value)}
-                                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input"
-                            >
-                                <option value="en">English (US)</option>
-                                <option value="id">Bahasa Indonesia</option>
-                                <option value="es">Español</option>
-                                <option value="fr">Français</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label className="block text-xs font-bold text-slate-700 mb-1.5">Timezone</label>
-                            <select
-                                value={timezone}
-                                onChange={(e) => setTimezone(e.target.value)}
-                                className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input"
-                            >
-                                <option value="Asia/Jakarta">Asia/Jakarta (UTC+7)</option>
-                                <option value="UTC">UTC</option>
-                                <option value="America/New_York">America/New_York (UTC-5)</option>
-                                <option value="Europe/London">Europe/London (UTC+0)</option>
-                            </select>
-                        </div>
                     </div>
                 </Card>
 

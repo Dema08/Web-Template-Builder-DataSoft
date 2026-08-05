@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import { Component, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
@@ -87,6 +87,15 @@ function SessionHydrator() {
 }
 
 function App() {
+    useEffect(() => {
+        const theme = localStorage.getItem('theme');
+        if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    }, []);
+
     return (
         <QueryClientProvider client={queryClient}>
             <SessionHydrator />
