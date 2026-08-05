@@ -14,6 +14,9 @@ export const API_VERSION = import.meta.env.VITE_API_VERSION || 'v1';
 export const ROUTES = {
     LOGIN: '/login',
     REGISTER: '/register',
+    FORGOT_PASSWORD: '/forgot-password',
+    VERIFY_OTP: '/verify-otp',
+    RESET_PASSWORD: '/reset-password',
     DASHBOARD: '/dashboard',
     WEBSITES: '/websites',
     TEMPLATES: '/templates',

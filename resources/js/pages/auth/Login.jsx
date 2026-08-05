@@ -95,9 +95,9 @@ export default function Login() {
                                 <label className="block text-xs font-semibold text-gray-700">
                                     Password
                                 </label>
-                                <a href="#forgot" onClick={(e) => e.preventDefault()} className="text-xs font-medium text-blue-600 hover:text-blue-700">
+                                <Link to={ROUTES.FORGOT_PASSWORD} className="text-xs font-medium text-blue-600 hover:text-blue-700">
                                     Forgot Password?
-                                </a>
+                                </Link>
                             </div>
                             <div className="relative">
                                 <input

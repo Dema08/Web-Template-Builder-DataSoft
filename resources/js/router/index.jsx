@@ -1,23 +1,26 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AppLayout, GuestLayout, BuilderLayout } from '@layouts';
-    import {
-        Login,
-        Register,
-        Dashboard,
-        Websites,
-        Templates,
-        Builder,
-        Settings,
-        Profile,
-        AdminDashboard,
-        AdminUsers,
-        AdminWebsites,
-        AdminTemplates,
-        AdminCategories,
-        AdminAnalytics,
-        AdminSettings,
-        Onboarding,
-    } from '@pages';
+import {
+            Login,
+            Register,
+            ForgotPassword,
+            VerifyOtp,
+            ResetPassword,
+            Dashboard,
+            Websites,
+            Templates,
+            Builder,
+            Settings,
+            Profile,
+            AdminDashboard,
+            AdminUsers,
+            AdminWebsites,
+            AdminTemplates,
+            AdminCategories,
+            AdminAnalytics,
+            AdminSettings,
+            Onboarding,
+        } from '@pages';
 import { ProtectedRoute, GuestRoute } from './guards';
 import { ROUTES } from '@constants';
 
@@ -35,6 +38,9 @@ export default function AppRouter() {
                 >
                     <Route path={ROUTES.LOGIN} element={<Login />} />
                     <Route path={ROUTES.REGISTER} element={<Register />} />
+                    <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
+                    <Route path={ROUTES.VERIFY_OTP} element={<VerifyOtp />} />
+                    <Route path={ROUTES.RESET_PASSWORD} element={<ResetPassword />} />
                 </Route>
 
                 {/* Authenticated app routes */}

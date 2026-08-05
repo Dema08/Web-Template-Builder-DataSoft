@@ -18,6 +18,9 @@ export { default as Onboarding } from './user/Onboarding';
 // Auth Pages
 export { default as Login } from './auth/Login';
 export { default as Register } from './auth/Register';
+export { default as ForgotPassword } from './auth/ForgotPassword';
+export { default as VerifyOtp } from './auth/VerifyOtp';
+export { default as ResetPassword } from './auth/ResetPassword';
 
 // Builder Page
 export { default as Builder } from './builder/Builder';
