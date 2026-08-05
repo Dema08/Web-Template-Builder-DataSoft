@@ -18,7 +18,7 @@ class OnboardingController extends Controller
     {
         $categories = $this->onboardingService->getCategories();
 
-        return ApiResponse::success('Categories retrieved successfully.', $categories);
+        return ApiResponse::success($categories, 'Categories retrieved successfully.');
     }
 
     public function getTemplatesByCategory(int $categoryId, Request $request): JsonResponse
@@ -28,7 +28,10 @@ class OnboardingController extends Controller
 
         $result = $this->onboardingService->getTemplatesByCategory($categoryId, $skip, $take);
 
-        return ApiResponse::success('Templates retrieved successfully.', $result['data'], $result['meta']);
+        return ApiResponse::success([
+            'data' => $result['data'],
+            'meta' => $result['meta'],
+        ], 'Templates retrieved successfully.');
     }
 
     public function getTemplate(int $id): JsonResponse
@@ -39,7 +42,7 @@ class OnboardingController extends Controller
             return ApiResponse::notFound('Template not found.');
         }
 
-        return ApiResponse::success('Template retrieved successfully.', new TemplateResource($template));
+        return ApiResponse::success(new TemplateResource($template), 'Template retrieved successfully.');
     }
 
     public function checkSlug(Request $request): JsonResponse
@@ -50,7 +53,7 @@ class OnboardingController extends Controller
 
         $result = $this->onboardingService->checkSlug($request->input('slug'));
 
-        return ApiResponse::success('Slug check completed.', $result);
+        return ApiResponse::success($result, 'Slug check completed.');
     }
 
     public function createWebsite(Request $request): JsonResponse
@@ -63,6 +66,6 @@ class OnboardingController extends Controller
 
         $website = $this->onboardingService->createWebsite($request->user(), $validated);
 
-        return ApiResponse::success('Website created successfully.', new WebsiteResource($website), null, 201);
+        return ApiResponse::success(new WebsiteResource($website), 'Website created successfully.', 201);
     }
 }

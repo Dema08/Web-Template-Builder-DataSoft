@@ -79,6 +79,8 @@ Route::prefix('v1')->group(function (): void {
         // Admin-only endpoints
         Route::prefix('admin')->middleware('admin')->group(function (): void {
             Route::get('/users', [App\Domains\Admin\Http\Controllers\AdminUserController::class, 'index']);
+            Route::apiResource('categories', App\Domains\Admin\Http\Controllers\AdminCategoryController::class);
+            Route::apiResource('categories.templates', App\Domains\Admin\Http\Controllers\AdminTemplateController::class);
         });
     });
 });

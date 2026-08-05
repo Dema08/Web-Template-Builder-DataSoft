@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Contracts\CategoryRepositoryInterface;
 use App\Contracts\TemplateRepositoryInterface;
 use App\Contracts\WebsiteRepositoryInterface;
+use App\DTOs\CategoryData;
 use App\DTOs\TemplateData;
 use App\DTOs\WebsiteData;
 use App\Enums\WebsiteStatus;

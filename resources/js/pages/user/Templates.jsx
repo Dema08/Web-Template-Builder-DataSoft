@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Sparkles,
@@ -14,6 +14,8 @@ import {
 import { Card, Button } from '@components/ui';
 import { ROUTES } from '@constants';
 import { toast } from '@store';
+import { useQuery } from '@tanstack/react-query';
+import { onboardingApi } from '@api';
 
 export default function Templates() {
     const navigate = useNavigate();
@@ -21,20 +23,30 @@ export default function Templates() {
     const [searchQuery, setSearchQuery] = useState('');
     const [previewModalTemplate, setPreviewModalTemplate] = useState(null);
 
+    const { data: categoriesData = [], isLoading: categoriesLoading, isError: categoriesError } = useQuery({
+        queryKey: ['user', 'categories'],
+        queryFn: async () => {
+            const data = await onboardingApi.getCategories();
+            return data || [];
+        },
+        staleTime: 5 * 60 * 1000, // 5 minutes — re-fetches if admin changes categories
+    });
+
+    const [templatesLoading] = useState(false);
+
     const categories = [
         { id: 'all', name: 'All Templates' },
-        { id: 'corporate', name: 'Corporate & Profile' },
-        { id: 'ecommerce', name: 'E-Commerce' },
-        { id: 'portfolio', name: 'Creative Portfolio' },
-        { id: 'saas', name: 'SaaS & Tech' },
-        { id: 'landing', name: 'Landing Page' },
+        ...categoriesData.map((cat) => ({
+            id: cat.id,
+            name: cat.name,
+        })),
     ];
 
-    const templates = [
+    const dummyTemplates = [
         {
             id: 'template-1',
             title: 'DataSoft Enterprise Suite',
-            category: 'corporate',
+            category: categoriesData[0]?.id || 'corporate',
             badge: 'Popular',
             rating: '4.9',
             downloads: '2.4k',
@@ -45,7 +57,7 @@ export default function Templates() {
         {
             id: 'template-2',
             title: 'Nexus Business Pro',
-            category: 'corporate',
+            category: categoriesData[0]?.id || 'corporate',
             badge: 'Featured',
             rating: '4.8',
             downloads: '1.9k',
@@ -56,7 +68,7 @@ export default function Templates() {
         {
             id: 'template-3',
             title: 'EcoStore Commerce',
-            category: 'ecommerce',
+            category: categoriesData[1]?.id || 'ecommerce',
             badge: 'New',
             rating: '4.9',
             downloads: '850',
@@ -67,7 +79,7 @@ export default function Templates() {
         {
             id: 'template-4',
             title: 'Alpha SaaS Launchpad',
-            category: 'saas',
+            category: categoriesData[3]?.id || 'saas',
             badge: 'Hot',
             rating: '5.0',
             downloads: '3.1k',
@@ -78,7 +90,7 @@ export default function Templates() {
         {
             id: 'template-5',
             title: 'Creative Studio Horizon',
-            category: 'portfolio',
+            category: categoriesData[2]?.id || 'portfolio',
             badge: 'Pro',
             rating: '4.7',
             downloads: '1.2k',
@@ -89,7 +101,7 @@ export default function Templates() {
         {
             id: 'template-6',
             title: 'Fintech Corporate Apex',
-            category: 'corporate',
+            category: categoriesData[0]?.id || 'corporate',
             badge: 'Enterprise',
             rating: '4.9',
             downloads: '1.5k',
@@ -98,6 +110,18 @@ export default function Templates() {
             features: ['Interactive Calculator', 'Team Section', 'Compliance Badges'],
         },
     ];
+
+    const templates = dummyTemplates.map((tpl) => ({
+        id: tpl.id,
+        title: tpl.title,
+        category: tpl.category,
+        badge: tpl.badge,
+        rating: tpl.rating,
+        downloads: tpl.downloads,
+        description: tpl.description,
+        image: tpl.image,
+        features: tpl.features,
+    }));
 
     const filteredTemplates = templates.filter((tpl) => {
         const matchesCat = selectedCategory === 'all' || tpl.category === selectedCategory;
@@ -111,6 +135,24 @@ export default function Templates() {
         toast.success(`Loading "${tpl.title}" template into Builder...`, 'Template Selected');
         navigate(ROUTES.BUILDER);
     };
+
+    if (categoriesLoading) {
+        return (
+            <div className="p-6 sm:p-8 max-w-7xl mx-auto">
+                <div className="text-center text-slate-500 py-12">Loading categories...</div>
+            </div>
+        );
+    }
+
+    if (categoriesError) {
+        return (
+            <div className="p-6 sm:p-8 max-w-7xl mx-auto">
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
+                    Failed to load categories. Please try refreshing the page.
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="p-6 sm:p-8 max-w-7xl mx-auto space-y-8">
@@ -159,85 +201,91 @@ export default function Templates() {
             </div>
 
             {/* Template Cards Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredTemplates.map((tpl) => (
-                    <Card
-                        key={tpl.id}
-                        className="border border-slate-200/80 hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col group"
-                    >
-                        {/* Preview Image with Hover Overlay */}
-                        <div className="relative h-52 bg-slate-100 overflow-hidden">
-                            <img
-                                src={tpl.image}
-                                alt={tpl.title}
-                                className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-                            />
-                            <div className="absolute top-3 left-3 flex items-center gap-2">
-                                <span className="px-2.5 py-1 rounded-full bg-slate-900/80 text-white text-[10px] font-extrabold uppercase tracking-wider backdrop-blur-md">
-                                    {tpl.badge}
-                                </span>
+            {templatesLoading ? (
+                <div className="text-center text-slate-500 py-12">Loading templates...</div>
+            ) : filteredTemplates.length === 0 ? (
+                <div className="text-center text-slate-500 py-12">No templates found.</div>
+            ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {filteredTemplates.map((tpl) => (
+                        <Card
+                            key={tpl.id}
+                            className="border border-slate-200/80 hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col group"
+                        >
+                            {/* Preview Image with Hover Overlay */}
+                            <div className="relative h-52 bg-slate-100 overflow-hidden">
+                                <img
+                                    src={tpl.image}
+                                    alt={tpl.title}
+                                    className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                                />
+                                <div className="absolute top-3 left-3 flex items-center gap-2">
+                                    <span className="px-2.5 py-1 rounded-full bg-slate-900/80 text-white text-[10px] font-extrabold uppercase tracking-wider backdrop-blur-md">
+                                        {tpl.badge}
+                                    </span>
+                                </div>
+
+                                <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-md px-2 py-0.5 rounded-full flex items-center gap-1 text-[11px] font-bold text-slate-800 shadow-xs">
+                                    <Star className="h-3 w-3 text-amber-400 fill-amber-400" />
+                                    <span>{tpl.rating}</span>
+                                </div>
+
+                                {/* Hover Overlay Buttons */}
+                                <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-xs opacity-0 group-hover:opacity-100 transition-all duration-200 flex items-center justify-center gap-3 p-4">
+                                    <button
+                                        type="button"
+                                        onClick={() => setPreviewModalTemplate(tpl)}
+                                        className="px-4 py-2.5 bg-white text-slate-900 font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-lg hover:bg-slate-100 transition"
+                                    >
+                                        <Eye className="h-3.5 w-3.5" />
+                                        Preview
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => handleUseTemplate(tpl)}
+                                        className="px-4 py-2.5 bg-indigo-600 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-lg hover:bg-indigo-700 transition"
+                                    >
+                                        <UseTemplateIcon className="h-3.5 w-3.5" />
+                                        Use Template
+                                    </button>
+                                </div>
                             </div>
 
-                            <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-md px-2 py-0.5 rounded-full flex items-center gap-1 text-[11px] font-bold text-slate-800 shadow-xs">
-                                <Star className="h-3 w-3 text-amber-400 fill-amber-400" />
-                                <span>{tpl.rating}</span>
-                            </div>
+                            {/* Content */}
+                            <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
+                                <div>
+                                    <h3 className="text-base font-extrabold text-slate-900 group-hover:text-indigo-600 transition">
+                                        {tpl.title}
+                                    </h3>
+                                    <p className="text-xs text-slate-500 mt-1.5 leading-relaxed line-clamp-2">
+                                        {tpl.description}
+                                    </p>
+                                </div>
 
-                            {/* Hover Overlay Buttons */}
-                            <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-xs opacity-0 group-hover:opacity-100 transition-all duration-200 flex items-center justify-center gap-3 p-4">
-                                <button
-                                    type="button"
-                                    onClick={() => setPreviewModalTemplate(tpl)}
-                                    className="px-4 py-2.5 bg-white text-slate-900 font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-lg hover:bg-slate-100 transition"
-                                >
-                                    <Eye className="h-3.5 w-3.5" />
-                                    Preview
-                                </button>
-                                <button
-                                    type="button"
+                                {/* Key Features Pill */}
+                                <div className="space-y-1.5 pt-2 border-t border-slate-100">
+                                    {tpl.features.map((feat) => (
+                                        <div key={feat} className="flex items-center gap-2 text-[11px] text-slate-600 font-medium">
+                                            <Check className="h-3.5 w-3.5 text-indigo-600 shrink-0" />
+                                            <span>{feat}</span>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {/* Footer Action */}
+                                <Button
                                     onClick={() => handleUseTemplate(tpl)}
-                                    className="px-4 py-2.5 bg-indigo-600 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-lg hover:bg-indigo-700 transition"
+                                    className="w-full py-2.5 px-4 bg-slate-50 hover:bg-indigo-50 hover:text-indigo-600 border border-slate-200/80 rounded-xl text-xs font-bold text-slate-700 transition flex items-center justify-center gap-2"
+                                    variant="ghost"
                                 >
-                                    <UseTemplateIcon className="h-3.5 w-3.5" />
-                                    Use Template
-                                </button>
+                                    <span>Customize in DataSoft Builder</span>
+                                    <ArrowRight className="h-3.5 w-3.5" />
+                                </Button>
                             </div>
-                        </div>
-
-                        {/* Content */}
-                        <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
-                            <div>
-                                <h3 className="text-base font-extrabold text-slate-900 group-hover:text-indigo-600 transition">
-                                    {tpl.title}
-                                </h3>
-                                <p className="text-xs text-slate-500 mt-1.5 leading-relaxed line-clamp-2">
-                                    {tpl.description}
-                                </p>
-                            </div>
-
-                            {/* Key Features Pill */}
-                            <div className="space-y-1.5 pt-2 border-t border-slate-100">
-                                {tpl.features.map((feat) => (
-                                    <div key={feat} className="flex items-center gap-2 text-[11px] text-slate-600 font-medium">
-                                        <Check className="h-3.5 w-3.5 text-indigo-600 shrink-0" />
-                                        <span>{feat}</span>
-                                    </div>
-                                ))}
-                            </div>
-
-                            {/* Footer Action */}
-                            <Button
-                                onClick={() => handleUseTemplate(tpl)}
-                                className="w-full py-2.5 px-4 bg-slate-50 hover:bg-indigo-50 hover:text-indigo-600 border border-slate-200/80 rounded-xl text-xs font-bold text-slate-700 transition flex items-center justify-center gap-2"
-                                variant="ghost"
-                            >
-                                <span>Customize in DataSoft Builder</span>
-                                <ArrowRight className="h-3.5 w-3.5" />
-                            </Button>
-                        </div>
-                    </Card>
-                ))}
-            </div>
+                        </Card>
+                    ))}
+                </div>
+            )}
 
             {/* Template Live Preview Modal */}
             {previewModalTemplate && (
