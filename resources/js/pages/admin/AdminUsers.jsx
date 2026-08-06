@@ -1,11 +1,17 @@
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { Users, Search, Plus, Shield, ShieldCheck, Mail, Calendar, Edit2, Trash2, KeyRound } from 'lucide-react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Users, Search, Plus, Shield, ShieldCheck, Edit2, Trash2, X, Check } from 'lucide-react';
 import { http } from '@api';
 import { Spinner, Alert, Card } from '@components/ui';
+import { toast } from '@store';
 
 export default function AdminUsers() {
     const [search, setSearch] = useState('');
+    const [selectedUser, setSelectedUser] = useState(null);
+    const [selectedRole, setSelectedRole] = useState('user');
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+    const queryClient = useQueryClient();
 
     const { data: users, isLoading, isError } = useQuery({
         queryKey: ['admin-users'],
@@ -14,6 +20,58 @@ export default function AdminUsers() {
             return data.data;
         },
     });
+
+    // Mutation to update user role
+    const updateRoleMutation = useMutation({
+        mutationFn: async ({ userId, role }) => {
+            const { data } = await http.patch(`/admin/users/${userId}/role`, { role });
+            return data;
+        },
+        onSuccess: (data) => {
+            queryClient.invalidateQueries(['admin-users']);
+            toast.success(data?.message || 'Role user berhasil diperbarui!', 'Role Changed');
+            setIsEditModalOpen(false);
+            setSelectedUser(null);
+        },
+        onError: (error) => {
+            const msg = error?.response?.data?.message || 'Gagal memperbarui role user.';
+            toast.error(msg, 'Error Update Role');
+        },
+    });
+
+    // Mutation to delete user
+    const deleteUserMutation = useMutation({
+        mutationFn: async (userId) => {
+            const { data } = await http.delete(`/admin/users/${userId}`);
+            return data;
+        },
+        onSuccess: (data) => {
+            queryClient.invalidateQueries(['admin-users']);
+            toast.success(data?.message || 'Akun user berhasil dihapus dari sistem.', 'User Deleted');
+        },
+        onError: (error) => {
+            const msg = error?.response?.data?.message || 'Gagal menghapus user.';
+            toast.error(msg, 'Error Delete User');
+        },
+    });
+
+    const handleOpenEditRole = (user) => {
+        setSelectedUser(user);
+        setSelectedRole(user.role || 'user');
+        setIsEditModalOpen(true);
+    };
+
+    const handleSaveRole = (e) => {
+        e.preventDefault();
+        if (!selectedUser) return;
+        updateRoleMutation.mutate({ userId: selectedUser.id, role: selectedRole });
+    };
+
+    const handleDeleteUser = (user) => {
+        if (confirm(`ADMIN ACTION: Apakah Anda yakin ingin menghapus permanen akun "${user.name}" (${user.email})?`)) {
+            deleteUserMutation.mutate(user.id);
+        }
+    };
 
     const filteredUsers = users?.filter(
         (u) =>
@@ -38,6 +96,7 @@ export default function AdminUsers() {
 
                 <button
                     type="button"
+                    onClick={() => toast.info('Pendaftaran user baru dapat dilakukan melalui halaman register.', 'User Registration')}
                     className="flex items-center justify-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-sm shadow-md shadow-indigo-600/20 transition-all"
                 >
                     <Plus className="h-4 w-4 stroke-[3]" />
@@ -122,24 +181,23 @@ export default function AdminUsers() {
                                             </td>
                                             <td className="py-4 px-6 text-right">
                                                 <div className="flex items-center justify-end gap-1">
+                                                    {/* Action 1: Edit Role */}
                                                     <button
                                                         type="button"
-                                                        className="p-1.5 text-[rgb(var(--color-text-tertiary))] hover:text-indigo-600 rounded-xl hover:bg-indigo-50 dark:hover:bg-indigo-950/30 transition"
-                                                        title="Edit User"
+                                                        onClick={() => handleOpenEditRole(u)}
+                                                        className="p-2 text-[rgb(var(--color-text-tertiary))] hover:text-indigo-600 rounded-xl hover:bg-indigo-50 dark:hover:bg-indigo-950/30 transition flex items-center gap-1"
+                                                        title="Edit Role User / Jadikan Admin"
                                                     >
                                                         <Edit2 className="h-4 w-4" />
                                                     </button>
+
+                                                    {/* Action 2: Delete User */}
                                                     <button
                                                         type="button"
-                                                        className="p-1.5 text-[rgb(var(--color-text-tertiary))] hover:text-amber-600 rounded-xl hover:bg-amber-50 dark:hover:bg-amber-950/30 transition"
-                                                        title="Reset Password"
-                                                    >
-                                                        <KeyRound className="h-4 w-4" />
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        className="p-1.5 text-[rgb(var(--color-text-tertiary))] hover:text-red-600 rounded-xl hover:bg-red-50 dark:hover:bg-red-950/30 transition"
-                                                        title="Delete User"
+                                                        onClick={() => handleDeleteUser(u)}
+                                                        disabled={deleteUserMutation.isPending}
+                                                        className="p-2 text-[rgb(var(--color-text-tertiary))] hover:text-red-600 rounded-xl hover:bg-red-50 dark:hover:bg-red-950/30 transition flex items-center gap-1 disabled:opacity-50"
+                                                        title="Delete User Account"
                                                     >
                                                         <Trash2 className="h-4 w-4" />
                                                     </button>
@@ -153,6 +211,79 @@ export default function AdminUsers() {
                     </div>
                 )}
             </Card>
+
+            {/* Edit Role Modal */}
+            {isEditModalOpen && selectedUser && (
+                <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+                    <div className="bg-[rgb(var(--color-surface))] rounded-3xl max-w-md w-full p-6 shadow-2xl border border-[rgb(var(--color-border))] space-y-5 animate-in fade-in zoom-in-95 duration-150">
+                        <div className="flex items-center justify-between border-b border-[rgb(var(--color-border))] pb-3">
+                            <div className="flex items-center gap-2">
+                                <ShieldCheck className="h-5 w-5 text-indigo-600" />
+                                <h3 className="text-base font-extrabold text-[rgb(var(--color-text-primary))]">Edit Role Akun</h3>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setIsEditModalOpen(false);
+                                    setSelectedUser(null);
+                                }}
+                                className="text-[rgb(var(--color-text-tertiary))] hover:text-[rgb(var(--color-text-primary))] p-1 rounded-lg hover:bg-[rgb(var(--color-surface-alt))] transition"
+                            >
+                                <X className="h-5 w-5" />
+                            </button>
+                        </div>
+
+                        <form onSubmit={handleSaveRole} className="space-y-4">
+                            <div className="p-3 bg-[rgb(var(--color-surface-alt))] rounded-2xl border border-[rgb(var(--color-border))]">
+                                <p className="text-sm font-bold text-[rgb(var(--color-text-primary))]">{selectedUser.name}</p>
+                                <p className="text-xs text-[rgb(var(--color-text-secondary))]">{selectedUser.email}</p>
+                            </div>
+
+                            <div>
+                                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Pilih Role User</label>
+                                <select
+                                    value={selectedRole}
+                                    onChange={(e) => setSelectedRole(e.target.value)}
+                                    className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 font-semibold"
+                                >
+                                    <option value="user">User (Pengguna Biasa)</option>
+                                    <option value="admin">Admin (Administrator Sistem)</option>
+                                </select>
+                                <p className="mt-1 text-[10px] text-[rgb(var(--color-text-tertiary))]">
+                                    Pilih &apos;Admin&apos; untuk menjadikan akun ini sebagai Administrator dengan akses penuh.
+                                </p>
+                            </div>
+
+                            <div className="pt-4 flex items-center justify-end gap-3 border-t border-[rgb(var(--color-border))]">
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setIsEditModalOpen(false);
+                                        setSelectedUser(null);
+                                    }}
+                                    className="px-4 py-2 text-xs font-bold text-[rgb(var(--color-text-secondary))] hover:bg-[rgb(var(--color-surface-alt))] rounded-xl transition"
+                                >
+                                    Batal
+                                </button>
+                                <button
+                                    type="submit"
+                                    disabled={updateRoleMutation.isPending}
+                                    className="px-5 py-2 text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-md shadow-indigo-600/20 transition flex items-center gap-1.5 disabled:opacity-50"
+                                >
+                                    {updateRoleMutation.isPending ? (
+                                        <span>Menyimpan...</span>
+                                    ) : (
+                                        <>
+                                            <Check className="h-4 w-4" />
+                                            <span>Simpan Role</span>
+                                        </>
+                                    )}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
