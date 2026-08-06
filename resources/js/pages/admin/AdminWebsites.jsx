@@ -101,12 +101,12 @@ export default function AdminWebsites() {
             {/* Admin Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-bold mb-2">
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 text-xs font-bold mb-2">
                         <Shield className="h-3.5 w-3.5" />
                         <span>Platform Administration</span>
                     </div>
-                    <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">All Platform Websites</h1>
-                    <p className="text-sm text-slate-500 mt-1">
+                    <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">All Platform Websites</h1>
+                    <p className="text-sm text-[rgb(var(--color-text-secondary))] mt-1">
                         Review, manage, and moderate all websites created across the DataSoft ecosystem.
                     </p>
                 </div>
@@ -115,24 +115,24 @@ export default function AdminWebsites() {
             {/* Admin KPI Stats */}
             <div className="grid grid-cols-1 sm:grid-cols-4 gap-5">
                 <Card className="p-5">
-                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Hosted Sites</p>
-                    <p className="text-2xl font-extrabold text-slate-900 mt-1">{websitesList.length}</p>
+                    <p className="text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Total Hosted Sites</p>
+                    <p className="text-2xl font-extrabold text-[rgb(var(--color-text-primary))] mt-1">{websitesList.length}</p>
                 </Card>
                 <Card className="p-5">
-                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Published Sites</p>
-                    <p className="text-2xl font-extrabold text-emerald-600 mt-1">
+                    <p className="text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Published Sites</p>
+                    <p className="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-1">
                         {websitesList.filter((w) => w.status === 'Published').length}
                     </p>
                 </Card>
                 <Card className="p-5">
-                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Draft Sites</p>
-                    <p className="text-2xl font-extrabold text-amber-600 mt-1">
+                    <p className="text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Draft Sites</p>
+                    <p className="text-2xl font-extrabold text-amber-600 dark:text-amber-400 mt-1">
                         {websitesList.filter((w) => w.status === 'Draft').length}
                     </p>
                 </Card>
                 <Card className="p-5">
-                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Suspended Sites</p>
-                    <p className="text-2xl font-extrabold text-rose-600 mt-1">
+                    <p className="text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Suspended Sites</p>
+                    <p className="text-2xl font-extrabold text-rose-600 dark:text-rose-400 mt-1">
                         {websitesList.filter((w) => w.status === 'Suspended').length}
                     </p>
                 </Card>
@@ -142,17 +142,17 @@ export default function AdminWebsites() {
             <Card className="p-5 space-y-4">
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div className="relative w-full sm:w-80">
-                        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[rgb(var(--color-text-tertiary))]" />
                         <input
                             type="text"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             placeholder="Search by site name, domain, or owner..."
-                            className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input"
+                            className="w-full pl-10 pr-4 py-2 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] placeholder-[rgb(var(--color-text-tertiary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input"
                         />
                     </div>
 
-                    <div className="flex items-center gap-2 bg-slate-100 p-1 rounded-xl">
+                    <div className="flex items-center gap-2 bg-[rgb(var(--color-surface-alt))] p-1 rounded-xl border border-[rgb(var(--color-border))]">
                         {['all', 'published', 'draft', 'suspended'].map((st) => (
                             <button
                                 key={st}
@@ -160,8 +160,8 @@ export default function AdminWebsites() {
                                 onClick={() => setStatusFilter(st)}
                                 className={`px-3 py-1.5 rounded-lg text-xs font-bold capitalize transition ${
                                     statusFilter === st
-                                        ? 'bg-white text-slate-900 shadow-xs'
-                                        : 'text-slate-600 hover:text-slate-900'
+                                        ? 'bg-[rgb(var(--color-surface))] text-[rgb(var(--color-text-primary))] shadow-xs'
+                                        : 'text-[rgb(var(--color-text-secondary))] hover:text-[rgb(var(--color-text-primary))]'
                                 }`}
                             >
                                 {st}
@@ -171,9 +171,9 @@ export default function AdminWebsites() {
                 </div>
 
                 {/* Websites Table */}
-                <div className="overflow-x-auto border-t border-slate-100 pt-4 ds-scrollbar-thin">
-                    <table className="w-full text-left text-xs text-slate-600">
-                        <thead className="bg-slate-50 text-slate-400 font-bold uppercase tracking-wider border-b border-slate-100">
+                <div className="overflow-x-auto border-t border-[rgb(var(--color-border))] pt-4 ds-scrollbar-thin">
+                    <table className="w-full text-left text-xs text-[rgb(var(--color-text-secondary))]">
+                        <thead className="bg-[rgb(var(--color-surface-alt))] text-[rgb(var(--color-text-tertiary))] font-bold uppercase tracking-wider border-b border-[rgb(var(--color-border))]">
                             <tr>
                                 <th className="py-3.5 px-4">Website / Domain</th>
                                 <th className="py-3.5 px-4">Owner</th>
@@ -183,38 +183,38 @@ export default function AdminWebsites() {
                                 <th className="py-3.5 px-4 text-right">Admin Actions</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-slate-100 font-medium">
+                        <tbody className="divide-y divide-[rgb(var(--color-border))] font-medium">
                             {filteredWebsites.map((site) => (
-                                <tr key={site.id} className="hover:bg-slate-50/80 transition">
+                                <tr key={site.id} className="hover:bg-[rgb(var(--color-surface-alt))]/80 transition">
                                     <td className="py-4 px-4">
                                         <div className="flex items-center gap-3">
-                                            <div className="h-9 w-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">
+                                            <div className="h-9 w-9 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold">
                                                 <Globe className="h-4 w-4 stroke-[2]" />
                                             </div>
                                             <div>
-                                                <p className="font-extrabold text-slate-900">{site.name}</p>
-                                                <p className="text-[11px] text-indigo-600 font-semibold">{site.domain}</p>
+                                                <p className="font-extrabold text-[rgb(var(--color-text-primary))]">{site.name}</p>
+                                                <p className="text-[11px] text-indigo-600 dark:text-indigo-400 font-semibold">{site.domain}</p>
                                             </div>
                                         </div>
                                     </td>
 
                                     <td className="py-4 px-4">
                                         <div>
-                                            <p className="font-bold text-slate-800">{site.owner}</p>
-                                            <p className="text-[11px] text-slate-400">{site.ownerEmail}</p>
+                                            <p className="font-bold text-[rgb(var(--color-text-primary))]">{site.owner}</p>
+                                            <p className="text-[11px] text-[rgb(var(--color-text-tertiary))]">{site.ownerEmail}</p>
                                         </div>
                                     </td>
 
-                                    <td className="py-4 px-4 font-bold text-slate-700">{site.templateName}</td>
+                                    <td className="py-4 px-4 font-bold text-[rgb(var(--color-text-primary))]">{site.templateName}</td>
 
                                     <td className="py-4 px-4">
                                         <span
                                             className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold ${
                                                 site.status === 'Published'
-                                                    ? 'bg-emerald-100 text-emerald-700'
+                                                    ? 'bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300'
                                                     : site.status === 'Draft'
-                                                    ? 'bg-amber-100 text-amber-700'
-                                                    : 'bg-rose-100 text-rose-700'
+                                                    ? 'bg-amber-100 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300'
+                                                    : 'bg-rose-100 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300'
                                             }`}
                                         >
                                             <span
@@ -230,14 +230,14 @@ export default function AdminWebsites() {
                                         </span>
                                     </td>
 
-                                    <td className="py-4 px-4 font-bold text-slate-800">{site.visitors}</td>
+                                    <td className="py-4 px-4 font-bold text-[rgb(var(--color-text-primary))]">{site.visitors}</td>
 
                                     <td className="py-4 px-4 text-right">
                                         <div className="flex items-center justify-end gap-2">
                                             <button
                                                 type="button"
                                                 onClick={() => handleToggleStatus(site.id, site.status)}
-                                                className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-bold transition"
+                                                className="px-2.5 py-1 bg-[rgb(var(--color-surface-alt))] hover:bg-indigo-50 dark:hover:bg-indigo-950/40 text-[rgb(var(--color-text-primary))] hover:text-indigo-600 border border-[rgb(var(--color-border))] rounded-lg text-xs font-bold transition"
                                             >
                                                 {site.status === 'Published' ? 'Unpublish' : 'Publish'}
                                             </button>
@@ -245,7 +245,7 @@ export default function AdminWebsites() {
                                             <button
                                                 type="button"
                                                 onClick={() => handleDeleteWebsite(site.id, site.name)}
-                                                className="p-1.5 text-slate-400 hover:text-red-600 rounded-lg hover:bg-red-50 transition"
+                                                className="p-1.5 text-[rgb(var(--color-text-tertiary))] hover:text-red-600 rounded-lg hover:bg-red-50 dark:hover:bg-red-950/30 transition"
                                                 title="Delete Site"
                                             >
                                                 <Trash2 className="h-4 w-4" />

@@ -166,7 +166,7 @@ export default function Profile() {
                     <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">User Profile</h1>
                     <p className="text-sm text-[rgb(var(--color-text-secondary))]">Manage your personal account details and website identity.</p>
                 </div>
-                <div className="inline-flex items-center gap-2 rounded-full bg-indigo-100 px-3.5 py-1 text-xs font-bold text-indigo-900 dark:bg-indigo-900/30 dark:text-indigo-200">
+                <div className="inline-flex items-center gap-2 rounded-full bg-indigo-50 border border-indigo-200/60 dark:bg-indigo-950/40 dark:border-indigo-800/40 px-3.5 py-1 text-xs font-bold text-indigo-700 dark:text-indigo-300">
                     <Shield className="h-3.5 w-3.5" />
                     DataSoft User Profile
                 </div>
@@ -205,7 +205,7 @@ export default function Profile() {
                         <div className="min-w-0">
                             <p className="text-lg font-extrabold text-[rgb(var(--color-text-primary))]">{profile?.name || 'User'}</p>
                             <p className="text-sm text-[rgb(var(--color-text-secondary))]">{profile?.email || 'email@example.com'}</p>
-                            <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-[rgb(var(--color-surface-alt))] px-2.5 py-1 text-xs font-extrabold text-[rgb(var(--color-text-primary))] uppercase tracking-wider">
+                            <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] px-2.5 py-1 text-xs font-extrabold text-[rgb(var(--color-text-primary))] uppercase tracking-wider">
                                 {profile?.role || 'user'}
                             </span>
                         </div>
@@ -321,7 +321,7 @@ export default function Profile() {
                             </div>
                             <div className="flex justify-between gap-4 items-center">
                                 <span className="text-[rgb(var(--color-text-secondary))]">Status</span>
-                                <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700">
+                                <span className="rounded-full bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1 text-xs font-bold text-emerald-700 dark:text-emerald-400">
                                     {websiteSummary.status}
                                 </span>
                             </div>
@@ -333,6 +333,7 @@ export default function Profile() {
                     </Card>
                 </div>
             </div>
+
         </div>
     );
 }
