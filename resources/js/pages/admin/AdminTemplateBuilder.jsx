@@ -23,8 +23,10 @@ export default function AdminTemplateBuilder() {
   const { id } = useParams();
   const queryClient = useQueryClient();
   const [showIndustryModal, setShowIndustryModal] = useState(false);
-  const [selectedIndustrySlug, setSelectedIndustrySlug] = useState('');
+  const [selectedCategoryId, setSelectedCategoryId] = useState('');
   const [templateMode, setTemplateMode] = useState(null); // 'blank' | 'starter'
+  const [selectedCategorySlug, setSelectedCategorySlug] = useState('');
+  const [selectedCategoryName, setSelectedCategoryName] = useState('');
 
   const {
     setIndustry,
@@ -37,6 +39,7 @@ export default function AdminTemplateBuilder() {
     resetBuilder,
     saveToHistory,
     industryId,
+    industrySlug,
   } = useBuilderStore();
 
   // Fetch template if editing
@@ -69,32 +72,39 @@ export default function AdminTemplateBuilder() {
       });
 
       // Set industry if available
-      if (templateData.industry_category?.slug) {
-        setIndustry(templateData.industry_category.id);
-        setSelectedIndustrySlug(templateData.industry_category.slug);
+      if (templateData.industry_category) {
+        setIndustry(templateData.industry_category.id, templateData.industry_category.slug, templateData.industry_category.name);
+        setSelectedCategoryId(templateData.industry_category.id);
       }
     }
-  }, [templateData]);
+  }, [templateData, setTemplateId, setTemplateName, addSection, setIndustry]);
 
   const handleIndustrySelect = () => {
-    if (!selectedIndustrySlug) {
+    if (!selectedCategoryId) {
       toast.error('Please select an industry category', 'Error');
       return;
     }
 
-    const config = INDUSTRY_CONFIGS[selectedIndustrySlug] || INDUSTRY_CONFIGS.default;
-    setIndustry(config.id);
-    setShowIndustryModal(false);
-    setTemplateMode(null);
-
-    toast.success(`Industry "${config.name}" selected. Choose a template mode.`, 'Success');
+    // Type-safe comparison (handle string/number mismatch between select value and API data)
+    const selectedCategory = categoriesData?.find(c => String(c.id) === String(selectedCategoryId));
+      
+    if (selectedCategory) {
+      // Set industry in store with id, slug, and name
+      setIndustry(selectedCategory.id, selectedCategory.slug, selectedCategory.name);
+      // Show template mode modal
+      setShowIndustryModal(true);
+    } else {
+      toast.error('Category not found', 'Error');
+    }
   };
 
   const handleTemplateModeSelect = (mode) => {
     setTemplateMode(mode);
 
     if (mode === 'starter') {
-      const config = INDUSTRY_CONFIGS[selectedIndustrySlug] || INDUSTRY_CONFIGS.default;
+      // Use industrySlug from store which was set in handleIndustrySelect
+      const slug = industrySlug || 'default';
+      const config = INDUSTRY_CONFIGS[slug] || INDUSTRY_CONFIGS.default;
 
       // Add all starter sections
       config.sections.forEach((sectionConfig, index) => {
@@ -107,7 +117,15 @@ export default function AdminTemplateBuilder() {
     } else {
       toast.success('Blank template created', 'Success');
     }
+    
+    // Close modal after selection
+    setShowIndustryModal(false);
   };
+
+  // Check if category still exists when editing
+  const categoryExists = templateData?.industry_category 
+    ? categoriesData?.some(c => String(c.id) === String(templateData.industry_category.id))
+    : true;
 
   const handleBack = () => {
     if (sections.length > 0) {
@@ -188,7 +206,52 @@ export default function AdminTemplateBuilder() {
     );
   }
 
-  const industryOptions = categoriesData?.data || [];
+  // Show warning if category was deleted
+  if (templateData?.industry_category && !categoryExists && id) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <div className="max-w-2xl w-full space-y-6">
+          <div className="bg-red-50 border border-red-200 rounded-3xl p-8 shadow-lg">
+            <div className="text-center">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-100 text-red-700 text-xs font-bold mb-4">
+                <span>⚠️ Warning</span>
+              </div>
+              <h2 className="text-2xl font-extrabold text-slate-900 mb-2">
+                Category Not Available
+              </h2>
+              <p className="text-sm text-slate-600 mb-6">
+                The category <strong>"{templateData.industry_category.name}"</strong> for this template 
+                has been deleted by the administrator. You can still edit the template, but the category 
+                is no longer available for new templates.
+              </p>
+              <div className="flex gap-3 justify-center">
+                <button
+                  onClick={() => {
+                    resetBuilder();
+                    navigate('/admin/templates');
+                  }}
+                  className="px-5 py-2.5 border border-slate-300 text-slate-700 font-bold rounded-xl hover:bg-slate-50 transition"
+                >
+                  Back to Templates
+                </button>
+                <button
+                  onClick={() => {
+                    // Continue editing without category
+                    setIndustry(null, null, null);
+                  }}
+                  className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition"
+                >
+                  Continue Editing
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const industryOptions = categoriesData || [];
 
   return (
     <>
@@ -235,29 +298,26 @@ export default function AdminTemplateBuilder() {
               </div>
 
               <div className="bg-white rounded-3xl p-8 shadow-lg border border-slate-100 space-y-6">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-2">
-                    Industry Category
-                  </label>
-                  <select
-                    value={selectedIndustrySlug}
-                    onChange={(e) => setSelectedIndustrySlug(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input"
-                  >
-                    <option value="">Select an industry...</option>
-                    {industryOptions.map((cat) => (
-                      <option key={cat.id} value={cat.slug}>
-                        {cat.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-2">
+                  Industry Category
+                </label>
+                <select
+                  value={selectedCategoryId}
+                  onChange={(e) => setSelectedCategoryId(e.target.value)}
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input"
+                >
+                  <option value="">Select an industry...</option>
+                  {industryOptions.map((cat) => (
+                    <option key={cat.id} value={cat.id}>
+                      {cat.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-                <button
-                  onClick={() => {
-                    setShowIndustryModal(true);
-                    handleIndustrySelect();
-                  }}
+              <button
+                onClick={handleIndustrySelect}
                   className="w-full px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition flex items-center justify-center gap-2"
                 >
                   <FolderOpen className="h-4 w-4" />
@@ -306,7 +366,7 @@ export default function AdminTemplateBuilder() {
                 className="w-full p-4 border-2 border-slate-200 rounded-xl hover:border-indigo-300 hover:bg-indigo-50 transition text-left"
               >
                 <div className="text-sm font-bold text-slate-900">Starter Template</div>
-                <div className="text-xs text-slate-500 mt-1">Use default sections for {selectedIndustrySlug || 'selected industry'}</div>
+                <div className="text-xs text-slate-500 mt-1">Use default sections for {selectedCategoryName || 'selected industry'}</div>
               </button>
             </div>
           </div>

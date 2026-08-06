@@ -13,6 +13,8 @@ export const useBuilderStore = create((set, get) => ({
   clipboard: null,
   selectedLayers: [],
   industryId: null,
+  industrySlug: null,
+  industryName: null,
   templateId: null,
   templateName: '',
   sections: [],
@@ -22,8 +24,8 @@ export const useBuilderStore = create((set, get) => ({
   isSaving: false,
 
   // Actions
-  setIndustry: (industryId) => {
-    set({ industryId, sections: [], selectedSectionId: null, selectedComponentId: null, selectedProperty: null, selectedLayers: [] });
+  setIndustry: (industryId, industrySlug, industryName) => {
+    set({ industryId, industrySlug, industryName, sections: [], selectedSectionId: null, selectedComponentId: null, selectedProperty: null, selectedLayers: [] });
   },
 
   setTemplateId: (templateId) => {
@@ -334,6 +336,9 @@ export const useBuilderStore = create((set, get) => ({
       hoveredComponent: null,
       clipboard: null,
       selectedLayers: [],
+      industryId: null,
+      industrySlug: null,
+      industryName: null,
       templateId: null,
       templateName: '',
       sections: [],

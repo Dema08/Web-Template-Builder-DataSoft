@@ -3,9 +3,9 @@ import { getIndustryConfig } from '../../utils/industryConfigs';
 import SectionItem from './SectionItem';
 
 export default function SectionSidebar() {
-  const { industryId, sections } = useBuilderStore();
+  const { industrySlug, sections } = useBuilderStore();
 
-  const industryConfig = industryId ? getIndustryConfig('default') : null;
+  const industryConfig = industrySlug ? getIndustryConfig(industrySlug) : null;
   const availableSections = industryConfig?.sections || [];
 
   return (
@@ -26,7 +26,7 @@ export default function SectionSidebar() {
         })}
       </div>
 
-      {!industryId && (
+      {!industrySlug && (
         <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
           <p className="text-xs text-amber-800">
             Please select an industry category first to see available sections.
