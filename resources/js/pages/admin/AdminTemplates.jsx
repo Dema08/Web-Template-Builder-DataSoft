@@ -1,95 +1,211 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
     Plus,
     Search,
     Edit2,
     Trash2,
     Star,
-    Layers,
-    Shield,
-    Check,
-    Upload,
+    Archive,
+    Copy,
+    Eye,
+    MoreVertical,
+    X,
+    Loader2,
 } from 'lucide-react';
 import { Card } from '@components/ui';
 import { toast } from '@store';
+import { templateApi } from '@api';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useForm } from 'react-hook-form';
+
+const STATUS_OPTIONS = [
+    { value: '', label: 'All Status' },
+    { value: 'draft', label: 'Draft' },
+    { value: 'published', label: 'Published' },
+    { value: 'archived', label: 'Archived' },
+    { value: 'disabled', label: 'Disabled' },
+];
 
 export default function AdminTemplates() {
+    const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState('');
-    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-    const [newTitle, setNewTitle] = useState('');
-    const [newCategory, setNewCategory] = useState('corporate');
-    const [newBadge, setNewBadge] = useState('Featured');
+    const [statusFilter, setStatusFilter] = useState('');
+    const [categoryFilter, setCategoryFilter] = useState('');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [editingTemplate, setEditingTemplate] = useState(null);
+    const [previewTemplate, setPreviewTemplate] = useState(null);
+    const [actionDropdown, setActionDropdown] = useState(null);
+    const queryClient = useQueryClient();
 
-    const [templatesList, setTemplatesList] = useState([
-        {
-            id: 't-1',
-            title: 'DataSoft Enterprise Suite',
-            category: 'Corporate',
-            badge: 'Popular',
-            status: 'Active',
-            rating: '4.9',
-            image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&auto=format&fit=crop&q=80',
+    const { register, handleSubmit, reset, formState: { errors } } = useForm({
+        defaultValues: {
+            industry_category_id: '',
+            code: '',
+            name: '',
+            slug: '',
+            description: '',
+            thumbnail: '',
+            preview_image: '',
+            draft_json: '',
+            published_json: '',
+            version: '1.0.0',
+            sort_order: 0,
+            is_featured: false,
+            status: 'draft',
+        }
+    });
+
+    const { data, isLoading } = useQuery({
+        queryKey: ['admin-templates', { search: searchQuery, status: statusFilter, category: categoryFilter }],
+        queryFn: () => templateApi.getAll({
+            search: searchQuery || undefined,
+            status: statusFilter || undefined,
+            industry_category_id: categoryFilter || undefined,
+            per_page: 12,
+        }).then(res => res.data.data),
+    });
+
+    const templates = data?.data ?? [];
+
+    const createMutation = useMutation({
+        mutationFn: templateApi.create,
+        onSuccess: () => {
+            queryClient.invalidateQueries(['admin-templates']);
+            toast.success('Template created successfully', 'Success');
+            handleCloseModal();
         },
-        {
-            id: 't-2',
-            title: 'Nexus Business Pro',
-            category: 'Corporate',
-            badge: 'Featured',
-            status: 'Active',
-            rating: '4.8',
-            image: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&auto=format&fit=crop&q=80',
+        onError: (error) => {
+            toast.error(error.response?.data?.message || 'Failed to create template', 'Error');
         },
-        {
-            id: 't-3',
-            title: 'EcoStore Commerce',
-            category: 'E-Commerce',
-            badge: 'New',
-            status: 'Active',
-            rating: '4.9',
-            image: 'https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=800&auto=format&fit=crop&q=80',
+    });
+
+    const updateMutation = useMutation({
+        mutationFn: ({ id, data }) => templateApi.update(id, data),
+        onSuccess: () => {
+            queryClient.invalidateQueries(['admin-templates']);
+            toast.success('Template updated successfully', 'Success');
+            handleCloseModal();
         },
-        {
-            id: 't-4',
-            title: 'Alpha SaaS Launchpad',
-            category: 'SaaS & Tech',
-            badge: 'Hot',
-            status: 'Active',
-            rating: '5.0',
-            image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&auto=format&fit=crop&q=80',
+        onError: (error) => {
+            toast.error(error.response?.data?.message || 'Failed to update template', 'Error');
         },
-    ]);
+    });
 
-    const filteredTemplates = templatesList.filter(
-        (t) =>
-            t.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            t.category.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const deleteMutation = useMutation({
+        mutationFn: templateApi.delete,
+        onSuccess: () => {
+            queryClient.invalidateQueries(['admin-templates']);
+            toast.success('Template deleted successfully', 'Success');
+            setActionDropdown(null);
+        },
+    });
 
-    const handleAddTemplate = (e) => {
-        e.preventDefault();
-        if (!newTitle.trim()) return;
+    const publishMutation = useMutation({
+        mutationFn: templateApi.publish,
+        onSuccess: () => {
+            queryClient.invalidateQueries(['admin-templates']);
+            toast.success('Template published successfully', 'Success');
+            setActionDropdown(null);
+        },
+    });
 
-        const newTpl = {
-            id: `t-${Date.now()}`,
-            title: newTitle,
-            category: newCategory.toUpperCase(),
-            badge: newBadge,
-            status: 'Active',
-            rating: '5.0',
-            image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&auto=format&fit=crop&q=80',
-        };
+    const archiveMutation = useMutation({
+        mutationFn: templateApi.archive,
+        onSuccess: () => {
+            queryClient.invalidateQueries(['admin-templates']);
+            toast.success('Template archived successfully', 'Success');
+            setActionDropdown(null);
+        },
+    });
 
-        setTemplatesList([newTpl, ...templatesList]);
-        setIsAddModalOpen(false);
-        setNewTitle('');
-        toast.success(`Template "${newTpl.title}" added to system!`, 'Template Created');
+    const duplicateMutation = useMutation({
+        mutationFn: templateApi.duplicate,
+        onSuccess: () => {
+            queryClient.invalidateQueries(['admin-templates']);
+            toast.success('Template duplicated successfully', 'Success');
+            setActionDropdown(null);
+        },
+    });
+
+    const featuredMutation = useMutation({
+        mutationFn: templateApi.toggleFeatured,
+        onSuccess: () => {
+            queryClient.invalidateQueries(['admin-templates']);
+            setActionDropdown(null);
+        },
+    });
+
+    const handleOpenModal = (template = null) => {
+        if (template) {
+            setEditingTemplate(template);
+            reset({
+                industry_category_id: template.industry_category_id || '',
+                code: template.code || '',
+                name: template.name,
+                slug: template.slug || '',
+                description: template.description || '',
+                thumbnail: template.thumbnail || '',
+                preview_image: template.preview_image || '',
+                draft_json: typeof template.draft_json === 'object' ? JSON.stringify(template.draft_json, null, 2) : template.draft_json || '',
+                published_json: typeof template.published_json === 'object' ? JSON.stringify(template.published_json, null, 2) : template.published_json || '',
+                version: template.version || '1.0.0',
+                sort_order: template.sort_order || 0,
+                is_featured: template.is_featured || false,
+                status: template.status || 'draft',
+            });
+        } else {
+            setEditingTemplate(null);
+            reset({
+                industry_category_id: '',
+                code: '',
+                name: '',
+                slug: '',
+                description: '',
+                thumbnail: '',
+                preview_image: '',
+                draft_json: '',
+                published_json: '',
+                version: '1.0.0',
+                sort_order: 0,
+                is_featured: false,
+                status: 'draft',
+            });
+        }
+        setIsModalOpen(true);
     };
 
-    const handleDeleteTemplate = (id, title) => {
-        if (confirm(`ADMIN ACTION: Delete template "${title}"?`)) {
-            setTemplatesList(templatesList.filter((t) => t.id !== id));
-            toast.info(`Template "${title}" removed.`, 'Template Deleted');
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        setEditingTemplate(null);
+        reset();
+    };
+
+    const onSubmit = (formData) => {
+        const payload = {
+            ...formData,
+            industry_category_id: parseInt(formData.industry_category_id) || formData.industry_category_id,
+            sort_order: parseInt(formData.sort_order) || 0,
+            is_featured: Boolean(formData.is_featured),
+            draft_json: formData.draft_json ? JSON.parse(formData.draft_json) : null,
+            published_json: formData.published_json ? JSON.parse(formData.published_json) : null,
+        };
+
+        if (editingTemplate) {
+            updateMutation.mutate({ id: editingTemplate.id, data: payload });
+        } else {
+            createMutation.mutate(payload);
         }
+    };
+
+    const getStatusColor = (status) => {
+        const colors = {
+            draft: 'bg-gray-100 text-gray-700',
+            published: 'bg-emerald-100 text-emerald-700',
+            archived: 'bg-amber-100 text-amber-700',
+            disabled: 'bg-red-100 text-red-700',
+        };
+        return colors[status] || 'bg-gray-100 text-gray-700';
     };
 
     return (
@@ -97,150 +213,437 @@ export default function AdminTemplates() {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 text-xs font-bold mb-2">
-                        <Shield className="h-3.5 w-3.5" />
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-bold mb-2">
+                        <Star className="h-3.5 w-3.5" />
                         <span>Template Manager</span>
                     </div>
-                    <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">System Templates</h1>
-                    <p className="text-sm text-[rgb(var(--color-text-secondary))] mt-1">
+                    <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">System Templates</h1>
+                    <p className="text-sm text-slate-500 mt-1">
                         Create, upload, and update default corporate website templates for DataSoft users.
                     </p>
                 </div>
 
                 <button
                     type="button"
-                    onClick={() => setIsAddModalOpen(true)}
+                    onClick={() => navigate('/admin/templates/builder/create')}
                     className="flex items-center justify-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-sm shadow-md shadow-indigo-600/20 transition-all"
                 >
                     <Plus className="h-4 w-4 stroke-[3]" />
-                    <span>Upload New Template</span>
+                    <span>New Template</span>
                 </button>
             </div>
 
             {/* Toolbar */}
             <Card className="p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="relative w-full sm:w-80">
-                    <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[rgb(var(--color-text-tertiary))]" />
+                    <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                     <input
                         type="text"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder="Search templates by title or category..."
-                        className="w-full pl-10 pr-4 py-2 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] placeholder-[rgb(var(--color-text-tertiary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input"
+                        placeholder="Search templates by name or code..."
+                        className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input"
                     />
                 </div>
 
-                <div className="text-xs font-bold text-[rgb(var(--color-text-secondary))]">
-                    Total Active Templates: <span className="text-[rgb(var(--color-text-primary))] font-extrabold">{templatesList.length}</span>
+                <div className="flex items-center gap-3 w-full sm:w-auto">
+                    <select
+                        value={categoryFilter}
+                        onChange={(e) => setCategoryFilter(e.target.value)}
+                        className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input"
+                    >
+                        <option value="">All Categories</option>
+                        {/* Categories will be populated from API */}
+                    </select>
+
+                    <select
+                        value={statusFilter}
+                        onChange={(e) => setStatusFilter(e.target.value)}
+                        className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input"
+                    >
+                        {STATUS_OPTIONS.map(opt => (
+                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                        ))}
+                    </select>
+                </div>
+
+                <div className="text-xs font-bold text-slate-500">
+                    Total Active Templates: <span className="text-slate-900 font-extrabold">{templates.length}</span>
                 </div>
             </Card>
 
             {/* Template Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {filteredTemplates.map((tpl) => (
-                    <Card
-                        key={tpl.id}
-                        className="border border-[rgb(var(--color-border))] overflow-hidden flex flex-col justify-between group hover:shadow-md transition-all duration-200"
-                    >
-                        <div className="relative h-44 bg-[rgb(var(--color-surface-alt))] overflow-hidden border-b border-[rgb(var(--color-border))]">
-                            <img
-                                src={tpl.image}
-                                alt={tpl.title}
-                                className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-                            />
-                            <div className="absolute top-3 left-3">
-                                <span className="px-2.5 py-1 rounded-full bg-slate-900/80 text-white text-[10px] font-extrabold uppercase backdrop-blur-md">
-                                    {tpl.badge}
-                                </span>
-                            </div>
-                        </div>
-
-                        <div className="p-4 space-y-3">
-                            <div>
-                                <h3 className="text-sm font-extrabold text-[rgb(var(--color-text-primary))] truncate group-hover:text-indigo-600 transition">{tpl.title}</h3>
-                                <p className="text-xs font-bold text-indigo-600 dark:text-indigo-400 mt-0.5">{tpl.category}</p>
-                            </div>
-
-                            <div className="pt-3 border-t border-[rgb(var(--color-border))] flex items-center justify-between">
-                                <span className="text-[11px] font-extrabold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded-md">
-                                    {tpl.status}
-                                </span>
-
-                                <div className="flex items-center gap-1">
-                                    <button
-                                        type="button"
-                                        onClick={() => handleDeleteTemplate(tpl.id, tpl.title)}
-                                        className="p-1.5 text-[rgb(var(--color-text-tertiary))] hover:text-red-600 rounded-lg hover:bg-red-50 dark:hover:bg-red-950/30 transition"
-                                    >
-                                        <Trash2 className="h-4 w-4" />
-                                    </button>
+            {isLoading ? (
+                <div className="flex items-center justify-center py-20">
+                    <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    {templates.map((tpl) => (
+                        <Card
+                            key={tpl.id}
+                            className="border border-slate-200/80 overflow-hidden flex flex-col justify-between group hover:shadow-md transition-all duration-200"
+                        >
+                            <div className="relative h-44 bg-slate-100 overflow-hidden border-b border-slate-100">
+                                <img
+                                    src={tpl.thumbnail || '/placeholder-template.jpg'}
+                                    alt={tpl.name}
+                                    className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                                />
+                                {tpl.is_featured && (
+                                    <div className="absolute top-3 left-3">
+                                        <span className="px-2.5 py-1 rounded-full bg-amber-500 text-white text-[10px] font-extrabold uppercase backdrop-blur-md flex items-center gap-1">
+                                            <Star className="h-3 w-3 fill-current" />
+                                            Featured
+                                        </span>
+                                    </div>
+                                )}
+                                <div className="absolute top-3 right-3">
+                                    <span className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase ${getStatusColor(tpl.status)}`}>
+                                        {tpl.status_label}
+                                    </span>
                                 </div>
                             </div>
-                        </div>
-                    </Card>
-                ))}
-            </div>
 
-            {/* Add Template Modal */}
-            {isAddModalOpen && (
+                            <div className="p-4 space-y-3">
+                                <div>
+                                    <h3 className="text-sm font-extrabold text-slate-900 truncate group-hover:text-indigo-600 transition">{tpl.name}</h3>
+                                    <p className="text-xs font-bold text-indigo-600 mt-0.5">{tpl.code}</p>
+                                    {tpl.industry_category && (
+                                        <p className="text-[11px] text-slate-500 mt-1">{tpl.industry_category.name}</p>
+                                    )}
+                                </div>
+
+                                {tpl.description && (
+                                    <p className="text-xs text-slate-600 line-clamp-2">{tpl.description}</p>
+                                )}
+
+                                <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
+                                    <span className="text-[11px] text-slate-500">
+                                        v{tpl.version}
+                                    </span>
+
+                                    <div className="flex items-center gap-1">
+                                        <button
+                                            type="button"
+                                            onClick={() => setPreviewTemplate(tpl)}
+                                            className="p-1.5 text-slate-400 hover:text-indigo-600 rounded-lg hover:bg-indigo-50 transition"
+                                            title="Preview"
+                                        >
+                                            <Eye className="h-4 w-4" />
+                                        </button>
+
+                                        <div className="relative">
+                                            <button
+                                                type="button"
+                                                onClick={() => setActionDropdown(actionDropdown === tpl.id ? null : tpl.id)}
+                                                className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition"
+                                            >
+                                                <MoreVertical className="h-4 w-4" />
+                                            </button>
+
+                                            {actionDropdown === tpl.id && (
+                                                <div className="absolute right-0 mt-1 w-48 bg-white rounded-xl shadow-lg border border-slate-200 z-10 py-1">
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => { handleOpenModal(tpl); setActionDropdown(null); }}
+                                                        className="w-full text-left px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-2"
+                                                    >
+                                                        <Edit2 className="h-3.5 w-3.5" />
+                                                        Edit
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => { duplicateMutation.mutate(tpl.id); setActionDropdown(null); }}
+                                                        className="w-full text-left px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-2"
+                                                    >
+                                                        <Copy className="h-3.5 w-3.5" />
+                                                        Duplicate
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => { featuredMutation.mutate(tpl.id); setActionDropdown(null); }}
+                                                        className="w-full text-left px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-2"
+                                                    >
+                                                        <Star className="h-3.5 w-3.5" />
+                                                        {tpl.is_featured ? 'Unfeature' : 'Feature'}
+                                                    </button>
+                                                    {tpl.status !== 'published' && (
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => { publishMutation.mutate(tpl.id); setActionDropdown(null); }}
+                                                            className="w-full text-left px-4 py-2 text-xs font-bold text-emerald-700 hover:bg-emerald-50 flex items-center gap-2"
+                                                        >
+                                                            <Eye className="h-3.5 w-3.5" />
+                                                            Publish
+                                                        </button>
+                                                    )}
+                                                    {tpl.status !== 'archived' && (
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => { archiveMutation.mutate(tpl.id); setActionDropdown(null); }}
+                                                            className="w-full text-left px-4 py-2 text-xs font-bold text-amber-700 hover:bg-amber-50 flex items-center gap-2"
+                                                        >
+                                                            <Archive className="h-3.5 w-3.5" />
+                                                            Archive
+                                                        </button>
+                                                    )}
+                                                    <hr className="my-1" />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            if (confirm(`Delete template "${tpl.name}"?`)) {
+                                                                deleteMutation.mutate(tpl.id);
+                                                            }
+                                                        }}
+                                                        className="w-full text-left px-4 py-2 text-xs font-bold text-red-700 hover:bg-red-50 flex items-center gap-2"
+                                                    >
+                                                        <Trash2 className="h-3.5 w-3.5" />
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </Card>
+                    ))}
+                </div>
+            )}
+
+            {/* Create/Edit Modal */}
+            {isModalOpen && (
                 <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
-                    <div className="bg-[rgb(var(--color-surface))] rounded-3xl max-w-md w-full p-6 shadow-2xl border border-[rgb(var(--color-border))] space-y-5 animate-in fade-in zoom-in-95 duration-150">
-                        <div className="flex items-center justify-between border-b border-[rgb(var(--color-border))] pb-3">
-                            <h3 className="text-base font-extrabold text-[rgb(var(--color-text-primary))]">Add New Template</h3>
+                    <div className="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl border border-slate-100 space-y-5 max-h-[90vh] overflow-y-auto">
+                        <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                            <h3 className="text-base font-extrabold text-slate-900">
+                                {editingTemplate ? 'Edit Template' : 'Add New Template'}
+                            </h3>
                             <button
                                 type="button"
-                                onClick={() => setIsAddModalOpen(false)}
-                                className="text-[rgb(var(--color-text-tertiary))] hover:text-[rgb(var(--color-text-primary))] p-1 rounded-lg hover:bg-[rgb(var(--color-surface-alt))] transition"
+                                onClick={handleCloseModal}
+                                className="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100 transition"
                             >
-                                ✕
+                                <X className="h-5 w-5" />
                             </button>
                         </div>
 
-                        <form onSubmit={handleAddTemplate} className="space-y-4">
+                        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-700 mb-1.5">Template Code</label>
+                                    <input
+                                        type="text"
+                                        {...register('code')}
+                                        placeholder="Auto-generated if empty"
+                                        className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-700 mb-1.5">Version</label>
+                                    <input
+                                        type="text"
+                                        {...register('version')}
+                                        placeholder="1.0.0"
+                                        className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input"
+                                    />
+                                </div>
+                            </div>
+
                             <div>
-                                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Template Title</label>
+                                <label className="block text-xs font-bold text-slate-700 mb-1.5">Template Name *</label>
                                 <input
                                     type="text"
-                                    required
-                                    placeholder="e.g. DataSoft Executive Corporate"
-                                    value={newTitle}
-                                    onChange={(e) => setNewTitle(e.target.value)}
-                                    className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] placeholder-[rgb(var(--color-text-tertiary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input"
+                                    {...register('name', { required: 'Template name is required' })}
+                                    placeholder="e.g. DataSoft Corporate"
+                                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input"
+                                />
+                                {errors.name && <p className="text-red-500 text-[10px] mt-1">{errors.name.message}</p>}
+                            </div>
+
+                            <div>
+                                <label className="block text-xs font-bold text-slate-700 mb-1.5">Slug</label>
+                                <input
+                                    type="text"
+                                    {...register('slug')}
+                                    placeholder="Auto-generated from name"
+                                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input"
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Category</label>
-                                <select
-                                    value={newCategory}
-                                    onChange={(e) => setNewCategory(e.target.value)}
-                                    className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input"
-                                >
-                                    <option value="corporate">Corporate</option>
-                                    <option value="ecommerce">E-Commerce</option>
-                                    <option value="saas">SaaS & Tech</option>
-                                    <option value="portfolio">Portfolio</option>
-                                </select>
+                                <label className="block text-xs font-bold text-slate-700 mb-1.5">Description</label>
+                                <textarea
+                                    {...register('description')}
+                                    rows={3}
+                                    placeholder="Template description..."
+                                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input resize-none"
+                                />
                             </div>
 
-                            <div className="pt-4 flex items-center justify-end gap-3 border-t border-[rgb(var(--color-border))]">
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-700 mb-1.5">Thumbnail URL</label>
+                                    <input
+                                        type="text"
+                                        {...register('thumbnail')}
+                                        placeholder="https://..."
+                                        className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-700 mb-1.5">Preview Image URL</label>
+                                    <input
+                                        type="text"
+                                        {...register('preview_image')}
+                                        placeholder="https://..."
+                                        className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input"
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-xs font-bold text-slate-700 mb-1.5">Draft JSON</label>
+                                <textarea
+                                    {...register('draft_json')}
+                                    rows={4}
+                                    placeholder='{"sections": [...]}'
+                                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input resize-none font-mono"
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-700 mb-1.5">Sort Order</label>
+                                    <input
+                                        type="number"
+                                        {...register('sort_order')}
+                                        min="0"
+                                        className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-bold text-slate-700 mb-1.5">Status</label>
+                                    <select
+                                        {...register('status')}
+                                        className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input"
+                                    >
+                                        <option value="draft">Draft</option>
+                                        <option value="published">Published</option>
+                                        <option value="archived">Archived</option>
+                                        <option value="disabled">Disabled</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-2">
+                                <input
+                                    type="checkbox"
+                                    id="is_featured"
+                                    {...register('is_featured')}
+                                    className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-600"
+                                />
+                                <label htmlFor="is_featured" className="text-xs font-bold text-slate-700">
+                                    Featured Template
+                                </label>
+                            </div>
+
+                            <div className="pt-4 flex items-center justify-end gap-3 border-t border-slate-100">
                                 <button
                                     type="button"
-                                    onClick={() => setIsAddModalOpen(false)}
-                                    className="px-4 py-2 text-xs font-bold text-[rgb(var(--color-text-secondary))] hover:bg-[rgb(var(--color-surface-alt))] rounded-xl transition"
+                                    onClick={handleCloseModal}
+                                    className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl transition"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     type="submit"
-                                    className="px-5 py-2 text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-md shadow-indigo-600/20 transition"
+                                    disabled={createMutation.isPending || updateMutation.isPending}
+                                    className="px-5 py-2 text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-md shadow-indigo-600/20 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                                 >
-                                    Create Template
+                                    {(createMutation.isPending || updateMutation.isPending) && (
+                                        <Loader2 className="h-4 w-4 animate-spin" />
+                                    )}
+                                    {editingTemplate ? 'Update Template' : 'Create Template'}
                                 </button>
                             </div>
                         </form>
                     </div>
                 </div>
+            )}
+
+            {/* Preview Modal */}
+            {previewTemplate && (
+                <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+                    <div className="bg-white rounded-3xl max-w-4xl w-full p-6 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto">
+                        <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+                            <h3 className="text-base font-extrabold text-slate-900">Template Preview</h3>
+                            <button
+                                type="button"
+                                onClick={() => setPreviewTemplate(null)}
+                                className="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100 transition"
+                            >
+                                <X className="h-5 w-5" />
+                            </button>
+                        </div>
+
+                        <div className="space-y-4">
+                            <div>
+                                <img
+                                    src={previewTemplate.preview_image || previewTemplate.thumbnail || '/placeholder-template.jpg'}
+                                    alt={previewTemplate.name}
+                                    className="w-full h-64 object-cover rounded-xl border border-slate-200"
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <h4 className="text-xs font-bold text-slate-500 uppercase mb-1">Name</h4>
+                                    <p className="text-sm font-bold text-slate-900">{previewTemplate.name}</p>
+                                </div>
+                                <div>
+                                    <h4 className="text-xs font-bold text-slate-500 uppercase mb-1">Code</h4>
+                                    <p className="text-sm font-mono text-slate-900">{previewTemplate.code}</p>
+                                </div>
+                                <div>
+                                    <h4 className="text-xs font-bold text-slate-500 uppercase mb-1">Status</h4>
+                                    <span className={`inline-block px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase ${getStatusColor(previewTemplate.status)}`}>
+                                        {previewTemplate.status_label}
+                                    </span>
+                                </div>
+                                <div>
+                                    <h4 className="text-xs font-bold text-slate-500 uppercase mb-1">Category</h4>
+                                    <p className="text-sm text-slate-900">{previewTemplate.industry_category?.name || 'N/A'}</p>
+                                </div>
+                            </div>
+
+                            {previewTemplate.description && (
+                                <div>
+                                    <h4 className="text-xs font-bold text-slate-500 uppercase mb-1">Description</h4>
+                                    <p className="text-sm text-slate-700">{previewTemplate.description}</p>
+                                </div>
+                            )}
+
+                            {previewTemplate.draft_json && (
+                                <div>
+                                    <h4 className="text-xs font-bold text-slate-500 uppercase mb-2">Draft JSON Structure</h4>
+                                    <pre className="bg-slate-50 p-4 rounded-xl text-xs overflow-x-auto border border-slate-200">
+                                        {JSON.stringify(previewTemplate.draft_json, null, 2)}
+                                    </pre>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Click outside to close dropdown */}
+            {actionDropdown && (
+                <div className="fixed inset-0 z-0" onClick={() => setActionDropdown(null)} />
             )}
         </div>
     );

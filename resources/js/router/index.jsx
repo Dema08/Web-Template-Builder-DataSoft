@@ -16,6 +16,7 @@ import {
             AdminUsers,
             AdminWebsites,
             AdminTemplates,
+            AdminTemplateBuilder,
             AdminCategories,
             AdminAnalytics,
             AdminSettings,
@@ -64,6 +65,8 @@ export default function AppRouter() {
                     <Route path={ROUTES.ADMIN_USERS} element={<AdminUsers />} />
                     <Route path={ROUTES.ADMIN_WEBSITES} element={<AdminWebsites />} />
                     <Route path={ROUTES.ADMIN_TEMPLATES} element={<AdminTemplates />} />
+                    <Route path="/admin/templates/builder/create" element={<AdminTemplateBuilder />} />
+                    <Route path="/admin/templates/builder/:id" element={<AdminTemplateBuilder />} />
                     <Route path={ROUTES.ADMIN_CATEGORIES} element={<AdminCategories />} />
                     <Route path={ROUTES.ADMIN_ANALYTICS} element={<AdminAnalytics />} />
                     <Route path={ROUTES.ADMIN_SETTINGS} element={<AdminSettings />} />

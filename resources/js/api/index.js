@@ -6,3 +6,4 @@ export { default as websiteApi } from './website';
 export { default as publicApi } from './public';
 export { onboardingApi } from './onboarding';
 export { default as categoryApi } from './category';
+export { default as templateApi } from './template';

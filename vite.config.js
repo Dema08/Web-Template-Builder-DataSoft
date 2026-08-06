@@ -30,6 +30,7 @@ export default defineConfig({
             '@utils': path.resolve(__dirname, 'resources/js/utils'),
             '@constants': path.resolve(__dirname, 'resources/js/constants'),
             '@assets': path.resolve(__dirname, 'resources/js/assets'),
+            '@builder': path.resolve(__dirname, 'resources/js/builder'),
         },
     },
     server: {

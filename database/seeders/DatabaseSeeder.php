@@ -49,5 +49,8 @@ class DatabaseSeeder extends Seeder
 
         // Seed default industry categories
         $this->call(CategorySeeder::class);
+
+        // Seed demo templates
+        $this->call(TemplateSeeder::class);
     }
 }

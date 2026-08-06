@@ -84,6 +84,14 @@ Route::prefix('v1')->group(function (): void {
             Route::delete('/users/{user}', [App\Domains\Admin\Http\Controllers\AdminUserController::class, 'destroy']);
             Route::apiResource('categories', App\Domains\Admin\Http\Controllers\AdminCategoryController::class);
             Route::apiResource('categories.templates', App\Domains\Admin\Http\Controllers\AdminTemplateController::class);
+
+            Route::get('/templates/trashed', [App\Domains\Template\Http\Controllers\TemplateController::class, 'trashed']);
+            Route::patch('/templates/{template}/publish', [App\Domains\Template\Http\Controllers\TemplateController::class, 'publish']);
+            Route::patch('/templates/{template}/archive', [App\Domains\Template\Http\Controllers\TemplateController::class, 'archive']);
+            Route::post('/templates/{template}/duplicate', [App\Domains\Template\Http\Controllers\TemplateController::class, 'duplicate']);
+            Route::patch('/templates/{template}/featured', [App\Domains\Template\Http\Controllers\TemplateController::class, 'toggleFeatured']);
+            Route::delete('/templates/{template}/force', [App\Domains\Template\Http\Controllers\TemplateController::class, 'forceDelete']);
+            Route::patch('/templates/{id}/restore', [App\Domains\Template\Http\Controllers\TemplateController::class, 'restore']);
         });
     });
 });
