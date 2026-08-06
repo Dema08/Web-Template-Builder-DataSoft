@@ -51,16 +51,13 @@ class AuthService extends BaseService
     {
         return $this->repository()->transaction(function () use ($dto): array {
             $user = $this->userRepository->createRegularUser([
-                'name' => $dto->getName(),
-                'email' => $dto->getEmail(),
+                'name'     => $dto->getName(),
+                'email'    => $dto->getEmail(),
                 'password' => $dto->getPassword(), // User model auto-hashes via Attribute cast
             ]);
 
-            $token = $user->createToken(
-                config('auth.token_name', 'auth-token')
-            )->plainTextToken;
-
-            return ['user' => $user, 'token' => $token];
+            // No token issued — account must be approved by admin before login
+            return ['user' => $user];
         });
     }
 
@@ -76,6 +73,13 @@ class AuthService extends BaseService
 
         if (! $user || ! Hash::check($dto->getPassword(), $user->password)) {
             throw new DomainException('Invalid credentials', 401);
+        }
+
+        if (! $user->is_approved) {
+            throw new DomainException(
+                'Akun Anda belum disetujui oleh administrator. Harap tunggu konfirmasi dari admin.',
+                403
+            );
         }
 
         $token = $user->createToken(

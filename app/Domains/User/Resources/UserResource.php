@@ -29,12 +29,13 @@ class UserResource extends JsonResource
             : null;
 
         return [
-            'id' => $user->id,
-            'name' => $user->name,
-            'email' => $user->email,
-            'avatar' => $avatar,
-            'role' => $user->role?->value ?? 'user',
-            'created_at' => $user->created_at?->toISOString(),
+            'id'          => $user->id,
+            'name'        => $user->name,
+            'email'       => $user->email,
+            'avatar'      => $avatar,
+            'role'        => $user->role?->value ?? 'user',
+            'is_approved' => (bool) $user->is_approved,
+            'created_at'  => $user->created_at?->toISOString(),
         ];
     }
 }

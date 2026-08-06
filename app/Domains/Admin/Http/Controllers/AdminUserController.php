@@ -27,6 +27,20 @@ class AdminUserController extends BaseController
         );
     }
 
+    public function approveUser(User $user): JsonResponse
+    {
+        if ($user->is_approved) {
+            return $this->error("Akun {$user->name} sudah disetujui sebelumnya.", 409);
+        }
+
+        $user->update(['is_approved' => true]);
+
+        return $this->success(
+            new UserResource($user),
+            "Akun {$user->name} berhasil disetujui. User sekarang dapat login."
+        );
+    }
+
     public function updateRole(Request $request, User $user): JsonResponse
     {
         $validated = $request->validate([

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-import { Eye, EyeOff, Sparkles, Compass } from 'lucide-react';
+import { Eye, EyeOff, Sparkles, Compass, Clock, CheckCircle2, Info } from 'lucide-react';
 import { Spinner, Alert } from '@components/ui';
 import { useRegister } from '@hooks';
 import { ROUTES } from '@constants';
@@ -31,6 +31,74 @@ export default function Register() {
         });
     };
 
+    // Show pending approval state after successful registration
+    if (doRegister.isSuccess) {
+        return (
+            <div className="max-w-5xl w-full bg-white rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row min-h-[660px] border border-gray-100/50">
+                <div className="w-full md:w-1/2 p-8 sm:p-12 flex flex-col items-center justify-center bg-white text-center gap-5">
+                    <div className="h-20 w-20 rounded-full bg-amber-50 border-2 border-amber-200 flex items-center justify-center">
+                        <Clock className="h-10 w-10 text-amber-500" />
+                    </div>
+                    <div>
+                        <h2 className="text-2xl font-extrabold text-gray-900 tracking-tight">Pendaftaran Berhasil!</h2>
+                        <p className="text-sm text-gray-500 mt-2 leading-relaxed max-w-xs">
+                            Akun Anda telah berhasil didaftarkan. Akun Anda sedang menunggu persetujuan dari <span className="font-bold text-gray-700">Administrator</span>.
+                        </p>
+                    </div>
+                    <div className="w-full bg-amber-50 border border-amber-200 rounded-2xl p-4 text-left space-y-2">
+                        <div className="flex items-center gap-2">
+                            <CheckCircle2 className="h-4 w-4 text-amber-600 shrink-0" />
+                            <p className="text-xs font-semibold text-amber-800">Langkah selanjutnya:</p>
+                        </div>
+                        <ol className="text-xs text-amber-700 space-y-1 list-decimal list-inside pl-1">
+                            <li>Administrator akan meninjau pendaftaran Anda</li>
+                            <li>Setelah disetujui, Anda dapat login dan menggunakan platform</li>
+                            <li>Hubungi admin jika menunggu lebih dari 1x24 jam</li>
+                        </ol>
+                    </div>
+                    <Link
+                        to={ROUTES.LOGIN}
+                        className="mt-2 inline-flex items-center justify-center px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-sm shadow-lg shadow-blue-600/25 transition-all"
+                    >
+                        Kembali ke Halaman Login
+                    </Link>
+                </div>
+                <div className="hidden md:flex md:w-1/2 relative bg-slate-900 p-10 flex-col justify-between text-white overflow-hidden">
+                    <div
+                        className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 scale-105"
+                        style={{ backgroundImage: `url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1200&auto=format&fit=crop')` }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-700/85 via-blue-900/90 to-slate-950/95 backdrop-blur-[2px]" />
+                    <div className="relative z-10 flex justify-end">
+                        <div className="bg-white/15 backdrop-blur-xl border border-white/25 rounded-2xl p-4 w-28 h-28 flex flex-col items-center justify-center text-center shadow-2xl">
+                            <Compass className="h-8 w-8 text-white/90 mb-1.5 stroke-[1.5]" />
+                            <span className="text-[10px] font-bold tracking-widest text-white/90 uppercase">DATASOFT</span>
+                        </div>
+                    </div>
+                    <div className="relative z-10 my-auto py-8 text-center">
+                        <Clock className="h-16 w-16 text-amber-300 mx-auto mb-4" />
+                        <h2 className="text-3xl font-extrabold text-white mb-3">Menunggu Persetujuan</h2>
+                        <p className="text-sm text-blue-100/80 leading-relaxed">Akun Anda telah terdaftar. Admin akan segera meninjau dan menyetujui akun Anda.</p>
+                    </div>
+                    <div className="relative z-10 grid grid-cols-3 gap-4 pt-6 border-t border-white/15">
+                        <div>
+                            <div className="text-base font-extrabold text-white tracking-tight">1.2M+</div>
+                            <div className="text-[9px] font-bold text-blue-200/70 tracking-widest uppercase mt-0.5">SITES BUILT</div>
+                        </div>
+                        <div>
+                            <div className="text-base font-extrabold text-white tracking-tight">99.9%</div>
+                            <div className="text-[9px] font-bold text-blue-200/70 tracking-widest uppercase mt-0.5">PLATFORM UPTIME</div>
+                        </div>
+                        <div>
+                            <div className="text-base font-extrabold text-white tracking-tight">24/7</div>
+                            <div className="text-[9px] font-bold text-blue-200/70 tracking-widest uppercase mt-0.5">EXPERT SUPPORT</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="max-w-5xl w-full bg-white rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row min-h-[660px] border border-gray-100/50">
             {/* Left Column — Form */}
@@ -59,6 +127,14 @@ export default function Register() {
                             </Alert>
                         </div>
                     )}
+
+                    {/* Pending approval notice */}
+                    <div className="mb-4 flex items-start gap-2 px-3 py-2.5 bg-blue-50 border border-blue-200 rounded-xl">
+                        <Info className="h-4 w-4 text-blue-600 shrink-0 mt-0.5" />
+                        <p className="text-xs text-blue-700 leading-relaxed">
+                            <span className="font-bold">Perhatian:</span> Akun baru memerlukan persetujuan admin sebelum dapat login.
+                        </p>
+                    </div>
 
                     {/* Form */}
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-3.5" noValidate>

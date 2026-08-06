@@ -43,8 +43,7 @@ class AuthController extends BaseController
 
         return $this->created([
             'user' => new UserResource($result['user']),
-            'token' => $result['token'],
-        ], 'Registration successful');
+        ], 'Pendaftaran berhasil! Akun Anda sedang menunggu persetujuan dari administrator.');
     }
 
     /**

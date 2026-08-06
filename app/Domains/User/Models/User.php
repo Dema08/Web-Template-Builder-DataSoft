@@ -35,6 +35,7 @@ class User extends Authenticatable
         'password',
         'avatar',
         'role',
+        'is_approved',
     ];
 
     /**
@@ -55,6 +56,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'role' => UserRole::class,
+        'is_approved' => 'boolean',
     ];
 
     /**

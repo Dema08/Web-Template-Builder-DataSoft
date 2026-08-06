@@ -79,6 +79,7 @@ Route::prefix('v1')->group(function (): void {
         // Admin-only endpoints
         Route::prefix('admin')->middleware('admin')->group(function (): void {
             Route::get('/users', [App\Domains\Admin\Http\Controllers\AdminUserController::class, 'index']);
+            Route::patch('/users/{user}/approve', [App\Domains\Admin\Http\Controllers\AdminUserController::class, 'approveUser']);
             Route::patch('/users/{user}/role', [App\Domains\Admin\Http\Controllers\AdminUserController::class, 'updateRole']);
             Route::delete('/users/{user}', [App\Domains\Admin\Http\Controllers\AdminUserController::class, 'destroy']);
             Route::apiResource('categories', App\Domains\Admin\Http\Controllers\AdminCategoryController::class);
