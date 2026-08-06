@@ -19,7 +19,8 @@ export function useLogin() {
         onSuccess: (session) => {
             setSession(session);
             toast.success(`Welcome back, ${session.user?.name?.split(' ')[0] || 'there'}!`, 'Signed in');
-            navigate(ROUTES.DASHBOARD, { replace: true });
+            const targetRoute = session.user?.role === 'admin' ? ROUTES.ADMIN_DASHBOARD : ROUTES.DASHBOARD;
+            navigate(targetRoute, { replace: true });
         },
         onError: (error) => {
             toast.error(error?.response?.data?.message || 'Unable to sign in. Please try again.', 'Sign in failed');

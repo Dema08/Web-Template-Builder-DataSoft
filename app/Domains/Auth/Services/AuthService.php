@@ -15,8 +15,9 @@ use App\Domains\User\Models\PasswordResetOtp;
 use App\Domains\User\Models\User;
 use App\Domains\User\Repositories\UserRepository;
 use App\Mail\OtpPasswordResetMail;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 /**
  * AuthService
@@ -73,6 +74,14 @@ class AuthService extends BaseService
 
         if (! $user || ! Hash::check($dto->getPassword(), $user->password)) {
             throw new DomainException('Invalid credentials', 401);
+        }
+
+        // Check if system maintenance mode is active
+        if (Cache::get('maintenance_mode', false) && ! $user->isAdmin()) {
+            throw new DomainException(
+                'Sistem sedang dalam pemeliharaan (maintenance mode). Hanya Administrator yang dapat login saat ini.',
+                503
+            );
         }
 
         if (! $user->is_approved) {

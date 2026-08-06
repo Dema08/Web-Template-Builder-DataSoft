@@ -1,7 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
-import { Shield, Settings, Save, RefreshCw, Image, Type, Palette, Upload, X, Sun, Moon } from 'lucide-react';
+import { Shield, Settings, Save, RefreshCw, Image, Type, Palette, Upload, X, Sun, Moon, AlertTriangle, Wrench } from 'lucide-react';
 import { toast, useBrandStore } from '@store';
 import { Card } from '@components/ui';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { http } from '@api';
 
 export default function AdminSettings() {
     const { brandName, brandBadge, brandColor, logoUrl, planLabel, setBrand, resetBrand } = useBrandStore();
@@ -33,6 +35,39 @@ export default function AdminSettings() {
     const [maintenanceMode, setMaintenanceMode] = useState(false);
     const [allowRegistration, setAllowRegistration] = useState(true);
     const [defaultStorageLimit, setDefaultStorageLimit] = useState(100);
+
+    const queryClient = useQueryClient();
+
+    // Fetch current maintenance mode status
+    const { data: maintenanceData } = useQuery({
+        queryKey: ['system', 'maintenance'],
+        queryFn: async () => {
+            const response = await http.get('/admin/system/maintenance');
+            return response.data;
+        },
+    });
+
+    useEffect(() => {
+        if (maintenanceData?.data?.maintenance_mode !== undefined) {
+            setMaintenanceMode(Boolean(maintenanceData.data.maintenance_mode));
+        }
+    }, [maintenanceData]);
+
+    // Update maintenance mode mutation
+    const updateMaintenanceMutation = useMutation({
+        mutationFn: async (enabled) => {
+            const response = await http.patch('/admin/system/maintenance', { maintenance_mode: enabled });
+            return response.data;
+        },
+        onSuccess: (data) => {
+            queryClient.invalidateQueries({ queryKey: ['system', 'maintenance'] });
+            toast.success(data.message || 'Maintenance mode updated successfully', 'Success');
+        },
+        onError: (error) => {
+            const message = error?.response?.data?.message || 'Failed to update maintenance mode';
+            toast.error(message, 'Error');
+        },
+    });
 
     const fileInputRef = useRef(null);
 
@@ -87,9 +122,18 @@ export default function AdminSettings() {
         toast.info('Brand identity reset to DataSoft defaults.', 'Brand Reset');
     };
 
-    const handleSaveSystem = (e) => {
+    const handleSaveSystem = async (e) => {
         e.preventDefault();
-        toast.success('Platform system configuration updated successfully!', 'System Settings Saved');
+        
+        try {
+            const result = await updateMaintenanceMutation.mutateAsync(maintenanceMode);
+            console.log('Maintenance update result:', result);
+            // Note: allowRegistration and defaultStorageLimit are not implemented in backend yet
+            toast.success('Platform system configuration updated successfully!', 'System Settings Saved');
+        } catch (error) {
+            console.error('Maintenance update error:', error);
+            // Error is handled in mutation
+        }
     };
 
     return (
@@ -316,29 +360,61 @@ export default function AdminSettings() {
                 </div>
             </form>
 
-            {/* ===== PLATFORM CONTROLS SECTION ===== */}
+            {/* ===== PLATFORM & MAINTENANCE CONTROLS SECTION ===== */}
             <form onSubmit={handleSaveSystem} className="bg-[rgb(var(--color-surface))] rounded-3xl p-6 sm:p-8 border border-[rgb(var(--color-border))] shadow-xs space-y-6">
-                <h2 className="text-base font-extrabold text-[rgb(var(--color-text-primary))] flex items-center gap-2 border-b border-[rgb(var(--color-border))] pb-4">
-                    <Settings className="h-4 w-4 text-blue-600" /> Platform Controls
-                </h2>
+                <div className="flex items-center justify-between border-b border-[rgb(var(--color-border))] pb-4">
+                    <h2 className="text-base font-extrabold text-[rgb(var(--color-text-primary))] flex items-center gap-2">
+                        <Wrench className="h-4 w-4 text-blue-600" /> Maintenance & Platform Controls
+                    </h2>
+                    {maintenanceMode && (
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 animate-pulse">
+                            <AlertTriangle className="h-3.5 w-3.5" />
+                            Maintenance Active
+                        </span>
+                    )}
+                </div>
+
+                {maintenanceMode && (
+                    <div className="p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/60 rounded-2xl flex items-start gap-3">
+                        <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                        <div>
+                            <p className="text-xs font-bold text-amber-900 dark:text-amber-200">
+                                Mode Pemeliharaan (Maintenance Mode) Sedang Aktif!
+                            </p>
+                            <p className="text-xs text-amber-700 dark:text-amber-300 mt-1 leading-relaxed">
+                                Seluruh akun user non-admin yang sedang aktif akan di-logout otomatis dan tidak dapat login kembali sampai Admin menonaktifkan modus pemeliharaan ini.
+                            </p>
+                        </div>
+                    </div>
+                )}
 
                 <div className="flex items-center justify-between py-3 border-b border-[rgb(var(--color-border))]">
                     <div>
-                        <p className="text-xs font-extrabold text-[rgb(var(--color-text-primary))]">Maintenance Mode</p>
-                        <p className="text-xs text-[rgb(var(--color-text-secondary))] font-medium">Temporarily disable non-admin user access for system upgrades.</p>
+                        <p className="text-xs font-extrabold text-[rgb(var(--color-text-primary))]">Aktifkan Maintenance Mode</p>
+                        <p className="text-xs text-[rgb(var(--color-text-secondary))] font-medium">
+                            Nonaktifkan akses pengguna biasa sementara waktu untuk perbaikan atau pemeliharaan sistem.
+                        </p>
                     </div>
-                    <input
-                        type="checkbox"
-                        checked={maintenanceMode}
-                        onChange={(e) => setMaintenanceMode(e.target.checked)}
-                        className="h-5 w-5 rounded border-[rgb(var(--color-border))] text-blue-600 focus:ring-blue-500 cursor-pointer"
-                    />
+                    <label className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none cursor-pointer">
+                        <input
+                            type="checkbox"
+                            checked={maintenanceMode}
+                            onChange={(e) => setMaintenanceMode(e.target.checked)}
+                            className="sr-only"
+                        />
+                        <span className={`absolute inset-0 rounded-full transition ${maintenanceMode ? 'bg-amber-500' : 'bg-slate-300 dark:bg-slate-600'}`} />
+                        <span
+                            className={`absolute top-1 left-1 h-4 w-4 transform rounded-full bg-white transition ${
+                                maintenanceMode ? 'translate-x-5' : ''
+                            }`}
+                        />
+                    </label>
                 </div>
 
                 <div className="flex items-center justify-between py-3 border-b border-[rgb(var(--color-border))]">
                     <div>
-                        <p className="text-xs font-extrabold text-[rgb(var(--color-text-primary))]">Allow Public User Registrations</p>
-                        <p className="text-xs text-[rgb(var(--color-text-secondary))] font-medium">Enable or disable new user signups on <code className="bg-[rgb(var(--color-surface-alt))] px-1 rounded">/register</code>.</p>
+                        <p className="text-xs font-extrabold text-[rgb(var(--color-text-primary))]">Izinkan Pendaftaran Pengguna Baru</p>
+                        <p className="text-xs text-[rgb(var(--color-text-secondary))] font-medium">Aktifkan atau nonaktifkan form registrasi di <code className="bg-[rgb(var(--color-surface-alt))] px-1 rounded">/register</code>.</p>
                     </div>
                     <input
                         type="checkbox"
@@ -349,7 +425,7 @@ export default function AdminSettings() {
                 </div>
 
                 <div className="pt-2">
-                    <label className="block text-xs font-extrabold text-[rgb(var(--color-text-primary))] mb-1.5">Default User Storage Quota (MB)</label>
+                    <label className="block text-xs font-extrabold text-[rgb(var(--color-text-primary))] mb-1.5">Kuota Penyimpanan Bawaan User (MB)</label>
                     <input
                         type="number"
                         value={defaultStorageLimit}
@@ -361,13 +437,15 @@ export default function AdminSettings() {
                 <div className="flex justify-end pt-2 border-t border-[rgb(var(--color-border))]">
                     <button
                         type="submit"
-                        className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold rounded-xl text-xs shadow-md shadow-blue-600/20 transition"
+                        disabled={updateMaintenanceMutation.isPending}
+                        className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-extrabold rounded-xl text-xs shadow-md shadow-blue-600/20 transition disabled:opacity-70"
                     >
                         <Save className="h-4 w-4" />
-                        <span>Save System Settings</span>
+                        <span>{updateMaintenanceMutation.isPending ? 'Saving...' : 'Save Settings'}</span>
                     </button>
                 </div>
             </form>
         </div>
     );
 }
+

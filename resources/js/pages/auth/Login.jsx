@@ -11,6 +11,15 @@ export default function Login() {
     const location = useLocation();
     const justRegistered = location.state?.registered === true;
 
+    const [maintenanceNotice, setMaintenanceNotice] = useState(() => {
+        const notice = sessionStorage.getItem('maintenance_logout_notice');
+        if (notice) {
+            sessionStorage.removeItem('maintenance_logout_notice');
+            return notice;
+        }
+        return null;
+    });
+
     const {
         register,
         handleSubmit,
@@ -44,6 +53,14 @@ export default function Login() {
                         <p className="text-sm text-gray-500 mt-1.5">Please enter your details to access your DataSoft dashboard.</p>
                     </div>
 
+                    {maintenanceNotice && (
+                        <div className="mb-4">
+                            <Alert variant="warning" title="Modus Pemeliharaan Aktif">
+                                {maintenanceNotice}
+                            </Alert>
+                        </div>
+                    )}
+
                     {justRegistered && (
                         <div className="mb-4">
                             <Alert variant="success" title="Akun berhasil dibuat!">
@@ -54,7 +71,7 @@ export default function Login() {
 
                     {login.isError && (
                         <div className="mb-4">
-                            <Alert variant="error" title="Unable to sign in">
+                            <Alert variant="error" title="Gagal Login">
                                 {login.error?.response?.data?.message || 'Please check your credentials and try again.'}
                             </Alert>
                         </div>

@@ -27,6 +27,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Custom middleware aliases.
         $middleware->alias([
             'admin' => \App\Domains\Shared\Http\Middleware\EnsureUserIsAdmin::class,
+            'maintenance' => \App\Http\Middleware\CheckMaintenanceMode::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

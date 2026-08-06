@@ -30,24 +30,47 @@ http.interceptors.request.use(
     (error) => Promise.reject(error)
 );
 
-// On a 401 response, clear the persisted session and redirect to /login.
+// On a 401 response or 503 maintenance mode, clear the persisted session and redirect to /login.
 http.interceptors.response.use(
     (response) => response,
     (error) => {
         const { response } = error;
 
-        if (response && response.status === HTTP_STATUS.UNAUTHORIZED) {
-            useAuthStore.getState().clearSession();
-            localStorage.removeItem(TOKEN_STORAGE_KEY);
-            localStorage.removeItem('cpwb_user');
+        if (response) {
+            const currentUser = useAuthStore.getState().user;
+            const isUserAdmin = currentUser?.role === 'admin';
 
-            if (!window.location.pathname.startsWith('/login')) {
-                window.location.href = '/login';
+            // 401 Unauthorized (session expired or token revoked)
+            if (response.status === HTTP_STATUS.UNAUTHORIZED) {
+                useAuthStore.getState().clearSession();
+                localStorage.removeItem(TOKEN_STORAGE_KEY);
+                localStorage.removeItem('cpwb_user');
+
+                if (!window.location.pathname.startsWith('/login')) {
+                    window.location.href = '/login';
+                }
+            }
+
+            // 503 Service Unavailable / Maintenance Mode for non-admins
+            if ((response.status === 503 || response.data?.errors?.maintenance) && !isUserAdmin) {
+                useAuthStore.getState().clearSession();
+                localStorage.removeItem(TOKEN_STORAGE_KEY);
+                localStorage.removeItem('cpwb_user');
+
+                sessionStorage.setItem(
+                    'maintenance_logout_notice',
+                    'Sistem sedang dalam pemeliharaan (maintenance mode). Anda telah dikeluarkan otomatis oleh Administrator.'
+                );
+
+                if (!window.location.pathname.startsWith('/login')) {
+                    window.location.href = '/login';
+                }
             }
         }
 
         return Promise.reject(error);
     }
 );
+
 
 export default http;

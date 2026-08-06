@@ -1,6 +1,6 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '@store';
-import { ROUTES } from '@constants';
+import { ROUTES, TOKEN_STORAGE_KEY } from '@constants';
 
 /**
  * Protects routes: redirects unauthenticated users to /login.
@@ -17,12 +17,24 @@ export function ProtectedRoute({ children }) {
 
 /**
  * Redirects authenticated users away from guest pages (login/register).
+ * If clear_session parameter is present, clears existing auth state to force login.
  */
 export function GuestRoute({ children }) {
     const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+    const user = useAuthStore((state) => state.user);
+    const location = useLocation();
+
+    const searchParams = new URLSearchParams(location.search);
+    if (searchParams.get('clear_session') === '1' || searchParams.get('logout') === '1') {
+        useAuthStore.getState().clearSession();
+        localStorage.removeItem(TOKEN_STORAGE_KEY);
+        localStorage.removeItem('cpwb_user');
+        return children;
+    }
 
     if (isAuthenticated) {
-        return <Navigate to={ROUTES.DASHBOARD} replace />;
+        const targetRoute = user?.role === 'admin' ? ROUTES.ADMIN_DASHBOARD : ROUTES.DASHBOARD;
+        return <Navigate to={targetRoute} replace />;
     }
 
     return children;

@@ -43,9 +43,30 @@ Route::prefix('v1')->group(function (): void {
     });
 
     // -------------------------------------------------------------
-    // Authenticated application endpoints
-    // -------------------------------------------------------------
-    Route::middleware('auth:sanctum')->group(function (): void {
+    // Admin-only endpoints (accessible even during maintenance)
+    Route::prefix('admin')->middleware(['auth:sanctum', 'admin'])->group(function (): void {
+        Route::get('/users', [App\Domains\Admin\Http\Controllers\AdminUserController::class, 'index']);
+        Route::patch('/users/{user}/approve', [App\Domains\Admin\Http\Controllers\AdminUserController::class, 'approveUser']);
+        Route::patch('/users/{user}/role', [App\Domains\Admin\Http\Controllers\AdminUserController::class, 'updateRole']);
+        Route::delete('/users/{user}', [App\Domains\Admin\Http\Controllers\AdminUserController::class, 'destroy']);
+        Route::apiResource('categories', App\Domains\Admin\Http\Controllers\AdminCategoryController::class);
+        Route::apiResource('categories.templates', App\Domains\Admin\Http\Controllers\AdminTemplateController::class);
+
+        Route::get('/templates/trashed', [App\Domains\Template\Http\Controllers\TemplateController::class, 'trashed']);
+        Route::patch('/templates/{template}/publish', [App\Domains\Template\Http\Controllers\TemplateController::class, 'publish']);
+        Route::patch('/templates/{template}/archive', [App\Domains\Template\Http\Controllers\TemplateController::class, 'archive']);
+        Route::post('/templates/{template}/duplicate', [App\Domains\Template\Http\Controllers\TemplateController::class, 'duplicate']);
+        Route::patch('/templates/{template}/featured', [App\Domains\Template\Http\Controllers\TemplateController::class, 'toggleFeatured']);
+        Route::delete('/templates/{template}/force', [App\Domains\Template\Http\Controllers\TemplateController::class, 'forceDelete']);
+        Route::patch('/templates/{id}/restore', [App\Domains\Template\Http\Controllers\TemplateController::class, 'restore']);
+
+        // System settings (accessible even during maintenance)
+        Route::get('/system/maintenance', [App\Domains\System\Http\Controllers\SystemSettingsController::class, 'getMaintenanceMode']);
+        Route::patch('/system/maintenance', [App\Domains\System\Http\Controllers\SystemSettingsController::class, 'updateMaintenanceMode']);
+    });
+
+    // Authenticated application endpoints (protected by maintenance mode)
+    Route::middleware(['auth:sanctum', 'maintenance'])->group(function (): void {
         Route::prefix('user')->group(function (): void {
             Route::get('/profile', [App\Domains\User\Http\Controllers\UserController::class, 'profile']);
             Route::put('/profile', [App\Domains\User\Http\Controllers\UserController::class, 'updateProfile']);
@@ -74,24 +95,6 @@ Route::prefix('v1')->group(function (): void {
             Route::get('/template/{id}', [App\Http\Controllers\OnboardingController::class, 'getTemplate']);
             Route::post('/check-slug', [App\Http\Controllers\OnboardingController::class, 'checkSlug']);
             Route::post('/create', [App\Http\Controllers\OnboardingController::class, 'createWebsite']);
-        });
-
-        // Admin-only endpoints
-        Route::prefix('admin')->middleware('admin')->group(function (): void {
-            Route::get('/users', [App\Domains\Admin\Http\Controllers\AdminUserController::class, 'index']);
-            Route::patch('/users/{user}/approve', [App\Domains\Admin\Http\Controllers\AdminUserController::class, 'approveUser']);
-            Route::patch('/users/{user}/role', [App\Domains\Admin\Http\Controllers\AdminUserController::class, 'updateRole']);
-            Route::delete('/users/{user}', [App\Domains\Admin\Http\Controllers\AdminUserController::class, 'destroy']);
-            Route::apiResource('categories', App\Domains\Admin\Http\Controllers\AdminCategoryController::class);
-            Route::apiResource('categories.templates', App\Domains\Admin\Http\Controllers\AdminTemplateController::class);
-
-            Route::get('/templates/trashed', [App\Domains\Template\Http\Controllers\TemplateController::class, 'trashed']);
-            Route::patch('/templates/{template}/publish', [App\Domains\Template\Http\Controllers\TemplateController::class, 'publish']);
-            Route::patch('/templates/{template}/archive', [App\Domains\Template\Http\Controllers\TemplateController::class, 'archive']);
-            Route::post('/templates/{template}/duplicate', [App\Domains\Template\Http\Controllers\TemplateController::class, 'duplicate']);
-            Route::patch('/templates/{template}/featured', [App\Domains\Template\Http\Controllers\TemplateController::class, 'toggleFeatured']);
-            Route::delete('/templates/{template}/force', [App\Domains\Template\Http\Controllers\TemplateController::class, 'forceDelete']);
-            Route::patch('/templates/{id}/restore', [App\Domains\Template\Http\Controllers\TemplateController::class, 'restore']);
         });
     });
 });
