@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Layers, Plus, Trash2, Edit2, Shield, Search, X, ChevronUp, ChevronDown, Eye, EyeOff, FileText } from 'lucide-react';
+  import { useState } from 'react';
+import { Layers, Plus, Trash2, Edit2, Shield, Search, X, ChevronUp, ChevronDown, Eye, EyeOff, FileText, Home, Building, Store, Coffee, Car, Plane, Ship, Train, Bike, Bus, Hotel, MapPin, Users, Briefcase, Settings, Wrench, Package, ShoppingCart, CreditCard, Wallet, PiggyBank, BarChart, TrendingUp, PieChart, DollarSign, Euro, PoundSterling, Bitcoin, Receipt, FileText as FileInvoice, BookOpen, GraduationCap, Stethoscope, Heart, Activity, Apple, Beef, Coffee as CoffeeIcon, Utensils, Bike as BikeIcon, Dumbbell, Waves, Mountain, TreePine, Flower2, Sun, Cloud, CloudRain, Zap, Flame } from 'lucide-react';
 import { Card } from '@components/ui';
 import { toast } from '@store';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -126,6 +126,57 @@ export default function AdminCategories() {
     sort_order: 0,
     is_active: true,
   });
+
+  const [showIconPicker, setShowIconPicker] = useState(false);
+
+  const availableIcons = [
+    { name: 'Layers', icon: Layers },
+    { name: 'Home', icon: Home },
+    { name: 'Building', icon: Building },
+    { name: 'Store', icon: Store },
+    { name: 'Coffee', icon: Coffee },
+    { name: 'Car', icon: Car },
+    { name: 'Plane', icon: Plane },
+    { name: 'Ship', icon: Ship },
+    { name: 'Train', icon: Train },
+    { name: 'Bike', icon: BikeIcon },
+    { name: 'Bus', icon: Bus },
+    { name: 'Hotel', icon: Hotel },
+    { name: 'MapPin', icon: MapPin },
+    { name: 'Users', icon: Users },
+    { name: 'Briefcase', icon: Briefcase },
+    { name: 'Settings', icon: Settings },
+    { name: 'Wrench', icon: Wrench },
+    { name: 'Package', icon: Package },
+    { name: 'ShoppingCart', icon: ShoppingCart },
+    { name: 'CreditCard', icon: CreditCard },
+    { name: 'Wallet', icon: Wallet },
+    { name: 'PiggyBank', icon: PiggyBank },
+    { name: 'BarChart', icon: BarChart },
+    { name: 'TrendingUp', icon: TrendingUp },
+    { name: 'PieChart', icon: PieChart },
+    { name: 'DollarSign', icon: DollarSign },
+    { name: 'Receipt', icon: Receipt },
+    { name: 'FileInvoice', icon: FileInvoice },
+    { name: 'BookOpen', icon: BookOpen },
+    { name: 'GraduationCap', icon: GraduationCap },
+    { name: 'Stethoscope', icon: Stethoscope },
+    { name: 'Heart', icon: Heart },
+    { name: 'Activity', icon: Activity },
+    { name: 'Apple', icon: Apple },
+    { name: 'Beef', icon: Beef },
+    { name: 'Utensils', icon: Utensils },
+    { name: 'Dumbbell', icon: Dumbbell },
+    { name: 'Waves', icon: Waves },
+    { name: 'Mountain', icon: Mountain },
+    { name: 'TreePine', icon: TreePine },
+    { name: 'Flower2', icon: Flower2 },
+    { name: 'Sun', icon: Sun },
+    { name: 'Cloud', icon: Cloud },
+    { name: 'CloudRain', icon: CloudRain },
+    { name: 'Zap', icon: Zap },
+    { name: 'Flame', icon: Flame },
+  ];
 
   const resetForm = () => {
     setFormData({
@@ -368,10 +419,24 @@ export default function AdminCategories() {
                       <td className="px-4 py-4">
                         <div className="flex items-center gap-3">
                           <div
-                            className="h-10 w-10 rounded-xl flex items-center justify-center font-bold text-white shadow-xs"
+                            className="h-10 w-10 rounded-xl flex items-center justify-center text-white shadow-xs"
                             style={{ backgroundColor: cat.color || '#6366f1' }}
                           >
-                            {cat.icon ? <span className="text-lg">{cat.icon}</span> : <Layers className="h-5 w-5" />}
+                            {(() => {
+                              const iconMap = {
+                                Layers, Home, Building, Store, Coffee, Car, Plane, Ship, Train, Bike: BikeIcon,
+                                Bus, Hotel, MapPin, Users, Briefcase, Settings, Wrench, Package, ShoppingCart,
+                                CreditCard, Wallet, PiggyBank, BarChart, TrendingUp, PieChart, DollarSign,
+                                Receipt, FileText: FileInvoice, BookOpen, GraduationCap, Stethoscope, Heart,
+                                Activity, Apple, Beef, Utensils, Dumbbell, Waves, Mountain, TreePine, Flower2,
+                                Sun, Cloud, CloudRain, Zap, Flame
+                              };
+                              const IconComponent = cat.icon ? iconMap[cat.icon] : Layers;
+                              if (IconComponent) {
+                                return <IconComponent className="h-5 w-5" />;
+                              }
+                              return <Layers className="h-5 w-5" />;
+                            })()}
                           </div>
                           <div>
                             <p className="font-extrabold text-[rgb(var(--color-text-primary))] text-sm">{cat.name}</p>
@@ -384,7 +449,23 @@ export default function AdminCategories() {
                       <td className="px-4 py-4">
                         <p className="text-sm text-[rgb(var(--color-text-secondary))] max-w-xs truncate">{cat.description || '-'}</p>
                       </td>
-                      <td className="px-4 py-4 text-sm text-[rgb(var(--color-text-secondary))]">{cat.icon || '-'}</td>
+                      <td className="px-4 py-4">
+                        {cat.icon ? (() => {
+                          const iconMap = {
+                            Layers, Home, Building, Store, Coffee, Car, Plane, Ship, Train, Bike: BikeIcon,
+                            Bus, Hotel, MapPin, Users, Briefcase, Settings, Wrench, Package, ShoppingCart,
+                            CreditCard, Wallet, PiggyBank, BarChart, TrendingUp, PieChart, DollarSign,
+                            Receipt, FileText: FileInvoice, BookOpen, GraduationCap, Stethoscope, Heart,
+                            Activity, Apple, Beef, Utensils, Dumbbell, Waves, Mountain, TreePine, Flower2,
+                            Sun, Cloud, CloudRain, Zap, Flame
+                          };
+                          const IconComponent = iconMap[cat.icon];
+                          if (IconComponent) {
+                            return <IconComponent className="h-5 w-5 text-[rgb(var(--color-text-primary))]" />;
+                          }
+                          return <span className="text-sm text-[rgb(var(--color-text-secondary))]">{cat.icon}</span>;
+                        })() : '-'}
+                      </td>
                       <td className="px-4 py-4">
                         <div className="flex items-center gap-2">
                           <div
@@ -559,16 +640,65 @@ export default function AdminCategories() {
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Icon (emoji or text)</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. 🏢"
-                    value={formData.icon}
-                    onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] placeholder-[rgb(var(--color-text-tertiary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600"
-                  />
+              <div>
+                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Icon</label>
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setShowIconPicker(!showIconPicker)}
+                    className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-left flex items-center justify-between hover:border-indigo-600 transition"
+                  >
+                    <span className="flex items-center gap-2">
+                      {formData.icon && (() => {
+                        const selectedIcon = availableIcons.find(i => i.name === formData.icon);
+                        if (selectedIcon) {
+                          const IconComponent = selectedIcon.icon;
+                          return <IconComponent className="h-5 w-5" />;
+                        }
+                        return <span>{formData.icon}</span>;
+                      })()}
+                      {!formData.icon && <span className="text-[rgb(var(--color-text-tertiary))]">Select an icon...</span>}
+                    </span>
+                    <svg className="h-4 w-4 text-[rgb(var(--color-text-tertiary))]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                  {showIconPicker && (
+                    <div className="absolute top-full left-0 right-0 mt-2 bg-[rgb(var(--color-surface))] border border-indigo-600 rounded-xl shadow-2xl z-50 max-h-80 overflow-hidden">
+                      <div className="overflow-y-auto p-3 grid grid-cols-6 gap-1.5">
+                        {availableIcons.map((item) => {
+                          const IconComponent = item.icon;
+                          return (
+                            <button
+                              key={item.name}
+                              type="button"
+                              onClick={() => {
+                                setFormData({ ...formData, icon: item.name });
+                                setShowIconPicker(false);
+                              }}
+                              className={`p-2.5 rounded-lg transition flex items-center justify-center ${
+                                formData.icon === item.name
+                                  ? 'bg-indigo-100 dark:bg-indigo-900/40 ring-2 ring-indigo-600'
+                                  : 'hover:bg-indigo-50 dark:hover:bg-indigo-950/30'
+                              }`}
+                              title={item.name}
+                            >
+                              <IconComponent className="h-5 w-5 text-[rgb(var(--color-text-primary))]" />
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
                 </div>
+                <button
+                  type="button"
+                  onClick={() => setFormData({ ...formData, icon: '' })}
+                  className="mt-2 text-xs text-red-600 hover:text-red-700 font-medium"
+                >
+                  Clear icon
+                </button>
+              </div>
 
                 <div>
                   <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Color (hex)</label>
