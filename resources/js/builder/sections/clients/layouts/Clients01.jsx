@@ -1,0 +1,26 @@
+import { renderLayoutComponents } from '../../../utils/layoutRenderer.jsx';
+
+export default function Clients01({ components = [], sectionId = null }) {
+  const defaultComponents = [
+    { id: 'heading-1', type: 'heading', props: { content: 'Our Clients', level: 'h2', fontSize: '32px', fontWeight: '700', color: '#0f172a', align: 'center', margin: '0 0 32px 0' } },
+  ];
+
+  const layoutComponents = components.length > 0 ? components : defaultComponents;
+
+  return (
+    <section className="py-20 px-6 bg-white">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col items-center gap-4 mb-12">
+          {renderLayoutComponents(layoutComponents.filter(c => c.type === 'heading' || c.type === 'text' || c.type === 'badge'), sectionId)}
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          {['Client A', 'Client B', 'Client C', 'Client D', 'Client E', 'Client F', 'Client G', 'Client H'].map((client, i) => (
+            <div key={i} className="p-6 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-center hover:shadow-md transition">
+              <span className="text-lg font-bold text-slate-400">{client}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}

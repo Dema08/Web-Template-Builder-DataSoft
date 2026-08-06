@@ -26,4 +26,14 @@ export const createEmptyComponent = (componentType) => ({
   id: generateComponentId(),
   type: componentType,
   props: {},
+  // Position properties for visual builder
+  position: {
+    x: 0,
+    y: 0,
+    width: null,
+    height: null,
+    rotation: 0,
+    scale: 1,
+    zIndex: 1,
+  },
 });

@@ -81,6 +81,27 @@ export const LAYOUT_REGISTRY = {
   certifications: [
     { id: 'certifications-01', name: 'Certifications 01', component: 'Certifications01', thumbnail: null },
   ],
+  vision: [
+    { id: 'vision-01', name: 'Vision 01', component: 'Vision01', thumbnail: null },
+  ],
+  mission: [
+    { id: 'mission-01', name: 'Mission 01', component: 'Mission01', thumbnail: null },
+  ],
+  timeline: [
+    { id: 'timeline-01', name: 'Timeline 01', component: 'Timeline01', thumbnail: null },
+  ],
+  team: [
+    { id: 'team-01', name: 'Team 01', component: 'Team01', thumbnail: null },
+  ],
+  faq: [
+    { id: 'faq-01', name: 'FAQ 01', component: 'Faq01', thumbnail: null },
+  ],
+  pricing: [
+    { id: 'pricing-01', name: 'Pricing 01', component: 'Pricing01', thumbnail: null },
+  ],
+  map: [
+    { id: 'map-01', name: 'Map 01', component: 'Map01', thumbnail: null },
+  ],
 };
 
 export const getLayoutsForSection = (sectionType) => {

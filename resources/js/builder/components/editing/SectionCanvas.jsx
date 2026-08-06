@@ -24,7 +24,7 @@ function SortableSection({ section, isSelected, onSelect }) {
       data-section-id={section.id}
       {...attributes}
       {...listeners}
-      className={`cursor-grab active:cursor-grabbing relative ${isSelected ? 'z-10' : ''}`}
+      className={`relative ${isSelected ? 'z-10' : ''}`}
     >
       <SectionRenderer
         section={section}
@@ -67,7 +67,7 @@ export default function SectionCanvas() {
         items={sections.map(s => s.id)}
         strategy={verticalListSortingStrategy}
       >
-        <div className="space-y-4 pb-20">
+        <div className="pb-20">
           {sections.map((section) => (
             <SortableSection
               key={section.id}

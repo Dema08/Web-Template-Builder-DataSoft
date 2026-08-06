@@ -3,14 +3,24 @@ import { getSectionConfig } from '../../utils/industryConfigs';
 import { getLayoutComponent } from '../../utils/layoutComponentMapper';
 import { getUIComponent } from '../../utils/componentMapper';
 
+// Convert layout ID like "hero-01" to component name "Hero01"
+const layoutIdToComponentName = (layoutId) => {
+  if (!layoutId) return null;
+  return layoutId
+    .split('-')
+    .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+    .join('');
+};
+
 export default function SectionRenderer({ section, isSelected, onClick }) {
   const config = getSectionConfig('default', section.type);
   const { selectedSectionId, selectSection, selectComponent } = useBuilderStore();
 
   const isSectionSelected = selectedSectionId === section.id;
 
-  // Get the layout component
-  const LayoutComponent = getLayoutComponent(section.layout);
+  // Get the layout component - convert layout ID to component name
+  const componentName = layoutIdToComponentName(section.layout);
+  const LayoutComponent = getLayoutComponent(componentName);
 
   const handleSectionClick = (e) => {
     e.stopPropagation();
@@ -29,6 +39,7 @@ export default function SectionRenderer({ section, isSelected, onClick }) {
     return <Component key={component.id} {...component.props} />;
   };
 
+  // If no layout component found, render a fallback with the section type
   if (!LayoutComponent) {
     return (
       <div

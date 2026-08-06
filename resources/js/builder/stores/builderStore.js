@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { createEmptySection, createEmptyComponent } from '../types';
 import { getDefaultLayout } from '../utils/layoutRegistry';
+import { getLayoutDefaults } from '../utils/layoutDefaults';
 
 export const useBuilderStore = create((set, get) => ({
   // Initial state
@@ -36,12 +37,47 @@ export const useBuilderStore = create((set, get) => ({
     set({ templateName });
   },
 
+  loadSections: (sectionsData) => {
+    const loadedSections = sectionsData.map((section, index) => ({
+      id: section.id || `section-${Date.now()}-${index}-${Math.random().toString(36).substr(2, 9)}`,
+      type: section.type,
+      layout: section.layout,
+      components: (section.components || []).map(c => ({
+        id: c.id || `component-${Date.now()}-${index}-${Math.random().toString(36).substr(2, 9)}`,
+        type: c.type,
+        props: c.props || {},
+        position: c.position || { x: 0, y: 0, width: null, height: null, rotation: 0, scale: 1, zIndex: 1 },
+      })),
+      order: index,
+      styles: section.styles || {},
+    }));
+
+    set({
+      sections: loadedSections,
+      history: [JSON.parse(JSON.stringify(loadedSections))],
+      historyIndex: 0,
+      selectedSectionId: null,
+      selectedComponentId: null,
+    });
+  },
+
   addSection: (sectionType, layout = null) => {
     const { sections, saveToHistory } = get();
     saveToHistory();
 
     const sectionLayout = layout || getDefaultLayout(sectionType);
     const newSection = createEmptySection(sectionType, sectionLayout, sections.length);
+
+    // Seed section with default components from layout defaults registry
+    const defaultComponents = getLayoutDefaults(sectionLayout);
+    if (defaultComponents.length > 0) {
+      newSection.components = defaultComponents.map(c => ({
+        id: c.id || `component-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        type: c.type,
+        props: c.props || {},
+        position: { x: 0, y: 0, width: null, height: null, rotation: 0, scale: 1, zIndex: 1 },
+      }));
+    }
 
     set({ sections: [...sections, newSection], selectedSectionId: newSection.id, selectedComponentId: null });
   },
@@ -132,6 +168,54 @@ export const useBuilderStore = create((set, get) => ({
             c.id === componentId ? { ...c, props: { ...c.props, ...props } } : c
           ),
         };
+      }
+      return s;
+    });
+
+    set({ sections: newSections });
+  },
+
+  updateComponentPosition: (sectionId, componentId, position) => {
+    const { sections } = get();
+
+    const newSections = sections.map(s => {
+      if (s.id === sectionId) {
+        return {
+          ...s,
+          components: s.components.map(c =>
+            c.id === componentId
+              ? { ...c, position: { ...c.position, ...position } }
+              : c
+          ),
+        };
+      }
+      return s;
+    });
+
+    set({ sections: newSections });
+  },
+
+  reorderComponents: (sectionId, newComponents) => {
+    const { sections, saveToHistory } = get();
+    saveToHistory();
+
+    const newSections = sections.map(s => {
+      if (s.id === sectionId) {
+        return { ...s, components: newComponents };
+      }
+      return s;
+    });
+
+    set({ sections: newSections });
+  },
+
+  updateSectionStyles: (sectionId, styles) => {
+    const { sections, saveToHistory } = get();
+    saveToHistory();
+
+    const newSections = sections.map(s => {
+      if (s.id === sectionId) {
+        return { ...s, styles: { ...(s.styles || {}), ...styles } };
       }
       return s;
     });
