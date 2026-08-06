@@ -385,10 +385,6 @@ export default function AdminCategories() {
                 <tr>
                   <th className="px-4 py-3 text-left text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Order</th>
                   <th className="px-4 py-3 text-left text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Name</th>
-                  <th className="px-4 py-3 text-left text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Slug</th>
-                  <th className="px-4 py-3 text-left text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Description</th>
-                  <th className="px-4 py-3 text-left text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Icon</th>
-                  <th className="px-4 py-3 text-left text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Color</th>
                   <th className="px-4 py-3 text-center text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Status</th>
                   <th className="px-4 py-3 text-right text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Actions</th>
                 </tr>
@@ -443,38 +439,6 @@ export default function AdminCategories() {
                           </div>
                         </div>
                       </td>
-                      <td className="px-4 py-4">
-                        <code className="text-xs bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] px-2 py-1 rounded text-[rgb(var(--color-text-primary))] font-mono">{cat.slug}</code>
-                      </td>
-                      <td className="px-4 py-4">
-                        <p className="text-sm text-[rgb(var(--color-text-secondary))] max-w-xs truncate">{cat.description || '-'}</p>
-                      </td>
-                      <td className="px-4 py-4">
-                        {cat.icon ? (() => {
-                          const iconMap = {
-                            Layers, Home, Building, Store, Coffee, Car, Plane, Ship, Train, Bike: BikeIcon,
-                            Bus, Hotel, MapPin, Users, Briefcase, Settings, Wrench, Package, ShoppingCart,
-                            CreditCard, Wallet, PiggyBank, BarChart, TrendingUp, PieChart, DollarSign,
-                            Receipt, FileText: FileInvoice, BookOpen, GraduationCap, Stethoscope, Heart,
-                            Activity, Apple, Beef, Utensils, Dumbbell, Waves, Mountain, TreePine, Flower2,
-                            Sun, Cloud, CloudRain, Zap, Flame
-                          };
-                          const IconComponent = iconMap[cat.icon];
-                          if (IconComponent) {
-                            return <IconComponent className="h-5 w-5 text-[rgb(var(--color-text-primary))]" />;
-                          }
-                          return <span className="text-sm text-[rgb(var(--color-text-secondary))]">{cat.icon}</span>;
-                        })() : '-'}
-                      </td>
-                      <td className="px-4 py-4">
-                        <div className="flex items-center gap-2">
-                          <div
-                            className="h-6 w-6 rounded-md border border-[rgb(var(--color-border))]"
-                            style={{ backgroundColor: cat.color || '#6366f1' }}
-                          />
-                          <span className="text-sm text-[rgb(var(--color-text-secondary))] font-mono">{cat.color || 'default'}</span>
-                        </div>
-                      </td>
                       <td className="px-4 py-4 whitespace-nowrap text-center">
                         <button
                           onClick={() => categoryService.update(cat.id, { ...cat, is_active: !cat.is_active }).then(() => queryClient.invalidateQueries(['admin', 'categories']))}
@@ -521,7 +485,7 @@ export default function AdminCategories() {
                     </tr>
                     {expandedCategory === cat.id && (
                       <tr key={`${cat.id}-templates`}>
-                        <td colSpan="8" className="p-0">
+                        <td colSpan="4" className="p-0">
                           <div className="border-t border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface-alt))]">
                             <div className="p-4">
                               <div className="flex items-center justify-between mb-3">
@@ -617,132 +581,29 @@ export default function AdminCategories() {
                 />
               </div>
 
+              <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Slug</label>
+                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Sort Order</label>
                 <input
-                  type="text"
-                  placeholder="auto-generated-from-name"
-                  value={formData.slug}
-                  onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                  className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] placeholder-[rgb(var(--color-text-tertiary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 font-mono"
+                  type="number"
+                  min="0"
+                  value={formData.sort_order}
+                  onChange={(e) => setFormData({ ...formData, sort_order: parseInt(e.target.value) || 0 })}
+                  className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Description</label>
-                <textarea
-                  rows="3"
-                  placeholder="Category description..."
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] placeholder-[rgb(var(--color-text-tertiary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 resize-none"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Icon</label>
-                <div className="relative">
-                  <button
-                    type="button"
-                    onClick={() => setShowIconPicker(!showIconPicker)}
-                    className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-left flex items-center justify-between hover:border-indigo-600 transition"
-                  >
-                    <span className="flex items-center gap-2">
-                      {formData.icon && (() => {
-                        const selectedIcon = availableIcons.find(i => i.name === formData.icon);
-                        if (selectedIcon) {
-                          const IconComponent = selectedIcon.icon;
-                          return <IconComponent className="h-5 w-5" />;
-                        }
-                        return <span>{formData.icon}</span>;
-                      })()}
-                      {!formData.icon && <span className="text-[rgb(var(--color-text-tertiary))]">Select an icon...</span>}
-                    </span>
-                    <svg className="h-4 w-4 text-[rgb(var(--color-text-tertiary))]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
-                  {showIconPicker && (
-                    <div className="absolute top-full left-0 right-0 mt-2 bg-[rgb(var(--color-surface))] border border-indigo-600 rounded-xl shadow-2xl z-50 max-h-80 overflow-hidden">
-                      <div className="overflow-y-auto p-3 grid grid-cols-6 gap-1.5">
-                        {availableIcons.map((item) => {
-                          const IconComponent = item.icon;
-                          return (
-                            <button
-                              key={item.name}
-                              type="button"
-                              onClick={() => {
-                                setFormData({ ...formData, icon: item.name });
-                                setShowIconPicker(false);
-                              }}
-                              className={`p-2.5 rounded-lg transition flex items-center justify-center ${
-                                formData.icon === item.name
-                                  ? 'bg-indigo-100 dark:bg-indigo-900/40 ring-2 ring-indigo-600'
-                                  : 'hover:bg-indigo-50 dark:hover:bg-indigo-950/30'
-                              }`}
-                              title={item.name}
-                            >
-                              <IconComponent className="h-5 w-5 text-[rgb(var(--color-text-primary))]" />
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )}
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setFormData({ ...formData, icon: '' })}
-                  className="mt-2 text-xs text-red-600 hover:text-red-700 font-medium"
+                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Status</label>
+                <select
+                  value={formData.is_active ? 'true' : 'false'}
+                  onChange={(e) => setFormData({ ...formData, is_active: e.target.value === 'true' })}
+                  className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600"
                 >
-                  Clear icon
-                </button>
+                  <option value="true">Active</option>
+                  <option value="false">Inactive</option>
+                </select>
               </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Color (hex)</label>
-                  <div className="flex gap-2">
-                    <input
-                      type="color"
-                      value={formData.color || '#6366f1'}
-                      onChange={(e) => setFormData({ ...formData, color: e.target.value })}
-                      className="h-10 w-14 rounded-lg border border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface-alt))] cursor-pointer"
-                    />
-                    <input
-                      type="text"
-                      placeholder="#6366f1"
-                      value={formData.color}
-                      onChange={(e) => setFormData({ ...formData, color: e.target.value })}
-                      className="flex-1 px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] placeholder-[rgb(var(--color-text-tertiary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 font-mono"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Sort Order</label>
-                  <input
-                    type="number"
-                    min="0"
-                    value={formData.sort_order}
-                    onChange={(e) => setFormData({ ...formData, sort_order: parseInt(e.target.value) || 0 })}
-                    className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Status</label>
-                  <select
-                    value={formData.is_active ? 'true' : 'false'}
-                    onChange={(e) => setFormData({ ...formData, is_active: e.target.value === 'true' })}
-                    className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600"
-                  >
-                    <option value="true">Active</option>
-                    <option value="false">Inactive</option>
-                  </select>
-                </div>
               </div>
 
               <div className="flex justify-end gap-2 pt-4 border-t border-[rgb(var(--color-border))]">
