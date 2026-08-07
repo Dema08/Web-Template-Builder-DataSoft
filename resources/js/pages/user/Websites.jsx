@@ -156,55 +156,59 @@ export default function Websites() {
                 </Card>
             </div>
 
-            {/* Search & Filter Toolbar */}
-            <Card className="p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div className="relative w-full sm:w-80">
-                    <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[rgb(var(--color-text-tertiary))]" />
-                    <input
-                        type="text"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder="Search websites by name or domain..."
-                        className="w-full pl-10 pr-4 py-2 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] placeholder-[rgb(var(--color-text-tertiary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input"
-                    />
-                </div>
+            {/* Search & Filter Toolbar - Modern Premium Design */}
+            <div className="bg-[rgb(var(--color-surface))] rounded-2xl border border-[rgb(var(--color-border))] p-4 shadow-sm hover:shadow-md transition-shadow duration-200">
+                <div className="flex flex-col lg:flex-row items-stretch gap-4">
+                    {/* Search Bar - Primary Focus (60-70% width) */}
+                    <div className="relative flex-1 lg:max-w-[65%]">
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-indigo-400" />
+                        <input
+                            type="text"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            placeholder="Search websites by name or domain..."
+                            className="w-full h-[52px] pl-12 pr-4 bg-[rgb(var(--color-surface-alt))] border-2 border-[rgb(var(--color-border))] rounded-xl text-sm text-[rgb(var(--color-text-primary))] placeholder:text-[rgb(var(--color-text-tertiary))] focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 focus:bg-white transition-all"
+                        />
+                    </div>
 
-                <div className="flex items-center gap-2 bg-[rgb(var(--color-surface-alt))] p-1 rounded-xl">
-                    <button
-                        type="button"
-                        onClick={() => setStatusFilter('all')}
-                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition ${
-                                statusFilter === 'all'
-                                    ? 'bg-[rgb(var(--color-surface))] text-[rgb(var(--color-text-primary))] shadow-xs'
-                                    : 'text-[rgb(var(--color-text-secondary))] hover:text-[rgb(var(--color-text-primary))]'
-                            }`}
-                    >
-                        All ({websitesList.length})
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => setStatusFilter('published')}
-                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition ${
-                                statusFilter === 'published'
-                                    ? 'bg-[rgb(var(--color-surface))] text-emerald-600 shadow-xs'
-                                    : 'text-[rgb(var(--color-text-secondary))] hover:text-[rgb(var(--color-text-primary))]'
-                            }`}
-                    >
-                        Published ({websitesList.filter((w) => w.status === 'Published').length})
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => setStatusFilter('draft')}
-                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition ${
-                                statusFilter === 'draft'
-                                    ? 'bg-[rgb(var(--color-surface))] text-amber-600 shadow-xs'
-                                    : 'text-[rgb(var(--color-text-secondary))] hover:text-[rgb(var(--color-text-primary))]'
-                            }`}
-                    >
-                        Draft ({websitesList.filter((w) => w.status === 'Draft').length})
-                    </button>
+                    {/* Status Filter */}
+                    <div className="flex items-center gap-2 bg-[rgb(var(--color-surface-alt))] p-1 rounded-xl">
+                        <button
+                            type="button"
+                            onClick={() => setStatusFilter('all')}
+                                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                                    statusFilter === 'all'
+                                        ? 'bg-[rgb(var(--color-surface))] text-[rgb(var(--color-text-primary))] shadow-sm'
+                                        : 'text-[rgb(var(--color-text-secondary))] hover:text-[rgb(var(--color-text-primary))]'
+                                }`}
+                        >
+                            All ({websitesList.length})
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setStatusFilter('published')}
+                                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                                    statusFilter === 'published'
+                                        ? 'bg-[rgb(var(--color-surface))] text-emerald-600 shadow-sm'
+                                        : 'text-[rgb(var(--color-text-secondary))] hover:text-[rgb(var(--color-text-primary))]'
+                                }`}
+                        >
+                            Published ({websitesList.filter((w) => w.status === 'Published').length})
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setStatusFilter('draft')}
+                                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                                    statusFilter === 'draft'
+                                        ? 'bg-[rgb(var(--color-surface))] text-amber-600 shadow-sm'
+                                        : 'text-[rgb(var(--color-text-secondary))] hover:text-[rgb(var(--color-text-primary))]'
+                                }`}
+                        >
+                            Draft ({websitesList.filter((w) => w.status === 'Draft').length})
+                        </button>
+                    </div>
                 </div>
-            </Card>
+            </div>
 
             {/* Grid of Website Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
