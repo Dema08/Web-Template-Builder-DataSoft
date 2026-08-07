@@ -16,6 +16,7 @@ import {
 import { Card } from '@components/ui';
 import { toast } from '@store';
 import { templateApi } from '@api';
+import { categoryService } from '@services';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 
@@ -72,6 +73,7 @@ export default function AdminTemplates() {
         mutationFn: templateApi.create,
         onSuccess: () => {
             queryClient.invalidateQueries(['admin-templates']);
+            queryClient.invalidateQueries(['admin-categories']);
             toast.success('Template created successfully', 'Success');
             handleCloseModal();
         },
@@ -84,6 +86,7 @@ export default function AdminTemplates() {
         mutationFn: ({ id, data }) => templateApi.update(id, data),
         onSuccess: () => {
             queryClient.invalidateQueries(['admin-templates']);
+            queryClient.invalidateQueries(['admin-categories']);
             toast.success('Template updated successfully', 'Success');
             handleCloseModal();
         },
@@ -96,6 +99,7 @@ export default function AdminTemplates() {
         mutationFn: templateApi.delete,
         onSuccess: () => {
             queryClient.invalidateQueries(['admin-templates']);
+            queryClient.invalidateQueries(['admin-categories']);
             toast.success('Template deleted successfully', 'Success');
             setActionDropdown(null);
         },
@@ -105,6 +109,7 @@ export default function AdminTemplates() {
         mutationFn: templateApi.publish,
         onSuccess: () => {
             queryClient.invalidateQueries(['admin-templates']);
+            queryClient.invalidateQueries(['admin-categories']);
             toast.success('Template published successfully', 'Success');
             setActionDropdown(null);
         },
@@ -114,6 +119,7 @@ export default function AdminTemplates() {
         mutationFn: templateApi.archive,
         onSuccess: () => {
             queryClient.invalidateQueries(['admin-templates']);
+            queryClient.invalidateQueries(['admin-categories']);
             toast.success('Template archived successfully', 'Success');
             setActionDropdown(null);
         },
@@ -123,6 +129,7 @@ export default function AdminTemplates() {
         mutationFn: templateApi.duplicate,
         onSuccess: () => {
             queryClient.invalidateQueries(['admin-templates']);
+            queryClient.invalidateQueries(['admin-categories']);
             toast.success('Template duplicated successfully', 'Success');
             setActionDropdown(null);
         },
@@ -132,6 +139,7 @@ export default function AdminTemplates() {
         mutationFn: templateApi.toggleFeatured,
         onSuccess: () => {
             queryClient.invalidateQueries(['admin-templates']);
+            queryClient.invalidateQueries(['admin-categories']);
             setActionDropdown(null);
         },
     });
@@ -198,6 +206,17 @@ export default function AdminTemplates() {
         }
     };
 
+    const { data: categoriesData = [] } = useQuery({
+        queryKey: ['admin-categories'],
+        queryFn: categoryService.getAll,
+    });
+
+    const categories = categoriesData.map(cat => ({
+        id: cat.id,
+        name: cat.name,
+        template_count: cat.template_count || 0,
+    }));
+
     const getStatusColor = (status) => {
         const colors = {
             draft: 'bg-gray-100 text-gray-700',
@@ -257,7 +276,11 @@ export default function AdminTemplates() {
                             className="h-[52px] px-4 bg-slate-50/50 border-2 border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 focus:bg-white transition-all cursor-pointer hover:border-slate-300"
                         >
                             <option value="">All Categories</option>
-                            {/* Categories will be populated from API */}
+                            {categories.map((cat) => (
+                                <option key={cat.id} value={cat.id}>
+                                    {cat.name} ({cat.template_count})
+                                </option>
+                            ))}
                         </select>
 
                         {/* Status Filter */}
