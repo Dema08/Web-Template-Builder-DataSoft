@@ -34,7 +34,7 @@ export default function AppLayout() {
     const profileAvatar = user?.avatar || null;
     const profileAvatarFallback = `https://ui-avatars.com/api/?name=${encodeURIComponent(firstName)}&background=6366f1&color=fff`;
 
-    const { brandName, brandBadge, brandColor, logoUrl, planLabel } = useSettingsStore();
+    const { brand_name, brand_badge, brand_color, logo_path, plan_label } = useSettingsStore();
 
     const sidebarItems = isAdmin
         ? [
@@ -70,26 +70,26 @@ export default function AppLayout() {
                         }`}
                     >
                         <div className="flex shrink-0 items-center justify-center">
-                            {logoUrl ? (
-                                <img src={logoUrl} alt={brandName} className="h-10 w-10 rounded-xl object-contain border border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface))] p-0.5 shadow-sm" />
+                            {logo_path ? (
+                                <img src={logo_path} alt={brand_name} className="h-10 w-10 rounded-xl object-contain border border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface))] p-0.5 shadow-sm" />
                             ) : (
                                 <div
                                     className="h-10 w-10 rounded-xl flex items-center justify-center text-white font-extrabold text-sm shadow-md"
-                                    style={{ backgroundColor: brandColor }}
+                                    style={{ backgroundColor: brand_color }}
                                 >
-                                    {brandBadge || 'DS'}
+                                    {brand_badge || 'DS'}
                                 </div>
                             )}
                         </div>
 
                         {!isSidebarCollapsed && (
                             <div className="min-w-0 flex-1">
-                                <div className="text-[15px] font-extrabold tracking-tight">{brandName}</div>
+                                <div className="text-[15px] font-extrabold tracking-tight">{brand_name}</div>
                                 <div
                                     className="text-[10px] font-bold uppercase tracking-[0.18em]"
-                                    style={{ color: brandColor }}
+                                    style={{ color: brand_color }}
                                 >
-                                    {isAdmin ? 'Admin Panel' : planLabel}
+                                    {isAdmin ? 'Admin Panel' : plan_label}
                                 </div>
                             </div>
                         )}
@@ -260,7 +260,7 @@ export default function AppLayout() {
                         {/* App Footer */}
                         <footer className="mt-12 border-t border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface))] px-8 py-6 flex flex-col sm:flex-row items-center justify-between text-xs text-[rgb(var(--color-text-secondary))] gap-4 transition-colors duration-300">
                             <div className="flex items-center gap-2">
-                                <span className="font-extrabold text-[rgb(var(--color-text-primary))]">{brandName} Profile Builder</span>
+                                <span className="font-extrabold text-[rgb(var(--color-text-primary))]">{brand_name} Profile Builder</span>
                                 <span>•</span>
                                 <span>© 2026 PT DataSoft Solusindo. All rights reserved.</span>
                             </div>
