@@ -21,7 +21,9 @@
     --color-danger: 239, 68, 68;      /* red-500 */
     --color-surface: 255, 255, 255;
     --color-surface-alt: 250, 250, 252;
-    --color-surface-elevated: 255, 255, 255;
+    --color-surface-elevated: 239, 246, 255; /* very light blue */
+    --color-sidebar: 239, 246, 255;    /* very light blue (slate-50 with blue tint) */
+    --color-navbar: 239, 246, 255;     /* very light blue (slate-50 with blue tint) */
     --color-border: 226, 232, 240;    /* slate-200 */
     --color-border-soft: 231, 240, 252;
     --color-text-primary: 15, 23, 42;  /* slate-900 */
@@ -36,6 +38,8 @@
     --color-surface: 15, 23, 42;      /* slate-900 */
     --color-surface-alt: 30, 41, 59;  /* slate-800 */
     --color-surface-elevated: 30, 41, 59; /* slate-800 */
+    --color-sidebar: 30, 41, 59;      /* slate-800 */
+    --color-navbar: 30, 41, 59;       /* slate-800 */
     --color-border: 51, 65, 85;       /* slate-700 */
     --color-border-soft: 71, 85, 105; /* slate-600 */
     --color-text-primary: 248, 250, 252; /* slate-50 */
@@ -72,7 +76,7 @@ html, body {
 }
 
 .ds-card {
-    background-color: rgb(var(--color-surface));
+    background-color: rgb(var(--color-surface-elevated));
     border: 1px solid rgb(var(--color-border));
     box-shadow: var(--shadow-card);
     border-radius: 1.25rem;
