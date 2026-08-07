@@ -4,6 +4,7 @@ export { default as profileApi } from './profile';
 export { default as dashboardApi } from './dashboard';
 export { default as websiteApi } from './website';
 export { default as publicApi } from './public';
+export { default as settingsApi } from './settings';
 export { onboardingApi } from './onboarding';
 export { default as categoryApi } from './category';
 export { default as templateApi } from './template';

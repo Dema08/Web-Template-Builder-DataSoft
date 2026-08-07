@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Sparkles, Compass } from 'lucide-react';
 import { useForm } from 'react-hook-form';
-import { Spinner, Alert } from '@components/ui';
+import { Spinner, Alert, BrandLogo } from '@components/ui';
 import { ROUTES } from '@constants';
 
 export default function ResetPassword() {
@@ -79,12 +79,7 @@ export default function ResetPassword() {
             <div className="w-full md:w-1/2 p-8 sm:p-12 flex flex-col justify-between bg-[rgb(var(--color-surface))]">
                 <div>
                     {/* Brand Logo */}
-                    <div className="flex items-center gap-2.5">
-                        <div className="h-9 w-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-black text-sm tracking-tighter shadow-md shadow-indigo-500/20">
-                            DS
-                        </div>
-                        <span className="text-xl font-bold text-[rgb(var(--color-text-primary))] tracking-tight">DataSoft</span>
-                    </div>
+                    <BrandLogo />
 
                     {/* Heading */}
                     <div className="mt-8 mb-6">

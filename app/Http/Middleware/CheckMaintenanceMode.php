@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Setting;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -21,8 +22,12 @@ class CheckMaintenanceMode
             return $next($request);
         }
 
-        // Check if maintenance mode is enabled
-        $maintenanceMode = Cache::get('maintenance_mode', false);
+        // Read maintenance mode from the settings table (single source of truth),
+        // cached for 30 days. The cache is kept in sync by SystemSettingsController
+        // and AdminSettingController whenever the value changes.
+        $maintenanceMode = Cache::remember('maintenance_mode', now()->addDays(30), function () {
+            return (bool) Setting::get('maintenance_mode', false);
+        });
 
         if ($maintenanceMode) {
             // Return maintenance mode response for API or JSON requests

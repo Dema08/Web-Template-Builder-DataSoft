@@ -1,12 +1,15 @@
 import { useState, useRef, useEffect } from 'react';
 import { Shield, Settings, Save, RefreshCw, Image, Type, Palette, Upload, X, Sun, Moon, AlertTriangle, Wrench } from 'lucide-react';
-import { toast, useBrandStore } from '@store';
+import { toast, useSettingsStore } from '@store';
 import { Card } from '@components/ui';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { http } from '@api';
+import { useSettings } from '@hooks';
 
 export default function AdminSettings() {
-    const { brandName, brandBadge, brandColor, logoUrl, planLabel, setBrand, resetBrand } = useBrandStore();
+    const { brand_name, brand_badge, brand_color, plan_label, logo_path, setSettings, updateSetting, resetSettings } = useSettingsStore();
+    const { updateSettings, uploadLogo, removeLogo, isUpdating, isUploadingLogo, isRemovingLogo } = useSettings();
+    const queryClient = useQueryClient();
 
     // Theme state
     const [darkMode, setDarkMode] = useState(() => {
@@ -23,35 +26,44 @@ export default function AdminSettings() {
         }
     }, [darkMode]);
 
-    // Brand identity form state
-    const [localBrandName, setLocalBrandName] = useState(brandName);
-    const [localBrandBadge, setLocalBrandBadge] = useState(brandBadge);
-    const [localBrandColor, setLocalBrandColor] = useState(brandColor);
-    const [localPlanLabel, setLocalPlanLabel] = useState(planLabel);
-    const [localLogoUrl, setLocalLogoUrl] = useState(logoUrl);
-    const [logoPreview, setLogoPreview] = useState(logoUrl);
+    // Local form state
+    const [localBrandName, setLocalBrandName] = useState(brand_name);
+    const [localBrandBadge, setLocalBrandBadge] = useState(brand_badge);
+    const [localBrandColor, setLocalBrandColor] = useState(brand_color);
+    const [localPlanLabel, setLocalPlanLabel] = useState(plan_label);
+    const [logoPreview, setLogoPreview] = useState(logo_path);
 
     // System settings state
     const [maintenanceMode, setMaintenanceMode] = useState(false);
     const [allowRegistration, setAllowRegistration] = useState(true);
     const [defaultStorageLimit, setDefaultStorageLimit] = useState(100);
 
-    const queryClient = useQueryClient();
-
-    // Fetch current maintenance mode status
-    const { data: maintenanceData } = useQuery({
-        queryKey: ['system', 'maintenance'],
+    // Fetch all settings from database
+    const { data: settingsData, isLoading: settingsLoading } = useQuery({
+        queryKey: ['settings'],
         queryFn: async () => {
-            const response = await http.get('/admin/system/maintenance');
+            const response = await http.get('/admin/settings');
             return response.data;
         },
     });
 
+    // Initialize form state from database
     useEffect(() => {
-        if (maintenanceData?.data?.maintenance_mode !== undefined) {
-            setMaintenanceMode(Boolean(maintenanceData.data.maintenance_mode));
+        if (settingsData?.data) {
+            const brand = settingsData.data;
+            const system = settingsData.data;
+
+            setLocalBrandName(brand.brand_name || 'DataSoft');
+            setLocalBrandBadge(brand.brand_badge || 'DS');
+            setLocalBrandColor(brand.brand_color || '#2563eb');
+            setLocalPlanLabel(brand.plan_label || 'Premium Plan');
+            setLogoPreview(brand.logo_path || null);
+
+            setMaintenanceMode(Boolean(system.maintenance_mode));
+            setAllowRegistration(Boolean(system.allow_registration));
+            setDefaultStorageLimit(Number(system.default_storage_limit) || 100);
         }
-    }, [maintenanceData]);
+    }, [settingsData]);
 
     // Update maintenance mode mutation
     const updateMaintenanceMutation = useMutation({
@@ -61,6 +73,7 @@ export default function AdminSettings() {
         },
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['system', 'maintenance'] });
+            queryClient.invalidateQueries({ queryKey: ['settings'] });
             toast.success(data.message || 'Maintenance mode updated successfully', 'Success');
         },
         onError: (error) => {
@@ -83,41 +96,48 @@ export default function AdminSettings() {
         const reader = new FileReader();
         reader.onload = (ev) => {
             setLogoPreview(ev.target.result);
-            setLocalLogoUrl(ev.target.result);
         };
         reader.readAsDataURL(file);
+
+        // Upload to server
+        uploadLogo(file);
     };
 
     const handleRemoveLogo = () => {
         setLogoPreview(null);
-        setLocalLogoUrl(null);
-        if (fileInputRef.current) fileInputRef.current.value = '';
+        removeLogo();
     };
 
-    const handleSaveBrand = (e) => {
+    const handleSaveBrand = async (e) => {
         e.preventDefault();
         if (!localBrandName.trim()) {
             toast.error('Brand name cannot be empty.', 'Validation Error');
             return;
         }
-        setBrand({
-            brandName: localBrandName.trim(),
-            brandBadge: localBrandBadge.trim().slice(0, 4).toUpperCase() || 'DS',
-            brandColor: localBrandColor,
-            planLabel: localPlanLabel.trim(),
-            logoUrl: localLogoUrl,
-        });
-        toast.success('Brand identity updated successfully! Changes are now live across all panels.', 'Brand Saved');
+
+        try {
+            const payload = {
+                brand_name: localBrandName.trim(),
+                brand_badge: localBrandBadge.trim().slice(0, 4).toUpperCase() || 'DS',
+                brand_color: localBrandColor,
+                plan_label: localPlanLabel.trim(),
+            };
+
+            const updated = await updateSettingsAsync(payload);
+            setSettings(updated);
+            toast.success('Brand settings updated successfully', 'Success');
+        } catch (error) {
+            // Error is handled in mutation
+        }
     };
 
     const handleResetBrand = () => {
         if (!confirm('Reset brand to factory defaults (DataSoft)?')) return;
-        resetBrand();
+        resetSettings();
         setLocalBrandName('DataSoft');
         setLocalBrandBadge('DS');
         setLocalBrandColor('#2563eb');
         setLocalPlanLabel('Premium Plan');
-        setLocalLogoUrl(null);
         setLogoPreview(null);
         toast.info('Brand identity reset to DataSoft defaults.', 'Brand Reset');
     };
@@ -126,12 +146,21 @@ export default function AdminSettings() {
         e.preventDefault();
         
         try {
-            const result = await updateMaintenanceMutation.mutateAsync(maintenanceMode);
-            console.log('Maintenance update result:', result);
-            // Note: allowRegistration and defaultStorageLimit are not implemented in backend yet
+            const payload = {
+                maintenance_mode: maintenanceMode,
+                allow_registration: allowRegistration,
+                default_storage_limit: defaultStorageLimit,
+            };
+
+            const updated = await updateSettingsAsync(payload);
+            setSettings(updated);
+
+            // Always update maintenance mode via dedicated endpoint for immediate effect
+            // This ensures both enabling AND disabling works properly
+            await updateMaintenanceMutation.mutateAsync(maintenanceMode);
+
             toast.success('Platform system configuration updated successfully!', 'System Settings Saved');
         } catch (error) {
-            console.error('Maintenance update error:', error);
             // Error is handled in mutation
         }
     };
@@ -319,10 +348,11 @@ export default function AdminSettings() {
                             <button
                                 type="button"
                                 onClick={handleRemoveLogo}
-                                className="p-2 text-[rgb(var(--color-text-tertiary))] hover:text-red-600 hover:bg-red-50 rounded-xl transition"
+                                disabled={isRemovingLogo}
+                                className="p-2 text-[rgb(var(--color-text-tertiary))] hover:text-red-600 hover:bg-red-50 rounded-xl transition disabled:opacity-50"
                                 title="Remove logo"
                             >
-                                <X className="h-4 w-4" />
+                                {isRemovingLogo ? <Spinner size="sm" /> : <X className="h-4 w-4" />}
                             </button>
                         </div>
                     ) : (
@@ -352,10 +382,11 @@ export default function AdminSettings() {
                 <div className="flex justify-end pt-2 border-t border-[rgb(var(--color-border))]">
                     <button
                         type="submit"
-                        className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold rounded-xl text-xs shadow-md shadow-blue-600/20 transition"
+                        disabled={isUpdating || isUploadingLogo}
+                        className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold rounded-xl text-xs shadow-md shadow-blue-600/20 transition disabled:opacity-50"
                     >
                         <Save className="h-4 w-4" />
-                        <span>Apply Brand Changes</span>
+                        <span>{isUpdating ? 'Saving...' : 'Apply Brand Changes'}</span>
                     </button>
                 </div>
             </form>
@@ -437,15 +468,14 @@ export default function AdminSettings() {
                 <div className="flex justify-end pt-2 border-t border-[rgb(var(--color-border))]">
                     <button
                         type="submit"
-                        disabled={updateMaintenanceMutation.isPending}
-                        className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-extrabold rounded-xl text-xs shadow-md shadow-blue-600/20 transition disabled:opacity-70"
+                        disabled={updateMaintenanceMutation.isPending || isUpdating}
+                        className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-extrabold rounded-xl text-xs shadow-md shadow-blue-600/20 transition disabled:opacity-50"
                     >
                         <Save className="h-4 w-4" />
-                        <span>{updateMaintenanceMutation.isPending ? 'Saving...' : 'Save Settings'}</span>
+                        <span>{updateMaintenanceMutation.isPending || isUpdating ? 'Saving...' : 'Save Settings'}</span>
                     </button>
                 </div>
             </form>
         </div>
     );
 }
-

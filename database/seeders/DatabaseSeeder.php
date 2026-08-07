@@ -47,6 +47,9 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+        // Seed platform system & brand settings (Single Source of Truth)
+        $this->call(SettingsSeeder::class);
+
         // Seed default industry categories
         $this->call(CategorySeeder::class);
 

@@ -21,6 +21,8 @@ Route::prefix('v1')->group(function (): void {
     Route::prefix('public')->group(function (): void {
         // GET /api/v1/public/site
         Route::get('/site', [App\Domains\Publish\Http\Controllers\PublicSiteController::class, 'show']);
+        // GET /api/v1/public/settings — brand identity for unauthenticated pages
+        Route::get('/settings', [App\Domains\System\Http\Controllers\PublicSettingsController::class, 'index']);
     });
 
     // -------------------------------------------------------------
@@ -44,7 +46,7 @@ Route::prefix('v1')->group(function (): void {
 
     // -------------------------------------------------------------
     // Admin-only endpoints (accessible even during maintenance)
-    Route::prefix('admin')->middleware(['auth:sanctum', 'admin'])->group(function (): void {
+    Route::prefix('admin')->middleware(['auth:sanctum', 'session.timeout', 'admin'])->group(function (): void {
         Route::get('/users', [App\Domains\Admin\Http\Controllers\AdminUserController::class, 'index']);
         Route::patch('/users/{user}/approve', [App\Domains\Admin\Http\Controllers\AdminUserController::class, 'approveUser']);
         Route::patch('/users/{user}/role', [App\Domains\Admin\Http\Controllers\AdminUserController::class, 'updateRole']);
@@ -63,10 +65,15 @@ Route::prefix('v1')->group(function (): void {
         // System settings (accessible even during maintenance)
         Route::get('/system/maintenance', [App\Domains\System\Http\Controllers\SystemSettingsController::class, 'getMaintenanceMode']);
         Route::patch('/system/maintenance', [App\Domains\System\Http\Controllers\SystemSettingsController::class, 'updateMaintenanceMode']);
+
+        Route::get('/settings', [App\Domains\System\Http\Controllers\AdminSettingController::class, 'index']);
+        Route::put('/settings', [App\Domains\System\Http\Controllers\AdminSettingController::class, 'update']);
+        Route::post('/settings/logo', [App\Domains\System\Http\Controllers\AdminSettingController::class, 'uploadLogo']);
+        Route::delete('/settings/logo', [App\Domains\System\Http\Controllers\AdminSettingController::class, 'removeLogo']);
     });
 
     // Authenticated application endpoints (protected by maintenance mode)
-    Route::middleware(['auth:sanctum', 'maintenance'])->group(function (): void {
+    Route::middleware(['auth:sanctum', 'session.timeout', 'maintenance'])->group(function (): void {
         Route::prefix('user')->group(function (): void {
             Route::get('/profile', [App\Domains\User\Http\Controllers\UserController::class, 'profile']);
             Route::put('/profile', [App\Domains\User\Http\Controllers\UserController::class, 'updateProfile']);

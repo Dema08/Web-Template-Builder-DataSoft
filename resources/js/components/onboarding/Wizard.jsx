@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { ArrowLeft, ArrowRight, Sparkles } from 'lucide-react';
 import { Button } from '@components/ui';
 import { useOnboardingStore } from '@store';
+import { useSettingsStore } from '@store';
 import ProgressStepper from './ProgressStepper';
 import StepCompanyInfo from './steps/StepCompanyInfo';
 import StepCategory from './steps/StepCategory';
@@ -19,6 +20,7 @@ export default function Wizard() {
     const currentStep = useOnboardingStore((state) => state.currentStep);
     const setCurrentStep = useOnboardingStore((state) => state.setCurrentStep);
     const isSubmitting = useOnboardingStore((state) => state.isSubmitting);
+    const { brand_badge, brand_name } = useSettingsStore();
 
     const CurrentStepComponent = stepsComponents[currentStep - 1];
 
@@ -48,10 +50,10 @@ export default function Wizard() {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <div className="h-10 w-10 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-extrabold shadow-lg shadow-indigo-500/25">
-                            DS
+                            {brand_badge || 'DS'}
                         </div>
                         <div>
-                            <h1 className="text-sm font-extrabold text-slate-900">Create Your Website</h1>
+                            <h1 className="text-sm font-extrabold text-slate-900">{brand_name} — Create Your Website</h1>
                             <p className="text-xs text-slate-500">Let's get you started</p>
                         </div>
                     </div>
@@ -67,53 +69,23 @@ export default function Wizard() {
 
             {/* Progress Stepper */}
             <div className="bg-white border-b border-slate-200">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6">
-                    <ProgressStepper />
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
+                    <ProgressStepper currentStep={currentStep} />
                 </div>
             </div>
 
             {/* Step Content */}
-            <main className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-                <div
-                    key={currentStep}
-                    className={`transition-all duration-300 ${
-                        direction === 'forward' ? 'animate-in fade-in slide-in-from-right-4' : 'animate-in fade-in slide-in-from-left-4'
-                    }`}
-                >
-                    <CurrentStepComponent />
+            <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+                <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs">
+                    <CurrentStepComponent
+                        onNext={goNext}
+                        onPrev={goPrev}
+                        isFirstStep={isFirstStep}
+                        isLastStep={isLastStep}
+                        direction={direction}
+                    />
                 </div>
             </main>
-
-            {/* Navigation Buttons */}
-            <footer className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-                    <div>
-                        {!isFirstStep && (
-                            <Button variant="ghost" onClick={goPrev}>
-                                <ArrowLeft className="h-4 w-4 mr-2" />
-                                Back
-                            </Button>
-                        )}
-                    </div>
-                    <div>
-                        {!isLastStep ? (
-                            <Button onClick={goNext}>
-                                Continue
-                                <ArrowRight className="h-4 w-4 ml-2" />
-                            </Button>
-                        ) : (
-                            <Button
-                                onClick={() => navigate('/dashboard')}
-                                loading={isSubmitting}
-                                disabled={isSubmitting}
-                            >
-                                <Sparkles className="h-4 w-4 mr-2" />
-                                Create Website
-                            </Button>
-                        )}
-                    </div>
-                </div>
-            </footer>
         </div>
     );
 }
