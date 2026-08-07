@@ -34,20 +34,20 @@ export default function Register() {
     // Show pending approval state after successful registration
     if (doRegister.isSuccess) {
         return (
-            <div className="max-w-5xl w-full bg-white rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row min-h-[660px] border border-gray-100/50">
-                <div className="w-full md:w-1/2 p-8 sm:p-12 flex flex-col items-center justify-center bg-white text-center gap-5">
+            <div className="max-w-5xl w-full bg-[rgb(var(--color-surface))] rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row min-h-[660px] border border-[rgb(var(--color-border))]">
+                <div className="w-full md:w-1/2 p-8 sm:p-12 flex flex-col items-center justify-center bg-[rgb(var(--color-surface))] text-center gap-5">
                     <div className="h-20 w-20 rounded-full bg-amber-50 border-2 border-amber-200 flex items-center justify-center">
                         <Clock className="h-10 w-10 text-amber-500" />
                     </div>
                     <div>
-                        <h2 className="text-2xl font-extrabold text-gray-900 tracking-tight">Pendaftaran Berhasil!</h2>
-                        <p className="text-sm text-gray-500 mt-2 leading-relaxed max-w-xs">
-                            Akun Anda telah berhasil didaftarkan. Akun Anda sedang menunggu persetujuan dari <span className="font-bold text-gray-700">Administrator</span>.
+                        <h2 className="text-2xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">Pendaftaran Berhasil!</h2>
+                        <p className="text-sm text-[rgb(var(--color-text-secondary))] mt-2 leading-relaxed max-w-xs">
+                            Akun Anda telah berhasil didaftarkan. Akun Anda sedang menunggu persetujuan dari <span className="font-bold text-[rgb(var(--color-text-primary))]">Administrator</span>.
                         </p>
                     </div>
                     <div className="w-full bg-amber-50 border border-amber-200 rounded-2xl p-4 text-left space-y-2">
                         <div className="flex items-center gap-2">
-                            <CheckCircle2 className="h-4 w-4 text-amber-600 shrink-0" />
+                            <CheckCircle2 className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
                             <p className="text-xs font-semibold text-amber-800">Langkah selanjutnya:</p>
                         </div>
                         <ol className="text-xs text-amber-700 space-y-1 list-decimal list-inside pl-1">
@@ -58,7 +58,7 @@ export default function Register() {
                     </div>
                     <Link
                         to={ROUTES.LOGIN}
-                        className="mt-2 inline-flex items-center justify-center px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-sm shadow-lg shadow-blue-600/25 transition-all"
+                        className="mt-2 inline-flex items-center justify-center px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-sm shadow-lg shadow-indigo-600/25 transition-all"
                     >
                         Kembali ke Halaman Login
                     </Link>
@@ -100,22 +100,22 @@ export default function Register() {
     }
 
     return (
-        <div className="max-w-5xl w-full bg-white rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row min-h-[660px] border border-gray-100/50">
+        <div className="max-w-5xl w-full bg-[rgb(var(--color-surface))] rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row min-h-[660px] border border-[rgb(var(--color-border))]">
             {/* Left Column — Form */}
-            <div className="w-full md:w-1/2 p-8 sm:p-12 flex flex-col justify-between bg-white">
+            <div className="w-full md:w-1/2 p-8 sm:p-12 flex flex-col justify-between bg-[rgb(var(--color-surface))]">
                 <div>
                     {/* Brand Logo */}
                     <div className="flex items-center gap-2.5">
-                        <div className="h-9 w-9 rounded-xl bg-blue-600 flex items-center justify-center text-white font-black text-sm tracking-tighter shadow-md shadow-blue-500/20">
+                        <div className="h-9 w-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-black text-sm tracking-tighter shadow-md shadow-indigo-500/20">
                             DS
                         </div>
-                        <span className="text-xl font-bold text-gray-900 tracking-tight">DataSoft</span>
+                        <span className="text-xl font-bold text-[rgb(var(--color-text-primary))] tracking-tight">DataSoft</span>
                     </div>
 
                     {/* Heading */}
                     <div className="mt-8 mb-6">
-                        <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Create Account</h1>
-                        <p className="text-sm text-gray-500 mt-1.5">Join and start building your company profile website with DataSoft.</p>
+                        <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">Create Account</h1>
+                        <p className="text-sm text-[rgb(var(--color-text-secondary))] mt-1.5">Join and start building your company profile website with DataSoft.</p>
                     </div>
 
                     {doRegister.isError && (
@@ -129,9 +129,9 @@ export default function Register() {
                     )}
 
                     {/* Pending approval notice */}
-                    <div className="mb-4 flex items-start gap-2 px-3 py-2.5 bg-blue-50 border border-blue-200 rounded-xl">
-                        <Info className="h-4 w-4 text-blue-600 shrink-0 mt-0.5" />
-                        <p className="text-xs text-blue-700 leading-relaxed">
+                    <div className="mb-4 flex items-start gap-2 px-3 py-2.5 bg-indigo-50 border border-indigo-200 rounded-xl">
+                        <Info className="h-4 w-4 text-indigo-600 shrink-0 mt-0.5" />
+                        <p className="text-xs text-indigo-700 leading-relaxed">
                             <span className="font-bold">Perhatian:</span> Akun baru memerlukan persetujuan admin sebelum dapat login.
                         </p>
                     </div>
@@ -140,17 +140,17 @@ export default function Register() {
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-3.5" noValidate>
                         {/* Name Field */}
                         <div>
-                            <label className="block text-xs font-semibold text-gray-700 mb-1">
+                            <label className="block text-xs font-semibold text-[rgb(var(--color-text-primary))] mb-1">
                                 Full Name
                             </label>
                             <input
                                 type="text"
                                 autoComplete="name"
                                 placeholder="Jane Doe"
-                                className={`w-full px-4 py-2.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-blue-600/20 ${
+                                className={`w-full px-4 py-2.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-indigo-600/20 bg-[rgb(var(--color-surface-alt))] text-[rgb(var(--color-text-primary))] placeholder:text-[rgb(var(--color-text-tertiary))] ${
                                     errors.name
-                                        ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
-                                        : 'border-gray-200 focus:border-blue-600'
+                                        ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20'
+                                        : 'border-[rgb(var(--color-border))] focus:border-indigo-600'
                                 }`}
                                 {...register('name', {
                                     required: 'Name is required',
@@ -164,17 +164,17 @@ export default function Register() {
 
                         {/* Email Field */}
                         <div>
-                            <label className="block text-xs font-semibold text-gray-700 mb-1">
+                            <label className="block text-xs font-semibold text-[rgb(var(--color-text-primary))] mb-1">
                                 Email Address
                             </label>
                             <input
                                 type="email"
                                 autoComplete="email"
                                 placeholder="name@datasoft.id"
-                                className={`w-full px-4 py-2.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-blue-600/20 ${
+                                className={`w-full px-4 py-2.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-indigo-600/20 bg-[rgb(var(--color-surface-alt))] text-[rgb(var(--color-text-primary))] placeholder:text-[rgb(var(--color-text-tertiary))] ${
                                     errors.email
-                                        ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
-                                        : 'border-gray-200 focus:border-blue-600'
+                                        ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20'
+                                        : 'border-[rgb(var(--color-border))] focus:border-indigo-600'
                                 }`}
                                 {...register('email', {
                                     required: 'Email is required',
@@ -191,7 +191,7 @@ export default function Register() {
 
                         {/* Password Field */}
                         <div>
-                            <label className="block text-xs font-semibold text-gray-700 mb-1">
+                            <label className="block text-xs font-semibold text-[rgb(var(--color-text-primary))] mb-1">
                                 Password
                             </label>
                             <div className="relative">
@@ -199,10 +199,10 @@ export default function Register() {
                                     type={showPassword ? 'text' : 'password'}
                                     autoComplete="new-password"
                                     placeholder="Minimum 8 characters"
-                                    className={`w-full px-4 py-2.5 pr-10 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-blue-600/20 ${
+                                    className={`w-full px-4 py-2.5 pr-10 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-indigo-600/20 bg-[rgb(var(--color-surface-alt))] text-[rgb(var(--color-text-primary))] placeholder:text-[rgb(var(--color-text-tertiary))] ${
                                         errors.password
-                                            ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
-                                            : 'border-gray-200 focus:border-blue-600'
+                                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20'
+                                            : 'border-[rgb(var(--color-border))] focus:border-indigo-600'
                                     }`}
                                     {...register('password', {
                                         required: 'Password is required',
@@ -212,7 +212,7 @@ export default function Register() {
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[rgb(var(--color-text-tertiary))] hover:text-[rgb(var(--color-text-secondary))] focus:outline-none"
                                 >
                                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                                 </button>
@@ -224,7 +224,7 @@ export default function Register() {
 
                         {/* Confirm Password Field */}
                         <div>
-                            <label className="block text-xs font-semibold text-gray-700 mb-1">
+                            <label className="block text-xs font-semibold text-[rgb(var(--color-text-primary))] mb-1">
                                 Confirm Password
                             </label>
                             <div className="relative">
@@ -232,10 +232,10 @@ export default function Register() {
                                     type={showConfirmPassword ? 'text' : 'password'}
                                     autoComplete="new-password"
                                     placeholder="Re-enter password"
-                                    className={`w-full px-4 py-2.5 pr-10 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-blue-600/20 ${
+                                    className={`w-full px-4 py-2.5 pr-10 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-indigo-600/20 bg-[rgb(var(--color-surface-alt))] text-[rgb(var(--color-text-primary))] placeholder:text-[rgb(var(--color-text-tertiary))] ${
                                         errors.password_confirmation
-                                            ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
-                                            : 'border-gray-200 focus:border-blue-600'
+                                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20'
+                                            : 'border-[rgb(var(--color-border))] focus:border-indigo-600'
                                     }`}
                                     {...register('password_confirmation', {
                                         required: 'Please confirm your password',
@@ -245,7 +245,7 @@ export default function Register() {
                                 <button
                                     type="button"
                                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[rgb(var(--color-text-tertiary))] hover:text-[rgb(var(--color-text-secondary))] focus:outline-none"
                                 >
                                     {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                                 </button>
@@ -259,7 +259,7 @@ export default function Register() {
                         <button
                             type="submit"
                             disabled={doRegister.isPending}
-                            className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold rounded-xl text-sm shadow-lg shadow-blue-600/25 transition-all flex items-center justify-center gap-2 disabled:opacity-70 mt-4"
+                            className="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-semibold rounded-xl text-sm shadow-lg shadow-indigo-600/25 transition-all flex items-center justify-center gap-2 disabled:opacity-70 mt-4"
                         >
                             {doRegister.isPending ? <Spinner size="sm" /> : 'Register'}
                         </button>
@@ -267,9 +267,9 @@ export default function Register() {
                 </div>
 
                 {/* Footer Link */}
-                <div className="pt-6 text-center text-xs text-gray-500">
+                <div className="pt-6 text-center text-xs text-[rgb(var(--color-text-secondary))]">
                     Already have an account?{' '}
-                    <Link to={ROUTES.LOGIN} className="font-bold text-blue-600 hover:text-blue-700">
+                    <Link to={ROUTES.LOGIN} className="font-bold text-indigo-600 hover:text-indigo-700">
                         Sign in
                     </Link>
                 </div>
@@ -313,21 +313,15 @@ export default function Register() {
                 <div className="relative z-10 grid grid-cols-3 gap-4 pt-6 border-t border-white/15">
                     <div>
                         <div className="text-base font-extrabold text-white tracking-tight">1.2M+</div>
-                        <div className="text-[9px] font-bold text-blue-200/70 tracking-widest uppercase mt-0.5">
-                            SITES BUILT
-                        </div>
+                        <div className="text-[9px] font-bold text-blue-200/70 tracking-widest uppercase mt-0.5">SITES BUILT</div>
                     </div>
                     <div>
                         <div className="text-base font-extrabold text-white tracking-tight">99.9%</div>
-                        <div className="text-[9px] font-bold text-blue-200/70 tracking-widest uppercase mt-0.5">
-                            PLATFORM UPTIME
-                        </div>
+                        <div className="text-[9px] font-bold text-blue-200/70 tracking-widest uppercase mt-0.5">PLATFORM UPTIME</div>
                     </div>
                     <div>
                         <div className="text-base font-extrabold text-white tracking-tight">24/7</div>
-                        <div className="text-[9px] font-bold text-blue-200/70 tracking-widest uppercase mt-0.5">
-                            EXPERT SUPPORT
-                        </div>
+                        <div className="text-[9px] font-bold text-blue-200/70 tracking-widest uppercase mt-0.5">EXPERT SUPPORT</div>
                     </div>
                 </div>
             </div>

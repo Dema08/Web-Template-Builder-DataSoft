@@ -233,44 +233,56 @@ export default function AdminTemplates() {
                 </button>
             </div>
 
-            {/* Toolbar */}
-            <Card className="p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div className="relative w-full sm:w-80">
-                    <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-                    <input
-                        type="text"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder="Search templates by name or code..."
-                        className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input"
-                    />
-                </div>
+            {/* Search and Filters - Modern Premium Design */}
+            <div className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm hover:shadow-md transition-shadow duration-200">
+                <div className="flex flex-col lg:flex-row items-stretch gap-4">
+                    {/* Search Bar - Primary Focus (45-55% width) */}
+                    <div className="relative flex-1 lg:max-w-[55%]">
+                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-indigo-400" />
+                        <input
+                            type="text"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            placeholder="Search templates by name, code, or description..."
+                            className="w-full h-[52px] pl-12 pr-4 bg-slate-50/50 border-2 border-slate-200 rounded-xl text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 focus:bg-white transition-all"
+                        />
+                    </div>
 
-                <div className="flex items-center gap-3 w-full sm:w-auto">
-                    <select
-                        value={categoryFilter}
-                        onChange={(e) => setCategoryFilter(e.target.value)}
-                        className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input"
-                    >
-                        <option value="">All Categories</option>
-                        {/* Categories will be populated from API */}
-                    </select>
+                    {/* Filters & Stats */}
+                    <div className="flex items-center gap-3">
+                        {/* Category Filter */}
+                        <select
+                            value={categoryFilter}
+                            onChange={(e) => setCategoryFilter(e.target.value)}
+                            className="h-[52px] px-4 bg-slate-50/50 border-2 border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 focus:bg-white transition-all cursor-pointer hover:border-slate-300"
+                        >
+                            <option value="">All Categories</option>
+                            {/* Categories will be populated from API */}
+                        </select>
 
-                    <select
-                        value={statusFilter}
-                        onChange={(e) => setStatusFilter(e.target.value)}
-                        className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input"
-                    >
-                        {STATUS_OPTIONS.map(opt => (
-                            <option key={opt.value} value={opt.value}>{opt.label}</option>
-                        ))}
-                    </select>
-                </div>
+                        {/* Status Filter */}
+                        <select
+                            value={statusFilter}
+                            onChange={(e) => setStatusFilter(e.target.value)}
+                            className="h-[52px] px-4 bg-slate-50/50 border-2 border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 focus:bg-white transition-all cursor-pointer hover:border-slate-300"
+                        >
+                            {STATUS_OPTIONS.map(opt => (
+                                <option key={opt.value} value={opt.value}>{opt.label}</option>
+                            ))}
+                        </select>
 
-                <div className="text-xs font-bold text-slate-500">
-                    Total Active Templates: <span className="text-slate-900 font-extrabold">{templates.length}</span>
+                        {/* Active Templates Stats Card */}
+                        <div className="hidden sm:flex items-center gap-3 h-[52px] px-5 bg-gradient-to-br from-indigo-50 to-indigo-50/50 border-2 border-indigo-100 rounded-xl">
+                            <div className="flex flex-col">
+                                <span className="text-[10px] font-bold text-indigo-600 uppercase tracking-wider leading-tight">Active</span>
+                                <span className="text-lg font-extrabold text-indigo-700 leading-tight">{templates.length}</span>
+                            </div>
+                            <div className="h-8 w-px bg-indigo-200"></div>
+                            <Star className="h-5 w-5 text-indigo-500" fill="currentColor" />
+                        </div>
+                    </div>
                 </div>
-            </Card>
+            </div>
 
             {/* Template Grid */}
             {isLoading ? (

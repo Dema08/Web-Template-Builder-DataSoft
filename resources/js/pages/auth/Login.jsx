@@ -35,22 +35,22 @@ export default function Login() {
     };
 
     return (
-        <div className="max-w-4xl w-full bg-white rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row min-h-[520px] border border-gray-100/50">
+        <div className="max-w-4xl w-full bg-[rgb(var(--color-surface))] rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row min-h-[520px] border border-[rgb(var(--color-border))]">
             {/* Left Column — Form */}
-            <div className="w-full md:w-1/2 p-6 sm:p-8 flex flex-col justify-between bg-white">
+            <div className="w-full md:w-1/2 p-6 sm:p-8 flex flex-col justify-between bg-[rgb(var(--color-surface))]">
                 <div>
                     {/* Brand Logo */}
                     <div className="flex items-center gap-2.5">
-                        <div className="h-9 w-9 rounded-xl bg-blue-600 flex items-center justify-center text-white font-black text-sm tracking-tighter shadow-md shadow-blue-500/20">
+                        <div className="h-9 w-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-black text-sm tracking-tighter shadow-md shadow-indigo-500/20">
                             DS
                         </div>
-                        <span className="text-xl font-bold text-gray-900 tracking-tight">DataSoft</span>
+                        <span className="text-xl font-bold text-[rgb(var(--color-text-primary))] tracking-tight">DataSoft</span>
                     </div>
 
                     {/* Heading */}
                     <div className="mt-6 mb-5">
-                        <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">Welcome Back</h1>
-                        <p className="text-sm text-gray-500 mt-1.5">Please enter your details to access your DataSoft dashboard.</p>
+                        <h1 className="text-2xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">Welcome Back</h1>
+                        <p className="text-sm text-[rgb(var(--color-text-secondary))] mt-1.5">Please enter your details to access your DataSoft dashboard.</p>
                     </div>
 
                     {maintenanceNotice && (
@@ -81,17 +81,17 @@ export default function Login() {
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-3" noValidate>
                         {/* Email Field */}
                         <div>
-                            <label className="block text-xs font-semibold text-gray-700 mb-1">
+                            <label className="block text-xs font-semibold text-[rgb(var(--color-text-primary))] mb-1">
                                 Email Address
                             </label>
                             <input
                                 type="email"
                                 autoComplete="email"
                                 placeholder="name@datasoft.id"
-                                className={`w-full px-4 py-2.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-blue-600/20 ${
+                                className={`w-full px-4 py-2.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-indigo-600/20 bg-[rgb(var(--color-surface-alt))] text-[rgb(var(--color-text-primary))] placeholder:text-[rgb(var(--color-text-tertiary))] ${
                                     errors.email
-                                        ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
-                                        : 'border-gray-200 focus:border-blue-600'
+                                        ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20'
+                                        : 'border-[rgb(var(--color-border))] focus:border-indigo-600'
                                 }`}
                                 {...register('email', {
                                     required: 'Email is required',
@@ -109,10 +109,10 @@ export default function Login() {
                         {/* Password Field */}
                         <div>
                             <div className="flex items-center justify-between mb-1">
-                                <label className="block text-xs font-semibold text-gray-700">
+                                <label className="block text-xs font-semibold text-[rgb(var(--color-text-primary))]">
                                     Password
                                 </label>
-                                <Link to={ROUTES.FORGOT_PASSWORD} className="text-xs font-medium text-blue-600 hover:text-blue-700">
+                                <Link to={ROUTES.FORGOT_PASSWORD} className="text-xs font-medium text-indigo-600 hover:text-indigo-700">
                                     Forgot Password?
                                 </Link>
                             </div>
@@ -121,10 +121,10 @@ export default function Login() {
                                     type={showPassword ? 'text' : 'password'}
                                     autoComplete="current-password"
                                     placeholder="••••••••"
-                                    className={`w-full px-4 py-2.5 pr-10 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-blue-600/20 ${
+                                    className={`w-full px-4 py-2.5 pr-10 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-indigo-600/20 bg-[rgb(var(--color-surface-alt))] text-[rgb(var(--color-text-primary))] placeholder:text-[rgb(var(--color-text-tertiary))] ${
                                         errors.password
-                                            ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
-                                            : 'border-gray-200 focus:border-blue-600'
+                                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20'
+                                            : 'border-[rgb(var(--color-border))] focus:border-indigo-600'
                                     }`}
                                     {...register('password', {
                                         required: 'Password is required',
@@ -134,7 +134,7 @@ export default function Login() {
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[rgb(var(--color-text-tertiary))] hover:text-[rgb(var(--color-text-secondary))] focus:outline-none"
                                 >
                                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                                 </button>
@@ -149,10 +149,10 @@ export default function Login() {
                             <input
                                 type="checkbox"
                                 id="remember"
-                                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                className="h-4 w-4 rounded border-[rgb(var(--color-border))] text-indigo-600 focus:ring-indigo-600 bg-[rgb(var(--color-surface-alt))]"
                                 {...register('remember')}
                             />
-                            <label htmlFor="remember" className="ml-2 block text-xs text-gray-600 select-none">
+                            <label htmlFor="remember" className="ml-2 block text-xs text-[rgb(var(--color-text-secondary))] select-none">
                                 Remember Me
                             </label>
                         </div>
@@ -161,15 +161,15 @@ export default function Login() {
                         <button
                             type="submit"
                             disabled={login.isPending}
-                            className="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold rounded-xl text-sm shadow-lg shadow-blue-600/25 transition-all flex items-center justify-center gap-2 disabled:opacity-70 mt-2"
+                            className="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-semibold rounded-xl text-sm shadow-lg shadow-indigo-600/25 transition-all flex items-center justify-center gap-2 disabled:opacity-70 mt-2"
                         >
                             {login.isPending ? <Spinner size="sm" /> : 'Login'}
                         </button>
 
                         {/* Footer Link */}
-                        <div className="pt-4 text-center text-xs text-gray-500">
+                        <div className="pt-4 text-center text-xs text-[rgb(var(--color-text-secondary))]">
                             Don't have an account?{' '}
-                            <Link to={ROUTES.REGISTER} className="font-bold text-blue-600 hover:text-blue-700">
+                            <Link to={ROUTES.REGISTER} className="font-bold text-indigo-600 hover:text-indigo-700">
                                 Register
                             </Link>
                         </div>

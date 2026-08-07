@@ -147,7 +147,7 @@ export default function AppLayout() {
                 {/* Main Content & Top Header Area */}
                 <main className="flex-1 flex flex-col min-w-0 overflow-y-auto bg-[rgb(var(--color-surface-alt))] transition-colors duration-300">
                     {/* Top Navbar Header */}
-                    <header className="sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between border-b border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface))] px-4 sm:px-6 shadow-xs transition-colors duration-300">
+                    <header className="sticky top-0 z-30 flex h-20 shrink-0 items-center justify-between border-b border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface))] px-4 sm:px-6 shadow-xs transition-colors duration-300">
                         <div className="flex items-center gap-3">
                             <button
                                 type="button"

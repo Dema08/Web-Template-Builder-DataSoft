@@ -58,22 +58,22 @@ export default function ForgotPassword() {
     };
 
     return (
-        <div className="max-w-5xl w-full bg-white rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row min-h-[640px] border border-gray-100/50">
+        <div className="max-w-5xl w-full bg-[rgb(var(--color-surface))] rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row min-h-[640px] border border-[rgb(var(--color-border))]">
             {/* Left Column — Form */}
-            <div className="w-full md:w-1/2 p-8 sm:p-12 flex flex-col justify-between bg-white">
+            <div className="w-full md:w-1/2 p-8 sm:p-12 flex flex-col justify-between bg-[rgb(var(--color-surface))]">
                 <div>
                     {/* Brand Logo */}
                     <div className="flex items-center gap-2.5">
-                        <div className="h-9 w-9 rounded-xl bg-blue-600 flex items-center justify-center text-white font-black text-sm tracking-tighter shadow-md shadow-blue-500/20">
+                        <div className="h-9 w-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-black text-sm tracking-tighter shadow-md shadow-indigo-500/20">
                             DS
                         </div>
-                        <span className="text-xl font-bold text-gray-900 tracking-tight">DataSoft</span>
+                        <span className="text-xl font-bold text-[rgb(var(--color-text-primary))] tracking-tight">DataSoft</span>
                     </div>
 
                     {/* Heading */}
                     <div className="mt-8 mb-6">
-                        <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Lupa Password?</h1>
-                        <p className="text-sm text-gray-500 mt-1.5">
+                        <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">Lupa Password?</h1>
+                        <p className="text-sm text-[rgb(var(--color-text-secondary))] mt-1.5">
                             Masukkan email Anda dan kami akan mengirimkan kode OTP untuk mereset password.
                         </p>
                     </div>
@@ -98,17 +98,17 @@ export default function ForgotPassword() {
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
                         {/* Email Field */}
                         <div>
-                            <label className="block text-xs font-semibold text-gray-700 mb-1">
+                            <label className="block text-xs font-semibold text-[rgb(var(--color-text-primary))] mb-1">
                                 Email Address
                             </label>
                             <input
                                 type="email"
                                 autoComplete="email"
                                 placeholder="name@datasoft.id"
-                                className={`w-full px-4 py-2.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-blue-600/20 ${
+                                className={`w-full px-4 py-2.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-indigo-600/20 bg-[rgb(var(--color-surface-alt))] text-[rgb(var(--color-text-primary))] placeholder:text-[rgb(var(--color-text-tertiary))] ${
                                     errors.email
-                                        ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20'
-                                        : 'border-gray-200 focus:border-blue-600'
+                                        ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20'
+                                        : 'border-[rgb(var(--color-border))] focus:border-indigo-600'
                                 }`}
                                 {...register('email', {
                                     required: 'Email is required',
@@ -127,16 +127,16 @@ export default function ForgotPassword() {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold rounded-xl text-sm shadow-lg shadow-blue-600/25 transition-all flex items-center justify-center gap-2 disabled:opacity-70 mt-2"
+                            className="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white font-semibold rounded-xl text-sm shadow-lg shadow-indigo-600/25 transition-all flex items-center justify-center gap-2 disabled:opacity-70 mt-2"
                         >
                             {isLoading ? <Spinner size="sm" /> : 'Kirim Kode OTP'}
                         </button>
                     </form>
 
                     {/* Footer Link */}
-                    <div className="pt-6 text-center text-xs text-gray-500">
+                    <div className="pt-6 text-center text-xs text-[rgb(var(--color-text-secondary))]">
                         Ingat password Anda?{' '}
-                        <Link to={ROUTES.LOGIN} className="font-bold text-blue-600 hover:text-blue-700">
+                        <Link to={ROUTES.LOGIN} className="font-bold text-indigo-600 hover:text-indigo-700">
                             Login
                         </Link>
                     </div>
