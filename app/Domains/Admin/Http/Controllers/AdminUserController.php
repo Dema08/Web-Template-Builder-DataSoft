@@ -6,8 +6,10 @@ use App\Domains\Shared\Enums\UserRole;
 use App\Domains\Shared\Http\Controllers\BaseController;
 use App\Domains\User\Models\User;
 use App\Domains\User\Resources\UserResource;
+use App\Mail\RegistrationApprovedMail;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 
 /**
@@ -34,6 +36,8 @@ class AdminUserController extends BaseController
         }
 
         $user->update(['is_approved' => true]);
+
+        Mail::to($user->email)->send(new RegistrationApprovedMail($user));
 
         return $this->success(
             new UserResource($user),
