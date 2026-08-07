@@ -68,19 +68,34 @@ export default function AdminSettings() {
     // Update maintenance mode mutation
     const updateMaintenanceMutation = useMutation({
         mutationFn: async (enabled) => {
+            console.log('Making API call to update maintenance mode:', enabled);
             const response = await http.patch('/admin/system/maintenance', { maintenance_mode: enabled });
+            console.log('API response:', response.data);
             return response.data;
         },
         onSuccess: (data) => {
+            console.log('Maintenance mode updated successfully:', data);
             queryClient.invalidateQueries({ queryKey: ['system', 'maintenance'] });
             queryClient.invalidateQueries({ queryKey: ['settings'] });
             toast.success(data.message || 'Maintenance mode updated successfully', 'Success');
         },
         onError: (error) => {
+            console.error('Failed to update maintenance mode:', error);
             const message = error?.response?.data?.message || 'Failed to update maintenance mode';
             toast.error(message, 'Error');
         },
     });
+
+    // Auto-save maintenance mode when toggled
+    const handleMaintenanceToggle = async (enabled) => {
+        setMaintenanceMode(enabled);
+        try {
+            await updateMaintenanceMutation.mutateAsync(enabled);
+        } catch (error) {
+            // Revert on error
+            setMaintenanceMode(!enabled);
+        }
+    };
 
     const fileInputRef = useRef(null);
 
@@ -146,6 +161,8 @@ export default function AdminSettings() {
         e.preventDefault();
         
         try {
+            console.log('Saving system settings:', { maintenanceMode, allowRegistration, defaultStorageLimit });
+            
             const payload = {
                 maintenance_mode: maintenanceMode,
                 allow_registration: allowRegistration,
@@ -153,15 +170,19 @@ export default function AdminSettings() {
             };
 
             const updated = await updateSettingsAsync(payload);
+            console.log('Settings updated:', updated);
             setSettings(updated);
 
             // Always update maintenance mode via dedicated endpoint for immediate effect
             // This ensures both enabling AND disabling works properly
+            console.log('Updating maintenance mode via dedicated endpoint:', maintenanceMode);
             await updateMaintenanceMutation.mutateAsync(maintenanceMode);
 
             toast.success('Platform system configuration updated successfully!', 'System Settings Saved');
         } catch (error) {
-            // Error is handled in mutation
+            console.error('Failed to save system settings:', error);
+            const message = error?.response?.data?.message || error?.message || 'Failed to save system settings';
+            toast.error(message, 'Error');
         }
     };
 
@@ -430,7 +451,8 @@ export default function AdminSettings() {
                         <input
                             type="checkbox"
                             checked={maintenanceMode}
-                            onChange={(e) => setMaintenanceMode(e.target.checked)}
+                            onChange={(e) => handleMaintenanceToggle(e.target.checked)}
+                            disabled={updateMaintenanceMutation.isPending}
                             className="sr-only"
                         />
                         <span className={`absolute inset-0 rounded-full transition ${maintenanceMode ? 'bg-amber-500' : 'bg-slate-300 dark:bg-slate-600'}`} />
