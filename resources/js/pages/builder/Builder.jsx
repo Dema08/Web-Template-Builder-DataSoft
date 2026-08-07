@@ -6,12 +6,14 @@ import { Save } from 'lucide-react';
 import { useWebsite } from '@hooks';
 import { useWebsiteStore } from '@store';
 import { Spinner } from '@components/ui';
+import { useSettingsStore } from '@store';
 
 export default function Builder() {
     const editorRef = useRef(null);
     const containerRef = useRef(null);
     const { content, isContentLoading, saveContent, isSaving } = useWebsite();
     const { setEditor, markDirty } = useWebsiteStore();
+    const { brandBadge, brandName } = useSettingsStore();
 
     // Initialize GrapesJS once on mount.
     useEffect(() => {
@@ -99,9 +101,9 @@ export default function Builder() {
             <div className="flex items-center justify-between px-6 py-3 border-b border-slate-200 bg-white shrink-0 shadow-xs">
                 <div className="flex items-center gap-2">
                     <div className="h-7 w-7 rounded-lg bg-blue-600 flex items-center justify-center text-white font-black text-xs">
-                        DS
+                        {brandBadge || 'DS'}
                     </div>
-                    <h1 className="text-sm font-extrabold text-slate-900">DataSoft Visual Website Builder</h1>
+                    <h1 className="text-sm font-extrabold text-slate-900">{brandName} Visual Website Builder</h1>
                 </div>
 
                 <button

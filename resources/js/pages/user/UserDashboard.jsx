@@ -9,6 +9,7 @@ import {
 import { useAuth, useDashboard } from '@hooks';
 import { Spinner, Card } from '@components/ui';
 import { ROUTES } from '@constants';
+import { useSettingsStore } from '@store';
 
 const templateCards = [
     { title: 'Architectural Vanguard', subtitle: 'Premium • Business', accent: 'from-indigo-100 via-white to-white' },
@@ -19,251 +20,98 @@ const templateCards = [
 
 export default function UserDashboard() {
     const { user } = useAuth();
-    const { data: dashboard, isLoading, isError, error } = useDashboard();
+    const { websites, isLoading } = useDashboard();
+    const { brand_name } = useSettingsStore();
 
-    if (isLoading) {
-        return (
-            <div className="flex min-h-[420px] items-center justify-center">
-                <Spinner size="lg" />
-            </div>
-        );
-    }
-
-    if (isError) {
-        return (
-                <div className="p-6">
-                    <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-sm text-red-700 font-semibold">
-                        {error?.response?.data?.message || 'Unable to load dashboard right now.'}
-                    </div>
-                </div>
-        );
-    }
-
-    const hasWebsite = Boolean(dashboard?.website);
-    const dashboardUser = dashboard?.user || user;
-    const firstName = dashboardUser?.name?.split(' ')[0] || 'User';
-    const website = dashboard?.website;
-    const quickActions = dashboard?.quick_actions || [
-        { label: 'Edit Content', description: 'Update page text & images', href: ROUTES.ONBOARDING, icon: 'sparkles' },
-        { label: 'Site Settings', description: 'Configure subdomain & SEO', href: ROUTES.SETTINGS, icon: 'layout-grid' },
-        { label: 'Pick Template', description: 'Switch layout design', href: ROUTES.TEMPLATES, icon: 'user-circle' },
-    ];
-    const activities = dashboard?.activities || [
-        { action: 'Website Initialized', description: 'Corporate profile created', created_at: 'Just now' },
-        { action: 'Profile Updated', description: 'Account settings saved', created_at: '2 hours ago' },
-    ];
+    const firstName = user?.name?.split(' ')[0] || 'User';
+    const myWebsite = websites?.[0];
 
     return (
-        <div className="space-y-6 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
-            {/* Section 1: Welcome Header */}
-            <Card className="p-6 lg:p-8">
-                <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-                    <div className="space-y-3">
-                        <div className="inline-flex items-center gap-2 rounded-full bg-indigo-100 px-3 py-1 text-xs font-bold text-indigo-900 dark:bg-indigo-900/30 dark:text-indigo-200">
-                            <Sparkles className="h-3.5 w-3.5" />
-                            Dashboard overview
+        <div className="p-6 sm:p-8 max-w-7xl mx-auto space-y-8">
+            {/* Welcome Header */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">
+                        Welcome back, {firstName}
+                    </h1>
+                    <p className="text-sm text-[rgb(var(--color-text-secondary))] mt-1">
+                        Here's what's happening with your websites today.
+                    </p>
+                </div>
+                <Link
+                    to={ROUTES.ONBOARDING}
+                    className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-xl text-xs font-bold hover:bg-blue-700 transition shadow-md shadow-blue-600/20"
+                >
+                    <Sparkles className="h-4 w-4" />
+                    Create New Site
+                </Link>
+            </div>
+
+            {/* Website Summary Card */}
+            <Card className="p-6 flex flex-col justify-between">
+                <div>
+                    <div className="mb-4 flex items-center justify-between gap-4">
+                        <div>
+                            <p className="text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Website Summary</p>
+                            <h2 className="text-2xl font-extrabold text-[rgb(var(--color-text-primary))] mt-1">{myWebsite?.name || 'My Company Profile'}</h2>
                         </div>
-                        <h1 className="text-2xl font-extrabold text-[rgb(var(--color-text-primary))] sm:text-3xl tracking-tight">
-                            Welcome back, {firstName}!
-                        </h1>
-                        <p className="mt-1 text-sm text-[rgb(var(--color-text-secondary))] lg:text-base max-w-lg">
-                            {hasWebsite
-                                ? 'Your website is ready for updates, publishing, and review.'
-                                : 'Create your first website and start shaping your brand story.'}
-                        </p>
+                        <span className="rounded-full bg-[rgb(var(--color-surface-alt))] px-3 py-1 text-xs font-bold text-[rgb(var(--color-text-primary))]">
+                            {myWebsite?.is_published ? 'Published' : 'Draft'}
+                        </span>
                     </div>
 
-                    <div className="flex flex-wrap gap-3">
-                        {hasWebsite ? (
-                            <>
-                                <Link
-                                    to={ROUTES.WEBSITES}
-                                    className="rounded-xl border border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface))] px-4 py-2 text-xs font-bold text-[rgb(var(--color-text-primary))] hover:bg-[rgb(var(--color-surface-alt))] transition shadow-xs"
-                                >
-                                    Preview
-                                </Link>
-                                <Link
-                                    to={ROUTES.BUILDER}
-                                    className="rounded-xl bg-indigo-600 px-5 py-2 text-xs font-bold text-white hover:bg-indigo-700 shadow-md shadow-indigo-600/20 transition"
-                                >
-                                    Continue Editing
-                                </Link>
-                            </>
-                        ) : (
-                            <Link
-                                to={ROUTES.ONBOARDING}
-                                className="rounded-xl bg-indigo-600 px-5 py-2 text-xs font-bold text-white hover:bg-indigo-700 shadow-md shadow-indigo-600/20 transition"
-                            >
-                                <Sparkles className="h-4 w-4 inline mr-2" />
-                                Create Your Website
-                            </Link>
-                        )}
+                    <div className="grid gap-4 md:grid-cols-2 mt-4">
+                        <div className="p-4 bg-[rgb(var(--color-surface-alt))] rounded-xl">
+                            <p className="text-[10px] font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider mb-1">Template</p>
+                            <p className="text-sm font-extrabold text-[rgb(var(--color-text-primary))]">{myWebsite?.template || 'Corporate Pro v2'}</p>
+                        </div>
+                        <div className="p-4 bg-[rgb(var(--color-surface-alt))] rounded-xl">
+                            <p className="text-[10px] font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider mb-1">Subdomain</p>
+                            <p className="text-sm font-extrabold text-[rgb(var(--color-text-primary))]">{myWebsite?.subdomain || 'mycompany'}</p>
+                        </div>
                     </div>
                 </div>
             </Card>
 
-            {/* Section 2: Website Summary + Weekly Performance */}
-            <section className="grid gap-6 xl:grid-cols-[1.5fr_1fr]">
-                {/* Website Summary Card */}
-                <Card className="p-6 flex flex-col justify-between">
-                    <div>
-                        <div className="mb-4 flex items-center justify-between gap-4">
-                            <div>
-                                <p className="text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Website Summary</p>
-                                <h2 className="text-2xl font-extrabold text-[rgb(var(--color-text-primary))] mt-1">{website?.name || 'DataSoft Profile'}</h2>
-                            </div>
-                            <span className="rounded-full bg-[rgb(var(--color-surface-alt))] px-3 py-1 text-xs font-bold text-[rgb(var(--color-text-primary))]">
-                                {website?.is_published ? 'Published' : 'Draft'}
-                            </span>
-                        </div>
-
-                        <div className="grid gap-4 md:grid-cols-2 mt-4">
-                            <div className="rounded-xl bg-[rgb(var(--color-surface-alt))] p-4 border border-[rgb(var(--color-border))]">
-                                <div className="text-[10px] uppercase tracking-widest font-bold text-[rgb(var(--color-text-tertiary))]">Template</div>
-                                <div className="mt-1.5 text-base font-extrabold text-[rgb(var(--color-text-primary))]">{website?.template || 'Corporate Pro v2'}</div>
-                            </div>
-                            <div className="rounded-xl bg-[rgb(var(--color-surface-alt))] p-4 border border-[rgb(var(--color-border))]">
-                                <div className="text-[10px] uppercase tracking-widest font-bold text-[rgb(var(--color-text-tertiary))]">Slug</div>
-                                <div className="mt-1.5 text-base font-extrabold text-[rgb(var(--color-text-primary))]">{website?.slug || website?.subdomain || 'datasoft'}</div>
-                            </div>
-                            <div className="rounded-xl bg-[rgb(var(--color-surface-alt))] p-4 md:col-span-2 border border-[rgb(var(--color-border))]">
-                                <div className="flex items-center justify-between gap-3">
-                                    <div>
-                                        <div className="text-[10px] uppercase tracking-widest font-bold text-[rgb(var(--color-text-tertiary))]">Last updated</div>
-                                        <div className="mt-1.5 text-base font-extrabold text-[rgb(var(--color-text-primary))]">{website?.updated_at || website?.created_at || 'Just now'}</div>
-                                    </div>
-                                    <a
-                                        href={`http://${website?.subdomain || 'datasoft'}.datasoft.id`}
-                                        target="_blank"
-                                        rel="noreferrer"
-                                        className="inline-flex items-center gap-2 rounded-full bg-indigo-600 px-4 py-2 text-xs font-bold text-white transition hover:bg-indigo-700 shadow-md shadow-indigo-600/20"
-                                    >
-                                        <Globe className="h-4 w-4" />
-                                        <span>View Live Site</span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </Card>
-
-                {/* Weekly Performance Card */}
-                <Card className="p-6 bg-gradient-to-br from-indigo-600 via-blue-600 to-indigo-700 text-white flex flex-col justify-between relative overflow-hidden">
-                    <div className="relative z-10">
-                        <div className="flex items-start justify-between">
-                            <div>
-                                <div className="text-2xl font-extrabold tracking-tight">Weekly Performance</div>
-                                <div className="mt-2 text-sm text-blue-100 font-medium">+12.4% traffic increase this week.</div>
-                            </div>
-                            <div className="rounded-xl bg-white/10 p-2.5 backdrop-blur-md">
-                                <Sparkles className="h-5 w-5" />
-                            </div>
-                        </div>
-                        <div className="mt-8 text-[52px] font-black leading-none tracking-tight">1.2k</div>
-                    </div>
-
-                    {/* Subtle wave pattern */}
-                    <div className="absolute -bottom-2 -left-2 w-32 h-16 opacity-10">
-                        <svg viewBox="0 0 100 30" fill="none" preserveAspectRatio="none">
-                            <path d="M0 25 Q20 5, 40 20 T80 10 T100 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                        </svg>
-                    </div>
-                </Card>
-            </section>
-
-            {/* Section 3: Quick Actions + Recent Activity */}
-            <section className="grid gap-6 xl:grid-cols-[1.6fr_0.9fr]">
+            {/* Quick Actions & Templates */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Quick Actions */}
                 <Card className="p-6">
-                    <div className="mb-6">
-                        <p className="text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Quick Actions</p>
-                        <h2 className="text-2xl font-extrabold text-[rgb(var(--color-text-primary))] mt-1 tracking-tight">Launch faster</h2>
-                        <p className="text-xs text-[rgb(var(--color-text-secondary))] mt-1.5">Common tasks to publish & optimize your site</p>
-                    </div>
-                    <div className="grid gap-4 sm:grid-cols-3">
-                        {quickActions.map((action) => (
-                            <Link
-                                key={action.label}
-                                to={action.href || ROUTES.ONBOARDING}
-                                className="group relative rounded-2xl border border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface-alt))] p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-indigo-200 hover:bg-[rgb(var(--color-surface))] hover:shadow-md flex flex-col text-center"
-                            >
-                                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-[rgb(var(--color-surface))] text-lg shadow-sm ring-1 ring-[rgb(var(--color-border))] group-hover:ring-indigo-200 mx-auto">
-                                    ✨
-                                </div>
-                                <div className="text-base font-extrabold text-[rgb(var(--color-text-primary))] group-hover:text-indigo-600 transition">{action.label}</div>
-                                <p className="mt-1 text-xs text-[rgb(var(--color-text-secondary))] font-medium flex-1">{action.description}</p>
-                                <div className="mt-4 inline-flex items-center gap-2 text-xs font-bold text-indigo-600">
-                                    <span>Open</span> <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" />
-                                </div>
-                            </Link>
-                        ))}
-                    </div>
-                </Card>
-
-                {/* Recent Activity */}
-                <Card className="p-6">
-                    <div className="mb-6 flex items-center justify-between gap-3">
-                        <div>
-                            <p className="text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Recent Activity</p>
-                            <h2 className="text-2xl font-extrabold text-[rgb(var(--color-text-primary))] mt-1 tracking-tight">Latest activity</h2>
-                        </div>
-                        <div className="rounded-full bg-[rgb(var(--color-surface-alt))] p-2.5 text-[rgb(var(--color-text-tertiary))]">
-                            <Activity className="h-4 w-4" />
-                        </div>
-                    </div>
-
+                    <h3 className="text-sm font-extrabold text-[rgb(var(--color-text-primary))] mb-4">Quick Actions</h3>
                     <div className="space-y-3">
-                        {activities.slice(0, 4).map((activity, index) => (
-                            <div
-                                key={`${activity.action}-${index}`}
-                                className="flex items-start gap-3 rounded-xl bg-[rgb(var(--color-surface-alt))] p-3 border border-[rgb(var(--color-border))]"
-                            >
-                                <div className="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-indigo-500" />
-                                <div className="min-w-0 flex-1">
-                                    <div className="text-xs font-extrabold text-[rgb(var(--color-text-primary))]">{activity.action}</div>
-                                    <div className="text-xs text-[rgb(var(--color-text-secondary))] mt-0.5">{activity.description}</div>
-                                </div>
-                                <div className="whitespace-nowrap text-[10px] font-bold text-[rgb(var(--color-text-tertiary))]">
-                                    {activity.created_at || 'Recently'}
-                                </div>
+                        <Link to={ROUTES.BUILDER} className="flex items-center gap-3 p-3 bg-[rgb(var(--color-surface-alt))] rounded-xl hover:bg-indigo-50 transition">
+                            <Globe className="h-5 w-5 text-indigo-600" />
+                            <div>
+                                <p className="text-xs font-bold text-[rgb(var(--color-text-primary))]">Edit Website</p>
+                                <p className="text-[10px] text-[rgb(var(--color-text-secondary))]">Open in builder</p>
+                            </div>
+                        </Link>
+                        <Link to={ROUTES.TEMPLATES} className="flex items-center gap-3 p-3 bg-[rgb(var(--color-surface-alt))] rounded-xl hover:bg-indigo-50 transition">
+                            <Activity className="h-5 w-5 text-indigo-600" />
+                            <div>
+                                <p className="text-xs font-bold text-[rgb(var(--color-text-primary))]">Browse Templates</p>
+                                <p className="text-[10px] text-[rgb(var(--color-text-secondary))]">Find a new design</p>
+                            </div>
+                        </Link>
+                    </div>
+                </Card>
+
+                {/* Template Recommendations */}
+                <Card className="p-6 lg:col-span-2">
+                    <h3 className="text-sm font-extrabold text-[rgb(var(--color-text-primary))] mb-4">Recommended Templates</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {templateCards.map((template) => (
+                            <div key={template.title} className={`p-4 rounded-xl bg-gradient-to-br ${template.accent} border border-[rgb(var(--color-border))]`}>
+                                <p className="text-xs font-bold text-[rgb(var(--color-text-primary))]">{template.title}</p>
+                                <p className="text-[10px] text-[rgb(var(--color-text-secondary))] mt-1">{template.subtitle}</p>
+                                <Link to={ROUTES.TEMPLATES} className="inline-flex items-center gap-1 mt-3 text-[10px] font-bold text-indigo-600 hover:text-indigo-700">
+                                    Use template <ArrowRight className="h-3 w-3" />
+                                </Link>
                             </div>
                         ))}
                     </div>
                 </Card>
-            </section>
-
-            {/* Section 4: Template Library */}
-            <Card className="p-6">
-                <div className="mb-6 flex items-center justify-between">
-                    <h2 className="text-2xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">Template Library</h2>
-                    <Link to={ROUTES.TEMPLATES} className="flex items-center gap-1 text-xs font-bold text-indigo-600 hover:text-indigo-700 transition">
-                        <span>Browse All</span> <ChevronRight className="h-4 w-4" />
-                    </Link>
-                </div>
-
-                <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-                    {templateCards.map((card) => (
-                        <div
-                            key={card.title}
-                            className="group overflow-hidden rounded-2xl border border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface))] shadow-xs hover:shadow-md transition-all duration-200"
-                        >
-                            <div className={`h-44 bg-gradient-to-br ${card.accent} p-4`}>
-                                <div className="flex h-full items-center justify-center rounded-xl border border-white/70 bg-white/40 backdrop-blur-sm group-hover:scale-105 transition-transform duration-300">
-                                    <div className="grid w-full grid-cols-3 gap-2 p-3">
-                                        <div className="col-span-2 h-8 rounded bg-[rgb(var(--color-surface-alt))]" />
-                                        <div className="h-8 rounded bg-[rgb(var(--color-border))]" />
-                                        <div className="col-span-3 h-16 rounded bg-[rgb(var(--color-surface))]/80" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="p-4 space-y-1">
-                                <div className="text-sm font-extrabold text-[rgb(var(--color-text-primary))] group-hover:text-indigo-600 transition">{card.title}</div>
-                                <div className="text-xs font-semibold text-[rgb(var(--color-text-tertiary))]">{card.subtitle}</div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </Card>
+            </div>
         </div>
     );
 }

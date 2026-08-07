@@ -5,6 +5,9 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import AppRouter from '@router';
 import { Toast } from '@components/ui';
 import { useCurrentUser } from '@hooks';
+import { useSettingsStore, useAuthStore } from '@store';
+import { settingsApi } from '@api';
+import SessionTimeoutModal from '@components/SessionTimeoutModal';
 import '../css/app.css';
 
 // Configure the global QueryClient.
@@ -86,6 +89,39 @@ function SessionHydrator() {
     return null;
 }
 
+/**
+ * SettingsHydrator
+ *
+ * On app mount, load public brand settings from /api/v1/public/settings
+ * so that every page (login, register, forgot password, public site)
+ * can read the brand identity from the global settings store instead of
+ * hardcoded values.
+ */
+function SettingsHydrator() {
+    const { loadPublicSettings } = useSettingsStore();
+    const { isAuthenticated } = useAuthStore();
+
+    useEffect(() => {
+        // Always load public settings for brand display on auth pages
+        settingsApi.getPublicSettings().then((settings) => {
+            loadPublicSettings(settings);
+        }).catch(() => {
+            // Silently fail — default values are already in the store
+        });
+
+        // If the user is already authenticated, load full admin settings
+        if (isAuthenticated) {
+            settingsApi.getSettings().then((settings) => {
+                loadPublicSettings(settings);
+            }).catch(() => {
+                // Silently fail
+            });
+        }
+    }, [loadPublicSettings, isAuthenticated]);
+
+    return null;
+}
+
 function App() {
     useEffect(() => {
         const theme = localStorage.getItem('theme');
@@ -99,10 +135,12 @@ function App() {
     return (
         <QueryClientProvider client={queryClient}>
             <SessionHydrator />
+            <SettingsHydrator />
             <ErrorBoundary>
                 <AppRouter />
             </ErrorBoundary>
             <Toast />
+            <SessionTimeoutModal />
             {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
         </QueryClientProvider>
     );

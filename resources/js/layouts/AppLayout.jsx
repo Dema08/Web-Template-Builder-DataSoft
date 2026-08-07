@@ -21,7 +21,7 @@ import {
 import { useAuth } from '@hooks';
 import { ROUTES } from '@constants';
 import { Spinner } from '@components/ui';
-import { useBrandStore } from '@store';
+import { useSettingsStore } from '@store';
 
 export default function AppLayout() {
     const { user, logout, isLoggingOut } = useAuth();
@@ -34,7 +34,7 @@ export default function AppLayout() {
     const profileAvatar = user?.avatar || null;
     const profileAvatarFallback = `https://ui-avatars.com/api/?name=${encodeURIComponent(firstName)}&background=6366f1&color=fff`;
 
-    const { brandName, brandBadge, brandColor, logoUrl, planLabel } = useBrandStore();
+    const { brandName, brandBadge, brandColor, logoUrl, planLabel } = useSettingsStore();
 
     const sidebarItems = isAdmin
         ? [
@@ -260,7 +260,7 @@ export default function AppLayout() {
                         {/* App Footer */}
                         <footer className="mt-12 border-t border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface))] px-8 py-6 flex flex-col sm:flex-row items-center justify-between text-xs text-[rgb(var(--color-text-secondary))] gap-4 transition-colors duration-300">
                             <div className="flex items-center gap-2">
-                                <span className="font-extrabold text-[rgb(var(--color-text-primary))]">DataSoft Profile Builder</span>
+                                <span className="font-extrabold text-[rgb(var(--color-text-primary))]">{brandName} Profile Builder</span>
                                 <span>•</span>
                                 <span>© 2026 PT DataSoft Solusindo. All rights reserved.</span>
                             </div>

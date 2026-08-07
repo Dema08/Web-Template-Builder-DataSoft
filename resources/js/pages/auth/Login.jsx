@@ -2,14 +2,16 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useLocation } from 'react-router-dom';
 import { Eye, EyeOff, Sparkles, Compass } from 'lucide-react';
-import { Spinner, Alert } from '@components/ui';
+import { Spinner, Alert, BrandLogo } from '@components/ui';
 import { useLogin } from '@hooks';
 import { ROUTES } from '@constants';
+import { useSettingsStore } from '@store';
 
 export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const location = useLocation();
     const justRegistered = location.state?.registered === true;
+    const { brand_color } = useSettingsStore();
 
     const [maintenanceNotice, setMaintenanceNotice] = useState(() => {
         const notice = sessionStorage.getItem('maintenance_logout_notice');
@@ -40,17 +42,12 @@ export default function Login() {
             <div className="w-full md:w-1/2 p-6 sm:p-8 flex flex-col justify-between bg-[rgb(var(--color-surface))]">
                 <div>
                     {/* Brand Logo */}
-                    <div className="flex items-center gap-2.5">
-                        <div className="h-9 w-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-black text-sm tracking-tighter shadow-md shadow-indigo-500/20">
-                            DS
-                        </div>
-                        <span className="text-xl font-bold text-[rgb(var(--color-text-primary))] tracking-tight">DataSoft</span>
-                    </div>
+                    <BrandLogo />
 
                     {/* Heading */}
                     <div className="mt-6 mb-5">
-                        <h1 className="text-2xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">Welcome Back</h1>
-                        <p className="text-sm text-[rgb(var(--color-text-secondary))] mt-1.5">Please enter your details to access your DataSoft dashboard.</p>
+                        <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">Welcome Back</h1>
+                        <p className="text-sm text-gray-500 mt-1.5">Please enter your details to access your dashboard.</p>
                     </div>
 
                     {maintenanceNotice && (
@@ -87,8 +84,8 @@ export default function Login() {
                             <input
                                 type="email"
                                 autoComplete="email"
-                                placeholder="name@datasoft.id"
-                                className={`w-full px-4 py-2.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-indigo-600/20 bg-[rgb(var(--color-surface-alt))] text-[rgb(var(--color-text-primary))] placeholder:text-[rgb(var(--color-text-tertiary))] ${
+                                placeholder="name@company.com"
+                                className={`w-full px-4 py-2.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-blue-600/20 ${
                                     errors.email
                                         ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20'
                                         : 'border-[rgb(var(--color-border))] focus:border-indigo-600'

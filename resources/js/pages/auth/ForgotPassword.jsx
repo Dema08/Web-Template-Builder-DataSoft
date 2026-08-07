@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Eye, EyeOff, Sparkles, Compass } from 'lucide-react';
 import { useForm } from 'react-hook-form';
-import { Spinner, Alert } from '@components/ui';
+import { Spinner, Alert, BrandLogo } from '@components/ui';
 import { ROUTES } from '@constants';
 
 export default function ForgotPassword() {
@@ -63,12 +63,7 @@ export default function ForgotPassword() {
             <div className="w-full md:w-1/2 p-8 sm:p-12 flex flex-col justify-between bg-[rgb(var(--color-surface))]">
                 <div>
                     {/* Brand Logo */}
-                    <div className="flex items-center gap-2.5">
-                        <div className="h-9 w-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-black text-sm tracking-tighter shadow-md shadow-indigo-500/20">
-                            DS
-                        </div>
-                        <span className="text-xl font-bold text-[rgb(var(--color-text-primary))] tracking-tight">DataSoft</span>
-                    </div>
+                    <BrandLogo />
 
                     {/* Heading */}
                     <div className="mt-8 mb-6">
@@ -104,8 +99,8 @@ export default function ForgotPassword() {
                             <input
                                 type="email"
                                 autoComplete="email"
-                                placeholder="name@datasoft.id"
-                                className={`w-full px-4 py-2.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-indigo-600/20 bg-[rgb(var(--color-surface-alt))] text-[rgb(var(--color-text-primary))] placeholder:text-[rgb(var(--color-text-tertiary))] ${
+                                placeholder="name@company.com"
+                                className={`w-full px-4 py-2.5 rounded-xl border text-sm transition-all focus:outline-none focus:ring-2 focus:ring-blue-600/20 ${
                                     errors.email
                                         ? 'border-red-500 focus:border-red-500 focus:ring-red-500/20'
                                         : 'border-[rgb(var(--color-border))] focus:border-indigo-600'

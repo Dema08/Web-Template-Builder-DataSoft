@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { Camera, Trash2, Shield, Globe } from 'lucide-react';
 import { Card, Input, Button, Alert, Spinner } from '@components/ui';
 import { useProfile, useWebsite } from '@hooks';
-import { useAuthStore } from '@store';
+import { useAuthStore, useSettingsStore } from '@store';
 
 const normalizeApiErrors = (error, form) => {
     const fieldErrors = error?.response?.data?.errors;
@@ -24,6 +24,7 @@ export default function Profile() {
     const { profile, isLoading, updateProfile, isUpdatingProfile, uploadAvatar, isUploadingAvatar, deleteAvatar, isDeletingAvatar, changePassword, isChangingPassword } = useProfile();
     const { website } = useWebsite();
     const setUser = useAuthStore((state) => state.setUser);
+    const { brand_name, brand_badge, brand_color } = useSettingsStore();
     const fileInputRef = useRef(null);
 
     const [avatarPreview, setAvatarPreview] = useState(null);
@@ -62,10 +63,10 @@ export default function Profile() {
 
     const websiteSummary = useMemo(
         () => ({
-            name: website?.name || 'DataSoft Corporate Profile',
+            name: website?.name || 'My Company Profile',
             template: website?.template || 'Corporate Pro v2',
             status: website?.is_published ? 'Published' : 'Draft',
-            slug: website?.subdomain || 'datasoft',
+            slug: website?.subdomain || 'mycompany',
         }),
         [website]
     );
@@ -83,67 +84,13 @@ export default function Profile() {
         }
     };
 
-    const onAvatarPick = async (event) => {
-        const file = event.target.files?.[0];
-        if (!file) return;
-
-        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
-        if (!allowedTypes.includes(file.type)) {
-            setStatusMessage('Only JPEG, PNG, and WebP images are allowed.');
-            setStatusVariant('error');
-            event.target.value = '';
-            return;
-        }
-        if (file.size > 5 * 1024 * 1024) {
-            setStatusMessage('Image must be smaller than 5MB.');
-            setStatusVariant('error');
-            event.target.value = '';
-            return;
-        }
-
-        const tempPreview = URL.createObjectURL(file);
-        setAvatarPreview(tempPreview);
-        setStatusMessage(null);
-
-        try {
-            const updatedUser = await uploadAvatar(file);
-            if (updatedUser?.avatar) {
-                setAvatarPreview(updatedUser.avatar);
-            }
-            setStatusMessage('Avatar updated successfully.');
-            setStatusVariant('success');
-        } catch (error) {
-            setAvatarPreview(profile?.avatar || null);
-            const msg = error?.response?.data?.message || 'Unable to upload avatar. Please try again.';
-            setStatusMessage(msg);
-            setStatusVariant('error');
-        } finally {
-            URL.revokeObjectURL(tempPreview);
-            event.target.value = '';
-        }
-    };
-
-    const onDeleteAvatar = async () => {
-        setStatusMessage(null);
-        try {
-            await deleteAvatar();
-            setAvatarPreview(null);
-            setStatusMessage('Avatar removed successfully.');
-            setStatusVariant('success');
-        } catch (error) {
-            const msg = error?.response?.data?.message || error?.message || 'Unable to delete avatar.';
-            setStatusMessage(msg);
-            setStatusVariant('error');
-        }
-    };
-
     const onPasswordSubmit = async (values) => {
         try {
             passwordForm.clearErrors();
             await changePassword(values);
-            passwordForm.reset({ current_password: '', password: '', password_confirmation: '' });
             setStatusMessage('Password changed successfully.');
             setStatusVariant('success');
+            passwordForm.reset();
         } catch (error) {
             setStatusMessage(error?.response?.data?.message || 'Unable to change password.');
             setStatusVariant('error');
@@ -151,13 +98,27 @@ export default function Profile() {
         }
     };
 
-    if (isLoading) {
-        return (
-            <div className="flex h-full min-h-[420px] items-center justify-center">
-                <Spinner size="lg" />
-            </div>
-        );
-    }
+    const handleAvatarChange = (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        if (!file.type.startsWith('image/')) {
+            setStatusMessage('Please select a valid image file.', 'error');
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            setAvatarPreview(ev.target.result);
+            uploadAvatar(file);
+        };
+        reader.readAsDataURL(file);
+    };
+
+    const handleDeleteAvatar = () => {
+        setAvatarPreview(null);
+        deleteAvatar();
+    };
 
     return (
         <div className="mx-auto max-w-6xl p-6 lg:p-8 space-y-6">
@@ -168,7 +129,7 @@ export default function Profile() {
                 </div>
                 <div className="inline-flex items-center gap-2 rounded-full bg-indigo-50 border border-indigo-200/60 dark:bg-indigo-950/40 dark:border-indigo-800/40 px-3.5 py-1 text-xs font-bold text-indigo-700 dark:text-indigo-300">
                     <Shield className="h-3.5 w-3.5" />
-                    DataSoft User Profile
+                    {brand_name} User Profile
                 </div>
             </div>
 
@@ -178,162 +139,122 @@ export default function Profile() {
                 </Alert>
             )}
 
-            <div className="grid gap-6 xl:grid-cols-[1.2fr_0.9fr]">
-                {/* Profile Form */}
-                <Card className="p-6">
-                    <div className="mb-6 flex items-center gap-4">
-                        <div className="relative">
-                            <img
-                                src={avatarPreview || profile?.avatar || avatarFallback}
-                                alt="Avatar"
-                                onError={(event) => {
-                                    event.currentTarget.onerror = null;
-                                    event.currentTarget.src = avatarFallback;
-                                }}
-                                className="h-20 w-20 rounded-full object-cover ring-4 ring-indigo-50"
-                            />
-                            <button
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Avatar Card */}
+                <Card className="p-6 space-y-4">
+                    <h3 className="text-xs font-extrabold text-[rgb(var(--color-text-primary))] uppercase tracking-wider">Profile Photo</h3>
+                    <div className="flex flex-col items-center gap-3">
+                        <img
+                            src={avatarPreview || avatarFallback}
+                            alt="Profile"
+                            className="h-24 w-24 rounded-full object-cover ring-4 ring-[rgb(var(--color-border))]"
+                        />
+                        <div className="flex gap-2">
+                            <Button
                                 type="button"
+                                variant="outline"
+                                size="sm"
                                 onClick={() => fileInputRef.current?.click()}
-                                className="absolute -bottom-1 -right-1 rounded-full bg-indigo-600 p-2 text-white shadow-lg hover:bg-indigo-700 transition"
+                                disabled={isUploadingAvatar}
                             >
-                                <Camera className="h-4 w-4" />
-                            </button>
-                            <input ref={fileInputRef} type="file" accept="image/png,image/jpeg,image/webp,image/jpg" className="hidden" onChange={onAvatarPick} />
-                        </div>
-
-                        <div className="min-w-0">
-                            <p className="text-lg font-extrabold text-[rgb(var(--color-text-primary))]">{profile?.name || 'User'}</p>
-                            <p className="text-sm text-[rgb(var(--color-text-secondary))]">{profile?.email || 'email@example.com'}</p>
-                            <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] px-2.5 py-1 text-xs font-extrabold text-[rgb(var(--color-text-primary))] uppercase tracking-wider">
-                                {profile?.role || 'user'}
-                            </span>
-                        </div>
-                    </div>
-
-                    <div className="mb-4 flex items-center gap-2">
-                        <Button type="button" variant="secondary" size="sm" onClick={() => fileInputRef.current?.click()} disabled={isUploadingAvatar}>
-                            {isUploadingAvatar ? <Spinner size="sm" /> : 'Upload avatar'}
-                        </Button>
-                        <Button type="button" variant="danger" size="sm" onClick={onDeleteAvatar} disabled={isDeletingAvatar || !profile?.avatar}>
-                            {isDeletingAvatar ? <Spinner size="sm" /> : <Trash2 className="h-4 w-4" />}
-                        </Button>
-                    </div>
-
-                    <form onSubmit={profileForm.handleSubmit(onProfileSubmit)} className="space-y-4">
-                        <Input
-                            label="Name"
-                            placeholder="Jane Doe"
-                            error={profileForm.formState.errors.name?.message}
-                            {...profileForm.register('name', {
-                                required: 'Name is required',
-                                maxLength: { value: 100, message: 'Name must be 100 characters or fewer' },
-                            })}
-                        />
-
-                        <Input
-                            label="Email"
-                            type="email"
-                            placeholder="you@company.com"
-                            error={profileForm.formState.errors.email?.message}
-                            {...profileForm.register('email', {
-                                required: 'Email is required',
-                                pattern: {
-                                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                                    message: 'Enter a valid email address',
-                                },
-                            })}
-                        />
-
-                        <div className="flex justify-end">
-                            <Button type="submit" variant="primary" disabled={isUpdatingProfile}>
-                                {isUpdatingProfile ? <Spinner size="sm" /> : 'Save profile'}
+                                {isUploadingAvatar ? <Spinner size="sm" /> : <Camera className="h-4 w-4" />}
+                            </Button>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="sm"
+                                onClick={handleDeleteAvatar}
+                                disabled={isDeletingAvatar}
+                                className="text-red-600 hover:text-red-700"
+                            >
+                                {isDeletingAvatar ? <Spinner size="sm" /> : <Trash2 className="h-4 w-4" />}
                             </Button>
                         </div>
-                    </form>
+                        <input
+                            ref={fileInputRef}
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={handleAvatarChange}
+                        />
+                    </div>
+
+                    {/* Website Summary */}
+                    <div className="mt-4 pt-4 border-t border-[rgb(var(--color-border))]">
+                        <h4 className="text-xs font-extrabold text-[rgb(var(--color-text-primary))] uppercase tracking-wider mb-3">Your Website</h4>
+                        <div className="space-y-2">
+                            <div className="flex items-center gap-2">
+                                <Globe className="h-4 w-4 text-[rgb(var(--color-text-tertiary))]" />
+                                <span className="text-xs font-bold text-[rgb(var(--color-text-primary))]">{websiteSummary.name}</span>
+                            </div>
+                            <p className="text-[10px] text-[rgb(var(--color-text-secondary))] ml-6">Template: {websiteSummary.template}</p>
+                            <p className="text-[10px] text-[rgb(var(--color-text-secondary))] ml-6">Status: {websiteSummary.status}</p>
+                        </div>
+                    </div>
                 </Card>
 
-                {/* Side Column: Password + Website Summary */}
-                <div className="space-y-6">
-                    {/* Change Password */}
+                {/* Forms */}
+                <div className="lg:col-span-2 space-y-6">
+                    {/* Profile Info */}
                     <Card className="p-6">
-                        <div className="mb-4 flex items-center gap-2">
-                            <Shield className="h-5 w-5 text-indigo-600" />
-                            <h2 className="text-lg font-bold text-[rgb(var(--color-text-primary))]">Change Password</h2>
-                        </div>
-
-                        <form onSubmit={passwordForm.handleSubmit(onPasswordSubmit)} className="space-y-4">
-                            <Input
-                                label="Current Password"
-                                type="password"
-                                autoComplete="current-password"
-                                error={passwordForm.formState.errors.current_password?.message}
-                                {...passwordForm.register('current_password', {
-                                    required: 'Current password is required',
-                                })}
-                            />
-
-                            <Input
-                                label="New Password"
-                                type="password"
-                                autoComplete="new-password"
-                                error={passwordForm.formState.errors.password?.message}
-                                {...passwordForm.register('password', {
-                                    required: 'New password is required',
-                                    minLength: { value: 8, message: 'Password must be at least 8 characters' },
-                                })}
-                            />
-
-                            <Input
-                                label="Confirm Password"
-                                type="password"
-                                autoComplete="new-password"
-                                error={passwordForm.formState.errors.password_confirmation?.message}
-                                {...passwordForm.register('password_confirmation', {
-                                    required: 'Please confirm your password',
-                                    validate: (value, values) => value === values.password || 'Passwords do not match',
-                                })}
-                            />
-
+                        <h3 className="text-xs font-extrabold text-[rgb(var(--color-text-primary))] uppercase tracking-wider mb-4">Profile Information</h3>
+                        <form onSubmit={profileForm.handleSubmit(onProfileSubmit)} className="space-y-4">
+                            <div>
+                                <label className="block text-xs font-semibold text-[rgb(var(--color-text-primary))] mb-1">Full Name</label>
+                                <Input {...profileForm.register('name', { required: 'Name is required' })} placeholder="Your name" />
+                                {profileForm.formState.errors.name && (
+                                    <p className="mt-1 text-xs text-red-500">{profileForm.formState.errors.name.message}</p>
+                                )}
+                            </div>
+                            <div>
+                                <label className="block text-xs font-semibold text-[rgb(var(--color-text-primary))] mb-1">Email Address</label>
+                                <Input {...profileForm.register('email', { required: 'Email is required' })} placeholder="you@example.com" />
+                                {profileForm.formState.errors.email && (
+                                    <p className="mt-1 text-xs text-red-500">{profileForm.formState.errors.email.message}</p>
+                                )}
+                            </div>
                             <div className="flex justify-end">
-                                <Button type="submit" variant="secondary" disabled={isChangingPassword}>
-                                    {isChangingPassword ? <Spinner size="sm" /> : 'Update password'}
+                                <Button type="submit" disabled={isUpdatingProfile}>
+                                    {isUpdatingProfile ? <Spinner size="sm" /> : 'Save Changes'}
                                 </Button>
                             </div>
                         </form>
                     </Card>
 
-                    {/* Website Summary */}
+                    {/* Change Password */}
                     <Card className="p-6">
-                        <div className="mb-4 flex items-center gap-2">
-                            <Globe className="h-5 w-5 text-indigo-600" />
-                            <h2 className="text-lg font-bold text-[rgb(var(--color-text-primary))]">Website Summary</h2>
-                        </div>
-
-                        <div className="space-y-3 text-sm">
-                            <div className="flex justify-between gap-4">
-                                <span className="text-[rgb(var(--color-text-secondary))]">Website Name</span>
-                                <span className="font-bold text-[rgb(var(--color-text-primary))]">{websiteSummary.name}</span>
+                        <h3 className="text-xs font-extrabold text-[rgb(var(--color-text-primary))] uppercase tracking-wider mb-4">Change Password</h3>
+                        <form onSubmit={passwordForm.handleSubmit(onPasswordSubmit)} className="space-y-4">
+                            <div>
+                                <label className="block text-xs font-semibold text-[rgb(var(--color-text-primary))] mb-1">Current Password</label>
+                                <Input type="password" {...passwordForm.register('current_password', { required: 'Current password is required' })} placeholder="••••••••" />
+                                {passwordForm.formState.errors.current_password && (
+                                    <p className="mt-1 text-xs text-red-500">{passwordForm.formState.errors.current_password.message}</p>
+                                )}
                             </div>
-                            <div className="flex justify-between gap-4">
-                                <span className="text-[rgb(var(--color-text-secondary))]">Template</span>
-                                <span className="font-bold text-[rgb(var(--color-text-primary))]">{websiteSummary.template}</span>
+                            <div>
+                                <label className="block text-xs font-semibold text-[rgb(var(--color-text-primary))] mb-1">New Password</label>
+                                <Input type="password" {...passwordForm.register('password', { required: 'New password is required', minLength: { value: 8, message: 'Min 8 characters' } })} placeholder="••••••••" />
+                                {passwordForm.formState.errors.password && (
+                                    <p className="mt-1 text-xs text-red-500">{passwordForm.formState.errors.password.message}</p>
+                                )}
                             </div>
-                            <div className="flex justify-between gap-4 items-center">
-                                <span className="text-[rgb(var(--color-text-secondary))]">Status</span>
-                                <span className="rounded-full bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1 text-xs font-bold text-emerald-700 dark:text-emerald-400">
-                                    {websiteSummary.status}
-                                </span>
+                            <div>
+                                <label className="block text-xs font-semibold text-[rgb(var(--color-text-primary))] mb-1">Confirm New Password</label>
+                                <Input type="password" {...passwordForm.register('password_confirmation', { required: 'Please confirm password' })} placeholder="••••••••" />
+                                {passwordForm.formState.errors.password_confirmation && (
+                                    <p className="mt-1 text-xs text-red-500">{passwordForm.formState.errors.password_confirmation.message}</p>
+                                )}
                             </div>
-                            <div className="flex justify-between gap-4">
-                                <span className="text-[rgb(var(--color-text-secondary))]">Slug</span>
-                                <span className="font-bold text-[rgb(var(--color-text-primary))] font-mono">{websiteSummary.slug}</span>
+                            <div className="flex justify-end">
+                                <Button type="submit" disabled={isChangingPassword}>
+                                    {isChangingPassword ? <Spinner size="sm" /> : 'Change Password'}
+                                </Button>
                             </div>
-                        </div>
+                        </form>
                     </Card>
                 </div>
             </div>
-
         </div>
     );
 }
