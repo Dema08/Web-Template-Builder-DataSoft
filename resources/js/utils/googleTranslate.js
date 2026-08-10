@@ -44,6 +44,13 @@ const loadGoogleTranslateScript = () => {
                 if (window.google && window.google.translate) {
                     clearInterval(checkInterval);
                     isInitialized = true;
+                    
+                    // Wait for Google Translate to fully initialize before hiding UI
+                    setTimeout(() => {
+                        hideGoogleTranslateUI();
+                        setupMutationObserver();
+                    }, 2000);
+                    
                     resolve();
                 }
             }, 100);
@@ -64,13 +71,12 @@ const loadGoogleTranslateScript = () => {
         window.googleTranslateElementInit = () => {
             try {
                 if (window.google && window.google.translate) {
-                    // Create hidden container
+                    // Initialize Google Translate first
                     const gtElement = document.createElement('div');
                     gtElement.id = 'google_translate_element';
                     gtElement.style.cssText = 'position: absolute; top: -9999px; left: -9999px; width: 0; height: 0; overflow: hidden; opacity: 0;';
                     document.body.appendChild(gtElement);
 
-                    // Initialize Google Translate
                     new window.google.translate.TranslateElement({
                         pageLanguage: 'en',
                         includedLanguages: 'id,en,ja,ko,zh-CN,fr,de,es',
@@ -80,6 +86,13 @@ const loadGoogleTranslateScript = () => {
 
                     isInitialized = true;
                     console.log('Google Translate initialized');
+                    
+                    // Hide UI after initialization is complete
+                    setTimeout(() => {
+                        hideGoogleTranslateUI();
+                        setupMutationObserver();
+                    }, 2000);
+                    
                     resolve();
                 }
             } catch (error) {
@@ -220,6 +233,48 @@ export const resetGoogleTranslate = async () => {
         console.error('Failed to reset language:', error);
         return false;
     }
+};
+
+// Setup Mutation Observer to prevent insertBefore errors
+const setupMutationObserver = () => {
+    if (typeof window === 'undefined') return;
+    if (window.googleTranslateObserverActive) return; // Prevent duplicate observers
+
+    const observer = new MutationObserver((mutations) => {
+        let shouldRehide = false;
+        
+        mutations.forEach((mutation) => {
+            // Check if Google Translate added elements to body
+            if (mutation.type === 'childList') {
+                mutation.addedNodes.forEach((node) => {
+                    if (node.nodeType === 1) { // Element node
+                        // Check if it's a Google Translate element
+                        if (
+                            node.classList?.contains('goog-te-banner-frame') ||
+                            node.id?.includes('goog-te') ||
+                            node.tagName === 'IFRAME' && node.src?.includes('translate.google')
+                        ) {
+                            shouldRehide = true;
+                        }
+                    }
+                });
+            }
+        });
+
+        if (shouldRehide) {
+            hideGoogleTranslateUI();
+        }
+    });
+
+    // Observe body for changes
+    if (document.body) {
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true,
+        });
+    }
+
+    window.googleTranslateObserverActive = true;
 };
 
 // Hide Google Translate UI
