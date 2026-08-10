@@ -31,9 +31,15 @@ export default function Register() {
         });
     };
 
+    // Set localStorage flag when registration is successful
+    if (doRegister.isSuccess) {
+        localStorage.setItem('show_registration_pending_modal', 'true');
+    }
+
     // Show pending approval state after successful registration
     if (doRegister.isSuccess) {
         return (
+            <>
             <div className="max-w-5xl w-full bg-[rgb(var(--color-surface))] rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row min-h-[660px] border border-[rgb(var(--color-border))]">
                 <div className="w-full md:w-1/2 p-8 sm:p-12 flex flex-col items-center justify-center bg-[rgb(var(--color-surface))] text-center gap-5">
                     <div className="h-20 w-20 rounded-full bg-amber-50 border-2 border-amber-200 flex items-center justify-center">
@@ -96,6 +102,7 @@ export default function Register() {
                     </div>
                 </div>
             </div>
+            </>
         );
     }
 
