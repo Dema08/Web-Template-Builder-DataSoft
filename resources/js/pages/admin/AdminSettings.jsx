@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
-import { Shield, Settings, Save, RefreshCw, Image, Type, Palette, Upload, X, Sun, Moon, AlertTriangle, Wrench } from 'lucide-react';
+import { Shield, Settings, Save, RefreshCw, Image, Type, Palette, Upload, X, Sun, Moon, AlertTriangle, Wrench, Globe } from 'lucide-react';
 import { toast, useSettingsStore } from '@store';
 import { Card } from '@components/ui';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { http } from '@api';
 import { useSettings } from '@hooks';
+import LanguageSelector from '@components/common/LanguageSelector';
 
 export default function AdminSettings() {
     const { brand_name, brand_badge, brand_color, plan_label, logo_path, setSettings, updateSetting, resetSettings } = useSettingsStore();
@@ -199,6 +200,20 @@ export default function AdminSettings() {
                     Configure platform brand identity, theme appearance, registration controls, and system limits.
                 </p>
             </div>
+
+            {/* ===== LANGUAGE / TRANSLATION SECTION ===== */}
+            <Card className="p-6 sm:p-8 space-y-6">
+                <div className="flex items-center justify-between border-b border-[rgb(var(--color-border))] pb-4">
+                    <h2 className="text-base font-extrabold text-[rgb(var(--color-text-primary))] flex items-center gap-2">
+                        <Globe className="h-4 w-4 text-blue-600" />
+                        Language
+                    </h2>
+                </div>
+
+                <div className="max-w-md">
+                    <LanguageSelector variant="settings" showLabel={true} />
+                </div>
+            </Card>
 
             {/* ===== APPEARANCE / THEME SECTION ===== */}
             <Card className="p-6 sm:p-8 space-y-6">

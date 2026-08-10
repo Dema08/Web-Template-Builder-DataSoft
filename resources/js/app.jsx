@@ -8,6 +8,7 @@ import { useCurrentUser } from '@hooks';
 import { useSettingsStore, useAuthStore } from '@store';
 import { settingsApi } from '@api';
 import SessionTimeoutModal from '@components/SessionTimeoutModal';
+import { initializeGoogleTranslate, setupGoogleTranslateElement } from '@utils/googleTranslate';
 import '../css/app.css';
 
 // Configure the global QueryClient.
@@ -130,6 +131,43 @@ function App() {
         } else {
             document.documentElement.classList.remove('dark');
         }
+    }, []);
+
+    // Initialize Google Translate on app mount
+    useEffect(() => {
+        const initGoogleTranslate = async () => {
+            try {
+                // Get saved language from localStorage
+                const savedLanguage = localStorage.getItem('preferred_language');
+                
+                // If there's a saved language, set the cookie BEFORE loading Google Translate
+                // This ensures Google Translate reads the correct language on load
+                if (savedLanguage) {
+                    const cookieValue = `/${savedLanguage}`;
+                    document.cookie = `googtrans=${cookieValue}; path=/; domain=.${window.location.hostname}`;
+                    document.cookie = `googtrans=${cookieValue}; path=/`;
+                    console.log(`Setting language cookie from localStorage: ${savedLanguage}`);
+                } else {
+                    // No saved language, set default to English
+                    document.cookie = 'googtrans=/en; path=/; domain=' + window.location.hostname;
+                    document.cookie = 'googtrans=/en; path=/';
+                    console.log('No saved language, setting default to English');
+                }
+
+                // Setup hidden Google Translate element
+                setupGoogleTranslateElement();
+
+                // Initialize Google Translate (it will read the cookie automatically)
+                await initializeGoogleTranslate();
+            } catch (error) {
+                console.error('Failed to initialize Google Translate:', error);
+                // App continues to work normally without translation
+            }
+        };
+
+        // Delay initialization to avoid blocking app startup
+        const timer = setTimeout(initGoogleTranslate, 500);
+        return () => clearTimeout(timer);
     }, []);
 
     return (

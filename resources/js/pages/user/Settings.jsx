@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Bell, BellOff, Shield, Save, Sun, Moon } from 'lucide-react';
+import { Bell, BellOff, Shield, Save, Sun, Moon, Globe } from 'lucide-react';
 import { Card, Button, Spinner } from '@components/ui';
 import { toast } from '@store';
+import LanguageSelector from '@components/common/LanguageSelector';
 
 export default function Settings() {
     const [notifications, setNotifications] = useState(true);
@@ -77,11 +78,22 @@ export default function Settings() {
                     </div>
                 </Card>
 
-                {/* Appearance Section */}
-                <Card className="p-6 sm:p-8 space-y-6">
-                    <h2 className="text-base font-extrabold text-[rgb(var(--color-text-primary))] flex items-center gap-2">
-                        {darkMode ? <Moon className="h-4 w-4 text-indigo-600" /> : <Sun className="h-4 w-4 text-indigo-600" />} Appearance
-                    </h2>
+            {/* Language Section */}
+            <Card className="p-6 sm:p-8 space-y-6">
+                <h2 className="text-base font-extrabold text-[rgb(var(--color-text-primary))] flex items-center gap-2">
+                    <Globe className="h-4 w-4 text-indigo-600" /> Language
+                </h2>
+
+                <div className="max-w-md">
+                    <LanguageSelector variant="settings" showLabel={true} />
+                </div>
+            </Card>
+
+            {/* Appearance Section */}
+            <Card className="p-6 sm:p-8 space-y-6">
+                <h2 className="text-base font-extrabold text-[rgb(var(--color-text-primary))] flex items-center gap-2">
+                    {darkMode ? <Moon className="h-4 w-4 text-indigo-600" /> : <Sun className="h-4 w-4 text-indigo-600" />} Appearance
+                </h2>
 
                     <div className="flex items-center justify-between py-2">
                         <div>
