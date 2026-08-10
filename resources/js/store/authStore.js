@@ -18,13 +18,26 @@ export const useAuthStore = create(
 
             /**
              * Set the authenticated session (user + token).
+             * @param {Object} session - { user, token }
+             * @param {boolean} remember - If true, persist to localStorage; otherwise sessionStorage
              */
-            setSession: (session) =>
-                set({
+            setSession: (session, remember = false) => {
+                const storage = remember ? localStorage : sessionStorage;
+                
+                // Persist to the chosen storage
+                if (session?.token) {
+                    storage.setItem('cpwb-auth-token', session.token);
+                }
+                if (session?.user) {
+                    storage.setItem('cpwb-auth-user', JSON.stringify(session.user));
+                }
+
+                return set({
                     user: session?.user || null,
                     token: session?.token || null,
                     isAuthenticated: Boolean(session?.token || session?.user),
-                }),
+                });
+            },
 
             /**
              * Set just the user object (e.g. after fetching `/auth/user`).
@@ -34,7 +47,13 @@ export const useAuthStore = create(
             /**
              * Clear the session (logout).
              */
-            clearSession: () => set(initialState),
+            clearSession: () => {
+                localStorage.removeItem('cpwb-auth-token');
+                localStorage.removeItem('cpwb-auth-user');
+                sessionStorage.removeItem('cpwb-auth-token');
+                sessionStorage.removeItem('cpwb-auth-user');
+                set(initialState);
+            },
 
             /**
              * Convenience getter for the current user.
@@ -45,13 +64,18 @@ export const useAuthStore = create(
             name: 'cpwb-auth-store',
             storage: {
                 getItem: (name) => {
-                    const value = localStorage.getItem(name);
+                    // Try localStorage first, then sessionStorage
+                    const value = localStorage.getItem(name) || sessionStorage.getItem(name);
                     return value ? JSON.parse(value) : null;
                 },
                 setItem: (name, value) => {
+                    // Default to localStorage for the zustand persist state
                     localStorage.setItem(name, JSON.stringify(value));
                 },
-                removeItem: (name) => localStorage.removeItem(name),
+                removeItem: (name) => {
+                    localStorage.removeItem(name);
+                    sessionStorage.removeItem(name);
+                },
             },
             partialize: (state) => ({
                 user: state.user,

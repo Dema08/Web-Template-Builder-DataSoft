@@ -18,8 +18,8 @@ export function useLogin() {
 
     return useMutation({
         mutationFn: (credentials) => authApi.login(credentials),
-        onSuccess: (session) => {
-            setSession(session);
+        onSuccess: (session, variables) => {
+            setSession(session, variables?.remember);
             toast.success(`Welcome back, ${session.user?.name?.split(' ')[0] || 'there'}!`, 'Signed in');
 
             // Load full admin settings so the entire UI updates instantly

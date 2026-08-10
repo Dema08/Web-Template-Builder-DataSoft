@@ -75,4 +75,16 @@ return [
 
     'token_name' => env('AUTH_TOKEN_NAME', 'auth-token'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Remember Me Token Expiration
+    |--------------------------------------------------------------------------
+    |
+    | This value controls the number of days that a "Remember Me" token will
+    | be considered valid. Used for persistent login sessions.
+    |
+    */
+
+    'remember_me_days' => env('REMEMBER_ME_DAYS', 30),
+
 ];

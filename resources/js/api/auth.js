@@ -1,5 +1,4 @@
 import http from './http';
-import { TOKEN_STORAGE_KEY, USER_STORAGE_KEY } from '@constants';
 
 /**
  * Authentication API client.
@@ -18,11 +17,10 @@ const authApi = {
 
     /**
      * Log the user in.
-     * @param {Object} credentials - { email, password }
+     * @param {Object} credentials - { email, password, remember }
      */
     async login(credentials) {
         const { data } = await http.post('/auth/login', credentials);
-        this._persistSession(data.data);
         return data.data;
     },
 
@@ -33,7 +31,7 @@ const authApi = {
         try {
             await http.post('/auth/logout');
         } finally {
-            this._clearSession();
+            // Session clearing is handled by the auth store
         }
     },
 
@@ -52,19 +50,6 @@ const authApi = {
         return this.me();
     },
 
-    _persistSession(session) {
-        if (session?.token) {
-            localStorage.setItem(TOKEN_STORAGE_KEY, session.token);
-        }
-        if (session?.user) {
-            localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(session.user));
-        }
-    },
-
-    _clearSession() {
-        localStorage.removeItem(TOKEN_STORAGE_KEY);
-        localStorage.removeItem(USER_STORAGE_KEY);
-    },
 };
 
 export default authApi;

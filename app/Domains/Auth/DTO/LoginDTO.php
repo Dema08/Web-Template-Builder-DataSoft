@@ -13,7 +13,7 @@ class LoginDTO extends BaseDTO
 {
     protected function keys(): array
     {
-        return ['email', 'password'];
+        return ['email', 'password', 'remember'];
     }
 
     public function getEmail(): string
@@ -24,5 +24,10 @@ class LoginDTO extends BaseDTO
     public function getPassword(): string
     {
         return $this->get('password');
+    }
+
+    public function getRemember(): bool
+    {
+        return (bool) $this->get('remember');
     }
 }

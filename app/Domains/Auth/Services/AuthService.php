@@ -91,8 +91,13 @@ class AuthService extends BaseService
             );
         }
 
+        $remember = $dto->getRemember();
+        $tokenExpiration = $remember ? now()->addDays(config('auth.remember_me_days', 30)) : null;
+
         $token = $user->createToken(
-            config('auth.token_name', 'auth-token')
+            config('auth.token_name', 'auth-token'),
+            ['*'],
+            $tokenExpiration
         )->plainTextToken;
 
         return ['user' => $user, 'token' => $token];
