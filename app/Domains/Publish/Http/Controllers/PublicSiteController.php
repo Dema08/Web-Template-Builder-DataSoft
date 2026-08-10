@@ -4,6 +4,7 @@ namespace App\Domains\Publish\Http\Controllers;
 
 use App\Domains\Shared\Http\Controllers\BaseController;
 use App\Models\Setting;
+use App\Models\Website;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Storage;
 
@@ -26,6 +27,40 @@ class PublicSiteController extends BaseController
 
         $logoUrl = $logoRaw ? Storage::url($logoRaw) : null;
 
+        // Try to look up website by slug (subdomain), or fallback to the first active/published site
+        $slug = request()->query('slug');
+        if ($slug) {
+            $website = Website::where('slug', $slug)->first();
+        } else {
+            $website = Website::where('status', 'published')->first() ?? Website::first();
+        }
+
+        if ($website) {
+            // Record view/visitor
+            $website->views()->create([
+                'ip_address' => request()->ip(),
+                'user_agent' => request()->userAgent(),
+            ]);
+
+            // Set branding values from website settings if available, or fall back to system defaults
+            $siteName = $website->name;
+            $siteSubdomain = $website->slug;
+            
+            $html = $website->published_json['html'] ?? $website->draft_json['html'] ?? "<h1>Selamat Datang di {$siteName}</h1>";
+            $css = $website->published_json['css'] ?? $website->draft_json['css'] ?? "h1 { color: {$brandColor}; }";
+
+            return $this->success([
+                'site_name' => $siteName,
+                'subdomain' => $siteSubdomain,
+                'brand_badge' => $brandBadge,
+                'brand_color' => $brandColor,
+                'logo_url'    => $website->logo ? Storage::url($website->logo) : $logoUrl,
+                'html' => $html,
+                'css'  => $css,
+            ], 'Public site data retrieved');
+        }
+
+        // Fallback to default demo site when no websites exist in database
         return $this->success([
             'site_name' => $brandName,
             'subdomain' => 'koperasimaju',

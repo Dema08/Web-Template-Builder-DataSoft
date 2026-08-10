@@ -7,8 +7,8 @@ const dashboardApi = {
     /**
      * Fetch dashboard summary data (website status, stats).
      */
-    async getDashboard() {
-        const { data } = await http.get('/dashboard');
+    async getDashboard(params = {}) {
+        const { data } = await http.get('/dashboard', { params });
         return data.data;
     },
 };

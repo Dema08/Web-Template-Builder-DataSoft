@@ -44,4 +44,9 @@ class Website extends Model
     {
         return $this->belongsTo(Template::class);
     }
+
+    public function views(): HasMany
+    {
+        return $this->hasMany(WebsiteView::class);
+    }
 }

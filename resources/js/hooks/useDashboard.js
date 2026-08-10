@@ -5,10 +5,15 @@ import { QUERY_KEYS } from '@constants';
 /**
  * Dashboard data hook.
  */
-export function useDashboard() {
-    return useQuery({
-        queryKey: [QUERY_KEYS.DASHBOARD],
-        queryFn: () => dashboardApi.getDashboard(),
-        staleTime: 60 * 1000, // 1 minute
+export function useDashboard(params = {}) {
+    const query = useQuery({
+        queryKey: [QUERY_KEYS.DASHBOARD, params],
+        queryFn: () => dashboardApi.getDashboard(params),
+        staleTime: 10 * 1000, // 10 seconds
     });
+
+    return {
+        ...query,
+        ...(query.data || {}),
+    };
 }

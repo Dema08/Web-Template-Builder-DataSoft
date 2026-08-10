@@ -89,7 +89,7 @@ class TemplateSeeder extends Seeder
         foreach ($templates as $index => $templateData) {
             $name = $templateData['name'];
             $code = 'TMPL-' . strtoupper(Str::random(6));
-            $slug = Str::slug($name) . '-' . ($index + 1);
+            $slug = Str::slug($name) . '-' . $category->slug . '-' . ($index + 1);
 
             \App\Models\Template::create([
                 'category_id' => $category->id,
