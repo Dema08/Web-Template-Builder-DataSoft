@@ -38,7 +38,11 @@ http.interceptors.response.use(
 
         if (response) {
             const currentUser = useAuthStore.getState().user;
-            const isUserAdmin = currentUser?.role === 'admin';
+            const storedUserRaw = localStorage.getItem('cpwb_user');
+            let storedUser = null;
+            try { storedUser = storedUserRaw ? JSON.parse(storedUserRaw) : null; } catch(e) {}
+            const userRole = currentUser?.role || storedUser?.role;
+            const isUserAdmin = userRole === 'admin';
 
             // 401 Unauthorized (session expired or token revoked)
             if (response.status === HTTP_STATUS.UNAUTHORIZED) {

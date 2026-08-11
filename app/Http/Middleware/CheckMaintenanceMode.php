@@ -12,13 +12,19 @@ class CheckMaintenanceMode
 {
     public function handle(Request $request, Closure $next)
     {
-        // Skip if user is admin (admin can always access)
-        if (Auth::check() && Auth::user()->isAdmin()) {
+        // Resolve authenticated user from Sanctum guard or default session guard
+        $user = $request->user('sanctum') ?? Auth::user();
+
+        // Skip maintenance mode completely for admin users (admin can always access)
+        if ($user && method_exists($user, 'isAdmin') && $user->isAdmin()) {
             return $next($request);
         }
 
-        // Allow auth endpoints and admin endpoints so administrators can log in and manage the site
-        if ($request->is('api/v1/auth/*') || $request->is('api/v1/admin/*') || $request->is('login')) {
+        // Allow auth endpoints, admin endpoints, public settings, and login page
+        if ($request->is('api/v1/auth/*') ||
+            $request->is('api/v1/admin/*') ||
+            $request->is('api/v1/public/settings') ||
+            $request->is('login')) {
             return $next($request);
         }
 
@@ -46,3 +52,4 @@ class CheckMaintenanceMode
         return $next($request);
     }
 }
+
