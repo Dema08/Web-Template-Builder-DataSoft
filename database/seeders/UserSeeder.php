@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\User;
+use App\Domains\User\Models\User;
 use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
@@ -15,7 +15,7 @@ class UserSeeder extends Seeder
             ['email' => 'admin@datasoft.id'],
             [
                 'name'               => 'Datasoft Administrator',
-                'password'           => Hash::make('password'),
+                'password'           => 'password',
                 'role'               => 'admin',
                 'level'              => 1,
                 'email_verified_at'  => now(),
@@ -27,9 +27,31 @@ class UserSeeder extends Seeder
             ['email' => 'user@datasoft.id'],
             [
                 'name'               => 'Koperasi Maju User',
-                'password'           => Hash::make('password'),
+                'password'           => 'password',
                 'role'               => 'user',
                 'level'              => 2,
+                'email_verified_at'  => now(),
+            ]
+        );
+
+        User::updateOrCreate(
+            ['email' => 'demaadzhani08@gmail.com'],
+            [
+                'name'               => 'Dema',
+                'password'           => 'Akuabsen8',
+                'role'               => 'user',
+                'level'              => 2,
+                'email_verified_at'  => now(),
+            ]
+        );
+
+        User::updateOrCreate(
+            ['email' => 'demaadzhani5@gmail.com'],
+            [
+                'name'               => 'demor',
+                'password'           => 'Akuabsen8',
+                'role'               => 'admin',
+                'level'              => 1,
                 'email_verified_at'  => now(),
             ]
         );

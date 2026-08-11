@@ -38,6 +38,7 @@ export default function AppLayout() {
 
     const sidebarItems = isAdmin
         ? [
+              { label: 'Home', icon: Home, to: ROUTES.HOME },
               { label: 'Dashboard', icon: LayoutGrid, to: ROUTES.ADMIN_DASHBOARD },
               { label: 'All Websites', icon: Globe, to: ROUTES.ADMIN_WEBSITES },
               { label: 'Manage Templates', icon: FileText, to: ROUTES.ADMIN_TEMPLATES },
@@ -47,6 +48,7 @@ export default function AppLayout() {
               { label: 'Maintenance & Settings', icon: SettingsIcon, to: ROUTES.ADMIN_SETTINGS },
           ]
         : [
+              { label: 'Home', icon: Home, to: ROUTES.HOME },
               { label: 'Dashboard', icon: LayoutGrid, to: ROUTES.DASHBOARD },
               { label: 'Websites', icon: Globe, to: ROUTES.WEBSITES },
               { label: 'Templates', icon: FileText, to: ROUTES.TEMPLATES },
