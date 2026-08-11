@@ -15,6 +15,8 @@ export default function ContextMenu() {
     removeSection,
     bringForward,
     sendBackward,
+    bringToFront,
+    sendToBack,
   } = useBuilderStore();
 
   useEffect(() => {
@@ -124,6 +126,24 @@ export default function ContextMenu() {
             }}
           >
             Send Backward
+          </button>
+          <button
+            className={menuItemClass}
+            onClick={() => {
+              bringToFront(menu.sectionId, menu.componentId);
+              setMenu(null);
+            }}
+          >
+            Bring to Front
+          </button>
+          <button
+            className={menuItemClass}
+            onClick={() => {
+              sendToBack(menu.sectionId, menu.componentId);
+              setMenu(null);
+            }}
+          >
+            Send to Back
           </button>
           <div className="border-t border-slate-100 my-1" />
           <button

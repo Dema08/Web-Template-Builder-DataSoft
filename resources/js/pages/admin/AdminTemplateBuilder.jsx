@@ -15,12 +15,14 @@ import ContextMenu from '@builder/components/editing/ContextMenu';
 import KeyboardShortcuts from '@builder/components/editing/KeyboardShortcuts';
 import { useBuilderStore } from '@builder/stores/builderStore';
 import { INDUSTRY_CONFIGS } from '@builder/utils/industryConfigs';
-import { ArrowLeft, FolderOpen, Sparkles } from 'lucide-react';
+import useAutosave from '@builder/hooks/useAutosave';
+import { ArrowLeft, FolderOpen, Sparkles, Save } from 'lucide-react';
 
 export default function AdminTemplateBuilder() {
   const navigate = useNavigate();
   const { id } = useParams();
   const queryClient = useQueryClient();
+  const { saveStatus } = useAutosave();
   const [showIndustryModal, setShowIndustryModal] = useState(false);
   const [selectedCategoryId, setSelectedCategoryId] = useState('');
   const [templateMode, setTemplateMode] = useState(null); // 'blank' | 'starter'

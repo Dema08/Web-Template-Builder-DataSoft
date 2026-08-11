@@ -9,7 +9,7 @@ export const COMPONENT_REGISTRY = {
     category: 'text',
     editable: true,
     draggable: true,
-    resizable: false,
+    resizable: true,
     props: {
       content: {
         type: 'string',
@@ -74,7 +74,7 @@ export const COMPONENT_REGISTRY = {
     category: 'text',
     editable: true,
     draggable: true,
-    resizable: false,
+    resizable: true,
     props: {
       content: {
         type: 'string',
@@ -135,7 +135,7 @@ export const COMPONENT_REGISTRY = {
     category: 'interactive',
     editable: true,
     draggable: true,
-    resizable: false,
+    resizable: true,
     props: {
       label: {
         type: 'string',

@@ -3,6 +3,7 @@ import { useBuilderStore } from '../../stores/builderStore';
 import { getIndustryConfig } from '../../utils/industryConfigs';
 import { getComponentConfig } from '../../utils/componentRegistry';
 import { getLayoutsForSection } from '../../utils/layoutRegistry';
+import SectionLayoutPicker from './SectionLayoutPicker';
 import { 
   Layout, Section, Component, Image, Upload, Type, 
   Plus, Star, Layers, ChevronDown, ChevronRight, GripVertical
@@ -74,6 +75,7 @@ const COMPONENTS = [
 export default function LeftPanel() {
   const [activeTab, setActiveTab] = useState('layers');
   const [expandedSections, setExpandedSections] = useState({});
+  const [layoutPickerSection, setLayoutPickerSection] = useState(null);
   const { addSection, addComponent, industrySlug, sections, selectedSectionId, selectSection, selectComponent, selectedComponentId } = useBuilderStore();
 
   const industryConfig = industrySlug ? getIndustryConfig(industrySlug) : null;
@@ -89,7 +91,8 @@ export default function LeftPanel() {
   };
 
   const handleAddSection = (sectionType) => {
-    addSection(sectionType);
+    // Open layout picker first instead of directly adding
+    setLayoutPickerSection(sectionType);
   };
 
   const handleAddLayout = (layoutId) => {
@@ -386,6 +389,7 @@ export default function LeftPanel() {
   };
 
   return (
+    <>
     <div className="h-full flex flex-col">
       {/* Tabs */}
       <div className="flex items-center gap-1 px-3 pt-3 pb-2 border-b border-slate-200 overflow-x-auto">
@@ -413,5 +417,14 @@ export default function LeftPanel() {
         {renderContent()}
       </div>
     </div>
+
+    {/* Section Layout Picker Modal */}
+    {layoutPickerSection && (
+      <SectionLayoutPicker
+        sectionType={layoutPickerSection}
+        onClose={() => setLayoutPickerSection(null)}
+      />
+    )}
+    </>
   );
 }

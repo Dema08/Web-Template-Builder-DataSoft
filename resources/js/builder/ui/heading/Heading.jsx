@@ -1,5 +1,5 @@
-import { useBuilderStore } from '../../stores/builderStore';
 import InlineEditableText from '../../components/editing/InlineEditableText';
+import { useBuilderStore } from '../../stores/builderStore';
 
 export default function Heading({
   content = 'Heading',
@@ -11,10 +11,15 @@ export default function Heading({
   align = 'left',
   margin = '0',
   padding = '0',
+  lineHeight = '1.5',
+  letterSpacing = 'normal',
+  textTransform = 'none',
+  textDecoration = 'none',
+  fontStyle = 'normal',
   componentId = null,
   sectionId = null,
 }) {
-  const { selectedComponentId, hoveredComponent, setHoveredComponent, updateComponentProps } = useBuilderStore();
+  const { updateComponentProps } = useBuilderStore();
 
   const style = {
     fontFamily,
@@ -24,10 +29,12 @@ export default function Heading({
     textAlign: align,
     margin,
     padding,
+    lineHeight,
+    letterSpacing,
+    textTransform,
+    textDecoration,
+    fontStyle,
   };
-
-  const isSelected = selectedComponentId === componentId;
-  const isHovered = hoveredComponent === componentId;
 
   const handleUpdate = (newContent) => {
     if (sectionId && componentId) {
@@ -36,26 +43,11 @@ export default function Heading({
   };
 
   return (
-    <span
-      id={componentId}
-      data-component-id={componentId}
-      data-section-id={sectionId}
-      onMouseEnter={() => setHoveredComponent(componentId)}
-      onMouseLeave={() => setHoveredComponent(null)}
-      className={`relative inline-block transition-all ${
-        isSelected
-          ? 'ring-2 ring-indigo-600 ring-offset-1'
-          : isHovered
-            ? 'ring-1 ring-indigo-400 ring-offset-1'
-            : ''
-      }`}
-    >
-      <InlineEditableText
-        value={content}
-        onUpdate={handleUpdate}
-        style={style}
-        tag={level}
-      />
-    </span>
+    <InlineEditableText
+      value={content}
+      onUpdate={handleUpdate}
+      style={style}
+      tag={level}
+    />
   );
 }

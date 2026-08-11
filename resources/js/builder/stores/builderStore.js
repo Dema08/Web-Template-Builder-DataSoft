@@ -157,16 +157,32 @@ export const useBuilderStore = create((set, get) => ({
     });
   },
 
-  updateComponentProps: (sectionId, componentId, props) => {
+  updateComponentPosition: (sectionId, componentId, position, deviceView = null) => {
     const { sections } = get();
+    const device = deviceView || get().deviceView;
 
     const newSections = sections.map(s => {
       if (s.id === sectionId) {
         return {
           ...s,
-          components: s.components.map(c =>
-            c.id === componentId ? { ...c, props: { ...c.props, ...props } } : c
-          ),
+          components: s.components.map(c => {
+            if (c.id === componentId) {
+              // Store device-specific overrides
+              const deviceOverrides = { ...(c.deviceOverrides || {}) };
+              const currentDevice = deviceOverrides[device] || {};
+              
+              // Merge position into device overrides
+              deviceOverrides[device] = { ...currentDevice, ...position };
+              
+              // Always keep the master position as the current device's position for backward compatibility
+              return { 
+                ...c, 
+                position: { ...c.position, ...position },
+                deviceOverrides,
+              };
+            }
+            return c;
+          }),
         };
       }
       return s;
@@ -175,17 +191,16 @@ export const useBuilderStore = create((set, get) => ({
     set({ sections: newSections });
   },
 
-  updateComponentPosition: (sectionId, componentId, position) => {
+  updateComponentProps: (sectionId, componentId, props, deviceView = null) => {
     const { sections } = get();
+    const device = deviceView || get().deviceView;
 
     const newSections = sections.map(s => {
       if (s.id === sectionId) {
         return {
           ...s,
           components: s.components.map(c =>
-            c.id === componentId
-              ? { ...c, position: { ...c.position, ...position } }
-              : c
+            c.id === componentId ? { ...c, props: { ...c.props, ...props } } : c
           ),
         };
       }
@@ -349,6 +364,87 @@ export const useBuilderStore = create((set, get) => ({
     });
 
     set({ sections: newSections });
+  },
+
+  bringToFront: (sectionId, componentId) => {
+    const { sections, saveToHistory } = get();
+    saveToHistory();
+
+    const newSections = sections.map(s => {
+      if (s.id === sectionId) {
+        const index = s.components.findIndex(c => c.id === componentId);
+        if (index < s.components.length - 1) {
+          const newComponents = [...s.components];
+          const [component] = newComponents.splice(index, 1);
+          newComponents.push(component);
+          return { ...s, components: newComponents };
+        }
+      }
+      return s;
+    });
+
+    set({ sections: newSections });
+  },
+
+  sendToBack: (sectionId, componentId) => {
+    const { sections, saveToHistory } = get();
+    saveToHistory();
+
+    const newSections = sections.map(s => {
+      if (s.id === sectionId) {
+        const index = s.components.findIndex(c => c.id === componentId);
+        if (index > 0) {
+          const newComponents = [...s.components];
+          const [component] = newComponents.splice(index, 1);
+          newComponents.unshift(component);
+          return { ...s, components: newComponents };
+        }
+      }
+      return s;
+    });
+
+    set({ sections: newSections });
+  },
+
+  // Multi-select support
+  toggleComponentSelection: (componentId) => {
+    const { selectedLayers } = get();
+    if (selectedLayers.includes(componentId)) {
+      set({ selectedLayers: selectedLayers.filter(id => id !== componentId) });
+    } else {
+      set({ selectedLayers: [...selectedLayers, componentId] });
+    }
+  },
+
+  clearSelection: () => {
+    set({ selectedLayers: [], selectedComponentId: null, selectedSectionId: null });
+  },
+
+  groupSelectedComponents: (sectionId) => {
+    const { sections, selectedLayers, saveToHistory } = get();
+    if (selectedLayers.length < 2) return;
+    saveToHistory();
+
+    const newSections = sections.map(s => {
+      if (s.id === sectionId) {
+        const selectedIds = new Set(selectedLayers);
+        const selectedComponents = s.components.filter(c => selectedIds.has(c.id));
+        const remainingComponents = s.components.filter(c => !selectedIds.has(c.id));
+
+        const group = {
+          id: `group-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+          type: 'group',
+          props: {},
+          position: { x: 0, y: 0, width: null, height: null, rotation: 0, scale: 1, zIndex: 10 },
+          children: selectedComponents,
+        };
+
+        return { ...s, components: [...remainingComponents, group] };
+      }
+      return s;
+    });
+
+    set({ sections: newSections, selectedLayers: [] });
   },
 
   undo: () => {

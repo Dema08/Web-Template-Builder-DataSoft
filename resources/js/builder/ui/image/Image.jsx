@@ -1,6 +1,5 @@
 import { useRef } from 'react';
 import { useBuilderStore } from '../../stores/builderStore';
-import ResizableImage from '../../components/editing/ResizableImage';
 
 export default function Image({
   src = '',
@@ -8,16 +7,37 @@ export default function Image({
   width = '100%',
   height = 'auto',
   objectFit = 'cover',
+  objectPosition = 'center',
   borderRadius = '0',
   shadow = 'none',
   opacity = 100,
+  borderWidth = '0',
+  borderColor = '#e5e7eb',
   componentId = null,
   sectionId = null,
 }) {
-  const { selectedComponentId, selectComponent, updateComponentProps } = useBuilderStore();
+  const { updateComponentProps } = useBuilderStore();
   const fileInputRef = useRef(null);
 
-  const isSelected = selectedComponentId === componentId;
+  const shadowStyles = {
+    none: '',
+    sm: 'shadow-sm',
+    md: 'shadow-md',
+    lg: 'shadow-lg',
+    xl: 'shadow-xl',
+  };
+
+  const style = {
+    objectFit,
+    objectPosition,
+    borderRadius,
+    opacity: opacity / 100,
+    width,
+    height,
+    borderWidth,
+    borderColor,
+    borderStyle: borderWidth && borderWidth !== '0' ? 'solid' : 'none',
+  };
 
   const handleFileUpload = (e) => {
     const file = e.target.files?.[0];
@@ -31,43 +51,25 @@ export default function Image({
     reader.readAsDataURL(file);
   };
 
-  const handleClick = (e) => {
-    e.stopPropagation();
-    selectComponent(componentId);
-    // Trigger file upload when selected image is clicked
-    fileInputRef.current?.click();
-  };
-
   return (
-    <div
-      id={componentId}
-      data-component-id={componentId}
-      data-section-id={sectionId}
-      onClick={handleClick}
-      className={`relative ${isSelected ? 'z-10' : ''}`}
-    >
-      <ResizableImage
+    <div className="relative group">
+      <img
         src={src}
         alt={alt}
-        width={width}
-        height={height}
-        objectFit={objectFit}
-        borderRadius={borderRadius}
-        shadow={shadow}
-        opacity={opacity}
-        componentId={componentId}
-        sectionId={sectionId}
+        style={style}
+        className={`${shadowStyles[shadow]} bg-slate-100 transition-all`}
       />
 
-      {/* Upload overlay on hover/selected */}
-      {(isSelected || !src) && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 hover:opacity-100 transition-opacity rounded-lg cursor-pointer group">
-          <div className="text-center">
-            <div className="text-2xl mb-1">📷</div>
-            <div className="text-xs text-white font-bold">{src ? 'Replace' : 'Upload'}</div>
-          </div>
+      {/* Upload overlay on hover */}
+      <div
+        className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg cursor-pointer"
+        onClick={() => fileInputRef.current?.click()}
+      >
+        <div className="text-center">
+          <div className="text-2xl mb-1">📷</div>
+          <div className="text-xs text-white font-bold">{src ? 'Replace' : 'Upload'}</div>
         </div>
-      )}
+      </div>
 
       <input
         ref={fileInputRef}

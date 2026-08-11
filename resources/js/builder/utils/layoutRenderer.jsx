@@ -1,4 +1,5 @@
 import { getUIComponent } from './componentMapper';
+import EditableComponent from '../components/editing/EditableComponent';
 
 // Helper to render components within a layout with section context
 export const renderLayoutComponents = (components, sectionId) => {
@@ -6,12 +7,17 @@ export const renderLayoutComponents = (components, sectionId) => {
     const Component = getUIComponent(component.type);
     if (!Component) return null;
     return (
-      <Component
+      <EditableComponent
         key={component.id}
-        {...component.props}
-        componentId={component.id}
+        component={component}
         sectionId={sectionId}
-      />
+      >
+        <Component
+          {...component.props}
+          componentId={component.id}
+          sectionId={sectionId}
+        />
+      </EditableComponent>
     );
   });
 };

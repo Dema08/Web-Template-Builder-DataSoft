@@ -1,4 +1,5 @@
 import { useBuilderStore } from '../../stores/builderStore';
+import InlineEditableText from '../../components/editing/InlineEditableText';
 
 export default function Button({
   label = 'Button',
@@ -9,10 +10,16 @@ export default function Button({
   background = '#4f46e5',
   color = '#ffffff',
   shadow = 'md',
+  fontFamily = 'sans-serif',
+  fontSize = '14px',
+  fontWeight = '700',
+  letterSpacing = 'normal',
+  textTransform = 'none',
+  padding = '0',
   componentId = null,
   sectionId = null,
 }) {
-  const { selectedComponentId, hoveredComponent, setHoveredComponent, selectComponent } = useBuilderStore();
+  const { updateComponentProps } = useBuilderStore();
 
   const baseStyles = 'font-bold transition-all inline-flex items-center justify-center';
 
@@ -21,6 +28,10 @@ export default function Button({
     secondary: 'bg-slate-600 text-white hover:bg-slate-700',
     outline: 'border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-50',
     ghost: 'text-indigo-600 hover:bg-indigo-50',
+    gradient: 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700',
+    pill: 'bg-indigo-600 text-white hover:bg-indigo-700',
+    square: 'bg-indigo-600 text-white hover:bg-indigo-700',
+    glass: 'bg-white/20 backdrop-blur-sm text-white border border-white/30 hover:bg-white/30',
   };
 
   const sizeStyles = {
@@ -44,37 +55,38 @@ export default function Button({
     lg: 'shadow-lg',
   };
 
-  const isSelected = selectedComponentId === componentId;
-  const isHovered = hoveredComponent === componentId;
+  const handleUpdate = (newLabel) => {
+    if (sectionId && componentId) {
+      updateComponentProps(sectionId, componentId, { label: newLabel });
+    }
+  };
 
-  const className = `${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${radiusStyles[radius]} ${shadowStyles[shadow]} ${
-    isSelected
-      ? 'ring-2 ring-indigo-600 ring-offset-2'
-      : isHovered
-        ? 'ring-1 ring-indigo-400 ring-offset-1'
-        : ''
-  }`;
+  const className = `${baseStyles} ${variantStyles[variant] || variantStyles.primary} ${sizeStyles[size]} ${radiusStyles[radius]} ${shadowStyles[shadow]}`;
+
+  const style = {
+    backgroundColor: ['primary', 'secondary', 'gradient', 'pill', 'square'].includes(variant) ? background : 'transparent',
+    color: ['primary', 'secondary', 'gradient', 'pill', 'square'].includes(variant) ? color : background,
+    fontFamily,
+    fontSize,
+    fontWeight,
+    letterSpacing,
+    textTransform,
+    padding,
+  };
 
   return (
     <a
-      id={componentId}
-      data-component-id={componentId}
-      data-section-id={sectionId}
       href={href}
-      onClick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        selectComponent(componentId);
-      }}
-      onMouseEnter={() => setHoveredComponent(componentId)}
-      onMouseLeave={() => setHoveredComponent(null)}
+      onClick={(e) => e.preventDefault()}
       className={className}
-      style={{
-        backgroundColor: variant === 'primary' || variant === 'secondary' ? background : 'transparent',
-        color: variant === 'primary' || variant === 'secondary' ? color : background,
-      }}
+      style={style}
     >
-      {label}
+      <InlineEditableText
+        value={label}
+        onUpdate={handleUpdate}
+        style={{ fontFamily, fontSize, fontWeight, letterSpacing, textTransform }}
+        tag="span"
+      />
     </a>
   );
 }

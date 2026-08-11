@@ -1,5 +1,5 @@
-import { useBuilderStore } from '../../stores/builderStore';
 import InlineEditableText from '../../components/editing/InlineEditableText';
+import { useBuilderStore } from '../../stores/builderStore';
 
 export default function Text({
   content = '',
@@ -14,10 +14,11 @@ export default function Text({
   padding = '0',
   fontStyle = 'normal',
   textDecoration = 'none',
+  textTransform = 'none',
   componentId = null,
   sectionId = null,
 }) {
-  const { selectedComponentId, hoveredComponent, setHoveredComponent, updateComponentProps } = useBuilderStore();
+  const { updateComponentProps } = useBuilderStore();
 
   const style = {
     fontFamily,
@@ -31,10 +32,8 @@ export default function Text({
     padding,
     fontStyle,
     textDecoration,
+    textTransform,
   };
-
-  const isSelected = selectedComponentId === componentId;
-  const isHovered = hoveredComponent === componentId;
 
   const handleUpdate = (newContent) => {
     if (sectionId && componentId) {
@@ -43,25 +42,10 @@ export default function Text({
   };
 
   return (
-    <span
-      id={componentId}
-      data-component-id={componentId}
-      data-section-id={sectionId}
-      onMouseEnter={() => setHoveredComponent(componentId)}
-      onMouseLeave={() => setHoveredComponent(null)}
-      className={`relative inline-block transition-all ${
-        isSelected
-          ? 'ring-2 ring-indigo-600 ring-offset-1'
-          : isHovered
-            ? 'ring-1 ring-indigo-400 ring-offset-1'
-            : ''
-      }`}
-    >
-      <InlineEditableText
-        value={content}
-        onUpdate={handleUpdate}
-        style={style}
-      />
-    </span>
+    <InlineEditableText
+      value={content}
+      onUpdate={handleUpdate}
+      style={style}
+    />
   );
 }

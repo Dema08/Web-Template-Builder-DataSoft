@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { useBuilderStore } from '../../stores/builderStore';
 
 export default function InlineEditableText({
@@ -9,20 +9,53 @@ export default function InlineEditableText({
   tag = 'span',
 }) {
   const ref = useRef(null);
+  const [isEditing, setIsEditing] = useState(false);
   const { selectComponent } = useBuilderStore();
 
   useEffect(() => {
-    if (ref.current && ref.current.innerText !== value) {
+    if (ref.current && ref.current.innerText !== value && !isEditing) {
       ref.current.innerText = value;
     }
-  }, [value]);
+  }, [value, isEditing]);
 
   const handleBlur = () => {
+    setIsEditing(false);
     if (ref.current) {
       const newValue = ref.current.innerText;
       if (newValue !== value) {
         onUpdate(newValue);
       }
+    }
+  };
+
+  const handleDoubleClick = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setIsEditing(true);
+    // Focus and select all text
+    setTimeout(() => {
+      if (ref.current) {
+        ref.current.focus();
+        const range = document.createRange();
+        range.selectNodeContents(ref.current);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+      }
+    }, 0);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      ref.current?.blur();
+    }
+    if (e.key === 'Escape') {
+      // Revert to original value
+      if (ref.current) {
+        ref.current.innerText = value;
+      }
+      ref.current?.blur();
     }
   };
 
@@ -43,6 +76,8 @@ export default function InlineEditableText({
       suppressContentEditableWarning
       onBlur={handleBlur}
       onClick={handleClick}
+      onDoubleClick={handleDoubleClick}
+      onKeyDown={handleKeyDown}
       style={style}
       className={`outline-none focus:outline-2 focus:outline-indigo-500 focus:outline-dashed cursor-text ${className}`}
     >

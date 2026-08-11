@@ -2,6 +2,7 @@ import { useBuilderStore } from '../../stores/builderStore';
 import { getSectionConfig } from '../../utils/industryConfigs';
 import { getLayoutComponent } from '../../utils/layoutComponentMapper';
 import { getUIComponent } from '../../utils/componentMapper';
+import EditableComponent from '../editing/EditableComponent';
 
 // Convert layout ID like "hero-01" to component name "Hero01"
 const layoutIdToComponentName = (layoutId) => {
@@ -36,7 +37,19 @@ export default function SectionRenderer({ section, isSelected, onClick }) {
   const renderComponent = (component) => {
     const Component = getUIComponent(component.type);
     if (!Component) return null;
-    return <Component key={component.id} {...component.props} />;
+    return (
+      <EditableComponent
+        key={component.id}
+        component={component}
+        sectionId={section.id}
+      >
+        <Component
+          {...component.props}
+          componentId={component.id}
+          sectionId={section.id}
+        />
+      </EditableComponent>
+    );
   };
 
   // If no layout component found, render a fallback with the section type
