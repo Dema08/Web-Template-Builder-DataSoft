@@ -102,8 +102,7 @@ export default function UserDashboard() {
             </Card>
 
             {/* Visitor Analytics Section */}
-            {myWebsite && (
-                <Card className="p-6 sm:p-8 space-y-6">
+            <Card className="p-6 sm:p-8 space-y-6">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[rgb(var(--color-border))] pb-4">
                         <div>
                             <div className="flex items-center gap-2">
@@ -335,7 +334,6 @@ export default function UserDashboard() {
                     })()}
 
                 </Card>
-            )}
 
             {/* Quick Actions & Templates */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
