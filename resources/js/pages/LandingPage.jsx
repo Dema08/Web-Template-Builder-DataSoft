@@ -66,12 +66,12 @@ const FEATURES = [
 ];
 
 const TEMPLATES = [
-    { title: 'Corporate Business', tag: 'Popular', color: 'from-blue-500 to-indigo-600', img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop&q=80' },
+    { title: 'Corporate Business', tag: 'Popular', color: 'from-blue-500 to-indigo-600', img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&auto=format&fit=crop&q=80' },
     { title: 'Logistics Company', tag: 'New', color: 'from-slate-500 to-slate-700', img: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=600&auto=format&fit=crop&q=80' },
     { title: 'Manufacturing', tag: 'Enterprise', color: 'from-orange-500 to-red-600', img: 'https://images.unsplash.com/photo-1565043666747-69f6646db940?w=600&auto=format&fit=crop&q=80' },
-    { title: 'Educational Institution', tag: 'Featured', color: 'from-emerald-500 to-teal-600', img: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=600&auto=format&fit=crop&q=80' },
-    { title: 'Startup & SaaS', tag: 'Hot', color: 'from-violet-500 to-purple-700', img: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&auto=format&fit=crop&q=80' },
-    { title: 'Organization & NGO', tag: 'Pro', color: 'from-cyan-500 to-blue-600', img: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=600&auto=format&fit=crop&q=80' },
+    { title: 'Educational Institution', tag: 'Featured', color: 'from-emerald-500 to-teal-600', img: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&auto=format&fit=crop&q=80' },
+    { title: 'Startup & SaaS', tag: 'Hot', color: 'from-violet-500 to-purple-700', img: 'https://images.unsplash.com/photo-1551434678-e076c223a692?w=600&auto=format&fit=crop&q=80' },
+    { title: 'Organization & NGO', tag: 'Pro', color: 'from-cyan-500 to-blue-600', img: 'https://images.unsplash.com/photo-1593113598332-cd288d649433?w=600&auto=format&fit=crop&q=80' },
 ];
 
 const STEPS = [
@@ -410,7 +410,7 @@ export default function LandingPage() {
                                     WebkitBackgroundClip: 'text',
                                     WebkitTextFillColor: 'transparent',
                                     backgroundClip: 'text',
-                                }}>Like Canva</span>
+                                }}>Without Coding!!!</span>
                             </h1>
 
                             {/* Sub */}
