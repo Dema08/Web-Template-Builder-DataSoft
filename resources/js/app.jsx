@@ -8,6 +8,7 @@ import { useCurrentUser } from '@hooks';
 import { useSettingsStore, useAuthStore } from '@store';
 import { settingsApi } from '@api';
 import SessionTimeoutModal from '@components/SessionTimeoutModal';
+import RegistrationPendingModal from '@components/auth/RegistrationPendingModal';
 import { initializeGoogleTranslate, setupGoogleTranslateElement } from '@utils/googleTranslate';
 import '../css/app.css';
 
@@ -179,6 +180,7 @@ function App() {
             </ErrorBoundary>
             <Toast />
             <SessionTimeoutModal />
+            <RegistrationPendingModal />
             {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
         </QueryClientProvider>
     );

@@ -31,19 +31,19 @@ export default function Register() {
         });
     };
 
+    // Set localStorage flag when registration is successful
+    if (doRegister.isSuccess) {
+        localStorage.setItem('show_registration_pending_modal', 'true');
+    }
+
     // Show pending approval state after successful registration
     if (doRegister.isSuccess) {
         return (
-            <div
-                className="max-w-[960px] w-full rounded-[28px] overflow-hidden flex flex-col md:flex-row min-h-[560px] relative z-10 transition-all duration-300 bg-white"
-                style={{
-                    boxShadow: '0 25px 70px rgba(30, 41, 59, 0.18)',
-                    border: '1px solid rgba(255, 255, 255, 0.9)',
-                }}
-            >
-                <div className="w-full md:w-1/2 p-8 sm:p-11 flex flex-col items-center justify-center bg-white text-center gap-5">
-                    <div className="h-16 w-16 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center shadow-sm">
-                        <Clock className="h-8 w-8 text-amber-500" />
+<div className="max-w-5xl w-full bg-[rgb(var(--color-surface))] rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row min-h-[660px] border border-[rgb(var(--color-border))]">
+    <div className="w-full md:w-1/2 p-8 sm:p-12 flex flex-col items-center justify-center bg-[rgb(var(--color-surface))] text-center gap-5">
+        <div className="h-20 w-20 rounded-full bg-amber-50 border-2 border-amber-200 flex items-center justify-center">
+            <Clock className="h-10 w-10 text-amber-500" />
+        </div>
                     </div>
                     <div>
                         <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">Pendaftaran Berhasil!</h2>
@@ -128,6 +128,7 @@ export default function Register() {
                     </div>
                 </div>
             </div>
+            </>
         );
     }
 
