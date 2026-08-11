@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\User;
+use App\Domains\User\Models\User;
 use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
@@ -30,6 +30,28 @@ class UserSeeder extends Seeder
                 'password'           => Hash::make('password'),
                 'role'               => 'user',
                 'level'              => 2,
+                'email_verified_at'  => now(),
+            ]
+        );
+
+        User::updateOrCreate(
+            ['email' => 'demaadzhani08@gmail.com'],
+            [
+                'name'               => 'Dema',
+                'password'           => Hash::make('Akuabsen8'),
+                'role'               => 'user',
+                'level'              => 2,
+                'email_verified_at'  => now(),
+            ]
+        );
+
+        User::updateOrCreate(
+            ['email' => 'demaadzhani5@gmail.com'],
+            [
+                'name'               => 'demor',
+                'password'           => Hash::make('Akuabsen8'),
+                'role'               => 'admin',
+                'level'              => 1,
                 'email_verified_at'  => now(),
             ]
         );

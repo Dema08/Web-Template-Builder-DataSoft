@@ -410,7 +410,7 @@ export default function LandingPage() {
                                     WebkitBackgroundClip: 'text',
                                     WebkitTextFillColor: 'transparent',
                                     backgroundClip: 'text',
-                                }}>Without Coding!!!</span>
+                                }}>With One-Click Hosting</span>
                             </h1>
 
                             {/* Sub */}
