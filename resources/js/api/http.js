@@ -47,7 +47,7 @@ http.interceptors.response.use(
                 localStorage.removeItem('cpwb_user');
 
                 if (!window.location.pathname.startsWith('/login')) {
-                    window.location.href = '/login';
+                    window.location.href = '/login?logout=1';
                 }
             }
 

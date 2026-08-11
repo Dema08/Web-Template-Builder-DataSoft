@@ -10,9 +10,9 @@ use Symfony\Component\HttpFoundation\Response;
 class CheckSessionTimeout
 {
     /**
-     * Session timeout in minutes (5 minutes)
+     * Session timeout in minutes (15 minutes)
      */
-    protected int $timeout = 5;
+    protected int $timeout = 15;
 
     /**
      * Handle an incoming request.
@@ -26,24 +26,28 @@ class CheckSessionTimeout
         $lastActivity = session()->get('last_activity_time');
 
         if ($lastActivity && (time() - $lastActivity) > ($this->timeout * 60)) {
-            // Session expired - revoke token for Sanctum
-            if ($request->user()) {
-                $request->user()->currentAccessToken()->delete();
+            // Session expired - revoke token for Sanctum if present
+            if ($request->user() && method_exists($request->user(), 'currentAccessToken') && $request->user()->currentAccessToken()) {
+                try {
+                    $request->user()->currentAccessToken()->delete();
+                } catch (\Throwable $e) {
+                    // Ignore if token already revoked or session-only
+                }
             }
 
             // Invalidate session
             $request->session()->invalidate();
             $request->session()->regenerateToken();
 
-            if ($request->expectsJson()) {
+            if ($request->expectsJson() || $request->is('api/*')) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Sesi Anda telah berakhir karena tidak ada aktivitas selama 5 menit. Silakan login kembali.',
-                    'errors' => ['session_timeout' => 'Session expired due to inactivity'],
+                    'message' => "Sesi Anda telah berakhir karena tidak ada aktivitas selama {$this->timeout} menit. Silakan login kembali.",
+                    'errors'  => ['session_timeout' => 'Session expired due to inactivity'],
                 ], 401);
             }
 
-            return redirect()->route('login')->with('message', 'Sesi Anda telah berakhir karena tidak ada aktivitas selama 5 menit. Silakan login kembali.');
+            return redirect()->to('/login?logout=1')->with('message', "Sesi Anda telah berakhir karena tidak ada aktivitas selama {$this->timeout} menit. Silakan login kembali.");
         }
 
         // Update last activity time
@@ -52,3 +56,4 @@ class CheckSessionTimeout
         return $next($request);
     }
 }
+
