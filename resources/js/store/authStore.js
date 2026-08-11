@@ -26,10 +26,10 @@ export const useAuthStore = create(
                 
                 // Persist to the chosen storage
                 if (session?.token) {
-                    storage.setItem('cpwb-auth-token', session.token);
+                    storage.setItem('cpwb_access_token', session.token);
                 }
                 if (session?.user) {
-                    storage.setItem('cpwb-auth-user', JSON.stringify(session.user));
+                    storage.setItem('cpwb_user', JSON.stringify(session.user));
                 }
 
                 return set({
@@ -48,10 +48,10 @@ export const useAuthStore = create(
              * Clear the session (logout).
              */
             clearSession: () => {
-                localStorage.removeItem('cpwb-auth-token');
-                localStorage.removeItem('cpwb-auth-user');
-                sessionStorage.removeItem('cpwb-auth-token');
-                sessionStorage.removeItem('cpwb-auth-user');
+                localStorage.removeItem('cpwb_access_token');
+                localStorage.removeItem('cpwb_user');
+                sessionStorage.removeItem('cpwb_access_token');
+                sessionStorage.removeItem('cpwb_user');
                 set(initialState);
             },
 

@@ -247,7 +247,8 @@ export default function AdminSettings() {
             </Card>
 
             {/* ===== BRAND IDENTITY SECTION ===== */}
-            <form onSubmit={handleSaveBrand} className="bg-[rgb(var(--color-surface))] rounded-3xl p-6 sm:p-8 border border-[rgb(var(--color-border))] shadow-xs space-y-6">
+            <Card className="p-0 overflow-hidden">
+                <form onSubmit={handleSaveBrand} className="p-6 sm:p-8 space-y-6">
                 <div className="flex items-center justify-between border-b border-[rgb(var(--color-border))] pb-4">
                     <h2 className="text-base font-extrabold text-[rgb(var(--color-text-primary))] flex items-center gap-2">
                         <Palette className="h-4 w-4 text-blue-600" />
@@ -425,10 +426,12 @@ export default function AdminSettings() {
                         <span>{isUpdating ? 'Saving...' : 'Apply Brand Changes'}</span>
                     </button>
                 </div>
-            </form>
+                </form>
+            </Card>
 
             {/* ===== PLATFORM & MAINTENANCE CONTROLS SECTION ===== */}
-            <form onSubmit={handleSaveSystem} className="bg-[rgb(var(--color-surface))] rounded-3xl p-6 sm:p-8 border border-[rgb(var(--color-border))] shadow-xs space-y-6">
+            <Card className="p-0 overflow-hidden">
+                <form onSubmit={handleSaveSystem} className="p-6 sm:p-8 space-y-6">
                 <div className="flex items-center justify-between border-b border-[rgb(var(--color-border))] pb-4">
                     <h2 className="text-base font-extrabold text-[rgb(var(--color-text-primary))] flex items-center gap-2">
                         <Wrench className="h-4 w-4 text-blue-600" /> Maintenance & Platform Controls
@@ -512,7 +515,8 @@ export default function AdminSettings() {
                         <span>{updateMaintenanceMutation.isPending || isUpdating ? 'Saving...' : 'Save Settings'}</span>
                     </button>
                 </div>
-            </form>
+                </form>
+            </Card>
         </div>
     );
 }

@@ -70,6 +70,9 @@ Route::prefix('v1')->group(function (): void {
         Route::put('/settings', [App\Domains\System\Http\Controllers\AdminSettingController::class, 'update']);
         Route::post('/settings/logo', [App\Domains\System\Http\Controllers\AdminSettingController::class, 'uploadLogo']);
         Route::delete('/settings/logo', [App\Domains\System\Http\Controllers\AdminSettingController::class, 'removeLogo']);
+
+        // Dashboard summary (admin-only, always accessible even in maintenance)
+        Route::get('/dashboard-summary', [App\Domains\Admin\Http\Controllers\DashboardController::class, 'index']);
     });
 
     // Authenticated application endpoints (protected by maintenance mode)

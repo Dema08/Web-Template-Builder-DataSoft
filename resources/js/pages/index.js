@@ -28,3 +28,6 @@ export { default as Builder } from './builder/Builder';
 
 // Main Dashboard Switcher
 export { default as Dashboard } from './Dashboard';
+
+// Public Landing Page
+export { default as LandingPage } from './LandingPage';

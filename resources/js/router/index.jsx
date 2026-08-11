@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AppLayout, GuestLayout, BuilderLayout } from '@layouts';
 import {
+            LandingPage,
             Login,
             Register,
             ForgotPassword,
@@ -29,6 +30,9 @@ export default function AppRouter() {
     return (
         <BrowserRouter>
             <Routes>
+                {/* Public Landing Page — accessible to everyone */}
+                <Route path="/" element={<LandingPage />} />
+
                 {/* Guest-only routes */}
                 <Route
                     element={
@@ -84,8 +88,8 @@ export default function AppRouter() {
                     }
                 />
 
-                {/* Fallback */}
-                <Route path="*" element={<Navigate to={ROUTES.DASHBOARD} replace />} />
+                {/* Fallback — redirect to landing page */}
+                <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
         </BrowserRouter>
     );
