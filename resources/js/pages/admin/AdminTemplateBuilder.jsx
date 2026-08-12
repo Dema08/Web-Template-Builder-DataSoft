@@ -16,6 +16,7 @@ import KeyboardShortcuts from '@builder/components/editing/KeyboardShortcuts';
 import { useBuilderStore } from '@builder/stores/builderStore';
 import { INDUSTRY_CONFIGS } from '@builder/utils/industryConfigs';
 import { INDUSTRY_STARTER_TEMPLATES, getCategoryStarterTemplates } from '@builder/utils/industryStarterTemplates';
+import { getLayoutDefaults } from '@builder/utils/layoutDefaults';
 import { ArrowLeft, FolderOpen, Sparkles, Layout, Zap, CheckCircle2, Eye, X, Layers, ArrowRight } from 'lucide-react';
 import CustomDropdown from '@/components/ui/CustomDropdown';
 
@@ -118,8 +119,46 @@ export default function AdminTemplateBuilder() {
   const handleApplyStarterTemplate = (starterTpl) => {
     if (!starterTpl || !starterTpl.sections) return;
 
-    // Load complete starter template sections into store
-    loadSections(starterTpl.sections);
+    // Enrich each section: merge starter template components with layoutDefaults
+    // so sections that only declare a heading still get the full card/sub-component tree
+    const enrichedSections = starterTpl.sections.map(section => {
+      const defaults = getLayoutDefaults(section.layout);
+      const starterComps = section.components || [];
+
+      let mergedComponents;
+      if (defaults.length === 0 || starterComps.length === 0) {
+        // No defaults or no starter overrides — just use whichever has content
+        mergedComponents = starterComps.length > 0 ? starterComps : defaults;
+      } else {
+        // Merge: for each default component, check if starter has an override by id/type
+        // Starter overrides take priority for matching nodes; defaults fill the rest
+        const starterMap = {};
+        starterComps.forEach(c => {
+          if (c.id) starterMap[c.id] = c;
+        });
+        mergedComponents = defaults.map(def => {
+          const override = starterMap[def.id];
+          if (override) {
+            return {
+              ...def,
+              props: { ...def.props, ...(override.props || {}) },
+            };
+          }
+          return def;
+        });
+        // Append any starter components not in defaults (e.g. badges, extra buttons)
+        starterComps.forEach(sc => {
+          if (!defaults.some(d => d.id === sc.id)) {
+            mergedComponents.push(sc);
+          }
+        });
+      }
+
+      return { ...section, components: mergedComponents };
+    });
+
+    // Load enriched sections into store (loadSections will recursively normalize childrenComponents)
+    loadSections(enrichedSections);
 
     // Auto-set template name
     setTemplateName(starterTpl.name);
@@ -154,8 +193,12 @@ export default function AdminTemplateBuilder() {
       industry_category_id: selectedCategoryId || null,
       draft_json: {
         sections: sections.map(s => ({
+          id: s.id,
           type: s.type,
           layout: s.layout,
+          styles: s.styles || {},
+          isLocked: s.isLocked || false,
+          isHidden: s.isHidden || false,
           components: s.components,
         })),
       },

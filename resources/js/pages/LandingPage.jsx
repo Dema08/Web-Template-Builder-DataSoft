@@ -216,50 +216,63 @@ function Navbar({ onDemo }) {
     );
 }
 
-/* ── Dashboard Illustration ── */
+/* ── Animated Dashboard Illustration ── */
 function DashboardIllustration() {
+    const [activeSec, setActiveSec] = useState(0);
+    const sectionsList = ['Hero Banner','Nav Bar','Feature Grid','Testimonials','Footer','About Us','Contact'];
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setActiveSec((prev) => (prev + 1) % sectionsList.length);
+        }, 2500);
+        return () => clearInterval(interval);
+    }, []);
+
     return (
-        <div className="relative w-full max-w-[620px] mx-auto">
-            {/* Glow */}
-            <div className="absolute inset-0 blur-3xl opacity-25 rounded-3xl"
-                 style={{ background: 'radial-gradient(circle,#4f46e5 0%,#2563eb 50%,transparent 80%)' }} />
+        <div className="relative w-full max-w-[620px] mx-auto group">
+            {/* Pulsing Animated Background Glow */}
+            <div className="absolute inset-0 blur-3xl opacity-30 rounded-3xl ds-animate-pulse-slow"
+                 style={{ background: 'radial-gradient(circle,#4f46e5 0%,#2563eb 50%,#7c3aed 80%,transparent 100%)' }} />
 
             {/* Main Dashboard Window */}
-            <div className="relative bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden"
-                 style={{ boxShadow: '0 30px 80px rgba(79,70,229,0.18)' }}>
+            <div className="relative bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden ds-hover-glow transition-all duration-500"
+                 style={{ boxShadow: '0 30px 80px rgba(79,70,229,0.22)' }}>
                 {/* Toolbar */}
-                <div className="flex items-center gap-2 px-4 py-3 bg-slate-50 border-b border-slate-200">
+                <div className="flex items-center gap-2 px-4 py-3 bg-slate-900 border-b border-slate-800 text-white">
                     <div className="flex gap-1.5">
-                        <div className="w-3 h-3 rounded-full bg-red-400" />
+                        <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
                         <div className="w-3 h-3 rounded-full bg-amber-400" />
                         <div className="w-3 h-3 rounded-full bg-emerald-400" />
                     </div>
-                    <div className="flex-1 bg-white rounded-md px-3 py-1 text-[10px] text-slate-400 border border-slate-200 mx-4 font-medium">
-                        datasoft.io/builder
+                    <div className="flex-1 bg-slate-800 rounded-lg px-3 py-1 text-[10px] text-slate-300 border border-slate-700 mx-4 font-mono flex items-center justify-between">
+                        <span>datasoft.io/builder</span>
+                        <span className="flex items-center gap-1 text-[9px] text-emerald-400 font-bold">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" /> LIVE ENGINE
+                        </span>
                     </div>
                     <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-bold text-slate-500 px-2 py-1 bg-slate-100 rounded-md">Save</span>
-                        <span className="text-[10px] font-bold text-white px-2 py-1 rounded-md"
+                        <span className="text-[10px] font-bold text-slate-400 px-2 py-1 bg-slate-800 rounded-md">Save</span>
+                        <span className="text-[10px] font-bold text-white px-2.5 py-1 rounded-md ds-animate-pulse-glow"
                               style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>Publish ✓</span>
                     </div>
                 </div>
 
                 {/* Builder Layout */}
-                <div className="flex" style={{ height: '280px' }}>
+                <div className="flex" style={{ height: '290px' }}>
                     {/* Left Sidebar */}
-                    <div className="w-14 bg-slate-900 flex flex-col items-center py-3 gap-3">
+                    <div className="w-14 bg-slate-950 flex flex-col items-center py-3 gap-3">
                         {[Layout, Image, Palette, Layers, Globe].map((Icon, i) => (
-                            <div key={i} className={`w-9 h-9 rounded-xl flex items-center justify-center cursor-pointer transition ${i === 0 ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:bg-slate-700'}`}>
+                            <div key={i} className={`w-9 h-9 rounded-xl flex items-center justify-center cursor-pointer transition-all duration-300 ${i === (activeSec % 5) ? 'bg-indigo-600 text-white scale-110 shadow-lg shadow-indigo-500/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}>
                                 <Icon className="h-4 w-4" />
                             </div>
                         ))}
                     </div>
 
                     {/* Components Panel */}
-                    <div className="w-32 bg-slate-800 p-2 space-y-1.5 overflow-hidden">
+                    <div className="w-32 bg-slate-900 p-2 space-y-1.5 overflow-hidden">
                         <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider px-1 mb-2">Sections</p>
-                        {['Hero Banner','Nav Bar','Feature Grid','Testimonials','Footer','About Us','Contact'].map((s, i) => (
-                            <div key={i} className={`px-2 py-1.5 rounded-lg text-[10px] font-semibold cursor-pointer ${i === 0 ? 'bg-indigo-600 text-white' : 'text-slate-300 hover:bg-slate-700'}`}>
+                        {sectionsList.map((s, i) => (
+                            <div key={i} className={`px-2 py-1.5 rounded-lg text-[10px] font-semibold cursor-pointer transition-all duration-300 ${i === activeSec ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md font-bold' : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'}`}>
                                 {s}
                             </div>
                         ))}
@@ -267,23 +280,31 @@ function DashboardIllustration() {
 
                     {/* Canvas */}
                     <div className="flex-1 bg-slate-100 relative overflow-hidden">
+                        {/* Animated Live Cursor moving around */}
+                        <div className="absolute z-40 pointer-events-none ds-animate-cursor transition-all duration-1000">
+                            <MousePointer2 className="h-5 w-5 text-indigo-600 fill-indigo-600 drop-shadow-md" />
+                            <div className="ml-3 -mt-2 bg-indigo-600 text-white text-[8px] font-bold px-1.5 py-0.5 rounded shadow">
+                                User Dragging...
+                            </div>
+                        </div>
+
                         {/* Website preview */}
-                        <div className="absolute inset-2 bg-white rounded-lg shadow-sm overflow-hidden">
+                        <div className="absolute inset-2 bg-white rounded-lg shadow-sm overflow-hidden flex flex-col">
                             {/* Hero */}
-                            <div className="h-20 flex items-center px-4 gap-2"
+                            <div className={`h-20 flex items-center px-4 gap-2 transition-all duration-500 ${activeSec === 0 ? 'ring-2 ring-indigo-500 bg-indigo-50/50' : ''}`}
                                  style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
-                                <div className="w-6 h-6 rounded-lg bg-white/20 flex items-center justify-center text-white text-[8px] font-black">DS</div>
+                                <div className="w-6 h-6 rounded-lg bg-white/20 flex items-center justify-center text-white text-[8px] font-black animate-pulse">DS</div>
                                 <div className="flex-1 space-y-1 pl-1">
-                                    <div className="h-2.5 bg-white/90 rounded w-24" />
+                                    <div className="h-2.5 bg-white/90 rounded w-24 ds-animate-shimmer" />
                                     <div className="h-1.5 bg-white/50 rounded w-36" />
                                 </div>
-                                <div className="h-5 px-2 bg-white rounded text-[8px] font-bold text-indigo-600 flex items-center">Get Started</div>
+                                <div className="h-5 px-2 bg-white rounded text-[8px] font-bold text-indigo-600 flex items-center hover:scale-105 transition">Get Started</div>
                             </div>
                             {/* Feature grid */}
-                            <div className="grid grid-cols-3 gap-1.5 p-2">
+                            <div className={`grid grid-cols-3 gap-1.5 p-2 transition-all duration-500 ${activeSec === 2 ? 'ring-2 ring-indigo-500 bg-indigo-50/50' : ''}`}>
                                 {[...Array(6)].map((_, i) => (
-                                    <div key={i} className="bg-slate-50 rounded p-1.5 space-y-1 border border-slate-100">
-                                        <div className="w-4 h-4 rounded bg-indigo-100" />
+                                    <div key={i} className="bg-slate-50 rounded p-1.5 space-y-1 border border-slate-100 hover:border-indigo-300 transition">
+                                        <div className={`w-4 h-4 rounded ${i % 2 === 0 ? 'bg-indigo-500' : 'bg-blue-500'}`} />
                                         <div className="h-1.5 bg-slate-200 rounded w-full" />
                                         <div className="h-1 bg-slate-100 rounded w-3/4" />
                                     </div>
@@ -291,9 +312,12 @@ function DashboardIllustration() {
                             </div>
                         </div>
 
-                        {/* Selection Highlight */}
-                        <div className="absolute top-2 left-2 right-2 h-20 border-2 border-dashed border-indigo-500 rounded-lg pointer-events-none">
-                            <div className="absolute -top-3 left-2 bg-indigo-500 text-white text-[9px] font-bold px-2 py-0.5 rounded">Hero Section</div>
+                        {/* Selection Highlight Box dynamically moving */}
+                        <div className="absolute top-2 left-2 right-2 h-20 border-2 border-dashed border-indigo-500 rounded-lg pointer-events-none transition-all duration-500 bg-indigo-500/5">
+                            <div className="absolute -top-3 left-2 bg-gradient-to-r from-indigo-600 to-blue-600 text-white text-[9px] font-bold px-2 py-0.5 rounded shadow-sm flex items-center gap-1">
+                                <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
+                                Active: {sectionsList[activeSec]}
+                            </div>
                         </div>
                     </div>
 
@@ -302,65 +326,65 @@ function DashboardIllustration() {
                         <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Properties</p>
                         <div className="space-y-2">
                             <div>
-                                <p className="text-[9px] text-slate-500 mb-1">Background</p>
+                                <p className="text-[9px] text-slate-500 mb-1">Color Palette</p>
                                 <div className="flex gap-1">
                                     {['#4f46e5','#2563eb','#7c3aed','#0ea5e9','#10b981'].map(c => (
-                                        <div key={c} className="w-4 h-4 rounded-full cursor-pointer border border-white shadow-sm" style={{ background: c }} />
+                                        <div key={c} className="w-4 h-4 rounded-full cursor-pointer border border-white shadow-sm hover:scale-125 transition-transform" style={{ background: c }} />
                                     ))}
                                 </div>
                             </div>
                             <div>
-                                <p className="text-[9px] text-slate-500 mb-1">Font</p>
-                                <div className="h-5 bg-slate-100 rounded text-[9px] px-2 flex items-center text-slate-600">Inter</div>
+                                <p className="text-[9px] text-slate-500 mb-1">Font Family</p>
+                                <div className="h-5 bg-indigo-50 border border-indigo-200 rounded text-[9px] px-2 flex items-center text-indigo-700 font-bold">Inter (Google)</div>
                             </div>
                             <div>
-                                <p className="text-[9px] text-slate-500 mb-1">Spacing</p>
+                                <p className="text-[9px] text-slate-500 mb-1">Container Gap</p>
                                 <div className="grid grid-cols-2 gap-1">
-                                    <div className="h-4 bg-slate-100 rounded text-[9px] text-center text-slate-500 flex items-center justify-center">40px</div>
-                                    <div className="h-4 bg-slate-100 rounded text-[9px] text-center text-slate-500 flex items-center justify-center">24px</div>
+                                    <div className="h-4 bg-slate-100 rounded text-[9px] text-center text-slate-600 flex items-center justify-center font-mono">40px</div>
+                                    <div className="h-4 bg-slate-100 rounded text-[9px] text-center text-slate-600 flex items-center justify-center font-mono">24px</div>
                                 </div>
                             </div>
                         </div>
                         <div className="space-y-1">
                             <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Responsive</p>
                             <div className="flex gap-1.5">
-                                <div className="p-1 bg-indigo-50 rounded text-indigo-600"><Monitor className="h-3 w-3" /></div>
-                                <div className="p-1 bg-slate-100 rounded text-slate-400"><Tablet className="h-3 w-3" /></div>
-                                <div className="p-1 bg-slate-100 rounded text-slate-400"><Smartphone className="h-3 w-3" /></div>
+                                <div className="p-1 bg-indigo-600 text-white rounded shadow-sm hover:scale-110 transition"><Monitor className="h-3 w-3" /></div>
+                                <div className="p-1 bg-slate-100 text-slate-400 hover:bg-slate-200 rounded transition"><Tablet className="h-3 w-3" /></div>
+                                <div className="p-1 bg-slate-100 text-slate-400 hover:bg-slate-200 rounded transition"><Smartphone className="h-3 w-3" /></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* Floating cards */}
-            <div className="absolute -top-4 -right-8 bg-white rounded-2xl shadow-xl border border-slate-100 px-3 py-2.5 flex items-center gap-2 animate-bounce" style={{ animationDuration: '3s' }}>
-                <div className="w-7 h-7 rounded-xl bg-emerald-500 flex items-center justify-center">
-                    <CheckCircle2 className="h-4 w-4 text-white" />
+            {/* Floating Drifting Cards with CSS animations */}
+            <div className="absolute -top-4 -right-8 bg-white rounded-2xl shadow-xl border border-slate-100 px-3 py-2.5 flex items-center gap-2.5 ds-animate-float-slow z-20 hover:scale-110 transition-transform">
+                <div className="w-8 h-8 rounded-xl bg-emerald-500 flex items-center justify-center shadow-lg shadow-emerald-500/30">
+                    <CheckCircle2 className="h-4 w-4 text-white animate-bounce" />
                 </div>
                 <div>
-                    <p className="text-[10px] font-extrabold text-slate-900">Published!</p>
-                    <p className="text-[9px] text-slate-500">datasoft.io/mybrand</p>
+                    <p className="text-[10px] font-extrabold text-slate-900">Website Published!</p>
+                    <p className="text-[9px] text-slate-500 font-mono">datasoft.io/mybrand</p>
                 </div>
             </div>
 
-            <div className="absolute -bottom-4 -left-8 bg-white rounded-2xl shadow-xl border border-slate-100 px-3 py-2.5 flex items-center gap-2" style={{ animation: 'bounce 3.5s infinite' }}>
-                <div className="w-7 h-7 rounded-xl bg-indigo-500 flex items-center justify-center">
+            <div className="absolute -bottom-4 -left-8 bg-white rounded-2xl shadow-xl border border-slate-100 px-3 py-2.5 flex items-center gap-2.5 ds-animate-float-reverse z-20 hover:scale-110 transition-transform">
+                <div className="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-600/30">
                     <TrendingUp className="h-4 w-4 text-white" />
                 </div>
                 <div>
-                    <p className="text-[10px] font-extrabold text-slate-900">+2.4K Visitors</p>
-                    <p className="text-[9px] text-slate-500">This week</p>
+                    <p className="text-[10px] font-extrabold text-slate-900">+2.4K Live Visitors</p>
+                    <p className="text-[9px] text-slate-500 font-semibold">Real-time Analytics</p>
                 </div>
             </div>
 
-            <div className="absolute top-1/2 -right-14 bg-white rounded-2xl shadow-xl border border-slate-100 px-3 py-2.5 flex items-center gap-2">
-                <div className="w-7 h-7 rounded-xl bg-violet-500 flex items-center justify-center">
-                    <Sparkles className="h-4 w-4 text-white" />
+            <div className="absolute top-1/2 -right-12 bg-white rounded-2xl shadow-xl border border-slate-100 px-3 py-2.5 flex items-center gap-2.5 ds-animate-float-slow z-20 hover:scale-110 transition-transform" style={{ animationDelay: '1s' }}>
+                <div className="w-8 h-8 rounded-xl bg-violet-600 flex items-center justify-center shadow-lg shadow-violet-600/30">
+                    <Sparkles className="h-4 w-4 text-white animate-spin" style={{ animationDuration: '8s' }} />
                 </div>
                 <div>
-                    <p className="text-[10px] font-extrabold text-slate-900">120 Templates</p>
-                    <p className="text-[9px] text-slate-500">Ready to use</p>
+                    <p className="text-[10px] font-extrabold text-slate-900">120+ Templates</p>
+                    <p className="text-[9px] text-slate-500">Component Based</p>
                 </div>
             </div>
         </div>
@@ -382,31 +406,32 @@ export default function LandingPage() {
                 HERO SECTION
             ════════════════════════════════════════════════════ */}
             <section className="relative overflow-hidden pt-24 pb-20 sm:pt-32 sm:pb-28">
-                {/* Background glow orbs */}
-                <div className="absolute -top-40 -left-40 w-96 h-96 rounded-full pointer-events-none"
-                     style={{ background: 'radial-gradient(circle,rgba(79,70,229,0.15) 0%,transparent 70%)', filter: 'blur(60px)' }} />
-                <div className="absolute -top-20 right-0 w-96 h-96 rounded-full pointer-events-none"
-                     style={{ background: 'radial-gradient(circle,rgba(37,99,235,0.12) 0%,transparent 70%)', filter: 'blur(60px)' }} />
-                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-64 rounded-full pointer-events-none"
-                     style={{ background: 'radial-gradient(circle,rgba(124,58,237,0.08) 0%,transparent 70%)', filter: 'blur(80px)' }} />
+                {/* Background drifting glowing orbs */}
+                <div className="absolute -top-40 -left-40 w-[500px] h-[500px] rounded-full pointer-events-none ds-animate-float-slow opacity-60"
+                     style={{ background: 'radial-gradient(circle,rgba(79,70,229,0.2) 0%,transparent 70%)', filter: 'blur(70px)' }} />
+                <div className="absolute -top-20 right-0 w-[450px] h-[450px] rounded-full pointer-events-none ds-animate-float-reverse opacity-50"
+                     style={{ background: 'radial-gradient(circle,rgba(37,99,235,0.18) 0%,transparent 70%)', filter: 'blur(70px)' }} />
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[900px] h-72 rounded-full pointer-events-none ds-animate-pulse-slow opacity-40"
+                     style={{ background: 'radial-gradient(circle,rgba(124,58,237,0.12) 0%,transparent 70%)', filter: 'blur(90px)' }} />
 
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
                         {/* Left Content */}
-                        <div className="flex-1 text-center lg:text-left">
+                        <div className="flex-1 text-center lg:text-left ds-animate-fade-up">
                             {/* Badge */}
-                            <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-bold mb-6 border"
+                            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold mb-6 border shadow-sm hover:scale-105 transition-transform cursor-pointer"
                                  style={{ background: 'rgba(79,70,229,0.06)', borderColor: 'rgba(79,70,229,0.18)', color: '#4f46e5' }}>
+                                <span className="w-2 h-2 rounded-full bg-indigo-600 animate-ping" />
                                 <Sparkles className="h-3.5 w-3.5" />
-                                <span>DataSoft Website Builder</span>
+                                <span>DataSoft Website Builder 2.0</span>
                             </div>
 
-                            {/* Headline */}
+                            {/* Headline with animated flowing gradient */}
                             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-[1.1] tracking-tight mb-5">
                                 Build Professional<br />
                                 Websites{' '}
-                                <span style={{
-                                    background: 'linear-gradient(135deg,#2563eb,#4f46e5,#7c3aed)',
+                                <span className="ds-animate-gradient" style={{
+                                    background: 'linear-gradient(135deg, #2563eb, #4f46e5, #7c3aed, #ec4899, #2563eb)',
                                     WebkitBackgroundClip: 'text',
                                     WebkitTextFillColor: 'transparent',
                                     backgroundClip: 'text',
@@ -422,38 +447,40 @@ export default function LandingPage() {
                             {/* CTAs */}
                             <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
                                 <Link to={ROUTES.REGISTER}
-                                      className="inline-flex items-center justify-center gap-2 px-7 py-3.5 text-white font-bold rounded-2xl text-sm shadow-xl transition-all hover:shadow-2xl hover:-translate-y-0.5"
-                                      style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)', boxShadow: '0 8px 30px rgba(79,70,229,0.35)' }}>
+                                      className="inline-flex items-center justify-center gap-2 px-7 py-3.5 text-white font-bold rounded-2xl text-sm shadow-xl transition-all hover:shadow-2xl hover:-translate-y-1 ds-animate-pulse-glow"
+                                      style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
                                     <Sparkles className="h-4 w-4" />
                                     Start Building Free
                                     <ArrowRight className="h-4 w-4" />
                                 </Link>
                                 <button onClick={() => setDemoOpen(true)}
-                                        className="inline-flex items-center justify-center gap-2 px-7 py-3.5 font-bold rounded-2xl text-sm border-2 border-slate-200 text-slate-700 hover:border-indigo-300 hover:text-indigo-600 transition-all bg-white/80 backdrop-blur-sm">
-                                    <div className="w-6 h-6 rounded-full bg-indigo-600 flex items-center justify-center">
+                                        className="inline-flex items-center justify-center gap-2 px-7 py-3.5 font-bold rounded-2xl text-sm border-2 border-slate-200 text-slate-700 hover:border-indigo-400 hover:text-indigo-600 hover:-translate-y-0.5 transition-all bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md">
+                                    <div className="w-6 h-6 rounded-full bg-indigo-600 flex items-center justify-center animate-pulse">
                                         <Play className="h-3 w-3 text-white fill-white ml-0.5" />
                                     </div>
-                                    Watch Demo
+                                    Watch Live Demo
                                 </button>
                             </div>
 
                             {/* Trust text */}
                             <p className="mt-6 text-sm text-slate-400 font-medium">
-                                ✦ Trusted by <span className="font-bold text-slate-600">10,000+</span> businesses and organizations
+                                ✦ Trusted by <span className="font-bold text-slate-700">10,000+</span> businesses and organizations nationwide
                             </p>
 
-                            {/* Trusted logos */}
-                            <div className="mt-4 flex flex-wrap gap-2 justify-center lg:justify-start">
-                                {TRUSTED_LOGOS.map(l => (
-                                    <div key={l} className="px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-[11px] font-bold text-slate-500">
-                                        {l}
-                                    </div>
-                                ))}
+                            {/* Trusted logos infinite marquee */}
+                            <div className="mt-4 overflow-hidden max-w-md mx-auto lg:mx-0 relative py-2">
+                                <div className="ds-animate-marquee gap-3">
+                                    {[...TRUSTED_LOGOS, ...TRUSTED_LOGOS, ...TRUSTED_LOGOS].map((l, idx) => (
+                                        <div key={idx} className="px-3 py-1.5 bg-slate-50 border border-slate-200/80 rounded-lg text-[11px] font-extrabold text-slate-600 shadow-2xs hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200 transition-colors shrink-0">
+                                            {l}
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         </div>
 
                         {/* Right: Builder illustration */}
-                        <div className="flex-1 w-full lg:max-w-[600px]">
+                        <div className="flex-1 w-full lg:max-w-[600px] ds-animate-fade-up">
                             <DashboardIllustration />
                         </div>
                     </div>
@@ -463,17 +490,17 @@ export default function LandingPage() {
             {/* ════════════════════════════════════════════════════
                 FEATURES SECTION
             ════════════════════════════════════════════════════ */}
-            <section id="features" className="py-20 sm:py-28 bg-slate-50">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <section id="features" className="py-20 sm:py-28 bg-slate-50 relative overflow-hidden">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <div className="text-center mb-14">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold mb-4 border"
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold mb-4 border shadow-2xs"
                              style={{ background: 'rgba(79,70,229,0.06)', borderColor: 'rgba(79,70,229,0.18)', color: '#4f46e5' }}>
-                            <Zap className="h-3 w-3" /> Platform Features
+                            <Zap className="h-3 w-3 animate-bounce" /> Platform Features
                         </div>
                         <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
                             Everything Needed to Launch<br />
-                            <span style={{
-                                background: 'linear-gradient(135deg,#2563eb,#4f46e5)',
+                            <span className="ds-animate-gradient" style={{
+                                background: 'linear-gradient(135deg,#2563eb,#4f46e5,#7c3aed)',
                                 WebkitBackgroundClip: 'text',
                                 WebkitTextFillColor: 'transparent',
                                 backgroundClip: 'text',
@@ -489,11 +516,11 @@ export default function LandingPage() {
                             const Icon = f.icon;
                             return (
                                 <div key={f.title}
-                                     className="group bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                                    <div className={`w-12 h-12 rounded-2xl ${f.bg} flex items-center justify-center mb-4 group-hover:scale-110 transition`}>
+                                     className="group bg-white rounded-2xl p-6 border border-slate-100 shadow-sm ds-hover-lift ds-hover-glow cursor-pointer">
+                                    <div className={`w-12 h-12 rounded-2xl ${f.bg} flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-sm`}>
                                         <Icon className={`h-5 w-5 ${f.accent}`} />
                                     </div>
-                                    <h3 className="text-base font-extrabold text-slate-900 mb-2">{f.title}</h3>
+                                    <h3 className="text-base font-extrabold text-slate-900 mb-2 group-hover:text-indigo-600 transition-colors">{f.title}</h3>
                                     <p className="text-sm text-slate-500 leading-relaxed">{f.desc}</p>
                                 </div>
                             );
@@ -505,16 +532,16 @@ export default function LandingPage() {
             {/* ════════════════════════════════════════════════════
                 HOW IT WORKS
             ════════════════════════════════════════════════════ */}
-            <section className="py-20 sm:py-28 bg-white">
+            <section className="py-20 sm:py-28 bg-white relative">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-14">
                         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold mb-4 border"
                              style={{ background: 'rgba(79,70,229,0.06)', borderColor: 'rgba(79,70,229,0.18)', color: '#4f46e5' }}>
-                            <Clock className="h-3 w-3" /> How It Works
+                            <Clock className="h-3 w-3 animate-spin" style={{ animationDuration: '10s' }} /> How It Works
                         </div>
                         <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-                            Build and Publish in <span style={{
-                                background: 'linear-gradient(135deg,#2563eb,#4f46e5)',
+                            Build and Publish in <span className="ds-animate-gradient" style={{
+                                background: 'linear-gradient(135deg,#2563eb,#4f46e5,#7c3aed)',
                                 WebkitBackgroundClip: 'text',
                                 WebkitTextFillColor: 'transparent',
                                 backgroundClip: 'text',
@@ -524,23 +551,25 @@ export default function LandingPage() {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
                         {/* Connector line (desktop only) */}
-                        <div className="hidden lg:block absolute top-10 left-[12.5%] right-[12.5%] h-0.5"
-                             style={{ background: 'linear-gradient(90deg,#4f46e5,#7c3aed)' }} />
+                        <div className="hidden lg:block absolute top-10 left-[12.5%] right-[12.5%] h-1 rounded-full overflow-hidden bg-slate-100">
+                            <div className="w-full h-full ds-animate-shimmer"
+                                 style={{ background: 'linear-gradient(90deg,transparent,#4f46e5,#7c3aed,transparent)' }} />
+                        </div>
 
                         {STEPS.map((step, i) => {
                             const Icon = step.icon;
                             return (
-                                <div key={i} className="relative text-center">
+                                <div key={i} className="relative text-center group cursor-pointer">
                                     <div className="relative inline-flex">
-                                        <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-5 relative z-10 shadow-lg"
+                                        <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-5 relative z-10 shadow-lg group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-300"
                                              style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
-                                            <Icon className="h-8 w-8 text-white" />
+                                            <Icon className="h-8 w-8 text-white group-hover:rotate-6 transition-transform" />
                                         </div>
-                                        <span className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-slate-900 text-white text-[10px] font-black flex items-center justify-center z-20">
+                                        <span className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-slate-900 text-white text-[11px] font-black flex items-center justify-center z-20 shadow-md border-2 border-white animate-pulse">
                                             {i + 1}
                                         </span>
                                     </div>
-                                    <h3 className="text-base font-extrabold text-slate-900 mb-2">{step.title}</h3>
+                                    <h3 className="text-base font-extrabold text-slate-900 mb-2 group-hover:text-indigo-600 transition-colors">{step.title}</h3>
                                     <p className="text-sm text-slate-500 leading-relaxed max-w-xs mx-auto">{step.desc}</p>
                                 </div>
                             );
@@ -565,7 +594,7 @@ export default function LandingPage() {
                             </h2>
                         </div>
                         <Link to={ROUTES.LOGIN}
-                              className="inline-flex items-center gap-2 text-sm font-bold text-indigo-600 hover:text-indigo-700 transition shrink-0">
+                              className="inline-flex items-center gap-2 text-sm font-bold text-indigo-600 hover:text-indigo-700 transition shrink-0 hover:translate-x-1 duration-200">
                             Browse All Templates <ArrowRight className="h-4 w-4" />
                         </Link>
                     </div>
@@ -575,34 +604,34 @@ export default function LandingPage() {
                             <div key={i}
                                  onMouseEnter={() => setActiveTemplate(i)}
                                  onMouseLeave={() => setActiveTemplate(null)}
-                                 className="group relative rounded-2xl overflow-hidden cursor-pointer bg-white border border-slate-100 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
+                                 className="group relative rounded-2xl overflow-hidden cursor-pointer bg-white border border-slate-100 shadow-sm ds-hover-lift ds-hover-glow transition-all duration-300">
                                 {/* Image */}
                                 <div className="relative h-48 overflow-hidden">
                                     <img src={t.img} alt={t.title}
-                                         className="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+                                         className="w-full h-full object-cover group-hover:scale-110 transition duration-700" />
                                     <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center gap-3"
-                                         style={{ background: 'rgba(15,23,42,0.5)', backdropFilter: 'blur(2px)' }}>
+                                         style={{ background: 'rgba(15,23,42,0.6)', backdropFilter: 'blur(3px)' }}>
                                         <Link to={ROUTES.LOGIN}
-                                              className="px-4 py-2 bg-white text-slate-900 rounded-xl text-xs font-bold flex items-center gap-1 shadow-lg hover:bg-slate-50 transition">
+                                              className="px-4 py-2 bg-white text-slate-900 rounded-xl text-xs font-bold flex items-center gap-1 shadow-lg hover:bg-slate-50 hover:scale-105 transition">
                                             <Eye className="h-3.5 w-3.5" /> Preview
                                         </Link>
                                         <Link to={ROUTES.REGISTER}
-                                              className="px-4 py-2 text-white rounded-xl text-xs font-bold flex items-center gap-1 shadow-lg transition"
+                                              className="px-4 py-2 text-white rounded-xl text-xs font-bold flex items-center gap-1 shadow-lg hover:scale-105 transition"
                                               style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
                                             Use Template
                                         </Link>
                                     </div>
                                     {/* Badge */}
                                     <div className="absolute top-3 left-3">
-                                        <span className="px-2 py-1 rounded-full text-[10px] font-extrabold text-white shadow"
+                                        <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold text-white shadow-md animate-pulse"
                                               style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
                                             {t.tag}
                                         </span>
                                     </div>
                                 </div>
-                                <div className="p-4 flex items-center justify-between">
-                                    <span className="text-sm font-extrabold text-slate-900">{t.title}</span>
-                                    <ChevronRight className="h-4 w-4 text-slate-300 group-hover:text-indigo-500 group-hover:translate-x-1 transition-all" />
+                                <div className="p-4 flex items-center justify-between bg-white">
+                                    <span className="text-sm font-extrabold text-slate-900 group-hover:text-indigo-600 transition-colors">{t.title}</span>
+                                    <ChevronRight className="h-4 w-4 text-slate-300 group-hover:text-indigo-600 group-hover:translate-x-1 transition-all" />
                                 </div>
                             </div>
                         ))}
@@ -616,9 +645,9 @@ export default function LandingPage() {
             <section className="py-20 sm:py-24 relative overflow-hidden"
                      style={{ background: 'linear-gradient(135deg,#0f172a 0%,#1e1b4b 50%,#0f172a 100%)' }}>
                 <div className="absolute inset-0 pointer-events-none">
-                    <div className="absolute top-0 left-1/4 w-96 h-96 rounded-full opacity-20"
+                    <div className="absolute top-0 left-1/4 w-96 h-96 rounded-full opacity-20 ds-animate-float-slow"
                          style={{ background: 'radial-gradient(circle,#4f46e5,transparent)', filter: 'blur(80px)' }} />
-                    <div className="absolute bottom-0 right-1/4 w-96 h-96 rounded-full opacity-20"
+                    <div className="absolute bottom-0 right-1/4 w-96 h-96 rounded-full opacity-20 ds-animate-float-reverse"
                          style={{ background: 'radial-gradient(circle,#2563eb,transparent)', filter: 'blur(80px)' }} />
                 </div>
 
@@ -635,13 +664,13 @@ export default function LandingPage() {
                             const Icon = s.icon;
                             return (
                                 <div key={s.label}
-                                     className="flex flex-col items-center text-center rounded-2xl p-6 border"
+                                     className="flex flex-col items-center text-center rounded-2xl p-6 border ds-hover-glow transition-all duration-300 group cursor-pointer"
                                      style={{ background: 'rgba(255,255,255,0.04)', borderColor: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(10px)' }}>
-                                    <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4"
+                                    <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"
                                          style={{ background: 'rgba(79,70,229,0.2)', border: '1px solid rgba(79,70,229,0.3)' }}>
-                                        <Icon className="h-5 w-5 text-indigo-300" />
+                                        <Icon className="h-5 w-5 text-indigo-300 group-hover:text-white transition-colors" />
                                     </div>
-                                    <div className="text-3xl font-extrabold text-white tracking-tight mb-1">{s.value}</div>
+                                    <div className="text-3xl font-extrabold text-white tracking-tight mb-1 group-hover:scale-105 transition-transform">{s.value}</div>
                                     <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">{s.label}</div>
                                 </div>
                             );
@@ -658,7 +687,7 @@ export default function LandingPage() {
                     <div className="text-center mb-12">
                         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold mb-4 border"
                              style={{ background: 'rgba(79,70,229,0.06)', borderColor: 'rgba(79,70,229,0.18)', color: '#4f46e5' }}>
-                            <Star className="h-3 w-3 fill-current" /> Testimonials
+                            <Star className="h-3 w-3 fill-current text-amber-400 animate-pulse" /> Testimonials
                         </div>
                         <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
                             Loved by Businesses Everywhere
@@ -668,11 +697,11 @@ export default function LandingPage() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {TESTIMONIALS.map((t, i) => (
                             <div key={i}
-                                 className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                                <Quote className="h-8 w-8 text-indigo-100 mb-3" />
+                                 className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm ds-hover-lift ds-hover-glow transition-all duration-300">
+                                <Quote className="h-8 w-8 text-indigo-200 mb-3" />
                                 <p className="text-sm text-slate-600 leading-relaxed mb-5">"{t.review}"</p>
                                 <div className="flex items-center gap-3 pt-4 border-t border-slate-100">
-                                    <img src={t.avatar} alt={t.name} className="w-10 h-10 rounded-full object-cover" />
+                                    <img src={t.avatar} alt={t.name} className="w-10 h-10 rounded-full object-cover shadow-sm" />
                                     <div className="flex-1">
                                         <p className="text-sm font-extrabold text-slate-900">{t.name}</p>
                                         <p className="text-xs text-slate-500">{t.role}</p>
@@ -708,16 +737,15 @@ export default function LandingPage() {
                             <div key={i}
                                  className={`rounded-2xl p-7 border flex flex-col transition-all duration-300 ${
                                      p.highlight
-                                         ? 'text-white shadow-2xl scale-105 relative'
-                                         : 'bg-white border-slate-100 shadow-sm hover:shadow-lg'
+                                         ? 'text-white shadow-2xl scale-105 relative ds-animate-pulse-glow'
+                                         : 'bg-white border-slate-100 shadow-sm ds-hover-lift'
                                  }`}
                                  style={p.highlight ? {
                                      background: 'linear-gradient(135deg,#2563eb,#4f46e5)',
-                                     boxShadow: '0 20px 60px rgba(79,70,229,0.4)',
                                  } : {}}>
                                 {p.highlight && (
                                     <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                                        <span className="bg-amber-400 text-amber-900 text-[10px] font-extrabold px-3 py-1 rounded-full shadow">
+                                        <span className="bg-amber-400 text-amber-950 text-[10px] font-extrabold px-3 py-1 rounded-full shadow-md animate-bounce" style={{ animationDuration: '2.5s' }}>
                                             ✦ Most Popular
                                         </span>
                                     </div>
@@ -731,23 +759,23 @@ export default function LandingPage() {
                                         <span className={`text-4xl font-extrabold ${p.highlight ? 'text-white' : 'text-slate-900'}`}>{p.price}</span>
                                         <span className={`text-sm font-medium ${p.highlight ? 'text-blue-200' : 'text-slate-400'}`}>{p.period}</span>
                                     </div>
-                                    <p className={`text-sm ${p.highlight ? 'text-blue-100' : 'text-slate-500'}`}>{p.desc}</p>
+                                    <p className={`text-xs ${p.highlight ? 'text-blue-100' : 'text-slate-500'}`}>{p.desc}</p>
                                 </div>
 
-                                <ul className="space-y-3 flex-1 mb-7">
-                                    {p.features.map((f, j) => (
-                                        <li key={j} className="flex items-center gap-2.5 text-sm">
-                                            <CheckCircle2 className={`h-4 w-4 shrink-0 ${p.highlight ? 'text-blue-200' : 'text-indigo-500'}`} />
-                                            <span className={p.highlight ? 'text-blue-50' : 'text-slate-600'}>{f}</span>
+                                <ul className="space-y-3 mb-8 flex-1">
+                                    {p.features.map(f => (
+                                        <li key={f} className="flex items-center gap-2 text-xs font-semibold">
+                                            <Check className={`h-4 w-4 shrink-0 ${p.highlight ? 'text-emerald-300' : 'text-emerald-500'}`} />
+                                            <span className={p.highlight ? 'text-white' : 'text-slate-700'}>{f}</span>
                                         </li>
                                     ))}
                                 </ul>
 
                                 <Link to={ROUTES.REGISTER}
-                                      className={`block text-center py-3 rounded-xl text-sm font-bold transition-all ${
+                                      className={`text-center text-sm font-bold py-3 px-4 rounded-xl transition-all shadow-md ${
                                           p.highlight
-                                              ? 'bg-white text-indigo-600 hover:bg-blue-50 shadow-md'
-                                              : 'border-2 border-slate-200 text-slate-700 hover:border-indigo-400 hover:text-indigo-600 bg-white'
+                                              ? 'bg-white text-indigo-600 hover:bg-slate-100 hover:scale-105'
+                                              : 'border-2 border-slate-200 text-slate-700 hover:border-indigo-400 hover:text-indigo-600 bg-white hover:scale-105'
                                       }`}>
                                     {p.cta}
                                 </Link>
@@ -762,29 +790,29 @@ export default function LandingPage() {
             ════════════════════════════════════════════════════ */}
             <section className="py-20 sm:py-28 relative overflow-hidden">
                 <div className="absolute inset-0 pointer-events-none">
-                    <div className="absolute -top-20 -left-20 w-96 h-96 rounded-full opacity-30"
+                    <div className="absolute -top-20 -left-20 w-96 h-96 rounded-full opacity-30 ds-animate-float-slow"
                          style={{ background: 'radial-gradient(circle,rgba(79,70,229,0.5),transparent)', filter: 'blur(80px)' }} />
-                    <div className="absolute -bottom-20 -right-20 w-96 h-96 rounded-full opacity-30"
+                    <div className="absolute -bottom-20 -right-20 w-96 h-96 rounded-full opacity-30 ds-animate-float-reverse"
                          style={{ background: 'radial-gradient(circle,rgba(124,58,237,0.5),transparent)', filter: 'blur(80px)' }} />
                 </div>
 
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-                    <div className="rounded-3xl p-12 sm:p-16 border relative overflow-hidden"
+                    <div className="rounded-3xl p-12 sm:p-16 border relative overflow-hidden ds-hover-glow"
                          style={{
                              background: 'linear-gradient(135deg,rgba(37,99,235,0.06),rgba(79,70,229,0.08))',
                              borderColor: 'rgba(79,70,229,0.15)',
                              boxShadow: '0 25px 80px rgba(79,70,229,0.12)',
                          }}>
-                        <div className="absolute top-4 right-4 opacity-10">
-                            <Sparkles className="h-24 w-24 text-indigo-500" />
+                        <div className="absolute top-4 right-4 opacity-10 ds-animate-pulse-slow">
+                            <Sparkles className="h-24 w-24 text-indigo-500 animate-spin" style={{ animationDuration: '15s' }} />
                         </div>
                         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold mb-5 border"
                              style={{ background: 'rgba(79,70,229,0.08)', borderColor: 'rgba(79,70,229,0.2)', color: '#4f46e5' }}>
-                            <Rocket className="h-3 w-3" /> Get Started Today
+                            <Rocket className="h-3 w-3 animate-bounce" /> Get Started Today
                         </div>
                         <h2 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight mb-4 leading-tight">
                             Start Building Your<br />
-                            <span style={{
+                            <span className="ds-animate-gradient" style={{
                                 background: 'linear-gradient(135deg,#2563eb,#4f46e5,#7c3aed)',
                                 WebkitBackgroundClip: 'text',
                                 WebkitTextFillColor: 'transparent',
@@ -797,13 +825,13 @@ export default function LandingPage() {
                         </p>
                         <div className="flex flex-col sm:flex-row gap-3 justify-center">
                             <Link to={ROUTES.REGISTER}
-                                  className="inline-flex items-center justify-center gap-2 px-8 py-4 text-white font-bold rounded-2xl text-base shadow-xl hover:-translate-y-0.5 transition-all"
-                                  style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)', boxShadow: '0 8px 30px rgba(79,70,229,0.4)' }}>
+                                  className="inline-flex items-center justify-center gap-2 px-8 py-4 text-white font-bold rounded-2xl text-base shadow-xl hover:-translate-y-1 transition-all ds-animate-pulse-glow"
+                                  style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
                                 <Sparkles className="h-5 w-5" />
                                 Start Building Free
                             </Link>
                             <a href="mailto:hello@datasoft.id"
-                               className="inline-flex items-center justify-center gap-2 px-8 py-4 font-bold rounded-2xl text-base border-2 border-slate-200 text-slate-700 hover:border-indigo-300 hover:text-indigo-600 transition-all bg-white/80">
+                               className="inline-flex items-center justify-center gap-2 px-8 py-4 font-bold rounded-2xl text-base border-2 border-slate-200 text-slate-700 hover:border-indigo-400 hover:text-indigo-600 hover:-translate-y-0.5 transition-all bg-white/80">
                                 Request Demo
                                 <ArrowRight className="h-5 w-5" />
                             </a>
@@ -811,7 +839,6 @@ export default function LandingPage() {
                     </div>
                 </div>
             </section>
-
             {/* ════════════════════════════════════════════════════
                 FOOTER
             ════════════════════════════════════════════════════ */}

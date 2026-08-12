@@ -4,9 +4,13 @@ import { getIndustryConfig } from '../../utils/industryConfigs';
 import { getComponentConfig } from '../../utils/componentRegistry';
 import { getLayoutsForSection } from '../../utils/layoutRegistry';
 import SectionLayoutPicker from './SectionLayoutPicker';
+import MediaPanel from './MediaPanel';
+import IconPanel from './IconPanel';
+import UploadsPanel from './UploadsPanel';
 import { 
   Layout, Section, Component, Image, Upload, Type, 
-  Plus, Star, Layers, ChevronDown, ChevronRight, GripVertical
+  Plus, Star, Layers, ChevronDown, ChevronRight, GripVertical,
+  Eye, EyeOff, Lock, Unlock
 } from 'lucide-react';
 
 const TABS = [
@@ -72,11 +76,137 @@ const COMPONENTS = [
   { id: 'faq-item', label: 'FAQ Item' },
 ];
 
+function ComponentLayerNode({
+  component,
+  sectionId,
+  depth = 1,
+  selectedComponentId,
+  selectSection,
+  selectComponent,
+  toggleVisibilityComponent,
+  toggleLockComponent,
+  expandedComps,
+  toggleCompExpand,
+}) {
+  const componentConfig = getComponentConfig(component.type);
+  const isComponentSelected = selectedComponentId === component.id;
+  const isCompLocked = !!component.isLocked;
+  const isCompHidden = !!component.isHidden;
+  const hasChildren = Array.isArray(component.childrenComponents) && component.childrenComponents.length > 0;
+  const isExpanded = expandedComps[component.id] !== false;
+
+  const getIcon = (type) => {
+    switch (type) {
+      case 'card': return '🎴';
+      case 'heading': return '🔤';
+      case 'text': return '📝';
+      case 'button': return '🔘';
+      case 'image': return '🖼️';
+      case 'icon': return '⭐';
+      case 'badge': return '🏷️';
+      case 'statistic': return '📊';
+      case 'divider': return '➖';
+      case 'social': return '🌐';
+      default: return '🧩';
+    }
+  };
+
+  return (
+    <div className="space-y-0.5">
+      <div
+        className={`w-full flex items-center gap-1.5 pr-2 py-1 rounded-lg transition group ${
+          isComponentSelected ? 'bg-indigo-50 text-indigo-700 font-bold border-l-2 border-indigo-600' : 'hover:bg-slate-50'
+        }`}
+        style={{ paddingLeft: `${depth * 12 + 12}px` }}
+      >
+        {hasChildren ? (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleCompExpand(component.id);
+            }}
+            className="text-slate-400 hover:text-slate-600"
+          >
+            {isExpanded ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
+          </button>
+        ) : (
+          <span className="text-[10px] text-slate-300">▸</span>
+        )}
+
+        <span className="text-xs">{getIcon(component.type)}</span>
+
+        <button
+          type="button"
+          onClick={() => {
+            selectSection(sectionId);
+            selectComponent(component.id);
+          }}
+          className="text-xs flex-1 text-left truncate text-slate-700 font-medium"
+        >
+          {component.props?.content || component.props?.title || componentConfig?.label || component.type}
+        </button>
+
+        {/* Visibility and Lock Controls for Component */}
+        <div className="flex items-center gap-1 opacity-70 group-hover:opacity-100 transition">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleVisibilityComponent(sectionId, component.id);
+            }}
+            className={`p-0.5 rounded hover:bg-slate-200/60 ${isCompHidden ? 'text-amber-600' : 'text-slate-400'}`}
+            title={isCompHidden ? 'Show Component' : 'Hide Component'}
+          >
+            {isCompHidden ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
+          </button>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleLockComponent(sectionId, component.id);
+            }}
+            className={`p-0.5 rounded hover:bg-slate-200/60 ${isCompLocked ? 'text-amber-600' : 'text-slate-400'}`}
+            title={isCompLocked ? 'Unlock Component' : 'Lock Component'}
+          >
+            {isCompLocked ? <Lock className="h-3 w-3" /> : <Unlock className="h-3 w-3" />}
+          </button>
+        </div>
+      </div>
+
+      {/* Render Sub-components recursively */}
+      {hasChildren && isExpanded && (
+        <div className="space-y-0.5">
+          {component.childrenComponents.map((child) => (
+            <ComponentLayerNode
+              key={child.id}
+              component={child}
+              sectionId={sectionId}
+              depth={depth + 1}
+              selectedComponentId={selectedComponentId}
+              selectSection={selectSection}
+              selectComponent={selectComponent}
+              toggleVisibilityComponent={toggleVisibilityComponent}
+              toggleLockComponent={toggleLockComponent}
+              expandedComps={expandedComps}
+              toggleCompExpand={toggleCompExpand}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function LeftPanel() {
   const [activeTab, setActiveTab] = useState('layers');
   const [expandedSections, setExpandedSections] = useState({});
   const [layoutPickerSection, setLayoutPickerSection] = useState(null);
-  const { addSection, addComponent, industrySlug, sections, selectedSectionId, selectSection, selectComponent, selectedComponentId } = useBuilderStore();
+  const {
+    addSection, addComponent, industrySlug, sections, selectedSectionId,
+    selectSection, selectComponent, selectedComponentId,
+    toggleLockComponent, toggleLockSection, toggleVisibilityComponent, toggleVisibilitySection
+  } = useBuilderStore();
 
   const industryConfig = industrySlug ? getIndustryConfig(industrySlug) : null;
   const availableSections = industryConfig?.sections || [];
@@ -126,56 +256,94 @@ export default function LeftPanel() {
     e.dataTransfer.effectAllowed = 'copy';
   };
 
+  const [expandedComps, setExpandedComps] = useState({});
+
+  const toggleCompExpand = (id) => {
+    setExpandedComps(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+  };
+
   const renderLayersTab = () => (
     <div className="p-3 space-y-0.5">
       {/* Website root */}
-      <div className="flex items-center gap-2 px-2 py-2 rounded-lg bg-slate-100">
+      <div className="flex items-center gap-2 px-2 py-2 rounded-lg bg-slate-100 mb-1">
         <GripVertical className="h-3.5 w-3.5 text-slate-400" />
-        <span className="text-xs font-bold text-slate-700">🌐 Website</span>
+        <span className="text-xs font-bold text-slate-700 flex-1">🌐 Website Canvas</span>
       </div>
 
       {sections.map((section) => {
         const isSectionSelected = selectedSectionId === section.id;
         const isExpanded = expandedSections[section.id] !== false;
+        const isSecLocked = !!section.isLocked;
+        const isSecHidden = !!section.isHidden;
 
         return (
           <div key={section.id} className="space-y-0.5">
-            <button
-              onClick={() => {
-                toggleSection(section.id);
-                selectSection(section.id);
-              }}
-              className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-lg transition ${
-                isSectionSelected ? 'bg-indigo-50 text-indigo-600' : 'hover:bg-slate-50'
+            <div
+              className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-lg transition group ${
+                isSectionSelected ? 'bg-indigo-50 text-indigo-700 font-bold' : 'hover:bg-slate-50'
               }`}
             >
-              {isExpanded ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
+              <button
+                type="button"
+                onClick={() => toggleSection(section.id)}
+                className="text-slate-400 hover:text-slate-600"
+              >
+                {isExpanded ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
+              </button>
               <span className="text-xs">📄</span>
-              <span className="text-xs font-medium flex-1 text-left">
+              <button
+                type="button"
+                onClick={() => selectSection(section.id)}
+                className="text-xs font-semibold flex-1 text-left truncate"
+              >
                 {getSectionLabel(section.type)} / {section.layout}
-              </span>
-            </button>
+              </button>
 
-            {isExpanded && section.components.map((component) => {
-              const componentConfig = getComponentConfig(component.type);
-              const isComponentSelected = selectedComponentId === component.id;
-
-              return (
+              {/* Visibility and Lock Controls for Section */}
+              <div className="flex items-center gap-1 opacity-70 group-hover:opacity-100 transition">
                 <button
-                  key={component.id}
-                  onClick={() => {
-                    selectSection(section.id);
-                    selectComponent(component.id);
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleVisibilitySection(section.id);
                   }}
-                  className={`w-full flex items-center gap-2 pl-8 pr-2 py-1 rounded-lg transition ${
-                    isComponentSelected ? 'bg-purple-50 text-purple-600' : 'hover:bg-slate-50'
-                  }`}
+                  className={`p-1 rounded hover:bg-slate-200/60 ${isSecHidden ? 'text-amber-600' : 'text-slate-400'}`}
+                  title={isSecHidden ? 'Show Section' : 'Hide Section'}
                 >
-                  <span className="text-xs">▸</span>
-                  <span className="text-xs">{componentConfig?.label || component.type}</span>
+                  {isSecHidden ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
                 </button>
-              );
-            })}
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleLockSection(section.id);
+                  }}
+                  className={`p-1 rounded hover:bg-slate-200/60 ${isSecLocked ? 'text-amber-600' : 'text-slate-400'}`}
+                  title={isSecLocked ? 'Unlock Section' : 'Lock Section'}
+                >
+                  {isSecLocked ? <Lock className="h-3 w-3" /> : <Unlock className="h-3 w-3" />}
+                </button>
+              </div>
+            </div>
+
+            {isExpanded && section.components.map((component) => (
+              <ComponentLayerNode
+                key={component.id}
+                component={component}
+                sectionId={section.id}
+                depth={1}
+                selectedComponentId={selectedComponentId}
+                selectSection={selectSection}
+                selectComponent={selectComponent}
+                toggleVisibilityComponent={toggleVisibilityComponent}
+                toggleLockComponent={toggleLockComponent}
+                expandedComps={expandedComps}
+                toggleCompExpand={toggleCompExpand}
+              />
+            ))}
           </div>
         );
       })}
@@ -290,93 +458,13 @@ export default function LeftPanel() {
         );
 
       case 'media':
-        return (
-          <div className="p-4 space-y-4">
-            <button className="w-full flex flex-col items-center gap-2 p-6 border-2 border-dashed border-slate-300 rounded-xl hover:border-indigo-400 hover:bg-indigo-50/50 transition">
-              <Image className="h-8 w-8 text-slate-400" />
-              <span className="text-sm font-bold text-slate-700">Upload Image</span>
-              <span className="text-xs text-slate-500">Click or drag to upload</span>
-            </button>
-
-            <div>
-              <h3 className="text-xs font-bold text-slate-700 mb-3 px-1">Gallery</h3>
-              <div className="grid grid-cols-2 gap-2">
-                {[1, 2, 3, 4].map(i => (
-                  <div key={i} className="aspect-square bg-slate-100 rounded-lg border border-slate-200 hover:border-indigo-400 hover:shadow-sm transition cursor-pointer" />
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <h3 className="text-xs font-bold text-slate-700 mb-3 px-1">Logo</h3>
-              <div className="grid grid-cols-3 gap-2">
-                {[1, 2, 3].map(i => (
-                  <div key={i} className="aspect-square bg-slate-100 rounded-lg border border-slate-200 hover:border-indigo-400 hover:shadow-sm transition cursor-pointer" />
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <h3 className="text-xs font-bold text-slate-700 mb-3 px-1">Video</h3>
-              <button className="w-full flex items-center gap-2 px-3 py-2 border border-slate-200 rounded-lg hover:bg-slate-50 transition">
-                <Upload className="h-4 w-4 text-slate-400" />
-                <span className="text-sm text-slate-700">Upload Video</span>
-              </button>
-            </div>
-          </div>
-        );
+        return <MediaPanel />;
 
       case 'icons':
-        return (
-          <div className="p-4">
-            <div className="mb-4">
-              <input
-                type="text"
-                placeholder="Search icons..."
-                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600"
-              />
-            </div>
-            <div className="grid grid-cols-4 gap-2">
-              {['Home', 'User', 'Settings', 'Mail', 'Phone', 'Map', 'Calendar', 'Star'].map(icon => (
-                <button
-                  key={icon}
-                  className="aspect-square flex items-center justify-center rounded-lg border border-slate-200 hover:border-indigo-400 hover:bg-indigo-50 transition"
-                  title={icon}
-                >
-                  <Type className="h-5 w-5 text-slate-600" />
-                </button>
-              ))}
-            </div>
-          </div>
-        );
+        return <IconPanel />;
 
       case 'uploads':
-        return (
-          <div className="p-4">
-            <div className="border-2 border-dashed border-slate-300 rounded-xl p-8 text-center hover:border-indigo-400 hover:bg-indigo-50/50 transition cursor-pointer">
-              <Upload className="h-10 w-10 text-slate-400 mx-auto mb-3" />
-              <p className="text-sm font-bold text-slate-700 mb-1">Drop files here</p>
-              <p className="text-xs text-slate-500">or click to browse</p>
-            </div>
-
-            <div className="mt-6">
-              <h3 className="text-xs font-bold text-slate-700 mb-3">Recent Uploads</h3>
-              <div className="space-y-2">
-                {['image1.png', 'document.pdf', 'video.mp4'].map(file => (
-                  <div key={file} className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 transition cursor-pointer">
-                    <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
-                      <Image className="h-5 w-5 text-slate-400" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-bold text-slate-900 truncate">{file}</p>
-                      <p className="text-xs text-slate-500">2.4 MB</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        );
+        return <UploadsPanel />;
 
       default:
         return null;

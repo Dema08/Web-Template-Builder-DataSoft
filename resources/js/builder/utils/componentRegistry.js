@@ -341,6 +341,104 @@ export const COMPONENT_REGISTRY = {
       },
     },
   },
+
+  icon: {
+    type: 'icon',
+    label: 'Icon',
+    icon: 'Type',
+    category: 'media',
+    editable: true,
+    draggable: true,
+    resizable: true,
+    props: {
+      icon: {
+        type: 'string',
+        label: 'Icon Name',
+        default: 'FaGlobe',
+      },
+      size: {
+        type: 'string',
+        label: 'Size',
+        default: '32px',
+      },
+      color: {
+        type: 'color',
+        label: 'Color',
+        default: '#4f46e5',
+      },
+      align: {
+        type: 'select',
+        label: 'Alignment',
+        default: 'center',
+        options: ['left', 'center', 'right'],
+      },
+    },
+  },
+
+  card: {
+    type: 'card',
+    label: 'Card',
+    icon: 'Layout',
+    category: 'container',
+    editable: true,
+    draggable: true,
+    resizable: true,
+    props: {
+      variant: {
+        type: 'select',
+        label: 'Card Variant',
+        default: 'service',
+        options: ['service', 'feature', 'team', 'testimonial', 'pricing', 'product', 'default'],
+      },
+      background: {
+        type: 'color',
+        label: 'Background',
+        default: '#ffffff',
+      },
+      borderRadius: {
+        type: 'string',
+        label: 'Border Radius',
+        default: '16px',
+      },
+      borderWidth: {
+        type: 'string',
+        label: 'Border Width',
+        default: '1px',
+      },
+      borderColor: {
+        type: 'color',
+        label: 'Border Color',
+        default: '#e2e8f0',
+      },
+      shadow: {
+        type: 'select',
+        label: 'Shadow',
+        default: 'md',
+        options: ['none', 'sm', 'md', 'lg', 'xl'],
+      },
+      padding: {
+        type: 'string',
+        label: 'Padding',
+        default: '24px',
+      },
+      hoverEffect: {
+        type: 'select',
+        label: 'Hover Effect',
+        default: 'lift',
+        options: ['none', 'lift', 'scale', 'glow'],
+      },
+      width: {
+        type: 'string',
+        label: 'Width',
+        default: '100%',
+      },
+      height: {
+        type: 'string',
+        label: 'Height',
+        default: 'auto',
+      },
+    },
+  },
 };
 
 export const getComponentConfig = (componentType) => {

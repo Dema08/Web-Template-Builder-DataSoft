@@ -201,6 +201,80 @@ html, body {
     50% { opacity: 0.5; }
 }
 
+@keyframes ds-gradient-shift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes ds-shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(200%); }
+}
+
+@keyframes ds-float-slow {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-18px) rotate(3deg); }
+}
+
+@keyframes ds-float-reverse {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(18px) rotate(-3deg); }
+}
+
+@keyframes ds-marquee {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-50%); }
+}
+
+@keyframes ds-pulse-glow {
+    0%, 100% { box-shadow: 0 0 15px rgba(79, 70, 229, 0.4), 0 0 30px rgba(37, 99, 235, 0.2); }
+    50% { box-shadow: 0 0 30px rgba(79, 70, 229, 0.8), 0 0 50px rgba(124, 58, 237, 0.5); }
+}
+
+@keyframes ds-cursor-move {
+    0% { transform: translate(10px, 10px); }
+    25% { transform: translate(120px, 40px); }
+    50% { transform: translate(180px, 140px); }
+    75% { transform: translate(50px, 180px); }
+    100% { transform: translate(10px, 10px); }
+}
+
+.ds-animate-gradient {
+    background-size: 200% 200% !important;
+    animation: ds-gradient-shift 6s ease infinite !important;
+}
+
+.ds-animate-shimmer {
+    animation: ds-shimmer 2.5s infinite;
+}
+
+.ds-animate-float-slow {
+    animation: ds-float-slow 6s ease-in-out infinite;
+}
+
+.ds-animate-float-reverse {
+    animation: ds-float-reverse 7s ease-in-out infinite;
+}
+
+.ds-animate-marquee {
+    display: flex;
+    width: max-content;
+    animation: ds-marquee 20s linear infinite;
+}
+
+.ds-animate-marquee:hover {
+    animation-play-state: paused;
+}
+
+.ds-animate-pulse-glow {
+    animation: ds-pulse-glow 3s ease-in-out infinite;
+}
+
+.ds-animate-cursor {
+    animation: ds-cursor-move 10s ease-in-out infinite;
+}
+
 .ds-animate-fade-in {
     animation: ds-fade-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
 }

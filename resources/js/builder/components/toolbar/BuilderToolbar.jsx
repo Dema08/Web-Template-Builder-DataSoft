@@ -13,6 +13,9 @@ import {
   ZoomIn,
   ZoomOut,
   Maximize,
+  MousePointer,
+  Move,
+  Maximize2,
 } from 'lucide-react';
 
 export default function BuilderToolbar({ onBack, onSave, onPublish }) {
@@ -30,6 +33,8 @@ export default function BuilderToolbar({ onBack, onSave, onPublish }) {
     status,
     setIsSaving,
     isSaving,
+    builderMode,
+    setBuilderMode,
   } = useBuilderStore();
 
   const handleSave = async () => {
@@ -96,7 +101,49 @@ export default function BuilderToolbar({ onBack, onSave, onPublish }) {
           <Redo2 className="h-4 w-4 text-slate-600" />
         </button>
 
-        <div className="w-px h-6 bg-slate-200 mx-2" />
+        <div className="w-px h-6 bg-slate-200 mx-1" />
+
+        {/* Builder Modes Switcher */}
+        <div className="flex items-center bg-slate-100 p-1 rounded-xl gap-0.5 border border-slate-200/80">
+          <button
+            onClick={() => setBuilderMode('select')}
+            className={`flex items-center gap-1.5 px-2.5 py-1 text-xs font-extrabold rounded-lg transition ${
+              builderMode === 'select'
+                ? 'bg-indigo-600 text-white shadow-sm'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
+            }`}
+            title="Select Mode — Safe: click to select & edit text only"
+          >
+            <MousePointer className="h-3.5 w-3.5" />
+            <span>Select</span>
+          </button>
+          <button
+            onClick={() => setBuilderMode('drag')}
+            className={`flex items-center gap-1.5 px-2.5 py-1 text-xs font-extrabold rounded-lg transition ${
+              builderMode === 'drag'
+                ? 'bg-indigo-600 text-white shadow-sm'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
+            }`}
+            title="Drag Mode — Drag & move component positions"
+          >
+            <Move className="h-3.5 w-3.5" />
+            <span>Drag</span>
+          </button>
+          <button
+            onClick={() => setBuilderMode('resize')}
+            className={`flex items-center gap-1.5 px-2.5 py-1 text-xs font-extrabold rounded-lg transition ${
+              builderMode === 'resize'
+                ? 'bg-indigo-600 text-white shadow-sm'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
+            }`}
+            title="Resize Mode — Resize width & height with handles"
+          >
+            <Maximize2 className="h-3.5 w-3.5" />
+            <span>Resize</span>
+          </button>
+        </div>
+
+        <div className="w-px h-6 bg-slate-200 mx-1" />
 
         {/* Device View Dropdown */}
         <div className="relative">

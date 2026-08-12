@@ -14,6 +14,7 @@ export const renderLayoutComponents = (components, sectionId) => {
       >
         <Component
           {...component.props}
+          childrenComponents={component.childrenComponents || []}
           componentId={component.id}
           sectionId={sectionId}
         />

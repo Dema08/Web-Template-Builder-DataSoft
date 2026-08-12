@@ -23,8 +23,68 @@ export const useBuilderStore = create((set, get) => ({
   historyIndex: 0,
   isPreviewMode: false,
   isSaving: false,
+  builderMode: 'select', // 'select' | 'drag' | 'resize'
 
   // Actions
+  setBuilderMode: (builderMode) => set({ builderMode }),
+
+  toggleLockComponent: (sectionId, componentId) => {
+    const { sections, saveToHistory } = get();
+    saveToHistory();
+    const updateInTree = (comps) => comps.map(c => {
+      if (c.id === componentId) return { ...c, isLocked: !c.isLocked };
+      if (Array.isArray(c.childrenComponents) && c.childrenComponents.length > 0) {
+        return { ...c, childrenComponents: updateInTree(c.childrenComponents) };
+      }
+      return c;
+    });
+
+    const newSections = sections.map(s => {
+      if (s.id === sectionId) {
+        return { ...s, components: updateInTree(s.components) };
+      }
+      return s;
+    });
+    set({ sections: newSections });
+  },
+
+  toggleLockSection: (sectionId) => {
+    const { sections, saveToHistory } = get();
+    saveToHistory();
+    const newSections = sections.map(s =>
+      s.id === sectionId ? { ...s, isLocked: !s.isLocked } : s
+    );
+    set({ sections: newSections });
+  },
+
+  toggleVisibilityComponent: (sectionId, componentId) => {
+    const { sections, saveToHistory } = get();
+    saveToHistory();
+    const updateInTree = (comps) => comps.map(c => {
+      if (c.id === componentId) return { ...c, isHidden: !c.isHidden };
+      if (Array.isArray(c.childrenComponents) && c.childrenComponents.length > 0) {
+        return { ...c, childrenComponents: updateInTree(c.childrenComponents) };
+      }
+      return c;
+    });
+
+    const newSections = sections.map(s => {
+      if (s.id === sectionId) {
+        return { ...s, components: updateInTree(s.components) };
+      }
+      return s;
+    });
+    set({ sections: newSections });
+  },
+
+  toggleVisibilitySection: (sectionId) => {
+    const { sections, saveToHistory } = get();
+    saveToHistory();
+    const newSections = sections.map(s =>
+      s.id === sectionId ? { ...s, isHidden: !s.isHidden } : s
+    );
+    set({ sections: newSections });
+  },
   setIndustry: (industryId, industrySlug, industryName) => {
     set({ industryId, industrySlug, industryName, sections: [], selectedSectionId: null, selectedComponentId: null, selectedProperty: null, selectedLayers: [] });
   },
@@ -37,20 +97,60 @@ export const useBuilderStore = create((set, get) => ({
     set({ templateName });
   },
 
+  // Helper: recursively normalize a component tree node (preserves childrenComponents)
+  _normalizeComponent: (c, idx = 0) => {
+    const normalized = {
+      id: c.id || `comp-${Date.now()}-${idx}-${Math.random().toString(36).substr(2, 9)}`,
+      type: c.type,
+      props: c.props || {},
+      position: c.position || { x: 0, y: 0, width: null, height: null, rotation: 0, scale: 1, zIndex: 1 },
+      isLocked: c.isLocked || false,
+      isHidden: c.isHidden || false,
+    };
+    if (Array.isArray(c.childrenComponents) && c.childrenComponents.length > 0) {
+      normalized.childrenComponents = c.childrenComponents.map((child, ci) =>
+        get()._normalizeComponent(child, ci)
+      );
+    }
+    return normalized;
+  },
+
   loadSections: (sectionsData) => {
-    const loadedSections = sectionsData.map((section, index) => ({
-      id: section.id || `section-${Date.now()}-${index}-${Math.random().toString(36).substr(2, 9)}`,
-      type: section.type,
-      layout: section.layout,
-      components: (section.components || []).map(c => ({
-        id: c.id || `component-${Date.now()}-${index}-${Math.random().toString(36).substr(2, 9)}`,
+    const normalizeComponent = (c, idx = 0) => {
+      const normalized = {
+        id: c.id || `comp-${Date.now()}-${idx}-${Math.random().toString(36).substr(2, 9)}`,
         type: c.type,
         props: c.props || {},
         position: c.position || { x: 0, y: 0, width: null, height: null, rotation: 0, scale: 1, zIndex: 1 },
-      })),
-      order: index,
-      styles: section.styles || {},
-    }));
+        isLocked: c.isLocked || false,
+        isHidden: c.isHidden || false,
+      };
+      if (Array.isArray(c.childrenComponents) && c.childrenComponents.length > 0) {
+        normalized.childrenComponents = c.childrenComponents.map((child, ci) =>
+          normalizeComponent(child, ci)
+        );
+      }
+      return normalized;
+    };
+
+    const loadedSections = sectionsData.map((section, index) => {
+      // If section has no components defined, fall back to layoutDefaults
+      let components = section.components || [];
+      if (components.length === 0 && section.layout) {
+        components = getLayoutDefaults(section.layout);
+      }
+
+      return {
+        id: section.id || `section-${Date.now()}-${index}-${Math.random().toString(36).substr(2, 9)}`,
+        type: section.type,
+        layout: section.layout,
+        components: components.map((c, ci) => normalizeComponent(c, ci)),
+        order: index,
+        styles: section.styles || {},
+        isLocked: section.isLocked || false,
+        isHidden: section.isHidden || false,
+      };
+    });
 
     set({
       sections: loadedSections,
@@ -68,15 +168,27 @@ export const useBuilderStore = create((set, get) => ({
     const sectionLayout = layout || getDefaultLayout(sectionType);
     const newSection = createEmptySection(sectionType, sectionLayout, sections.length);
 
-    // Seed section with default components from layout defaults registry
-    const defaultComponents = getLayoutDefaults(sectionLayout);
-    if (defaultComponents.length > 0) {
-      newSection.components = defaultComponents.map(c => ({
-        id: c.id || `component-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    // Seed section with default components from layout defaults registry (preserving childrenComponents)
+    const normalizeComponent = (c, idx = 0) => {
+      const normalized = {
+        id: c.id || `comp-${Date.now()}-${idx}-${Math.random().toString(36).substr(2, 9)}`,
         type: c.type,
         props: c.props || {},
-        position: { x: 0, y: 0, width: null, height: null, rotation: 0, scale: 1, zIndex: 1 },
-      }));
+        position: c.position || { x: 0, y: 0, width: null, height: null, rotation: 0, scale: 1, zIndex: 1 },
+        isLocked: false,
+        isHidden: false,
+      };
+      if (Array.isArray(c.childrenComponents) && c.childrenComponents.length > 0) {
+        normalized.childrenComponents = c.childrenComponents.map((child, ci) =>
+          normalizeComponent(child, ci)
+        );
+      }
+      return normalized;
+    };
+
+    const defaultComponents = getLayoutDefaults(sectionLayout);
+    if (defaultComponents.length > 0) {
+      newSection.components = defaultComponents.map((c, ci) => normalizeComponent(c, ci));
     }
 
     set({ sections: [...sections, newSection], selectedSectionId: newSection.id, selectedComponentId: null });
@@ -141,12 +253,18 @@ export const useBuilderStore = create((set, get) => ({
     const { sections, selectedComponentId, saveToHistory } = get();
     saveToHistory();
 
+    const removeFromTree = (comps) => comps
+      .filter(c => c.id !== componentId)
+      .map(c => {
+        if (Array.isArray(c.childrenComponents) && c.childrenComponents.length > 0) {
+          return { ...c, childrenComponents: removeFromTree(c.childrenComponents) };
+        }
+        return c;
+      });
+
     const newSections = sections.map(s => {
       if (s.id === sectionId) {
-        return {
-          ...s,
-          components: s.components.filter(c => c.id !== componentId),
-        };
+        return { ...s, components: removeFromTree(s.components) };
       }
       return s;
     });
@@ -161,29 +279,22 @@ export const useBuilderStore = create((set, get) => ({
     const { sections } = get();
     const device = deviceView || get().deviceView;
 
+    const updateInTree = (comps) => comps.map(c => {
+      if (c.id === componentId) {
+        const deviceOverrides = { ...(c.deviceOverrides || {}) };
+        const currentDevice = deviceOverrides[device] || {};
+        deviceOverrides[device] = { ...currentDevice, ...position };
+        return { ...c, position: { ...c.position, ...position }, deviceOverrides };
+      }
+      if (Array.isArray(c.childrenComponents) && c.childrenComponents.length > 0) {
+        return { ...c, childrenComponents: updateInTree(c.childrenComponents) };
+      }
+      return c;
+    });
+
     const newSections = sections.map(s => {
       if (s.id === sectionId) {
-        return {
-          ...s,
-          components: s.components.map(c => {
-            if (c.id === componentId) {
-              // Store device-specific overrides
-              const deviceOverrides = { ...(c.deviceOverrides || {}) };
-              const currentDevice = deviceOverrides[device] || {};
-              
-              // Merge position into device overrides
-              deviceOverrides[device] = { ...currentDevice, ...position };
-              
-              // Always keep the master position as the current device's position for backward compatibility
-              return { 
-                ...c, 
-                position: { ...c.position, ...position },
-                deviceOverrides,
-              };
-            }
-            return c;
-          }),
-        };
+        return { ...s, components: updateInTree(s.components) };
       }
       return s;
     });
@@ -193,16 +304,20 @@ export const useBuilderStore = create((set, get) => ({
 
   updateComponentProps: (sectionId, componentId, props, deviceView = null) => {
     const { sections } = get();
-    const device = deviceView || get().deviceView;
+
+    const updateInTree = (comps) => comps.map(c => {
+      if (c.id === componentId) {
+        return { ...c, props: { ...c.props, ...props } };
+      }
+      if (Array.isArray(c.childrenComponents) && c.childrenComponents.length > 0) {
+        return { ...c, childrenComponents: updateInTree(c.childrenComponents) };
+      }
+      return c;
+    });
 
     const newSections = sections.map(s => {
       if (s.id === sectionId) {
-        return {
-          ...s,
-          components: s.components.map(c =>
-            c.id === componentId ? { ...c, props: { ...c.props, ...props } } : c
-          ),
-        };
+        return { ...s, components: updateInTree(s.components) };
       }
       return s;
     });
@@ -526,6 +641,7 @@ export const useBuilderStore = create((set, get) => ({
       historyIndex: 0,
       isPreviewMode: false,
       isSaving: false,
+      builderMode: 'select',
     });
   },
 }));

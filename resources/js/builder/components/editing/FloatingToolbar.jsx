@@ -3,7 +3,14 @@ import { useBuilderStore } from '../../stores/builderStore';
 import { getComponentConfig } from '../../utils/componentRegistry';
 
 export default function FloatingToolbar() {
-  const { sections, selectedSectionId, selectedComponentId, updateComponentProps, setSelectedProperty } = useBuilderStore();
+  const {
+    sections,
+    selectedSectionId,
+    selectedComponentId,
+    updateComponentProps,
+    setSelectedProperty,
+    toggleLockComponent,
+  } = useBuilderStore();
   const [position, setPosition] = useState(null);
 
   const selectedSection = sections.find(s => s.id === selectedSectionId);
@@ -176,6 +183,8 @@ export default function FloatingToolbar() {
     zIndex: 100,
   };
 
+  const isLocked = !!selectedComponent?.isLocked;
+
   return (
     <div
       style={toolbarStyle}
@@ -189,6 +198,19 @@ export default function FloatingToolbar() {
           : selectedComponent.type === 'image'
             ? renderImageToolbar()
             : null}
+
+      <div className="w-px h-4 bg-slate-200 mx-1" />
+
+      {/* Lock / Unlock Toggle Button */}
+      <button
+        onClick={() => toggleLockComponent(selectedSectionId, selectedComponentId)}
+        className={`flex items-center gap-1 px-2 py-1 rounded text-xs font-bold transition ${
+          isLocked ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+        }`}
+        title={isLocked ? 'Unlock Component' : 'Lock Component'}
+      >
+        <span>{isLocked ? '🔒 Locked' : '🔓 Unlock'}</span>
+      </button>
     </div>
   );
 }

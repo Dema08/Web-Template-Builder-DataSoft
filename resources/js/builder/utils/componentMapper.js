@@ -9,6 +9,8 @@ import Badge from '@builder/ui/badge/Badge';
 import Statistic from '@builder/ui/statistic/Statistic';
 import Divider from '@builder/ui/divider/Divider';
 import Social from '@builder/ui/social/Social';
+import Icon from '@builder/ui/icon/Icon';
+import Card from '@builder/ui/card/Card';
 
 export const UI_COMPONENTS = {
   text: Text,
@@ -19,6 +21,8 @@ export const UI_COMPONENTS = {
   statistic: Statistic,
   divider: Divider,
   social: Social,
+  icon: Icon,
+  card: Card,
 };
 
 export const getUIComponent = (componentType) => {
