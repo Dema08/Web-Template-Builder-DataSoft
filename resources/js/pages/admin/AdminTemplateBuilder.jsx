@@ -14,6 +14,8 @@ import FloatingToolbar from '@builder/components/editing/FloatingToolbar';
 import ContextMenu from '@builder/components/editing/ContextMenu';
 import KeyboardShortcuts from '@builder/components/editing/KeyboardShortcuts';
 import { useBuilderStore } from '@builder/stores/builderStore';
+import { getIndustryConfig } from '@builder/utils/industryConfigs';
+import { getCategoryStarterTemplates, getTotalStarterTemplateCount } from '@builder/utils/industryStarterTemplates';
 import { INDUSTRY_CONFIGS } from '@builder/utils/industryConfigs';
 import { INDUSTRY_STARTER_TEMPLATES, getCategoryStarterTemplates } from '@builder/utils/industryStarterTemplates';
 import { getLayoutDefaults } from '@builder/utils/layoutDefaults';
@@ -91,7 +93,7 @@ export default function AdminTemplateBuilder() {
     }
 
     const selectedCategory = categoriesData?.find(c => String(c.id) === String(selectedCategoryId));
-      
+
     if (selectedCategory) {
       setSelectedCategoryObj(selectedCategory);
       setIndustry(selectedCategory.id, selectedCategory.slug, selectedCategory.name);
@@ -169,7 +171,7 @@ export default function AdminTemplateBuilder() {
   };
 
   // Check if category still exists when editing
-  const categoryExists = templateData?.industry_category 
+  const categoryExists = templateData?.industry_category
     ? categoriesData?.some(c => String(c.id) === String(templateData.industry_category.id))
     : true;
 
@@ -271,7 +273,7 @@ export default function AdminTemplateBuilder() {
                 Category Not Available
               </h2>
               <p className="text-sm text-slate-600 mb-6">
-                The category <strong>"{templateData.industry_category.name}"</strong> for this template 
+                The category <strong>"{templateData.industry_category.name}"</strong> for this template
                 has been deleted by the administrator. You can still edit the template.
               </p>
               <div className="flex gap-3 justify-center">
@@ -301,6 +303,8 @@ export default function AdminTemplateBuilder() {
   const industryOptions = categoriesData || [];
   const currentCategorySlug = selectedCategoryObj?.slug || industrySlug || 'default';
   const availableStarters = getCategoryStarterTemplates(currentCategorySlug);
+  const industryConfig = getIndustryConfig(currentCategorySlug);
+  const totalStarterCount = getTotalStarterTemplateCount();
 
   return (
     <>
@@ -328,6 +332,9 @@ export default function AdminTemplateBuilder() {
                   <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100 text-indigo-700 text-xs font-extrabold mb-3">
                     <Sparkles className="h-4 w-4 text-indigo-600" />
                     <span>Intelligent Starter Generator 2026</span>
+                    <span className="px-2 py-0.5 bg-indigo-100 text-indigo-700 rounded-full text-[10px]">
+                      {totalStarterCount} Templates &times; 10 Industries
+                    </span>
                   </div>
                   <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight mb-2">
                     Create Industry Website Starter
@@ -372,16 +379,34 @@ export default function AdminTemplateBuilder() {
       {showIndustryModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
           <div className={`bg-white rounded-3xl w-full shadow-2xl border border-slate-100 transition-all duration-300 ${modalStep === 3 ? 'max-w-4xl p-6 sm:p-8 max-h-[90vh] overflow-y-auto' : 'max-w-lg p-6'}`}>
-            
+
             {/* Header */}
             <div className="flex items-center justify-between border-b border-slate-100 pb-4 mb-6">
-              <div>
-                <span className="text-[11px] font-extrabold text-indigo-600 uppercase tracking-wider">
-                  Category: {selectedCategoryObj?.name}
-                </span>
-                <h3 className="text-xl font-extrabold text-slate-900 mt-0.5">
-                  {modalStep === 2 ? 'Choose Generation Mode' : `Select Starter Template for ${selectedCategoryObj?.name}`}
-                </h3>
+              <div className="flex items-center gap-3">
+                {modalStep > 1 && (
+                  <button
+                    onClick={() => {
+                      if (modalStep === 3) {
+                        setModalStep(2);
+                        setTemplateMode(null);
+                      } else if (modalStep === 2) {
+                        setShowIndustryModal(false);
+                        setModalStep(1);
+                      }
+                    }}
+                    className="text-slate-400 hover:text-slate-700 p-1.5 rounded-xl hover:bg-slate-100 transition"
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                  </button>
+                )}
+                <div>
+                  <span className="text-[11px] font-extrabold text-indigo-600 uppercase tracking-wider">
+                    Category: {selectedCategoryObj?.name}
+                  </span>
+                  <h3 className="text-xl font-extrabold text-slate-900 mt-0.5">
+                    {modalStep === 2 ? 'Choose Generation Mode' : `Select Starter Template for ${selectedCategoryObj?.name}`}
+                  </h3>
+                </div>
               </div>
               <button
                 onClick={() => setShowIndustryModal(false)}
@@ -394,6 +419,23 @@ export default function AdminTemplateBuilder() {
             {/* STEP 2: Mode Choice */}
             {modalStep === 2 && (
               <div className="space-y-4">
+                {/* Industry Sections from INDUSTRY_CONFIGS */}
+                {industryConfig && industryConfig.sections && (
+                  <div className="bg-indigo-50/50 rounded-xl p-4 border border-indigo-100 mb-2">
+                    <h4 className="text-xs font-extrabold text-indigo-900 uppercase mb-2 flex items-center gap-2">
+                      <Layers className="h-4 w-4" />
+                      Sections for {industryConfig.name} ({industryConfig.sections.length})
+                    </h4>
+                    <div className="flex flex-wrap gap-1.5">
+                      {industryConfig.sections.map((sec) => (
+                        <span key={sec.id} className="px-2.5 py-1 bg-white text-indigo-700 text-xs font-bold rounded-lg border border-indigo-100">
+                          {sec.label}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 <button
                   onClick={() => handleTemplateModeSelect('starter')}
                   className="w-full p-5 border-2 border-indigo-200 bg-gradient-to-r from-indigo-50/50 to-purple-50/50 rounded-2xl hover:border-indigo-600 hover:shadow-lg transition-all text-left group flex items-start gap-4"
@@ -432,70 +474,87 @@ export default function AdminTemplateBuilder() {
             {/* STEP 3: Available Starter Templates Grid */}
             {modalStep === 3 && (
               <div className="space-y-6">
-                <p className="text-xs text-slate-500">
-                  Select a starter template design below. Each template includes complete sections, demo text, images, and modern responsive layouts.
-                </p>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {availableStarters.map((starter) => (
-                    <div
-                      key={starter.id}
-                      className="border border-slate-200 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col justify-between group bg-white"
-                    >
-                      <div className="relative h-48 bg-slate-100 overflow-hidden">
-                        <img
-                          src={starter.thumbnail}
-                          alt={starter.name}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-between p-4">
-                          <button
-                            type="button"
-                            onClick={() => setPreviewTemplateItem(starter)}
-                            className="px-3 py-1.5 bg-white/90 backdrop-blur-md text-slate-900 text-xs font-bold rounded-lg flex items-center gap-1.5 hover:bg-white transition"
-                          >
-                            <Eye className="h-3.5 w-3.5 text-indigo-600" />
-                            <span>Preview</span>
-                          </button>
-                        </div>
-                      </div>
-
-                      <div className="p-5 space-y-3 flex-1 flex flex-col justify-between">
-                        <div>
-                          <div className="flex items-center gap-1.5 flex-wrap mb-2">
-                            {starter.tags?.map((tag, idx) => (
-                              <span key={idx} className="px-2 py-0.5 bg-indigo-50 text-indigo-700 text-[10px] font-extrabold rounded-md uppercase">
-                                {tag}
-                              </span>
-                            ))}
-                          </div>
-                          <h4 className="text-base font-extrabold text-slate-900 group-hover:text-indigo-600 transition">
-                            {starter.name}
-                          </h4>
-                          <p className="text-xs text-slate-600 mt-1 line-clamp-2">
-                            {starter.description}
-                          </p>
-                        </div>
-
-                        <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
-                          <span className="text-[11px] font-bold text-slate-500 flex items-center gap-1">
-                            <Layers className="h-3.5 w-3.5 text-indigo-500" />
-                            {starter.sections?.length || 0} Sections
-                          </span>
-
-                          <button
-                            type="button"
-                            onClick={() => handleApplyStarterTemplate(starter)}
-                            className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-extrabold rounded-xl shadow-md shadow-indigo-600/20 transition flex items-center gap-1.5"
-                          >
-                            <span>Generate Website</span>
-                            <Zap className="h-3.5 w-3.5 fill-current" />
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                <div className="flex items-center justify-between">
+                  <p className="text-xs text-slate-500">
+                    Select a starter template design below. Each template includes complete sections, demo text, images, and modern responsive layouts.
+                  </p>
+                  <span className="text-xs font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full">
+                    {availableStarters.length} template{availableStarters.length !== 1 ? 's' : ''} available
+                  </span>
                 </div>
+
+                {availableStarters.length === 0 ? (
+                  <div className="text-center py-12 text-slate-400">
+                    <Layers className="h-12 w-12 text-slate-300 mx-auto mb-3" />
+                    <p className="text-sm font-medium text-slate-500">
+                      No starter templates found for "{selectedCategoryObj?.name}".
+                    </p>
+                    <p className="text-xs text-slate-400 mt-1">
+                      Try selecting a different category or use Blank Canvas mode.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {availableStarters.map((starter) => (
+                      <div
+                        key={starter.id}
+                        className="border border-slate-200 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col justify-between group bg-white"
+                      >
+                        <div className="relative h-48 bg-slate-100 overflow-hidden">
+                          <img
+                            src={starter.thumbnail}
+                            alt={starter.name}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-between p-4">
+                            <button
+                              type="button"
+                              onClick={() => setPreviewTemplateItem(starter)}
+                              className="px-3 py-1.5 bg-white/90 backdrop-blur-md text-slate-900 text-xs font-bold rounded-lg flex items-center gap-1.5 hover:bg-white transition"
+                            >
+                              <Eye className="h-3.5 w-3.5 text-indigo-600" />
+                              <span>Preview</span>
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="p-5 space-y-3 flex-1 flex flex-col justify-between">
+                          <div>
+                            <div className="flex items-center gap-1.5 flex-wrap mb-2">
+                              {starter.tags?.map((tag, idx) => (
+                                <span key={idx} className="px-2 py-0.5 bg-indigo-50 text-indigo-700 text-[10px] font-extrabold rounded-md uppercase">
+                                  {tag}
+                                </span>
+                              ))}
+                            </div>
+                            <h4 className="text-base font-extrabold text-slate-900 group-hover:text-indigo-600 transition">
+                              {starter.name}
+                            </h4>
+                            <p className="text-xs text-slate-600 mt-1 line-clamp-2">
+                              {starter.description}
+                            </p>
+                          </div>
+
+                          <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
+                            <span className="text-[11px] font-bold text-slate-500 flex items-center gap-1">
+                              <Layers className="h-3.5 w-3.5 text-indigo-500" />
+                              {starter.sections?.length || 0} Sections
+                            </span>
+
+                            <button
+                              type="button"
+                              onClick={() => handleApplyStarterTemplate(starter)}
+                              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-extrabold rounded-xl shadow-md shadow-indigo-600/20 transition flex items-center gap-1.5"
+                            >
+                              <span>Generate Website</span>
+                              <Zap className="h-3.5 w-3.5 fill-current" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
           </div>
