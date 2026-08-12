@@ -25,9 +25,6 @@ class AdminCategoryController extends BaseController
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'slug' => 'nullable|string|max:255|unique:categories,slug',
-            'description' => 'nullable|string',
-            'icon' => 'nullable|string|max:255',
-            'color' => 'nullable|string|max:255',
             'sort_order' => 'nullable|integer|min:0',
             'is_active' => 'boolean',
         ]);
@@ -57,9 +54,6 @@ class AdminCategoryController extends BaseController
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'slug' => 'nullable|string|max:255|unique:categories,slug,' . $category->id,
-            'description' => 'nullable|string',
-            'icon' => 'nullable|string|max:255',
-            'color' => 'nullable|string|max:255',
             'sort_order' => 'nullable|integer|min:0',
             'is_active' => 'boolean',
         ]);

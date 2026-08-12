@@ -13,11 +13,10 @@ class CategoryResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
-            'description' => $this->description,
-            'icon' => $this->icon,
-            'color' => $this->color,
             'sort_order' => $this->sort_order,
             'is_active' => $this->is_active,
+            'created_at' => $this->created_at?->toIso8601String(),
+            'updated_at' => $this->updated_at?->toIso8601String(),
         ];
     }
 }

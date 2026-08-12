@@ -1,5 +1,5 @@
-  import { useState } from 'react';
-import { Layers, Plus, Trash2, Edit2, Shield, Search, X, ChevronUp, ChevronDown, Eye, EyeOff, FileText, Home, Building, Store, Coffee, Car, Plane, Ship, Train, Bike, Bus, Hotel, MapPin, Users, Briefcase, Settings, Wrench, Package, ShoppingCart, CreditCard, Wallet, PiggyBank, BarChart, TrendingUp, PieChart, DollarSign, Euro, PoundSterling, Bitcoin, Receipt, FileText as FileInvoice, BookOpen, GraduationCap, Stethoscope, Heart, Activity, Apple, Beef, Coffee as CoffeeIcon, Utensils, Bike as BikeIcon, Dumbbell, Waves, Mountain, TreePine, Flower2, Sun, Cloud, CloudRain, Zap, Flame } from 'lucide-react';
+import { useState } from 'react';
+import { Plus, Trash2, Edit2, Shield, Search, X, ChevronUp, ChevronDown, Eye, EyeOff, FileText } from 'lucide-react';
 import { Card } from '@components/ui';
 import { toast } from '@store';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -13,6 +13,13 @@ export default function AdminCategories() {
   const [showTemplateModal, setShowTemplateModal] = useState(false);
   const [editingTemplate, setEditingTemplate] = useState(null);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+
+  const [formData, setFormData] = useState({
+    name: '',
+    slug: '',
+    sort_order: 0,
+    is_active: true,
+  });
 
   const [templateForm, setTemplateForm] = useState({
     name: '',
@@ -117,74 +124,10 @@ export default function AdminCategories() {
     },
   });
 
-  const [formData, setFormData] = useState({
-    name: '',
-    slug: '',
-    description: '',
-    icon: '',
-    color: '',
-    sort_order: 0,
-    is_active: true,
-  });
-
-  const [showIconPicker, setShowIconPicker] = useState(false);
-
-  const availableIcons = [
-    { name: 'Layers', icon: Layers },
-    { name: 'Home', icon: Home },
-    { name: 'Building', icon: Building },
-    { name: 'Store', icon: Store },
-    { name: 'Coffee', icon: Coffee },
-    { name: 'Car', icon: Car },
-    { name: 'Plane', icon: Plane },
-    { name: 'Ship', icon: Ship },
-    { name: 'Train', icon: Train },
-    { name: 'Bike', icon: BikeIcon },
-    { name: 'Bus', icon: Bus },
-    { name: 'Hotel', icon: Hotel },
-    { name: 'MapPin', icon: MapPin },
-    { name: 'Users', icon: Users },
-    { name: 'Briefcase', icon: Briefcase },
-    { name: 'Settings', icon: Settings },
-    { name: 'Wrench', icon: Wrench },
-    { name: 'Package', icon: Package },
-    { name: 'ShoppingCart', icon: ShoppingCart },
-    { name: 'CreditCard', icon: CreditCard },
-    { name: 'Wallet', icon: Wallet },
-    { name: 'PiggyBank', icon: PiggyBank },
-    { name: 'BarChart', icon: BarChart },
-    { name: 'TrendingUp', icon: TrendingUp },
-    { name: 'PieChart', icon: PieChart },
-    { name: 'DollarSign', icon: DollarSign },
-    { name: 'Receipt', icon: Receipt },
-    { name: 'FileInvoice', icon: FileInvoice },
-    { name: 'BookOpen', icon: BookOpen },
-    { name: 'GraduationCap', icon: GraduationCap },
-    { name: 'Stethoscope', icon: Stethoscope },
-    { name: 'Heart', icon: Heart },
-    { name: 'Activity', icon: Activity },
-    { name: 'Apple', icon: Apple },
-    { name: 'Beef', icon: Beef },
-    { name: 'Utensils', icon: Utensils },
-    { name: 'Dumbbell', icon: Dumbbell },
-    { name: 'Waves', icon: Waves },
-    { name: 'Mountain', icon: Mountain },
-    { name: 'TreePine', icon: TreePine },
-    { name: 'Flower2', icon: Flower2 },
-    { name: 'Sun', icon: Sun },
-    { name: 'Cloud', icon: Cloud },
-    { name: 'CloudRain', icon: CloudRain },
-    { name: 'Zap', icon: Zap },
-    { name: 'Flame', icon: Flame },
-  ];
-
   const resetForm = () => {
     setFormData({
       name: '',
       slug: '',
-      description: '',
-      icon: '',
-      color: '',
       sort_order: 0,
       is_active: true,
     });
@@ -203,7 +146,6 @@ export default function AdminCategories() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     if (editingCategory) {
       updateMutation.mutate({ id: editingCategory.id, data: formData });
     } else {
@@ -216,9 +158,6 @@ export default function AdminCategories() {
     setFormData({
       name: category.name,
       slug: category.slug,
-      description: category.description || '',
-      icon: category.icon || '',
-      color: category.color || '',
       sort_order: category.sort_order || 0,
       is_active: category.is_active,
     });
@@ -315,9 +254,23 @@ export default function AdminCategories() {
     });
   };
 
+  const formatDate = (dateStr) => {
+    if (!dateStr) return '-';
+    try {
+      const date = new Date(dateStr);
+      return new Intl.DateTimeFormat('id-ID', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+      }).format(date);
+    } catch {
+      return dateStr;
+    }
+  };
+
   const filteredCategories = categories.filter((cat) =>
-    cat.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    cat.slug.toLowerCase().includes(searchTerm.toLowerCase())
+    (cat.name && cat.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (cat.slug && cat.slug.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   if (error) {
@@ -341,7 +294,7 @@ export default function AdminCategories() {
           </div>
           <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">Industry Categories</h1>
           <p className="text-sm text-[rgb(var(--color-text-secondary))] mt-1">
-            Manage industry taxonomies and template categorization rules.
+            Manage industry categories and website starter taxonomies.
           </p>
         </div>
 
@@ -352,7 +305,7 @@ export default function AdminCategories() {
             setEditingCategory(null);
             setIsAddOpen(true);
           }}
-          className="flex items-center justify-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-sm shadow-md transition-all"
+          className="flex items-center justify-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-sm shadow-md transition-all cursor-pointer"
         >
           <Plus className="h-4 w-4 stroke-[3]" />
           <span>Add Category</span>
@@ -363,13 +316,13 @@ export default function AdminCategories() {
       <Card className="overflow-hidden">
         <div className="p-5 border-b border-[rgb(var(--color-border))]">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[rgb(var(--color-text-tertiary))]" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[rgb(var(--color-text-tertiary))]" />
             <input
               type="text"
-              placeholder="Search categories..."
+              placeholder="Search by category name or slug..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-sm text-[rgb(var(--color-text-primary))] placeholder-[rgb(var(--color-text-tertiary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600"
+              className="w-full pl-10 pr-4 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-sm text-[rgb(var(--color-text-primary))] placeholder-[rgb(var(--color-text-tertiary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600"
             />
           </div>
         </div>
@@ -377,175 +330,126 @@ export default function AdminCategories() {
         {isLoading ? (
           <div className="p-8 text-center text-[rgb(var(--color-text-secondary))]">Loading categories...</div>
         ) : filteredCategories.length === 0 ? (
-          <div className="p-8 text-center text-[rgb(var(--color-text-secondary))]">No categories found.</div>
+          <div className="p-8 text-center text-[rgb(var(--color-text-secondary))]">No categories found matching search.</div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full text-left border-collapse">
               <thead className="bg-[rgb(var(--color-surface-alt))] border-b border-[rgb(var(--color-border))]">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Order</th>
-                  <th className="px-4 py-3 text-left text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Name</th>
-                  <th className="px-4 py-3 text-center text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Status</th>
-                  <th className="px-4 py-3 text-right text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Actions</th>
+                  <th className="px-4 py-3.5 text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider w-16">ID</th>
+                  <th className="px-4 py-3.5 text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Name</th>
+                  <th className="px-4 py-3.5 text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Slug</th>
+                  <th className="px-4 py-3.5 text-center text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider w-28">Sort Order</th>
+                  <th className="px-4 py-3.5 text-center text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider w-28">Status</th>
+                  <th className="px-4 py-3.5 text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider w-32">Created At</th>
+                  <th className="px-4 py-3.5 text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider w-32">Updated At</th>
+                  <th className="px-4 py-3.5 text-right text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider w-32">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[rgb(var(--color-border))]">
                 {filteredCategories.map((cat, index) => (
-                  <>
-                    <tr key={cat.id} className="hover:bg-[rgb(var(--color-surface-alt))]/80 transition">
-                      <td className="px-4 py-4 whitespace-nowrap">
-                        <div className="flex items-center gap-1">
-                          <button
-                            onClick={() => moveSortOrder(index, -1)}
-                            disabled={index === 0}
-                            className="p-1 text-[rgb(var(--color-text-tertiary))] hover:text-indigo-600 disabled:opacity-30 disabled:cursor-not-allowed"
-                          >
-                            <ChevronUp className="h-4 w-4" />
-                          </button>
-                          <button
-                            onClick={() => moveSortOrder(index, 1)}
-                            disabled={index === filteredCategories.length - 1}
-                            className="p-1 text-[rgb(var(--color-text-tertiary))] hover:text-indigo-600 disabled:opacity-30 disabled:cursor-not-allowed"
-                          >
-                            <ChevronDown className="h-4 w-4" />
-                          </button>
-                          <span className="text-sm font-bold text-[rgb(var(--color-text-primary))] w-6 text-center">{cat.sort_order}</span>
-                        </div>
-                      </td>
-                      <td className="px-4 py-4">
-                        <div className="flex items-center gap-3">
-                          <div
-                            className="h-10 w-10 rounded-xl flex items-center justify-center text-white shadow-xs"
-                            style={{ backgroundColor: cat.color || '#6366f1' }}
-                          >
-                            {(() => {
-                              const iconMap = {
-                                Layers, Home, Building, Store, Coffee, Car, Plane, Ship, Train, Bike: BikeIcon,
-                                Bus, Hotel, MapPin, Users, Briefcase, Settings, Wrench, Package, ShoppingCart,
-                                CreditCard, Wallet, PiggyBank, BarChart, TrendingUp, PieChart, DollarSign,
-                                Receipt, FileText: FileInvoice, BookOpen, GraduationCap, Stethoscope, Heart,
-                                Activity, Apple, Beef, Utensils, Dumbbell, Waves, Mountain, TreePine, Flower2,
-                                Sun, Cloud, CloudRain, Zap, Flame
-                              };
-                              const IconComponent = cat.icon ? iconMap[cat.icon] : Layers;
-                              if (IconComponent) {
-                                return <IconComponent className="h-5 w-5" />;
-                              }
-                              return <Layers className="h-5 w-5" />;
-                            })()}
-                          </div>
-                          <div>
-                            <p className="font-extrabold text-[rgb(var(--color-text-primary))] text-sm">{cat.name}</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-4 py-4 whitespace-nowrap text-center">
+                  <tr key={cat.id} className="hover:bg-[rgb(var(--color-surface-alt))]/80 transition group">
+                    {/* ID */}
+                    <td className="px-4 py-4 whitespace-nowrap text-xs font-mono font-bold text-[rgb(var(--color-text-secondary))]">
+                      #{cat.id}
+                    </td>
+
+                    {/* Name */}
+                    <td className="px-4 py-4 whitespace-nowrap">
+                      <p className="font-extrabold text-[rgb(var(--color-text-primary))] text-sm group-hover:text-indigo-600 transition">
+                        {cat.name}
+                      </p>
+                    </td>
+
+                    {/* Slug */}
+                    <td className="px-4 py-4 whitespace-nowrap">
+                      <span className="font-mono text-xs text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md">
+                        {cat.slug}
+                      </span>
+                    </td>
+
+                    {/* Sort Order */}
+                    <td className="px-4 py-4 whitespace-nowrap text-center">
+                      <div className="inline-flex items-center justify-center gap-1">
                         <button
-                          onClick={() => categoryService.update(cat.id, { ...cat, is_active: !cat.is_active }).then(() => queryClient.invalidateQueries(['admin', 'categories']))}
-                          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold cursor-pointer transition ${
-                            cat.is_active
-                              ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100'
-                              : 'bg-[rgb(var(--color-surface-alt))] text-[rgb(var(--color-text-secondary))] hover:bg-[rgb(var(--color-border))]'
-                          }`}
+                          onClick={() => moveSortOrder(index, -1)}
+                          disabled={index === 0}
+                          className="p-1 text-[rgb(var(--color-text-tertiary))] hover:text-indigo-600 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+                          title="Move Up"
                         >
-                          {cat.is_active ? <Eye className="h-3 w-3" /> : <EyeOff className="h-3 w-3" />}
-                          {cat.is_active ? 'Active' : 'Inactive'}
+                          <ChevronUp className="h-4 w-4" />
                         </button>
-                      </td>
-                      <td className="px-4 py-4 whitespace-nowrap text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          <button
-                            onClick={() => toggleExpandCategory(cat.id)}
-                            className={`p-2 rounded-lg transition ${
-                              expandedCategory === cat.id
-                                ? 'text-indigo-600 bg-indigo-50 dark:bg-indigo-950/40'
-                                : 'text-[rgb(var(--color-text-tertiary))] hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/30'
-                            }`}
-                            title="Manage Templates"
-                          >
-                            <FileText className="h-4 w-4" />
-                          </button>
-                          <button
-                            onClick={() => handleEdit(cat)}
-                            className="p-2 text-[rgb(var(--color-text-tertiary))] hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 rounded-lg transition"
-                            title="Edit"
-                          >
-                            <Edit2 className="h-4 w-4" />
-                          </button>
-                          <button
-                            onClick={() => handleDelete(cat.id, cat.name)}
-                            disabled={deleteMutation.isPending}
-                            className="p-2 text-[rgb(var(--color-text-tertiary))] hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition disabled:opacity-50"
-                            title="Delete"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                    {expandedCategory === cat.id && (
-                      <tr key={`${cat.id}-templates`}>
-                        <td colSpan="4" className="p-0">
-                          <div className="border-t border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface-alt))]">
-                            <div className="p-4">
-                              <div className="flex items-center justify-between mb-3">
-                                <h4 className="text-sm font-bold text-[rgb(var(--color-text-primary))]">Templates in {cat.name}</h4>
-                                <button
-                                  onClick={() => handleAddTemplate(cat.id)}
-                                  className="flex items-center gap-1 px-3 py-1.5 bg-indigo-600 text-white text-xs font-bold rounded-lg hover:bg-indigo-700 transition"
-                                >
-                                  <Plus className="h-3 w-3" />
-                                  Add Template
-                                </button>
-                              </div>
-                              {templates.length === 0 ? (
-                                <p className="text-xs text-[rgb(var(--color-text-secondary))] text-center py-4">No templates yet. Add your first template.</p>
-                              ) : (
-                                <div className="space-y-2">
-                                  {templates.map((template) => (
-                                    <div key={template.id} className="bg-[rgb(var(--color-surface))] border border-[rgb(var(--color-border))] rounded-lg p-3 flex items-center justify-between">
-                                      <div>
-                                        <p className="text-sm font-bold text-[rgb(var(--color-text-primary))]">{template.name}</p>
-                                        <p className="text-xs text-[rgb(var(--color-text-secondary))]">Slug: {template.slug} • Usage: {template.usage_count}x</p>
-                                      </div>
-                                      <div className="flex items-center gap-2">
-                                        <button
-                                          onClick={() => categoryService.update(template.id, { ...template, is_active: !template.is_active }).then(() => queryClient.invalidateQueries(['admin', 'templates']))}
-                                          className={`px-2.5 py-1 rounded-full text-xs font-bold transition ${
-                                            template.is_active
-                                              ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300'
-                                              : 'bg-[rgb(var(--color-surface-alt))] text-[rgb(var(--color-text-secondary))]'
-                                          }`}
-                                        >
-                                          {template.is_active ? 'Active' : 'Inactive'}
-                                        </button>
-                                        <button
-                                          onClick={() => handleEditTemplate(template)}
-                                          className="p-1.5 text-[rgb(var(--color-text-tertiary))] hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 rounded-lg transition"
-                                        >
-                                          <Edit2 className="h-3.5 w-3.5" />
-                                        </button>
-                                        <button
-                                          onClick={() => {
-                                            if (confirm(`Delete template "${template.name}"?`)) {
-                                              deleteTemplateMutation.mutate({ categoryId: expandedCategory, id: template.id });
-                                            }
-                                          }}
-                                          className="p-1.5 text-[rgb(var(--color-text-tertiary))] hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition"
-                                        >
-                                          <Trash2 className="h-3.5 w-3.5" />
-                                        </button>
-                                      </div>
-                                    </div>
-                                  ))}
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                    )}
-                  </>
+                        <span className="text-xs font-bold text-[rgb(var(--color-text-primary))] min-w-[20px] text-center">
+                          {cat.sort_order}
+                        </span>
+                        <button
+                          onClick={() => moveSortOrder(index, 1)}
+                          disabled={index === filteredCategories.length - 1}
+                          className="p-1 text-[rgb(var(--color-text-tertiary))] hover:text-indigo-600 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+                          title="Move Down"
+                        >
+                          <ChevronDown className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </td>
+
+                    {/* Status */}
+                    <td className="px-4 py-4 whitespace-nowrap text-center">
+                      <button
+                        onClick={() => categoryService.update(cat.id, { ...cat, is_active: !cat.is_active }).then(() => queryClient.invalidateQueries(['admin', 'categories']))}
+                        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold cursor-pointer transition ${
+                          cat.is_active
+                            ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100'
+                            : 'bg-[rgb(var(--color-surface-alt))] text-[rgb(var(--color-text-secondary))] hover:bg-[rgb(var(--color-border))]'
+                        }`}
+                      >
+                        {cat.is_active ? <Eye className="h-3 w-3" /> : <EyeOff className="h-3 w-3" />}
+                        {cat.is_active ? 'Active' : 'Inactive'}
+                      </button>
+                    </td>
+
+                    {/* Created At */}
+                    <td className="px-4 py-4 whitespace-nowrap text-xs text-[rgb(var(--color-text-secondary))]">
+                      {formatDate(cat.created_at)}
+                    </td>
+
+                    {/* Updated At */}
+                    <td className="px-4 py-4 whitespace-nowrap text-xs text-[rgb(var(--color-text-secondary))]">
+                      {formatDate(cat.updated_at)}
+                    </td>
+
+                    {/* Actions */}
+                    <td className="px-4 py-4 whitespace-nowrap text-right">
+                      <div className="flex items-center justify-end gap-1">
+                        <button
+                          onClick={() => toggleExpandCategory(cat.id)}
+                          className={`p-2 rounded-lg transition cursor-pointer ${
+                            expandedCategory === cat.id
+                              ? 'text-indigo-600 bg-indigo-50 dark:bg-indigo-950/40'
+                              : 'text-[rgb(var(--color-text-tertiary))] hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/30'
+                          }`}
+                          title="Manage Templates"
+                        >
+                          <FileText className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => handleEdit(cat)}
+                          className="p-2 text-[rgb(var(--color-text-tertiary))] hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 rounded-lg transition cursor-pointer"
+                          title="Edit Category"
+                        >
+                          <Edit2 className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(cat.id, cat.name)}
+                          disabled={deleteMutation.isPending}
+                          className="p-2 text-[rgb(var(--color-text-tertiary))] hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition disabled:opacity-50 cursor-pointer"
+                          title="Delete Category"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
                 ))}
               </tbody>
             </table>
@@ -553,73 +457,85 @@ export default function AdminCategories() {
         )}
       </Card>
 
-      {/* Category Modal */}
+      {/* Category Modal (Create / Edit) */}
       {isAddOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-[rgb(var(--color-surface))] rounded-3xl max-w-2xl w-full p-6 shadow-2xl space-y-4 border border-[rgb(var(--color-border))] animate-in fade-in zoom-in-95 duration-150 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between">
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-[rgb(var(--color-surface))] rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-5 border border-[rgb(var(--color-border))] animate-in fade-in zoom-in-95 duration-150">
+            <div className="flex items-center justify-between border-b border-[rgb(var(--color-border))] pb-3">
               <h3 className="text-base font-extrabold text-[rgb(var(--color-text-primary))]">
                 {editingCategory ? 'Edit Category' : 'Add New Category'}
               </h3>
               <button
                 onClick={handleClose}
-                className="p-1 text-[rgb(var(--color-text-tertiary))] hover:text-[rgb(var(--color-text-primary))] rounded-lg hover:bg-[rgb(var(--color-surface-alt))] transition"
+                className="p-1 text-[rgb(var(--color-text-tertiary))] hover:text-[rgb(var(--color-text-primary))] rounded-lg hover:bg-[rgb(var(--color-surface-alt))] transition cursor-pointer"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
+
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Category Name *</label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Real Estate & Hospitality"
+                  placeholder="e.g. Logistik & Transportasi"
                   value={formData.name}
                   onChange={(e) => handleNameChange(e.target.value)}
                   className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] placeholder-[rgb(var(--color-text-tertiary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600"
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Sort Order</label>
+                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Slug</label>
                 <input
-                  type="number"
-                  min="0"
-                  value={formData.sort_order}
-                  onChange={(e) => setFormData({ ...formData, sort_order: parseInt(e.target.value) || 0 })}
-                  className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600"
+                  type="text"
+                  placeholder="auto-generated-from-name"
+                  value={formData.slug}
+                  onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+                  className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 font-mono"
                 />
               </div>
 
-              <div>
-                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Status</label>
-                <select
-                  value={formData.is_active ? 'true' : 'false'}
-                  onChange={(e) => setFormData({ ...formData, is_active: e.target.value === 'true' })}
-                  className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600"
-                >
-                  <option value="true">Active</option>
-                  <option value="false">Inactive</option>
-                </select>
-              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Sort Order</label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={formData.sort_order}
+                    onChange={(e) => setFormData({ ...formData, sort_order: parseInt(e.target.value) || 0 })}
+                    className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Status</label>
+                  <select
+                    value={formData.is_active ? 'true' : 'false'}
+                    onChange={(e) => setFormData({ ...formData, is_active: e.target.value === 'true' })}
+                    className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600"
+                  >
+                    <option value="true">Active</option>
+                    <option value="false">Inactive</option>
+                  </select>
+                </div>
               </div>
 
               <div className="flex justify-end gap-2 pt-4 border-t border-[rgb(var(--color-border))]">
                 <button
                   type="button"
                   onClick={handleClose}
-                  className="px-4 py-2 text-xs font-bold text-[rgb(var(--color-text-secondary))] hover:bg-[rgb(var(--color-surface-alt))] rounded-xl transition"
+                  className="px-4 py-2 text-xs font-bold text-[rgb(var(--color-text-secondary))] hover:bg-[rgb(var(--color-surface-alt))] rounded-xl transition cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={createMutation.isPending || updateMutation.isPending}
-                  className="px-5 py-2 text-xs font-bold bg-indigo-600 text-white rounded-xl shadow-md shadow-indigo-600/20 hover:bg-indigo-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-5 py-2 text-xs font-extrabold bg-indigo-600 text-white rounded-xl shadow-md shadow-indigo-600/20 hover:bg-indigo-700 transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
-                  {editingCategory ? 'Update' : 'Save'}
+                  {editingCategory ? 'Update Category' : 'Save Category'}
                 </button>
               </div>
             </form>
@@ -629,9 +545,9 @@ export default function AdminCategories() {
 
       {/* Template Modal */}
       {showTemplateModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-[rgb(var(--color-surface))] rounded-3xl max-w-2xl w-full p-6 shadow-2xl space-y-4 border border-[rgb(var(--color-border))] animate-in fade-in zoom-in-95 duration-150 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between border-b border-[rgb(var(--color-border))] pb-3">
               <h3 className="text-base font-extrabold text-[rgb(var(--color-text-primary))]">
                 {editingTemplate ? 'Edit Template' : 'Add New Template'}
               </h3>
@@ -641,7 +557,7 @@ export default function AdminCategories() {
                   setEditingTemplate(null);
                   resetTemplateForm();
                 }}
-                className="p-1 text-[rgb(var(--color-text-tertiary))] hover:text-[rgb(var(--color-text-primary))] rounded-lg hover:bg-[rgb(var(--color-surface-alt))] transition"
+                className="p-1 text-[rgb(var(--color-text-tertiary))] hover:text-[rgb(var(--color-text-primary))] rounded-lg hover:bg-[rgb(var(--color-surface-alt))] transition cursor-pointer"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -725,16 +641,16 @@ export default function AdminCategories() {
                     setEditingTemplate(null);
                     resetTemplateForm();
                   }}
-                  className="px-4 py-2 text-xs font-bold text-[rgb(var(--color-text-secondary))] hover:bg-[rgb(var(--color-surface-alt))] rounded-xl transition"
+                  className="px-4 py-2 text-xs font-bold text-[rgb(var(--color-text-secondary))] hover:bg-[rgb(var(--color-surface-alt))] rounded-xl transition cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={createTemplateMutation.isPending || updateTemplateMutation.isPending}
-                  className="px-5 py-2 text-xs font-bold bg-indigo-600 text-white rounded-xl shadow-md shadow-indigo-600/20 hover:bg-indigo-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-5 py-2 text-xs font-extrabold bg-indigo-600 text-white rounded-xl shadow-md shadow-indigo-600/20 hover:bg-indigo-700 transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
-                  {editingTemplate ? 'Update' : 'Save'}
+                  {editingTemplate ? 'Update Template' : 'Save Template'}
                 </button>
               </div>
             </form>

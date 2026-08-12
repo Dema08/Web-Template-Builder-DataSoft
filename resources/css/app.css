@@ -159,16 +159,41 @@ html, body {
 }
 
 /* ============================================================
- * Animation Presets
+ * 2026 Global Design System Animation Presets
  * ========================================================= */
 @keyframes ds-fade-in {
     from { opacity: 0; transform: translateY(-4px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes ds-fade-up {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes ds-slide-left {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes ds-slide-right {
+    from { opacity: 0; transform: translateX(-30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
 @keyframes ds-scale-in {
-    from { opacity: 0; transform: scale(0.96); }
+    from { opacity: 0; transform: scale(0.95); }
     to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes ds-float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes ds-infinite-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
 }
 
 @keyframes ds-pulse-slow {
@@ -177,15 +202,53 @@ html, body {
 }
 
 .ds-animate-fade-in {
-    animation: ds-fade-in 0.25s ease-out both;
+    animation: ds-fade-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.ds-animate-fade-up {
+    animation: ds-fade-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.ds-animate-slide-left {
+    animation: ds-slide-left 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.ds-animate-slide-right {
+    animation: ds-slide-right 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .ds-animate-scale-in {
-    animation: ds-scale-in 0.2s ease-out both;
+    animation: ds-scale-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.ds-animate-float {
+    animation: ds-float 4s ease-in-out infinite;
+}
+
+.ds-animate-infinite-scroll {
+    animation: ds-infinite-scroll 25s linear infinite;
 }
 
 .ds-animate-pulse-slow {
     animation: ds-pulse-slow 2s ease-in-out infinite;
+}
+
+.ds-hover-lift {
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ds-hover-lift:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+}
+
+.ds-hover-glow {
+    transition: all 0.3s ease;
+}
+
+.ds-hover-glow:hover {
+    box-shadow: 0 0 25px rgba(99, 102, 241, 0.35);
+    border-color: rgba(99, 102, 241, 0.5);
 }
 
 /* ============================================================

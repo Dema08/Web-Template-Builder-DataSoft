@@ -7,4 +7,6 @@ export { default as Input } from './Input';
 export { default as Logo } from './Logo';
 export { default as Spinner } from './Spinner';
 export { default as Toast } from './Toast';
+export { default as CustomDropdown } from './CustomDropdown';
 export { default as StatusBadge } from '../dashboard/StatusBadge';
+
