@@ -114,19 +114,31 @@ const PRICING = [
         name: 'Starter', price: 'Free', period: '',
         desc: 'Perfect for personal projects and exploring the platform.',
         features: ['1 Website', '10 Pages', 'DataSoft Subdomain', 'Basic Templates', 'Community Support'],
-        cta: 'Get Started Free', variant: 'outline', highlight: false,
+        cta: 'Get Started Free', highlight: false,
+    },
+    {
+        name: 'Growth', price: 'Rp 79K', period: '/bulan',
+        desc: 'For individuals and freelancers starting their online journey.',
+        features: ['3 Websites', '50 Pages', 'Custom Domain', 'Premium Templates', 'Email Support', 'Media Manager'],
+        cta: 'Start Growth', highlight: false,
     },
     {
         name: 'Professional', price: 'Rp 149K', period: '/bulan',
         desc: 'For growing businesses ready to scale their online presence.',
         features: ['5 Websites', 'Unlimited Pages', 'Custom Domain', 'All Premium Templates', 'Media Manager', 'Analytics Dashboard', 'Priority Support'],
-        cta: 'Start Professional', variant: 'primary', highlight: true,
+        cta: 'Start Professional', highlight: true,
+    },
+    {
+        name: 'Agency', price: 'Rp 349K', period: '/bulan',
+        desc: 'For agencies managing multiple clients and projects at scale.',
+        features: ['20 Websites', 'Unlimited Pages', 'Client Management', 'White Label Option', 'API Access', 'Team Collaboration', '24/7 Priority Support'],
+        cta: 'Start Agency', highlight: false,
     },
     {
         name: 'Enterprise', price: 'Custom', period: '',
-        desc: 'For agencies, enterprises, and large organizations.',
+        desc: 'For large organizations needing full customization and control.',
         features: ['Unlimited Websites', 'White Label Option', 'API Access', 'Dedicated Manager', 'SSO Integration', 'SLA 99.9%', '24/7 Phone Support'],
-        cta: 'Contact Sales', variant: 'outline', highlight: false,
+        cta: 'Contact Sales', highlight: false,
     },
 ];
 
@@ -669,8 +681,8 @@ function PricingSection() {
         targetAngleRef.current = Math.round(targetAngleRef.current / step) * step;
     };
 
-    // Tight Carousel Radius (230px desktop, 180px tablet)
-    const radius = isMobile ? 0 : isTablet ? 180 : 230;
+    // Carousel Radius — wider for 5 cards (72deg spacing)
+    const radius = isMobile ? 0 : isTablet ? 240 : 320;
 
     return (
         <section id="pricing" className="py-20 sm:py-28 bg-slate-50 overflow-hidden">
