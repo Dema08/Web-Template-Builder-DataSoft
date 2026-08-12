@@ -251,6 +251,22 @@ export const useBuilderStore = create((set, get) => ({
 
   removeComponent: (sectionId, componentId) => {
     const { sections, selectedComponentId, saveToHistory } = get();
+
+    // Refuse to remove a locked component (definitive guard)
+    const findInTree = (comps) => {
+      for (const c of comps) {
+        if (c.id === componentId) return c;
+        if (Array.isArray(c.childrenComponents) && c.childrenComponents.length > 0) {
+          const found = findInTree(c.childrenComponents);
+          if (found) return found;
+        }
+      }
+      return null;
+    };
+    const targetSection = sections.find(s => s.id === sectionId);
+    const targetComponent = targetSection ? findInTree(targetSection.components || []) : null;
+    if (targetComponent?.isLocked) return; // 🔒 cannot delete locked component
+
     saveToHistory();
 
     const removeFromTree = (comps) => comps

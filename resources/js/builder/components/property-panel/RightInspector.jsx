@@ -139,9 +139,12 @@ export default function RightInspector() {
 
   const handleDelete = () => {
     if (selectedSectionId && selectedComponentId) {
+      if (selectedComponent?.isLocked) return; // refuse if locked
       removeComponent(selectedSectionId, selectedComponentId);
     }
   };
+
+  const isLocked = !!(selectedComponent?.isLocked);
 
   if (!selectedComponent) {
     return (
@@ -745,13 +748,20 @@ export default function RightInspector() {
 
         {/* Delete */}
         <div className="p-4 pt-0">
-          <button
-            onClick={handleDelete}
-            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-red-50 text-red-600 text-sm font-bold rounded-lg hover:bg-red-100 transition"
-          >
-            <Trash2 className="h-4 w-4" />
-            Delete Component
-          </button>
+          {isLocked ? (
+            <div className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-amber-50 text-amber-600 text-sm font-bold rounded-lg cursor-not-allowed select-none">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              Locked – Cannot Delete
+            </div>
+          ) : (
+            <button
+              onClick={handleDelete}
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-red-50 text-red-600 text-sm font-bold rounded-lg hover:bg-red-100 transition"
+            >
+              <Trash2 className="h-4 w-4" />
+              Delete Component
+            </button>
+          )}
         </div>
       </div>
     </div>

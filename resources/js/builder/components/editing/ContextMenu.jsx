@@ -64,6 +64,27 @@ export default function ContextMenu() {
 
   if (!menu) return null;
 
+  // Resolve the component from the store to check its locked state
+  const getComponentFromMenu = () => {
+    if (!menu || menu.type !== 'component') return null;
+    const section = sections.find(s => s.id === menu.sectionId);
+    if (!section) return null;
+    const findInTree = (comps) => {
+      for (const c of comps) {
+        if (c.id === menu.componentId) return c;
+        if (Array.isArray(c.childrenComponents) && c.childrenComponents.length > 0) {
+          const found = findInTree(c.childrenComponents);
+          if (found) return found;
+        }
+      }
+      return null;
+    };
+    return findInTree(section.components || []);
+  };
+
+  const menuComponent = getComponentFromMenu();
+  const isMenuComponentLocked = !!(menuComponent?.isLocked);
+
   const menuStyle = {
     position: 'fixed',
     top: menu.y,
@@ -146,15 +167,22 @@ export default function ContextMenu() {
             Send to Back
           </button>
           <div className="border-t border-slate-100 my-1" />
-          <button
-            className="w-full text-left px-3 py-1.5 text-xs text-red-600 hover:bg-red-50 rounded transition"
-            onClick={() => {
-              removeComponent(menu.sectionId, menu.componentId);
-              setMenu(null);
-            }}
-          >
-            Delete
-          </button>
+          {isMenuComponentLocked ? (
+            <div className="w-full text-left px-3 py-1.5 text-xs text-amber-500 flex items-center gap-1.5 select-none">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              Locked – cannot delete
+            </div>
+          ) : (
+            <button
+              className="w-full text-left px-3 py-1.5 text-xs text-red-600 hover:bg-red-50 rounded transition"
+              onClick={() => {
+                removeComponent(menu.sectionId, menu.componentId);
+                setMenu(null);
+              }}
+            >
+              Delete
+            </button>
+          )}
         </>
       ) : (
         <>

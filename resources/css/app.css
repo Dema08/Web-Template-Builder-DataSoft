@@ -299,6 +299,78 @@ html, body {
     animation: ds-float 4s ease-in-out infinite;
 }
 
+/* ─────────────────────────────────────────────────────────
+   REVISED 3D PRICING CAROUSEL (APPLE / FRAMER STYLE)
+───────────────────────────────────────────────────────── */
+.ds-pricing-sticky-section {
+    position: relative;
+    background-color: #f8fafc;
+}
+
+.ds-carousel-stage {
+    perspective: 1400px;
+    transform-style: preserve-3d;
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 3rem 0;
+}
+
+.pricing-group {
+    position: relative;
+    width: 100%;
+    max-width: 920px;
+    height: 480px;
+    transform-style: preserve-3d;
+    will-change: transform;
+}
+
+.ds-carousel-card-wrapper {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 320px;
+    margin-left: -160px;
+    transform-style: preserve-3d;
+    will-change: transform, opacity, filter;
+    transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease, filter 0.4s ease;
+}
+
+.ds-carousel-card-wrapper.is-active-card {
+    box-shadow: 0 0 50px rgba(79, 70, 229, 0.35), 0 25px 60px rgba(0, 0, 0, 0.25) !important;
+}
+
+.ds-carousel-card-wrapper.is-inactive-card {
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+}
+
+@media (max-width: 767px) {
+    .ds-pricing-sticky-section {
+        height: auto;
+    }
+    .ds-carousel-stage {
+        position: relative;
+        height: auto;
+        min-height: auto;
+        perspective: none;
+    }
+    .pricing-group {
+        height: auto;
+        max-width: 100%;
+    }
+    .ds-carousel-card-wrapper {
+        position: relative;
+        top: auto;
+        left: auto;
+        width: 100%;
+        margin-left: 0;
+    }
+}
+
 .ds-animate-infinite-scroll {
     animation: ds-infinite-scroll 25s linear infinite;
 }

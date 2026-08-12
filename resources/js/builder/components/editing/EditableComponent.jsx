@@ -92,11 +92,17 @@ export default function EditableComponent({
     window.addEventListener('mouseup', onMouseUp);
   };
 
-  // --- INTERACTIVE MOUSE DRAG POSITION HANDLER ---
+  // --- INTERACTIVE POINTER DRAG POSITION HANDLER ---
   const handleDragStart = (e) => {
+    // Always stop propagation in drag mode so the section click doesn't fire
+    if (builderMode === 'drag') {
+      e.stopPropagation();
+      e.preventDefault();
+    }
     if (isLocked || builderMode !== 'drag') return;
-    e.stopPropagation();
-    e.preventDefault();
+
+    const el = e.currentTarget;
+    el.setPointerCapture(e.pointerId); // lock pointer to this element during drag
 
     const startX = e.clientX;
     const startY = e.clientY;
@@ -105,12 +111,12 @@ export default function EditableComponent({
     const startPosX = currentPos.x || 0;
     const startPosY = currentPos.y || 0;
 
-    const currentMarginLeft = parseInt(component.props?.marginLeft || 0, 10);
-    const currentMarginTop = parseInt(component.props?.marginTop || 0, 10);
+    const currentMarginLeft = parseInt(component.props?.marginLeft || '0', 10);
+    const currentMarginTop = parseInt(component.props?.marginTop || '0', 10);
 
     setIsDraggingLocal(true);
 
-    const onMouseMove = (moveEvent) => {
+    const onPointerMove = (moveEvent) => {
       const deltaX = moveEvent.clientX - startX;
       const deltaY = moveEvent.clientY - startY;
 
@@ -119,7 +125,6 @@ export default function EditableComponent({
       const newPosX = snapToGrid(startPosX + deltaX);
       const newPosY = snapToGrid(startPosY + deltaY);
 
-      // Update position and margins
       updateComponentPosition(sectionId, component.id, { x: newPosX, y: newPosY });
       updateComponentProps(sectionId, component.id, {
         marginLeft: `${newMarginLeft}px`,
@@ -127,14 +132,15 @@ export default function EditableComponent({
       });
     };
 
-    const onMouseUp = () => {
+    const onPointerUp = () => {
       setIsDraggingLocal(false);
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseup', onMouseUp);
+      el.releasePointerCapture(e.pointerId);
+      el.removeEventListener('pointermove', onPointerMove);
+      el.removeEventListener('pointerup', onPointerUp);
     };
 
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseup', onMouseUp);
+    el.addEventListener('pointermove', onPointerMove);
+    el.addEventListener('pointerup', onPointerUp);
   };
 
   // Determine cursor dynamically
@@ -181,7 +187,7 @@ export default function EditableComponent({
       style={wrapperStyle}
       onClick={handleClick}
       onDoubleClick={handleDoubleClick}
-      onMouseDown={builderMode === 'drag' ? handleDragStart : undefined}
+      onPointerDown={builderMode === 'drag' ? handleDragStart : undefined}
       onMouseEnter={() => setHoveredComponent(component.id)}
       onMouseLeave={() => setHoveredComponent(null)}
     >
@@ -198,7 +204,7 @@ export default function EditableComponent({
       {/* Drag Move Handle Indicator (shown in Drag Mode when selected & not locked) */}
       {isSelected && builderMode === 'drag' && !isLocked && (
         <div
-          onMouseDown={handleDragStart}
+          onPointerDown={handleDragStart}
           className="absolute -top-3 left-2 z-30 bg-indigo-600 text-white px-2 py-0.5 rounded-md text-[10px] font-extrabold shadow-md cursor-grab active:cursor-grabbing flex items-center gap-1"
           title="Click & drag to move component"
         >

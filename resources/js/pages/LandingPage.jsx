@@ -392,6 +392,444 @@ function DashboardIllustration() {
 }
 
 /* ─────────────────────────────────────────────────────────
+   ANIMATED STATS SECTION
+───────────────────────────────────────────────────────── */
+function StatsSection() {
+    const sectionRef = useRef(null);
+    const bgRef = useRef(null);
+    const [isAnimated, setIsAnimated] = useState(false);
+    const [counts, setCounts] = useState(['0', '0%', '0', '0/7']);
+
+    // Intersection Observer to trigger counter once
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setIsAnimated(true);
+                    observer.unobserve(entry.target);
+                }
+            },
+            { threshold: 0.2 }
+        );
+
+        if (sectionRef.current) {
+            observer.observe(sectionRef.current);
+        }
+
+        return () => observer.disconnect();
+    }, []);
+
+    // requestAnimationFrame Counter Logic with easeOutExpo (2200ms)
+    useEffect(() => {
+        if (!isAnimated) return;
+
+        const duration = 2200;
+        const startTime = performance.now();
+        let animationFrameId;
+
+        const easeOutExpo = (x) => (x === 1 ? 1 : 1 - Math.pow(2, -10 * x));
+
+        const updateCounters = (currentTime) => {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const easeVal = easeOutExpo(progress);
+
+            // Item 1: 1.2M+ (Websites Created) -> 0 to 1.2M+
+            const val1 = 1.2 * easeVal;
+            let display1;
+            if (progress >= 1) {
+                display1 = '1.2M+';
+            } else if (val1 < 1.0) {
+                display1 = Math.floor(val1 * 1000) + 'K';
+            } else {
+                display1 = val1.toFixed(1) + 'M+';
+            }
+
+            // Item 2: 99.9% (Platform Uptime) -> 0% to 99.9%
+            const val2 = 99.9 * easeVal;
+            let display2 = progress >= 1 ? '99.9%' : val2.toFixed(1) + '%';
+
+            // Item 3: 10K+ (Active Users) -> 0 to 10K+
+            const val3 = 10 * easeVal;
+            let display3;
+            if (progress >= 1) {
+                display3 = '10K+';
+            } else {
+                const kVal = Math.floor(val3);
+                display3 = kVal > 0 ? `${kVal}K` : '0';
+            }
+
+            // Item 4: 24/7 (Expert Support) -> 0/7 to 24/7
+            const val4 = Math.floor(24 * easeVal);
+            let display4 = progress >= 1 ? '24/7' : `${val4}/7`;
+
+            setCounts([display1, display2, display3, display4]);
+
+            if (progress < 1) {
+                animationFrameId = requestAnimationFrame(updateCounters);
+            }
+        };
+
+        animationFrameId = requestAnimationFrame(updateCounters);
+
+        return () => {
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+        };
+    }, [isAnimated]);
+
+    // Parallax background on scroll (translateY = scroll * 0.15)
+    useEffect(() => {
+        let animationFrameId;
+
+        const handleScroll = () => {
+            if (!sectionRef.current || !bgRef.current) return;
+            const rect = sectionRef.current.getBoundingClientRect();
+            if (rect.top < window.innerHeight && rect.bottom > 0) {
+                const scrollOffset = (window.innerHeight - rect.top) * 0.15;
+                bgRef.current.style.transform = `translate3d(0, ${scrollOffset}px, 0)`;
+            }
+        };
+
+        const onScroll = () => {
+            animationFrameId = requestAnimationFrame(handleScroll);
+        };
+
+        window.addEventListener('scroll', onScroll, { passive: true });
+        handleScroll();
+
+        return () => {
+            window.removeEventListener('scroll', onScroll);
+            if (animationFrameId) cancelAnimationFrame(animationFrameId);
+        };
+    }, []);
+
+    return (
+        <section
+            ref={sectionRef}
+            className="py-20 sm:py-24 relative overflow-hidden"
+            style={{ background: 'linear-gradient(135deg,#0f172a 0%,#1e1b4b 50%,#0f172a 100%)' }}
+        >
+            <div ref={bgRef} className="absolute inset-0 pointer-events-none will-change-transform">
+                <div
+                    className="absolute top-0 left-1/4 w-96 h-96 rounded-full opacity-20 ds-animate-float-slow"
+                    style={{ background: 'radial-gradient(circle,#4f46e5,transparent)', filter: 'blur(80px)' }}
+                />
+                <div
+                    className="absolute bottom-0 right-1/4 w-96 h-96 rounded-full opacity-20 ds-animate-float-reverse"
+                    style={{ background: 'radial-gradient(circle,#2563eb,transparent)', filter: 'blur(80px)' }}
+                />
+            </div>
+
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div className="text-center mb-12">
+                    <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+                        Trusted at Scale
+                    </h2>
+                    <p className="text-slate-400 mt-2 font-medium">Numbers that speak for themselves.</p>
+                </div>
+
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
+                    {STATS.map((s, idx) => {
+                        const Icon = s.icon;
+                        return (
+                            <div
+                                key={s.label}
+                                className={`flex flex-col items-center text-center rounded-2xl p-6 border ds-hover-glow transition-all duration-600 ease-out group cursor-pointer ${
+                                    isAnimated
+                                        ? 'opacity-100 translate-y-0 scale-100'
+                                        : 'opacity-0 translate-y-5 scale-95'
+                                }`}
+                                style={{
+                                    background: 'rgba(255,255,255,0.04)',
+                                    borderColor: 'rgba(255,255,255,0.08)',
+                                    backdropFilter: 'blur(10px)',
+                                    transitionDelay: `${idx * 100}ms`,
+                                }}
+                            >
+                                <div
+                                    className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"
+                                    style={{ background: 'rgba(79,70,229,0.2)', border: '1px solid rgba(79,70,229,0.3)' }}
+                                >
+                                    <Icon className="h-5 w-5 text-indigo-300 group-hover:text-white transition-colors" />
+                                </div>
+                                <div className="text-3xl font-extrabold text-white tracking-tight mb-1 group-hover:scale-105 transition-transform">
+                                    {counts[idx]}
+                                </div>
+                                <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">{s.label}</div>
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
+        </section>
+    );
+}
+
+/* ─────────────────────────────────────────────────────────
+   REVISED 3D PRICING CAROUSEL (APPLE / FRAMER STYLE)
+   Interaction: Horizontal Drag Left/Right to Rotate
+───────────────────────────────────────────────────────── */
+function PricingSection() {
+    const stageRef = useRef(null);
+    const [rotationAngle, setRotationAngle] = useState(0);
+    const targetAngleRef = useRef(0);
+    const currentAngleRef = useRef(0);
+    const [activeIndex, setActiveIndex] = useState(0);
+    const [isMobile, setIsMobile] = useState(false);
+    const [isTablet, setIsTablet] = useState(false);
+    const [isDragging, setIsDragging] = useState(false);
+
+    // Drag state refs (non-reactive for performance)
+    const dragStartXRef = useRef(0);
+    const dragStartAngleRef = useRef(0);
+    const isDraggingRef = useRef(false);
+    const lastWheelTimeRef = useRef(0);
+
+    // Screen size detection
+    useEffect(() => {
+        const checkScreen = () => {
+            const w = window.innerWidth;
+            setIsMobile(w < 768);
+            setIsTablet(w >= 768 && w < 1024);
+        };
+        checkScreen();
+        window.addEventListener('resize', checkScreen);
+        return () => window.removeEventListener('resize', checkScreen);
+    }, []);
+
+    // RAF render loop (runs independently of drag events)
+    useEffect(() => {
+        let animationFrameId;
+        const renderLoop = () => {
+            // Smooth spring damping lerp
+            const diff = targetAngleRef.current - currentAngleRef.current;
+            currentAngleRef.current += diff * 0.09;
+            setRotationAngle(currentAngleRef.current);
+
+            // Active front card index calculation
+            const count = PRICING.length;
+            const step = (2 * Math.PI) / count;
+            let normAngle = (-currentAngleRef.current) % (2 * Math.PI);
+            if (normAngle < 0) normAngle += 2 * Math.PI;
+            const closestIdx = Math.round(normAngle / step) % count;
+            setActiveIndex(closestIdx);
+
+            animationFrameId = requestAnimationFrame(renderLoop);
+        };
+        animationFrameId = requestAnimationFrame(renderLoop);
+        return () => cancelAnimationFrame(animationFrameId);
+    }, []);
+
+    // ── Pointer (mouse drag) handlers ──────────────────────
+    const handlePointerDown = (e) => {
+        isDraggingRef.current = true;
+        setIsDragging(true);
+        dragStartXRef.current = e.clientX;
+        dragStartAngleRef.current = targetAngleRef.current;
+        e.currentTarget.setPointerCapture(e.pointerId);
+    };
+
+    const handlePointerMove = (e) => {
+        if (!isDraggingRef.current) return;
+        const dx = e.clientX - dragStartXRef.current;
+        // Sensitivity: 1px of horizontal drag = ~0.01 rad of rotation
+        // Drag left (negative dx) → rotate right (decrease angle)
+        // Drag right (positive dx) → rotate left (increase angle)
+        const sensitivity = 0.008;
+        targetAngleRef.current = dragStartAngleRef.current + dx * sensitivity;
+    };
+
+    const handlePointerUp = () => {
+        if (!isDraggingRef.current) return;
+        isDraggingRef.current = false;
+        setIsDragging(false);
+        // Snap to nearest 120deg step
+        const step = (2 * Math.PI) / PRICING.length;
+        targetAngleRef.current = Math.round(targetAngleRef.current / step) * step;
+    };
+
+    // ── Touch (mobile swipe) handlers ──────────────────────
+    const touchStartXRef = useRef(0);
+    const touchStartAngleRef = useRef(0);
+
+    const handleTouchStart = (e) => {
+        touchStartXRef.current = e.touches[0].clientX;
+        touchStartAngleRef.current = targetAngleRef.current;
+    };
+
+    const handleTouchMove = (e) => {
+        const dx = e.touches[0].clientX - touchStartXRef.current;
+        const sensitivity = 0.008;
+        targetAngleRef.current = touchStartAngleRef.current + dx * sensitivity;
+    };
+
+    const handleTouchEnd = () => {
+        // Snap to nearest 120deg step
+        const step = (2 * Math.PI) / PRICING.length;
+        targetAngleRef.current = Math.round(targetAngleRef.current / step) * step;
+    };
+
+    // Tight Carousel Radius (230px desktop, 180px tablet)
+    const radius = isMobile ? 0 : isTablet ? 180 : 230;
+
+    return (
+        <section id="pricing" className="py-20 sm:py-28 bg-slate-50 overflow-hidden">
+            <div className="ds-carousel-stage" style={{ position: 'relative', height: 'auto', minHeight: '600px' }}>
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+                    <div className="text-center mb-8">
+                        <div
+                            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold mb-3 border"
+                            style={{ background: 'rgba(79,70,229,0.06)', borderColor: 'rgba(79,70,229,0.18)', color: '#4f46e5' }}
+                        >
+                            <Award className="h-3 w-3" /> Pricing
+                        </div>
+                        <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Simple, Transparent Pricing</h2>
+                        <p className="mt-2 text-slate-500 font-medium text-sm">Drag left/right or tap a tab to rotate 3D pricing wheel.</p>
+
+                        {/* Quick Plan Switcher Buttons */}
+                        <div className="flex items-center justify-center gap-2 mt-4">
+                            {PRICING.map((p, i) => (
+                                <button
+                                    key={p.name}
+                                    onClick={() => {
+                                        targetAngleRef.current = -(i * 2 * Math.PI) / PRICING.length;
+                                    }}
+                                    className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${
+                                        activeIndex === i
+                                            ? 'bg-indigo-600 text-white shadow-md scale-105'
+                                            : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+                                    }`}
+                                >
+                                    {p.name}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Tight 3D Rotating Carousel Stage — horizontal drag/swipe to rotate */}
+                    <div
+                        ref={stageRef}
+                        className="pricing-group mx-auto"
+                        style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
+                        onPointerDown={handlePointerDown}
+                        onPointerMove={handlePointerMove}
+                        onPointerUp={handlePointerUp}
+                        onPointerCancel={handlePointerUp}
+                        onTouchStart={handleTouchStart}
+                        onTouchMove={handleTouchMove}
+                        onTouchEnd={handleTouchEnd}
+                    >
+                        {PRICING.map((p, i) => {
+                            let cardStyle = {};
+                            let depthClass = 'is-inactive-card';
+
+                            if (!isMobile) {
+                                // 3D Wheel Angle calculation
+                                const cardAngle = rotationAngle + (i * 2 * Math.PI) / PRICING.length;
+                                const x = Math.sin(cardAngle) * radius;
+                                const z = (Math.cos(cardAngle) - 1) * 90; // Depth translateZ [0, -180px]
+                                const rotateY = (cardAngle * 180) / Math.PI;
+
+                                // Normalize facing position (cosVal: 1 front, -1 back)
+                                const cosVal = Math.cos(cardAngle);
+                                const norm = (cosVal + 1) / 2; // 0 to 1
+
+                                // Target Card Scale & Opacity as requested:
+                                // Front card: scale(1), opacity(1)
+                                // Side card: scale(0.85), opacity(0.7)
+                                // Back card: scale(0.7), opacity(0.4)
+                                const cardScale = 0.7 + 0.3 * norm;     // 0.7 to 1.0
+                                const cardOpacity = 0.4 + 0.6 * norm;   // 0.4 to 1.0
+                                const cardBlur = (1 - norm) * 2.0;      // 0px to 2.0px
+                                const zIdx = Math.round(norm * 100);
+
+                                if (norm > 0.85) {
+                                    depthClass = 'is-active-card';
+                                }
+
+                                cardStyle = {
+                                    transform: `translateX(${x.toFixed(1)}px) translateZ(${z.toFixed(1)}px) rotateY(${rotateY.toFixed(1)}deg) scale(${cardScale.toFixed(2)})`,
+                                    opacity: cardOpacity.toFixed(2),
+                                    filter: cardBlur > 0.1 ? `blur(${cardBlur.toFixed(1)}px)` : 'none',
+                                    zIndex: zIdx,
+                                };
+                            } else {
+                                // Mobile view active card handling
+                                const isActive = activeIndex === i;
+                                cardStyle = {
+                                    display: isActive ? 'block' : 'none',
+                                    opacity: 1,
+                                    transform: 'scale(1)',
+                                };
+                                depthClass = 'is-active-card';
+                            }
+
+                            return (
+                                <div
+                                    key={i}
+                                    className={`ds-carousel-card-wrapper rounded-2xl ${depthClass}`}
+                                    style={cardStyle}
+                                >
+                                    <div
+                                        className={`rounded-2xl p-7 border flex flex-col relative transition-all duration-300 h-full ${
+                                            p.highlight
+                                                ? 'text-white shadow-2xl z-10 ds-animate-pulse-glow'
+                                                : 'bg-white border-slate-100 shadow-sm'
+                                        }`}
+                                        style={p.highlight ? {
+                                            background: 'linear-gradient(135deg,#2563eb,#4f46e5)',
+                                        } : {}}
+                                    >
+                                        {p.highlight && (
+                                            <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-20">
+                                                <span className="bg-amber-400 text-amber-950 text-[10px] font-extrabold px-3 py-1 rounded-full shadow-md animate-bounce" style={{ animationDuration: '2.5s' }}>
+                                                    ✦ Most Popular
+                                                </span>
+                                            </div>
+                                        )}
+
+                                        <div className="mb-6">
+                                            <p className={`text-sm font-extrabold uppercase tracking-wider mb-2 ${p.highlight ? 'text-blue-200' : 'text-indigo-600'}`}>
+                                                {p.name}
+                                            </p>
+                                            <div className="flex items-baseline gap-1 mb-2">
+                                                <span className={`text-4xl font-extrabold ${p.highlight ? 'text-white' : 'text-slate-900'}`}>{p.price}</span>
+                                                <span className={`text-sm font-medium ${p.highlight ? 'text-blue-200' : 'text-slate-400'}`}>{p.period}</span>
+                                            </div>
+                                            <p className={`text-xs ${p.highlight ? 'text-blue-100' : 'text-slate-500'}`}>{p.desc}</p>
+                                        </div>
+
+                                        <ul className="space-y-3 mb-8 flex-1">
+                                            {p.features.map(f => (
+                                                <li key={f} className="flex items-center gap-2 text-xs font-semibold">
+                                                    <Check className={`h-4 w-4 shrink-0 ${p.highlight ? 'text-emerald-300' : 'text-emerald-500'}`} />
+                                                    <span className={p.highlight ? 'text-white' : 'text-slate-700'}>{f}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+
+                                        <Link
+                                            to={ROUTES.REGISTER}
+                                            className={`text-center text-sm font-bold py-3 px-4 rounded-xl transition-all shadow-md ${
+                                                p.highlight
+                                                    ? 'bg-white text-indigo-600 hover:bg-slate-100 hover:scale-105'
+                                                    : 'border-2 border-slate-200 text-slate-700 hover:border-indigo-400 hover:text-indigo-600 bg-white hover:scale-105'
+                                            }`}
+                                        >
+                                            {p.cta}
+                                        </Link>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+}
+
+/* ─────────────────────────────────────────────────────────
    MAIN PAGE
 ───────────────────────────────────────────────────────── */
 export default function LandingPage() {
@@ -640,44 +1078,9 @@ export default function LandingPage() {
             </section>
 
             {/* ════════════════════════════════════════════════════
-                STATS (Dark)
+                STATS (Dark with Animated Counter & Parallax)
             ════════════════════════════════════════════════════ */}
-            <section className="py-20 sm:py-24 relative overflow-hidden"
-                     style={{ background: 'linear-gradient(135deg,#0f172a 0%,#1e1b4b 50%,#0f172a 100%)' }}>
-                <div className="absolute inset-0 pointer-events-none">
-                    <div className="absolute top-0 left-1/4 w-96 h-96 rounded-full opacity-20 ds-animate-float-slow"
-                         style={{ background: 'radial-gradient(circle,#4f46e5,transparent)', filter: 'blur(80px)' }} />
-                    <div className="absolute bottom-0 right-1/4 w-96 h-96 rounded-full opacity-20 ds-animate-float-reverse"
-                         style={{ background: 'radial-gradient(circle,#2563eb,transparent)', filter: 'blur(80px)' }} />
-                </div>
-
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                    <div className="text-center mb-12">
-                        <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-                            Trusted at Scale
-                        </h2>
-                        <p className="text-slate-400 mt-2 font-medium">Numbers that speak for themselves.</p>
-                    </div>
-
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
-                        {STATS.map((s) => {
-                            const Icon = s.icon;
-                            return (
-                                <div key={s.label}
-                                     className="flex flex-col items-center text-center rounded-2xl p-6 border ds-hover-glow transition-all duration-300 group cursor-pointer"
-                                     style={{ background: 'rgba(255,255,255,0.04)', borderColor: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(10px)' }}>
-                                    <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform"
-                                         style={{ background: 'rgba(79,70,229,0.2)', border: '1px solid rgba(79,70,229,0.3)' }}>
-                                        <Icon className="h-5 w-5 text-indigo-300 group-hover:text-white transition-colors" />
-                                    </div>
-                                    <div className="text-3xl font-extrabold text-white tracking-tight mb-1 group-hover:scale-105 transition-transform">{s.value}</div>
-                                    <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">{s.label}</div>
-                                </div>
-                            );
-                        })}
-                    </div>
-                </div>
-            </section>
+            <StatsSection />
 
             {/* ════════════════════════════════════════════════════
                 TESTIMONIALS
@@ -719,71 +1122,9 @@ export default function LandingPage() {
             </section>
 
             {/* ════════════════════════════════════════════════════
-                PRICING
+                PRICING (With Rotation Entrance & Premium Hover)
             ════════════════════════════════════════════════════ */}
-            <section id="pricing" className="py-20 sm:py-28 bg-slate-50">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="text-center mb-12">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold mb-4 border"
-                             style={{ background: 'rgba(79,70,229,0.06)', borderColor: 'rgba(79,70,229,0.18)', color: '#4f46e5' }}>
-                            <Award className="h-3 w-3" /> Pricing
-                        </div>
-                        <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Simple, Transparent Pricing</h2>
-                        <p className="mt-3 text-slate-500 font-medium">Choose the plan that fits your needs.</p>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
-                        {PRICING.map((p, i) => (
-                            <div key={i}
-                                 className={`rounded-2xl p-7 border flex flex-col transition-all duration-300 ${
-                                     p.highlight
-                                         ? 'text-white shadow-2xl scale-105 relative ds-animate-pulse-glow'
-                                         : 'bg-white border-slate-100 shadow-sm ds-hover-lift'
-                                 }`}
-                                 style={p.highlight ? {
-                                     background: 'linear-gradient(135deg,#2563eb,#4f46e5)',
-                                 } : {}}>
-                                {p.highlight && (
-                                    <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                                        <span className="bg-amber-400 text-amber-950 text-[10px] font-extrabold px-3 py-1 rounded-full shadow-md animate-bounce" style={{ animationDuration: '2.5s' }}>
-                                            ✦ Most Popular
-                                        </span>
-                                    </div>
-                                )}
-
-                                <div className="mb-6">
-                                    <p className={`text-sm font-extrabold uppercase tracking-wider mb-2 ${p.highlight ? 'text-blue-200' : 'text-indigo-600'}`}>
-                                        {p.name}
-                                    </p>
-                                    <div className="flex items-baseline gap-1 mb-2">
-                                        <span className={`text-4xl font-extrabold ${p.highlight ? 'text-white' : 'text-slate-900'}`}>{p.price}</span>
-                                        <span className={`text-sm font-medium ${p.highlight ? 'text-blue-200' : 'text-slate-400'}`}>{p.period}</span>
-                                    </div>
-                                    <p className={`text-xs ${p.highlight ? 'text-blue-100' : 'text-slate-500'}`}>{p.desc}</p>
-                                </div>
-
-                                <ul className="space-y-3 mb-8 flex-1">
-                                    {p.features.map(f => (
-                                        <li key={f} className="flex items-center gap-2 text-xs font-semibold">
-                                            <Check className={`h-4 w-4 shrink-0 ${p.highlight ? 'text-emerald-300' : 'text-emerald-500'}`} />
-                                            <span className={p.highlight ? 'text-white' : 'text-slate-700'}>{f}</span>
-                                        </li>
-                                    ))}
-                                </ul>
-
-                                <Link to={ROUTES.REGISTER}
-                                      className={`text-center text-sm font-bold py-3 px-4 rounded-xl transition-all shadow-md ${
-                                          p.highlight
-                                              ? 'bg-white text-indigo-600 hover:bg-slate-100 hover:scale-105'
-                                              : 'border-2 border-slate-200 text-slate-700 hover:border-indigo-400 hover:text-indigo-600 bg-white hover:scale-105'
-                                      }`}>
-                                    {p.cta}
-                                </Link>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
+            <PricingSection />
 
             {/* ════════════════════════════════════════════════════
                 CTA SECTION

@@ -15,6 +15,25 @@ export default function KeyboardShortcuts() {
     removeSection,
   } = useBuilderStore();
 
+  // Helper: find component (recursive) and check if it's locked
+  const isSelectedComponentLocked = () => {
+    if (!selectedSectionId || !selectedComponentId) return false;
+    const section = sections.find(s => s.id === selectedSectionId);
+    if (!section) return false;
+    const findInTree = (comps) => {
+      for (const c of comps) {
+        if (c.id === selectedComponentId) return c;
+        if (Array.isArray(c.childrenComponents) && c.childrenComponents.length > 0) {
+          const found = findInTree(c.childrenComponents);
+          if (found) return found;
+        }
+      }
+      return null;
+    };
+    const comp = findInTree(section.components || []);
+    return !!(comp?.isLocked);
+  };
+
   useEffect(() => {
     const handleKeyDown = (e) => {
       // Ctrl/Cmd + Z = Undo
@@ -51,6 +70,7 @@ export default function KeyboardShortcuts() {
       // Delete = Remove
       if (e.key === 'Delete' || e.key === 'Backspace') {
         if (selectedSectionId && selectedComponentId) {
+          if (isSelectedComponentLocked()) return; // refuse if locked
           e.preventDefault();
           removeComponent(selectedSectionId, selectedComponentId);
         } else if (selectedSectionId) {
