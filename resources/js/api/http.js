@@ -46,12 +46,22 @@ http.interceptors.response.use(
 
             // 401 Unauthorized (session expired or token revoked)
             if (response.status === HTTP_STATUS.UNAUTHORIZED) {
-                useAuthStore.getState().clearSession();
-                localStorage.removeItem(TOKEN_STORAGE_KEY);
-                localStorage.removeItem('cpwb_user');
+                // Ignore 401s from requests that used a stale token. After a
+                // successful re-login the store holds a brand-new token; an
+                // old in-flight request racing with that relogin would otherwise
+                // wipe the fresh session and force the user to log in again.
+                const currentToken = useAuthStore.getState().token ?? localStorage.getItem(TOKEN_STORAGE_KEY);
+                const requestToken = error.config?.headers?.Authorization?.replace('Bearer ', '');
+                const usesCurrentToken = !requestToken || !currentToken || requestToken === currentToken;
 
-                if (!window.location.pathname.startsWith('/login')) {
-                    window.location.href = '/login?logout=1';
+                if (usesCurrentToken) {
+                    useAuthStore.getState().clearSession();
+                    localStorage.removeItem(TOKEN_STORAGE_KEY);
+                    localStorage.removeItem('cpwb_user');
+
+                    if (!window.location.pathname.startsWith('/login')) {
+                        window.location.href = '/login?logout=1';
+                    }
                 }
             }
 
