@@ -437,3 +437,84 @@ html, body {
     background-color: rgb(79 70 229 / 0.15);
     color: rgb(79 70 229);
 }
+
+/* ============================================================
+ * Template Builder — Responsive Device Viewport Canvas Styles
+ * ========================================================= */
+
+/* Builder Canvas Mobile Override Mode (Width: 375px) */
+.builder-canvas-mobile .grid {
+    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+    gap: 1.25rem !important;
+}
+
+.builder-canvas-mobile section {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    padding-top: 2.5rem !important;
+    padding-bottom: 2.5rem !important;
+}
+
+.builder-canvas-mobile .max-w-7xl,
+.builder-canvas-mobile .max-w-6xl,
+.builder-canvas-mobile .max-w-5xl,
+.builder-canvas-mobile .max-w-4xl,
+.builder-canvas-mobile .max-w-3xl {
+    max-width: 100% !important;
+}
+
+.builder-canvas-mobile [class*="lg:flex-row"],
+.builder-canvas-mobile [class*="md:flex-row"],
+.builder-canvas-mobile [class*="sm:flex-row"] {
+    flex-direction: column !important;
+}
+
+.builder-canvas-mobile [class*="items-start"] {
+    align-items: flex-start !important;
+}
+
+.builder-canvas-mobile [class*="text-4xl"],
+.builder-canvas-mobile [class*="text-5xl"],
+.builder-canvas-mobile [class*="text-6xl"] {
+    font-size: 1.65rem !important;
+    line-height: 2.15rem !important;
+}
+
+.builder-canvas-mobile [class*="text-3xl"] {
+    font-size: 1.4rem !important;
+    line-height: 1.85rem !important;
+}
+
+.builder-canvas-mobile img {
+    max-width: 100% !important;
+    height: auto !important;
+}
+
+/* Builder Canvas Tablet Override Mode (Width: 768px) */
+.builder-canvas-tablet .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 1.5rem !important;
+}
+
+.builder-canvas-tablet .grid.grid-cols-1 {
+    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+}
+
+.builder-canvas-tablet section {
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+    padding-top: 3.5rem !important;
+    padding-bottom: 3.5rem !important;
+}
+
+.builder-canvas-tablet .max-w-7xl,
+.builder-canvas-tablet .max-w-6xl {
+    max-width: 100% !important;
+}
+
+.builder-canvas-tablet [class*="text-5xl"],
+.builder-canvas-tablet [class*="text-6xl"] {
+    font-size: 2.15rem !important;
+    line-height: 2.5rem !important;
+}
+

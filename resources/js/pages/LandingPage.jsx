@@ -644,9 +644,6 @@ function PricingSection() {
     const handlePointerMove = (e) => {
         if (!isDraggingRef.current) return;
         const dx = e.clientX - dragStartXRef.current;
-        // Sensitivity: 1px of horizontal drag = ~0.01 rad of rotation
-        // Drag left (negative dx) → rotate right (decrease angle)
-        // Drag right (positive dx) → rotate left (increase angle)
         const sensitivity = 0.008;
         targetAngleRef.current = dragStartAngleRef.current + dx * sensitivity;
     };
@@ -655,7 +652,7 @@ function PricingSection() {
         if (!isDraggingRef.current) return;
         isDraggingRef.current = false;
         setIsDragging(false);
-        // Snap to nearest 120deg step
+        // Snap to nearest card step
         const step = (2 * Math.PI) / PRICING.length;
         targetAngleRef.current = Math.round(targetAngleRef.current / step) * step;
     };

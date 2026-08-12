@@ -24,9 +24,15 @@ export const useBuilderStore = create((set, get) => ({
   isPreviewMode: false,
   isSaving: false,
   builderMode: 'select', // 'select' | 'drag' | 'resize'
+  isLeftPanelOpen: true,
+  isRightPanelOpen: true,
 
   // Actions
   setBuilderMode: (builderMode) => set({ builderMode }),
+  toggleLeftPanel: () => set(state => ({ isLeftPanelOpen: !state.isLeftPanelOpen })),
+  toggleRightPanel: () => set(state => ({ isRightPanelOpen: !state.isRightPanelOpen })),
+  setLeftPanelOpen: (isOpen) => set({ isLeftPanelOpen: isOpen }),
+  setRightPanelOpen: (isOpen) => set({ isRightPanelOpen: isOpen }),
 
   toggleLockComponent: (sectionId, componentId) => {
     const { sections, saveToHistory } = get();
@@ -658,6 +664,8 @@ export const useBuilderStore = create((set, get) => ({
       isPreviewMode: false,
       isSaving: false,
       builderMode: 'select',
+      isLeftPanelOpen: true,
+      isRightPanelOpen: true,
     });
   },
 }));
