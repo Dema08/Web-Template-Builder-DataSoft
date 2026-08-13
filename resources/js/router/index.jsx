@@ -18,6 +18,7 @@ import {
             AdminWebsites,
             AdminTemplates,
             AdminTemplateBuilder,
+            AdminTemplatePreview,
             AdminCategories,
             AdminAnalytics,
             AdminSettings,
@@ -73,6 +74,40 @@ export default function AppRouter() {
                     <Route path={ROUTES.ADMIN_ANALYTICS} element={<AdminAnalytics />} />
                     <Route path={ROUTES.ADMIN_SETTINGS} element={<AdminSettings />} />
                 </Route>
+
+                {/* Preview routes — fullscreen live website preview (MUST come before /:id to avoid collision) */}
+                <Route
+                    path="/admin/templates/builder/preview"
+                    element={
+                        <ProtectedRoute>
+                            <AdminTemplatePreview />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/admin/templates/builder/:id/preview"
+                    element={
+                        <ProtectedRoute>
+                            <AdminTemplatePreview />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/preview/template"
+                    element={
+                        <ProtectedRoute>
+                            <AdminTemplatePreview />
+                        </ProtectedRoute>
+                    }
+                />
+                <Route
+                    path="/preview/:slug"
+                    element={
+                        <ProtectedRoute>
+                            <AdminTemplatePreview />
+                        </ProtectedRoute>
+                    }
+                />
 
                 {/* Authenticated builder routes (fullscreen) */}
                 <Route

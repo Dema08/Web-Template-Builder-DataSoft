@@ -7,12 +7,12 @@ import { toast } from '@store';
 import { GripVertical } from 'lucide-react';
 
 function SortableSection({ section, isSelected, onSelect }) {
-  const { builderMode } = useBuilderStore();
-  const isDragMode = builderMode === 'drag';
+  const { builderMode, isPreviewMode } = useBuilderStore();
+  const isDragMode = !isPreviewMode && builderMode === 'drag';
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: section.id,
-    disabled: !isDragMode || !!section.isLocked, // Disable dnd-kit sortable unless explicitly in Drag mode & not locked
+    disabled: isPreviewMode || !isDragMode || !!section.isLocked, // Disable dnd-kit sortable in preview mode or non-drag mode
   });
 
   const style = {
@@ -28,10 +28,10 @@ function SortableSection({ section, isSelected, onSelect }) {
       style={style}
       id={section.id}
       data-section-id={section.id}
-      className={`relative group/section ${isSelected ? 'z-10' : ''}`}
+      className={`relative group/section ${isSelected && !isPreviewMode ? 'z-10' : ''}`}
     >
-      {/* Section Drag Bar (shown when in Drag mode) */}
-      {isDragMode && !section.isLocked && (
+      {/* Section Drag Bar (shown when in Drag mode and not in preview mode) */}
+      {!isPreviewMode && isDragMode && !section.isLocked && (
         <div
           {...attributes}
           {...listeners}
@@ -45,15 +45,15 @@ function SortableSection({ section, isSelected, onSelect }) {
 
       <SectionRenderer
         section={section}
-        isSelected={isSelected}
-        onClick={() => onSelect(section.id)}
+        isSelected={!isPreviewMode && isSelected}
+        onClick={() => !isPreviewMode && onSelect(section.id)}
       />
     </div>
   );
 }
 
 export default function SectionCanvas() {
-  const { sections, selectedSectionId, reorderSections, selectSection, addSection, addComponent, builderMode } = useBuilderStore();
+  const { sections, selectedSectionId, reorderSections, selectSection, addSection, addComponent, builderMode, isPreviewMode } = useBuilderStore();
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
   );

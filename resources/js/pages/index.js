@@ -4,6 +4,7 @@ export { default as AdminUsers } from './admin/AdminUsers';
 export { default as AdminWebsites } from './admin/AdminWebsites';
 export { default as AdminTemplates } from './admin/AdminTemplates';
 export { default as AdminTemplateBuilder } from './admin/AdminTemplateBuilder';
+export { default as AdminTemplatePreview } from './admin/AdminTemplatePreview';
 export { default as AdminCategories } from './admin/AdminCategories';
 export { default as AdminAnalytics } from './admin/AdminAnalytics';
 export { default as AdminSettings } from './admin/AdminSettings';
