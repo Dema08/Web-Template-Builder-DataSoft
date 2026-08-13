@@ -10,13 +10,23 @@ export default function InlineEditableText({
 }) {
   const ref = useRef(null);
   const [isEditing, setIsEditing] = useState(false);
-  const { selectComponent } = useBuilderStore();
+  const { selectComponent, isPreviewMode } = useBuilderStore();
 
   useEffect(() => {
     if (ref.current && ref.current.innerText !== value && !isEditing) {
       ref.current.innerText = value;
     }
   }, [value, isEditing]);
+
+  const Tag = tag;
+
+  if (isPreviewMode) {
+    return (
+      <Tag style={style} className={className}>
+        {value}
+      </Tag>
+    );
+  }
 
   const handleBlur = () => {
     setIsEditing(false);
@@ -66,8 +76,6 @@ export default function InlineEditableText({
       selectComponent(componentId);
     }
   };
-
-  const Tag = tag;
 
   return (
     <Tag

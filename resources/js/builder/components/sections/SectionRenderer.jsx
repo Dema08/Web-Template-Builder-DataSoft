@@ -15,9 +15,24 @@ const layoutIdToComponentName = (layoutId) => {
 
 export default function SectionRenderer({ section, isSelected, onClick }) {
   const config = getSectionConfig('default', section.type);
-  const { selectedSectionId, selectSection, selectComponent } = useBuilderStore();
+  const { selectedSectionId, selectSection, selectComponent, isPreviewMode } = useBuilderStore();
 
-  const isSectionSelected = selectedSectionId === section.id;
+  const isSectionSelected = !isPreviewMode && (selectedSectionId === section.id || isSelected);
+
+  // In Preview Mode, hide section if marked hidden, and render clean section output
+  if (isPreviewMode) {
+    if (section.isHidden) return null;
+    const componentName = layoutIdToComponentName(section.layout);
+    const LayoutComponent = getLayoutComponent(componentName);
+
+    if (!LayoutComponent) return null;
+
+    return (
+      <div id={section.id} className="relative w-full">
+        <LayoutComponent components={section.components} sectionId={section.id} />
+      </div>
+    );
+  }
 
   // Get the layout component - convert layout ID to component name
   const componentName = layoutIdToComponentName(section.layout);

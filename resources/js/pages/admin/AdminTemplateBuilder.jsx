@@ -95,7 +95,7 @@ export default function AdminTemplateBuilder() {
 
     if (selectedCategory) {
       setSelectedCategoryObj(selectedCategory);
-      setIndustry(selectedCategory.id, selectedCategory.slug, selectedCategory.name);
+      setIndustry(selectedCategory.id, selectedCategory.slug, selectedCategory.name, true);
       setModalStep(2);
       setShowIndustryModal(true);
     } else {

@@ -91,8 +91,17 @@ export const useBuilderStore = create((set, get) => ({
     );
     set({ sections: newSections });
   },
-  setIndustry: (industryId, industrySlug, industryName) => {
-    set({ industryId, industrySlug, industryName, sections: [], selectedSectionId: null, selectedComponentId: null, selectedProperty: null, selectedLayers: [] });
+  setIndustry: (industryId, industrySlug, industryName, clearSections = false) => {
+    set(state => ({
+      industryId,
+      industrySlug,
+      industryName,
+      sections: clearSections ? [] : state.sections,
+      selectedSectionId: null,
+      selectedComponentId: null,
+      selectedProperty: null,
+      selectedLayers: []
+    }));
   },
 
   setTemplateId: (templateId) => {
@@ -635,6 +644,10 @@ export const useBuilderStore = create((set, get) => ({
     set(state => ({ isPreviewMode: !state.isPreviewMode }));
   },
 
+  setIsPreviewMode: (isPreviewMode) => {
+    set({ isPreviewMode });
+  },
+
   setStatus: (status) => {
     set({ status });
   },
@@ -669,3 +682,51 @@ export const useBuilderStore = create((set, get) => ({
     });
   },
 }));
+
+// Realtime sync broadcast channel for Builder -> Preview tab
+let broadcastChannel = null;
+if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
+  try {
+    broadcastChannel = new BroadcastChannel('datasoft_builder_sync');
+  } catch (e) {
+    console.error('BroadcastChannel initialization error:', e);
+  }
+}
+
+export const broadcastBuilderState = (state) => {
+  const payload = {
+    sections: state.sections,
+    templateName: state.templateName,
+    industryName: state.industryName,
+    industrySlug: state.industrySlug,
+    status: state.status,
+    templateId: state.templateId,
+    timestamp: Date.now(),
+  };
+
+  try {
+    localStorage.setItem('template_builder_preview_data', JSON.stringify(payload));
+  } catch (e) {
+    // Ignore quota errors
+  }
+
+  if (broadcastChannel) {
+    try {
+      broadcastChannel.postMessage(payload);
+    } catch (err) {
+      console.warn('BroadcastChannel error:', err);
+    }
+  }
+};
+
+// Automatically broadcast on store changes
+useBuilderStore.subscribe((state, previousState) => {
+  if (
+    state.sections !== previousState.sections ||
+    state.templateName !== previousState.templateName ||
+    state.status !== previousState.status
+  ) {
+    broadcastBuilderState(state);
+  }
+});
+

@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { useBuilderStore } from '../../stores/builderStore';
+import { useBuilderStore, broadcastBuilderState } from '../../stores/builderStore';
+import { toast } from '@store';
 import {
   ArrowLeft,
   Undo2,
@@ -8,6 +9,7 @@ import {
   Tablet,
   Smartphone,
   Eye,
+  ExternalLink,
   Save,
   Send,
   ZoomIn,
@@ -42,6 +44,43 @@ export default function BuilderToolbar({ onBack, onSave, onPublish }) {
     toggleLeftPanel,
     toggleRightPanel,
   } = useBuilderStore();
+
+  const handleOpenPreview = () => {
+    const currentState = useBuilderStore.getState();
+    const { sections, templateName, industryName, industrySlug, status, templateId } = currentState;
+
+    if (!sections || sections.length === 0) {
+      toast.error('Canvas is empty. Please add sections or load a template before previewing.', 'Preview Error');
+      return;
+    }
+
+    // Save snapshot to localStorage for instant new tab preview
+    const payload = {
+      sections,
+      templateName: templateName || 'Untitled Template',
+      industryName,
+      industrySlug,
+      status,
+      templateId,
+      timestamp: Date.now(),
+    };
+
+    try {
+      localStorage.setItem('template_builder_preview_data', JSON.stringify(payload));
+    } catch (e) {
+      console.warn('Failed to write preview payload to localStorage', e);
+    }
+
+    broadcastBuilderState(currentState);
+
+    // Open clean, full live website preview in a new tab
+    const previewUrl = templateId
+      ? `/admin/templates/builder/${templateId}/preview`
+      : '/preview/template';
+
+    window.open(previewUrl, '_blank');
+    toast.success('Live website preview opened in new tab', 'Preview Mode');
+  };
 
   const handleSave = async () => {
     setIsSaving(true);
@@ -219,18 +258,16 @@ export default function BuilderToolbar({ onBack, onSave, onPublish }) {
                 <div className="border-t border-slate-100 my-1" />
                 <button
                   onClick={() => {
-                    togglePreviewMode();
+                    handleOpenPreview();
                     setShowDeviceMenu(false);
                   }}
-                  className={`w-full flex items-center justify-between px-3 py-2 text-xs font-bold transition ${
-                    isPreviewMode ? 'text-indigo-600 bg-indigo-50/70' : 'text-slate-700 hover:bg-slate-50'
-                  }`}
+                  className="w-full flex items-center justify-between px-3 py-2 text-xs font-bold text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition"
                 >
                   <div className="flex items-center gap-2">
-                    <Eye className="h-4 w-4 shrink-0 text-slate-500" />
-                    <span>Preview Mode</span>
+                    <ExternalLink className="h-4 w-4 shrink-0 text-indigo-600" />
+                    <span>Preview in New Tab</span>
                   </div>
-                  {isPreviewMode && <Check className="h-3.5 w-3.5 text-indigo-600" />}
+                  <span className="text-[10px] bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded font-extrabold">NEW TAB</span>
                 </button>
               </div>
             </>
@@ -276,6 +313,16 @@ export default function BuilderToolbar({ onBack, onSave, onPublish }) {
 
       {/* Right side - Right Panel Toggle & Save / Publish */}
       <div className="flex items-center gap-1.5 shrink-0">
+        {/* Live Preview Mode Button */}
+        <button
+          onClick={handleOpenPreview}
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg transition font-extrabold border border-indigo-200/80 text-xs shadow-2xs hover:shadow-xs"
+          title="Open professional live website preview in a new tab"
+        >
+          <ExternalLink className="h-3.5 w-3.5" />
+          <span className="hidden sm:inline">Preview Mode</span>
+        </button>
+
         {/* Right Inspector Toggle Button */}
         <button
           onClick={toggleRightPanel}

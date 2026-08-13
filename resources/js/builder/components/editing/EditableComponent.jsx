@@ -15,6 +15,7 @@ export default function EditableComponent({
     selectComponent,
     updateComponentProps,
     updateComponentPosition,
+    isPreviewMode,
   } = useBuilderStore();
 
   const elementRef = useRef(null);
@@ -25,6 +26,27 @@ export default function EditableComponent({
   const isHovered = hoveredComponent === component.id;
   const isLocked = !!component.isLocked;
   const isHidden = !!component.isHidden;
+
+  // In Preview Mode, render 100% clean production output without editor UI
+  if (isPreviewMode) {
+    if (isHidden) return null;
+    const isInline = ['text', 'heading', 'button', 'icon', 'badge'].includes(component.type);
+    return (
+      <div
+        id={component.id}
+        className="relative"
+        style={{
+          display: isInline ? 'inline-block' : 'block',
+          maxWidth: '100%',
+          width: component.props?.width || (isInline ? 'fit-content' : undefined),
+          marginLeft: component.props?.marginLeft,
+          marginTop: component.props?.marginTop,
+        }}
+      >
+        {children}
+      </div>
+    );
+  }
 
   // Snap value to 8px grid
   const snapToGrid = (val) => Math.round(val / 8) * 8;
