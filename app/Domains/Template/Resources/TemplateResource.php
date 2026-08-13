@@ -31,9 +31,9 @@ class TemplateResource extends BaseResource
             'status' => $this->status?->value ?? TemplateStatus::Draft->value,
             'status_label' => $this->status?->label() ?? TemplateStatus::Draft->label(),
             'status_color' => $this->status?->color() ?? TemplateStatus::Draft->color(),
-            'industry_category_id' => $this->industry_category_id,
+            'industry_category_id' => $this->category_id,
             'industry_category' => $this->industryCategory ? [
-                'id' => $this->industryCategory->id,
+                'id'   => $this->industryCategory->id,
                 'name' => $this->industryCategory->name,
                 'slug' => $this->industryCategory->slug,
             ] : null,

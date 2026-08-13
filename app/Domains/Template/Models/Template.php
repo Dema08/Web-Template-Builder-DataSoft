@@ -3,8 +3,9 @@
 namespace App\Domains\Template\Models;
 
 use App\Domains\Template\Enums\TemplateStatus;
-use App\Models\User;
+use App\Domains\User\Models\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,10 +15,20 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * Template
  *
  * Represents a company profile website template owned by an industry category.
+ * DB table: templates
+ * Category FK: category_id (aliased as industry_category_id for API compatibility)
  */
 class Template extends Model
 {
     use HasFactory, SoftDeletes;
+
+    /**
+     * Always bind routes by numeric primary key so frontend numeric IDs resolve correctly.
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'id';
+    }
 
     /**
      * The attributes that are mass assignable.
@@ -48,27 +59,39 @@ class Template extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'draft_json' => 'array',
+        'draft_json'     => 'array',
         'published_json' => 'array',
-        'is_featured' => 'boolean',
-        'sort_order' => 'integer',
-        'status' => TemplateStatus::class,
+        'is_featured'    => 'boolean',
+        'sort_order'     => 'integer',
+        'status'         => TemplateStatus::class,
     ];
 
     /**
-     * Get the route key for the model.
+     * Virtual accessor: industry_category_id → category_id.
+     * Lets the API send/receive industry_category_id without a DB column rename.
      */
-    public function getRouteKeyName(): string
+    protected function industryCategoryId(): Attribute
     {
-        return 'slug';
+        return Attribute::make(
+            get: fn () => $this->category_id,
+            set: fn ($value) => ['category_id' => $value],
+        );
     }
 
     /**
-     * Industry category that owns this template.
+     * Industry category that owns this template (primary relation).
      */
     public function category(): BelongsTo
     {
-        return $this->belongsTo(Category::class, 'category_id');
+        return $this->belongsTo(\App\Models\Category::class, 'category_id');
+    }
+
+    /**
+     * Alias for category() — used in resources and eager loads.
+     */
+    public function industryCategory(): BelongsTo
+    {
+        return $this->belongsTo(\App\Models\Category::class, 'category_id');
     }
 
     /**
@@ -87,65 +110,49 @@ class Template extends Model
         return $this->belongsTo(User::class, 'updated_by');
     }
 
-    /**
-     * Scope templates by status.
-     */
+    // ------------------------------------------------------------------
+    // Scopes
+    // ------------------------------------------------------------------
+
     public function scopeByStatus(Builder $query, TemplateStatus $status): Builder
     {
-        return $query->where('status', $status);
+        return $query->where('status', $status->value);
     }
 
-    /**
-     * Scope featured templates only.
-     */
     public function scopeFeatured(Builder $query): Builder
     {
         return $query->where('is_featured', true);
     }
 
-    /**
-     * Scope templates by industry category.
-     */
     public function scopeByCategory(Builder $query, int $categoryId): Builder
     {
         return $query->where('category_id', $categoryId);
     }
 
-    /**
-     * Check if template is published.
-     */
+    // ------------------------------------------------------------------
+    // Helpers
+    // ------------------------------------------------------------------
+
     public function isPublished(): bool
     {
         return $this->status === TemplateStatus::Published;
     }
 
-    /**
-     * Check if template is draft.
-     */
     public function isDraft(): bool
     {
         return $this->status === TemplateStatus::Draft;
     }
 
-    /**
-     * Check if template is archived.
-     */
     public function isArchived(): bool
     {
         return $this->status === TemplateStatus::Archived;
     }
 
-    /**
-     * Check if template is disabled.
-     */
     public function isDisabled(): bool
     {
         return $this->status === TemplateStatus::Disabled;
     }
 
-    /**
-     * Determine whether the template is available for use.
-     */
     public function isAvailable(): bool
     {
         return $this->status === TemplateStatus::Published

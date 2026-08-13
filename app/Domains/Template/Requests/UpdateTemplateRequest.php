@@ -15,20 +15,22 @@ class UpdateTemplateRequest extends FormRequest
 
     public function rules(): array
     {
+        $templateId = $this->route('template')?->id ?? $this->route('template');
+
         return [
-            'industry_category_id' => ['sometimes', 'integer', 'exists:categories,id'],
-            'code' => ['nullable', 'string', 'max:50', 'unique:templates,code,' . $this->route('template')->id],
-            'name' => ['sometimes', 'string', 'max:255'],
-            'slug' => ['nullable', 'string', 'max:255', new SlugRule(), 'unique:templates,slug,' . $this->route('template')->id],
-            'description' => ['nullable', 'string', 'max:2000'],
-            'thumbnail' => ['nullable', 'string', 'max:255'],
-            'preview_image' => ['nullable', 'string', 'max:255'],
-            'draft_json' => ['nullable', 'array'],
-            'published_json' => ['nullable', 'array'],
-            'version' => ['nullable', 'string', 'max:20'],
-            'sort_order' => ['nullable', 'integer', 'min:0'],
-            'is_featured' => ['boolean'],
-            'status' => ['sometimes', Rule::in(['draft', 'published', 'archived', 'disabled'])],
+            'industry_category_id' => ['sometimes', 'nullable', 'integer', 'exists:categories,id'],
+            'code'                 => ['nullable', 'string', 'max:50', 'unique:templates,code,' . $templateId],
+            'name'                 => ['sometimes', 'string', 'max:255'],
+            'slug'                 => ['nullable', 'string', 'max:255', new SlugRule(), 'unique:templates,slug,' . $templateId],
+            'description'          => ['nullable', 'string', 'max:2000'],
+            'thumbnail'            => ['nullable', 'string', 'max:255'],
+            'preview_image'        => ['nullable', 'string', 'max:255'],
+            'draft_json'           => ['nullable', 'array'],
+            'published_json'       => ['nullable', 'array'],
+            'version'              => ['nullable', 'string', 'max:20'],
+            'sort_order'           => ['nullable', 'integer', 'min:0'],
+            'is_featured'          => ['boolean'],
+            'status'               => ['sometimes', Rule::in(['draft', 'published', 'archived', 'disabled'])],
         ];
     }
 

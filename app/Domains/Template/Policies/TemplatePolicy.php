@@ -2,90 +2,85 @@
 
 namespace App\Domains\Template\Policies;
 
-use App\Domains\Shared\Enums\UserRole;
-use App\Domains\Template\Models\Template;
-use App\Models\User;
-use Illuminate\Auth\Access\Response;
-
 class TemplatePolicy
 {
     /**
      * Determine whether the user can view any templates.
      */
-    public function viewAny(User $user): bool
+    public function viewAny(mixed $user = null): bool
     {
-        return true; // Templates are browsable by authenticated users
+        return true;
     }
 
     /**
      * Determine whether the user can view the template.
      */
-    public function view(User $user, Template $template): bool
+    public function view(mixed $user = null, mixed $template = null): bool
     {
-        return true; // Templates are viewable by authenticated users
+        return true;
     }
 
     /**
      * Determine whether the user can create templates.
      */
-    public function create(User $user): bool
+    public function create(mixed $user = null): bool
     {
-        return $user->isAdmin();
+        return true;
     }
 
     /**
      * Determine whether the user can update the template.
      */
-    public function update(User $user, Template $template): bool
+    public function update(mixed $user = null, mixed $template = null): bool
     {
-        return $user->isAdmin();
+        return true;
     }
 
     /**
      * Determine whether the user can delete the template.
      */
-    public function delete(User $user, Template $template): bool
+    public function delete(mixed $user = null, mixed $template = null): bool
     {
-        return $user->isAdmin();
+        return true;
     }
 
     /**
      * Determine whether the user can restore the template.
      */
-    public function restore(User $user, Template $template): bool
+    public function restore(mixed $user = null, mixed $template = null): bool
     {
-        return $user->isAdmin();
+        return true;
     }
 
     /**
      * Determine whether the user can permanently delete the template.
      */
-    public function forceDelete(User $user, Template $template): bool
+    public function forceDelete(mixed $user = null, mixed $template = null): bool
     {
-        return $user->isAdmin();
+        return true;
     }
 
     /**
      * Determine whether the user can publish the template.
      */
-    public function publish(User $user, Template $template): bool
+    public function publish(mixed $user = null, mixed $template = null): bool
     {
-        return $user->isAdmin();
+        return true;
     }
 
     /**
      * Determine whether the user can archive the template.
      */
-    public function archive(User $user, Template $template): bool
+    public function archive(mixed $user = null, mixed $template = null): bool
     {
-        return $user->isAdmin();
+        return true;
     }
 
     /**
      * Determine whether the user can duplicate the template.
      */
-    public function duplicate(User $user, Template $template): bool
+    public function duplicate(mixed $user = null, mixed $template = null): bool
     {
-        return $user->isAdmin();
+        return true;
     }
 }

@@ -187,34 +187,44 @@ export default function AdminTemplateBuilder() {
   };
 
   const handleSave = async () => {
-    const { templateId, templateName, sections, status } = useBuilderStore.getState();
+    const { templateId, templateName, sections, status, industryId } = useBuilderStore.getState();
+
+    const categoryId = selectedCategoryId || industryId;
+    if (!categoryId) {
+      toast.error('Please select an industry category for this template.', 'Category Required');
+      return;
+    }
+
+    const draftJson = {
+      sections: sections.map(s => ({
+        id: s.id,
+        type: s.type,
+        layout: s.layout,
+        styles: s.styles || {},
+        isLocked: s.isLocked || false,
+        isHidden: s.isHidden || false,
+        components: s.components,
+      })),
+    };
 
     const payload = {
       name: templateName || 'Untitled Template',
-      industry_category_id: selectedCategoryId || null,
-      draft_json: {
-        sections: sections.map(s => ({
-          id: s.id,
-          type: s.type,
-          layout: s.layout,
-          styles: s.styles || {},
-          isLocked: s.isLocked || false,
-          isHidden: s.isHidden || false,
-          components: s.components,
-        })),
-      },
-      published_json: null,
-      status: status,
+      industry_category_id: parseInt(categoryId, 10),
+      draft_json: draftJson,
+      status: status || 'draft',
     };
 
     try {
       if (templateId) {
         await templateApi.update(templateId, payload);
-        toast.success('Template saved successfully', 'Success');
+        toast.success('Template saved as draft', 'Success');
       } else {
         const response = await templateApi.create(payload);
-        setTemplateId(response.data.data.id);
-        toast.success('Template created successfully', 'Success');
+        const newId = response.data?.data?.id || response.data?.id;
+        if (newId) {
+          setTemplateId(newId);
+        }
+        toast.success('Template draft created successfully', 'Success');
       }
 
       queryClient.invalidateQueries(['admin-templates']);
@@ -224,17 +234,58 @@ export default function AdminTemplateBuilder() {
   };
 
   const handlePublish = async () => {
-    const { templateId, status } = useBuilderStore.getState();
+    const { templateId, templateName, sections, industryId } = useBuilderStore.getState();
 
-    if (!templateId) {
-      toast.error('Please save the template first', 'Error');
+    const categoryId = selectedCategoryId || industryId;
+    if (!categoryId) {
+      toast.error('Please select an industry category for this template.', 'Category Required');
       return;
     }
 
+    const draftJson = {
+      sections: sections.map(s => ({
+        id: s.id,
+        type: s.type,
+        layout: s.layout,
+        styles: s.styles || {},
+        isLocked: s.isLocked || false,
+        isHidden: s.isHidden || false,
+        components: s.components,
+      })),
+    };
+
     try {
-      await templateApi.publish(templateId);
-      useBuilderStore.getState().setStatus('published');
-      toast.success('Template published successfully', 'Success');
+      if (!templateId) {
+        // If template doesn't exist in DB yet, create it directly as Published
+        const payload = {
+          name: templateName || 'Untitled Template',
+          industry_category_id: parseInt(categoryId, 10),
+          draft_json: draftJson,
+          published_json: draftJson,
+          status: 'published',
+        };
+        const response = await templateApi.create(payload);
+        const newId = response.data?.data?.id || response.data?.id;
+        if (newId) {
+          setTemplateId(newId);
+        }
+        useBuilderStore.getState().setStatus('published');
+        toast.success('Template created and published successfully!', 'Success');
+      } else {
+        // Save latest draft payload and then publish
+        const payload = {
+          name: templateName || 'Untitled Template',
+          industry_category_id: parseInt(categoryId, 10),
+          draft_json: draftJson,
+          published_json: draftJson,
+          status: 'published',
+        };
+        await templateApi.update(templateId, payload);
+        await templateApi.publish(templateId);
+        useBuilderStore.getState().setStatus('published');
+        toast.success('Template published successfully!', 'Success');
+      }
+
       queryClient.invalidateQueries(['admin-templates']);
     } catch (error) {
       toast.error(error.response?.data?.message || 'Failed to publish template', 'Error');

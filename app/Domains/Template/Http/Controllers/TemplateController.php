@@ -3,8 +3,8 @@
 namespace App\Domains\Template\Http\Controllers;
 
 use App\Domains\Shared\Http\Controllers\BaseController;
-use App\Domains\Template\Http\Requests\StoreTemplateRequest;
-use App\Domains\Template\Http\Requests\UpdateTemplateRequest;
+use App\Domains\Template\Requests\StoreTemplateRequest;
+use App\Domains\Template\Requests\UpdateTemplateRequest;
 use App\Domains\Template\Resources\TemplateResource;
 use App\Domains\Template\Services\TemplateService;
 use App\Models\Template as TemplateModel;

@@ -52,6 +52,7 @@ Route::prefix('v1')->group(function (): void {
         Route::patch('/users/{user}/role', [App\Domains\Admin\Http\Controllers\AdminUserController::class, 'updateRole']);
         Route::delete('/users/{user}', [App\Domains\Admin\Http\Controllers\AdminUserController::class, 'destroy']);
         Route::apiResource('categories', App\Domains\Admin\Http\Controllers\AdminCategoryController::class);
+        Route::apiResource('templates', App\Domains\Template\Http\Controllers\TemplateController::class);
         Route::apiResource('categories.templates', App\Domains\Admin\Http\Controllers\AdminTemplateController::class);
 
         Route::get('/templates/trashed', [App\Domains\Template\Http\Controllers\TemplateController::class, 'trashed']);

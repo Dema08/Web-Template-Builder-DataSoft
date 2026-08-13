@@ -7,7 +7,7 @@ use App\Domains\Shared\Services\BaseService;
 use App\Domains\Template\Enums\TemplateStatus;
 use App\Domains\Template\Models\Template;
 use App\Domains\Template\Repositories\TemplateRepository;
-use App\Models\User;
+use App\Domains\User\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -26,10 +26,16 @@ class TemplateService extends BaseService
 
     public function createTemplate(array $attributes, User $creator): Template
     {
-        $attributes['code'] = $attributes['code'] ?? str('TMPL-' . strtoupper(Str::random(6)))->__toString();
-        $attributes['slug'] = $attributes['slug'] ?? str($attributes['name'])->slug()->__toString();
-        $attributes['status'] = $attributes['status'] ?? TemplateStatus::Draft;
-        $attributes['version'] = $attributes['version'] ?? '1.0.0';
+        // API sends industry_category_id; DB column is category_id
+        if (isset($attributes['industry_category_id']) && !isset($attributes['category_id'])) {
+            $attributes['category_id'] = $attributes['industry_category_id'];
+        }
+        unset($attributes['industry_category_id']);
+
+        $attributes['code']       = $attributes['code'] ?? str('TMPL-' . strtoupper(Str::random(6)))->__toString();
+        $attributes['slug']       = $attributes['slug'] ?? str($attributes['name'])->slug()->__toString();
+        $attributes['status']     = $attributes['status'] ?? TemplateStatus::Draft;
+        $attributes['version']    = $attributes['version'] ?? '1.0.0';
         $attributes['created_by'] = $creator->id;
         $attributes['updated_by'] = $creator->id;
 
@@ -38,6 +44,12 @@ class TemplateService extends BaseService
 
     public function updateTemplate(Template $template, array $attributes): Template
     {
+        // API sends industry_category_id; DB column is category_id
+        if (isset($attributes['industry_category_id']) && !isset($attributes['category_id'])) {
+            $attributes['category_id'] = $attributes['industry_category_id'];
+        }
+        unset($attributes['industry_category_id']);
+
         if (isset($attributes['name']) && !isset($attributes['slug'])) {
             $attributes['slug'] = str($attributes['name'])->slug()->__toString();
         }
@@ -76,13 +88,9 @@ class TemplateService extends BaseService
 
     public function publishTemplate(Template $template): Template
     {
-        if ($template->isPublished()) {
-            throw new DomainException('Template is already published.', 422);
-        }
-
-        $template->status = TemplateStatus::Published;
+        $template->status         = TemplateStatus::Published;
         $template->published_json = $template->draft_json;
-        $template->updated_by = auth()->id();
+        $template->updated_by     = auth()->id();
         $template->save();
 
         return $template->fresh();

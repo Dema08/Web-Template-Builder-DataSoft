@@ -149,7 +149,10 @@ class TemplateRepository implements RepositoryContract
         }
 
         if (!empty($filters['status'])) {
-            $query->byStatus(TemplateStatus::from($filters['status']));
+            $enumStatus = TemplateStatus::tryFrom($filters['status']);
+            if ($enumStatus) {
+                $query->byStatus($enumStatus);
+            }
         }
 
         if (!empty($filters['is_featured'])) {

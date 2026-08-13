@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Plus,
@@ -12,6 +12,11 @@ import {
     MoreVertical,
     X,
     Loader2,
+    Layout,
+    CheckCircle2,
+    FileEdit,
+    Ban,
+    Globe,
 } from 'lucide-react';
 import { Card } from '@components/ui';
 import { toast } from '@store';
@@ -19,6 +24,64 @@ import { templateApi } from '@api';
 import { categoryService } from '@services';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
+
+function TemplateCardThumbnail({ template }) {
+    const [imgError, setImgError] = useState(false);
+    const imageUrl = template.preview_image || template.thumbnail;
+
+    const gradients = [
+        'from-indigo-600 via-purple-600 to-pink-500',
+        'from-blue-600 via-indigo-600 to-purple-600',
+        'from-emerald-500 via-teal-600 to-cyan-600',
+        'from-amber-500 via-orange-600 to-rose-600',
+        'from-slate-800 via-slate-900 to-indigo-950',
+    ];
+    const gradientClass = gradients[(template.id || 0) % gradients.length];
+
+    if (imageUrl && !imgError) {
+        return (
+            <img
+                src={imageUrl}
+                alt={template.name}
+                onError={() => setImgError(true)}
+                className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+            />
+        );
+    }
+
+    return (
+        <div className={`w-full h-full bg-gradient-to-br ${gradientClass} p-4 flex flex-col justify-between relative overflow-hidden group-hover:scale-105 transition duration-300 selection:bg-none`}>
+            {/* Ambient Lighting Accents */}
+            <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-xl pointer-events-none" />
+            <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-indigo-500/20 rounded-full blur-xl pointer-events-none" />
+
+            {/* Mockup Top Browser Navigation Bar */}
+            <div className="flex items-center justify-between bg-black/20 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/10 z-10">
+                <div className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-rose-400/90 inline-block" />
+                    <span className="w-2 h-2 rounded-full bg-amber-400/90 inline-block" />
+                    <span className="w-2 h-2 rounded-full bg-emerald-400/90 inline-block" />
+                </div>
+                <span className="text-[10px] font-mono text-white/70 truncate max-w-[120px]">
+                    {template.slug || 'template-preview'}
+                </span>
+            </div>
+
+            {/* Center Website Layout Graphic Illustration */}
+            <div className="my-auto text-center z-10 space-y-1.5 py-2">
+                <div className="inline-flex p-2.5 rounded-2xl bg-white/15 backdrop-blur-md border border-white/20 text-white shadow-inner">
+                    <Layout className="h-6 w-6" />
+                </div>
+                <h4 className="text-sm font-extrabold text-white tracking-tight drop-shadow-xs px-2 truncate">
+                    {template.name}
+                </h4>
+                <span className="inline-block px-2.5 py-0.5 rounded-full bg-white/20 backdrop-blur-md text-white text-[10px] font-semibold tracking-wide">
+                    {template.industry_category?.name || 'DataSoft Template'}
+                </span>
+            </div>
+        </div>
+    );
+}
 
 const STATUS_OPTIONS = [
     { value: '', label: 'All Status' },
@@ -38,6 +101,16 @@ export default function AdminTemplates() {
     const [previewTemplate, setPreviewTemplate] = useState(null);
     const [actionDropdown, setActionDropdown] = useState(null);
     const queryClient = useQueryClient();
+
+    useEffect(() => {
+        const handleOutsideClick = (e) => {
+            if (!e.target.closest('.template-action-menu')) {
+                setActionDropdown(null);
+            }
+        };
+        document.addEventListener('click', handleOutsideClick);
+        return () => document.removeEventListener('click', handleOutsideClick);
+    }, []);
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm({
         defaultValues: {
@@ -63,11 +136,13 @@ export default function AdminTemplates() {
             search: searchQuery || undefined,
             status: statusFilter || undefined,
             industry_category_id: categoryFilter || undefined,
-            per_page: 12,
-        }).then(res => res.data.data),
+            per_page: 50,
+        }).then(res => res.data?.data ?? res.data),
     });
 
-    const templates = data?.data ?? [];
+    const templates = Array.isArray(data)
+        ? data
+        : (Array.isArray(data?.data) ? data.data : []);
 
     const createMutation = useMutation({
         mutationFn: templateApi.create,
@@ -217,14 +292,37 @@ export default function AdminTemplates() {
         template_count: cat.template_count || 0,
     }));
 
+    const updateStatusMutation = useMutation({
+        mutationFn: ({ id, status }) => {
+            if (status === 'published') return templateApi.publish(id);
+            if (status === 'archived') return templateApi.archive(id);
+            return templateApi.update(id, { status });
+        },
+        onSuccess: (_, variables) => {
+            queryClient.invalidateQueries(['admin-templates']);
+            queryClient.invalidateQueries(['admin-categories']);
+            const labels = {
+                published: 'published',
+                draft: 'moved to draft',
+                disabled: 'disabled',
+                archived: 'archived',
+            };
+            toast.success(`Template status updated to ${labels[variables.status] || variables.status}`, 'Success');
+            setActionDropdown(null);
+        },
+        onError: (error) => {
+            toast.error(error.response?.data?.message || 'Failed to update template status', 'Error');
+        },
+    });
+
     const getStatusColor = (status) => {
         const colors = {
-            draft: 'bg-gray-100 text-gray-700',
-            published: 'bg-emerald-100 text-emerald-700',
-            archived: 'bg-amber-100 text-amber-700',
-            disabled: 'bg-red-100 text-red-700',
+            draft: 'bg-slate-100 text-slate-700 border border-slate-300',
+            published: 'bg-emerald-100 text-emerald-700 border border-emerald-300',
+            archived: 'bg-amber-100 text-amber-700 border border-amber-300',
+            disabled: 'bg-red-100 text-red-700 border border-red-300',
         };
-        return colors[status] || 'bg-gray-100 text-gray-700';
+        return colors[status] || 'bg-slate-100 text-slate-700 border border-slate-300';
     };
 
     return (
@@ -252,10 +350,10 @@ export default function AdminTemplates() {
                 </button>
             </div>
 
-            {/* Search and Filters - Modern Premium Design */}
+            {/* Search and Filters */}
             <div className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm hover:shadow-md transition-shadow duration-200">
                 <div className="flex flex-col lg:flex-row items-stretch gap-4">
-                    {/* Search Bar - Primary Focus (45-55% width) */}
+                    {/* Search Bar */}
                     <div className="relative flex-1 lg:max-w-[55%]">
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-indigo-400" />
                         <input
@@ -269,7 +367,6 @@ export default function AdminTemplates() {
 
                     {/* Filters & Stats */}
                     <div className="flex items-center gap-3">
-                        {/* Category Filter */}
                         <select
                             value={categoryFilter}
                             onChange={(e) => setCategoryFilter(e.target.value)}
@@ -283,7 +380,6 @@ export default function AdminTemplates() {
                             ))}
                         </select>
 
-                        {/* Status Filter */}
                         <select
                             value={statusFilter}
                             onChange={(e) => setStatusFilter(e.target.value)}
@@ -294,7 +390,6 @@ export default function AdminTemplates() {
                             ))}
                         </select>
 
-                        {/* Active Templates Stats Card */}
                         <div className="hidden sm:flex items-center gap-3 h-[52px] px-5 bg-gradient-to-br from-indigo-50 to-indigo-50/50 border-2 border-indigo-100 rounded-xl">
                             <div className="flex flex-col">
                                 <span className="text-[10px] font-bold text-indigo-600 uppercase tracking-wider leading-tight">Active</span>
@@ -317,25 +412,22 @@ export default function AdminTemplates() {
                     {templates.map((tpl) => (
                         <Card
                             key={tpl.id}
-                            className="border border-slate-200/80 overflow-hidden flex flex-col justify-between group hover:shadow-md transition-all duration-200"
+                            className="border border-slate-200/80 flex flex-col justify-between group hover:shadow-md transition-all duration-200 bg-white relative"
                         >
-                            <div className="relative h-44 bg-slate-100 overflow-hidden border-b border-slate-100">
-                                <img
-                                    src={tpl.thumbnail || '/placeholder-template.jpg'}
-                                    alt={tpl.name}
-                                    className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-                                />
+                            <div className="relative h-44 overflow-hidden rounded-t-2xl border-b border-slate-100">
+                                <TemplateCardThumbnail template={tpl} />
+
                                 {tpl.is_featured && (
-                                    <div className="absolute top-3 left-3">
-                                        <span className="px-2.5 py-1 rounded-full bg-amber-500 text-white text-[10px] font-extrabold uppercase backdrop-blur-md flex items-center gap-1">
+                                    <div className="absolute top-3 left-3 z-20">
+                                        <span className="px-2.5 py-1 rounded-full bg-amber-500 text-white text-[10px] font-extrabold uppercase backdrop-blur-md flex items-center gap-1 shadow-xs">
                                             <Star className="h-3 w-3 fill-current" />
                                             Featured
                                         </span>
                                     </div>
                                 )}
-                                <div className="absolute top-3 right-3">
-                                    <span className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase ${getStatusColor(tpl.status)}`}>
-                                        {tpl.status_label}
+                                <div className="absolute top-3 right-3 z-20">
+                                    <span className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase shadow-xs ${getStatusColor(tpl.status)}`}>
+                                        {tpl.status_label || tpl.status}
                                     </span>
                                 </div>
                             </div>
@@ -345,7 +437,7 @@ export default function AdminTemplates() {
                                     <h3 className="text-sm font-extrabold text-slate-900 truncate group-hover:text-indigo-600 transition">{tpl.name}</h3>
                                     <p className="text-xs font-bold text-indigo-600 mt-0.5">{tpl.code}</p>
                                     {tpl.industry_category && (
-                                        <p className="text-[11px] text-slate-500 mt-1">{tpl.industry_category.name}</p>
+                                        <p className="text-[11px] text-slate-500 mt-1 font-medium">{tpl.industry_category.name}</p>
                                     )}
                                 </div>
 
@@ -354,43 +446,54 @@ export default function AdminTemplates() {
                                 )}
 
                                 <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
-                                    <span className="text-[11px] text-slate-500">
+                                    <span className="text-[11px] font-semibold text-slate-400">
                                         v{tpl.version}
                                     </span>
 
                                     <div className="flex items-center gap-1">
                                         <button
                                             type="button"
-                                            onClick={() => setPreviewTemplate(tpl)}
+                                            onClick={() => window.open(`/admin/templates/builder/${tpl.id}/preview`, '_blank')}
                                             className="p-1.5 text-slate-400 hover:text-indigo-600 rounded-lg hover:bg-indigo-50 transition"
-                                            title="Preview"
+                                            title="Live Preview in New Tab"
                                         >
                                             <Eye className="h-4 w-4" />
                                         </button>
 
-                                        <div className="relative">
+                                        <div className="relative template-action-menu">
                                             <button
                                                 type="button"
-                                                onClick={() => setActionDropdown(actionDropdown === tpl.id ? null : tpl.id)}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setActionDropdown(actionDropdown === tpl.id ? null : tpl.id);
+                                                }}
                                                 className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition"
                                             >
                                                 <MoreVertical className="h-4 w-4" />
                                             </button>
 
                                             {actionDropdown === tpl.id && (
-                                                <div className="absolute right-0 mt-1 w-48 bg-white rounded-xl shadow-lg border border-slate-200 z-10 py-1">
+                                                <div className="absolute right-0 mt-1 w-52 bg-white rounded-xl shadow-xl border border-slate-200 z-30 py-1.5">
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => { navigate(`/admin/templates/builder/${tpl.id}`); setActionDropdown(null); }}
+                                                        className="w-full text-left px-4 py-2 text-xs font-bold text-slate-800 hover:bg-indigo-50 hover:text-indigo-600 flex items-center gap-2 transition"
+                                                    >
+                                                        <Layout className="h-3.5 w-3.5 text-indigo-600" />
+                                                        Open in Builder
+                                                    </button>
                                                     <button
                                                         type="button"
                                                         onClick={() => { handleOpenModal(tpl); setActionDropdown(null); }}
-                                                        className="w-full text-left px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-2"
+                                                        className="w-full text-left px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-2 transition"
                                                     >
                                                         <Edit2 className="h-3.5 w-3.5" />
-                                                        Edit
+                                                        Edit Details
                                                     </button>
                                                     <button
                                                         type="button"
                                                         onClick={() => { duplicateMutation.mutate(tpl.id); setActionDropdown(null); }}
-                                                        className="w-full text-left px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-2"
+                                                        className="w-full text-left px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-2 transition"
                                                     >
                                                         <Copy className="h-3.5 w-3.5" />
                                                         Duplicate
@@ -398,32 +501,62 @@ export default function AdminTemplates() {
                                                     <button
                                                         type="button"
                                                         onClick={() => { featuredMutation.mutate(tpl.id); setActionDropdown(null); }}
-                                                        className="w-full text-left px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-2"
+                                                        className="w-full text-left px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-2 transition"
                                                     >
-                                                        <Star className="h-3.5 w-3.5" />
+                                                        <Star className="h-3.5 w-3.5 text-amber-500" />
                                                         {tpl.is_featured ? 'Unfeature' : 'Feature'}
                                                     </button>
+
+                                                    <div className="my-1 border-t border-slate-100" />
+                                                    <div className="px-4 py-1 text-[10px] font-extrabold uppercase text-slate-400 tracking-wider">
+                                                        Change Status
+                                                    </div>
+
                                                     {tpl.status !== 'published' && (
                                                         <button
                                                             type="button"
-                                                            onClick={() => { publishMutation.mutate(tpl.id); setActionDropdown(null); }}
-                                                            className="w-full text-left px-4 py-2 text-xs font-bold text-emerald-700 hover:bg-emerald-50 flex items-center gap-2"
+                                                            onClick={() => updateStatusMutation.mutate({ id: tpl.id, status: 'published' })}
+                                                            className="w-full text-left px-4 py-2 text-xs font-bold text-emerald-700 hover:bg-emerald-50 flex items-center gap-2 transition"
                                                         >
-                                                            <Eye className="h-3.5 w-3.5" />
-                                                            Publish
+                                                            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+                                                            Publish (Aktifkan)
                                                         </button>
                                                     )}
+
+                                                    {tpl.status !== 'draft' && (
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => updateStatusMutation.mutate({ id: tpl.id, status: 'draft' })}
+                                                            className="w-full text-left px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100 flex items-center gap-2 transition"
+                                                        >
+                                                            <FileEdit className="h-3.5 w-3.5 text-slate-500" />
+                                                            Set to Draft
+                                                        </button>
+                                                    )}
+
+                                                    {tpl.status !== 'disabled' && (
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => updateStatusMutation.mutate({ id: tpl.id, status: 'disabled' })}
+                                                            className="w-full text-left px-4 py-2 text-xs font-bold text-red-700 hover:bg-red-50 flex items-center gap-2 transition"
+                                                        >
+                                                            <Ban className="h-3.5 w-3.5 text-red-600" />
+                                                            Disable (Sembunyikan)
+                                                        </button>
+                                                    )}
+
                                                     {tpl.status !== 'archived' && (
                                                         <button
                                                             type="button"
-                                                            onClick={() => { archiveMutation.mutate(tpl.id); setActionDropdown(null); }}
-                                                            className="w-full text-left px-4 py-2 text-xs font-bold text-amber-700 hover:bg-amber-50 flex items-center gap-2"
+                                                            onClick={() => updateStatusMutation.mutate({ id: tpl.id, status: 'archived' })}
+                                                            className="w-full text-left px-4 py-2 text-xs font-bold text-amber-700 hover:bg-amber-50 flex items-center gap-2 transition"
                                                         >
-                                                            <Archive className="h-3.5 w-3.5" />
-                                                            Archive
+                                                            <Archive className="h-3.5 w-3.5 text-amber-600" />
+                                                            Archive (Arsip)
                                                         </button>
                                                     )}
-                                                    <hr className="my-1" />
+
+                                                    <div className="my-1 border-t border-slate-100" />
                                                     <button
                                                         type="button"
                                                         onClick={() => {
@@ -431,7 +564,7 @@ export default function AdminTemplates() {
                                                                 deleteMutation.mutate(tpl.id);
                                                             }
                                                         }}
-                                                        className="w-full text-left px-4 py-2 text-xs font-bold text-red-700 hover:bg-red-50 flex items-center gap-2"
+                                                        className="w-full text-left px-4 py-2 text-xs font-bold text-red-700 hover:bg-red-50 flex items-center gap-2 transition"
                                                     >
                                                         <Trash2 className="h-3.5 w-3.5" />
                                                         Delete
