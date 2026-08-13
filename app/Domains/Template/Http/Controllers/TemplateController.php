@@ -183,7 +183,7 @@ class TemplateController extends BaseController
         $this->authorize('update', $template);
 
         $request->validate([
-            'thumbnail' => ['required', 'file', 'image', 'max:5120'], // max 5MB
+            'thumbnail' => ['required', 'file', 'mimetypes:image/png,image/jpg,image/jpeg,image/webp,image/svg+xml,image/gif,image/bmp,image/avif', 'max:10240'], // max 10MB
         ]);
 
         $template = $this->templateService->uploadThumbnail($template, $request->file('thumbnail'));
@@ -199,7 +199,7 @@ class TemplateController extends BaseController
         $this->authorize('update', $template);
 
         $request->validate([
-            'preview_image' => ['required', 'file', 'image', 'max:5120'],
+            'preview_image' => ['required', 'file', 'mimetypes:image/png,image/jpg,image/jpeg,image/webp,image/svg+xml,image/gif,image/bmp,image/avif', 'max:10240'], // max 10MB
         ]);
 
         $template = $this->templateService->uploadPreviewImage($template, $request->file('preview_image'));

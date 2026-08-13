@@ -28,58 +28,49 @@ import ThumbnailUploader from '@/components/ui/ThumbnailUploader';
 
 function TemplateCardThumbnail({ template }) {
     const [imgError, setImgError] = useState(false);
+    const [imgLoaded, setImgLoaded] = useState(false);
     const imageUrl = template.preview_image || template.thumbnail;
 
-    const gradients = [
-        'from-indigo-600 via-purple-600 to-pink-500',
-        'from-blue-600 via-indigo-600 to-purple-600',
-        'from-emerald-500 via-teal-600 to-cyan-600',
-        'from-amber-500 via-orange-600 to-rose-600',
-        'from-slate-800 via-slate-900 to-indigo-950',
-    ];
-    const gradientClass = gradients[(template.id || 0) % gradients.length];
+    // Debug: Log thumbnail URL for each card
+    useEffect(() => {
+        console.log('Card thumbnail debug:', {
+            templateId: template.id,
+            templateName: template.name,
+            imageUrl: imageUrl,
+            hasImage: !!imageUrl,
+        });
+    }, [template.id, template.name, imageUrl]);
 
     if (imageUrl && !imgError) {
         return (
-            <img
-                src={imageUrl}
-                alt={template.name}
-                onError={() => setImgError(true)}
-                className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-            />
+            <div className="w-full h-full relative">
+                {!imgLoaded && (
+                    <div className="absolute inset-0 flex items-center justify-center bg-slate-50">
+                        <div className="h-8 w-8 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+                    </div>
+                )}
+                <img
+                    src={imageUrl}
+                    alt={template.name}
+                    onError={(e) => {
+                        console.error('Failed to load image:', imageUrl, e);
+                        setImgError(true);
+                    }}
+                    onLoad={() => {
+                        console.log('Image loaded successfully:', imageUrl);
+                        setImgLoaded(true);
+                    }}
+                    className="w-full h-full object-cover"
+                    style={{ display: imgLoaded ? 'block' : 'none' }}
+                />
+            </div>
         );
     }
 
     return (
-        <div className={`w-full h-full bg-gradient-to-br ${gradientClass} p-4 flex flex-col justify-between relative overflow-hidden group-hover:scale-105 transition duration-300 selection:bg-none`}>
-            {/* Ambient Lighting Accents */}
-            <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-xl pointer-events-none" />
-            <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-indigo-500/20 rounded-full blur-xl pointer-events-none" />
-
-            {/* Mockup Top Browser Navigation Bar */}
-            <div className="flex items-center justify-between bg-black/20 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/10 z-10">
-                <div className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-rose-400/90 inline-block" />
-                    <span className="w-2 h-2 rounded-full bg-amber-400/90 inline-block" />
-                    <span className="w-2 h-2 rounded-full bg-emerald-400/90 inline-block" />
-                </div>
-                <span className="text-[10px] font-mono text-white/70 truncate max-w-[120px]">
-                    {template.slug || 'template-preview'}
-                </span>
-            </div>
-
-            {/* Center Website Layout Graphic Illustration */}
-            <div className="my-auto text-center z-10 space-y-1.5 py-2">
-                <div className="inline-flex p-2.5 rounded-2xl bg-white/15 backdrop-blur-md border border-white/20 text-white shadow-inner">
-                    <Layout className="h-6 w-6" />
-                </div>
-                <h4 className="text-sm font-extrabold text-white tracking-tight drop-shadow-xs px-2 truncate">
-                    {template.name}
-                </h4>
-                <span className="inline-block px-2.5 py-0.5 rounded-full bg-white/20 backdrop-blur-md text-white text-[10px] font-semibold tracking-wide">
-                    {template.industry_category?.name || 'DataSoft Template'}
-                </span>
-            </div>
+        <div className="w-full h-full flex flex-col items-center justify-center text-slate-400 bg-slate-50">
+            <Layout className="h-10 w-10 mb-2 opacity-40" />
+            <span className="text-xs font-medium">No Preview Available</span>
         </div>
     );
 }
@@ -145,6 +136,21 @@ export default function AdminTemplates() {
     const templates = Array.isArray(data)
         ? data
         : (Array.isArray(data?.data) ? data.data : []);
+
+    // Debug: Log template data to verify thumbnail URLs
+    useEffect(() => {
+        if (templates.length > 0) {
+            console.log('=== Template Data Debug ===');
+            templates.forEach((tpl, index) => {
+                console.log(`Template ${index + 1}:`, {
+                    id: tpl.id,
+                    name: tpl.name,
+                    thumbnail: tpl.thumbnail,
+                    preview_image: tpl.preview_image,
+                });
+            });
+        }
+    }, [templates]);
 
     const createMutation = useMutation({
         mutationFn: templateApi.create,
@@ -233,11 +239,24 @@ export default function AdminTemplates() {
     const handleOpenModal = (template = null) => {
         if (template) {
             setEditingTemplate(template);
-            // Set thumbnail preview — if stored locally use /storage/ path
-            const thumbUrl = template.thumbnail
-                ? (template.thumbnail.startsWith('http') ? template.thumbnail : `/storage/${template.thumbnail}`)
-                : '';
-            setThumbnailValue(thumbUrl);
+            // Normalize thumbnail: API returns full URL, but DB needs relative path
+            let thumbUrl = '';
+            if (template.thumbnail) {
+                if (template.thumbnail.startsWith('http')) {
+                    // Extract relative path from full URL (e.g., http://localhost/storage/templates/... → templates/...)
+                    const url = new URL(template.thumbnail);
+                    thumbUrl = url.pathname.replace(/^\/storage\//, '');
+                } else if (template.thumbnail.startsWith('/storage/')) {
+                    // Remove leading /storage/ to get relative path
+                    thumbUrl = template.thumbnail.replace(/^\/storage\//, '');
+                } else {
+                    // Already a relative path
+                    thumbUrl = template.thumbnail;
+                }
+            }
+            // Set thumbnail preview for the uploader component
+            const previewUrl = thumbUrl ? `/storage/${thumbUrl}` : '';
+            setThumbnailValue(previewUrl);
             setThumbnailFile(null);
             reset({
                 industry_category_id: template.industry_category_id || '',
@@ -436,13 +455,13 @@ export default function AdminTemplates() {
                     <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                     {templates.map((tpl) => (
                         <Card
                             key={tpl.id}
-                            className="border border-slate-200/80 flex flex-col justify-between group hover:shadow-md transition-all duration-200 bg-white relative"
+                            className="border border-slate-200/80 flex flex-col justify-between group hover:shadow-lg transition-all duration-200 bg-white relative"
                         >
-                            <div className="relative h-44 overflow-hidden rounded-t-2xl border-b border-slate-100">
+                            <div className="relative h-[220px] overflow-hidden rounded-t-[24px]">
                                 <TemplateCardThumbnail template={tpl} />
 
                                 {tpl.is_featured && (

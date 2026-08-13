@@ -25,12 +25,21 @@ export default function ThumbnailUploader({
     const [localFile, setLocalFile] = useState(null);
     const fileRef = useRef(null);
 
+    const [dimensions, setDimensions] = useState(null);
+
     const handleFileChange = (file) => {
         if (!file) return;
         const objectUrl = URL.createObjectURL(file);
         setLocalFile(file);
         onChange(objectUrl);
         onFileSelect?.(file);
+
+        // Get image dimensions
+        const img = new window.Image();
+        img.onload = () => {
+            setDimensions({ width: img.width, height: img.height });
+        };
+        img.src = objectUrl;
     };
 
     const handleInputFile = (e) => {
@@ -54,6 +63,7 @@ export default function ThumbnailUploader({
 
     const clearSelection = () => {
         setLocalFile(null);
+        setDimensions(null);
         onChange('');
         if (fileRef.current) fileRef.current.value = '';
     };
@@ -133,7 +143,10 @@ export default function ThumbnailUploader({
                                 <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
                                 <div className="flex-1 min-w-0">
                                     <p className="text-xs font-bold text-emerald-800 truncate">{localFile.name}</p>
-                                    <p className="text-[10px] text-emerald-600">{(localFile.size / 1024).toFixed(1)} KB</p>
+                                    <p className="text-[10px] text-emerald-600">
+                                        {(localFile.size / 1024).toFixed(1)} KB
+                                        {dimensions && ` • ${dimensions.width}×${dimensions.height}`}
+                                    </p>
                                 </div>
                                 <button
                                     type="button"

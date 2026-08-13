@@ -55,17 +55,46 @@ class TemplateResource extends BaseResource
 
     /**
      * Get the thumbnail URL.
+     * Handles both relative paths and full URLs (including corrupted data where full URL was saved to DB).
      */
     protected function getThumbnailUrlAttribute(): ?string
     {
-        return $this->thumbnail ? asset('storage/' . $this->thumbnail) : null;
+        if (!$this->thumbnail) {
+            return null;
+        }
+
+        // If already a full URL, return as-is
+        if (str_starts_with($this->thumbnail, 'http')) {
+            return $this->thumbnail;
+        }
+
+        // If it looks like a path that already includes /storage/, normalize it
+        if (str_starts_with($this->thumbnail, 'storage/')) {
+            return asset($this->thumbnail);
+        }
+
+        // Normal case: relative path from storage/app/public
+        return asset('storage/' . $this->thumbnail);
     }
 
     /**
      * Get the preview image URL.
+     * Handles both relative paths and full URLs.
      */
     protected function getPreviewImageUrlAttribute(): ?string
     {
-        return $this->preview_image ? asset('storage/' . $this->preview_image) : null;
+        if (!$this->preview_image) {
+            return null;
+        }
+
+        if (str_starts_with($this->preview_image, 'http')) {
+            return $this->preview_image;
+        }
+
+        if (str_starts_with($this->preview_image, 'storage/')) {
+            return asset($this->preview_image);
+        }
+
+        return asset('storage/' . $this->preview_image);
     }
 }

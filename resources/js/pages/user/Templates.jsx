@@ -15,7 +15,7 @@ import { Card, Button } from '@components/ui';
 import { ROUTES } from '@constants';
 import { toast } from '@store';
 import { useQuery } from '@tanstack/react-query';
-import { onboardingApi } from '@api';
+import { onboardingApi, templateApi } from '@api';
 
 export default function Templates() {
     const navigate = useNavigate();
@@ -32,7 +32,7 @@ export default function Templates() {
         staleTime: 5 * 60 * 1000, // 5 minutes — re-fetches if admin changes categories
     });
 
-    const [templatesLoading] = useState(false);
+    const [templatesLoading, setTemplatesLoading] = useState(false);
 
     const categories = [
         { id: 'all', name: 'All Templates' },
@@ -42,85 +42,26 @@ export default function Templates() {
         })),
     ];
 
-    const dummyTemplates = [
-        {
-            id: 'template-1',
-            title: 'DataSoft Enterprise Suite',
-            category: categoriesData[0]?.id || 'corporate',
-            badge: 'Popular',
-            rating: '4.9',
-            downloads: '2.4k',
-            description: 'Ultra-modern corporate company profile template tailored for technology and enterprise services.',
-            image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&auto=format&fit=crop&q=80',
-            features: ['Responsive 100%', 'SEO Optimized', 'Multi-language Ready', 'Dark Mode Accent'],
-        },
-        {
-            id: 'template-2',
-            title: 'Nexus Business Pro',
-            category: categoriesData[0]?.id || 'corporate',
-            badge: 'Featured',
-            rating: '4.8',
-            downloads: '1.9k',
-            description: 'Clean, minimalist corporate template focusing on clarity, corporate authority, and lead generation.',
-            image: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=800&auto=format&fit=crop&q=80',
-            features: ['Hero Video Support', 'Interactive Case Studies', 'Contact Form Integration'],
-        },
-        {
-            id: 'template-3',
-            title: 'EcoStore Commerce',
-            category: categoriesData[1]?.id || 'ecommerce',
-            badge: 'New',
-            rating: '4.9',
-            downloads: '850',
-            description: 'High-converting digital storefront template designed for catalog showcase and direct sales.',
-            image: 'https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=800&auto=format&fit=crop&q=80',
-            features: ['Product Grid', 'Cart Drawer', 'Payment Badge Section', 'Fast Loading'],
-        },
-        {
-            id: 'template-4',
-            title: 'Alpha SaaS Launchpad',
-            category: categoriesData[3]?.id || 'saas',
-            badge: 'Hot',
-            rating: '5.0',
-            downloads: '3.1k',
-            description: 'Sleek dark-mode landing page designed specifically for modern software products and startup apps.',
-            image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&auto=format&fit=crop&q=80',
-            features: ['Pricing Table', 'Feature Grid', 'Testimonial Carousel', 'Animated Gradient'],
-        },
-        {
-            id: 'template-5',
-            title: 'Creative Studio Horizon',
-            category: categoriesData[2]?.id || 'portfolio',
-            badge: 'Pro',
-            rating: '4.7',
-            downloads: '1.2k',
-            description: 'Aesthetic agency portfolio template featuring smooth visual grids and interactive showcase galleries.',
-            image: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=800&auto=format&fit=crop&q=80',
-            features: ['Masonry Grid', 'Filterable Portfolio', 'Client Logos Section'],
-        },
-        {
-            id: 'template-6',
-            title: 'Fintech Corporate Apex',
-            category: categoriesData[0]?.id || 'corporate',
-            badge: 'Enterprise',
-            rating: '4.9',
-            downloads: '1.5k',
-            description: 'Professional financial services template with security badge elements and high credibility layout.',
-            image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&auto=format&fit=crop&q=80',
-            features: ['Interactive Calculator', 'Team Section', 'Compliance Badges'],
-        },
-    ];
+    const { data: templatesData, isLoading: templatesApiLoading, isError: templatesError } = useQuery({
+        queryKey: ['user-templates', { category: selectedCategory, search: searchQuery }],
+        queryFn: () => templateApi.getAll({
+            industry_category_id: selectedCategory !== 'all' ? selectedCategory : undefined,
+            search: searchQuery || undefined,
+            per_page: 50,
+            status: 'published',
+        }).then(res => res.data?.data ?? res.data),
+    });
 
-    const templates = dummyTemplates.map((tpl) => ({
+    const templates = (templatesData || []).map((tpl) => ({
         id: tpl.id,
-        title: tpl.title,
-        category: tpl.category,
-        badge: tpl.badge,
-        rating: tpl.rating,
-        downloads: tpl.downloads,
-        description: tpl.description,
-        image: tpl.image,
-        features: tpl.features,
+        title: tpl.name,
+        category: tpl.industry_category_id || tpl.category_id,
+        badge: tpl.is_featured ? 'Featured' : (tpl.status === 'published' ? 'Published' : 'Draft'),
+        rating: null,
+        downloads: null,
+        description: tpl.description || '',
+        image: tpl.preview_image || tpl.thumbnail,
+        features: [],
     }));
 
     const filteredTemplates = templates.filter((tpl) => {
@@ -130,6 +71,10 @@ export default function Templates() {
             tpl.description.toLowerCase().includes(searchQuery.toLowerCase());
         return matchesCat && matchesSearch;
     });
+
+    useEffect(() => {
+        setTemplatesLoading(templatesApiLoading);
+    }, [templatesApiLoading]);
 
     const handleUseTemplate = (tpl) => {
         toast.success(`Loading "${tpl.title}" template into Builder...`, 'Template Selected');
@@ -149,6 +94,24 @@ export default function Templates() {
             <div className="p-6 sm:p-8 max-w-7xl mx-auto">
                 <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
                     Failed to load categories. Please try refreshing the page.
+                </div>
+            </div>
+        );
+    }
+
+    if (templatesApiLoading) {
+        return (
+            <div className="p-6 sm:p-8 max-w-7xl mx-auto">
+                <div className="text-center text-slate-500 py-12">Loading templates...</div>
+            </div>
+        );
+    }
+
+    if (templatesError) {
+        return (
+            <div className="p-6 sm:p-8 max-w-7xl mx-auto">
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
+                    Failed to load templates. Please try refreshing the page.
                 </div>
             </div>
         );
@@ -204,34 +167,41 @@ export default function Templates() {
             </div>
 
             {/* Template Cards Grid */}
-            {templatesLoading ? (
-                <div className="text-center text-slate-500 py-12">Loading templates...</div>
-            ) : filteredTemplates.length === 0 ? (
+            {filteredTemplates.length === 0 ? (
                 <div className="text-center text-slate-500 py-12">No templates found.</div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                     {filteredTemplates.map((tpl) => (
                         <Card
                             key={tpl.id}
                             className="border border-[rgb(var(--color-border))] hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col group"
                         >
                             {/* Preview Image with Hover Overlay */}
-                            <div className="relative h-52 bg-[rgb(var(--color-surface-alt))] overflow-hidden">
-                                <img
-                                    src={tpl.image}
-                                    alt={tpl.title}
-                                    className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-                                />
+                            <div className="relative h-[220px] overflow-hidden rounded-t-[24px]">
+                                {tpl.image ? (
+                                    <img
+                                        src={tpl.image}
+                                        alt={tpl.title}
+                                        className="w-full h-full object-cover"
+                                    />
+                                ) : (
+                                    <div className="w-full h-full flex flex-col items-center justify-center text-slate-400 bg-slate-50">
+                                        <Layout className="h-10 w-10 mb-2 opacity-40" />
+                                        <span className="text-xs font-medium">No Preview Available</span>
+                                    </div>
+                                )}
                                 <div className="absolute top-3 left-3 flex items-center gap-2">
                                     <span className="px-2.5 py-1 rounded-full bg-slate-900/80 text-white text-[10px] font-extrabold uppercase tracking-wider backdrop-blur-md">
                                         {tpl.badge}
                                     </span>
                                 </div>
 
-                                <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-md px-2 py-0.5 rounded-full flex items-center gap-1 text-[11px] font-bold text-slate-800 shadow-xs">
-                                    <Star className="h-3 w-3 text-amber-400 fill-amber-400" />
-                                    <span>{tpl.rating}</span>
-                                </div>
+                                {tpl.rating && (
+                                    <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-md px-2 py-0.5 rounded-full flex items-center gap-1 text-[11px] font-bold text-slate-800 shadow-xs">
+                                        <Star className="h-3 w-3 text-amber-400 fill-amber-400" />
+                                        <span>{tpl.rating}</span>
+                                    </div>
+                                )}
 
                                 {/* Hover Overlay Buttons */}
                                 <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-xs opacity-0 group-hover:opacity-100 transition-all duration-200 flex items-center justify-center gap-3 p-4">
@@ -265,15 +235,17 @@ export default function Templates() {
                                     </p>
                                 </div>
 
-                                {/* Key Features Pill */}
-                                <div className="space-y-1.5 pt-2 border-t border-[rgb(var(--color-border))]">
-                                    {tpl.features.map((feat) => (
-                                        <div key={feat} className="flex items-center gap-2 text-[11px] text-[rgb(var(--color-text-secondary))] font-medium">
-                                            <Check className="h-3.5 w-3.5 text-indigo-600 shrink-0" />
-                                            <span>{feat}</span>
-                                        </div>
-                                    ))}
-                                </div>
+        {/* Key Features Pill - Only show if features exist */}
+        {tpl.features.length > 0 && (
+            <div className="space-y-1.5 pt-2 border-t border-[rgb(var(--color-border))]">
+                {tpl.features.map((feat) => (
+                    <div key={feat} className="flex items-center gap-2 text-[11px] text-[rgb(var(--color-text-secondary))] font-medium">
+                        <Check className="h-3.5 w-3.5 text-indigo-600 shrink-0" />
+                        <span>{feat}</span>
+                    </div>
+                ))}
+            </div>
+        )}
 
                                 {/* Footer Action */}
                                 <Button
@@ -309,11 +281,17 @@ export default function Templates() {
                         </div>
 
                         <div className="relative rounded-2xl overflow-hidden border border-[rgb(var(--color-border))] max-h-80">
-                            <img
-                                src={previewModalTemplate.image}
-                                alt={previewModalTemplate.title}
-                                className="w-full h-full object-cover"
-                            />
+                            {previewModalTemplate.image ? (
+                                <img
+                                    src={previewModalTemplate.image}
+                                    alt={previewModalTemplate.title}
+                                    className="w-full h-full object-cover"
+                                />
+                            ) : (
+                                <div className="w-full h-64 flex items-center justify-center text-slate-400">
+                                    <span className="text-sm font-medium">No preview image available</span>
+                                </div>
+                            )}
                         </div>
 
                             <div className="flex items-center justify-between pt-3">
