@@ -62,6 +62,8 @@ Route::prefix('v1')->group(function (): void {
         Route::patch('/templates/{template}/featured', [App\Domains\Template\Http\Controllers\TemplateController::class, 'toggleFeatured']);
         Route::delete('/templates/{template}/force', [App\Domains\Template\Http\Controllers\TemplateController::class, 'forceDelete']);
         Route::patch('/templates/{id}/restore', [App\Domains\Template\Http\Controllers\TemplateController::class, 'restore']);
+        Route::post('/templates/{template}/thumbnail', [App\Domains\Template\Http\Controllers\TemplateController::class, 'uploadThumbnail']);
+        Route::post('/templates/{template}/preview', [App\Domains\Template\Http\Controllers\TemplateController::class, 'uploadPreviewImage']);
 
         // System settings (accessible even during maintenance)
         Route::get('/system/maintenance', [App\Domains\System\Http\Controllers\SystemSettingsController::class, 'getMaintenanceMode']);

@@ -7,7 +7,7 @@ use App\Domains\Template\Requests\StoreTemplateRequest;
 use App\Domains\Template\Requests\UpdateTemplateRequest;
 use App\Domains\Template\Resources\TemplateResource;
 use App\Domains\Template\Services\TemplateService;
-use App\Models\Template as TemplateModel;
+use App\Domains\Template\Models\Template as TemplateModel;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -175,6 +175,38 @@ class TemplateController extends BaseController
         return $this->success(
             TemplateResource::collection($templates),
             'Trashed templates retrieved successfully'
+        );
+    }
+
+    public function uploadThumbnail(Request $request, TemplateModel $template): JsonResponse
+    {
+        $this->authorize('update', $template);
+
+        $request->validate([
+            'thumbnail' => ['required', 'file', 'image', 'max:5120'], // max 5MB
+        ]);
+
+        $template = $this->templateService->uploadThumbnail($template, $request->file('thumbnail'));
+
+        return $this->success(
+            new TemplateResource($template),
+            'Thumbnail uploaded successfully'
+        );
+    }
+
+    public function uploadPreviewImage(Request $request, TemplateModel $template): JsonResponse
+    {
+        $this->authorize('update', $template);
+
+        $request->validate([
+            'preview_image' => ['required', 'file', 'image', 'max:5120'],
+        ]);
+
+        $template = $this->templateService->uploadPreviewImage($template, $request->file('preview_image'));
+
+        return $this->success(
+            new TemplateResource($template),
+            'Preview image uploaded successfully'
         );
     }
 }

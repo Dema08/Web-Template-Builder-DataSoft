@@ -18,8 +18,9 @@ import { getIndustryConfig, INDUSTRY_CONFIGS } from '@builder/utils/industryConf
 import { INDUSTRY_STARTER_TEMPLATES, getCategoryStarterTemplates, getTotalStarterTemplateCount } from '@builder/utils/industryStarterTemplates';
 
 import { getLayoutDefaults } from '@builder/utils/layoutDefaults';
-import { ArrowLeft, FolderOpen, Sparkles, Layout, Zap, CheckCircle2, Eye, X, Layers, ArrowRight } from 'lucide-react';
+import { ArrowLeft, FolderOpen, Sparkles, Layout, Zap, CheckCircle2, Eye, X, Layers, ArrowRight, Image, FileEdit, Send } from 'lucide-react';
 import CustomDropdown from '@/components/ui/CustomDropdown';
+import ThumbnailUploader from '@/components/ui/ThumbnailUploader';
 
 export default function AdminTemplateBuilder() {
   const navigate = useNavigate();
@@ -33,6 +34,15 @@ export default function AdminTemplateBuilder() {
   const [selectedCategoryObj, setSelectedCategoryObj] = useState(null);
   const [templateMode, setTemplateMode] = useState(null); // 'blank' | 'starter'
   const [previewTemplateItem, setPreviewTemplateItem] = useState(null);
+
+  // Save/Publish modal states
+  const [showSaveModal, setShowSaveModal] = useState(false);
+  const [pendingSaveAction, setPendingSaveAction] = useState(null); // 'draft' | 'publish'
+  const [saveDescription, setSaveDescription] = useState('');
+  const [saveThumbnail, setSaveThumbnail] = useState('');
+  const [saveThumbnailFile, setSaveThumbnailFile] = useState(null); // File object if user uploads
+  const [saveModalError, setSaveModalError] = useState('');
+  const [isSavingModal, setIsSavingModal] = useState(false);
 
   const {
     setIndustry,
@@ -186,15 +196,22 @@ export default function AdminTemplateBuilder() {
     }
   };
 
-  const handleSave = async () => {
-    const { templateId, templateName, sections, status, industryId } = useBuilderStore.getState();
+  const handleSave = () => {
+    setSaveDescription(templateData?.description || '');
+    setSaveThumbnail(templateData?.thumbnail ? `/storage/${templateData.thumbnail}` : (templateData?.thumbnail || ''));
+    setSaveThumbnailFile(null);
+    setSaveModalError('');
+    setPendingSaveAction('draft');
+    setShowSaveModal(true);
+  };
 
+  const executeSave = async (desc, thumb, thumbFile, action) => {
+    const { templateId, templateName, sections, status, industryId } = useBuilderStore.getState();
     const categoryId = selectedCategoryId || industryId;
     if (!categoryId) {
       toast.error('Please select an industry category for this template.', 'Category Required');
       return;
     }
-
     const draftJson = {
       sections: sections.map(s => ({
         id: s.id,
@@ -206,90 +223,88 @@ export default function AdminTemplateBuilder() {
         components: s.components,
       })),
     };
-
-    const payload = {
-      name: templateName || 'Untitled Template',
-      industry_category_id: parseInt(categoryId, 10),
-      draft_json: draftJson,
-      status: status || 'draft',
-    };
-
     try {
-      if (templateId) {
-        await templateApi.update(templateId, payload);
-        toast.success('Template saved as draft', 'Success');
-      } else {
-        const response = await templateApi.create(payload);
-        const newId = response.data?.data?.id || response.data?.id;
-        if (newId) {
-          setTemplateId(newId);
-        }
-        toast.success('Template draft created successfully', 'Success');
-      }
+      setIsSavingModal(true);
+      // Build thumb URL to use: if file was picked, we'll upload after creating/updating template
+      const thumbUrl = thumbFile ? null : thumb; // null means we'll set it via upload
 
+      if (action === 'draft') {
+        const payload = {
+          name: templateName || 'Untitled Template',
+          industry_category_id: parseInt(categoryId, 10),
+          description: desc,
+          ...(thumbUrl ? { thumbnail: thumbUrl } : {}),
+          draft_json: draftJson,
+          status: status || 'draft',
+        };
+        let savedId = templateId;
+        if (templateId) {
+          await templateApi.update(templateId, payload);
+          toast.success('Template saved as draft', 'Success');
+        } else {
+          const response = await templateApi.create(payload);
+          savedId = response.data?.data?.id || response.data?.id;
+          if (savedId) setTemplateId(savedId);
+          toast.success('Template draft created successfully', 'Success');
+        }
+        // Upload thumbnail file if picked
+        if (thumbFile && savedId) {
+          const fd = new FormData();
+          fd.append('thumbnail', thumbFile);
+          await templateApi.uploadThumbnail(savedId, fd);
+        }
+      } else {
+        const payload = {
+          name: templateName || 'Untitled Template',
+          industry_category_id: parseInt(categoryId, 10),
+          description: desc,
+          ...(thumbUrl ? { thumbnail: thumbUrl } : {}),
+          draft_json: draftJson,
+          published_json: draftJson,
+          status: 'published',
+        };
+        if (!templateId) {
+          const response = await templateApi.create(payload);
+          const newId = response.data?.data?.id || response.data?.id;
+          if (newId) {
+            setTemplateId(newId);
+            if (thumbFile) {
+              const fd = new FormData();
+              fd.append('thumbnail', thumbFile);
+              await templateApi.uploadThumbnail(newId, fd);
+            }
+          }
+          useBuilderStore.getState().setStatus('published');
+          toast.success('Template created and published successfully!', 'Success');
+        } else {
+          await templateApi.update(templateId, payload);
+          await templateApi.publish(templateId);
+          if (thumbFile) {
+            const fd = new FormData();
+            fd.append('thumbnail', thumbFile);
+            await templateApi.uploadThumbnail(templateId, fd);
+          }
+          useBuilderStore.getState().setStatus('published');
+          toast.success('Template published successfully!', 'Success');
+        }
+      }
       queryClient.invalidateQueries(['admin-templates']);
+      setShowSaveModal(false);
+      setSaveThumbnailFile(null);
     } catch (error) {
       toast.error(error.response?.data?.message || 'Failed to save template', 'Error');
+    } finally {
+      setIsSavingModal(false);
     }
   };
 
-  const handlePublish = async () => {
-    const { templateId, templateName, sections, industryId } = useBuilderStore.getState();
-
-    const categoryId = selectedCategoryId || industryId;
-    if (!categoryId) {
-      toast.error('Please select an industry category for this template.', 'Category Required');
-      return;
-    }
-
-    const draftJson = {
-      sections: sections.map(s => ({
-        id: s.id,
-        type: s.type,
-        layout: s.layout,
-        styles: s.styles || {},
-        isLocked: s.isLocked || false,
-        isHidden: s.isHidden || false,
-        components: s.components,
-      })),
-    };
-
-    try {
-      if (!templateId) {
-        // If template doesn't exist in DB yet, create it directly as Published
-        const payload = {
-          name: templateName || 'Untitled Template',
-          industry_category_id: parseInt(categoryId, 10),
-          draft_json: draftJson,
-          published_json: draftJson,
-          status: 'published',
-        };
-        const response = await templateApi.create(payload);
-        const newId = response.data?.data?.id || response.data?.id;
-        if (newId) {
-          setTemplateId(newId);
-        }
-        useBuilderStore.getState().setStatus('published');
-        toast.success('Template created and published successfully!', 'Success');
-      } else {
-        // Save latest draft payload and then publish
-        const payload = {
-          name: templateName || 'Untitled Template',
-          industry_category_id: parseInt(categoryId, 10),
-          draft_json: draftJson,
-          published_json: draftJson,
-          status: 'published',
-        };
-        await templateApi.update(templateId, payload);
-        await templateApi.publish(templateId);
-        useBuilderStore.getState().setStatus('published');
-        toast.success('Template published successfully!', 'Success');
-      }
-
-      queryClient.invalidateQueries(['admin-templates']);
-    } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to publish template', 'Error');
-    }
+  const handlePublish = () => {
+    setSaveDescription(templateData?.description || '');
+    setSaveThumbnail(templateData?.thumbnail ? `/storage/${templateData.thumbnail}` : (templateData?.thumbnail || ''));
+    setSaveThumbnailFile(null);
+    setSaveModalError('');
+    setPendingSaveAction('publish');
+    setShowSaveModal(true);
   };
 
   const handleCanvasClick = (e) => {
@@ -667,6 +682,103 @@ export default function AdminTemplateBuilder() {
               >
                 <span>Use This Template</span>
                 <CheckCircle2 className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Save/Publish Modal — Description & Thumbnail Required */}
+      {showSaveModal && (
+        <div className="fixed inset-0 z-[999] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-7 shadow-2xl border border-slate-100 space-y-5">
+            {/* Header */}
+            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+              <div className="flex items-center gap-3">
+                <div className={`p-2.5 rounded-xl ${pendingSaveAction === 'publish' ? 'bg-emerald-50' : 'bg-indigo-50'}`}>
+                  {pendingSaveAction === 'publish'
+                    ? <CheckCircle2 className="h-5 w-5 text-emerald-600" />
+                    : <FileEdit className="h-5 w-5 text-indigo-600" />}
+                </div>
+                <div>
+                  <h3 className="text-sm font-extrabold text-slate-900">
+                    {pendingSaveAction === 'publish' ? 'Publish Template' : 'Save as Draft'}
+                  </h3>
+                  <p className="text-[11px] text-slate-500 mt-0.5">Lengkapi informasi wajib sebelum menyimpan</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowSaveModal(false)}
+                className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Form */}
+            <div className="space-y-4">
+              {saveModalError && (
+                <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-xs font-semibold text-red-700 flex items-center gap-2">
+                  <span>⚠️</span> {saveModalError}
+                </div>
+              )}
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                  Deskripsi Template <span className="text-red-500">*</span>
+                </label>
+                <textarea
+                  rows={3}
+                  value={saveDescription}
+                  onChange={(e) => setSaveDescription(e.target.value)}
+                  placeholder="Tuliskan deskripsi singkat tentang template ini..."
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 resize-none"
+                />
+              </div>
+
+              <ThumbnailUploader
+                label="Thumbnail Template"
+                required
+                value={saveThumbnail}
+                onChange={(url) => setSaveThumbnail(url)}
+                onFileSelect={(file) => setSaveThumbnailFile(file)}
+                error={saveModalError && !saveDescription.trim() === false && !saveThumbnail ? 'URL atau file thumbnail wajib diisi' : null}
+              />
+            </div>
+
+            {/* Actions */}
+            <div className="pt-4 flex items-center justify-end gap-3 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => setShowSaveModal(false)}
+                disabled={isSavingModal}
+                className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl transition disabled:opacity-50"
+              >
+                Batal
+              </button>
+              <button
+                type="button"
+                disabled={isSavingModal}
+                onClick={() => {
+                  const desc = saveDescription.trim();
+                  const thumb = saveThumbnail;
+                  if (!desc) { setSaveModalError('Deskripsi template wajib diisi.'); return; }
+                  if (!thumb && !saveThumbnailFile) { setSaveModalError('Thumbnail wajib diisi — masukkan URL atau upload file gambar.'); return; }
+                  setSaveModalError('');
+                  executeSave(desc, thumb, saveThumbnailFile, pendingSaveAction);
+                }}
+                className={`px-5 py-2.5 text-xs font-extrabold text-white rounded-xl shadow-md transition flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed ${
+                  pendingSaveAction === 'publish'
+                    ? 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/20'
+                    : 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-600/20'
+                }`}
+              >
+                {isSavingModal ? (
+                  <><span className="animate-spin h-3.5 w-3.5 border-2 border-white border-t-transparent rounded-full" /> Menyimpan...</>
+                ) : pendingSaveAction === 'publish'
+                  ? <><Send className="h-3.5 w-3.5" /> Publish Sekarang</>
+                  : <><FileEdit className="h-3.5 w-3.5" /> Simpan sebagai Draft</>}
               </button>
             </div>
           </div>

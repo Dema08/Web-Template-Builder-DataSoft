@@ -24,6 +24,7 @@ import { templateApi } from '@api';
 import { categoryService } from '@services';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
+import ThumbnailUploader from '@/components/ui/ThumbnailUploader';
 
 function TemplateCardThumbnail({ template }) {
     const [imgError, setImgError] = useState(false);
@@ -87,7 +88,6 @@ const STATUS_OPTIONS = [
     { value: '', label: 'All Status' },
     { value: 'draft', label: 'Draft' },
     { value: 'published', label: 'Published' },
-    { value: 'archived', label: 'Archived' },
     { value: 'disabled', label: 'Disabled' },
 ];
 
@@ -100,6 +100,8 @@ export default function AdminTemplates() {
     const [editingTemplate, setEditingTemplate] = useState(null);
     const [previewTemplate, setPreviewTemplate] = useState(null);
     const [actionDropdown, setActionDropdown] = useState(null);
+    const [thumbnailValue, setThumbnailValue] = useState(''); // for ThumbnailUploader (URL or blob)
+    const [thumbnailFile, setThumbnailFile] = useState(null);  // File object if user uploads
     const queryClient = useQueryClient();
 
     useEffect(() => {
@@ -158,7 +160,16 @@ export default function AdminTemplates() {
     });
 
     const updateMutation = useMutation({
-        mutationFn: ({ id, data }) => templateApi.update(id, data),
+        mutationFn: async ({ id, data, thumbFile }) => {
+            const res = await templateApi.update(id, data);
+            // If a new file was selected, upload it after updating
+            if (thumbFile) {
+                const fd = new FormData();
+                fd.append('thumbnail', thumbFile);
+                await templateApi.uploadThumbnail(id, fd);
+            }
+            return res;
+        },
         onSuccess: () => {
             queryClient.invalidateQueries(['admin-templates']);
             queryClient.invalidateQueries(['admin-categories']);
@@ -222,16 +233,20 @@ export default function AdminTemplates() {
     const handleOpenModal = (template = null) => {
         if (template) {
             setEditingTemplate(template);
+            // Set thumbnail preview — if stored locally use /storage/ path
+            const thumbUrl = template.thumbnail
+                ? (template.thumbnail.startsWith('http') ? template.thumbnail : `/storage/${template.thumbnail}`)
+                : '';
+            setThumbnailValue(thumbUrl);
+            setThumbnailFile(null);
             reset({
                 industry_category_id: template.industry_category_id || '',
                 code: template.code || '',
                 name: template.name,
                 slug: template.slug || '',
                 description: template.description || '',
-                thumbnail: template.thumbnail || '',
+                thumbnail: thumbUrl,
                 preview_image: template.preview_image || '',
-                draft_json: typeof template.draft_json === 'object' ? JSON.stringify(template.draft_json, null, 2) : template.draft_json || '',
-                published_json: typeof template.published_json === 'object' ? JSON.stringify(template.published_json, null, 2) : template.published_json || '',
                 version: template.version || '1.0.0',
                 sort_order: template.sort_order || 0,
                 is_featured: template.is_featured || false,
@@ -239,6 +254,8 @@ export default function AdminTemplates() {
             });
         } else {
             setEditingTemplate(null);
+            setThumbnailValue('');
+            setThumbnailFile(null);
             reset({
                 industry_category_id: '',
                 code: '',
@@ -247,8 +264,6 @@ export default function AdminTemplates() {
                 description: '',
                 thumbnail: '',
                 preview_image: '',
-                draft_json: '',
-                published_json: '',
                 version: '1.0.0',
                 sort_order: 0,
                 is_featured: false,
@@ -261,21 +276,27 @@ export default function AdminTemplates() {
     const handleCloseModal = () => {
         setIsModalOpen(false);
         setEditingTemplate(null);
+        setThumbnailValue('');
+        setThumbnailFile(null);
         reset();
     };
 
     const onSubmit = (formData) => {
+        // Use thumbnailValue from uploader (URL or blob preview — we'll send file separately)
+        const thumbForPayload = thumbnailFile ? undefined : (thumbnailValue.startsWith('blob:') ? undefined : thumbnailValue);
         const payload = {
             ...formData,
             industry_category_id: parseInt(formData.industry_category_id) || formData.industry_category_id,
             sort_order: parseInt(formData.sort_order) || 0,
             is_featured: Boolean(formData.is_featured),
-            draft_json: formData.draft_json ? JSON.parse(formData.draft_json) : null,
-            published_json: formData.published_json ? JSON.parse(formData.published_json) : null,
+            // Only include thumbnail in payload if it's a plain URL (not a file upload)
+            ...(thumbForPayload !== undefined ? { thumbnail: thumbForPayload } : {}),
         };
+        delete payload.draft_json;
+        delete payload.published_json;
 
         if (editingTemplate) {
-            updateMutation.mutate({ id: editingTemplate.id, data: payload });
+            updateMutation.mutate({ id: editingTemplate.id, data: payload, thumbFile: thumbnailFile || null });
         } else {
             createMutation.mutate(payload);
         }
@@ -293,9 +314,15 @@ export default function AdminTemplates() {
     }));
 
     const updateStatusMutation = useMutation({
-        mutationFn: ({ id, status }) => {
+        mutationFn: ({ id, status, template }) => {
+            if (status === 'published' || status === 'draft') {
+                if (template && (!template.description?.trim() || !template.thumbnail?.trim())) {
+                    toast.error('Deskripsi dan Thumbnail Wajib Diisi terlebih dahulu!', 'Data Tidak Lengkap');
+                    handleOpenModal(template);
+                    throw new Error('Description and thumbnail required');
+                }
+            }
             if (status === 'published') return templateApi.publish(id);
-            if (status === 'archived') return templateApi.archive(id);
             return templateApi.update(id, { status });
         },
         onSuccess: (_, variables) => {
@@ -305,13 +332,14 @@ export default function AdminTemplates() {
                 published: 'published',
                 draft: 'moved to draft',
                 disabled: 'disabled',
-                archived: 'archived',
             };
             toast.success(`Template status updated to ${labels[variables.status] || variables.status}`, 'Success');
             setActionDropdown(null);
         },
         onError: (error) => {
-            toast.error(error.response?.data?.message || 'Failed to update template status', 'Error');
+            if (error.message !== 'Description and thumbnail required') {
+                toast.error(error.response?.data?.message || 'Failed to update template status', 'Error');
+            }
         },
     });
 
@@ -490,21 +518,13 @@ export default function AdminTemplates() {
                                                         <Edit2 className="h-3.5 w-3.5" />
                                                         Edit Details
                                                     </button>
-                                                    <button
+                                                     <button
                                                         type="button"
                                                         onClick={() => { duplicateMutation.mutate(tpl.id); setActionDropdown(null); }}
                                                         className="w-full text-left px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-2 transition"
                                                     >
                                                         <Copy className="h-3.5 w-3.5" />
                                                         Duplicate
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => { featuredMutation.mutate(tpl.id); setActionDropdown(null); }}
-                                                        className="w-full text-left px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-2 transition"
-                                                    >
-                                                        <Star className="h-3.5 w-3.5 text-amber-500" />
-                                                        {tpl.is_featured ? 'Unfeature' : 'Feature'}
                                                     </button>
 
                                                     <div className="my-1 border-t border-slate-100" />
@@ -515,7 +535,7 @@ export default function AdminTemplates() {
                                                     {tpl.status !== 'published' && (
                                                         <button
                                                             type="button"
-                                                            onClick={() => updateStatusMutation.mutate({ id: tpl.id, status: 'published' })}
+                                                            onClick={() => updateStatusMutation.mutate({ id: tpl.id, status: 'published', template: tpl })}
                                                             className="w-full text-left px-4 py-2 text-xs font-bold text-emerald-700 hover:bg-emerald-50 flex items-center gap-2 transition"
                                                         >
                                                             <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
@@ -526,7 +546,7 @@ export default function AdminTemplates() {
                                                     {tpl.status !== 'draft' && (
                                                         <button
                                                             type="button"
-                                                            onClick={() => updateStatusMutation.mutate({ id: tpl.id, status: 'draft' })}
+                                                            onClick={() => updateStatusMutation.mutate({ id: tpl.id, status: 'draft', template: tpl })}
                                                             className="w-full text-left px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100 flex items-center gap-2 transition"
                                                         >
                                                             <FileEdit className="h-3.5 w-3.5 text-slate-500" />
@@ -537,22 +557,11 @@ export default function AdminTemplates() {
                                                     {tpl.status !== 'disabled' && (
                                                         <button
                                                             type="button"
-                                                            onClick={() => updateStatusMutation.mutate({ id: tpl.id, status: 'disabled' })}
+                                                            onClick={() => updateStatusMutation.mutate({ id: tpl.id, status: 'disabled', template: tpl })}
                                                             className="w-full text-left px-4 py-2 text-xs font-bold text-red-700 hover:bg-red-50 flex items-center gap-2 transition"
                                                         >
                                                             <Ban className="h-3.5 w-3.5 text-red-600" />
                                                             Disable (Sembunyikan)
-                                                        </button>
-                                                    )}
-
-                                                    {tpl.status !== 'archived' && (
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => updateStatusMutation.mutate({ id: tpl.id, status: 'archived' })}
-                                                            className="w-full text-left px-4 py-2 text-xs font-bold text-amber-700 hover:bg-amber-50 flex items-center gap-2 transition"
-                                                        >
-                                                            <Archive className="h-3.5 w-3.5 text-amber-600" />
-                                                            Archive (Arsip)
                                                         </button>
                                                     )}
 
@@ -642,46 +651,32 @@ export default function AdminTemplates() {
                             </div>
 
                             <div>
-                                <label className="block text-xs font-bold text-slate-700 mb-1.5">Description</label>
+                                <label className="block text-xs font-bold text-slate-700 mb-1.5">Description <span className="text-red-500">*</span></label>
                                 <textarea
-                                    {...register('description')}
+                                    {...register('description', { required: 'Deskripsi template wajib diisi' })}
                                     rows={3}
-                                    placeholder="Template description..."
-                                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input resize-none"
+                                    placeholder="Deskripsi singkat template ini..."
+                                    className={`w-full px-3.5 py-2.5 bg-slate-50 border rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input resize-none ${errors.description ? 'border-red-400 bg-red-50' : 'border-slate-200'}`}
                                 />
+                                {errors.description && <p className="text-red-500 text-[10px] mt-1">{errors.description.message}</p>}
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-xs font-bold text-slate-700 mb-1.5">Thumbnail URL</label>
-                                    <input
-                                        type="text"
-                                        {...register('thumbnail')}
-                                        placeholder="https://..."
-                                        className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input"
-                                    />
-                                </div>
+                            <ThumbnailUploader
+                                label="Thumbnail Template"
+                                required
+                                value={thumbnailValue}
+                                onChange={(url) => {
+                                    setThumbnailValue(url);
+                                    // Sync back to react-hook-form so validation sees it
+                                    if (!url.startsWith('blob:')) {
+                                        // it's a URL - keep in form
+                                    }
+                                }}
+                                onFileSelect={(file) => setThumbnailFile(file)}
+                                error={errors.thumbnail?.message}
+                            />
 
-                                <div>
-                                    <label className="block text-xs font-bold text-slate-700 mb-1.5">Preview Image URL</label>
-                                    <input
-                                        type="text"
-                                        {...register('preview_image')}
-                                        placeholder="https://..."
-                                        className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input"
-                                    />
-                                </div>
-                            </div>
 
-                            <div>
-                                <label className="block text-xs font-bold text-slate-700 mb-1.5">Draft JSON</label>
-                                <textarea
-                                    {...register('draft_json')}
-                                    rows={4}
-                                    placeholder='{"sections": [...]}'
-                                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input resize-none font-mono"
-                                />
-                            </div>
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
@@ -702,22 +697,9 @@ export default function AdminTemplates() {
                                     >
                                         <option value="draft">Draft</option>
                                         <option value="published">Published</option>
-                                        <option value="archived">Archived</option>
                                         <option value="disabled">Disabled</option>
                                     </select>
                                 </div>
-                            </div>
-
-                            <div className="flex items-center gap-2">
-                                <input
-                                    type="checkbox"
-                                    id="is_featured"
-                                    {...register('is_featured')}
-                                    className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-600"
-                                />
-                                <label htmlFor="is_featured" className="text-xs font-bold text-slate-700">
-                                    Featured Template
-                                </label>
                             </div>
 
                             <div className="pt-4 flex items-center justify-end gap-3 border-t border-slate-100">
