@@ -13,13 +13,13 @@ export default {
   sections: [
     { id: 'nav', type: 'navbar', layout: 'navbar-03', components: [
       { id: 'logo', type: 'heading', props: { content: 'KARYA LOKAL', level: 'h2', fontSize: '20px', fontWeight: '900', color: '#4f46e5' } },
-      { id: 'cta', type: 'button', props: { label: 'Order Sekarang', href: '#contact', variant: 'primary', background: '#4f46e5', color: '#ffffff' } },
+      { id: 'cta', type: 'button', props: { label: 'Order Sekarang', href: '#contact', variant: 'primary', size: 'small', radius: 'md', background: '#4f46e5', color: '#ffffff', shadow: 'sm', fontSize: '13px', fontWeight: '600' } },
     ]},
     { id: 'hero', type: 'hero', layout: 'hero-05', components: [
-      { id: 'badge', type: 'badge', props: { content: '🇮🇩 UMKM Unggulan 2026', variant: 'primary' } },
+      { id: 'badge', type: 'badge', props: { content: '🇮🇩 UMKM Unggulan 2026', variant: 'primary', size: 'medium' } },
       { id: 'title', type: 'heading', props: { content: 'Produk Lokal Terbaik, Dibuat Dengan Hati', level: 'h1', fontSize: '52px', fontWeight: '800', color: '#0f172a', align: 'left' } },
       { id: 'desc', type: 'text', props: { content: 'Kami menghadirkan produk berkualitas tinggi buatan tangan pengrajin lokal Indonesia yang berpengalaman lebih dari satu dekade.', fontSize: '18px', color: '#64748b', align: 'left' } },
-      { id: 'btn', type: 'button', props: { label: 'Lihat Produk Unggulan', href: '#products', variant: 'primary', background: '#4f46e5', color: '#ffffff' } },
+      { id: 'btn', type: 'button', props: { label: 'Lihat Produk Unggulan', href: '#products', variant: 'primary', size: 'large', radius: 'md', background: '#4f46e5', color: '#ffffff', shadow: 'md', fontSize: '15px', fontWeight: '600' } },
       { id: 'img', type: 'image', props: { src: 'https://images.unsplash.com/photo-1556742049-0a670fc0a727?w=600&auto=format&fit=crop', alt: 'Product Showcase', width: '100%', height: '380px', objectFit: 'cover' } },
     ]},
     { id: 'products', type: 'products', layout: 'products-01', components: [

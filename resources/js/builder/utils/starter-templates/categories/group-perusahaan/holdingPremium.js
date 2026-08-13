@@ -17,7 +17,7 @@ export default {
     { id: 'hero', type: 'hero', layout: 'hero-06', components: [
       { id: 'title', type: 'heading', props: { content: 'The Power of Strategic Diversification', level: 'h1', fontSize: '52px', fontWeight: '900', color: '#ffffff', align: 'center' } },
       { id: 'desc', type: 'text', props: { content: "Prima Global Holdings builds long-term wealth through disciplined capital allocation across Asia's fastest-growing sectors.", fontSize: '20px', color: '#e2e8f0', align: 'center' } },
-      { id: 'btn', type: 'button', props: { label: 'Our Portfolio', href: '#about', variant: 'primary', background: '#f59e0b', color: '#0f172a' } },
+      { id: 'btn', type: 'button', props: { label: 'Our Portfolio', href: '#about', variant: 'premium', size: 'large', radius: 'full', background: '#f59e0b', color: '#0f172a', shadow: 'lg', fontSize: '15px', fontWeight: '700', letterSpacing: '0.02em' } },
     ]},
     { id: 'about', type: 'about', layout: 'about-01', components: [
       { id: 't', type: 'heading', props: { content: 'Company Overview', level: 'h2', fontSize: '32px', fontWeight: '800', color: '#000000', align: 'center' } },

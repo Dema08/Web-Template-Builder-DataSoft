@@ -17,7 +17,7 @@ export default {
     { id: 'hero', type: 'hero', layout: 'hero-07', components: [
       { id: 'title', type: 'heading', props: { content: 'Layanan Profesional Terpercaya Untuk Kebutuhan Bisnis Anda', level: 'h1', fontSize: '52px', fontWeight: '800', color: '#0f172a', align: 'center' } },
       { id: 'desc', type: 'text', props: { content: 'Didukung tenaga ahli bersertifikasi, proses terstruktur, dan jaminan kepuasan 100% atau uang kembali.', fontSize: '18px', color: '#64748b', align: 'center' } },
-      { id: 'btn1', type: 'button', props: { label: 'Lihat Layanan', href: '#services', variant: 'primary', background: '#0f172a', color: '#ffffff' } },
+      { id: 'btn1', type: 'button', props: { label: 'Lihat Layanan', href: '#services', variant: 'primary', size: 'large', radius: 'md', background: '#0f172a', color: '#ffffff', shadow: 'md', fontSize: '15px', fontWeight: '600' } },
     ]},
     { id: 'services', type: 'services', layout: 'services-03', components: [
       { id: 't', type: 'heading', props: { content: 'Apa Yang Kami Kerjakan', level: 'h2', fontSize: '32px', fontWeight: '800', color: '#0f172a', align: 'center' } },

@@ -13,13 +13,13 @@ export default {
   sections: [
     { id: 'nav', type: 'navbar', layout: 'navbar-04', components: [
       { id: 'logo', type: 'heading', props: { content: 'GLOBAL ACADEMY', level: 'h2', fontSize: '20px', fontWeight: '900', color: '#065f46' } },
-      { id: 'cta', type: 'button', props: { label: 'Daftar Sekarang', href: '#registration', variant: 'primary', background: '#10b981', color: '#ffffff' } },
+      { id: 'cta', type: 'button', props: { label: 'Daftar Sekarang', href: '#registration', variant: 'primary', size: 'small', radius: 'full', background: '#10b981', color: '#ffffff', shadow: 'sm', fontSize: '13px', fontWeight: '600' } },
     ]},
     { id: 'hero', type: 'hero', layout: 'hero-01', components: [
-      { id: 'badge', type: 'badge', props: { content: '🎓 Lembaga Pelatihan Tersertifikasi Nasional', variant: 'primary' } },
+      { id: 'badge', type: 'badge', props: { content: '🎓 Lembaga Pelatihan Tersertifikasi Nasional', variant: 'success', size: 'medium' } },
       { id: 'title', type: 'heading', props: { content: 'Kembangkan Potensi & Percepat Karier Anda', level: 'h1', fontSize: '48px', fontWeight: '900', color: '#ffffff', align: 'center' } },
       { id: 'desc', type: 'text', props: { content: 'Kurikulum berbasis industri terkini, instruktur praktisi berpengalaman, dan sertifikasi yang diakui 500+ perusahaan.', fontSize: '18px', color: '#d1fae5', align: 'center' } },
-      { id: 'btn', type: 'button', props: { label: 'Lihat Program Kursus', href: '#programs', variant: 'primary', background: '#ffffff', color: '#065f46' } },
+      { id: 'btn', type: 'button', props: { label: 'Lihat Program Kursus', href: '#programs', variant: 'primary', size: 'large', radius: 'md', background: '#ffffff', color: '#065f46', shadow: 'md', fontSize: '15px', fontWeight: '600' } },
     ]},
     { id: 'programs', type: 'programs', layout: 'programs-01', components: [
       { id: 't', type: 'heading', props: { content: 'Program Unggulan Kami', level: 'h2', fontSize: '32px', fontWeight: '800', color: '#0f172a', align: 'center' } },

@@ -15,10 +15,10 @@ export default {
       { id: 'logo', type: 'heading', props: { content: 'NEXUS CARGO GLOBAL', level: 'h2', fontSize: '18px', fontWeight: '900', color: '#0f172a' } },
     ]},
     { id: 'hero', type: 'hero', layout: 'hero-08', components: [
-      { id: 'badge', type: 'badge', props: { content: 'Freight Excellence Since 2009', variant: 'primary' } },
+      { id: 'badge', type: 'badge', props: { content: 'Freight Excellence Since 2009', variant: 'premium', size: 'medium' } },
       { id: 'title', type: 'heading', props: { content: 'Intelligent Global Freight & Supply Chain System', level: 'h1', fontSize: '50px', fontWeight: '900', color: '#ffffff', align: 'left' } },
       { id: 'desc', type: 'text', props: { content: 'Kargo udara ekspres, laut bulking, pergudangan dingin & pelacakan berbasis AI untuk industri skala enterprise.', fontSize: '18px', color: '#e0e7ff', align: 'left' } },
-      { id: 'btn', type: 'button', props: { label: 'Minta Penawaran B2B', href: '#contact', variant: 'primary', background: '#ffffff', color: '#0f172a' } },
+      { id: 'btn', type: 'button', props: { label: 'Minta Penawaran B2B', href: '#contact', variant: 'premium', size: 'large', radius: 'full', background: '#ffffff', color: '#0f172a', shadow: 'lg', fontSize: '15px', fontWeight: '700', letterSpacing: '0.02em' } },
       { id: 'img', type: 'image', props: { src: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=600&auto=format&fit=crop', alt: 'Cargo', width: '100%', height: '380px', objectFit: 'cover' } },
     ]},
     { id: 'services', type: 'services', layout: 'services-04', components: [

@@ -17,7 +17,7 @@ export default {
     { id: 'hero', type: 'hero', layout: 'hero-06', components: [
       { id: 'title', type: 'heading', props: { content: 'Engineering Excellence — Built to Last', level: 'h1', fontSize: '54px', fontWeight: '900', color: '#ffffff', align: 'center' } },
       { id: 'desc', type: 'text', props: { content: 'Custom precision engineering solutions for aerospace, automotive, and heavy industry sectors across Southeast Asia.', fontSize: '20px', color: '#e2e8f0', align: 'center' } },
-      { id: 'btn', type: 'button', props: { label: 'Technical Partnership', href: '#contact', variant: 'primary', background: '#f59e0b', color: '#0f172a' } },
+      { id: 'btn', type: 'button', props: { label: 'Technical Partnership', href: '#contact', variant: 'premium', size: 'large', radius: 'full', background: '#f59e0b', color: '#0f172a', shadow: 'lg', fontSize: '15px', fontWeight: '700', letterSpacing: '0.02em' } },
     ]},
     { id: 'about', type: 'about', layout: 'about-04', components: [
       { id: 't', type: 'heading', props: { content: 'Our Engineering Capabilities', level: 'h2', fontSize: '32px', fontWeight: '800', color: '#0f172a', align: 'center' } },

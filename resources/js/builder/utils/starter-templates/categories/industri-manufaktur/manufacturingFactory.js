@@ -13,13 +13,13 @@ export default {
   sections: [
     { id: 'nav', type: 'navbar', layout: 'navbar-05', components: [
       { id: 'logo', type: 'heading', props: { content: 'NUSANTARA INDUSTRIAL', level: 'h2', fontSize: '18px', fontWeight: '900', color: '#334155' } },
-      { id: 'cta', type: 'button', props: { label: 'Request RFQ', href: '#contact', variant: 'primary', background: '#334155', color: '#ffffff' } },
+      { id: 'cta', type: 'button', props: { label: 'Request RFQ', href: '#contact', variant: 'primary', size: 'small', radius: 'md', background: '#334155', color: '#ffffff', shadow: 'sm', fontSize: '13px', fontWeight: '600' } },
     ]},
     { id: 'hero', type: 'hero', layout: 'hero-03', components: [
-      { id: 'badge', type: 'badge', props: { content: '🏭 ISO 9001:2015 Certified', variant: 'primary' } },
+      { id: 'badge', type: 'badge', props: { content: '🏭 ISO 9001:2015 Certified', variant: 'premium', size: 'medium' } },
       { id: 'title', type: 'heading', props: { content: 'Manufaktur Presisi Tinggi, Standar Mutu Internasional', level: 'h1', fontSize: '48px', fontWeight: '900', color: '#ffffff', align: 'center' } },
       { id: 'desc', type: 'text', props: { content: 'Kapasitas produksi 50.000 unit/bulan didukung otomatisasi pabrik CNC dan sistem quality control berlapis.', fontSize: '18px', color: '#cbd5e1', align: 'center' } },
-      { id: 'btn', type: 'button', props: { label: 'Lihat Kapasitas Produksi', href: '#products', variant: 'primary', background: '#f59e0b', color: '#0f172a' } },
+      { id: 'btn', type: 'button', props: { label: 'Lihat Kapasitas Produksi', href: '#products', variant: 'premium', size: 'large', radius: 'md', background: '#f59e0b', color: '#0f172a', shadow: 'lg', fontSize: '15px', fontWeight: '700', letterSpacing: '0.02em' } },
     ]},
     { id: 'products', type: 'products', layout: 'products-01', components: [
       { id: 't', type: 'heading', props: { content: 'Katalog Hasil Manufaktur Kami', level: 'h2', fontSize: '32px', fontWeight: '800', color: '#0f172a', align: 'center' } },

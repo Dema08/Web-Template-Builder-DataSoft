@@ -17,7 +17,7 @@ export default {
     { id: 'hero', type: 'hero', layout: 'hero-07', components: [
       { id: 'title', type: 'heading', props: { content: 'Sederhana. Berkualitas. Bermakna.', level: 'h1', fontSize: '60px', fontWeight: '800', color: '#0f172a', align: 'center' } },
       { id: 'desc', type: 'text', props: { content: 'Produk minimalis yang dirancang untuk menemani hari-hari Anda dengan keindahan yang tak lekang waktu.', fontSize: '18px', color: '#64748b', align: 'center' } },
-      { id: 'btn', type: 'button', props: { label: 'Lihat Koleksi', href: '#products', variant: 'primary', background: '#0f172a', color: '#ffffff' } },
+      { id: 'btn', type: 'button', props: { label: 'Lihat Koleksi', href: '#products', variant: 'primary', size: 'medium', radius: 'sm', background: '#0f172a', color: '#ffffff', shadow: 'none', fontSize: '14px', fontWeight: '600' } },
     ]},
     { id: 'products', type: 'products', layout: 'products-01', components: [
       { id: 't', type: 'heading', props: { content: 'Koleksi', level: 'h2', fontSize: '36px', fontWeight: '800', color: '#0f172a', align: 'center' } },

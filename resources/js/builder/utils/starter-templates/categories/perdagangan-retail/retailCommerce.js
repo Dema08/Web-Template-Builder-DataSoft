@@ -13,13 +13,13 @@ export default {
   sections: [
     { id: 'nav', type: 'navbar', layout: 'navbar-01', components: [
       { id: 'logo', type: 'heading', props: { content: 'SUPERMART INDONESIA', level: 'h2', fontSize: '20px', fontWeight: '900', color: '#9f1239' } },
-      { id: 'cta', type: 'button', props: { label: '🔥 Promo Hari Ini', href: '#products', variant: 'primary', background: '#e11d48', color: '#ffffff' } },
+      { id: 'cta', type: 'button', props: { label: '🔥 Promo Hari Ini', href: '#products', variant: 'gradient', size: 'small', radius: 'full', background: '#e11d48', color: '#ffffff', shadow: 'md', fontSize: '13px', fontWeight: '600' } },
     ]},
     { id: 'hero', type: 'hero', layout: 'hero-01', components: [
-      { id: 'badge', type: 'badge', props: { content: '⚡ Flash Sale — 24 Jam Setiap Hari', variant: 'primary' } },
+      { id: 'badge', type: 'badge', props: { content: '⚡ Flash Sale — 24 Jam Setiap Hari', variant: 'danger', size: 'medium' } },
       { id: 'title', type: 'heading', props: { content: 'Harga Terbaik, Pilihan Terlengkap, Pengiriman Tercepat', level: 'h1', fontSize: '46px', fontWeight: '900', color: '#ffffff', align: 'center' } },
       { id: 'desc', type: 'text', props: { content: '100.000+ produk tersedia di seluruh gerai dan platform online kami. Belanja mudah, hemat, dan terpercaya.', fontSize: '18px', color: '#ffe4e6', align: 'center' } },
-      { id: 'btn', type: 'button', props: { label: 'Belanja Sekarang', href: '#products', variant: 'primary', background: '#ffffff', color: '#9f1239' } },
+      { id: 'btn', type: 'button', props: { label: 'Belanja Sekarang', href: '#products', variant: 'gradient', size: 'large', radius: 'full', background: '#e11d48', color: '#ffffff', shadow: 'lg', fontSize: '15px', fontWeight: '600' } },
     ]},
     { id: 'products', type: 'products', layout: 'products-01', components: [
       { id: 't', type: 'heading', props: { content: 'Penawaran Spesial & Best Sellers', level: 'h2', fontSize: '32px', fontWeight: '800', color: '#0f172a', align: 'center' } },

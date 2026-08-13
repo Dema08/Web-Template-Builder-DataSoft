@@ -15,10 +15,10 @@ export default {
       { id: 'logo', type: 'heading', props: { content: 'EVENT NUSANTARA', level: 'h2', fontSize: '20px', fontWeight: '900', color: '#7c3aed' } },
     ]},
     { id: 'hero', type: 'hero', layout: 'hero-08', components: [
-      { id: 'badge', type: 'badge', props: { content: '📅 Jadwal Event 2026 — Segera Daftar', variant: 'primary' } },
+      { id: 'badge', type: 'badge', props: { content: '📅 Jadwal Event 2026 — Segera Daftar', variant: 'warning', size: 'medium' } },
       { id: 'title', type: 'heading', props: { content: 'Momen Luar Biasa Dimulai Dari Sini', level: 'h1', fontSize: '52px', fontWeight: '900', color: '#ffffff', align: 'left' } },
       { id: 'desc', type: 'text', props: { content: 'Kami menghadirkan konferensi nasional, seminar, workshop, dan gathering eksklusif yang menginspirasi ribuan peserta setiap tahunnya.', fontSize: '18px', color: '#e0e7ff', align: 'left' } },
-      { id: 'btn', type: 'button', props: { label: 'Daftar Event Terdekat', href: '#registration', variant: 'primary', background: '#ffffff', color: '#7c3aed' } },
+      { id: 'btn', type: 'button', props: { label: 'Daftar Event Terdekat', href: '#registration', variant: 'gradient', size: 'large', radius: 'full', background: '#7c3aed', color: '#ffffff', shadow: 'lg', fontSize: '15px', fontWeight: '600' } },
       { id: 'img', type: 'image', props: { src: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&auto=format&fit=crop', alt: 'Event', width: '100%', height: '360px', objectFit: 'cover' } },
     ]},
     { id: 'services', type: 'services', layout: 'services-02', components: [

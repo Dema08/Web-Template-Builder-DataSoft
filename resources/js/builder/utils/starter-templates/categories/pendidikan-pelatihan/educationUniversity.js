@@ -15,10 +15,10 @@ export default {
       { id: 'logo', type: 'heading', props: { content: 'UNIVERSITAS NUSANTARA', level: 'h2', fontSize: '18px', fontWeight: '900', color: '#4c1d95' } },
     ]},
     { id: 'hero', type: 'hero', layout: 'hero-04', components: [
-      { id: 'badge', type: 'badge', props: { content: 'Akreditasi A — BAN-PT', variant: 'primary' } },
+      { id: 'badge', type: 'badge', props: { content: 'Akreditasi A — BAN-PT', variant: 'premium', size: 'medium' } },
       { id: 'title', type: 'heading', props: { content: 'Mencetak Pemimpin Bangsa Melalui Pendidikan Berkualitas', level: 'h1', fontSize: '48px', fontWeight: '900', color: '#ffffff', align: 'center' } },
       { id: 'desc', type: 'text', props: { content: 'Universitas terkemuka dengan 42 program studi, 1.200 dosen berpengalaman, dan jaringan alumni di 50+ negara.', fontSize: '18px', color: '#ede9fe', align: 'center' } },
-      { id: 'btn', type: 'button', props: { label: 'Seleksi Penerimaan Mahasiswa', href: '#registration', variant: 'primary', background: '#ffffff', color: '#4c1d95' } },
+      { id: 'btn', type: 'button', props: { label: 'Seleksi Penerimaan Mahasiswa', href: '#registration', variant: 'primary', size: 'large', radius: 'md', background: '#ffffff', color: '#4c1d95', shadow: 'md', fontSize: '15px', fontWeight: '600' } },
     ]},
     { id: 'about', type: 'about', layout: 'about-03', components: [
       { id: 't', type: 'heading', props: { content: 'Profil Universitas Nusantara', level: 'h2', fontSize: '32px', fontWeight: '800', color: '#0f172a', align: 'center' } },

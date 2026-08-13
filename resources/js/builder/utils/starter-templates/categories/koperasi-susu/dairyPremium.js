@@ -14,13 +14,13 @@ export default {
   sections: [
     { id: 'nav', type: 'navbar', layout: 'navbar-05', components: [
       { id: 'logo', type: 'heading', props: { content: 'SUSU PREMIUM ALAMI', level: 'h2', fontSize: '20px', fontWeight: '900', color: '#0f766e', letterSpacing: '0.08em', margin: '0' } },
-      { id: 'cta', type: 'button', props: { label: 'Order Langganan', href: '#contact', variant: 'primary', size: 'medium', radius: 'full', background: '#0f766e', color: '#ffffff', shadow: 'md', fontSize: '14px', fontWeight: '700' } },
+      { id: 'cta', type: 'button', props: { label: 'Order Langganan', href: '#contact', variant: 'premium', size: 'medium', radius: 'full', background: '#0f766e', color: '#ffffff', shadow: 'md', fontSize: '14px', fontWeight: '700' } },
     ]},
     { id: 'hero', type: 'hero', layout: 'hero-05', components: [
       { id: 'badge', type: 'badge', props: { content: '🥛 Organik • Halal MUI • BPOM Certified', variant: 'success', size: 'medium' } },
       { id: 'title', type: 'heading', props: { content: 'Susu Organik Premium Tanpa Bahan Pengawet', level: 'h1', fontSize: '52px', fontWeight: '900', color: '#0f172a', align: 'left', lineHeight: '1.1', letterSpacing: '-0.02em', margin: '8px 0 20px 0' } },
       { id: 'desc', type: 'text', props: { content: 'Dari 120 hektar padang rumput organik di kaki Gunung Kawi, langsung ke pintu rumah Anda dalam 24 jam. Fresh, bergizi, dan bebas hormon sintetis.', fontSize: '18px', color: '#64748b', align: 'left', lineHeight: '1.8', margin: '0 0 28px 0' } },
-      { id: 'btn', type: 'button', props: { label: 'Mulai Berlangganan', href: '#contact', variant: 'primary', size: 'large', radius: 'full', background: '#0f766e', color: '#ffffff', shadow: 'lg', fontSize: '16px', fontWeight: '700' } },
+      { id: 'btn', type: 'button', props: { label: 'Mulai Berlangganan', href: '#contact', variant: 'premium', size: 'large', radius: 'full', background: '#0f766e', color: '#ffffff', shadow: 'lg', fontSize: '16px', fontWeight: '700' } },
       { id: 'btn2', type: 'button', props: { label: 'Lihat Produk', href: '#services', variant: 'outline', size: 'large', radius: 'full', background: '#0f766e', color: '#0f766e', shadow: 'md', fontSize: '16px', fontWeight: '700' } },
       { id: 'trust', type: 'text', props: { content: '⭐ 4.9/5 — Dipercaya 12.000+ keluarga Indonesia', fontSize: '15px', fontWeight: '600', color: '#0f766e', align: 'left', letterSpacing: '0.02em', margin: '12px 0 0 0' } },
       { id: 'img', type: 'image', props: { src: 'https://images.unsplash.com/photo-1559598467-f8b76c8155d0?w=800&auto=format&fit=crop', alt: 'Premium Organic Dairy Products', width: '100%', height: '460px', objectFit: 'cover', borderRadius: '24px', shadow: 'xl' } },
@@ -32,7 +32,7 @@ export default {
       { id: 'f1', type: 'text', props: { content: '✓ Pakan organik 100% tanpa GMO dan bebas hormon', fontSize: '15px', fontWeight: '600', color: '#0f766e', align: 'left', margin: '0 0 12px 0' } },
       { id: 'f2', type: 'text', props: { content: '✓ Sapi Frisian Holstein & Jersey pilihan terbaik', fontSize: '15px', fontWeight: '600', color: '#0f766e', align: 'left', margin: '0 0 12px 0' } },
       { id: 'f3', type: 'text', props: { content: '✓ Diperah pagi hari, dikirim segar dalam 24 jam', fontSize: '15px', fontWeight: '600', color: '#0f766e', align: 'left', margin: '0 0 28px 0' } },
-      { id: 'btn', type: 'button', props: { label: 'Lihat Sertifikasi Resmi', href: '#certifications', variant: 'primary', size: 'medium', radius: 'full', background: '#0f766e', color: '#ffffff', shadow: 'md', fontSize: '14px', fontWeight: '700' } },
+      { id: 'btn', type: 'button', props: { label: 'Lihat Sertifikasi Resmi', href: '#certifications', variant: 'premium', size: 'medium', radius: 'full', background: '#0f766e', color: '#ffffff', shadow: 'md', fontSize: '14px', fontWeight: '700' } },
       { id: 'img', type: 'image', props: { src: 'https://images.unsplash.com/photo-1527153857715-33282435658a?w=800&auto=format&fit=crop', alt: 'Organic Premium Dairy Farm', width: '100%', height: '460px', objectFit: 'cover', borderRadius: '24px', shadow: 'xl' } },
     ]},
     { id: 'services', type: 'services', layout: 'services-02', components: [

@@ -15,10 +15,10 @@ export default {
       { id: 'logo', type: 'heading', props: { content: 'JARINGAN PETERNAK SUSU NUSANTARA', level: 'h2', fontSize: '16px', fontWeight: '900', color: '#1e293b' } },
     ]},
     { id: 'hero', type: 'hero', layout: 'hero-03', components: [
-      { id: 'badge', type: 'badge', props: { content: '🐄 Menghubungkan 5.000+ Peternak Lokal', variant: 'primary' } },
+      { id: 'badge', type: 'badge', props: { content: '🐄 Menghubungkan 5.000+ Peternak Lokal', variant: 'success', size: 'medium' } },
       { id: 'title', type: 'heading', props: { content: 'Platform Koperasi Susu Untuk Peternak Indonesia', level: 'h1', fontSize: '50px', fontWeight: '900', color: '#ffffff', align: 'center' } },
       { id: 'desc', type: 'text', props: { content: 'Ekosistem terintegrasi: pendampingan peternak, kumpul susu, pengolahan, dan pemasaran langsung ke industri F&B nasional.', fontSize: '18px', color: '#e2e8f0', align: 'center' } },
-      { id: 'btn', type: 'button', props: { label: 'Bergabung Sebagai Peternak Mitra', href: '#contact', variant: 'primary', background: '#10b981', color: '#ffffff' } },
+      { id: 'btn', type: 'button', props: { label: 'Bergabung Sebagai Peternak Mitra', href: '#contact', variant: 'primary', size: 'large', radius: 'full', background: '#10b981', color: '#ffffff', shadow: 'lg', fontSize: '15px', fontWeight: '600' } },
     ]},
     { id: 'stats', type: 'statistics', layout: 'statistics-01', components: [
       { id: 't', type: 'heading', props: { content: 'Ekosistem Peternak Susu Nusantara', level: 'h2', fontSize: '32px', fontWeight: '800', color: '#0f172a', align: 'center' } },

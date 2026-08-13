@@ -13,13 +13,13 @@ export default {
   sections: [
     { id: 'nav', type: 'navbar', layout: 'navbar-05', components: [
       { id: 'logo', type: 'heading', props: { content: 'BELAJAR.ID', level: 'h2', fontSize: '22px', fontWeight: '900', color: '#0369a1' } },
-      { id: 'cta', type: 'button', props: { label: 'Daftar Gratis', href: '#registration', variant: 'primary', background: '#0ea5e9', color: '#ffffff' } },
+      { id: 'cta', type: 'button', props: { label: 'Daftar Gratis', href: '#registration', variant: 'primary', size: 'small', radius: 'full', background: '#0ea5e9', color: '#ffffff', shadow: 'sm', fontSize: '13px', fontWeight: '600' } },
     ]},
     { id: 'hero', type: 'hero', layout: 'hero-05', components: [
-      { id: 'badge', type: 'badge', props: { content: '📱 Belajar Kapan Saja, Di Mana Saja', variant: 'primary' } },
+      { id: 'badge', type: 'badge', props: { content: '📱 Belajar Kapan Saja, Di Mana Saja', variant: 'primary', size: 'medium' } },
       { id: 'title', type: 'heading', props: { content: 'Platform Belajar Online Terlengkap di Indonesia', level: 'h1', fontSize: '48px', fontWeight: '800', color: '#0f172a', align: 'left' } },
       { id: 'desc', type: 'text', props: { content: '1.000+ kursus video berkualitas tinggi dari instruktur top Indonesia dan internasional. Belajar sesuai jadwal Anda.', fontSize: '18px', color: '#64748b', align: 'left' } },
-      { id: 'btn', type: 'button', props: { label: 'Mulai Belajar Gratis', href: '#programs', variant: 'primary', background: '#0ea5e9', color: '#ffffff' } },
+      { id: 'btn', type: 'button', props: { label: 'Mulai Belajar Gratis', href: '#programs', variant: 'primary', size: 'large', radius: 'full', background: '#0ea5e9', color: '#ffffff', shadow: 'md', fontSize: '15px', fontWeight: '600' } },
       { id: 'img', type: 'image', props: { src: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&auto=format&fit=crop', alt: 'Online Learning', width: '100%', height: '380px', objectFit: 'cover' } },
     ]},
     { id: 'programs', type: 'programs', layout: 'programs-01', components: [

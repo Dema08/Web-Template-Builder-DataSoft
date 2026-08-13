@@ -13,13 +13,13 @@ export default {
   sections: [
     { id: 'nav', type: 'navbar', layout: 'navbar-05', components: [
       { id: 'logo', type: 'heading', props: { content: 'ASTRA WIRA GROUP', level: 'h2', fontSize: '18px', fontWeight: '900', color: '#0f172a' } },
-      { id: 'cta', type: 'button', props: { label: 'Investor Relations', href: '#contact', variant: 'primary', background: '#1e293b', color: '#ffffff' } },
+      { id: 'cta', type: 'button', props: { label: 'Investor Relations', href: '#contact', variant: 'primary', size: 'small', radius: 'md', background: '#1e293b', color: '#ffffff', shadow: 'sm', fontSize: '13px', fontWeight: '600' } },
     ]},
     { id: 'hero', type: 'hero', layout: 'hero-04', components: [
       { id: 'badge', type: 'badge', props: { content: 'Synergy • Growth • Governance', variant: 'primary' } },
       { id: 'title', type: 'heading', props: { content: 'Membangun Ekosistem Bisnis Berkelanjutan Lintas Generasi', level: 'h1', fontSize: '48px', fontWeight: '900', color: '#ffffff', align: 'center' } },
       { id: 'desc', type: 'text', props: { content: 'Konglomerasi terkemuka mengelola 12 anak perusahaan di sektor energi, infrastruktur, keuangan, dan teknologi.', fontSize: '18px', color: '#e0e7ff', align: 'center' } },
-      { id: 'btn', type: 'button', props: { label: 'Pelajari Portofolio Kami', href: '#about', variant: 'primary', background: '#ffffff', color: '#4f46e5' } },
+      { id: 'btn', type: 'button', props: { label: 'Pelajari Portofolio Kami', href: '#about', variant: 'primary', size: 'large', radius: 'md', background: '#ffffff', color: '#4f46e5', shadow: 'md', fontSize: '15px', fontWeight: '600' } },
     ]},
     { id: 'about', type: 'about', layout: 'about-02', components: [
       { id: 't', type: 'heading', props: { content: 'Profil Group Astra Wira', level: 'h2', fontSize: '32px', fontWeight: '800', color: '#0f172a' } },

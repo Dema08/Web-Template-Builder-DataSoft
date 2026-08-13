@@ -13,13 +13,13 @@ export default {
   sections: [
     { id: 'nav', type: 'navbar', layout: 'navbar-05', components: [
       { id: 'logo', type: 'heading', props: { content: 'PRESTIGE RETAIL', level: 'h2', fontSize: '18px', fontWeight: '900', color: '#0f172a' } },
-      { id: 'cta', type: 'button', props: { label: 'Shop Premium', href: '#products', variant: 'primary', background: '#7c3aed', color: '#ffffff' } },
+      { id: 'cta', type: 'button', props: { label: 'Shop Premium', href: '#products', variant: 'primary', size: 'small', radius: 'full', background: '#7c3aed', color: '#ffffff', shadow: 'sm', fontSize: '13px', fontWeight: '600' } },
     ]},
     { id: 'hero', type: 'hero', layout: 'hero-08', components: [
-      { id: 'badge', type: 'badge', props: { content: '✦ Premium Selection — Kurasi Terbaik', variant: 'primary' } },
+      { id: 'badge', type: 'badge', props: { content: '✦ Premium Selection — Kurasi Terbaik', variant: 'premium', size: 'medium' } },
       { id: 'title', type: 'heading', props: { content: 'Di Sini Anda Menemukan Yang Terbaik', level: 'h1', fontSize: '52px', fontWeight: '900', color: '#ffffff', align: 'left' } },
       { id: 'desc', type: 'text', props: { content: 'Koleksi premium yang dikurasi dari brand-brand terpilih dunia dan lokal terbaik untuk pelanggan yang menghargai kualitas.', fontSize: '18px', color: '#e0e7ff', align: 'left' } },
-      { id: 'btn', type: 'button', props: { label: 'Eksplor Koleksi', href: '#products', variant: 'primary', background: '#ffffff', color: '#7c3aed' } },
+      { id: 'btn', type: 'button', props: { label: 'Eksplor Koleksi', href: '#products', variant: 'primary', size: 'large', radius: 'full', background: '#ffffff', color: '#7c3aed', shadow: 'md', fontSize: '15px', fontWeight: '600' } },
       { id: 'img', type: 'image', props: { src: 'https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?w=600&auto=format&fit=crop', alt: 'Premium Boutique', width: '100%', height: '380px', objectFit: 'cover' } },
     ]},
     { id: 'products', type: 'products', layout: 'products-01', components: [

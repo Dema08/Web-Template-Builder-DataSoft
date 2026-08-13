@@ -13,12 +13,12 @@ export default {
   sections: [
     { id: 'nav', type: 'navbar', layout: 'navbar-03', components: [
       { id: 'logo', type: 'heading', props: { content: 'KOMUNITAS INDONESIA', level: 'h2', fontSize: '18px', fontWeight: '900', color: '#0369a1' } },
-      { id: 'cta', type: 'button', props: { label: 'Gabung Sekarang', href: '#contact', variant: 'primary', background: '#0284c7', color: '#ffffff' } },
+      { id: 'cta', type: 'button', props: { label: 'Gabung Sekarang', href: '#contact', variant: 'primary', size: 'small', radius: 'full', background: '#0284c7', color: '#ffffff', shadow: 'sm', fontSize: '13px', fontWeight: '600' } },
     ]},
     { id: 'hero', type: 'hero', layout: 'hero-07', components: [
       { id: 'title', type: 'heading', props: { content: 'Bersama Kita Lebih Kuat, Lebih Bermakna', level: 'h1', fontSize: '52px', fontWeight: '800', color: '#0f172a', align: 'center' } },
       { id: 'desc', type: 'text', props: { content: 'Wadah bertemunya individu-individu berdedikasi yang bersatu untuk menciptakan perubahan positif bagi masyarakat Indonesia.', fontSize: '18px', color: '#64748b', align: 'center' } },
-      { id: 'btn', type: 'button', props: { label: 'Pelajari Komunitas Kami', href: '#about', variant: 'primary', background: '#0284c7', color: '#ffffff' } },
+      { id: 'btn', type: 'button', props: { label: 'Pelajari Komunitas Kami', href: '#about', variant: 'primary', size: 'large', radius: 'full', background: '#0284c7', color: '#ffffff', shadow: 'md', fontSize: '15px', fontWeight: '600' } },
     ]},
     { id: 'about', type: 'about', layout: 'about-01', components: [
       { id: 't', type: 'heading', props: { content: 'Tentang Komunitas', level: 'h2', fontSize: '32px', fontWeight: '800', color: '#000000', align: 'center' } },

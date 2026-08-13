@@ -13,13 +13,13 @@ export default {
   sections: [
     { id: 'nav', type: 'navbar', layout: 'navbar-03', components: [
       { id: 'logo', type: 'heading', props: { content: 'STUDIO PRIMA', level: 'h2', fontSize: '20px', fontWeight: '900', color: '#7c3aed' } },
-      { id: 'cta', type: 'button', props: { label: 'Mulai Proyek', href: '#contact', variant: 'primary', background: '#7c3aed', color: '#ffffff' } },
+      { id: 'cta', type: 'button', props: { label: 'Mulai Proyek', href: '#contact', variant: 'gradient', size: 'medium', radius: 'full', background: '#7c3aed', color: '#ffffff', shadow: 'md', fontSize: '14px', fontWeight: '600' } },
     ]},
     { id: 'hero', type: 'hero', layout: 'hero-05', components: [
-      { id: 'badge', type: 'badge', props: { content: '🏆 Top Agency Indonesia 2026', variant: 'primary' } },
+      { id: 'badge', type: 'badge', props: { content: '🏆 Top Agency Indonesia 2026', variant: 'premium', size: 'medium' } },
       { id: 'title', type: 'heading', props: { content: 'Kami Mengubah Ide Bisnis Anda Menjadi Pengalaman Digital Yang Luar Biasa', level: 'h1', fontSize: '46px', fontWeight: '800', color: '#0f172a', align: 'left' } },
       { id: 'desc', type: 'text', props: { content: 'Agensi full-service dengan spesialisasi branding, web development, dan digital marketing untuk bisnis ambisius.', fontSize: '18px', color: '#64748b', align: 'left' } },
-      { id: 'btn', type: 'button', props: { label: 'Lihat Portfolio Kami', href: '#gallery', variant: 'primary', background: '#7c3aed', color: '#ffffff' } },
+      { id: 'btn', type: 'button', props: { label: 'Lihat Portfolio Kami', href: '#gallery', variant: 'gradient', size: 'large', radius: 'full', background: '#7c3aed', color: '#ffffff', shadow: 'lg', fontSize: '15px', fontWeight: '600' } },
       { id: 'img', type: 'image', props: { src: 'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=600&auto=format&fit=crop', alt: 'Agency Team', width: '100%', height: '380px', objectFit: 'cover' } },
     ]},
     { id: 'services', type: 'services', layout: 'services-02', components: [

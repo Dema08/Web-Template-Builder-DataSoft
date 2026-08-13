@@ -17,7 +17,7 @@ export default {
     { id: 'hero', type: 'hero', layout: 'hero-04', components: [
       { id: 'title', type: 'heading', props: { content: 'Investasi Cerdas Bersama Koperasi Terpercaya', level: 'h1', fontSize: '48px', fontWeight: '900', color: '#ffffff', align: 'center' } },
       { id: 'desc', type: 'text', props: { content: 'Koperasi primer dengan aset Rp 250 Miliar, 15.000+ anggota aktif, dan return SHU kompetitif setiap tahun.', fontSize: '18px', color: '#e0e7ff', align: 'center' } },
-      { id: 'btn', type: 'button', props: { label: 'Bergabung Sekarang', href: '#contact', variant: 'primary', background: '#ffffff', color: '#4338ca' } },
+      { id: 'btn', type: 'button', props: { label: 'Bergabung Sekarang', href: '#contact', variant: 'gradient', size: 'large', radius: 'full', background: '#4f46e5', color: '#ffffff', shadow: 'lg', fontSize: '15px', fontWeight: '700' } },
     ]},
     { id: 'stats', type: 'statistics', layout: 'statistics-01', components: [
       { id: 't', type: 'heading', props: { content: 'Kekuatan Finansial Koperasi', level: 'h2', fontSize: '32px', fontWeight: '800', color: '#0f172a', align: 'center' } },

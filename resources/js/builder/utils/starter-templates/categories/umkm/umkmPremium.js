@@ -13,13 +13,13 @@ export default {
   sections: [
     { id: 'nav', type: 'navbar', layout: 'navbar-05', components: [
       { id: 'logo', type: 'heading', props: { content: 'ÉLITE CRAFT', level: 'h2', fontSize: '20px', fontWeight: '900', color: '#0f172a' } },
-      { id: 'cta', type: 'button', props: { label: 'Exclusive Access', href: '#contact', variant: 'primary', background: '#f59e0b', color: '#ffffff' } },
+      { id: 'cta', type: 'button', props: { label: 'Exclusive Access', href: '#contact', variant: 'premium', size: 'medium', radius: 'full', background: '#f59e0b', color: '#0f172a', shadow: 'md', fontSize: '13px', fontWeight: '700', letterSpacing: '0.02em' } },
     ]},
     { id: 'hero', type: 'hero', layout: 'hero-06', components: [
-      { id: 'badge', type: 'badge', props: { content: '✦ Edisi Premium — Terbatas', variant: 'primary' } },
+      { id: 'badge', type: 'badge', props: { content: '✦ Edisi Premium — Terbatas', variant: 'premium', size: 'medium' } },
       { id: 'title', type: 'heading', props: { content: 'Keistimewaan Yang Hanya Ada Di Sini', level: 'h1', fontSize: '56px', fontWeight: '900', color: '#ffffff', align: 'center' } },
       { id: 'desc', type: 'text', props: { content: 'Dibuat dari bahan pilihan terbaik dunia oleh tangan-tangan maestro kerajinan Indonesia.', fontSize: '20px', color: '#e2e8f0', align: 'center' } },
-      { id: 'btn', type: 'button', props: { label: 'Koleksi Eksklusif', href: '#products', variant: 'primary', background: '#f59e0b', color: '#0f172a' } },
+      { id: 'btn', type: 'button', props: { label: 'Koleksi Eksklusif', href: '#products', variant: 'premium', size: 'large', radius: 'full', background: '#f59e0b', color: '#0f172a', shadow: 'lg', fontSize: '15px', fontWeight: '700', letterSpacing: '0.02em' } },
     ]},
     { id: 'about', type: 'about', layout: 'about-04', components: [
       { id: 't', type: 'heading', props: { content: 'Keunggulan Élite Craft', level: 'h2', fontSize: '36px', fontWeight: '800', color: '#0f172a', align: 'center' } },

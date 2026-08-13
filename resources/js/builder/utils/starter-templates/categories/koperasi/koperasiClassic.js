@@ -13,12 +13,12 @@ export default {
   sections: [
     { id: 'nav', type: 'navbar', layout: 'navbar-01', components: [
       { id: 'logo', type: 'heading', props: { content: 'KSP SEJAHTERA BERSAMA', level: 'h2', fontSize: '18px', fontWeight: '800', color: '#065f46' } },
-      { id: 'cta', type: 'button', props: { label: 'Portal Anggota', href: '#contact', variant: 'primary', background: '#059669', color: '#ffffff' } },
+      { id: 'cta', type: 'button', props: { label: 'Portal Anggota', href: '#contact', variant: 'primary', size: 'medium', radius: 'md', background: '#059669', color: '#ffffff', shadow: 'sm', fontSize: '13px', fontWeight: '600' } },
     ]},
     { id: 'hero', type: 'hero', layout: 'hero-01', components: [
       { id: 'title', type: 'heading', props: { content: 'Keuangan Bersama Yang Adil, Transparan, Dan Mensejahterikan', level: 'h1', fontSize: '46px', fontWeight: '900', color: '#ffffff', align: 'center' } },
       { id: 'desc', type: 'text', props: { content: 'Layanan simpanan, pinjaman usaha berbunga ringan, dan pembagian SHU yang adil bagi seluruh anggota aktif.', fontSize: '18px', color: '#d1fae5', align: 'center' } },
-      { id: 'btn', type: 'button', props: { label: 'Daftar Anggota Baru', href: '#contact', variant: 'primary', background: '#ffffff', color: '#065f46' } },
+      { id: 'btn', type: 'button', props: { label: 'Daftar Anggota Baru', href: '#contact', variant: 'primary', size: 'large', radius: 'md', background: '#ffffff', color: '#065f46', shadow: 'md', fontSize: '15px', fontWeight: '600' } },
     ]},
     { id: 'stats', type: 'statistics', layout: 'statistics-01', components: [
       { id: 't', type: 'heading', props: { content: 'Perkembangan Koperasi Kami', level: 'h2', fontSize: '32px', fontWeight: '800', color: '#0f172a', align: 'center' } },

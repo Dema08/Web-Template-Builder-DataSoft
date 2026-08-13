@@ -13,13 +13,13 @@ export default {
   sections: [
     { id: 'nav', type: 'navbar', layout: 'navbar-05', components: [
       { id: 'logo', type: 'heading', props: { content: 'TRANSGO LOGISTICS', level: 'h2', fontSize: '20px', fontWeight: '900', color: '#1e293b' } },
-      { id: 'cta', type: 'button', props: { label: 'Lacak Kiriman', href: '#tracking', variant: 'primary', background: '#2563eb', color: '#ffffff' } },
+      { id: 'cta', type: 'button', props: { label: 'Lacak Kiriman', href: '#tracking', variant: 'primary', size: 'small', radius: 'md', background: '#2563eb', color: '#ffffff', shadow: 'sm', fontSize: '13px', fontWeight: '600' } },
     ]},
     { id: 'hero', type: 'hero', layout: 'hero-01', components: [
-      { id: 'badge', type: 'badge', props: { content: '🚚 Jaringan Nasional & Internasional', variant: 'primary' } },
+      { id: 'badge', type: 'badge', props: { content: '🚚 Jaringan Nasional & Internasional', variant: 'primary', size: 'medium' } },
       { id: 'title', type: 'heading', props: { content: 'Solusi Logistik Terintegrasi Untuk Bisnis Skala Nasional', level: 'h1', fontSize: '48px', fontWeight: '900', color: '#ffffff', align: 'center' } },
       { id: 'desc', type: 'text', props: { content: 'Armada modern, pelacakan real-time, dan jaringan gudang di 50+ kota Indonesia. Pengiriman tepat waktu dijamin.', fontSize: '18px', color: '#bfdbfe', align: 'center' } },
-      { id: 'btn1', type: 'button', props: { label: 'Cek Tarif Pengiriman', href: '#services', variant: 'primary', background: '#ffffff', color: '#1d4ed8' } },
+      { id: 'btn1', type: 'button', props: { label: 'Cek Tarif Pengiriman', href: '#services', variant: 'primary', size: 'large', radius: 'md', background: '#ffffff', color: '#1d4ed8', shadow: 'md', fontSize: '15px', fontWeight: '600' } },
     ]},
     { id: 'stats', type: 'statistics', layout: 'statistics-01', components: [
       { id: 't', type: 'heading', props: { content: 'Kapasitas & Jangkauan Operasional', level: 'h2', fontSize: '32px', fontWeight: '800', color: '#0f172a', align: 'center' } },

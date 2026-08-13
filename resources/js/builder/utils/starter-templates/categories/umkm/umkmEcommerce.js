@@ -13,13 +13,13 @@ export default {
   sections: [
     { id: 'nav', type: 'navbar', layout: 'navbar-01', components: [
       { id: 'logo', type: 'heading', props: { content: 'TOKO NUSANTARA', level: 'h2', fontSize: '20px', fontWeight: '900', color: '#92400e' } },
-      { id: 'cta', type: 'button', props: { label: '🛒 Keranjang', href: '#', variant: 'primary', background: '#f59e0b', color: '#ffffff' } },
+      { id: 'cta', type: 'button', props: { label: '🛒 Keranjang', href: '#', variant: 'primary', size: 'small', radius: 'full', background: '#f59e0b', color: '#ffffff', shadow: 'md', fontSize: '13px', fontWeight: '600' } },
     ]},
     { id: 'hero', type: 'hero', layout: 'hero-02', components: [
-      { id: 'badge', type: 'badge', props: { content: '🔥 Promo Akhir Tahun — Diskon s/d 50%', variant: 'primary' } },
+      { id: 'badge', type: 'badge', props: { content: '🔥 Promo Akhir Tahun — Diskon s/d 50%', variant: 'warning', size: 'medium' } },
       { id: 'title', type: 'heading', props: { content: 'Belanja Produk Lokal Terpercaya, Hemat & Cepat Sampai', level: 'h1', fontSize: '44px', fontWeight: '800', color: '#0f172a', align: 'left' } },
       { id: 'desc', type: 'text', props: { content: 'Ribuan produk UMKM asli Indonesia tersedia. Gratis ongkir ke seluruh wilayah.', fontSize: '16px', color: '#64748b', align: 'left' } },
-      { id: 'btn1', type: 'button', props: { label: 'Belanja Sekarang', href: '#products', variant: 'primary', background: '#f59e0b', color: '#ffffff' } },
+      { id: 'btn1', type: 'button', props: { label: 'Belanja Sekarang', href: '#products', variant: 'gradient', size: 'large', radius: 'full', background: '#f59e0b', color: '#ffffff', shadow: 'lg', fontSize: '15px', fontWeight: '700' } },
       { id: 'img', type: 'image', props: { src: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=600&auto=format&fit=crop', alt: 'Shop Banner', width: '100%', height: '360px', objectFit: 'cover' } },
     ]},
     { id: 'products', type: 'products', layout: 'products-01', components: [

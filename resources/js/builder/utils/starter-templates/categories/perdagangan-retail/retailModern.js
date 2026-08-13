@@ -13,12 +13,12 @@ export default {
   sections: [
     { id: 'nav', type: 'navbar', layout: 'navbar-04', components: [
       { id: 'logo', type: 'heading', props: { content: 'MEGA DISTRIBUSI', level: 'h2', fontSize: '20px', fontWeight: '900', color: '#1d4ed8' } },
-      { id: 'cta', type: 'button', props: { label: 'Order Grosir', href: '#contact', variant: 'primary', background: '#2563eb', color: '#ffffff' } },
+      { id: 'cta', type: 'button', props: { label: 'Order Grosir', href: '#contact', variant: 'primary', size: 'small', radius: 'md', background: '#2563eb', color: '#ffffff', shadow: 'sm', fontSize: '13px', fontWeight: '600' } },
     ]},
     { id: 'hero', type: 'hero', layout: 'hero-02', components: [
       { id: 'title', type: 'heading', props: { content: 'Distributor Terpercaya Untuk Kebutuhan Bisnis Anda', level: 'h1', fontSize: '44px', fontWeight: '800', color: '#0f172a', align: 'left' } },
       { id: 'desc', type: 'text', props: { content: '50.000+ SKU produk siap stok, harga grosir kompetitif, dan pengiriman ke seluruh Indonesia.', fontSize: '16px', color: '#64748b', align: 'left' } },
-      { id: 'btn', type: 'button', props: { label: 'Lihat Katalog Produk', href: '#products', variant: 'primary', background: '#2563eb', color: '#ffffff' } },
+      { id: 'btn', type: 'button', props: { label: 'Lihat Katalog Produk', href: '#products', variant: 'primary', size: 'large', radius: 'md', background: '#2563eb', color: '#ffffff', shadow: 'md', fontSize: '15px', fontWeight: '600' } },
       { id: 'img', type: 'image', props: { src: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&auto=format&fit=crop', alt: 'Retail Store', width: '100%', height: '360px', objectFit: 'cover' } },
     ]},
     { id: 'products', type: 'products', layout: 'products-01', components: [

@@ -17,7 +17,7 @@ export default {
     { id: 'hero', type: 'hero', layout: 'hero-07', components: [
       { id: 'title', type: 'heading', props: { content: 'Investasi Cerdas, Masa Depan Kokoh', level: 'h1', fontSize: '56px', fontWeight: '800', color: '#0f172a', align: 'center' } },
       { id: 'desc', type: 'text', props: { content: 'Nusantara Capital Group mengelola portofolio aset senilai Rp 47 Triliun dengan diversifikasi strategis di 8 sektor industri primer.', fontSize: '18px', color: '#64748b', align: 'center' } },
-      { id: 'btn1', type: 'button', props: { label: 'Unduh Annual Report 2025', href: '#', variant: 'primary', background: '#0369a1', color: '#ffffff' } },
+      { id: 'btn1', type: 'button', props: { label: 'Unduh Annual Report 2025', href: '#', variant: 'primary', size: 'large', radius: 'md', background: '#0369a1', color: '#ffffff', shadow: 'lg', fontSize: '15px', fontWeight: '600' } },
     ]},
     { id: 'stats', type: 'statistics', layout: 'statistics-01', components: [
       { id: 't', type: 'heading', props: { content: 'Financial Performance Highlights', level: 'h2', fontSize: '32px', fontWeight: '800', color: '#0f172a', align: 'center' } },

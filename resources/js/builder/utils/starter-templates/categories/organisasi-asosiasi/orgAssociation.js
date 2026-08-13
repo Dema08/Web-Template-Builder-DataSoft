@@ -17,7 +17,7 @@ export default {
     { id: 'hero', type: 'hero', layout: 'hero-04', components: [
       { id: 'title', type: 'heading', props: { content: 'Standar Profesi Tertinggi Untuk Indonesia', level: 'h1', fontSize: '48px', fontWeight: '900', color: '#ffffff', align: 'center' } },
       { id: 'desc', type: 'text', props: { content: 'Menghimpun lebih dari 25.000 profesional bersertifikat dalam satu wadah yang kuat untuk kemajuan profesi dan bangsa.', fontSize: '18px', color: '#e0e7ff', align: 'center' } },
-      { id: 'btn', type: 'button', props: { label: 'Daftarkan Keanggotaan', href: '#contact', variant: 'primary', background: '#ffffff', color: '#4338ca' } },
+      { id: 'btn', type: 'button', props: { label: 'Daftarkan Keanggotaan', href: '#contact', variant: 'primary', size: 'large', radius: 'md', background: '#ffffff', color: '#4338ca', shadow: 'md', fontSize: '15px', fontWeight: '600' } },
     ]},
     { id: 'about', type: 'about', layout: 'about-02', components: [
       { id: 't', type: 'heading', props: { content: 'Sejarah & Peran Asosiasi', level: 'h2', fontSize: '32px', fontWeight: '800', color: '#0f172a' } },

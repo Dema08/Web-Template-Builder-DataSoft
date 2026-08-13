@@ -13,12 +13,12 @@ export default {
   sections: [
     { id: 'nav', type: 'navbar', layout: 'navbar-01', components: [
       { id: 'logo', type: 'heading', props: { content: 'KOPTAN SUSU MURNI', level: 'h2', fontSize: '18px', fontWeight: '800', color: '#115e59' } },
-      { id: 'cta', type: 'button', props: { label: 'Kemitraan Peternak', href: '#contact', variant: 'primary', background: '#0d9488', color: '#ffffff' } },
+      { id: 'cta', type: 'button', props: { label: 'Kemitraan Peternak', href: '#contact', variant: 'primary', size: 'medium', radius: 'full', background: '#0d9488', color: '#ffffff', shadow: 'md', fontSize: '14px', fontWeight: '600' } },
     ]},
     { id: 'hero', type: 'hero', layout: 'hero-07', components: [
       { id: 'title', type: 'heading', props: { content: 'Susu Segar Murni Dari Peternak Lokal Pilihan', level: 'h1', fontSize: '52px', fontWeight: '800', color: '#0f172a', align: 'center' } },
       { id: 'desc', type: 'text', props: { content: 'Mengintegrasikan 2.500+ peternak sapi perah dengan standar pasteurisasi higienis dan rantai dingin modern dari ladang ke meja makan Anda.', fontSize: '18px', color: '#64748b', align: 'center' } },
-      { id: 'btn', type: 'button', props: { label: 'Pelajari Program Kemitraan', href: '#about', variant: 'primary', background: '#0d9488', color: '#ffffff' } },
+      { id: 'btn', type: 'button', props: { label: 'Pelajari Program Kemitraan', href: '#about', variant: 'primary', size: 'large', radius: 'full', background: '#0d9488', color: '#ffffff', shadow: 'md', fontSize: '15px', fontWeight: '600' } },
     ]},
     { id: 'stats', type: 'statistics', layout: 'statistics-01', components: [
       { id: 't', type: 'heading', props: { content: 'Kapasitas Produksi & Jaringan Peternak', level: 'h2', fontSize: '32px', fontWeight: '800', color: '#0f172a', align: 'center' } },

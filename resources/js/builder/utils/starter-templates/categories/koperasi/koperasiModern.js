@@ -13,13 +13,13 @@ export default {
   sections: [
     { id: 'nav', type: 'navbar', layout: 'navbar-05', components: [
       { id: 'logo', type: 'heading', props: { content: 'KOPERASI DIGITAL ID', level: 'h2', fontSize: '18px', fontWeight: '900', color: '#065f46' } },
-      { id: 'cta', type: 'button', props: { label: 'Daftar Online', href: '#contact', variant: 'primary', background: '#10b981', color: '#ffffff' } },
+      { id: 'cta', type: 'button', props: { label: 'Daftar Online', href: '#contact', variant: 'primary', size: 'small', radius: 'full', background: '#10b981', color: '#ffffff', shadow: 'sm', fontSize: '13px', fontWeight: '600' } },
     ]},
     { id: 'hero', type: 'hero', layout: 'hero-05', components: [
-      { id: 'badge', type: 'badge', props: { content: '🌐 Koperasi Berbasis Digital Pertama di Indonesia', variant: 'primary' } },
+      { id: 'badge', type: 'badge', props: { content: '🌐 Koperasi Berbasis Digital Pertama di Indonesia', variant: 'success', size: 'medium' } },
       { id: 'title', type: 'heading', props: { content: 'Kelola Simpanan & Pinjaman Anda Dari Mana Saja', level: 'h1', fontSize: '46px', fontWeight: '800', color: '#0f172a', align: 'left' } },
       { id: 'desc', type: 'text', props: { content: 'Aplikasi mobile koperasi terintegrasi untuk cek saldo, ajukan pinjaman, dan pantau SHU — 24/7 tanpa antre.', fontSize: '18px', color: '#64748b', align: 'left' } },
-      { id: 'btn', type: 'button', props: { label: 'Unduh Aplikasi', href: '#contact', variant: 'primary', background: '#10b981', color: '#ffffff' } },
+      { id: 'btn', type: 'button', props: { label: 'Unduh Aplikasi', href: '#contact', variant: 'primary', size: 'large', radius: 'full', background: '#10b981', color: '#ffffff', shadow: 'md', fontSize: '15px', fontWeight: '600' } },
       { id: 'img', type: 'image', props: { src: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=600&auto=format&fit=crop', alt: 'Digital Koperasi', width: '100%', height: '360px', objectFit: 'cover' } },
     ]},
     { id: 'services', type: 'services', layout: 'services-03', components: [
