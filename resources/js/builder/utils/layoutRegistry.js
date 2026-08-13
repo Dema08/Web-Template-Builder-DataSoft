@@ -8,6 +8,7 @@ export const LAYOUT_REGISTRY = {
     { id: 'navbar-03', name: 'Navbar 03', component: 'Navbar03', thumbnail: null },
     { id: 'navbar-04', name: 'Navbar 04', component: 'Navbar04', thumbnail: null },
     { id: 'navbar-05', name: 'Navbar 05', component: 'Navbar05', thumbnail: null },
+    { id: 'navbar-06', name: 'Navbar 06', component: 'Navbar06', thumbnail: null },
   ],
   hero: [
     { id: 'hero-01', name: 'Hero 01', component: 'Hero01', thumbnail: null },
@@ -18,6 +19,7 @@ export const LAYOUT_REGISTRY = {
     { id: 'hero-06', name: 'Hero 06', component: 'Hero06', thumbnail: null },
     { id: 'hero-07', name: 'Hero 07', component: 'Hero07', thumbnail: null },
     { id: 'hero-08', name: 'Hero 08', component: 'Hero08', thumbnail: null },
+    { id: 'hero-09', name: 'Hero 09', component: 'Hero09', thumbnail: null },
   ],
   about: [
     { id: 'about-01', name: 'About 01', component: 'About01', thumbnail: null },
@@ -53,9 +55,14 @@ export const LAYOUT_REGISTRY = {
   ],
   fleet: [
     { id: 'fleet-01', name: 'Fleet 01', component: 'Fleet01', thumbnail: null },
+    { id: 'fleet-02', name: 'Fleet 02', component: 'Fleet02', thumbnail: null },
   ],
   coverage: [
     { id: 'coverage-01', name: 'Coverage 01', component: 'Coverage01', thumbnail: null },
+    { id: 'coverage-02', name: 'Coverage 02', component: 'Coverage02', thumbnail: null },
+  ],
+  testimonials: [
+    { id: 'testimonials-01', name: 'Testimonials 01', component: 'Testimonials01', thumbnail: null },
   ],
   clients: [
     { id: 'clients-01', name: 'Clients 01', component: 'Clients01', thumbnail: null },
@@ -89,6 +96,7 @@ export const LAYOUT_REGISTRY = {
   ],
   timeline: [
     { id: 'timeline-01', name: 'Timeline 01', component: 'Timeline01', thumbnail: null },
+    { id: 'timeline-02', name: 'Timeline 02', component: 'Timeline02', thumbnail: null },
   ],
   team: [
     { id: 'team-01', name: 'Team 01', component: 'Team01', thumbnail: null },

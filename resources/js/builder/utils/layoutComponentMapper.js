@@ -9,12 +9,14 @@ import Hero05 from '@builder/sections/hero/layouts/Hero05';
 import Hero06 from '@builder/sections/hero/layouts/Hero06';
 import Hero07 from '@builder/sections/hero/layouts/Hero07';
 import Hero08 from '@builder/sections/hero/layouts/Hero08';
+import Hero09 from '@builder/sections/hero/layouts/Hero09';
 
 import Navbar01 from '@builder/sections/navbar/layouts/Navbar01';
 import Navbar02 from '@builder/sections/navbar/layouts/Navbar02';
 import Navbar03 from '@builder/sections/navbar/layouts/Navbar03';
 import Navbar04 from '@builder/sections/navbar/layouts/Navbar04';
 import Navbar05 from '@builder/sections/navbar/layouts/Navbar05';
+import Navbar06 from '@builder/sections/navbar/layouts/Navbar06';
 
 import About01 from '@builder/sections/about/layouts/About01';
 import About02 from '@builder/sections/about/layouts/About02';
@@ -42,7 +44,10 @@ import Footer04 from '@builder/sections/footer/layouts/Footer04';
 
 import Statistics01 from '@builder/sections/statistics/layouts/Statistics01';
 import Fleet01 from '@builder/sections/fleet/layouts/Fleet01';
+import Fleet02 from '@builder/sections/fleet/layouts/Fleet02';
 import Coverage01 from '@builder/sections/coverage/layouts/Coverage01';
+import Coverage02 from '@builder/sections/coverage/layouts/Coverage02';
+import Testimonials01 from '@builder/sections/testimonials/layouts/Testimonials01';
 import Clients01 from '@builder/sections/clients/layouts/Clients01';
 import Programs01 from '@builder/sections/programs/layouts/Programs01';
 import Teachers01 from '@builder/sections/teachers/layouts/Teachers01';
@@ -54,6 +59,7 @@ import Certifications01 from '@builder/sections/certifications/layouts/Certifica
 import Vision01 from '@builder/sections/vision/layouts/Vision01';
 import Mission01 from '@builder/sections/mission/layouts/Mission01';
 import Timeline01 from '@builder/sections/timeline/layouts/Timeline01';
+import Timeline02 from '@builder/sections/timeline/layouts/Timeline02';
 import Team01 from '@builder/sections/team/layouts/Team01';
 import Faq01 from '@builder/sections/faq/layouts/Faq01';
 import Pricing01 from '@builder/sections/pricing/layouts/Pricing01';
@@ -69,6 +75,7 @@ export const LAYOUT_COMPONENTS = {
   'Hero06': Hero06,
   'Hero07': Hero07,
   'Hero08': Hero08,
+  'Hero09': Hero09,
 
   // Navbar layouts
   'Navbar01': Navbar01,
@@ -76,6 +83,7 @@ export const LAYOUT_COMPONENTS = {
   'Navbar03': Navbar03,
   'Navbar04': Navbar04,
   'Navbar05': Navbar05,
+  'Navbar06': Navbar06,
 
   // About layouts
   'About01': About01,
@@ -109,7 +117,10 @@ export const LAYOUT_COMPONENTS = {
   // Other section layouts
   'Statistics01': Statistics01,
   'Fleet01': Fleet01,
+  'Fleet02': Fleet02,
   'Coverage01': Coverage01,
+  'Coverage02': Coverage02,
+  'Testimonials01': Testimonials01,
   'Clients01': Clients01,
   'Programs01': Programs01,
   'Teachers01': Teachers01,
@@ -121,6 +132,7 @@ export const LAYOUT_COMPONENTS = {
   'Vision01': Vision01,
   'Mission01': Mission01,
   'Timeline01': Timeline01,
+  'Timeline02': Timeline02,
   'Team01': Team01,
   'Faq01': Faq01,
   'Pricing01': Pricing01,

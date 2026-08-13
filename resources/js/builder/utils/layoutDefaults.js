@@ -681,6 +681,31 @@ export const LAYOUT_DEFAULTS = {
   'map-01': [
     { id: 'heading-1', type: 'heading', props: { content: 'Find Us', level: 'h2', fontSize: '32px', fontWeight: '700', color: '#0f172a', align: 'center', margin: '0 0 32px 0' } },
   ],
+  'navbar-06': [
+    { id: 'logo-nav06', type: 'heading', props: { content: 'TRANSGO', level: 'h2', fontSize: '20px', fontWeight: '900', color: '#ffffff' } },
+    { id: 'cta-nav06', type: 'button', props: { label: 'Track Shipment →', href: '#tracking', variant: 'primary', size: 'small', background: '#2563eb', color: '#ffffff' } },
+  ],
+  'hero-09': [
+    { id: 'hero09-badge', type: 'badge', props: { content: 'NATIONAL LOGISTICS NETWORK', variant: 'primary', size: 'medium' } },
+    { id: 'hero09-title', type: 'heading', props: { content: 'Moving Businesses Forward, Across Indonesia.', level: 'h1', fontSize: '48px', fontWeight: '800', color: '#ffffff' } },
+    { id: 'hero09-desc', type: 'text', props: { content: 'Providing reliable, data-driven, and multimodal supply chain solutions.', fontSize: '18px', color: '#94a3b8' } },
+    { id: 'hero09-btn1', type: 'button', props: { label: 'Request a Quote →', href: '#services', variant: 'primary', size: 'large', background: '#2563eb', color: '#ffffff' } },
+    { id: 'hero09-btn2', type: 'button', props: { label: 'Track Shipment', href: '#tracking', variant: 'outline', size: 'large', background: 'transparent', color: '#ffffff' } },
+    { id: 'hero09-img', type: 'image', props: { src: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=800&auto=format&fit=crop&q=80', alt: 'Cargo Ship', width: '100%', height: '480px', objectFit: 'cover' } }
+  ],
+  'fleet-02': [
+    { id: 'fleet02-heading', type: 'heading', props: { content: 'Armada & Fasilitas', level: 'h2', fontSize: '36px', fontWeight: '800', color: '#ffffff' } },
+    { id: 'fleet02-desc', type: 'text', props: { content: 'Kami mengoperasikan armada modern untuk memastikan pengiriman tepat waktu.', fontSize: '16px', color: '#94a3b8' } },
+    { id: 'fleet02-img', type: 'image', props: { src: 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=800&auto=format&fit=crop&q=80', alt: 'Logistics Fleet', width: '100%', height: '400px', objectFit: 'cover' } }
+  ],
+  'coverage-02': [
+    { id: 'cov02-heading', type: 'heading', props: { content: 'Jangkauan Distribusi Nasional', level: 'h2', fontSize: '36px', color: '#ffffff' } },
+    { id: 'cov02-desc', type: 'text', props: { content: 'Menghubungkan bisnis Anda ke seluruh wilayah di Indonesia.', fontSize: '16px', color: '#94a3b8' } }
+  ],
+  'timeline-02': [
+    { id: 'tm02-heading', type: 'heading', props: { content: 'Proses Pengiriman Cargo', level: 'h2', fontSize: '36px', color: '#ffffff' } },
+    { id: 'tm02-desc', type: 'text', props: { content: 'Alur kerja profesional dari pengambilan barang hingga tiba di tujuan.', fontSize: '16px', color: '#94a3b8' } }
+  ],
 };
 
 export const getLayoutDefaults = (layoutId) => {
