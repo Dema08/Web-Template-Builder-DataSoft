@@ -9,7 +9,18 @@ export default {
   description: 'Desain ekspresif dan premium untuk brand UMKM kreatif, artisan, dan seniman — tampil beda dengan gradient mewah, glassmorphism, dan animasi halus.',
   thumbnail: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&auto=format&fit=crop&q=80',
   tags: ['Creative', 'Premium', 'Bold', 'Artisan', 'Gradient'],
-  theme: { primaryColor: '#7c3aed', accent: '#ec4899', dark: false },
+  theme: {
+    primaryColor: '#7c3aed',
+    secondaryColor: '#f5f3ff',
+    accentColor: '#ec4899',
+    dark: false,
+    surface: '#ffffff',
+    text: '#1e293b',
+    muted: '#64748b',
+    border: '#ede9fe',
+    radius: 'md',
+    font: 'system-ui, -apple-system, sans-serif',
+  },
   animations: ['fade-up', 'scale-in', 'slide-right', 'hover-glow', 'counter-up'],
   sections: [
     // ============================================================

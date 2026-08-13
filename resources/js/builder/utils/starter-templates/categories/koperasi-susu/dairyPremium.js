@@ -9,7 +9,18 @@ export default {
   description: 'Template premium untuk brand susu organik mewah — split hero dengan trust indicator, profil peternakan eksklusif, lini produk premium, statistik kapasitas, sertifikasi resmi, dan FAQ langganan.',
   thumbnail: 'https://images.unsplash.com/photo-1559598467-f8b76c8155d0?w=800&auto=format&fit=crop&q=80',
   tags: ['Premium', 'Organic', 'Luxury', 'Halal', 'BPOM'],
-  theme: { primaryColor: '#0f766e', accent: '#d97706', dark: false },
+  theme: {
+    primaryColor: '#0f766e',
+    secondaryColor: '#f0fdfa',
+    accentColor: '#d97706',
+    dark: false,
+    surface: '#ffffff',
+    text: '#1e293b',
+    muted: '#64748b',
+    border: '#ccfbf1',
+    radius: 'md',
+    font: 'system-ui, -apple-system, sans-serif',
+  },
   animations: ['fade-up', 'scale-in', 'hover-lift', 'counter-up'],
   sections: [
     { id: 'nav', type: 'navbar', layout: 'navbar-05', components: [
