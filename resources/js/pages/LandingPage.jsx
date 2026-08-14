@@ -1,13 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
     Sparkles, ArrowRight, Play, Check, Star, Zap, Globe, Layout,
     Palette, Image, Monitor, Smartphone, Tablet, MousePointer2,
     Shield, Layers, ChevronRight, Menu, X, TrendingUp,
     Users, BarChart3, Clock, Quote, CheckCircle2, Rocket,
-    Eye, Code2, Headphones, Award,
+    Eye, Code2, Headphones, Award, Edit2, Loader2,
 } from 'lucide-react';
 import { ROUTES } from '@constants';
+import { templateApi } from '@api';
 
 /* ─────────────────────────────────────────────────────────
    CONSTANTS
@@ -839,6 +840,237 @@ function PricingSection() {
 }
 
 /* ─────────────────────────────────────────────────────────
+   PUBLIC TEMPLATE SHOWCASE SECTION & MODAL
+───────────────────────────────────────────────────────── */
+function TemplatesSection() {
+    const [publishedTemplates, setPublishedTemplates] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [selectedModalTemplate, setSelectedModalTemplate] = useState(null);
+
+    useEffect(() => {
+        let isMounted = true;
+        templateApi.getPublic()
+            .then((res) => {
+                if (!isMounted) return;
+                const items = res.data?.data ?? res.data ?? [];
+                if (Array.isArray(items) && items.length > 0) {
+                    setPublishedTemplates(items);
+                }
+            })
+            .catch((err) => {
+                console.warn('Could not fetch public published templates, using fallback list:', err);
+            })
+            .finally(() => {
+                if (isMounted) setIsLoading(false);
+            });
+        return () => { isMounted = false; };
+    }, []);
+
+    const displayTemplates = publishedTemplates.length > 0 ? publishedTemplates : TEMPLATES.map((t, idx) => ({
+        id: idx + 1,
+        name: t.title,
+        description: 'Template profesional berkualitas tinggi dengan komponen visual drag and drop siap pakai untuk bisnis Anda.',
+        thumbnail: t.img,
+        preview_image: t.img,
+        industry_category: { name: t.tag },
+        code: `TPL-00${idx + 1}`,
+        version: '1.0.0',
+        is_fallback: true,
+    }));
+
+    return (
+        <section id="templates" className="py-20 sm:py-28 bg-slate-50 relative">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
+                    <div>
+                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold mb-4 border"
+                             style={{ background: 'rgba(79,70,229,0.06)', borderColor: 'rgba(79,70,229,0.18)', color: '#4f46e5' }}>
+                            <Layout className="h-3 w-3" /> Template Library
+                        </div>
+                        <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                            Published System Templates<br />Ready to Launch
+                        </h2>
+                        <p className="text-sm text-slate-500 mt-2 font-medium">
+                            Pilih template terbaik yang telah diterbitkan untuk kebutuhan website bisnis Anda.
+                        </p>
+                    </div>
+                    <Link to={ROUTES.LOGIN}
+                          className="inline-flex items-center gap-2 text-sm font-bold text-indigo-600 hover:text-indigo-700 transition shrink-0 hover:translate-x-1 duration-200">
+                        Browse All Templates <ArrowRight className="h-4 w-4" />
+                    </Link>
+                </div>
+
+                {isLoading ? (
+                    <div className="flex items-center justify-center py-20">
+                        <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {displayTemplates.map((tpl) => {
+                            const categoryName = tpl.industry_category?.name || 'General';
+                            const imageUrl = tpl.thumbnail || tpl.preview_image || 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&auto=format&fit=crop&q=80';
+
+                            return (
+                                <div key={tpl.id}
+                                     onClick={() => setSelectedModalTemplate(tpl)}
+                                     className="group relative rounded-2xl overflow-hidden cursor-pointer bg-white border border-slate-200/80 shadow-sm ds-hover-lift ds-hover-glow transition-all duration-300 flex flex-col justify-between">
+                                    
+                                    {/* Thumbnail Image Container */}
+                                    <div className="relative h-52 overflow-hidden bg-slate-100">
+                                        <img src={imageUrl} alt={tpl.name}
+                                             className="w-full h-full object-cover group-hover:scale-105 transition duration-700" />
+                                        
+                                        {/* Overlay on hover */}
+                                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center gap-2"
+                                             style={{ background: 'rgba(15,23,42,0.65)', backdropFilter: 'blur(3px)' }}>
+                                            <span className="px-4 py-2 bg-white text-slate-900 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-lg hover:bg-slate-50 transition">
+                                                <Eye className="h-3.5 w-3.5 text-indigo-600" /> Lihat Detail & Preview
+                                            </span>
+                                        </div>
+
+                                        {/* Category Badge */}
+                                        <div className="absolute top-3 left-3 z-10">
+                                            <span className="px-3 py-1 rounded-full text-[10px] font-extrabold text-white shadow-md backdrop-blur-md"
+                                                  style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
+                                                {categoryName}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    {/* Info Body */}
+                                    <div className="p-5 space-y-2.5">
+                                        <div className="flex items-start justify-between gap-2">
+                                            <div>
+                                                <h3 className="text-base font-extrabold text-slate-900 group-hover:text-indigo-600 transition-colors line-clamp-1">
+                                                    {tpl.name}
+                                                </h3>
+                                                {tpl.code && (
+                                                    <p className="text-[11px] font-bold text-indigo-600 mt-0.5">{tpl.code}</p>
+                                                )}
+                                            </div>
+                                            <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-indigo-600 group-hover:translate-x-1 transition-all shrink-0 mt-1" />
+                                        </div>
+
+                                        {tpl.description && (
+                                            <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
+                                                {tpl.description}
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                )}
+            </div>
+
+            {/* ════════════════════════════════════════════════════
+                TEMPLATE DETAIL & PREVIEW MODAL
+            ════════════════════════════════════════════════════ */}
+            {selectedModalTemplate && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
+                     style={{ background: 'rgba(15,23,42,0.75)', backdropFilter: 'blur(8px)' }}>
+                    <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full overflow-hidden border border-slate-100 animate-in fade-in zoom-in-95 duration-200 max-h-[90vh] flex flex-col">
+                        
+                        {/* Header Image / Thumbnail Preview */}
+                        <div className="relative h-64 sm:h-72 bg-slate-900 overflow-hidden shrink-0">
+                            <img
+                                src={selectedModalTemplate.thumbnail || selectedModalTemplate.preview_image || 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&auto=format&fit=crop&q=80'}
+                                alt={selectedModalTemplate.name}
+                                className="w-full h-full object-cover opacity-90"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/30" />
+
+                            {/* Close Button */}
+                            <button
+                                type="button"
+                                onClick={() => setSelectedModalTemplate(null)}
+                                className="absolute top-4 right-4 p-2 rounded-full bg-slate-900/60 text-white hover:bg-slate-900 transition backdrop-blur-md shadow-lg z-10"
+                            >
+                                <X className="h-5 w-5" />
+                            </button>
+
+                            {/* Top Left Badges */}
+                            <div className="absolute top-4 left-4 flex items-center gap-2">
+                                <span className="px-3 py-1 rounded-full text-xs font-extrabold text-white shadow-md"
+                                      style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
+                                    {selectedModalTemplate.industry_category?.name || 'Corporate'}
+                                </span>
+                                <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-500/90 text-white backdrop-blur-md flex items-center gap-1 shadow-md">
+                                    <CheckCircle2 className="h-3.5 w-3.5" /> Published
+                                </span>
+                            </div>
+
+                            {/* Bottom Title on Image */}
+                            <div className="absolute bottom-4 left-6 right-6 text-white">
+                                <h3 className="text-2xl font-black tracking-tight">{selectedModalTemplate.name}</h3>
+                                {selectedModalTemplate.code && (
+                                    <p className="text-xs font-bold text-indigo-300 mt-0.5">{selectedModalTemplate.code}</p>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Modal Body */}
+                        <div className="p-6 space-y-5 overflow-y-auto flex-1">
+                            <div>
+                                <h4 className="text-xs font-extrabold text-slate-400 uppercase tracking-wider mb-1.5">Deskripsi Template</h4>
+                                <p className="text-sm text-slate-600 leading-relaxed font-normal">
+                                    {selectedModalTemplate.description || 'Template profesional siap pakai dengan komponen visual visual builder modern untuk mempercepat peluncuran website perusahaan Anda.'}
+                                </p>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4 pt-3 border-t border-slate-100">
+                                <div className="bg-slate-50 p-3 rounded-2xl border border-slate-100">
+                                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Kategori Industry</span>
+                                    <span className="text-xs font-extrabold text-slate-800 mt-0.5 block">
+                                        {selectedModalTemplate.industry_category?.name || 'Umum / Corporate'}
+                                    </span>
+                                </div>
+                                <div className="bg-slate-50 p-3 rounded-2xl border border-slate-100">
+                                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Versi Engine</span>
+                                    <span className="text-xs font-extrabold text-slate-800 mt-0.5 block">
+                                        v{selectedModalTemplate.version || '1.0.0'}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Modal Footer Actions */}
+                        <div className="p-5 bg-slate-50 border-t border-slate-100 flex flex-col sm:flex-row items-center gap-3 shrink-0">
+                            {/* Live Preview Action */}
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    const previewUrl = selectedModalTemplate.is_fallback
+                                        ? `/admin/templates/builder/preview`
+                                        : `/admin/templates/builder/${selectedModalTemplate.id}/preview`;
+                                    window.open(previewUrl, '_blank');
+                                }}
+                                className="w-full sm:flex-1 py-3 px-5 rounded-2xl bg-white hover:bg-slate-100 text-slate-800 border border-slate-200 font-bold text-xs shadow-sm flex items-center justify-center gap-2 transition hover:scale-[1.02] active:scale-95"
+                            >
+                                <Eye className="h-4 w-4 text-indigo-600" />
+                                <span>Live Preview</span>
+                            </button>
+
+                            {/* Edit Action -> Redirects to Login */}
+                            <Link
+                                to={ROUTES.LOGIN}
+                                className="w-full sm:flex-1 py-3 px-5 rounded-2xl text-white font-bold text-xs shadow-lg shadow-indigo-600/25 flex items-center justify-center gap-2 transition hover:scale-[1.02] active:scale-95 text-center"
+                                style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}
+                            >
+                                <Edit2 className="h-4 w-4" />
+                                <span>Edit Template (Login)</span>
+                            </Link>
+                        </div>
+
+                    </div>
+                </div>
+            )}
+        </section>
+    );
+}
+
+/* ─────────────────────────────────────────────────────────
    MAIN PAGE
 ───────────────────────────────────────────────────────── */
 export default function LandingPage() {
@@ -1028,63 +1260,7 @@ export default function LandingPage() {
             {/* ════════════════════════════════════════════════════
                 TEMPLATE SHOWCASE
             ════════════════════════════════════════════════════ */}
-            <section id="templates" className="py-20 sm:py-28 bg-slate-50">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
-                        <div>
-                            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold mb-4 border"
-                                 style={{ background: 'rgba(79,70,229,0.06)', borderColor: 'rgba(79,70,229,0.18)', color: '#4f46e5' }}>
-                                <Layout className="h-3 w-3" /> Template Library
-                            </div>
-                            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-                                Beautiful Templates<br />Ready to Use
-                            </h2>
-                        </div>
-                        <Link to={ROUTES.LOGIN}
-                              className="inline-flex items-center gap-2 text-sm font-bold text-indigo-600 hover:text-indigo-700 transition shrink-0 hover:translate-x-1 duration-200">
-                            Browse All Templates <ArrowRight className="h-4 w-4" />
-                        </Link>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {TEMPLATES.map((t, i) => (
-                            <div key={i}
-                                 onMouseEnter={() => setActiveTemplate(i)}
-                                 onMouseLeave={() => setActiveTemplate(null)}
-                                 className="group relative rounded-2xl overflow-hidden cursor-pointer bg-white border border-slate-100 shadow-sm ds-hover-lift ds-hover-glow transition-all duration-300">
-                                {/* Image */}
-                                <div className="relative h-48 overflow-hidden">
-                                    <img src={t.img} alt={t.title}
-                                         className="w-full h-full object-cover group-hover:scale-110 transition duration-700" />
-                                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center gap-3"
-                                         style={{ background: 'rgba(15,23,42,0.6)', backdropFilter: 'blur(3px)' }}>
-                                        <Link to={ROUTES.LOGIN}
-                                              className="px-4 py-2 bg-white text-slate-900 rounded-xl text-xs font-bold flex items-center gap-1 shadow-lg hover:bg-slate-50 hover:scale-105 transition">
-                                            <Eye className="h-3.5 w-3.5" /> Preview
-                                        </Link>
-                                        <Link to={ROUTES.REGISTER}
-                                              className="px-4 py-2 text-white rounded-xl text-xs font-bold flex items-center gap-1 shadow-lg hover:scale-105 transition"
-                                              style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
-                                            Use Template
-                                        </Link>
-                                    </div>
-                                    {/* Badge */}
-                                    <div className="absolute top-3 left-3">
-                                        <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold text-white shadow-md animate-pulse"
-                                              style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
-                                            {t.tag}
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="p-4 flex items-center justify-between bg-white">
-                                    <span className="text-sm font-extrabold text-slate-900 group-hover:text-indigo-600 transition-colors">{t.title}</span>
-                                    <ChevronRight className="h-4 w-4 text-slate-300 group-hover:text-indigo-600 group-hover:translate-x-1 transition-all" />
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
+            <TemplatesSection />
 
             {/* ════════════════════════════════════════════════════
                 STATS (Dark with Animated Counter & Parallax)

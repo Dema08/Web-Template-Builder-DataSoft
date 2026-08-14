@@ -159,16 +159,16 @@ export default function AdminTemplatePreview() {
   // Viewport width styling
   const getViewportContainerStyle = () => {
     if (viewport === 'tablet') {
-      return 'w-[768px] mx-auto min-h-[90vh] my-6 bg-white shadow-2xl rounded-2xl border border-slate-300/80 overflow-hidden transition-all duration-300 ease-in-out';
+      return 'w-[768px] mx-auto min-h-[90vh] my-6 bg-white shadow-2xl rounded-2xl border border-slate-300/80 overflow-y-auto transition-all duration-300 ease-in-out';
     }
     if (viewport === 'mobile') {
-      return 'w-[375px] mx-auto min-h-[85vh] my-6 bg-white shadow-2xl rounded-3xl border-4 border-slate-800 overflow-hidden transition-all duration-300 ease-in-out';
+      return 'w-[375px] mx-auto min-h-[85vh] my-6 bg-white shadow-2xl rounded-3xl border-4 border-slate-800 overflow-y-auto transition-all duration-300 ease-in-out';
     }
     return 'w-full min-h-screen bg-white transition-all duration-300 ease-in-out';
   };
 
   return (
-    <div className="min-h-screen bg-slate-900/95 font-sans relative selection:bg-indigo-500 selection:text-white">
+    <div className="min-h-screen bg-slate-900/95 font-sans relative selection:bg-indigo-500 selection:text-white overflow-y-auto">
       {/* 48px Floating Header Preview Toolbar */}
       <div
         onMouseEnter={() => setIsToolbarExpanded(true)}
@@ -277,7 +277,7 @@ export default function AdminTemplatePreview() {
       </div>
 
       {/* Main Website Canvas */}
-      <div className={`pt-12 pb-16 transition-all duration-300 min-h-screen ${viewport !== 'desktop' ? 'px-4' : ''}`}>
+      <div className={`pt-16 pb-16 transition-all duration-300 ${viewport !== 'desktop' ? 'px-4' : ''}`}>
         <div className={getViewportContainerStyle()}>
           {sections && sections.length > 0 ? (
             sections.map((section) => (

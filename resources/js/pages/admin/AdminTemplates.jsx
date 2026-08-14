@@ -453,7 +453,11 @@ export default function AdminTemplates() {
                     {templates.map((tpl) => (
                         <Card
                             key={tpl.id}
-                            className={`border border-slate-200/80 flex flex-col justify-between group hover:shadow-lg transition-all duration-200 bg-white relative ${actionDropdown === tpl.id ? 'z-30' : 'z-0'}`}
+                            className={`border flex flex-col justify-between group transition-all duration-200 bg-white relative rounded-3xl ${
+                                actionDropdown === tpl.id
+                                    ? 'z-40 ring-2 ring-indigo-500/40 shadow-xl border-indigo-200'
+                                    : 'border-slate-200/80 hover:shadow-lg z-0'
+                            }`}
                         >
                             <div className="relative h-[220px] overflow-hidden rounded-t-[24px]">
                                 <TemplateCardThumbnail template={tpl} />
@@ -495,7 +499,7 @@ export default function AdminTemplates() {
                                         <button
                                             type="button"
                                             onClick={() => window.open(`/admin/templates/builder/${tpl.id}/preview`, '_blank')}
-                                            className="p-1.5 text-slate-400 hover:text-indigo-600 rounded-lg hover:bg-indigo-50 transition"
+                                            className="p-2 text-slate-400 hover:text-indigo-600 rounded-xl hover:bg-indigo-50 transition-all duration-150 active:scale-95"
                                             title="Live Preview in New Tab"
                                         >
                                             <Eye className="h-4 w-4" />
@@ -508,92 +512,137 @@ export default function AdminTemplates() {
                                                     e.stopPropagation();
                                                     setActionDropdown(actionDropdown === tpl.id ? null : tpl.id);
                                                 }}
-                                                className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition"
+                                                className={`p-2 rounded-xl transition-all duration-150 flex items-center justify-center ${
+                                                    actionDropdown === tpl.id
+                                                        ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30 scale-105'
+                                                        : 'text-slate-400 hover:text-indigo-600 hover:bg-indigo-50/80 active:scale-95'
+                                                }`}
+                                                title="Opsi Template"
                                             >
-                                                <MoreVertical className="h-4 w-4" />
+                                                <MoreVertical className="h-4 w-4 stroke-[2.5]" />
                                             </button>
 
                                             {actionDropdown === tpl.id && (
                                                 <div
                                                     onClick={(e) => e.stopPropagation()}
-                                                    className="absolute right-0 mt-1 w-52 bg-white rounded-xl shadow-xl border border-slate-200 z-50 py-1.5"
+                                                    className="absolute right-0 bottom-full mb-2.5 w-60 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl shadow-indigo-950/15 border border-slate-200/90 z-50 p-2 transform origin-bottom-right ds-animate-scale-in space-y-1"
                                                 >
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => { navigate(`/admin/templates/builder/${tpl.id}`); setActionDropdown(null); }}
-                                                        className="w-full text-left px-4 py-2 text-xs font-bold text-slate-800 hover:bg-indigo-50 hover:text-indigo-600 flex items-center gap-2 transition"
-                                                    >
-                                                        <Layout className="h-3.5 w-3.5 text-indigo-600" />
-                                                        Open in Builder
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => { handleOpenModal(tpl); setActionDropdown(null); }}
-                                                        className="w-full text-left px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-2 transition"
-                                                    >
-                                                        <Edit2 className="h-3.5 w-3.5" />
-                                                        Edit Details
-                                                    </button>
-                                                     <button
-                                                        type="button"
-                                                        onClick={() => { duplicateMutation.mutate(tpl.id); setActionDropdown(null); }}
-                                                        className="w-full text-left px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 flex items-center gap-2 transition"
-                                                    >
-                                                        <Copy className="h-3.5 w-3.5" />
-                                                        Duplicate
-                                                    </button>
-
-                                                    <div className="my-1 border-t border-slate-100" />
-                                                    <div className="px-4 py-1 text-[10px] font-extrabold uppercase text-slate-400 tracking-wider">
-                                                        Change Status
+                                                    {/* Action Header */}
+                                                    <div className="px-3 py-1.5 flex items-center justify-between border-b border-slate-100">
+                                                        <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">Opsi Template</span>
+                                                        <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-slate-100 text-slate-500">#{tpl.id}</span>
                                                     </div>
 
-                                                    {tpl.status !== 'published' && (
+                                                    {/* Section 1: Main Actions */}
+                                                    <div className="space-y-0.5 py-1">
                                                         <button
                                                             type="button"
-                                                            onClick={() => updateStatusMutation.mutate({ id: tpl.id, status: 'published', template: tpl })}
-                                                            className="w-full text-left px-4 py-2 text-xs font-bold text-emerald-700 hover:bg-emerald-50 flex items-center gap-2 transition"
+                                                            onClick={() => { navigate(`/admin/templates/builder/${tpl.id}`); setActionDropdown(null); }}
+                                                            className="w-full text-left px-3 py-2 text-xs font-bold text-slate-800 hover:bg-indigo-600 hover:text-white rounded-xl flex items-center justify-between group transition-all duration-150"
                                                         >
-                                                            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
-                                                            Publish (Aktifkan)
+                                                            <div className="flex items-center gap-2.5">
+                                                                <div className="p-1.5 rounded-lg bg-indigo-50 text-indigo-600 group-hover:bg-white/20 group-hover:text-white transition-colors">
+                                                                    <Layout className="h-3.5 w-3.5" />
+                                                                </div>
+                                                                <span>Open in Builder</span>
+                                                            </div>
+                                                            <span className="text-[10px] opacity-0 group-hover:opacity-100 font-semibold transition-opacity">Edit →</span>
                                                         </button>
-                                                    )}
 
-                                                    {tpl.status !== 'draft' && (
                                                         <button
                                                             type="button"
-                                                            onClick={() => updateStatusMutation.mutate({ id: tpl.id, status: 'draft', template: tpl })}
-                                                            className="w-full text-left px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100 flex items-center gap-2 transition"
+                                                            onClick={() => { handleOpenModal(tpl); setActionDropdown(null); }}
+                                                            className="w-full text-left px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100 hover:text-slate-900 rounded-xl flex items-center gap-2.5 group transition-all duration-150"
                                                         >
-                                                            <FileEdit className="h-3.5 w-3.5 text-slate-500" />
-                                                            Set to Draft
+                                                            <div className="p-1.5 rounded-lg bg-slate-100 text-slate-600 group-hover:bg-slate-200 transition-colors">
+                                                                <Edit2 className="h-3.5 w-3.5" />
+                                                            </div>
+                                                            <span>Edit Details</span>
                                                         </button>
-                                                    )}
 
-                                                    {tpl.status !== 'disabled' && (
                                                         <button
                                                             type="button"
-                                                            onClick={() => updateStatusMutation.mutate({ id: tpl.id, status: 'disabled', template: tpl })}
-                                                            className="w-full text-left px-4 py-2 text-xs font-bold text-red-700 hover:bg-red-50 flex items-center gap-2 transition"
+                                                            onClick={() => { duplicateMutation.mutate(tpl.id); setActionDropdown(null); }}
+                                                            className="w-full text-left px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100 hover:text-slate-900 rounded-xl flex items-center gap-2.5 group transition-all duration-150"
                                                         >
-                                                            <Ban className="h-3.5 w-3.5 text-red-600" />
-                                                            Disable (Sembunyikan)
+                                                            <div className="p-1.5 rounded-lg bg-slate-100 text-slate-600 group-hover:bg-slate-200 transition-colors">
+                                                                <Copy className="h-3.5 w-3.5" />
+                                                            </div>
+                                                            <span>Duplicate</span>
                                                         </button>
-                                                    )}
+                                                    </div>
 
-                                                    <div className="my-1 border-t border-slate-100" />
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => {
-                                                            if (confirm(`Delete template "${tpl.name}"?`)) {
-                                                                deleteMutation.mutate(tpl.id);
-                                                            }
-                                                        }}
-                                                        className="w-full text-left px-4 py-2 text-xs font-bold text-red-700 hover:bg-red-50 flex items-center gap-2 transition"
-                                                    >
-                                                        <Trash2 className="h-3.5 w-3.5" />
-                                                        Delete
-                                                    </button>
+                                                    {/* Section 2: Status Management */}
+                                                    <div className="border-t border-slate-100 pt-1 space-y-0.5">
+                                                        <div className="px-3 py-1 text-[10px] font-extrabold uppercase text-slate-400 tracking-wider">
+                                                            Ubah Status
+                                                        </div>
+
+                                                        {tpl.status !== 'published' && (
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => updateStatusMutation.mutate({ id: tpl.id, status: 'published', template: tpl })}
+                                                                className="w-full text-left px-3 py-2 text-xs font-bold text-emerald-700 hover:bg-emerald-600 hover:text-white rounded-xl flex items-center justify-between group transition-all duration-150"
+                                                            >
+                                                                <div className="flex items-center gap-2.5">
+                                                                    <div className="p-1.5 rounded-lg bg-emerald-50 text-emerald-600 group-hover:bg-white/20 group-hover:text-white transition-colors">
+                                                                        <CheckCircle2 className="h-3.5 w-3.5" />
+                                                                    </div>
+                                                                    <span>Publish (Aktifkan)</span>
+                                                                </div>
+                                                            </button>
+                                                        )}
+
+                                                        {tpl.status !== 'draft' && (
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => updateStatusMutation.mutate({ id: tpl.id, status: 'draft', template: tpl })}
+                                                                className="w-full text-left px-3 py-2 text-xs font-bold text-slate-700 hover:bg-amber-500 hover:text-white rounded-xl flex items-center justify-between group transition-all duration-150"
+                                                            >
+                                                                <div className="flex items-center gap-2.5">
+                                                                    <div className="p-1.5 rounded-lg bg-amber-50 text-amber-600 group-hover:bg-white/20 group-hover:text-white transition-colors">
+                                                                        <FileEdit className="h-3.5 w-3.5" />
+                                                                    </div>
+                                                                    <span>Set to Draft</span>
+                                                                </div>
+                                                            </button>
+                                                        )}
+
+                                                        {tpl.status !== 'disabled' && (
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => updateStatusMutation.mutate({ id: tpl.id, status: 'disabled', template: tpl })}
+                                                                className="w-full text-left px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-700 hover:text-white rounded-xl flex items-center justify-between group transition-all duration-150"
+                                                            >
+                                                                <div className="flex items-center gap-2.5">
+                                                                    <div className="p-1.5 rounded-lg bg-slate-100 text-slate-600 group-hover:bg-white/20 group-hover:text-white transition-colors">
+                                                                        <Ban className="h-3.5 w-3.5" />
+                                                                    </div>
+                                                                    <span>Disable (Sembunyikan)</span>
+                                                                </div>
+                                                            </button>
+                                                        )}
+                                                    </div>
+
+                                                    {/* Section 3: Danger Action */}
+                                                    <div className="border-t border-slate-100 pt-1">
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => {
+                                                                if (confirm(`Delete template "${tpl.name}"?`)) {
+                                                                    deleteMutation.mutate(tpl.id);
+                                                                }
+                                                            }}
+                                                            className="w-full text-left px-3 py-2 text-xs font-bold text-rose-600 hover:bg-rose-600 hover:text-white rounded-xl flex items-center justify-between group transition-all duration-150"
+                                                        >
+                                                            <div className="flex items-center gap-2.5">
+                                                                <div className="p-1.5 rounded-lg bg-rose-50 text-rose-600 group-hover:bg-white/20 group-hover:text-white transition-colors">
+                                                                    <Trash2 className="h-3.5 w-3.5" />
+                                                                </div>
+                                                                <span>Delete Template</span>
+                                                            </div>
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             )}
                                         </div>

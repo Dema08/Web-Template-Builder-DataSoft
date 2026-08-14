@@ -1,6 +1,9 @@
 import http from './http';
 
 const templateApi = {
+  // Get public published templates for landing page
+  getPublic: (params = {}) => http.get('/public/templates', { params }),
+
   // List templates with filters
   getAll: (params = {}) => http.get('/admin/templates', { params }),
 

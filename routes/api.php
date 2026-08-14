@@ -23,6 +23,8 @@ Route::prefix('v1')->group(function (): void {
         Route::get('/site', [App\Domains\Publish\Http\Controllers\PublicSiteController::class, 'show']);
         // GET /api/v1/public/settings — brand identity for unauthenticated pages
         Route::get('/settings', [App\Domains\System\Http\Controllers\PublicSettingsController::class, 'index']);
+        // GET /api/v1/public/templates — published templates showcase for landing page
+        Route::get('/templates', [App\Domains\Publish\Http\Controllers\PublicSiteController::class, 'templates']);
     });
 
     // -------------------------------------------------------------

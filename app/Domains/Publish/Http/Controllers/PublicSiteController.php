@@ -71,4 +71,22 @@ class PublicSiteController extends BaseController
             'css'  => "h1 { color: {$brandColor}; }",
         ], 'Public site data retrieved');
     }
+
+    /**
+     * Get all published templates for public showcase (e.g., landing page).
+     */
+    public function templates(): JsonResponse
+    {
+        $templates = \App\Domains\Template\Models\Template::where('status', 'published')
+            ->with('industryCategory')
+            ->orderByDesc('is_featured')
+            ->orderBy('sort_order')
+            ->orderByDesc('id')
+            ->get();
+
+        return $this->success(
+            \App\Domains\Template\Resources\TemplateResource::collection($templates),
+            'Published templates retrieved successfully'
+        );
+    }
 }
