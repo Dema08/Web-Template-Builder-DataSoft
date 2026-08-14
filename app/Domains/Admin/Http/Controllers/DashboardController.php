@@ -12,7 +12,7 @@ class DashboardController extends BaseController
 {
     public function __construct(protected DashboardService $dashboardService)
     {
-        //
+        
     }
 
     public function index(Request $request): JsonResponse

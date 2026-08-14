@@ -79,6 +79,54 @@ class Template extends Model
     }
 
     /**
+     * Get full URL for template thumbnail.
+     */
+    public function getThumbnailUrlAttribute(): ?string
+    {
+        if (!$this->thumbnail) {
+            return null;
+        }
+
+        if (str_starts_with($this->thumbnail, 'http://') || str_starts_with($this->thumbnail, 'https://')) {
+            return $this->thumbnail;
+        }
+
+        if (str_starts_with($this->thumbnail, 'storage/')) {
+            return asset($this->thumbnail);
+        }
+
+        if (str_starts_with($this->thumbnail, '/storage/')) {
+            return asset(ltrim($this->thumbnail, '/'));
+        }
+
+        return asset('storage/' . $this->thumbnail);
+    }
+
+    /**
+     * Get full URL for template preview image.
+     */
+    public function getPreviewImageUrlAttribute(): ?string
+    {
+        if (!$this->preview_image) {
+            return null;
+        }
+
+        if (str_starts_with($this->preview_image, 'http://') || str_starts_with($this->preview_image, 'https://')) {
+            return $this->preview_image;
+        }
+
+        if (str_starts_with($this->preview_image, 'storage/')) {
+            return asset($this->preview_image);
+        }
+
+        if (str_starts_with($this->preview_image, '/storage/')) {
+            return asset(ltrim($this->preview_image, '/'));
+        }
+
+        return asset('storage/' . $this->preview_image);
+    }
+
+    /**
      * Industry category that owns this template (primary relation).
      */
     public function category(): BelongsTo

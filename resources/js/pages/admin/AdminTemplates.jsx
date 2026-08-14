@@ -29,21 +29,16 @@ import ThumbnailUploader from '@/components/ui/ThumbnailUploader';
 function TemplateCardThumbnail({ template }) {
     const [imgError, setImgError] = useState(false);
     const [imgLoaded, setImgLoaded] = useState(false);
-    const imageUrl = template.preview_image || template.thumbnail;
+    const imageUrl = template.thumbnail;
 
-    // Debug: Log thumbnail URL for each card
     useEffect(() => {
-        console.log('Card thumbnail debug:', {
-            templateId: template.id,
-            templateName: template.name,
-            imageUrl: imageUrl,
-            hasImage: !!imageUrl,
-        });
-    }, [template.id, template.name, imageUrl]);
+        setImgError(false);
+        setImgLoaded(false);
+    }, [template?.id, template?.thumbnail]);
 
     if (imageUrl && !imgError) {
         return (
-            <div className="w-full h-full relative">
+            <div className="w-full h-full relative bg-slate-100">
                 {!imgLoaded && (
                     <div className="absolute inset-0 flex items-center justify-center bg-slate-50">
                         <div className="h-8 w-8 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
@@ -53,15 +48,14 @@ function TemplateCardThumbnail({ template }) {
                     src={imageUrl}
                     alt={template.name}
                     onError={(e) => {
-                        console.error('Failed to load image:', imageUrl, e);
+                        console.error('Failed to load template image:', imageUrl, e);
                         setImgError(true);
                     }}
                     onLoad={() => {
-                        console.log('Image loaded successfully:', imageUrl);
                         setImgLoaded(true);
                     }}
-                    className="w-full h-full object-cover"
-                    style={{ display: imgLoaded ? 'block' : 'none' }}
+                    className="w-full h-full object-cover transition-opacity duration-300"
+                    style={{ opacity: imgLoaded ? 1 : 0 }}
                 />
             </div>
         );
@@ -334,14 +328,14 @@ export default function AdminTemplates() {
 
     const updateStatusMutation = useMutation({
         mutationFn: ({ id, status, template }) => {
-            if (status === 'published' || status === 'draft') {
+            if (status === 'published') {
                 if (template && (!template.description?.trim() || !template.thumbnail?.trim())) {
                     toast.error('Deskripsi dan Thumbnail Wajib Diisi terlebih dahulu!', 'Data Tidak Lengkap');
                     handleOpenModal(template);
                     throw new Error('Description and thumbnail required');
                 }
+                return templateApi.publish(id);
             }
-            if (status === 'published') return templateApi.publish(id);
             return templateApi.update(id, { status });
         },
         onSuccess: (_, variables) => {
@@ -459,7 +453,7 @@ export default function AdminTemplates() {
                     {templates.map((tpl) => (
                         <Card
                             key={tpl.id}
-                            className="border border-slate-200/80 flex flex-col justify-between group hover:shadow-lg transition-all duration-200 bg-white relative"
+                            className={`border border-slate-200/80 flex flex-col justify-between group hover:shadow-lg transition-all duration-200 bg-white relative ${actionDropdown === tpl.id ? 'z-30' : 'z-0'}`}
                         >
                             <div className="relative h-[220px] overflow-hidden rounded-t-[24px]">
                                 <TemplateCardThumbnail template={tpl} />
@@ -520,7 +514,10 @@ export default function AdminTemplates() {
                                             </button>
 
                                             {actionDropdown === tpl.id && (
-                                                <div className="absolute right-0 mt-1 w-52 bg-white rounded-xl shadow-xl border border-slate-200 z-30 py-1.5">
+                                                <div
+                                                    onClick={(e) => e.stopPropagation()}
+                                                    className="absolute right-0 mt-1 w-52 bg-white rounded-xl shadow-xl border border-slate-200 z-50 py-1.5"
+                                                >
                                                     <button
                                                         type="button"
                                                         onClick={() => { navigate(`/admin/templates/builder/${tpl.id}`); setActionDropdown(null); }}
@@ -763,7 +760,7 @@ export default function AdminTemplates() {
                         <div className="space-y-4">
                             <div>
                                 <img
-                                    src={previewTemplate.preview_image || previewTemplate.thumbnail || '/placeholder-template.jpg'}
+                                    src={previewTemplate.thumbnail || '/placeholder-template.jpg'}
                                     alt={previewTemplate.name}
                                     className="w-full h-64 object-cover rounded-xl border border-slate-200"
                                 />

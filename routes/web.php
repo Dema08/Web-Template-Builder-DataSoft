@@ -18,6 +18,26 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/debug/templates', function () {
+    $templates = \App\Domains\Template\Models\Template::select('id', 'name', 'thumbnail', 'preview_image', 'status')
+        ->whereNotNull('thumbnail')
+        ->limit(5)
+        ->get();
+
+    return response()->json([
+        'count' => $templates->count(),
+        'data' => $templates->map(function ($tpl) {
+            return [
+                'id' => $tpl->id,
+                'name' => $tpl->name,
+                'thumbnail_raw' => $tpl->thumbnail,
+                'preview_image_raw' => $tpl->preview_image,
+                'thumbnail_url_resource' => (new \App\Domains\Template\Resources\TemplateResource($tpl))->toArray(request())['thumbnail'] ?? null,
+            ];
+        }),
+    ]);
+});
+
 Route::get('/{any?}', fn () => view('welcome'))->where('any', '.*');
 
 
