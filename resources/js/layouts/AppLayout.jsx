@@ -20,8 +20,9 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@hooks';
 import { ROUTES } from '@constants';
-import { Spinner } from '@components/ui';
+import { Spinner, PageLoader } from '@components/ui';
 import { useSettingsStore } from '@store';
+import { Suspense } from 'react';
 
 export default function AppLayout() {
     const { user, logout, isLoggingOut } = useAuth();
@@ -255,8 +256,10 @@ export default function AppLayout() {
 
                     {/* Dynamic Page Outlet Content */}
                     <div className="flex-1 flex flex-col justify-between">
-                        <div className="flex-1">
-                            <Outlet />
+                        <div className="flex-1 relative">
+                            <Suspense fallback={<PageLoader />}>
+                                <Outlet />
+                            </Suspense>
                         </div>
 
                         {/* App Footer */}

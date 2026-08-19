@@ -46,6 +46,13 @@ http.interceptors.response.use(
 
             // 401 Unauthorized (session expired or token revoked)
             if (response.status === HTTP_STATUS.UNAUTHORIZED) {
+                // Ignore 401s from the login endpoint itself — these are expected
+                // (wrong credentials) and should NOT trigger a session wipe.
+                const requestUrl = error.config?.url || '';
+                if (requestUrl.includes('/auth/login')) {
+                    return Promise.reject(error);
+                }
+
                 // Ignore 401s from requests that used a stale token. After a
                 // successful re-login the store holds a brand-new token; an
                 // old in-flight request racing with that relogin would otherwise

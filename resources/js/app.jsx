@@ -4,7 +4,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import AppRouter from '@router';
 import { Toast } from '@components/ui';
-import { useCurrentUser } from '@hooks';
 import { useSettingsStore, useAuthStore } from '@store';
 import { settingsApi } from '@api';
 import SessionTimeoutModal from '@components/SessionTimeoutModal';
@@ -64,13 +63,22 @@ class ErrorBoundary extends Component {
                                 {this.state.error.message}
                             </p>
                         )}
-                        <button
-                            type="button"
-                            onClick={() => window.location.reload()}
-                            className="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-sm shadow-md shadow-blue-600/20 transition"
-                        >
-                            Refresh Page
-                        </button>
+                        <div className="flex flex-col sm:flex-row gap-3 mt-6">
+                            <button
+                                type="button"
+                                onClick={() => window.location.reload()}
+                                className="flex-1 py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-sm shadow-md shadow-blue-600/20 transition"
+                            >
+                                Try Again
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => window.location.href = '/'}
+                                className="flex-1 py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-sm transition"
+                            >
+                                Back to Dashboard
+                            </button>
+                        </div>
                     </div>
                 </div>
             );
@@ -80,44 +88,26 @@ class ErrorBoundary extends Component {
     }
 }
 
-/**
- * SessionHydrator
- *
- * On app mount, if a persisted session exists, re-fetch the current
- * user from /auth/me to keep the store fresh after a browser refresh.
- */
-function SessionHydrator() {
-    useCurrentUser();
-    return null;
-}
+
 
 /**
  * SettingsHydrator
- *
- * On app mount, load public brand settings from /api/v1/public/settings
- * so that every page (login, register, forgot password, public site)
- * can read the brand identity from the global settings store instead of
- * hardcoded values.
+ * Loads public + authenticated brand settings in the background.
+ * Does NOT block rendering.
  */
 function SettingsHydrator() {
     const { loadPublicSettings } = useSettingsStore();
     const { isAuthenticated } = useAuthStore();
 
     useEffect(() => {
-        // Always load public settings for brand display on auth pages
         settingsApi.getPublicSettings().then((settings) => {
             loadPublicSettings(settings);
-        }).catch(() => {
-            // Silently fail — default values are already in the store
-        });
+        }).catch(() => {});
 
-        // If the user is already authenticated, load full admin settings
         if (isAuthenticated) {
             settingsApi.getSettings().then((settings) => {
                 loadPublicSettings(settings);
-            }).catch(() => {
-                // Silently fail
-            });
+            }).catch(() => {});
         }
     }, [loadPublicSettings, isAuthenticated]);
 
@@ -125,6 +115,7 @@ function SettingsHydrator() {
 }
 
 function App() {
+    // Apply persisted theme immediately
     useEffect(() => {
         const theme = localStorage.getItem('theme');
         if (theme === 'dark') {
@@ -134,50 +125,40 @@ function App() {
         }
     }, []);
 
-    // Initialize Google Translate on app mount
+    // Initialize Google Translate after mount (delayed so it does not block startup)
     useEffect(() => {
         const initGoogleTranslate = async () => {
             try {
-                // Get saved language from localStorage
                 const savedLanguage = localStorage.getItem('preferred_language');
-                
-                // If there's a saved language, set the cookie BEFORE loading Google Translate
-                // This ensures Google Translate reads the correct language on load
                 if (savedLanguage) {
                     const cookieValue = `/${savedLanguage}`;
                     document.cookie = `googtrans=${cookieValue}; path=/; domain=.${window.location.hostname}`;
                     document.cookie = `googtrans=${cookieValue}; path=/`;
-                    console.log(`Setting language cookie from localStorage: ${savedLanguage}`);
                 } else {
-                    // No saved language, set default to English
                     document.cookie = 'googtrans=/en; path=/; domain=' + window.location.hostname;
                     document.cookie = 'googtrans=/en; path=/';
-                    console.log('No saved language, setting default to English');
                 }
-
-                // Setup hidden Google Translate element
                 setupGoogleTranslateElement();
-
-                // Initialize Google Translate (it will read the cookie automatically)
                 await initializeGoogleTranslate();
             } catch (error) {
                 console.error('Failed to initialize Google Translate:', error);
-                // App continues to work normally without translation
             }
         };
 
-        // Delay initialization to avoid blocking app startup
         const timer = setTimeout(initGoogleTranslate, 500);
         return () => clearTimeout(timer);
     }, []);
 
     return (
         <QueryClientProvider client={queryClient}>
-            <SessionHydrator />
+            {/* Settings hydration runs in background, does not block rendering */}
             <SettingsHydrator />
+
+            {/* AppRouter renders immediately — auth guards handle redirects internally */}
             <ErrorBoundary>
                 <AppRouter />
             </ErrorBoundary>
+
             <Toast />
             <SessionTimeoutModal />
             <RegistrationPendingModal />

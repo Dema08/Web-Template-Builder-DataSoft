@@ -9,4 +9,4 @@ export { default as Spinner } from './Spinner';
 export { default as Toast } from './Toast';
 export { default as CustomDropdown } from './CustomDropdown';
 export { default as StatusBadge } from '../dashboard/StatusBadge';
-
+export { default as PageLoader } from './PageLoader';

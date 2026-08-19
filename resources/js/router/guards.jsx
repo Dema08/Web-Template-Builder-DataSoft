@@ -35,7 +35,7 @@ export function GuestRoute({ children }) {
     const hasLogoutFlag = searchParams.get('clear_session') === '1' || searchParams.get('logout') === '1';
 
     useEffect(() => {
-        if (hasLogoutFlag && !clearedRef.current) {
+        if (hasLogoutFlag && !clearedRef.current && !isAuthenticated) {
             clearedRef.current = true;
             useAuthStore.getState().clearSession();
             localStorage.removeItem(TOKEN_STORAGE_KEY);
@@ -44,7 +44,7 @@ export function GuestRoute({ children }) {
             // Clean the URL so the stale `?logout=1` flag can never wipe a new session.
             window.history.replaceState({}, document.title, window.location.pathname);
         }
-    }, [hasLogoutFlag]);
+    }, [hasLogoutFlag, isAuthenticated]);
 
     if (isAuthenticated) {
         const targetRoute = user?.role === 'admin' ? ROUTES.ADMIN_DASHBOARD : ROUTES.DASHBOARD;

@@ -39,5 +39,6 @@ Route::get('/debug/templates', function () {
 });
 
 Route::get('/{any?}', fn () => view('welcome'))->where('any', '.*');
+Route::post('/login', fn () => redirect('/login'));
 
 

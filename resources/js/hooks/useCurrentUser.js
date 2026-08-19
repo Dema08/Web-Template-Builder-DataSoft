@@ -11,6 +11,7 @@ import { useAuthStore } from '@store';
  */
 export function useCurrentUser() {
     const setUser = useAuthStore((state) => state.setUser);
+    const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
     return useQuery({
         // Use a distinct key to avoid conflicting with useProfile which also uses ['user']
@@ -22,6 +23,6 @@ export function useCurrentUser() {
         },
         staleTime: 5 * 60 * 1000, // 5 minutes
         retry: false,
-        enabled: Boolean(useAuthStore.getState().isAuthenticated),
+        enabled: isAuthenticated,
     });
 }

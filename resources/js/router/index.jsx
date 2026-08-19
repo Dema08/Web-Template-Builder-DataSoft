@@ -1,5 +1,7 @@
+import { Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AppLayout, GuestLayout, BuilderLayout } from '@layouts';
+import { PageLoader } from '@components/ui';
 import {
             LandingPage,
             Login,
@@ -30,8 +32,9 @@ import { ROUTES } from '@constants';
 export default function AppRouter() {
     return (
         <BrowserRouter>
-            <Routes>
-                {/* Public Landing Page — accessible to everyone */}
+            <Suspense fallback={<PageLoader fullScreen />}>
+                <Routes>
+                    {/* Public Landing Page — accessible to everyone */}
                 <Route path="/" element={<LandingPage />} />
 
                 {/* Guest-only routes */}
@@ -139,7 +142,8 @@ export default function AppRouter() {
 
                 {/* Fallback — redirect to landing page */}
                 <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
+                </Routes>
+            </Suspense>
         </BrowserRouter>
     );
 }
