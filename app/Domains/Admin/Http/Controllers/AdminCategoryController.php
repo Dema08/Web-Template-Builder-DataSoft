@@ -12,7 +12,7 @@ class AdminCategoryController extends BaseController
 {
     public function index(): JsonResponse
     {
-        $categories = Category::orderBy('sort_order')->orderBy('name')->get();
+        $categories = Category::withCount('templates')->orderBy('sort_order')->orderBy('name')->get();
 
         return $this->success(
             CategoryResource::collection($categories),

@@ -3,6 +3,7 @@ import { getSectionConfig } from '../../utils/industryConfigs';
 import { getLayoutComponent } from '../../utils/layoutComponentMapper';
 import { getUIComponent } from '../../utils/componentMapper';
 import EditableComponent from '../editing/EditableComponent';
+import BuilderErrorBoundary from '../common/BuilderErrorBoundary';
 
 // Convert layout ID like "hero-01" to component name "Hero01"
 const layoutIdToComponentName = (layoutId) => {
@@ -14,8 +15,10 @@ const layoutIdToComponentName = (layoutId) => {
 };
 
 export default function SectionRenderer({ section, isSelected, onClick }) {
-  const config = getSectionConfig('default', section.type);
+  const config = getSectionConfig('default', section?.type);
   const { selectedSectionId, selectSection, selectComponent, isPreviewMode } = useBuilderStore();
+
+  if (!section) return null;
 
   const isSectionSelected = !isPreviewMode && (selectedSectionId === section.id || isSelected);
 
@@ -29,7 +32,9 @@ export default function SectionRenderer({ section, isSelected, onClick }) {
 
     return (
       <div id={section.id} className="relative w-full">
-        <LayoutComponent components={section.components} sectionId={section.id} />
+        <BuilderErrorBoundary title={`Preview section ${section.type}`}>
+          <LayoutComponent components={section.components || []} sectionId={section.id} />
+        </BuilderErrorBoundary>
       </div>
     );
   }
@@ -97,7 +102,9 @@ export default function SectionRenderer({ section, isSelected, onClick }) {
         isSelected || isSectionSelected ? 'ring-2 ring-indigo-600 ring-offset-2' : 'hover:ring-2 hover:ring-indigo-300'
       }`}
     >
-      <LayoutComponent components={section.components} sectionId={section.id} />
+      <BuilderErrorBoundary title={`Section layout (${section.type} / ${section.layout})`}>
+        <LayoutComponent components={section.components || []} sectionId={section.id} />
+      </BuilderErrorBoundary>
 
       {isSectionSelected && (
         <div className="absolute top-2 right-2 bg-indigo-600 text-white text-xs px-2 py-1 rounded">

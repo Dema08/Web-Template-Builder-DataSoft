@@ -177,7 +177,7 @@ function ComponentLayerNode({
       {/* Render Sub-components recursively */}
       {hasChildren && isExpanded && (
         <div className="space-y-0.5">
-          {component.childrenComponents.map((child) => (
+          {(component.childrenComponents || []).map((child) => (
             <ComponentLayerNode
               key={child.id}
               component={child}
@@ -329,7 +329,7 @@ export default function LeftPanel() {
               </div>
             </div>
 
-            {isExpanded && section.components.map((component) => (
+            {isExpanded && (section.components || []).map((component) => (
               <ComponentLayerNode
                 key={component.id}
                 component={component}

@@ -3,7 +3,8 @@ import EditableComponent from '../components/editing/EditableComponent';
 
 // Helper to render components within a layout with section context
 export const renderLayoutComponents = (components, sectionId) => {
-  return components.map((component) => {
+  const safeComponents = Array.isArray(components) ? components : [];
+  return safeComponents.map((component) => {
     const Component = getUIComponent(component.type);
     if (!Component) return null;
     return (

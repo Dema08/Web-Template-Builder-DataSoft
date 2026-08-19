@@ -84,6 +84,7 @@ export default function AdminTemplates() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingTemplate, setEditingTemplate] = useState(null);
     const [previewTemplate, setPreviewTemplate] = useState(null);
+    const [deleteConfirmTemplate, setDeleteConfirmTemplate] = useState(null);
     const [actionDropdown, setActionDropdown] = useState(null);
     const [thumbnailValue, setThumbnailValue] = useState(''); // for ThumbnailUploader (URL or blob)
     const [thumbnailFile, setThumbnailFile] = useState(null);  // File object if user uploads
@@ -185,11 +186,25 @@ export default function AdminTemplates() {
         mutationFn: templateApi.delete,
         onSuccess: () => {
             queryClient.invalidateQueries(['admin-templates']);
+            queryClient.invalidateQueries(['admin-all-templates']);
             queryClient.invalidateQueries(['admin-categories']);
             toast.success('Template deleted successfully', 'Success');
             setActionDropdown(null);
+            setDeleteConfirmTemplate(null);
+        },
+        onError: (error) => {
+            toast.error(error.response?.data?.message || 'Failed to delete template', 'Error');
         },
     });
+
+    const { data: allTemplatesData } = useQuery({
+        queryKey: ['admin-all-templates'],
+        queryFn: () => templateApi.getAll({ per_page: 500 }).then(res => res.data?.data ?? res.data),
+    });
+
+    const allTemplatesList = Array.isArray(allTemplatesData)
+        ? allTemplatesData
+        : (Array.isArray(allTemplatesData?.data) ? allTemplatesData.data : []);
 
     const publishMutation = useMutation({
         mutationFn: templateApi.publish,
@@ -320,11 +335,17 @@ export default function AdminTemplates() {
         queryFn: categoryService.getAll,
     });
 
-    const categories = categoriesData.map(cat => ({
-        id: cat.id,
-        name: cat.name,
-        template_count: cat.template_count || 0,
-    }));
+    const categories = categoriesData.map(cat => {
+        const countFromAllTemplates = allTemplatesList.filter(t =>
+            String(t.industry_category_id) === String(cat.id) ||
+            String(t.industry_category?.id) === String(cat.id)
+        ).length;
+        return {
+            id: cat.id,
+            name: cat.name,
+            template_count: countFromAllTemplates || (typeof cat.template_count === 'number' ? cat.template_count : 0),
+        };
+    });
 
     const updateStatusMutation = useMutation({
         mutationFn: ({ id, status, template }) => {
@@ -629,9 +650,8 @@ export default function AdminTemplates() {
                                                         <button
                                                             type="button"
                                                             onClick={() => {
-                                                                if (confirm(`Delete template "${tpl.name}"?`)) {
-                                                                    deleteMutation.mutate(tpl.id);
-                                                                }
+                                                                setDeleteConfirmTemplate(tpl);
+                                                                setActionDropdown(null);
                                                             }}
                                                             className="w-full text-left px-3 py-2 text-xs font-bold text-rose-600 hover:bg-rose-600 hover:text-white rounded-xl flex items-center justify-between group transition-all duration-150"
                                                         >
@@ -851,6 +871,60 @@ export default function AdminTemplates() {
                                     </pre>
                                 </div>
                             )}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Delete Confirmation Modal */}
+            {deleteConfirmTemplate && (
+                <div className="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+                    <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 space-y-5 ds-animate-scale-in">
+                        <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
+                            <div className="p-3 bg-red-50 text-red-600 rounded-2xl shrink-0">
+                                <Trash2 className="h-6 w-6" />
+                            </div>
+                            <div>
+                                <h3 className="text-base font-extrabold text-slate-900">Konfirmasi Hapus Template</h3>
+                                <p className="text-xs text-slate-500 mt-0.5">Tindakan ini permanen dan tidak dapat dibatalkan</p>
+                            </div>
+                        </div>
+
+                        <div className="bg-red-50/60 border border-red-100 rounded-2xl p-4 text-xs text-slate-700 space-y-2">
+                            <p className="font-semibold text-slate-900">
+                                Apakah Anda yakin ingin menghapus template <span className="text-red-600 font-extrabold">"{deleteConfirmTemplate.name}"</span>?
+                            </p>
+                            {deleteConfirmTemplate.code && (
+                                <p className="text-[11px] text-slate-500">
+                                    Kode: <code className="bg-white px-1.5 py-0.5 rounded border border-slate-200 font-mono text-slate-700">{deleteConfirmTemplate.code}</code>
+                                </p>
+                            )}
+                            <p className="text-[11px] text-red-600 font-medium pt-1 border-t border-red-100">
+                                ⚠️ Seluruh data draf, konfigurasi layout, dan riwayat template ini akan dihapus secara permanen dari database.
+                            </p>
+                        </div>
+
+                        <div className="flex items-center justify-end gap-3 pt-2">
+                            <button
+                                type="button"
+                                onClick={() => setDeleteConfirmTemplate(null)}
+                                disabled={deleteMutation.isPending}
+                                className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl transition disabled:opacity-50"
+                            >
+                                Batal
+                            </button>
+                            <button
+                                type="button"
+                                disabled={deleteMutation.isPending}
+                                onClick={() => deleteMutation.mutate(deleteConfirmTemplate.id)}
+                                className="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white text-xs font-extrabold rounded-xl shadow-md shadow-red-600/20 transition flex items-center gap-2 disabled:opacity-50"
+                            >
+                                {deleteMutation.isPending ? (
+                                    <><Loader2 className="h-4 w-4 animate-spin" /> Menghapus...</>
+                                ) : (
+                                    <><Trash2 className="h-4 w-4" /> Ya, Hapus Template</>
+                                )}
+                            </button>
                         </div>
                     </div>
                 </div>

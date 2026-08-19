@@ -14,6 +14,8 @@ import FloatingToolbar from '@builder/components/editing/FloatingToolbar';
 import ContextMenu from '@builder/components/editing/ContextMenu';
 import KeyboardShortcuts from '@builder/components/editing/KeyboardShortcuts';
 import { useBuilderStore } from '@builder/stores/builderStore';
+import useAutosave, { loadLocalDraft, clearLocalDraft } from '@builder/hooks/useAutosave';
+import BuilderErrorBoundary from '@builder/components/common/BuilderErrorBoundary';
 import { getIndustryConfig, INDUSTRY_CONFIGS } from '@builder/utils/industryConfigs';
 import { INDUSTRY_STARTER_TEMPLATES, getCategoryStarterTemplates, getTotalStarterTemplateCount } from '@builder/utils/industryStarterTemplates';
 
@@ -72,13 +74,32 @@ export default function AdminTemplateBuilder() {
     queryFn: () => categoryApi.getAll().then(res => res.data.data),
   });
 
+  // Activate automatic draft persistence (localStorage & backend autosave)
+  useAutosave();
+
+  // Restore unsaved local draft on mount (preserves edits on browser restart/refresh)
+  useEffect(() => {
+    const localDraft = loadLocalDraft(id);
+    if (localDraft && (localDraft.sections?.length > 0 || localDraft.industryId)) {
+      if (!id) {
+        // Restoring draft for /create route
+        if (localDraft.industryId) {
+          setIndustry(localDraft.industryId, localDraft.industrySlug, localDraft.industryName);
+          setSelectedCategoryId(localDraft.industryId);
+        }
+        if (localDraft.templateName) setTemplateName(localDraft.templateName);
+        if (localDraft.sections?.length > 0) loadSections(localDraft.sections);
+      }
+    }
+  }, [id, setIndustry, setTemplateName, loadSections]);
+
   // Load template data into store if editing an existing template
   useEffect(() => {
     if (templateData) {
       setTemplateId(templateData.id);
       setTemplateName(templateData.name);
 
-      const sectionsData = templateData.draft_json?.sections || templateData.published_json?.sections || [];
+      const serverSections = templateData.draft_json?.sections || templateData.published_json?.sections || [];
 
       if (templateData.industry_category) {
         setIndustry(templateData.industry_category.id, templateData.industry_category.slug, templateData.industry_category.name);
@@ -86,13 +107,30 @@ export default function AdminTemplateBuilder() {
         setSelectedCategoryObj(templateData.industry_category);
       }
 
-      if (sectionsData.length > 0) {
+      // Check if there are unsaved local edits for this template ID
+      const localDraft = loadLocalDraft(templateData.id);
+      const sectionsToLoad = (localDraft?.sections?.length > 0) ? localDraft.sections : serverSections;
+
+      if (sectionsToLoad.length > 0) {
         setTimeout(() => {
-          loadSections(sectionsData);
+          loadSections(sectionsToLoad);
         }, 10);
       }
     }
   }, [templateData, setTemplateId, setTemplateName, loadSections, setIndustry]);
+
+  // Prompt warning when reloading/closing if there are unsaved sections
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      const currentSections = useBuilderStore.getState().sections;
+      if (currentSections.length > 0) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, []);
 
   // Step 1 -> Step 2
   const handleIndustrySelect = () => {
@@ -187,10 +225,12 @@ export default function AdminTemplateBuilder() {
   const handleBack = () => {
     if (sections.length > 0) {
       if (confirm('You have unsaved changes. Are you sure you want to leave?')) {
+        clearLocalDraft(id);
         resetBuilder();
         navigate('/admin/templates');
       }
     } else {
+      clearLocalDraft(id);
       resetBuilder();
       navigate('/admin/templates');
     }
@@ -244,7 +284,11 @@ export default function AdminTemplateBuilder() {
         } else {
           const response = await templateApi.create(payload);
           savedId = response.data?.data?.id || response.data?.id;
-          if (savedId) setTemplateId(savedId);
+          if (savedId) {
+            setTemplateId(savedId);
+            clearLocalDraft(null); // clear /create local draft
+            navigate(`/admin/templates/builder/${savedId}`, { replace: true });
+          }
           toast.success('Template draft created successfully', 'Success');
         }
         // Upload thumbnail file if picked
@@ -268,11 +312,13 @@ export default function AdminTemplateBuilder() {
           const newId = response.data?.data?.id || response.data?.id;
           if (newId) {
             setTemplateId(newId);
+            clearLocalDraft(null);
             if (thumbFile) {
               const fd = new FormData();
               fd.append('thumbnail', thumbFile);
               await templateApi.uploadThumbnail(newId, fd);
             }
+            navigate(`/admin/templates/builder/${newId}`, { replace: true });
           }
           useBuilderStore.getState().setStatus('published');
           toast.success('Template created and published successfully!', 'Success');
@@ -385,8 +431,16 @@ export default function AdminTemplateBuilder() {
             onPublish={handlePublish}
           />
         }
-        leftPanel={<LeftPanel />}
-        rightPanel={<RightInspector />}
+        leftPanel={
+          <BuilderErrorBoundary title="Left Navigation Panel">
+            <LeftPanel />
+          </BuilderErrorBoundary>
+        }
+        rightPanel={
+          <BuilderErrorBoundary title="Inspector Property Panel">
+            <RightInspector />
+          </BuilderErrorBoundary>
+        }
         statusBar={<StatusBar />}
       >
         {!industryId ? (
@@ -434,7 +488,9 @@ export default function AdminTemplateBuilder() {
         ) : (
           <BuilderCanvas>
             <div onClick={handleCanvasClick}>
-              <SectionCanvas />
+              <BuilderErrorBoundary title="Canvas Section Renderer">
+                <SectionCanvas />
+              </BuilderErrorBoundary>
             </div>
           </BuilderCanvas>
         )}

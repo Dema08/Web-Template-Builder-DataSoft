@@ -2,33 +2,78 @@ import { useEffect, useRef, useState } from 'react';
 import { useBuilderStore } from '../stores/builderStore';
 import { templateApi } from '@api';
 
+export const getLocalDraftKey = (id) => `datasoft_builder_draft_${id || 'create'}`;
+
+export const loadLocalDraft = (id) => {
+  try {
+    const raw = localStorage.getItem(getLocalDraftKey(id));
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch (e) {
+    console.warn('Failed to load local builder draft:', e);
+    return null;
+  }
+};
+
+export const clearLocalDraft = (id) => {
+  try {
+    localStorage.removeItem(getLocalDraftKey(id));
+  } catch (e) {
+    console.warn('Failed to clear local builder draft:', e);
+  }
+};
+
+export const saveLocalDraft = (id, payload) => {
+  try {
+    localStorage.setItem(getLocalDraftKey(id), JSON.stringify({
+      ...payload,
+      updatedAt: Date.now(),
+    }));
+  } catch (e) {
+    console.warn('Failed to save local builder draft:', e);
+  }
+};
+
 export default function useAutosave() {
   const [saveStatus, setSaveStatus] = useState('idle'); // 'idle' | 'saving' | 'saved' | 'error'
   const timerRef = useRef(null);
-  const lastSavedRef = useRef(null);
 
   const sections = useBuilderStore(state => state.sections);
   const templateId = useBuilderStore(state => state.templateId);
   const templateName = useBuilderStore(state => state.templateName);
+  const industryId = useBuilderStore(state => state.industryId);
+  const industrySlug = useBuilderStore(state => state.industrySlug);
+  const industryName = useBuilderStore(state => state.industryName);
   const status = useBuilderStore(state => state.status);
   const setIsSaving = useBuilderStore(state => state.setIsSaving);
 
-  // Debounced autosave - triggers 1.5 seconds after last change
+  // Sync state to LocalStorage on every modification (both /create and /:id)
+  useEffect(() => {
+    if (sections.length > 0 || industryId) {
+      saveLocalDraft(templateId, {
+        sections,
+        templateId,
+        templateName,
+        industryId,
+        industrySlug,
+        industryName,
+        status,
+      });
+    }
+  }, [sections, templateId, templateName, industryId, industrySlug, industryName, status]);
+
+  // Debounced autosave to Backend API (only if templateId exists)
   useEffect(() => {
     if (!templateId) return;
 
-    // Clear previous timer
     if (timerRef.current) {
       clearTimeout(timerRef.current);
     }
 
-    // Skip if sections are empty (no changes to save)
     if (sections.length === 0) return;
 
-    // Set status to "unsaved"
     setSaveStatus('unsaved');
 
-    // Set timer for autosave
     timerRef.current = setTimeout(async () => {
       try {
         setSaveStatus('saving');
@@ -38,6 +83,7 @@ export default function useAutosave() {
           name: templateName || 'Untitled Template',
           draft_json: {
             sections: sections.map(s => ({
+              id: s.id,
               type: s.type,
               layout: s.layout,
               components: s.components,
@@ -48,10 +94,8 @@ export default function useAutosave() {
         };
 
         await templateApi.update(templateId, payload);
-        lastSavedRef.current = JSON.stringify(payload);
         setSaveStatus('saved');
 
-        // Reset to idle after 3 seconds
         setTimeout(() => {
           setSaveStatus('idle');
         }, 3000);
@@ -61,7 +105,7 @@ export default function useAutosave() {
       } finally {
         setIsSaving(false);
       }
-    }, 1500);
+    }, 2000);
 
     return () => {
       if (timerRef.current) {
@@ -69,32 +113,6 @@ export default function useAutosave() {
       }
     };
   }, [sections, templateId, templateName, status, setIsSaving]);
-
-  // Save on unmount/page leave
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      if (saveStatus === 'unsaved' && templateId) {
-        // Attempt to save synchronously (best effort)
-        const state = useBuilderStore.getState();
-        const payload = {
-          name: state.templateName || 'Untitled Template',
-          draft_json: {
-            sections: state.sections.map(s => ({
-              type: s.type,
-              layout: s.layout,
-              components: s.components,
-              styles: s.styles || {},
-            })),
-          },
-          status: state.status,
-        };
-        navigator.sendBeacon?.('/api/templates/' + templateId + '/autosave', JSON.stringify(payload));
-      }
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-  }, [saveStatus, templateId]);
 
   return { saveStatus };
 }

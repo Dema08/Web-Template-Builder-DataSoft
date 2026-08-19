@@ -391,6 +391,12 @@ export default function RightInspector() {
     </div>
   );
 
+const safeSplitString = (val, idx) => {
+  if (typeof val !== 'string') return '';
+  const parts = val.split(' ');
+  return parts[idx] || '';
+};
+
   const renderSpacingPanel = () => (
     <div className="p-4 space-y-4">
       <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Margin</h3>
@@ -399,7 +405,7 @@ export default function RightInspector() {
           <label className="block text-xs font-bold text-slate-700 mb-1.5">Top</label>
           <input
             type="text"
-            value={formValues['marginTop'] || formValues['margin']?.split(' ')[0] || '0'}
+            value={formValues['marginTop'] || safeSplitString(formValues['margin'], 0) || '0'}
             onChange={(e) => handleChange('marginTop', e.target.value)}
             className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm"
           />
@@ -408,7 +414,7 @@ export default function RightInspector() {
           <label className="block text-xs font-bold text-slate-700 mb-1.5">Right</label>
           <input
             type="text"
-            value={formValues['marginRight'] || formValues['margin']?.split(' ')[1] || '0'}
+            value={formValues['marginRight'] || safeSplitString(formValues['margin'], 1) || '0'}
             onChange={(e) => handleChange('marginRight', e.target.value)}
             className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm"
           />
@@ -417,7 +423,7 @@ export default function RightInspector() {
           <label className="block text-xs font-bold text-slate-700 mb-1.5">Bottom</label>
           <input
             type="text"
-            value={formValues['marginBottom'] || formValues['margin']?.split(' ')[2] || '0'}
+            value={formValues['marginBottom'] || safeSplitString(formValues['margin'], 2) || '0'}
             onChange={(e) => handleChange('marginBottom', e.target.value)}
             className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm"
           />
@@ -426,7 +432,7 @@ export default function RightInspector() {
           <label className="block text-xs font-bold text-slate-700 mb-1.5">Left</label>
           <input
             type="text"
-            value={formValues['marginLeft'] || formValues['margin']?.split(' ')[3] || '0'}
+            value={formValues['marginLeft'] || safeSplitString(formValues['margin'], 3) || '0'}
             onChange={(e) => handleChange('marginLeft', e.target.value)}
             className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm"
           />
@@ -440,7 +446,7 @@ export default function RightInspector() {
             <label className="block text-xs font-bold text-slate-700 mb-1.5">Top</label>
             <input
               type="text"
-              value={formValues['paddingTop'] || formValues['padding']?.split(' ')[0] || '0'}
+              value={formValues['paddingTop'] || safeSplitString(formValues['padding'], 0) || '0'}
               onChange={(e) => handleChange('paddingTop', e.target.value)}
               className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm"
             />
@@ -449,7 +455,7 @@ export default function RightInspector() {
             <label className="block text-xs font-bold text-slate-700 mb-1.5">Right</label>
             <input
               type="text"
-              value={formValues['paddingRight'] || formValues['padding']?.split(' ')[1] || '0'}
+              value={formValues['paddingRight'] || safeSplitString(formValues['padding'], 1) || '0'}
               onChange={(e) => handleChange('paddingRight', e.target.value)}
               className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm"
             />
@@ -458,7 +464,7 @@ export default function RightInspector() {
             <label className="block text-xs font-bold text-slate-700 mb-1.5">Bottom</label>
             <input
               type="text"
-              value={formValues['paddingBottom'] || formValues['padding']?.split(' ')[2] || '0'}
+              value={formValues['paddingBottom'] || safeSplitString(formValues['padding'], 2) || '0'}
               onChange={(e) => handleChange('paddingBottom', e.target.value)}
               className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm"
             />
@@ -467,7 +473,7 @@ export default function RightInspector() {
             <label className="block text-xs font-bold text-slate-700 mb-1.5">Left</label>
             <input
               type="text"
-              value={formValues['paddingLeft'] || formValues['padding']?.split(' ')[3] || '0'}
+              value={formValues['paddingLeft'] || safeSplitString(formValues['padding'], 3) || '0'}
               onChange={(e) => handleChange('paddingLeft', e.target.value)}
               className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm"
             />
@@ -777,7 +783,7 @@ const renderInput = (key, config, value, onChange) => {
           onChange={(e) => onChange(key, e.target.value)}
           className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm"
         >
-          {config.options.map(option => (
+          {(config.options || []).map(option => (
             <option key={option} value={option}>
               {typeof option === 'string' ? option.charAt(0).toUpperCase() + option.slice(1) : option}
             </option>

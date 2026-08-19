@@ -15,6 +15,7 @@ class CategoryResource extends JsonResource
             'slug' => $this->slug,
             'sort_order' => $this->sort_order,
             'is_active' => $this->is_active,
+            'template_count' => (int) ($this->templates_count ?? 0),
             'created_at' => $this->created_at?->toIso8601String(),
             'updated_at' => $this->updated_at?->toIso8601String(),
         ];
