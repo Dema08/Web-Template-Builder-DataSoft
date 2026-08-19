@@ -5,8 +5,20 @@ import { getComponentConfig } from '../../utils/componentRegistry';
 export default function Breadcrumb() {
   const { sections, selectedSectionId, selectedComponentId, selectSection, selectComponent } = useBuilderStore();
 
+  const findComponentInTree = (components, targetId) => {
+    if (!Array.isArray(components)) return null;
+    for (const c of components) {
+      if (c.id === targetId) return c;
+      if (Array.isArray(c.childrenComponents) && c.childrenComponents.length > 0) {
+        const found = findComponentInTree(c.childrenComponents, targetId);
+        if (found) return found;
+      }
+    }
+    return null;
+  };
+
   const selectedSection = sections.find(s => s.id === selectedSectionId);
-  const selectedComponent = selectedSection?.components?.find(c => c.id === selectedComponentId);
+  const selectedComponent = selectedSection ? findComponentInTree(selectedSection.components, selectedComponentId) : null;
 
   const sectionConfig = selectedSection ? getSectionConfig('default', selectedSection.type) : null;
   const componentConfig = selectedComponent ? getComponentConfig(selectedComponent.type) : null;

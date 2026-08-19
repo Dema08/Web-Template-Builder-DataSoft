@@ -54,6 +54,18 @@ export default function MediaPanel() {
     reader.readAsDataURL(file);
   };
 
+  const findComponentInTree = (components, targetId) => {
+    if (!Array.isArray(components)) return null;
+    for (const c of components) {
+      if (c.id === targetId) return c;
+      if (Array.isArray(c.childrenComponents) && c.childrenComponents.length > 0) {
+        const found = findComponentInTree(c.childrenComponents, targetId);
+        if (found) return found;
+      }
+    }
+    return null;
+  };
+
   // Apply chosen image to selected component OR add new Image component
   const applyImageToComponent = (imageUrl, imageName) => {
     setSelectedMedia({ url: imageUrl, name: imageName });
@@ -67,7 +79,7 @@ export default function MediaPanel() {
 
     if (selectedComponentId) {
       for (const sec of sections) {
-        const found = sec.components?.find((c) => c.id === selectedComponentId);
+        const found = findComponentInTree(sec.components, selectedComponentId);
         if (found) {
           targetSectionId = sec.id;
           targetComponent = found;

@@ -39,7 +39,7 @@ export default function LayerPanel() {
                 return (
                   <button
                     key={component.id}
-                    onClick={() => selectComponent(component.id)}
+                    onClick={() => selectComponent(component.id, section.id)}
                     className={`w-full flex items-center gap-2 pl-6 pr-2 py-1 rounded-lg transition ${
                       isComponentSelected ? 'bg-indigo-50 text-indigo-600' : 'hover:bg-slate-50'
                     }`}

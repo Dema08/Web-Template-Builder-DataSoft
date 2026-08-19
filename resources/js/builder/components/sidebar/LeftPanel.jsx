@@ -140,7 +140,7 @@ function ComponentLayerNode({
           type="button"
           onClick={() => {
             selectSection(sectionId);
-            selectComponent(component.id);
+            selectComponent(component.id, sectionId);
           }}
           className="text-xs flex-1 text-left truncate text-slate-700 font-medium"
         >

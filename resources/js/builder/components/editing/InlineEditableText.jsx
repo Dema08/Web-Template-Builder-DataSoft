@@ -71,9 +71,13 @@ export default function InlineEditableText({
 
   const handleClick = (e) => {
     e.stopPropagation();
-    const componentId = e.currentTarget.closest('[data-component-id]')?.getAttribute('data-component-id');
-    if (componentId) {
-      selectComponent(componentId);
+    const target = e.currentTarget.closest('[data-component-id]');
+    if (target) {
+      const componentId = target.getAttribute('data-component-id');
+      const sectionId = target.getAttribute('data-section-id');
+      if (componentId) {
+        selectComponent(componentId, sectionId);
+      }
     }
   };
 

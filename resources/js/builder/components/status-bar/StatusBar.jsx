@@ -4,12 +4,24 @@ import { Undo2, Redo2, History, Save, CheckCircle } from 'lucide-react';
 export default function StatusBar() {
   const { sections, selectedSectionId, selectedComponentId, historyIndex, history, isSaving, status } = useBuilderStore();
 
+  const findComponentInTree = (components, targetId) => {
+    if (!Array.isArray(components)) return null;
+    for (const c of components) {
+      if (c.id === targetId) return c;
+      if (Array.isArray(c.childrenComponents) && c.childrenComponents.length > 0) {
+        const found = findComponentInTree(c.childrenComponents, targetId);
+        if (found) return found;
+      }
+    }
+    return null;
+  };
+
   const selectedSection = sections.find(s => s.id === selectedSectionId);
   const totalSections = sections.length;
   const canUndo = historyIndex > 0;
   const canRedo = historyIndex < history.length - 1;
 
-  const selectedComponent = selectedSection?.components?.find(c => c.id === selectedComponentId);
+  const selectedComponent = selectedSection ? findComponentInTree(selectedSection.components, selectedComponentId) : null;
   const selectedComponentType = selectedComponent?.type;
 
   return (

@@ -6,8 +6,20 @@ export default function PropertyPanel() {
   const { sections, selectedSectionId, selectedComponentId, updateComponentProps, removeComponent } = useBuilderStore();
   const [formValues, setFormValues] = useState({});
 
+  const findComponentInTree = (components, targetId) => {
+    if (!Array.isArray(components)) return null;
+    for (const c of components) {
+      if (c.id === targetId) return c;
+      if (Array.isArray(c.childrenComponents) && c.childrenComponents.length > 0) {
+        const found = findComponentInTree(c.childrenComponents, targetId);
+        if (found) return found;
+      }
+    }
+    return null;
+  };
+
   const selectedSection = sections.find(s => s.id === selectedSectionId);
-  const selectedComponent = selectedSection?.components?.find(c => c.id === selectedComponentId);
+  const selectedComponent = selectedSection ? findComponentInTree(selectedSection.components, selectedComponentId) : null;
 
   const componentConfig = selectedComponent ? getComponentConfig(selectedComponent.type) : null;
 

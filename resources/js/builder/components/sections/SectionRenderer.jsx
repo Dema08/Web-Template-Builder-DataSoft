@@ -46,7 +46,7 @@ export default function SectionRenderer({ section, isSelected, onClick }) {
 
   const handleComponentClick = (e, componentId) => {
     e.stopPropagation();
-    selectComponent(componentId);
+    selectComponent(componentId, section.id);
   };
 
   const renderComponent = (component) => {

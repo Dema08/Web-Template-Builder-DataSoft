@@ -67,6 +67,18 @@ export default function IconPanel() {
       item.label.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const findComponentInTree = (components, targetId) => {
+    if (!Array.isArray(components)) return null;
+    for (const c of components) {
+      if (c.id === targetId) return c;
+      if (Array.isArray(c.childrenComponents) && c.childrenComponents.length > 0) {
+        const found = findComponentInTree(c.childrenComponents, targetId);
+        if (found) return found;
+      }
+    }
+    return null;
+  };
+
   const handleSelectIcon = (iconKey) => {
     let targetSectionId = selectedSectionId;
     let targetComponent = null;
@@ -77,7 +89,7 @@ export default function IconPanel() {
 
     if (selectedComponentId) {
       for (const sec of sections) {
-        const found = sec.components?.find((c) => c.id === selectedComponentId);
+        const found = findComponentInTree(sec.components, selectedComponentId);
         if (found) {
           targetSectionId = sec.id;
           targetComponent = found;

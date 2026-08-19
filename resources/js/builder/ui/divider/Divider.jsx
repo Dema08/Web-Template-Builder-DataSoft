@@ -24,7 +24,7 @@ export default function Divider({
       data-section-id={sectionId}
       onClick={(e) => {
         e.stopPropagation();
-        selectComponent(componentId);
+        selectComponent(componentId, sectionId);
       }}
       onMouseEnter={() => setHoveredComponent(componentId)}
       onMouseLeave={() => setHoveredComponent(null)}

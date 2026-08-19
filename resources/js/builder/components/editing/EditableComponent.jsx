@@ -54,7 +54,7 @@ export default function EditableComponent({
   // --- SELECT HANDLER ---
   const handleClick = (e) => {
     e.stopPropagation();
-    selectComponent(component.id);
+    selectComponent(component.id, sectionId);
   };
 
   const handleDoubleClick = (e) => {

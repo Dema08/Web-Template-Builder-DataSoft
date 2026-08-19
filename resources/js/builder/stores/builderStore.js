@@ -261,7 +261,7 @@ export const useBuilderStore = create((set, get) => ({
       return s;
     });
 
-    set({ sections: newSections, selectedComponentId: newComponent.id });
+    set({ sections: newSections, selectedComponentId: newComponent.id, selectedSectionId: sectionId });
   },
 
   removeComponent: (sectionId, componentId) => {
@@ -384,8 +384,15 @@ export const useBuilderStore = create((set, get) => ({
     set({ sections: newSections });
   },
 
-  selectComponent: (componentId) => {
-    set({ selectedComponentId: componentId, selectedProperty: null });
+  // Select a component within a section. Sets both selectedSectionId and
+  // selectedComponentId so that Property Panel / inspector components can
+  // correctly locate the selected component via the section → component tree.
+  selectComponent: (componentId, sectionId) => {
+    set((state) => ({
+      selectedComponentId: componentId,
+      selectedSectionId: sectionId !== undefined ? sectionId : state.selectedSectionId,
+      selectedProperty: null,
+    }));
   },
 
   setHoveredComponent: (componentId) => {
@@ -729,4 +736,3 @@ useBuilderStore.subscribe((state, previousState) => {
     broadcastBuilderState(state);
   }
 });
-

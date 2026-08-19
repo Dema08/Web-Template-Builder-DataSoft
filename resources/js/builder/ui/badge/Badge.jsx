@@ -41,7 +41,7 @@ export default function Badge({
       data-section-id={sectionId}
       onClick={(e) => {
         e.stopPropagation();
-        selectComponent(componentId);
+        selectComponent(componentId, sectionId);
       }}
       onMouseEnter={() => setHoveredComponent(componentId)}
       onMouseLeave={() => setHoveredComponent(null)}
