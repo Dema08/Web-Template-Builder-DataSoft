@@ -31,11 +31,11 @@ class DashboardService extends BaseService
 
         return Cache::remember($cacheKey, 5, function () use ($user, $range, $startDateParam, $endDateParam) {
             // Admin-specific dashboard metrics
-            if ($user->isAdmin()) {
+            if ($user->isAdmin() || request()->is('api/v1/admin/*')) {
                 $totalWebsites = Website::count();
                 $totalUsers = User::count();
-                $totalViews = \DB::table('website_views')->count();
-                $publishedCount = Website::where('status', 'published')->count();
+                $totalViews = \Illuminate\Support\Facades\Schema::hasTable('website_views') ? \DB::table('website_views')->count() : 0;
+                $publishedTemplatesCount = \App\Models\Template::where('status', 'published')->count();
 
                 $websitesFormatted = Website::with('user', 'template')
                     ->orderByDesc('created_at')
@@ -63,10 +63,11 @@ class DashboardService extends BaseService
                         'created_at' => $user->created_at?->toISOString(),
                     ],
                     'stats' => [
-                        'total_websites' => $totalWebsites,
                         'total_users' => $totalUsers,
                         'total_views' => $totalViews,
-                        'published_count' => $publishedCount,
+                        'published_templates_count' => $publishedTemplatesCount,
+                        'total_websites' => $totalWebsites,
+                        'published_count' => Website::where('status', 'published')->count(),
                     ],
                     'websites' => $websitesFormatted,
                     'recentActivity' => array_slice($this->dashboardRepository->getLatestActivitiesForUser($user->id), 0, 10),

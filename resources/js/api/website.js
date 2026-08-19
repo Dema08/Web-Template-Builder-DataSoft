@@ -60,6 +60,32 @@ const websiteApi = {
         });
         return data.data;
     },
+
+    // --- Admin-only ---
+
+    /**
+     * Get all platform websites (admin).
+     */
+    async adminGetAll(params = {}) {
+        const { data } = await http.get('/admin/websites', { params });
+        return data.data;
+    },
+
+    /**
+     * Update a website's status (admin).
+     */
+    async adminUpdateStatus(id, status) {
+        const { data } = await http.patch(`/admin/websites/${id}/status`, { status });
+        return data.data;
+    },
+
+    /**
+     * Delete a website (admin).
+     */
+    async adminDelete(id) {
+        const { data } = await http.delete(`/admin/websites/${id}`);
+        return data.data;
+    },
 };
 
 export default websiteApi;

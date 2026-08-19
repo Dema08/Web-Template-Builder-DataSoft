@@ -24,47 +24,43 @@ export default function AdminDashboard() {
     const { brand_name } = useSettingsStore();
 
     const firstName = user?.name?.split(' ')[0] || 'Admin';
-    const totalWebsites = stats?.total_websites || 0;
-    const totalUsers = stats?.total_users || 0;
-    const totalViews = stats?.total_views || 0;
-    const publishedCount = stats?.published_count || 0;
+    const totalUsers = stats?.total_users ?? 0;
+    const totalViews = stats?.total_views ?? 0;
+    const publishedTemplatesCount = stats?.published_templates_count ?? stats?.published_count ?? 0;
+    const totalWebsites = stats?.total_websites ?? 0;
 
     const statCards = [
         {
-            label: 'Total Websites',
-            value: totalWebsites.toString(),
-            change: '+12%',
-            changeDir: 'up',
-            icon: Globe,
-            iconColor: 'bg-blue-50 text-blue-600',
-            chartColor: 'text-blue-600',
-        },
-        {
             label: 'Total Users',
-            value: totalUsers.toString(),
-            change: '+8%',
-            changeDir: 'up',
+            value: totalUsers.toLocaleString(),
+            change: 'Platform Users',
             icon: UsersIcon,
             iconColor: 'bg-emerald-50 text-emerald-600',
             chartColor: 'text-emerald-600',
         },
         {
-            label: 'Total Views',
+            label: 'Total Views Website Builder',
             value: totalViews.toLocaleString(),
-            change: '+24%',
-            changeDir: 'up',
+            change: 'Total Views',
             icon: Eye,
             iconColor: 'bg-violet-50 text-violet-600',
             chartColor: 'text-violet-600',
         },
         {
-            label: 'Published',
-            value: publishedCount.toString(),
-            change: `${totalWebsites > 0 ? Math.round((publishedCount / totalWebsites) * 100) : 0}%`,
-            changeDir: 'up',
+            label: 'Template Dipublish',
+            value: publishedTemplatesCount.toLocaleString(),
+            change: 'Active Templates',
             icon: BarChart3,
             iconColor: 'bg-amber-50 text-amber-600',
             chartColor: 'text-amber-600',
+        },
+        {
+            label: 'Website Dihosting',
+            value: totalWebsites.toLocaleString(),
+            change: 'Hosted Sites',
+            icon: Globe,
+            iconColor: 'bg-blue-50 text-blue-600',
+            chartColor: 'text-blue-600',
         },
     ];
 
@@ -123,7 +119,7 @@ export default function AdminDashboard() {
                             <div key={site.id} className="flex items-center justify-between p-3 bg-[rgb(var(--color-surface-alt))] rounded-xl">
                                 <div>
                                     <p className="text-xs font-bold text-[rgb(var(--color-text-primary))]">{site.name}</p>
-                                    <p className="text-[10px] text-[rgb(var(--color-text-secondary))]">{site.owner?.name || 'Unknown'}</p>
+                                    <p className="text-[10px] text-[rgb(var(--color-text-secondary))]">{typeof site.owner === 'object' ? site.owner?.name : (site.owner || 'Unknown')}</p>
                                 </div>
                                 <span className={`px-2 py-1 rounded-full text-[10px] font-extrabold ${site.is_published ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'}`}>
                                     {site.is_published ? 'Published' : 'Draft'}
@@ -143,8 +139,8 @@ export default function AdminDashboard() {
                             <div key={idx} className="flex items-start gap-3">
                                 <div className="h-2 w-2 rounded-full bg-indigo-600 mt-1.5 shrink-0" />
                                 <div>
-                                    <p className="text-xs text-[rgb(var(--color-text-primary))]">{activity.description}</p>
-                                    <p className="text-[10px] text-[rgb(var(--color-text-secondary))]">{activity.time}</p>
+                                    <p className="text-xs text-[rgb(var(--color-text-primary))]">{activity.description || activity.action}</p>
+                                    <p className="text-[10px] text-[rgb(var(--color-text-secondary))]">{activity.time || (activity.created_at ? new Date(activity.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Recently')}</p>
                                 </div>
                             </div>
                         ))}

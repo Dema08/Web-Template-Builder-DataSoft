@@ -10,7 +10,7 @@ const dashboardApi = {
      */
     async getDashboard(params = {}) {
         const { data } = await http.get('/dashboard', { params });
-        return data.data;
+        return data.data?.data ?? data.data ?? data;
     },
 
     /**
@@ -20,7 +20,7 @@ const dashboardApi = {
      */
     async getAdminDashboard(params = {}) {
         const { data } = await http.get('/admin/dashboard-summary', { params });
-        return data.data;
+        return data.data?.data ?? data.data ?? data;
     },
 };
 

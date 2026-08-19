@@ -19,9 +19,10 @@ class DatabaseSeeder extends Seeder
             ['email' => 'admin@datasoft.id'],
             [
                 'name'              => 'Datasoft Administrator',
-                'password'          => 'password',
+                'password'          => 'password123',
                 'role'              => UserRole::Admin,
                 'email_verified_at' => now(),
+                'is_approved'       => true,
             ]
         );
 
@@ -30,9 +31,10 @@ class DatabaseSeeder extends Seeder
             ['email' => 'user@datasoft.id'],
             [
                 'name'              => 'Koperasi Maju User',
-                'password'          => 'password',
+                'password'          => 'password123',
                 'role'              => UserRole::User,
                 'email_verified_at' => now(),
+                'is_approved'       => true,
             ]
         );
 
@@ -41,9 +43,10 @@ class DatabaseSeeder extends Seeder
             ['email' => 'admin@example.com'],
             [
                 'name'              => 'Admin User',
-                'password'          => 'password',
+                'password'          => 'password123',
                 'role'              => UserRole::Admin,
                 'email_verified_at' => now(),
+                'is_approved'       => true,
             ]
         );
 

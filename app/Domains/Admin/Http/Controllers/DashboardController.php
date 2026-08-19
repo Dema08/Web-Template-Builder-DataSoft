@@ -20,7 +20,7 @@ class DashboardController extends BaseController
         $payload = $this->dashboardService->getDashboardPayload($request->user());
 
         return $this->success(
-            new DashboardResource($payload),
+            $payload,
             'Dashboard retrieved successfully'
         );
     }
