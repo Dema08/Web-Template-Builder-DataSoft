@@ -31,11 +31,11 @@ class AdminUserController extends BaseController
 
     public function approveUser(User $user): JsonResponse
     {
-        if ($user->is_approved) {
+        if ($user->disetujui) {
             return $this->error("Akun {$user->name} sudah disetujui sebelumnya.", 409);
         }
 
-        $user->update(['is_approved' => true]);
+        $user->update(['disetujui' => true]);
 
         Mail::to($user->email)->send(new RegistrationApprovedMail($user));
 
@@ -51,7 +51,7 @@ class AdminUserController extends BaseController
             'role' => ['required', 'string', Rule::in(UserRole::values())],
         ]);
 
-        $user->update(['role' => $validated['role']]);
+        $user->update(['peran' => $validated['role']]);
 
         return $this->success(
             new UserResource($user),

@@ -25,6 +25,11 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     /**
+     * Tabel pengguna (users).
+     */
+    protected $table = 'pengguna';
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
@@ -34,8 +39,8 @@ class User extends Authenticatable
         'email',
         'password',
         'avatar',
-        'role',
-        'is_approved',
+        'peran',
+        'disetujui',
     ];
 
     /**
@@ -55,8 +60,8 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'role' => UserRole::class,
-        'is_approved' => 'boolean',
+        'peran' => UserRole::class,
+        'disetujui' => 'boolean',
     ];
 
     /**
@@ -82,7 +87,7 @@ class User extends Authenticatable
      */
     public function isAdmin(): bool
     {
-        return $this->role?->isAdmin() ?? false;
+        return $this->peran?->isAdmin() ?? false;
     }
 
     /**

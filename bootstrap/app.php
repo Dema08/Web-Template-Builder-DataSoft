@@ -16,8 +16,8 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
         then: function (): void {
-            // Explicitly bind {template} route parameter to the domain Template model
-            // to avoid Laravel resolving to App\Models\Template by default.
+            // Explicitly bind {template} route parameter to the canonical
+            // domain Template model (App\Domains\Template\Models\Template).
             Route::bind('template', function ($value) {
                 return \App\Domains\Template\Models\Template::where('id', $value)->firstOrFail();
             });

@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
+use App\Domains\User\Models\User;
+use App\Domains\Template\Models\Template;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Website extends Model
 {
+    protected $table = 'website';
+
     protected $fillable = [
         'user_id',
         'category_id',

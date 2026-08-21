@@ -34,8 +34,8 @@ class UserRepository implements RepositoryContract
     public function createRegularUser(array $attributes): User
     {
         return User::create(array_merge($attributes, [
-            'role'        => UserRole::User,
-            'is_approved' => false, // Needs admin approval before login
+            'peran'        => UserRole::User,
+            'disetujui' => false, // Needs admin approval before login
         ]));
     }
 

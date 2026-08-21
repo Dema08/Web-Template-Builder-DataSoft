@@ -38,7 +38,7 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => 'password', // User model auto-hashes via Attribute cast
             'avatar' => null,
-            'role' => UserRole::User,
+            'peran' => UserRole::User,
             'remember_token' => Str::random(10),
         ];
     }
@@ -49,7 +49,7 @@ class UserFactory extends Factory
     public function admin(): static
     {
         return $this->state(fn (array $attributes) => [
-            'role' => UserRole::Admin,
+            'peran' => UserRole::Admin,
         ]);
     }
 

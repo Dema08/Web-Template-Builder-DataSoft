@@ -37,5 +37,14 @@ export default defineConfig({
         watch: {
             ignored: ['**/storage/framework/views/**'],
         },
+        // Proxy API requests to the Laravel backend during local development.
+        // Run `php artisan serve` on port 8000 (or update the target below).
+        proxy: {
+            '/api': {
+                target: 'http://localhost:8000',
+                changeOrigin: true,
+                secure: false,
+            },
+        },
     },
 });

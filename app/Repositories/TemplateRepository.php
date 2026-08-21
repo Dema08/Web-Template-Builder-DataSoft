@@ -3,7 +3,7 @@
 namespace App\Repositories;
 
 use App\Contracts\TemplateRepositoryInterface;
-use App\Models\Template;
+use App\Domains\Template\Models\Template;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class TemplateRepository implements TemplateRepositoryInterface

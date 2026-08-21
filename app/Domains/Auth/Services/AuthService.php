@@ -84,7 +84,7 @@ class AuthService extends BaseService
             );
         }
 
-        if (! $user->is_approved) {
+        if (! $user->disetujui) {
             throw new DomainException(
                 'Akun Anda belum disetujui oleh administrator. Harap tunggu konfirmasi dari admin.',
                 403

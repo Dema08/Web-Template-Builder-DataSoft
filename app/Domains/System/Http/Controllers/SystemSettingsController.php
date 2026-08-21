@@ -76,7 +76,7 @@ class SystemSettingsController extends BaseController
     {
         Cache::put('maintenance_mode_enabled_at', now()->timestamp, now()->addDays(30));
 
-        $nonAdminUserIds = User::where('role', '!=', UserRole::Admin->value)->pluck('id');
+        $nonAdminUserIds = User::where('peran', '!=', UserRole::Admin->value)->pluck('id');
 
         if ($nonAdminUserIds->isNotEmpty()) {
             DB::table('personal_access_tokens')

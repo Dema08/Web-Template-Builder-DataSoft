@@ -33,8 +33,8 @@ class UserResource extends JsonResource
             'name'        => $user->name,
             'email'       => $user->email,
             'avatar'      => $avatar,
-            'role'        => $user->role?->value ?? 'user',
-            'is_approved' => (bool) $user->is_approved,
+            'role'        => $user->peran?->value ?? 'user',
+            'is_approved' => (bool) $user->disetujui,
             'created_at'  => $user->created_at?->toISOString(),
         ];
     }

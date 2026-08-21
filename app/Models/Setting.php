@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Builder;
 
 class Setting extends Model
 {
+    protected $table = 'pengaturan';
+
     protected $fillable = [
         'key',
         'value',

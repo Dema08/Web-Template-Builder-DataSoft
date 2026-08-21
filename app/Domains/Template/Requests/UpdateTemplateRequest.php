@@ -18,10 +18,10 @@ class UpdateTemplateRequest extends FormRequest
         $templateId = $this->route('template')?->id ?? $this->route('template');
 
         return [
-            'industry_category_id' => ['sometimes', 'nullable', 'integer', 'exists:categories,id'],
-            'code'                 => ['nullable', 'string', 'max:50', 'unique:templates,code,' . $templateId],
+            'industry_category_id' => ['sometimes', 'nullable', 'integer', 'exists:kategori_industri,id'],
+            'code'                 => ['nullable', 'string', 'max:50', 'unique:template,code,' . $templateId],
             'name'                 => ['sometimes', 'string', 'max:255'],
-            'slug'                 => ['nullable', 'string', 'max:255', new SlugRule(), 'unique:templates,slug,' . $templateId],
+            'slug'                 => ['nullable', 'string', 'max:255', new SlugRule(), 'unique:template,slug,' . $templateId],
             'description'          => ['nullable', 'string', 'max:2000'],
             'thumbnail'            => ['nullable', 'string', 'max:255'],
             'preview_image'        => ['nullable', 'string', 'max:255'],

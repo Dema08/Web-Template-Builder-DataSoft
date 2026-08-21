@@ -15,6 +15,8 @@ class PasswordResetOtp extends Model
 {
     use HasFactory;
 
+    protected $table = 'password_reset_otps';
+
     protected $fillable = [
         'user_id',
         'email',

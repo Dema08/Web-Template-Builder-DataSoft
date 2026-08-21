@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Domains\Template\Models\Template;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Category extends Model
 {
+    protected $table = 'kategori_industri';
+
     protected $fillable = [
         'name',
         'slug',

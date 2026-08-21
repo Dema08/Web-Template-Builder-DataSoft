@@ -29,7 +29,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Gate::policy(\App\Models\Template::class, \App\Domains\Template\Policies\TemplatePolicy::class);
         Gate::policy(\App\Domains\Template\Models\Template::class, \App\Domains\Template\Policies\TemplatePolicy::class);
     }
 }

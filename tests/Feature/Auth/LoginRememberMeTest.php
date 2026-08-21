@@ -10,8 +10,8 @@ uses(RefreshDatabase::class);
 it('logs in without remember and returns a token', function () {
     $user = User::factory()->create([
         'email' => 'session@example.com',
-        'password' => Hash::make('Password123'),
-        'is_approved' => true,
+        'password' => 'Password123',
+        'disetujui' => true,
     ]);
 
     $response = $this->postJson('/api/v1/auth/login', [
@@ -32,8 +32,8 @@ it('logs in without remember and returns a token', function () {
 it('logs in with remember and returns an expiring token', function () {
     $user = User::factory()->create([
         'email' => 'remember@example.com',
-        'password' => Hash::make('Password123'),
-        'is_approved' => true,
+        'password' => 'Password123',
+        'disetujui' => true,
     ]);
 
     $response = $this->postJson('/api/v1/auth/login', [
@@ -56,8 +56,8 @@ it('logs in with remember and returns an expiring token', function () {
 it('logs out and revokes the current token', function () {
     $user = User::factory()->create([
         'email' => 'logout@example.com',
-        'password' => Hash::make('Password123'),
-        'is_approved' => true,
+        'password' => 'Password123',
+        'disetujui' => true,
     ]);
 
     $loginResponse = $this->postJson('/api/v1/auth/login', [
@@ -79,8 +79,8 @@ it('logs out and revokes the current token', function () {
 it('rejects invalid credentials without activating remember', function () {
     $user = User::factory()->create([
         'email' => 'invalid@example.com',
-        'password' => Hash::make('Password123'),
-        'is_approved' => true,
+        'password' => 'Password123',
+        'disetujui' => true,
     ]);
 
     $response = $this->postJson('/api/v1/auth/login', [
@@ -97,9 +97,9 @@ it('rejects invalid credentials without activating remember', function () {
 it('allows admin to login with remember and access admin routes', function () {
     $admin = User::factory()->create([
         'email' => 'admin-remember@example.com',
-        'password' => Hash::make('Password123'),
-        'role' => 'admin',
-        'is_approved' => true,
+        'password' => 'Password123',
+        'peran' => 'admin',
+        'disetujui' => true,
     ]);
 
     $response = $this->postJson('/api/v1/auth/login', [
@@ -120,9 +120,9 @@ it('allows admin to login with remember and access admin routes', function () {
 it('allows regular user to login with remember and access user routes', function () {
     $user = User::factory()->create([
         'email' => 'user-remember@example.com',
-        'password' => Hash::make('Password123'),
-        'role' => 'user',
-        'is_approved' => true,
+        'password' => 'Password123',
+        'peran' => 'user',
+        'disetujui' => true,
     ]);
 
     $response = $this->postJson('/api/v1/auth/login', [

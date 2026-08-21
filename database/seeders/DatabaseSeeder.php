@@ -2,81 +2,95 @@
 
 namespace Database\Seeders;
 
-use App\Domains\User\Models\User;
 use App\Domains\Shared\Enums\UserRole;
+use App\Domains\User\Models\User;
+use App\Models\Category;
+use App\Models\Website;
+use App\Domains\Template\Models\Template;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
     /**
      * Seed the application's database.
+     *
+     * Order of operations:
+     *   1. Users (admin + standard user)
+     *   2. System & brand settings
+     *   3. Industry categories
+     *   4. Default templates (one or more per category)
+     *   5. Default website for the standard user (uses the first Koperasi category template)
      */
     public function run(): void
     {
-        // Level 1 / Role Admin
+        // ── 1. Users ─────────────────────────────────────────────────────
         // Note: User model auto-hashes 'password' via Attribute cast
+
         User::updateOrCreate(
             ['email' => 'admin@datasoft.id'],
             [
                 'name'              => 'Datasoft Administrator',
                 'password'          => 'password123',
-                'role'              => UserRole::Admin,
+                'peran'             => UserRole::Admin,
                 'email_verified_at' => now(),
-                'is_approved'       => true,
+                'disetujui'         => true,
             ]
         );
 
-        // Level 2 / Role User
         User::updateOrCreate(
             ['email' => 'user@datasoft.id'],
             [
                 'name'              => 'Koperasi Maju User',
                 'password'          => 'password123',
-                'role'              => UserRole::User,
+                'peran'             => UserRole::User,
                 'email_verified_at' => now(),
-                'is_approved'       => true,
+                'disetujui'         => true,
             ]
         );
 
-        // Additional admin test user
         User::updateOrCreate(
             ['email' => 'admin@example.com'],
             [
                 'name'              => 'Admin User',
                 'password'          => 'password123',
-                'role'              => UserRole::Admin,
+                'peran'             => UserRole::Admin,
                 'email_verified_at' => now(),
-                'is_approved'       => true,
+                'disetujui'         => true,
             ]
         );
 
-        // Seed platform system & brand settings (Single Source of Truth)
+        // ── 2. System & brand settings ───────────────────────────────────
         $this->call(SettingsSeeder::class);
 
-        // Seed default industry categories
+        // ── 3. Industry categories ───────────────────────────────────────
         $this->call(CategorySeeder::class);
 
-        // NOTE: Templates are NOT seeded here.
-        // Templates are created by admin via the Template Builder and saved
-        // as draft or published. The templates table starts empty.
+        // ── 4. Default templates ─────────────────────────────────────────
+        // Templates are seeded with deterministic slugs so re-running
+        // the seeder is safe (updateOrCreate keyed on slug).
+        $this->call(TemplateSeeder::class);
 
-        // Seed default website for standard user — only if templates exist
-        // (Templates are created by admin via the builder, so this may be skipped on fresh installs)
+        // ── 5. Default website for the standard user ─────────────────────
+        // Pick the "Koperasi" category and a published template within it.
         $standardUser = User::where('email', 'user@datasoft.id')->first();
-        $category     = \App\Models\Category::first();
-        $template     = \App\Models\Template::first();
+        $koperasiCategory = Category::where('slug', 'koperasi')->first();
+        $template = $koperasiCategory
+            ? Template::where('category_id', $koperasiCategory->id)
+                ->where('status', 'published')
+                ->first()
+            : null;
 
-        if ($standardUser && $category && $template) {
-            $website = \App\Models\Website::updateOrCreate(
+        if ($standardUser && $koperasiCategory && $template) {
+            $website = Website::updateOrCreate(
                 ['user_id' => $standardUser->id],
                 [
-                    'category_id'    => $category->id,
+                    'category_id'    => $koperasiCategory->id,
                     'template_id'    => $template->id,
                     'name'           => 'Koperasi Maju',
                     'slug'           => 'koperasimaju',
                     'status'         => 'published',
-                    'draft_json'     => $template->default_content ?? ['sections' => []],
-                    'published_json' => $template->default_content ?? ['sections' => []],
+                    'draft_json'     => $template->draft_json ?? ['sections' => []],
+                    'published_json' => $template->draft_json ?? ['sections' => []],
                     'settings'       => ['siteName' => 'Koperasi Maju'],
                     'published_at'   => now(),
                 ]

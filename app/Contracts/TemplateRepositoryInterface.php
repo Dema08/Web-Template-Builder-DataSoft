@@ -2,7 +2,7 @@
 
 namespace App\Contracts;
 
-use App\Models\Template;
+use App\Domains\Template\Models\Template;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 interface TemplateRepositoryInterface

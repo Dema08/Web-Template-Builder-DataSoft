@@ -16,7 +16,7 @@ class CreateWebsiteRequest extends FormRequest
         return [
             'company_name' => ['required', 'string', 'min:2', 'max:255'],
             'slug' => ['required', 'string', 'min:3', 'max:255', 'regex:/^[a-z0-9-]+$/'],
-            'template_id' => ['required', 'integer', 'exists:templates,id'],
+            'template_id' => ['required', 'integer', 'exists:template,id'],
         ];
     }
 

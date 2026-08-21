@@ -22,6 +22,8 @@ class Template extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $table = 'template';
+
     /**
      * Always bind routes by numeric primary key so frontend numeric IDs resolve correctly.
      */

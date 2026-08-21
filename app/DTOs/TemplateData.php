@@ -19,7 +19,7 @@ class TemplateData
         public readonly int $usageCount,
     ) {}
 
-    public static function fromModel(\App\Models\Template $template): self
+    public static function fromModel(\App\Domains\Template\Models\Template $template): self
     {
         return new self(
             id: $template->id,

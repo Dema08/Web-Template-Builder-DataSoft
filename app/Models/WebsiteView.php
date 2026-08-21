@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class WebsiteView extends Model
 {
+    protected $table = 'website_view';
+
     protected $fillable = [
         'website_id',
         'ip_address',

@@ -9,7 +9,7 @@ use App\DTOs\CategoryData;
 use App\DTOs\TemplateData;
 use App\DTOs\WebsiteData;
 use App\Enums\WebsiteStatus;
-use App\Models\Template;
+use App\Domains\Template\Models\Template;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 

@@ -62,15 +62,14 @@ export const useAuthStore = create(
         }),
         {
             name: 'cpwb-auth-store',
+            // Zustand persist serialises/deserialises state itself — the custom
+            // storage adapter must be a pass-through (return/accept raw strings).
             storage: {
                 getItem: (name) => {
-                    // Try localStorage first, then sessionStorage
-                    const value = localStorage.getItem(name) || sessionStorage.getItem(name);
-                    return value ? JSON.parse(value) : null;
+                    return localStorage.getItem(name) || sessionStorage.getItem(name);
                 },
                 setItem: (name, value) => {
-                    // Default to localStorage for the zustand persist state
-                    localStorage.setItem(name, JSON.stringify(value));
+                    localStorage.setItem(name, value);
                 },
                 removeItem: (name) => {
                     localStorage.removeItem(name);

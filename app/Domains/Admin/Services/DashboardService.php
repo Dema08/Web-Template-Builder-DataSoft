@@ -34,8 +34,8 @@ class DashboardService extends BaseService
             if ($user->isAdmin() || request()->is('api/v1/admin/*')) {
                 $totalWebsites = Website::count();
                 $totalUsers = User::count();
-                $totalViews = \Illuminate\Support\Facades\Schema::hasTable('website_views') ? \DB::table('website_views')->count() : 0;
-                $publishedTemplatesCount = \App\Models\Template::where('status', 'published')->count();
+                $totalViews = \Illuminate\Support\Facades\Schema::hasTable('website_view') ? \DB::table('website_view')->count() : 0;
+                $publishedTemplatesCount = \App\Domains\Template\Models\Template::where('status', 'published')->count();
 
                 $websitesFormatted = Website::with('user', 'template')
                     ->orderByDesc('created_at')
@@ -59,7 +59,7 @@ class DashboardService extends BaseService
                         'name' => $user->name,
                         'email' => $user->email,
                         'avatar' => $user->avatar ? Storage::disk('public')->url($user->avatar) : null,
-                        'role' => $user->role?->value ?? 'admin',
+                        'role' => $user->peran?->value ?? 'admin',
                         'created_at' => $user->created_at?->toISOString(),
                     ],
                     'stats' => [
@@ -69,7 +69,7 @@ class DashboardService extends BaseService
                         'total_websites' => $totalWebsites,
                         'published_count' => Website::where('status', 'published')->count(),
                     ],
-                    'websites' => $websitesFormatted,
+                'websites' => $websitesFormatted,
                     'recentActivity' => array_slice($this->dashboardRepository->getLatestActivitiesForUser($user->id), 0, 10),
                 ];
             }
@@ -177,10 +177,11 @@ class DashboardService extends BaseService
                     'name' => $user->name,
                     'email' => $user->email,
                     'avatar' => $user->avatar ? Storage::disk('public')->url($user->avatar) : null,
-                    'role' => $user->role?->value ?? 'user',
+                    'role' => $user->peran?->value ?? 'user',
                     'created_at' => $user->created_at?->toISOString(),
                 ],
                 'websites' => $websitesFormatted,
+                'website' => $primaryWebsite,
                 'analytics' => [
                     'total_views' => $totalViews,
                     'unique_visitors' => $uniqueVisitors,

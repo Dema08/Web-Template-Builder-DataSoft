@@ -18,10 +18,13 @@ it('registers a user and allows login with the submitted password', function () 
 
     $response
         ->assertCreated()
-        ->assertJsonPath('message', 'Registration successful')
+        ->assertJsonPath('message', 'Pendaftaran berhasil! Akun Anda sedang menunggu persetujuan dari administrator.')
         ->assertJsonPath('data.user.email', $payload['email']);
 
     $user = User::query()->where('email', $payload['email'])->firstOrFail();
+
+    // Akun baru harus disetujui admin terlebih dahulu sebelum dapat login.
+    $user->update(['disetujui' => true]);
 
     expect($user->password)->not->toBe($payload['password']);
     expect(Hash::check($payload['password'], $user->password))->toBeTrue();

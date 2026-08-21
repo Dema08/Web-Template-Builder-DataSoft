@@ -3,7 +3,7 @@
 namespace App\Domains\Admin\Http\Controllers;
 
 use App\Domains\Shared\Http\Controllers\BaseController;
-use App\Models\Template;
+use App\Domains\Template\Models\Template;
 use App\Models\Category;
 use App\Http\Resources\TemplateResource;
 use Illuminate\Http\JsonResponse;
@@ -28,7 +28,7 @@ class AdminTemplateController extends BaseController
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'slug' => 'nullable|string|max:255|unique:templates,slug',
+            'slug' => 'nullable|string|max:255|unique:template,slug',
             'description' => 'nullable|string',
             'thumbnail' => 'nullable|string|max:255',
             'preview_data' => 'nullable|array',
@@ -63,7 +63,7 @@ class AdminTemplateController extends BaseController
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'slug' => 'nullable|string|max:255|unique:templates,slug,' . $template->id,
+            'slug' => 'nullable|string|max:255|unique:template,slug,' . $template->id,
             'description' => 'nullable|string',
             'thumbnail' => 'nullable|string|max:255',
             'preview_data' => 'nullable|array',
