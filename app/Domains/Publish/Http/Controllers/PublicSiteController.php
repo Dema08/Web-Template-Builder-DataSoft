@@ -77,9 +77,22 @@ class PublicSiteController extends BaseController
      */
     public function templates(): JsonResponse
     {
-        $templates = \App\Domains\Template\Models\Template::where('status', 'published')
-            ->with('industryCategory')
-            ->orderByDesc('is_featured')
+        $query = \App\Domains\Template\Models\Template::where('status', 'published')
+            ->with('industryCategory');
+
+        if ($categoryId = request('industry_category_id')) {
+            $query->where('category_id', $categoryId);
+        }
+
+        if ($search = request('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%")
+                  ->orWhere('code', 'like', "%{$search}%");
+            });
+        }
+
+        $templates = $query->orderByDesc('is_featured')
             ->orderBy('sort_order')
             ->orderByDesc('id')
             ->get();

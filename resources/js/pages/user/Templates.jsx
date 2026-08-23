@@ -44,11 +44,9 @@ export default function Templates() {
 
     const { data: templatesData, isLoading: templatesApiLoading, isError: templatesError } = useQuery({
         queryKey: ['user-templates', { category: selectedCategory, search: searchQuery }],
-        queryFn: () => templateApi.getAll({
+        queryFn: () => templateApi.getPublic({
             industry_category_id: selectedCategory !== 'all' ? selectedCategory : undefined,
             search: searchQuery || undefined,
-            per_page: 50,
-            status: 'published',
         }).then(res => res.data?.data ?? res.data),
     });
 
