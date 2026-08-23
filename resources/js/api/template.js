@@ -4,6 +4,9 @@ const templateApi = {
   // Get public published templates for landing page
   getPublic: (params = {}) => http.get('/public/templates', { params }),
 
+  // Get single public published template for live preview
+  getPublicById: (id) => http.get(`/public/templates/${id}`),
+
   // List templates with filters
   getAll: (params = {}) => http.get('/admin/templates', { params }),
 

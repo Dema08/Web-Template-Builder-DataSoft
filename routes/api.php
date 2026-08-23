@@ -25,6 +25,8 @@ Route::prefix('v1')->group(function (): void {
         Route::get('/settings', [App\Domains\System\Http\Controllers\PublicSettingsController::class, 'index']);
         // GET /api/v1/public/templates — published templates showcase for landing page
         Route::get('/templates', [App\Domains\Publish\Http\Controllers\PublicSiteController::class, 'templates']);
+        // GET /api/v1/public/templates/{id} — published template detail for public preview
+        Route::get('/templates/{id}', [App\Domains\Publish\Http\Controllers\PublicSiteController::class, 'showTemplate']);
     });
 
     // -------------------------------------------------------------

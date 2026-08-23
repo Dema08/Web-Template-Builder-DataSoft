@@ -67,7 +67,7 @@ export default function AdminTemplatePreview() {
 
     // If ID parameter exists and no local storage sections loaded, fetch from API
     if (id && (!sections || sections.length === 0)) {
-      templateApi.getById(id).then(res => {
+      const applyTemplateData = (res) => {
         const data = res.data?.data;
         if (data) {
           const sectionsData = data.draft_json?.sections || data.published_json?.sections || [];
@@ -76,9 +76,19 @@ export default function AdminTemplatePreview() {
           }
           if (data.name) setTemplateName(data.name);
         }
-      }).catch(err => {
-        console.warn('Could not load template API preview:', err);
-      });
+      };
+
+      // Try public endpoint first so guest users can preview published templates
+      templateApi.getPublicById(id)
+        .then(applyTemplateData)
+        .catch(() => {
+          // Fallback to admin endpoint for previewing unpublished draft templates if authenticated
+          templateApi.getById(id)
+            .then(applyTemplateData)
+            .catch(err => {
+              console.warn('Could not load template API preview:', err);
+            });
+        });
     }
   }, [id]);
 
@@ -145,14 +155,10 @@ export default function AdminTemplatePreview() {
   }, []);
 
   const handleClose = () => {
-    if (window.history.length > 1) {
+    if (typeof window !== 'undefined' && window.opener) {
       window.close();
-      // Fallback if window.close() blocked by browser pop-up rules:
-      setTimeout(() => {
-        navigate('/admin/templates');
-      }, 200);
     } else {
-      navigate('/admin/templates');
+      navigate('/');
     }
   };
 

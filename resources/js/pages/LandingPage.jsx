@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { ROUTES } from '@constants';
 import { templateApi } from '@api';
+import { useAuthStore } from '@store';
 
 /* ─────────────────────────────────────────────────────────
    CONSTANTS
@@ -843,9 +844,22 @@ function PricingSection() {
    PUBLIC TEMPLATE SHOWCASE SECTION & MODAL
 ───────────────────────────────────────────────────────── */
 function TemplatesSection() {
+    const navigate = useNavigate();
+    const { isAuthenticated, user } = useAuthStore();
     const [publishedTemplates, setPublishedTemplates] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [selectedModalTemplate, setSelectedModalTemplate] = useState(null);
+
+    const handleEditTemplate = (tpl) => {
+        if (!tpl) return;
+        if (!isAuthenticated) {
+            navigate(ROUTES.LOGIN);
+        } else if (user?.role === 'admin' || user?.role === 'superadmin') {
+            navigate(tpl.is_fallback ? `/admin/templates` : `/admin/templates/builder/${tpl.id}`);
+        } else {
+            navigate(ROUTES.ONBOARDING);
+        }
+    };
 
     useEffect(() => {
         let isMounted = true;
@@ -1037,12 +1051,12 @@ function TemplatesSection() {
 
                         {/* Modal Footer Actions */}
                         <div className="p-5 bg-slate-50 border-t border-slate-100 flex flex-col sm:flex-row items-center gap-3 shrink-0">
-                            {/* Live Preview Action */}
+                            {/* Live Preview Action — accessible without login */}
                             <button
                                 type="button"
                                 onClick={() => {
                                     const previewUrl = selectedModalTemplate.is_fallback
-                                        ? `/admin/templates/builder/preview`
+                                        ? `/preview/template`
                                         : `/admin/templates/builder/${selectedModalTemplate.id}/preview`;
                                     window.open(previewUrl, '_blank');
                                 }}
@@ -1052,15 +1066,16 @@ function TemplatesSection() {
                                 <span>Live Preview</span>
                             </button>
 
-                            {/* Edit Action -> Redirects to Login */}
-                            <Link
-                                to={ROUTES.LOGIN}
-                                className="w-full sm:flex-1 py-3 px-5 rounded-2xl text-white font-bold text-xs shadow-lg shadow-indigo-600/25 flex items-center justify-center gap-2 transition hover:scale-[1.02] active:scale-95 text-center"
+                            {/* Edit Action — requires login if unauthenticated */}
+                            <button
+                                type="button"
+                                onClick={() => handleEditTemplate(selectedModalTemplate)}
+                                className="w-full sm:flex-1 py-3 px-5 rounded-2xl text-white font-bold text-xs shadow-lg shadow-indigo-600/25 flex items-center justify-center gap-2 transition hover:scale-[1.02] active:scale-95 text-center cursor-pointer"
                                 style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}
                             >
                                 <Edit2 className="h-4 w-4" />
-                                <span>Edit Template (Login)</span>
-                            </Link>
+                                <span>{isAuthenticated ? 'Edit Template' : 'Edit Template (Login)'}</span>
+                            </button>
                         </div>
 
                     </div>

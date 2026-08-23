@@ -89,4 +89,24 @@ class PublicSiteController extends BaseController
             'Published templates retrieved successfully'
         );
     }
+
+    /**
+     * Get a single published template by ID for public preview.
+     */
+    public function showTemplate($id): JsonResponse
+    {
+        $template = \App\Domains\Template\Models\Template::where('status', 'published')
+            ->with('industryCategory')
+            ->where('id', $id)
+            ->first();
+
+        if (!$template) {
+            return $this->error('Published template not found', 404);
+        }
+
+        return $this->success(
+            new \App\Domains\Template\Resources\TemplateResource($template),
+            'Published template retrieved successfully'
+        );
+    }
 }

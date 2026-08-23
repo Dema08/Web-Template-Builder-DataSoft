@@ -78,39 +78,12 @@ export default function AppRouter() {
                     <Route path={ROUTES.ADMIN_SETTINGS} element={<AdminSettings />} />
                 </Route>
 
-                {/* Preview routes — fullscreen live website preview (MUST come before /:id to avoid collision) */}
-                <Route
-                    path="/admin/templates/builder/preview"
-                    element={
-                        <ProtectedRoute>
-                            <AdminTemplatePreview />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="/admin/templates/builder/:id/preview"
-                    element={
-                        <ProtectedRoute>
-                            <AdminTemplatePreview />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="/preview/template"
-                    element={
-                        <ProtectedRoute>
-                            <AdminTemplatePreview />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="/preview/:slug"
-                    element={
-                        <ProtectedRoute>
-                            <AdminTemplatePreview />
-                        </ProtectedRoute>
-                    }
-                />
+                {/* Preview routes — public fullscreen live website preview */}
+                <Route path="/admin/templates/builder/preview" element={<AdminTemplatePreview />} />
+                <Route path="/admin/templates/builder/:id/preview" element={<AdminTemplatePreview />} />
+                <Route path="/preview/template" element={<AdminTemplatePreview />} />
+                <Route path="/preview/template/:id" element={<AdminTemplatePreview />} />
+                <Route path="/preview/:slug" element={<AdminTemplatePreview />} />
 
                 {/* Authenticated builder routes (fullscreen) */}
                 <Route

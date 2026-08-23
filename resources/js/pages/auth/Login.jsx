@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useLocation } from 'react-router-dom';
-import { Eye, EyeOff, Sparkles, User, Lock, ArrowRight, Layers, ShieldCheck, Headphones } from 'lucide-react';
+import { Eye, EyeOff, Sparkles, User, Lock, ArrowRight, ArrowLeft, Layers, ShieldCheck, Headphones } from 'lucide-react';
 import { Spinner, Alert, BrandLogo } from '@components/ui';
 import { useLogin } from '@hooks';
 import { ROUTES } from '@constants';
@@ -45,8 +45,17 @@ export default function Login() {
             {/* Left Column — Form */}
             <div className="w-full md:w-1/2 p-8 sm:p-11 flex flex-col justify-between bg-white">
                 <div>
-                    {/* Brand Logo */}
-                    <BrandLogo />
+                    {/* Brand Logo & Back to Landing Page */}
+                    <div className="flex items-center justify-between">
+                        <BrandLogo />
+                        <Link
+                            to="/"
+                            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-100/90 hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 text-xs font-bold transition-all border border-slate-200/70 shadow-2xs hover:shadow-xs group"
+                        >
+                            <ArrowLeft className="h-3.5 w-3.5 group-hover:-translate-x-0.5 transition-transform" />
+                            <span>Landing Page</span>
+                        </Link>
+                    </div>
 
                     {/* Heading */}
                     <div className="mt-8 mb-6">
