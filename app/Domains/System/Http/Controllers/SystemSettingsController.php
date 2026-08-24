@@ -4,8 +4,8 @@ namespace App\Domains\System\Http\Controllers;
 
 use App\Domains\Shared\Enums\UserRole;
 use App\Domains\Shared\Http\Controllers\BaseController;
+use App\Domains\System\Models\Setting;
 use App\Domains\User\Models\User;
-use App\Models\Setting;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;

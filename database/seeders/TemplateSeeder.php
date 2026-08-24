@@ -2,11 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Domains\Category\Models\Category;
 use App\Domains\Shared\Enums\UserRole;
-use App\Domains\Template\Enums\TemplateStatus;
-use App\Domains\Template\Models\Template;
-use App\Domains\User\Models\User;
-use App\Models\Category;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 

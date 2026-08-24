@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@hooks';
 import { ROUTES } from '@constants';
-import { Spinner, PageLoader } from '@components/ui';
+import { Spinner, PageLoader } from '@shared/components/ui';
 import { useSettingsStore } from '@store';
 import { Suspense } from 'react';
 

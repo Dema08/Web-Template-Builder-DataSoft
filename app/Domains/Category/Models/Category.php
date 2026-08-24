@@ -1,0 +1,35 @@
+<?php
+
+namespace App\Domains\Category\Models;
+
+use App\Domains\Template\Models\Template;
+use App\Domains\Website\Models\Website;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class Category extends Model
+{
+    protected $table = 'kategori_industri';
+
+    protected $fillable = [
+        'name',
+        'slug',
+        'sort_order',
+        'is_active',
+    ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
+        'sort_order' => 'integer',
+    ];
+
+    public function templates(): HasMany
+    {
+        return $this->hasMany(Template::class);
+    }
+
+    public function websites(): HasMany
+    {
+        return $this->hasMany(Website::class);
+    }
+}

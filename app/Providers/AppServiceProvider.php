@@ -2,12 +2,12 @@
 
 namespace App\Providers;
 
-use App\Contracts\CategoryRepositoryInterface;
-use App\Contracts\TemplateRepositoryInterface;
-use App\Contracts\WebsiteRepositoryInterface;
-use App\Repositories\CategoryRepository;
-use App\Repositories\TemplateRepository;
-use App\Repositories\WebsiteRepository;
+use App\Domains\Onboarding\Contracts\CategoryRepositoryInterface;
+use App\Domains\Onboarding\Contracts\TemplateRepositoryInterface;
+use App\Domains\Onboarding\Contracts\WebsiteRepositoryInterface;
+use App\Domains\Onboarding\Repositories\CategoryRepository;
+use App\Domains\Onboarding\Repositories\TemplateRepository;
+use App\Domains\Onboarding\Repositories\WebsiteRepository;
 use Illuminate\Support\ServiceProvider;
 
 use Illuminate\Support\Facades\Gate;

@@ -5,7 +5,7 @@ namespace App\Domains\Admin\Services;
 use App\Domains\Admin\Repositories\DashboardRepository;
 use App\Domains\Shared\Services\BaseService;
 use App\Domains\User\Models\User;
-use App\Models\Website;
+use App\Domains\Website\Models\Website;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 

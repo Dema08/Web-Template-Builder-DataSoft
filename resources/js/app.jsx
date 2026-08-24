@@ -3,11 +3,11 @@ import { createRoot } from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import AppRouter from '@router';
-import { Toast } from '@components/ui';
+import { Toast } from '@shared/components/ui';
 import { useSettingsStore, useAuthStore } from '@store';
 import { settingsApi } from '@api';
-import SessionTimeoutModal from '@components/SessionTimeoutModal';
-import RegistrationPendingModal from '@components/auth/RegistrationPendingModal';
+import SessionTimeoutModal from '@shared/components/SessionTimeoutModal';
+import RegistrationPendingModal from '@features/auth/components/RegistrationPendingModal';
 import { initializeGoogleTranslate, setupGoogleTranslateElement } from '@utils/googleTranslate';
 import '../css/app.css';
 

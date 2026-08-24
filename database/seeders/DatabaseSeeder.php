@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Domains\Category\Models\Category;
 use App\Domains\Shared\Enums\UserRole;
 use App\Domains\User\Models\User;
-use App\Models\Category;
-use App\Models\Website;
+use App\Domains\Website\Models\Website;
 use App\Domains\Template\Models\Template;
 use Illuminate\Database\Seeder;
 

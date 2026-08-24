@@ -6,7 +6,7 @@ use App\Domains\Shared\Helpers\ApiResponse;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\TemplateResource;
 use App\Http\Resources\WebsiteResource;
-use App\Services\OnboardingService;
+use App\Domains\Onboarding\Services\OnboardingService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 

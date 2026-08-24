@@ -1,7 +1,7 @@
 import { Suspense, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AppLayout, GuestLayout, BuilderLayout } from '@layouts';
-import { PageLoader } from '@components/ui';
+import { PageLoader } from '@shared/components/ui';
 import {
             LandingPage,
             Login,

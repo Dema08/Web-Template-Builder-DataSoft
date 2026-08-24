@@ -3,7 +3,7 @@
 namespace App\Domains\Admin\Http\Controllers;
 
 use App\Domains\Shared\Http\Controllers\BaseController;
-use App\Models\Website;
+use App\Domains\Website\Models\Website;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 

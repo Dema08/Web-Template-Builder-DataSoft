@@ -3,7 +3,7 @@
 namespace App\Domains\Admin\Http\Controllers;
 
 use App\Domains\Shared\Http\Controllers\BaseController;
-use App\Models\Category;
+use App\Domains\Category\Models\Category;
 use App\Http\Resources\CategoryResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

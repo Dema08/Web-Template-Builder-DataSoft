@@ -2,6 +2,7 @@
 
 namespace App\Domains\Template\Models;
 
+use App\Domains\Category\Models\Category;
 use App\Domains\Template\Enums\TemplateStatus;
 use App\Domains\User\Models\User;
 use Illuminate\Database\Eloquent\Builder;
@@ -133,7 +134,7 @@ class Template extends Model
      */
     public function category(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\Category::class, 'category_id');
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
     /**
@@ -141,7 +142,7 @@ class Template extends Model
      */
     public function industryCategory(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\Category::class, 'category_id');
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
     /**
