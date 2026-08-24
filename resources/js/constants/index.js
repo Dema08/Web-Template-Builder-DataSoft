@@ -33,6 +33,7 @@ export const ROUTES = {
     ADMIN_ANALYTICS: '/admin/analytics',
     ADMIN_SETTINGS: '/admin/settings',
     ONBOARDING: '/onboarding',
+    TEMPLATE_GALLERY: '/templates-gallery',
 };
 
 export const TOKEN_STORAGE_KEY = 'cpwb_access_token';

@@ -895,23 +895,17 @@ function TemplatesSection() {
     return (
         <section id="templates" className="py-20 sm:py-28 bg-slate-50 relative">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
-                    <div>
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold mb-4 border"
-                             style={{ background: 'rgba(79,70,229,0.06)', borderColor: 'rgba(79,70,229,0.18)', color: '#4f46e5' }}>
-                            <Layout className="h-3 w-3" /> Template Library
-                        </div>
-                        <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-                            Published System Templates<br />Ready to Launch
-                        </h2>
-                        <p className="text-sm text-slate-500 mt-2 font-medium">
-                            Pilih template terbaik yang telah diterbitkan untuk kebutuhan website bisnis Anda.
-                        </p>
+                <div className="mb-10 text-center sm:text-left">
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold mb-4 border"
+                         style={{ background: 'rgba(79,70,229,0.06)', borderColor: 'rgba(79,70,229,0.18)', color: '#4f46e5' }}>
+                        <Layout className="h-3 w-3" /> Template Library
                     </div>
-                    <Link to={ROUTES.LOGIN}
-                          className="inline-flex items-center gap-2 text-sm font-bold text-indigo-600 hover:text-indigo-700 transition shrink-0 hover:translate-x-1 duration-200">
-                        Browse All Templates <ArrowRight className="h-4 w-4" />
-                    </Link>
+                    <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                        Published System Templates<br />Ready to Launch
+                    </h2>
+                    <p className="text-sm text-slate-500 mt-2 font-medium">
+                        Pilih template terbaik yang telah diterbitkan untuk kebutuhan website bisnis Anda.
+                    </p>
                 </div>
 
                 {isLoading ? (
@@ -920,7 +914,7 @@ function TemplatesSection() {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {displayTemplates.map((tpl) => {
+                        {displayTemplates.slice(0, 6).map((tpl) => {
                             const categoryName = tpl.industry_category?.name || 'General';
                             const imageUrl = tpl.thumbnail || tpl.preview_image || 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&auto=format&fit=crop&q=80';
 
@@ -974,6 +968,24 @@ function TemplatesSection() {
                                 </div>
                             );
                         })}
+                    </div>
+                )}
+
+                {/* Browse All CTA */}
+                {!isLoading && (
+                    <div className="mt-10 text-center">
+                        <Link
+                            to={ROUTES.TEMPLATE_GALLERY}
+                            className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-2xl text-sm font-bold text-white shadow-xl hover:shadow-2xl hover:-translate-y-0.5 transition-all ds-animate-pulse-glow"
+                            style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}
+                        >
+                            <Layout className="h-4 w-4" />
+                            Lihat Semua Template
+                            <ArrowRight className="h-4 w-4" />
+                        </Link>
+                        <p className="mt-3 text-xs text-slate-400 font-medium">
+                            Tersedia berbagai kategori — Korporat, Logistik, Pendidikan, Koperasi, dan banyak lagi
+                        </p>
                     </div>
                 )}
             </div>

@@ -199,7 +199,7 @@ export default function Register() {
                             className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-100/90 hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 text-xs font-bold transition-all duration-200 border border-slate-200/70 shadow-2xs hover:shadow-xs group hover:scale-[1.02] active:scale-95"
                         >
                             <ArrowLeft className="h-3.5 w-3.5 group-hover:-translate-x-1 transition-transform duration-200" />
-                            <span>Ke Login</span>
+                            <span>Halaman Login </span>
                         </Link>
                     </div>
 

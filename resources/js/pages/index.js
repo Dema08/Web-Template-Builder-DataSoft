@@ -34,3 +34,6 @@ export const Dashboard = lazy(() => import('./Dashboard'));
 
 // Public Landing Page
 export const LandingPage = lazy(() => import('./LandingPage'));
+
+// Public Template Gallery
+export const TemplateGalleryPage = lazy(() => import('./TemplateGalleryPage'));

@@ -1,5 +1,5 @@
-import { Suspense } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Suspense, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AppLayout, GuestLayout, BuilderLayout } from '@layouts';
 import { PageLoader } from '@components/ui';
 import {
@@ -25,17 +25,32 @@ import {
             AdminAnalytics,
             AdminSettings,
             Onboarding,
+            TemplateGalleryPage,
         } from '@pages';
 import { ProtectedRoute, GuestRoute } from './guards';
 import { ROUTES } from '@constants';
 
+function ScrollToTop() {
+    const { pathname } = useLocation();
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    }, [pathname]);
+
+    return null;
+}
+
 export default function AppRouter() {
     return (
         <BrowserRouter>
+            <ScrollToTop />
             <Suspense fallback={<PageLoader fullScreen />}>
                 <Routes>
                     {/* Public Landing Page — accessible to everyone */}
                 <Route path="/" element={<LandingPage />} />
+
+                {/* Public Template Gallery — accessible to everyone */}
+                <Route path={ROUTES.TEMPLATE_GALLERY} element={<TemplateGalleryPage />} />
 
                 {/* Guest-only routes */}
                 <Route
