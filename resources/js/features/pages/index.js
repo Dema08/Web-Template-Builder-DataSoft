@@ -10,6 +10,7 @@ export const AdminTemplatePreview = lazy(() => import('@features/admin/pages/Adm
 export const AdminCategories = lazy(() => import('@features/admin/pages/AdminCategories'));
 export const AdminAnalytics = lazy(() => import('@features/admin/pages/AdminAnalytics'));
 export const AdminSettings = lazy(() => import('@features/admin/pages/AdminSettings'));
+export const AdminLandingEditor = lazy(() => import('@features/admin/pages/AdminLandingEditor'));
 
 // User Pages
 export const UserDashboard = lazy(() => import('@features/user/pages/UserDashboard'));
@@ -34,3 +35,6 @@ export const Dashboard = lazy(() => import('@features/user/pages/Dashboard'));
 
 // Public Landing Page
 export const LandingPage = lazy(() => import('@features/publish/pages/LandingPage'));
+
+// Public Template Gallery Page
+export const TemplateGalleryPage = lazy(() => import('../../pages/TemplateGalleryPage'));

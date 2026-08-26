@@ -24,6 +24,7 @@ import {
             AdminCategories,
             AdminAnalytics,
             AdminSettings,
+            AdminLandingEditor,
             Onboarding,
             TemplateGalleryPage,
         } from '@pages';
@@ -90,6 +91,7 @@ export default function AppRouter() {
                     <Route path={ROUTES.ADMIN_TEMPLATES} element={<AdminTemplates />} />
                     <Route path={ROUTES.ADMIN_CATEGORIES} element={<AdminCategories />} />
                     <Route path={ROUTES.ADMIN_ANALYTICS} element={<AdminAnalytics />} />
+                    <Route path={ROUTES.ADMIN_LANDING} element={<AdminLandingEditor />} />
                     <Route path={ROUTES.ADMIN_SETTINGS} element={<AdminSettings />} />
                 </Route>
 

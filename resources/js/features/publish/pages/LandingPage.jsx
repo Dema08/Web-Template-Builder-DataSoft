@@ -5,16 +5,21 @@ import {
     Palette, Image, Monitor, Smartphone, Tablet, MousePointer2,
     Shield, Layers, ChevronRight, Menu, X, TrendingUp,
     Users, BarChart3, Clock, Quote, CheckCircle2, Rocket,
-    Eye, Code2, Headphones, Award, Edit2, Loader2,
+    Eye, Code2, Headphones, Award, Edit2, Loader2, Lock,
 } from 'lucide-react';
 import { ROUTES } from '@constants';
-import { templateApi } from '@api';
+import { templateApi, settingsApi } from '@api';
 import { useAuthStore } from '@store';
 
 /* ─────────────────────────────────────────────────────────
    CONSTANTS
 ───────────────────────────────────────────────────────── */
-const NAV_LINKS = ['Features', 'Templates', 'Builder', 'Pricing', 'Enterprise'];
+const NAV_LINKS = [
+    { label: 'Features', target: 'features' },
+    { label: 'Templates', target: 'templates' },
+    { label: 'How It Works', target: 'how-it-works' },
+    { label: 'Pricing', target: 'pricing' },
+];
 
 const FEATURES = [
     {
@@ -159,6 +164,18 @@ function Navbar({ onDemo }) {
         return () => window.removeEventListener('scroll', onScroll);
     }, []);
 
+    const scrollToSection = (e, targetId) => {
+        e.preventDefault();
+        setMobileOpen(false);
+
+        const element = document.getElementById(targetId);
+        if (element) {
+            const yOffset = -80; // offset for fixed header
+            const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+            window.scrollTo({ top: y, behavior: 'smooth' });
+        }
+    };
+
     return (
         <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
             scrolled ? 'bg-white/90 backdrop-blur-xl shadow-sm border-b border-slate-100' : 'bg-transparent'
@@ -166,7 +183,10 @@ function Navbar({ onDemo }) {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16 sm:h-20">
                     {/* Logo */}
-                    <div className="flex items-center gap-2.5">
+                    <div
+                        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                        className="flex items-center gap-2.5 cursor-pointer select-none"
+                    >
                         <div className="h-9 w-9 rounded-xl flex items-center justify-center text-white font-extrabold text-sm shadow-md"
                              style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>DS</div>
                         <div>
@@ -177,10 +197,14 @@ function Navbar({ onDemo }) {
 
                     {/* Desktop nav */}
                     <div className="hidden md:flex items-center gap-7">
-                        {NAV_LINKS.map(l => (
-                            <a key={l} href={`#${l.toLowerCase()}`}
-                               className="text-sm font-semibold text-slate-600 hover:text-indigo-600 transition-colors">
-                                {l}
+                        {NAV_LINKS.map(item => (
+                            <a
+                                key={item.target}
+                                href={`#${item.target}`}
+                                onClick={(e) => scrollToSection(e, item.target)}
+                                className="text-sm font-semibold text-slate-600 hover:text-indigo-600 transition-colors cursor-pointer"
+                            >
+                                {item.label}
                             </a>
                         ))}
                     </div>
@@ -192,7 +216,7 @@ function Navbar({ onDemo }) {
                             Login
                         </Link>
                         <Link to={ROUTES.REGISTER}
-                              className="text-sm font-bold text-white px-5 py-2.5 rounded-xl shadow-md hover:shadow-lg transition-all"
+                              className="text-sm font-bold text-white px-5 py-2.5 rounded-xl shadow-md hover:shadow-lg hover:scale-105 transition-all"
                               style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
                             Start Building
                         </Link>
@@ -207,12 +231,15 @@ function Navbar({ onDemo }) {
 
                 {/* Mobile menu */}
                 {mobileOpen && (
-                    <div className="md:hidden bg-white rounded-2xl shadow-xl border border-slate-100 mt-2 p-4 space-y-2">
-                        {NAV_LINKS.map(l => (
-                            <a key={l} href={`#${l.toLowerCase()}`}
-                               onClick={() => setMobileOpen(false)}
-                               className="block px-3 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition">
-                                {l}
+                    <div className="md:hidden bg-white rounded-2xl shadow-xl border border-slate-100 mt-2 p-4 space-y-2 animate-in fade-in slide-in-from-top-2 duration-200">
+                        {NAV_LINKS.map(item => (
+                            <a
+                                key={item.target}
+                                href={`#${item.target}`}
+                                onClick={(e) => scrollToSection(e, item.target)}
+                                className="block px-3 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:bg-indigo-50 hover:text-indigo-600 transition cursor-pointer"
+                            >
+                                {item.label}
                             </a>
                         ))}
                         <div className="pt-2 border-t border-slate-100 flex flex-col gap-2">
@@ -583,7 +610,8 @@ function StatsSection() {
    REVISED 3D PRICING CAROUSEL (APPLE / FRAMER STYLE)
    Interaction: Horizontal Drag Left/Right to Rotate
 ───────────────────────────────────────────────────────── */
-function PricingSection() {
+function PricingSection({ pricingList, pricingMeta }) {
+    const plans = (pricingList && pricingList.length > 0) ? pricingList : PRICING;
     const stageRef = useRef(null);
     const [rotationAngle, setRotationAngle] = useState(0);
     const targetAngleRef = useRef(0);
@@ -597,7 +625,6 @@ function PricingSection() {
     const dragStartXRef = useRef(0);
     const dragStartAngleRef = useRef(0);
     const isDraggingRef = useRef(false);
-    const lastWheelTimeRef = useRef(0);
 
     // Screen size detection
     useEffect(() => {
@@ -621,7 +648,7 @@ function PricingSection() {
             setRotationAngle(currentAngleRef.current);
 
             // Active front card index calculation
-            const count = PRICING.length;
+            const count = plans.length;
             const step = (2 * Math.PI) / count;
             let normAngle = (-currentAngleRef.current) % (2 * Math.PI);
             if (normAngle < 0) normAngle += 2 * Math.PI;
@@ -632,7 +659,7 @@ function PricingSection() {
         };
         animationFrameId = requestAnimationFrame(renderLoop);
         return () => cancelAnimationFrame(animationFrameId);
-    }, []);
+    }, [plans.length]);
 
     // ── Pointer (mouse drag) handlers ──────────────────────
     const handlePointerDown = (e) => {
@@ -655,7 +682,7 @@ function PricingSection() {
         isDraggingRef.current = false;
         setIsDragging(false);
         // Snap to nearest card step
-        const step = (2 * Math.PI) / PRICING.length;
+        const step = (2 * Math.PI) / plans.length;
         targetAngleRef.current = Math.round(targetAngleRef.current / step) * step;
     };
 
@@ -675,12 +702,11 @@ function PricingSection() {
     };
 
     const handleTouchEnd = () => {
-        // Snap to nearest 120deg step
-        const step = (2 * Math.PI) / PRICING.length;
+        const step = (2 * Math.PI) / plans.length;
         targetAngleRef.current = Math.round(targetAngleRef.current / step) * step;
     };
 
-    // Carousel Radius — wider for 5 cards (72deg spacing)
+    // Carousel Radius — wider for multiple cards
     const radius = isMobile ? 0 : isTablet ? 240 : 320;
 
     return (
@@ -692,20 +718,24 @@ function PricingSection() {
                             className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold mb-3 border"
                             style={{ background: 'rgba(79,70,229,0.06)', borderColor: 'rgba(79,70,229,0.18)', color: '#4f46e5' }}
                         >
-                            <Award className="h-3 w-3" /> Pricing
+                            <Award className="h-3 w-3" /> {pricingMeta?.badge || 'Pricing'}
                         </div>
-                        <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Simple, Transparent Pricing</h2>
-                        <p className="mt-2 text-slate-500 font-medium text-sm">Drag left/right or tap a tab to rotate 3D pricing wheel.</p>
+                        <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                            {pricingMeta?.title || 'Simple, Transparent Pricing'}
+                        </h2>
+                        <p className="mt-2 text-slate-500 font-medium text-sm">
+                            {pricingMeta?.subtitle || 'Drag left/right or tap a tab to rotate 3D pricing wheel.'}
+                        </p>
 
                         {/* Quick Plan Switcher Buttons */}
-                        <div className="flex items-center justify-center gap-2 mt-4">
-                            {PRICING.map((p, i) => (
+                        <div className="flex items-center justify-center gap-2 mt-4 flex-wrap">
+                            {plans.map((p, i) => (
                                 <button
-                                    key={p.name}
+                                    key={p.name + i}
                                     onClick={() => {
-                                        targetAngleRef.current = -(i * 2 * Math.PI) / PRICING.length;
+                                        targetAngleRef.current = -(i * 2 * Math.PI) / plans.length;
                                     }}
-                                    className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all ${
+                                    className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                                         activeIndex === i
                                             ? 'bg-indigo-600 text-white shadow-md scale-105'
                                             : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
@@ -717,7 +747,7 @@ function PricingSection() {
                         </div>
                     </div>
 
-                    {/* Tight 3D Rotating Carousel Stage — horizontal drag/swipe to rotate */}
+                    {/* Tight 3D Rotating Carousel Stage */}
                     <div
                         ref={stageRef}
                         className="pricing-group mx-auto"
@@ -730,28 +760,22 @@ function PricingSection() {
                         onTouchMove={handleTouchMove}
                         onTouchEnd={handleTouchEnd}
                     >
-                        {PRICING.map((p, i) => {
+                        {plans.map((p, i) => {
                             let cardStyle = {};
                             let depthClass = 'is-inactive-card';
 
                             if (!isMobile) {
-                                // 3D Wheel Angle calculation
-                                const cardAngle = rotationAngle + (i * 2 * Math.PI) / PRICING.length;
+                                const cardAngle = rotationAngle + (i * 2 * Math.PI) / plans.length;
                                 const x = Math.sin(cardAngle) * radius;
-                                const z = (Math.cos(cardAngle) - 1) * 90; // Depth translateZ [0, -180px]
+                                const z = (Math.cos(cardAngle) - 1) * 90;
                                 const rotateY = (cardAngle * 180) / Math.PI;
 
-                                // Normalize facing position (cosVal: 1 front, -1 back)
                                 const cosVal = Math.cos(cardAngle);
-                                const norm = (cosVal + 1) / 2; // 0 to 1
+                                const norm = (cosVal + 1) / 2;
 
-                                // Target Card Scale & Opacity as requested:
-                                // Front card: scale(1), opacity(1)
-                                // Side card: scale(0.85), opacity(0.7)
-                                // Back card: scale(0.7), opacity(0.4)
-                                const cardScale = 0.7 + 0.3 * norm;     // 0.7 to 1.0
-                                const cardOpacity = 0.4 + 0.6 * norm;   // 0.4 to 1.0
-                                const cardBlur = (1 - norm) * 2.0;      // 0px to 2.0px
+                                const cardScale = 0.7 + 0.3 * norm;
+                                const cardOpacity = 0.4 + 0.6 * norm;
+                                const cardBlur = (1 - norm) * 2.0;
                                 const zIdx = Math.round(norm * 100);
 
                                 if (norm > 0.85) {
@@ -765,7 +789,6 @@ function PricingSection() {
                                     zIndex: zIdx,
                                 };
                             } else {
-                                // Mobile view active card handling
                                 const isActive = activeIndex === i;
                                 cardStyle = {
                                     display: isActive ? 'block' : 'none',
@@ -1100,9 +1123,57 @@ function TemplatesSection() {
 /* ─────────────────────────────────────────────────────────
    MAIN PAGE
 ───────────────────────────────────────────────────────── */
-export default function LandingPage() {
+const DEFAULT_LANDING_CONTENT = {
+    hero_badge: 'DataSoft Website Builder 2.0',
+    hero_title: 'Build Professional Websites',
+    hero_subtitle: 'With One-Click Hosting',
+    hero_desc: 'Create, customize, and publish stunning websites using a visual drag-and-drop builder without writing a single line of code.',
+    hero_cta_primary: 'Start Building Free',
+    hero_cta_secondary: 'Watch Live Demo',
+    features_badge: 'Platform Features',
+    features_title: 'Everything Needed to Launch Websites Faster',
+    features_subtitle: 'All the tools a business needs to create a stunning web presence — in one platform.',
+    steps_title: 'Build and Publish in 4 Easy Steps',
+    stats_title: 'Trusted at Scale',
+    stats_subtitle: 'Numbers that speak for themselves.',
+    cta_badge: 'Get Started Today',
+    cta_title: 'Start Building Your Website Today',
+    cta_desc: 'Launch professional websites faster with DataSoft Website Builder. No credit card required.',
+    cta_button_text: 'Start Building Free',
+    // Footer
+    footer_brand_name: 'DataSoft',
+    footer_brand_tagline: 'Studio',
+    footer_desc: 'Build, customize, and publish professional websites without coding.',
+    footer_email: 'hello@datasoft.id',
+    footer_social_twitter: '#',
+    footer_social_github: '#',
+    footer_social_linkedin: '#',
+    footer_social_instagram: '#',
+    footer_copyright: '© 2026 PT DataSoft Solusindo. All rights reserved.',
+};
+
+export default function LandingPage({ liveContent }) {
     const [demoOpen, setDemoOpen] = useState(false);
     const [activeTemplate, setActiveTemplate] = useState(null);
+    const [landingContent, setLandingContent] = useState(liveContent || DEFAULT_LANDING_CONTENT);
+
+    useEffect(() => {
+        if (liveContent) {
+            setLandingContent({ ...DEFAULT_LANDING_CONTENT, ...liveContent });
+            return;
+        }
+        let isMounted = true;
+        settingsApi.getPublicSettings().then((settings) => {
+            if (!isMounted) return;
+            if (settings?.landing_content) {
+                const parsed = typeof settings.landing_content === 'string'
+                    ? JSON.parse(settings.landing_content)
+                    : settings.landing_content;
+                setLandingContent({ ...DEFAULT_LANDING_CONTENT, ...parsed });
+            }
+        }).catch(() => {});
+        return () => { isMounted = false; };
+    }, [liveContent]);
 
     return (
         <div className="min-h-screen bg-white font-sans" style={{ fontFamily: "'Inter', sans-serif" }}>
@@ -1129,25 +1200,23 @@ export default function LandingPage() {
                                  style={{ background: 'rgba(79,70,229,0.06)', borderColor: 'rgba(79,70,229,0.18)', color: '#4f46e5' }}>
                                 <span className="w-2 h-2 rounded-full bg-indigo-600 animate-ping" />
                                 <Sparkles className="h-3.5 w-3.5" />
-                                <span>DataSoft Website Builder 2.0</span>
+                                <span>{landingContent.hero_badge}</span>
                             </div>
 
                             {/* Headline with animated flowing gradient */}
                             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-[1.1] tracking-tight mb-5">
-                                Build Professional<br />
-                                Websites{' '}
+                                {landingContent.hero_title}<br />
                                 <span className="ds-animate-gradient" style={{
                                     background: 'linear-gradient(135deg, #2563eb, #4f46e5, #7c3aed, #ec4899, #2563eb)',
                                     WebkitBackgroundClip: 'text',
                                     WebkitTextFillColor: 'transparent',
                                     backgroundClip: 'text',
-                                }}>With One-Click Hosting</span>
+                                }}>{landingContent.hero_subtitle}</span>
                             </h1>
 
                             {/* Sub */}
                             <p className="text-lg text-slate-500 font-medium leading-relaxed max-w-xl mx-auto lg:mx-0 mb-8">
-                                Create, customize, and publish stunning websites using a visual drag-and-drop builder
-                                without writing a single line of code.
+                                {landingContent.hero_desc}
                             </p>
 
                             {/* CTAs */}
@@ -1156,7 +1225,7 @@ export default function LandingPage() {
                                       className="inline-flex items-center justify-center gap-2 px-7 py-3.5 text-white font-bold rounded-2xl text-sm shadow-xl transition-all hover:shadow-2xl hover:-translate-y-1 ds-animate-pulse-glow"
                                       style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
                                     <Sparkles className="h-4 w-4" />
-                                    Start Building Free
+                                    {landingContent.hero_cta_primary}
                                     <ArrowRight className="h-4 w-4" />
                                 </Link>
                                 <button onClick={() => setDemoOpen(true)}
@@ -1164,7 +1233,7 @@ export default function LandingPage() {
                                     <div className="w-6 h-6 rounded-full bg-indigo-600 flex items-center justify-center animate-pulse">
                                         <Play className="h-3 w-3 text-white fill-white ml-0.5" />
                                     </div>
-                                    Watch Live Demo
+                                    {landingContent.hero_cta_secondary}
                                 </button>
                             </div>
 
@@ -1201,30 +1270,54 @@ export default function LandingPage() {
                     <div className="text-center mb-14">
                         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold mb-4 border shadow-2xs"
                              style={{ background: 'rgba(79,70,229,0.06)', borderColor: 'rgba(79,70,229,0.18)', color: '#4f46e5' }}>
-                            <Zap className="h-3 w-3 animate-bounce" /> Platform Features
+                            <Zap className="h-3 w-3 animate-bounce" /> {landingContent.features_badge}
                         </div>
                         <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-                            Everything Needed to Launch<br />
-                            <span className="ds-animate-gradient" style={{
-                                background: 'linear-gradient(135deg,#2563eb,#4f46e5,#7c3aed)',
-                                WebkitBackgroundClip: 'text',
-                                WebkitTextFillColor: 'transparent',
-                                backgroundClip: 'text',
-                            }}>Websites Faster</span>
+                            {landingContent.features_title}
                         </h2>
                         <p className="mt-3 text-slate-500 font-medium max-w-xl mx-auto">
-                            All the tools a business needs to create a stunning web presence — in one platform.
+                            {landingContent.features_subtitle}
                         </p>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {FEATURES.map((f) => {
-                            const Icon = f.icon;
+                        {((landingContent.features_list && landingContent.features_list.length > 0)
+                            ? landingContent.features_list
+                            : FEATURES
+                        ).map((f, idx) => {
+                            const iconMap = {
+                                MousePointer2, Layout, Rocket, Monitor, Palette, Image, Sparkles, Shield,
+                                Globe, Zap, Users, Headphones, Code2, Lock, BarChart3, Star
+                            };
+                            const accentStyles = {
+                                blue: { bg: 'bg-blue-50', accent: 'text-blue-600' },
+                                indigo: { bg: 'bg-indigo-50', accent: 'text-indigo-600' },
+                                violet: { bg: 'bg-violet-50', accent: 'text-violet-600' },
+                                sky: { bg: 'bg-sky-50', accent: 'text-sky-600' },
+                                pink: { bg: 'bg-pink-50', accent: 'text-pink-600' },
+                                amber: { bg: 'bg-amber-50', accent: 'text-amber-600' },
+                                emerald: { bg: 'bg-emerald-50', accent: 'text-emerald-600' },
+                            };
+
+                            let Icon = MousePointer2;
+                            if (typeof f.icon === 'string' && iconMap[f.icon]) {
+                                Icon = iconMap[f.icon];
+                            } else if (f.icon && (typeof f.icon === 'function' || typeof f.icon === 'object')) {
+                                Icon = f.icon;
+                            } else {
+                                const fallbackIcons = [MousePointer2, Layout, Rocket, Monitor, Palette, Image, Sparkles, Shield];
+                                Icon = fallbackIcons[idx % fallbackIcons.length];
+                            }
+
+                            const style = accentStyles[f.accent] || accentStyles.indigo;
+                            const bgClass = f.bg || style.bg;
+                            const accentClass = f.accentClass || style.accent;
+
                             return (
-                                <div key={f.title}
+                                <div key={f.title + idx}
                                      className="group bg-white rounded-2xl p-6 border border-slate-100 shadow-sm ds-hover-lift ds-hover-glow cursor-pointer">
-                                    <div className={`w-12 h-12 rounded-2xl ${f.bg} flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-sm`}>
-                                        <Icon className={`h-5 w-5 ${f.accent}`} />
+                                    <div className={`w-12 h-12 rounded-2xl ${bgClass} flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-sm`}>
+                                        <Icon className={`h-5 w-5 ${accentClass}`} />
                                     </div>
                                     <h3 className="text-base font-extrabold text-slate-900 mb-2 group-hover:text-indigo-600 transition-colors">{f.title}</h3>
                                     <p className="text-sm text-slate-500 leading-relaxed">{f.desc}</p>
@@ -1238,32 +1331,44 @@ export default function LandingPage() {
             {/* ════════════════════════════════════════════════════
                 HOW IT WORKS
             ════════════════════════════════════════════════════ */}
-            <section className="py-20 sm:py-28 bg-white relative">
+            <section id="how-it-works" className="py-20 sm:py-28 bg-white relative">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-14">
                         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold mb-4 border"
                              style={{ background: 'rgba(79,70,229,0.06)', borderColor: 'rgba(79,70,229,0.18)', color: '#4f46e5' }}>
-                            <Clock className="h-3 w-3 animate-spin" style={{ animationDuration: '10s' }} /> How It Works
+                            <Clock className="h-3 w-3 animate-spin" style={{ animationDuration: '10s' }} /> {landingContent.steps_badge || 'How It Works'}
                         </div>
                         <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-                            Build and Publish in <span className="ds-animate-gradient" style={{
-                                background: 'linear-gradient(135deg,#2563eb,#4f46e5,#7c3aed)',
-                                WebkitBackgroundClip: 'text',
-                                WebkitTextFillColor: 'transparent',
-                                backgroundClip: 'text',
-                            }}>4 Easy Steps</span>
+                            {landingContent.steps_title || 'Build and Publish in 4 Easy Steps'}
                         </h2>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+                    <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-${Math.min(((landingContent.steps_list || STEPS).length), 4)} gap-6 relative`}>
                         {/* Connector line (desktop only) */}
                         <div className="hidden lg:block absolute top-10 left-[12.5%] right-[12.5%] h-1 rounded-full overflow-hidden bg-slate-100">
                             <div className="w-full h-full ds-animate-shimmer"
                                  style={{ background: 'linear-gradient(90deg,transparent,#4f46e5,#7c3aed,transparent)' }} />
                         </div>
 
-                        {STEPS.map((step, i) => {
-                            const Icon = step.icon;
+                        {((landingContent.steps_list && landingContent.steps_list.length > 0)
+                            ? landingContent.steps_list
+                            : STEPS
+                        ).map((step, i) => {
+                            const iconMap = {
+                                MousePointer2, Layout, Rocket, Monitor, Palette, Image, Sparkles, Shield,
+                                Globe, Zap, Users, Headphones, Code2, Lock, BarChart3, Star, Eye
+                            };
+
+                            let Icon = Layout;
+                            if (typeof step.icon === 'string' && iconMap[step.icon]) {
+                                Icon = iconMap[step.icon];
+                            } else if (step.icon && (typeof step.icon === 'function' || typeof step.icon === 'object')) {
+                                Icon = step.icon;
+                            } else {
+                                const fallbackStepIcons = [Layout, Palette, Eye, Rocket];
+                                Icon = fallbackStepIcons[i % fallbackStepIcons.length];
+                            }
+
                             return (
                                 <div key={i} className="relative text-center group cursor-pointer">
                                     <div className="relative inline-flex">
@@ -1336,7 +1441,14 @@ export default function LandingPage() {
             {/* ════════════════════════════════════════════════════
                 PRICING (With Rotation Entrance & Premium Hover)
             ════════════════════════════════════════════════════ */}
-            <PricingSection />
+            <PricingSection
+                pricingList={landingContent.pricing_list}
+                pricingMeta={{
+                    badge: landingContent.pricing_badge,
+                    title: landingContent.pricing_title,
+                    subtitle: landingContent.pricing_subtitle,
+                }}
+            />
 
             {/* ════════════════════════════════════════════════════
                 CTA SECTION
@@ -1361,27 +1473,20 @@ export default function LandingPage() {
                         </div>
                         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold mb-5 border"
                              style={{ background: 'rgba(79,70,229,0.08)', borderColor: 'rgba(79,70,229,0.2)', color: '#4f46e5' }}>
-                            <Rocket className="h-3 w-3 animate-bounce" /> Get Started Today
+                            <Rocket className="h-3 w-3 animate-bounce" /> {landingContent.cta_badge}
                         </div>
                         <h2 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight mb-4 leading-tight">
-                            Start Building Your<br />
-                            <span className="ds-animate-gradient" style={{
-                                background: 'linear-gradient(135deg,#2563eb,#4f46e5,#7c3aed)',
-                                WebkitBackgroundClip: 'text',
-                                WebkitTextFillColor: 'transparent',
-                                backgroundClip: 'text',
-                            }}>Website Today</span>
+                            {landingContent.cta_title}
                         </h2>
                         <p className="text-lg text-slate-500 font-medium max-w-xl mx-auto mb-8">
-                            Launch professional websites faster with DataSoft Website Builder.
-                            No credit card required.
+                            {landingContent.cta_desc}
                         </p>
                         <div className="flex flex-col sm:flex-row gap-3 justify-center">
                             <Link to={ROUTES.REGISTER}
                                   className="inline-flex items-center justify-center gap-2 px-8 py-4 text-white font-bold rounded-2xl text-base shadow-xl hover:-translate-y-1 transition-all ds-animate-pulse-glow"
                                   style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
                                 <Sparkles className="h-5 w-5" />
-                                Start Building Free
+                                {landingContent.cta_button_text}
                             </Link>
                             <a href="mailto:hello@datasoft.id"
                                className="inline-flex items-center justify-center gap-2 px-8 py-4 font-bold rounded-2xl text-base border-2 border-slate-200 text-slate-700 hover:border-indigo-400 hover:text-indigo-600 hover:-translate-y-0.5 transition-all bg-white/80">
@@ -1402,22 +1507,60 @@ export default function LandingPage() {
                         <div className="col-span-2 md:col-span-1">
                             <div className="flex items-center gap-2.5 mb-4">
                                 <div className="h-9 w-9 rounded-xl flex items-center justify-center text-white font-extrabold text-sm"
-                                     style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>DS</div>
+                                     style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
+                                    {(landingContent.footer_brand_name || 'DataSoft').substring(0, 2).toUpperCase()}
+                                </div>
                                 <div>
-                                    <div className="text-sm font-extrabold text-white">DataSoft</div>
-                                    <div className="text-[9px] font-bold uppercase tracking-[0.18em] text-indigo-400">Studio</div>
+                                    <div className="text-sm font-extrabold text-white">{landingContent.footer_brand_name || 'DataSoft'}</div>
+                                    <div className="text-[9px] font-bold uppercase tracking-[0.18em] text-indigo-400">{landingContent.footer_brand_tagline || 'Studio'}</div>
                                 </div>
                             </div>
                             <p className="text-xs text-slate-400 leading-relaxed mb-4">
-                                Build, customize, and publish professional websites without coding.
+                                {landingContent.footer_desc || 'Build, customize, and publish professional websites without coding.'}
                             </p>
+                            {/* Social Links */}
                             <div className="flex gap-2">
-                                {['Twitter','GitHub','LinkedIn'].map(s => (
-                                    <div key={s} className="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 hover:text-white hover:bg-indigo-600 cursor-pointer transition text-[10px] font-bold">
-                                        {s[0]}
-                                    </div>
-                                ))}
+                                {landingContent.footer_social_twitter && landingContent.footer_social_twitter !== '#' && (
+                                    <a href={landingContent.footer_social_twitter} target="_blank" rel="noreferrer"
+                                       className="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 hover:text-white hover:bg-sky-500 cursor-pointer transition text-[10px] font-bold" title="Twitter/X">
+                                        𝕏
+                                    </a>
+                                )}
+                                {landingContent.footer_social_github && landingContent.footer_social_github !== '#' && (
+                                    <a href={landingContent.footer_social_github} target="_blank" rel="noreferrer"
+                                       className="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-600 cursor-pointer transition text-[10px] font-bold" title="GitHub">
+                                        G
+                                    </a>
+                                )}
+                                {landingContent.footer_social_linkedin && landingContent.footer_social_linkedin !== '#' && (
+                                    <a href={landingContent.footer_social_linkedin} target="_blank" rel="noreferrer"
+                                       className="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 hover:text-white hover:bg-blue-600 cursor-pointer transition text-[10px] font-bold" title="LinkedIn">
+                                        in
+                                    </a>
+                                )}
+                                {landingContent.footer_social_instagram && landingContent.footer_social_instagram !== '#' && (
+                                    <a href={landingContent.footer_social_instagram} target="_blank" rel="noreferrer"
+                                       className="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 hover:text-white hover:bg-pink-600 cursor-pointer transition text-[10px] font-bold" title="Instagram">
+                                        IG
+                                    </a>
+                                )}
+                                {/* Fallback if no social links configured */}
+                                {[landingContent.footer_social_twitter, landingContent.footer_social_github, landingContent.footer_social_linkedin, landingContent.footer_social_instagram].every(l => !l || l === '#') && (
+                                    ['T','G','in'].map(s => (
+                                        <div key={s} className="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 hover:text-white hover:bg-indigo-600 cursor-pointer transition text-[10px] font-bold">{s}</div>
+                                    ))
+                                )}
                             </div>
+                            {/* Contact Email */}
+                            {landingContent.footer_email && (
+                                <a href={`mailto:${landingContent.footer_email}`}
+                                   className="mt-4 inline-flex items-center gap-1.5 text-xs text-indigo-400 hover:text-indigo-300 transition">
+                                    <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                    </svg>
+                                    {landingContent.footer_email}
+                                </a>
+                            )}
                         </div>
 
                         {[
@@ -1443,7 +1586,7 @@ export default function LandingPage() {
 
                     <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
                         <p className="text-xs text-slate-500">
-                            © 2026 PT DataSoft Solusindo. All rights reserved.
+                            {landingContent.footer_copyright || '© 2026 PT DataSoft Solusindo. All rights reserved.'}
                         </p>
                         <div className="flex gap-4">
                             <a href="#" className="text-xs text-slate-500 hover:text-white transition">Privacy Policy</a>

@@ -26,17 +26,19 @@ class PublicSettingsController extends BaseController
         'brand_color',
         'plan_label',
         'logo_path',
+        'landing_content',
     ];
 
     /**
      * Default fallback values for public settings.
      */
     protected const DEFAULTS = [
-        'brand_name'  => 'DataSoft',
-        'brand_badge' => 'DS',
-        'brand_color' => '#2563eb',
-        'plan_label'  => 'Premium Plan',
-        'logo_path'   => null,
+        'brand_name'      => 'DataSoft',
+        'brand_badge'     => 'DS',
+        'brand_color'     => '#2563eb',
+        'plan_label'      => 'Premium Plan',
+        'logo_path'       => null,
+        'landing_content' => null,
     ];
 
     /**

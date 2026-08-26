@@ -32,6 +32,7 @@ export const ROUTES = {
     ADMIN_CATEGORIES: '/admin/categories',
     ADMIN_ANALYTICS: '/admin/analytics',
     ADMIN_SETTINGS: '/admin/settings',
+    ADMIN_LANDING: '/admin/landing',
     ONBOARDING: '/onboarding',
     TEMPLATE_GALLERY: '/templates-gallery',
 };

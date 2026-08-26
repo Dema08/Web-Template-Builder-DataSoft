@@ -46,6 +46,7 @@ export default function AppLayout() {
               { label: 'Categories', icon: Layers, to: ROUTES.ADMIN_CATEGORIES },
               { label: 'User Management', icon: Users, to: ROUTES.ADMIN_USERS },
               { label: 'Analytics', icon: BarChart3, to: ROUTES.ADMIN_ANALYTICS },
+              { label: 'Edit Landing Page', icon: Sparkles, to: ROUTES.ADMIN_LANDING },
               { label: 'Maintenance & Settings', icon: SettingsIcon, to: ROUTES.ADMIN_SETTINGS },
           ]
         : [

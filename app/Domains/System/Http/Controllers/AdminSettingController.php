@@ -31,6 +31,7 @@ class AdminSettingController extends BaseController
         'maintenance_mode',
         'allow_registration',
         'default_storage_limit',
+        'landing_content',
     ];
 
     /**
@@ -45,6 +46,7 @@ class AdminSettingController extends BaseController
         'maintenance_mode'      => false,
         'allow_registration'    => true,
         'default_storage_limit' => 100,
+        'landing_content'       => null,
     ];
 
     /**
@@ -77,17 +79,6 @@ class AdminSettingController extends BaseController
     /**
      * GET /api/admin/settings
      * Return all settings as a flat object.
-     *
-     * {
-     *   "brand_name": "DataSoft",
-     *   "brand_badge": "DS",
-     *   "brand_color": "#2563eb",
-     *   "plan_label": "Premium Plan",
-     *   "logo_path": "/storage/settings/logo.png",
-     *   "maintenance_mode": false,
-     *   "allow_registration": true,
-     *   "default_storage_limit": 100
-     * }
      */
     public function index(): JsonResponse
     {
@@ -97,10 +88,6 @@ class AdminSettingController extends BaseController
     /**
      * PUT /api/admin/settings
      * Update one or more settings by key.
-     * Accepts a flat payload: { "brand_name": "...", "brand_color": "..." }
-     *
-     * logo_path is NOT accepted here — it is managed exclusively through
-     * the dedicated logo upload / remove endpoints.
      */
     public function update(Request $request): JsonResponse
     {
@@ -112,14 +99,19 @@ class AdminSettingController extends BaseController
             'maintenance_mode'      => 'sometimes|boolean',
             'allow_registration'    => 'sometimes|boolean',
             'default_storage_limit' => 'sometimes|integer|min:1',
+            'landing_content'       => 'sometimes|nullable',
         ]);
 
         foreach ($validated as $key => $value) {
-            $existing = Setting::where('key', $key)->first();
-
-            if ($existing) {
-                // UPDATE existing row — never create a duplicate.
-                Setting::set($key, $value, $existing->type, $existing->group);
+            if ($key === 'landing_content') {
+                Setting::set('landing_content', $value, 'json', 'landing');
+            } else {
+                $existing = Setting::where('key', $key)->first();
+                if ($existing) {
+                    Setting::set($key, $value, $existing->type, $existing->group);
+                } else {
+                    Setting::set($key, $value, 'string', 'general');
+                }
             }
         }
 
