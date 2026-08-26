@@ -112,11 +112,11 @@ Route::prefix('v1')->group(function (): void {
 
         // Onboarding endpoints
         Route::prefix('onboarding')->group(function (): void {
-            Route::get('/categories', [App\Http\Controllers\OnboardingController::class, 'getCategories']);
-            Route::get('/templates/{categoryId}', [App\Http\Controllers\OnboardingController::class, 'getTemplatesByCategory']);
-            Route::get('/template/{id}', [App\Http\Controllers\OnboardingController::class, 'getTemplate']);
-            Route::post('/check-slug', [App\Http\Controllers\OnboardingController::class, 'checkSlug']);
-            Route::post('/create', [App\Http\Controllers\OnboardingController::class, 'createWebsite']);
+            Route::get('/categories', [App\Domains\Onboarding\Http\Controllers\OnboardingController::class, 'getCategories']);
+            Route::get('/templates/{categoryId}', [App\Domains\Onboarding\Http\Controllers\OnboardingController::class, 'getTemplatesByCategory']);
+            Route::get('/template/{id}', [App\Domains\Onboarding\Http\Controllers\OnboardingController::class, 'getTemplate']);
+            Route::post('/check-slug', [App\Domains\Onboarding\Http\Controllers\OnboardingController::class, 'checkSlug']);
+            Route::post('/create', [App\Domains\Onboarding\Http\Controllers\OnboardingController::class, 'createWebsite']);
         });
     });
 });

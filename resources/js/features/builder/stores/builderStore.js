@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { createEmptySection, createEmptyComponent } from '../types';
-import { getDefaultLayout } from '../utils/layoutRegistry';
-import { getLayoutDefaults } from '../utils/layoutDefaults';
+import { getDefaultLayout } from '../engine/layoutRegistry';
+import { getLayoutDefaults } from '../engine/layoutDefaults';
 
 export const useBuilderStore = create((set, get) => ({
   // Initial state

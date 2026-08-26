@@ -17,12 +17,12 @@ import { useBuilderStore } from '@builder/stores/builderStore';
 import useAutosave, { loadLocalDraft, clearLocalDraft } from '@builder/hooks/useAutosave';
 import BuilderErrorBoundary from '@builder/components/common/BuilderErrorBoundary';
 import { getIndustryConfig, INDUSTRY_CONFIGS } from '@builder/utils/industryConfigs';
-import { INDUSTRY_STARTER_TEMPLATES, getCategoryStarterTemplates, getTotalStarterTemplateCount } from '@builder/utils/industryStarterTemplates';
+import { INDUSTRY_STARTER_TEMPLATES, getCategoryStarterTemplates, getTotalStarterTemplateCount } from '@builder/data/starter-templates/industryStarterTemplates';
 
-import { getLayoutDefaults } from '@builder/utils/layoutDefaults';
+import { getLayoutDefaults } from '@builder/engine/layoutDefaults';
 import { ArrowLeft, FolderOpen, Sparkles, Layout, Zap, CheckCircle2, Eye, X, Layers, ArrowRight, Image, FileEdit, Send } from 'lucide-react';
 import CustomDropdown from '@shared/components/ui/CustomDropdown';
-import ThumbnailUploader from '@shared/components/ui/ThumbnailUploader';
+import ThumbnailUploader from '@features/admin/components/ThumbnailUploader';
 
 export default function AdminTemplateBuilder() {
   const navigate = useNavigate();

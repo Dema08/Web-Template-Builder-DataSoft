@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useBuilderStore } from '../../stores/builderStore';
-import { getLayoutsForSection } from '../../utils/layoutRegistry';
+import { getLayoutsForSection } from '../../engine/layoutRegistry';
 import LayoutPreview from './LayoutPreview';
 import { X, Check, Plus } from 'lucide-react';
 

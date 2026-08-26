@@ -28,33 +28,90 @@ app/
 │   │   ├── Services/AuthService.php
 │   │   ├── Repositories/AuthRepository.php
 │   │   ├── Requests/LoginRequest.php, RegisterRequest.php, ChangePasswordRequest.php
-│   │   └── DTO/LoginDTO.php, RegisterDTO.php, ChangePasswordDTO.php
+│   │   ├── DTO/LoginDTO.php, RegisterDTO.php, ChangePasswordDTO.php
+│   │   └── Resources/ (none yet)
 │   ├── User/
-│   │   ├── Models/User.php
+│   │   ├── Models/User.php, PasswordResetOtp.php
 │   │   ├── Repositories/UserRepository.php
-│   │   └── Resources/UserResource.php
-│   ├── Website/            ← builder content + settings (later features)
-│   ├── Template/           ← 10 template categories (later features)
-│   ├── Builder/            ← GrapesJS data mapping (later features)
+│   │   ├── Resources/UserResource.php
+│   │   └── Http/Requests/UpdateProfileRequest.php, UploadAvatarRequest.php, DeleteAvatarRequest.php
+│   ├── Website/
+│   │   ├── Models/Website.php, WebsiteView.php
+│   │   ├── Http/Controllers/WebsiteController.php
+│   │   ├── Resources/WebsiteResource.php
+│   │   └── Enums/WebsiteStatus.php
+│   ├── Template/
+│   │   ├── Models/Template.php
+│   │   ├── Http/Controllers/TemplateController.php
+│   │   ├── Repositories/TemplateRepository.php
+│   │   ├── Services/TemplateService.php
+│   │   ├── Resources/TemplateResource.php
+│   │   ├── Requests/StoreTemplateRequest.php, UpdateTemplateRequest.php
+│   │   ├── Policies/TemplatePolicy.php
+│   │   └── Enums/TemplateStatus.php
+│   ├── Builder/            ← GrapesJS data mapping, engine, sections, UI
 │   ├── Media/              ← uploads (jpg/jpeg/png/webp ≤ 5MB)
 │   ├── Publish/            ← published_json rendering
 │   ├── Admin/              ← admin user mgmt + dashboard
+│   ├── Category/
+│   │   ├── Models/Category.php
+│   │   ├── Services/CategoryService.php
+│   │   └── Resources/CategoryResource.php
+│   ├── Onboarding/
+│   │   ├── Http/Controllers/OnboardingController.php
+│   │   ├── Services/OnboardingService.php
+│   │   ├── Repositories/{Category,Template,Website}Repository.php
+│   │   ├── DTO/{Category,Template,Website}Data.php
+│   │   └── Contracts/{Category,Template,Website}RepositoryInterface.php
 │   └── Shared/
 │       ├── Helpers/ApiResponse.php
 │       ├── Contracts/RepositoryContract.php, ServiceContract.php
 │       ├── Repositories/BaseRepository.php
 │       ├── Services/BaseService.php
 │       ├── Http/Controllers/BaseController.php
-│       ├── Http/Middleware/EnsureUserIsAdmin.php
+│       ├── Http/Middleware/EnsureUserIsAdmin.php, CheckMaintenanceMode.php, CheckSessionTimeout.php
 │       ├── Exceptions/DomainException.php, EntityNotFoundException.php
 │       ├── DTO/BaseDTO.php
 │       └── Enums/UserRole.php
-├── Models/                 ← removed (moved into Domains)
-├── Http/                   ← kept only Laravel stub Controller.php
-└── Providers/
+├── Mail/                    ← OtpPasswordResetMail, RegistrationApprovedMail
+└── Providers/AppServiceProvider.php
 ```
 
-**Frontend** lives under `resources/js/` (api, pages, layouts, hooks, services, store, router, components, constants, utils, assets).
+**Frontend** lives under `resources/js/`:
+
+```
+resources/js/
+├── app.jsx
+├── features/
+│   ├── auth/         ← login, register, forgot-password, verify-otp, reset-password
+│   ├── user/         ← dashboard, profile, settings, templates, websites
+│   ├── admin/        ← admin dashboard, users, websites, templates, categories, analytics, settings
+│   ├── onboarding/   ← wizard, steps, category/template selection
+│   ├── builder/      ← GrapesJS visual builder
+│   │   ├── components/   ← canvas, sidebar, toolbar, property panel
+│   │   ├── engine/       ← registry, mapper, renderer, schema
+│   │   ├── data/         ← starter templates, industry configs
+│   │   ├── sections/     ← layout templates (Hero, Footer, Navbar, dll)
+│   │   ├── ui/           ← reusable primitives (Button, Card, Badge, dll)
+│   │   ├── hooks/        ← useAutosave, useSnapEngine
+│   │   ├── stores/       ← builderStore, mediaStore
+│   │   ├── types/        ← TypeScript-like type definitions (JS)
+│   │   ├── utils/        ← helper functions
+│   │   └── pages/        ← Builder.jsx entry
+│   ├── category/     ← categoryService
+│   ├── system/       ← settings, brand
+│   └── publish/      ← public landing page
+├── shared/
+│   ├── components/   ← cross-feature UI (ui/ + feedback/)
+│   ├── hooks/        ← cross-feature hooks (useAuth, useDashboard, useSettings, dll)
+│   ├── stores/       ← cross-feature stores (authStore, settingsStore, websiteStore, toastStore)
+│   ├── api/          ← HTTP client + endpoint modules
+│   ├── utils/        ← format, storage, validation, googleTranslate
+│   ├── constants/    ← ROUTES, QUERY_KEYS, TOKEN_STORAGE_KEY
+│   └── assets/       ← images, fonts
+├── layouts/          ← AppLayout, GuestLayout, BuilderLayout
+└── router/           ← routes, guards, lazy page barrels
+```
 
 ---
 
@@ -205,3 +262,27 @@ Every endpoint returns the canonical payload:
 7. Keep GrapesJS content versioned via `draft_json` → `published_json`.
 8. Commit only `.env.example`.
 9. Two-command dev loop: `php artisan serve` + `npm run dev`.
+
+## 9. Domain Conventions & Rules
+
+### Backend
+- **Every domain lives under `app/Domains/<Domain>/`** — never in `app/Models`, `app/Services`, `app/Repositories`, `app/Contracts`, `app/DTOs`, `app/Enums`, or `app/Http/Resources`.
+- **Shared/cross-cutting code** goes in `app/Domains/Shared/` (helpers, base classes, middleware, exceptions, enums).
+- **Resources** live inside their domain: `app/Domains/<Domain>/Resources/`.
+- **Enums** live inside their domain: `app/Domains/<Domain>/Enums/`.
+- **Middleware** lives inside its domain: `app/Domains/Shared/Http/Middleware/` for shared middleware, or `app/Domains/<Domain>/Http/Middleware/` for domain-specific middleware.
+- **Controllers** extend `App\Domains\Shared\Http\Controllers\BaseController` (not the root `App\Http\Controllers\Controller`).
+
+### Frontend
+- **Feature code** lives in `resources/js/features/<feature>/`.
+- **Shared/cross-feature code** lives in `resources/js/shared/` (components, hooks, stores, api, utils, constants).
+- **Pages are NOT in `features/<feature>/pages/`** — use lazy barrels in `resources/js/router/pages.js` instead.
+- **Vite aliases**: `@features`, `@shared`, `@builder`, `@router`, `@layouts`, `@pages`, `@hooks`, `@store`, `@api`, `@utils`, `@constants`.
+- **Old aliases removed**: `@components`, `@services`, `@assets` — use `@shared/components`, `@features/<feature>/services`, `@shared/assets` instead.
+
+### Builder Internal Structure
+- **`engine/`** — core registry, mapper, renderer, schema, property engine.
+- **`data/`** — starter templates, industry configs (static data).
+- **`sections/`** — layout templates organized by section type.
+- **`components/`** — editing canvas, sidebar, toolbar, property panel.
+- **`ui/`** — reusable builder primitives.

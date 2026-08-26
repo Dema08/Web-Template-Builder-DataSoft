@@ -10,7 +10,7 @@ use App\Domains\Onboarding\DTO\TemplateData;
 use App\Domains\Onboarding\DTO\WebsiteData;
 use App\Domains\Template\Models\Template;
 use App\Domains\User\Models\User;
-use App\Enums\WebsiteStatus;
+use App\Domains\Website\Enums\WebsiteStatus;
 use Illuminate\Support\Facades\DB;
 
 class OnboardingService

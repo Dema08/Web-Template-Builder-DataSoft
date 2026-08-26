@@ -26,7 +26,7 @@ import {
             AdminSettings,
             Onboarding,
             TemplateGalleryPage,
-        } from '@pages';
+        } from './pages';
 import { ProtectedRoute, GuestRoute } from './guards';
 import { ROUTES } from '@constants';
 

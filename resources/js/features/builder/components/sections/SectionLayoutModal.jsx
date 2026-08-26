@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { getLayoutsForSection } from '../../utils/layoutRegistry';
+import { getLayoutsForSection } from '../../engine/layoutRegistry';
 
 export default function SectionLayoutModal({ sectionType, onSelect, onClose }) {
   const layouts = getLayoutsForSection(sectionType);

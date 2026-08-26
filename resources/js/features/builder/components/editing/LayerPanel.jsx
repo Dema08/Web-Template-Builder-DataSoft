@@ -1,6 +1,6 @@
 import { useBuilderStore } from '../../stores/builderStore';
 import { getSectionConfig } from '../../utils/industryConfigs';
-import { getComponentConfig } from '../../utils/componentRegistry';
+import { getComponentConfig } from '../../engine/componentRegistry';
 
 export default function LayerPanel() {
   const { sections, selectedSectionId, selectedComponentId, selectSection, selectComponent } = useBuilderStore();

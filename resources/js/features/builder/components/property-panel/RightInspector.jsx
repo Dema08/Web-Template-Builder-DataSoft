@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useBuilderStore } from '../../stores/builderStore';
-import { getComponentConfig } from '../../utils/componentRegistry';
-import { getPropertyConfig, getPropertyGroup, PROPERTY_GROUPS } from '../../utils/propertyEngine';
+import { getComponentConfig } from '../../engine/componentRegistry';
+import { getPropertyConfig, getPropertyGroup, PROPERTY_GROUPS } from '../../engine/propertyEngine';
 import { Type, AlignLeft, Palette, Square, Frame, Sun, Play, Move, Maximize, MousePointer, Trash2, RotateCcw, RectangleHorizontal } from 'lucide-react';
 
 const FONT_FAMILIES = [

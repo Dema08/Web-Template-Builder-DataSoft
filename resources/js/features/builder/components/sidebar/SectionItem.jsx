@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { getLayoutsForSection, getDefaultLayout } from '../../utils/layoutRegistry';
+import { getLayoutsForSection, getDefaultLayout } from '../../engine/layoutRegistry';
 import { useBuilderStore } from '../../stores/builderStore';
 import SectionLayoutModal from '../sections/SectionLayoutModal';
 

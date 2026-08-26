@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useBuilderStore } from '../../stores/builderStore';
 import { getIndustryConfig } from '../../utils/industryConfigs';
-import { getComponentConfig } from '../../utils/componentRegistry';
-import { getLayoutsForSection } from '../../utils/layoutRegistry';
+import { getComponentConfig } from '../../engine/componentRegistry';
+import { getLayoutsForSection } from '../../engine/layoutRegistry';
 import SectionLayoutPicker from './SectionLayoutPicker';
 import MediaPanel from './MediaPanel';
 import IconPanel from './IconPanel';

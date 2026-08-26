@@ -18,6 +18,7 @@ export const Templates = lazy(() => import('@features/user/pages/Templates'));
 export const Profile = lazy(() => import('@features/user/pages/Profile'));
 export const Settings = lazy(() => import('@features/user/pages/Settings'));
 export const Onboarding = lazy(() => import('@features/onboarding/pages/Onboarding'));
+export const TemplateGalleryPage = lazy(() => import('@features/user/pages/TemplateGalleryPage'));
 
 // Auth Pages
 export const Login = lazy(() => import('@features/auth/pages/Login'));

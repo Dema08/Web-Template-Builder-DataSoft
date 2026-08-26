@@ -1,16 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Domains\Onboarding\Http\Controllers;
 
 use App\Domains\Shared\Helpers\ApiResponse;
-use App\Http\Resources\CategoryResource;
-use App\Http\Resources\TemplateResource;
-use App\Http\Resources\WebsiteResource;
+use App\Domains\Shared\Http\Controllers\BaseController;
+use App\Domains\Category\Resources\CategoryResource;
+use App\Domains\Template\Resources\TemplateResource;
+use App\Domains\Website\Resources\WebsiteResource;
 use App\Domains\Onboarding\Services\OnboardingService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class OnboardingController extends Controller
+class OnboardingController extends BaseController
 {
     public function __construct(private OnboardingService $onboardingService) {}
 
