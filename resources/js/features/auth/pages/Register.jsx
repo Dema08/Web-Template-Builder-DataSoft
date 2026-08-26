@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { Eye, EyeOff, Sparkles, User, Mail, Lock, ShieldCheck, ArrowRight, ArrowLeft, Layers, Headphones, Clock, CheckCircle2, Info } from 'lucide-react';
 import { Spinner, Alert, BrandLogo } from '@shared/components/ui';
-import { useRegister } from '@hooks';
+import { useRegister } from '@features/auth/hooks/useRegister';
 import { ROUTES } from '@constants';
 
 function SparkleStarGroup({ className = '', style = {}, size = 'md', color = 'text-white' }) {

@@ -1,7 +1,7 @@
 import { useBuilderStore } from '../../stores/builderStore';
 import { getSectionConfig } from '../../utils/industryConfigs';
-import { getLayoutComponent } from '../../utils/layoutComponentMapper';
-import { getUIComponent } from '../../utils/componentMapper';
+import { getLayoutComponent } from '../../engine/layoutComponentMapper';
+import { getUIComponent } from '../../engine/componentMapper';
 import EditableComponent from '../editing/EditableComponent';
 import BuilderErrorBoundary from '../common/BuilderErrorBoundary';
 

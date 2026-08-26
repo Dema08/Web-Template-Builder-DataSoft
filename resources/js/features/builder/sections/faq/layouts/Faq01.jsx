@@ -1,4 +1,4 @@
-import { renderLayoutComponents } from '../../../utils/layoutRenderer.jsx';
+import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 export default function Faq01({ components = [], sectionId = null }) {
   const defaultComponents = [

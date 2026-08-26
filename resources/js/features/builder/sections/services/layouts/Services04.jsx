@@ -1,4 +1,4 @@
-import { renderLayoutComponents } from '../../../utils/layoutRenderer.jsx';
+import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 export default function Services04({ components = [], sectionId = null }) {
   const defaultComponents = [

@@ -24,7 +24,7 @@ import { templateApi } from '@api';
 import { categoryService } from '@features/category/services/categoryService';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
-import ThumbnailUploader from '@shared/components/ui/ThumbnailUploader';
+import ThumbnailUploader from '@features/admin/components/ThumbnailUploader';
 
 function TemplateCardThumbnail({ template }) {
     const [imgError, setImgError] = useState(false);

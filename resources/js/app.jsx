@@ -6,7 +6,7 @@ import AppRouter from '@router';
 import { Toast } from '@shared/components/ui';
 import { useSettingsStore, useAuthStore } from '@store';
 import { settingsApi } from '@api';
-import SessionTimeoutModal from '@shared/components/SessionTimeoutModal';
+import SessionTimeoutModal from '@shared/components/feedback/SessionTimeoutModal';
 import RegistrationPendingModal from '@features/auth/components/RegistrationPendingModal';
 import { initializeGoogleTranslate, setupGoogleTranslateElement } from '@utils/googleTranslate';
 import '../css/app.css';

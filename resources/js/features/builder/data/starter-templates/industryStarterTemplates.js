@@ -6,11 +6,11 @@
  * This file has been refactored into a modular directory structure.
  * All template definitions now live under:
  *
- *   resources/js/builder/utils/starter-templates/
+ *   resources/js/builder/data/starter-templates/
  *
  *   ├── index.js          → barrel: re-exports INDUSTRY_STARTER_TEMPLATES + utilities
  *   ├── helpers.js        → shared utility functions (sid, etc.)
- *   └── categories/
+ *   └── industries/
  *       ├── umkm/          → 5 templates (Modern, E-Commerce, Premium, Minimalist, Creative)
  *       ├── logistik-transportasi/ → 3 templates (Corporate, Premium, Tracking)
  *       ├── group-perusahaan/       → 3 templates (Enterprise, Investor, Premium)
@@ -27,9 +27,9 @@
  *   2. Import and register it in the sector's index.js
  *   3. It will automatically appear in the registry.
  *
- * This file re-exports everything from ./starter-templates/index.js
+ * This file re-exports everything from ./index.js
  * for backward compatibility with existing imports:
- *   import { INDUSTRY_STARTER_TEMPLATES, getCategoryStarterTemplates } from '@builder/utils/industryStarterTemplates';
+ *   import { INDUSTRY_STARTER_TEMPLATES, getCategoryStarterTemplates } from '@builder/data/starter-templates/industryStarterTemplates';
  * ────────────────────────────────────────────────────────────────
  */
 
@@ -39,4 +39,4 @@ export {
   getStarterTemplateById,
   getTotalStarterTemplateCount,
   sid,
-} from './starter-templates/index.js';
+} from './index.js';

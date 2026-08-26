@@ -1,5 +1,5 @@
-import { getLayoutComponent } from '../../utils/layoutComponentMapper';
-import { getLayoutDefaults } from '../../utils/layoutDefaults';
+import { getLayoutComponent } from '../../engine/layoutComponentMapper';
+import { getLayoutDefaults } from '../../engine/layoutDefaults';
 
 // Convert layout ID like "hero-01" to component name "Hero01"
 const layoutIdToComponentName = (layoutId) => {

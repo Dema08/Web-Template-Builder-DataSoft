@@ -26,16 +26,16 @@
 
 import { sid } from './helpers.js';
 
-import { category as umkm } from './categories/umkm/index.js';
-import { category as logistik } from './categories/logistik-transportasi/index.js';
-import { category as groupPerusahaan } from './categories/group-perusahaan/index.js';
-import { category as perusahaanJasa } from './categories/perusahaan-jasa/index.js';
-import { category as pendidikan } from './categories/pendidikan-pelatihan/index.js';
-import { category as organisasi } from './categories/organisasi-asosiasi/index.js';
-import { category as industri } from './categories/industri-manufaktur/index.js';
-import { category as koperasi } from './categories/koperasi/index.js';
-import { category as retail } from './categories/perdagangan-retail/index.js';
-import { category as koperasiSusu } from './categories/koperasi-susu/index.js';
+import { category as umkm } from './industries/umkm/index.js';
+import { category as logistik } from './industries/logistik-transportasi/index.js';
+import { category as groupPerusahaan } from './industries/group-perusahaan/index.js';
+import { category as perusahaanJasa } from './industries/perusahaan-jasa/index.js';
+import { category as pendidikan } from './industries/pendidikan-pelatihan/index.js';
+import { category as organisasi } from './industries/organisasi-asosiasi/index.js';
+import { category as industri } from './industries/industri-manufaktur/index.js';
+import { category as koperasi } from './industries/koperasi/index.js';
+import { category as retail } from './industries/perdagangan-retail/index.js';
+import { category as koperasiSusu } from './industries/koperasi-susu/index.js';
 
 /**
  * The complete registry of industry starter templates.

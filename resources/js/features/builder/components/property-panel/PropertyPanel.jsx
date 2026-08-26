@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useBuilderStore } from '../../stores/builderStore';
-import { getComponentConfig } from '../../utils/componentRegistry';
+import { getComponentConfig } from '../../engine/componentRegistry';
 
 export default function PropertyPanel() {
   const { sections, selectedSectionId, selectedComponentId, updateComponentProps, removeComponent } = useBuilderStore();

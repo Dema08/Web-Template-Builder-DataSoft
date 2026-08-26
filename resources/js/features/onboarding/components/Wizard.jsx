@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { ArrowLeft, ArrowRight, Sparkles } from 'lucide-react';
 import { Button } from '@shared/components/ui';
-import { useOnboardingStore } from '@store';
+import { useOnboardingStore } from '@features/onboarding/stores/onboardingStore';
 import { useSettingsStore } from '@store';
 import ProgressStepper from './ProgressStepper';
 import StepCompanyInfo from './steps/StepCompanyInfo';

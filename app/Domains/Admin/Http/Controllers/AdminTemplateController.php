@@ -5,7 +5,7 @@ namespace App\Domains\Admin\Http\Controllers;
 use App\Domains\Shared\Http\Controllers\BaseController;
 use App\Domains\Template\Models\Template;
 use App\Domains\Category\Models\Category;
-use App\Http\Resources\TemplateResource;
+use App\Domains\Template\Resources\TemplateResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 

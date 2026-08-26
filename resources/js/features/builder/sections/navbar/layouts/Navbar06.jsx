@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { renderLayoutComponents } from '../../../utils/layoutRenderer.jsx';
+import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 export default function Navbar06({
   components = [],

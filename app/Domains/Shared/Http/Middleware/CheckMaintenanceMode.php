@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Middleware;
+namespace App\Domains\Shared\Http\Middleware;
 
 use App\Domains\System\Models\Setting;
 use Closure;

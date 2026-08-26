@@ -1,4 +1,4 @@
-import { renderLayoutComponents } from '../../../utils/layoutRenderer.jsx';
+import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 const StarRating = ({ count = 5 }) => (
   <div className="flex items-center gap-0.5">

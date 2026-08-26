@@ -35,8 +35,8 @@ return Application::configure(basePath: dirname(__DIR__))
         // Custom middleware aliases.
         $middleware->alias([
             'admin' => \App\Domains\Shared\Http\Middleware\EnsureUserIsAdmin::class,
-            'maintenance' => \App\Http\Middleware\CheckMaintenanceMode::class,
-            'session.timeout' => \App\Http\Middleware\CheckSessionTimeout::class,
+            'maintenance' => \App\Domains\Shared\Http\Middleware\CheckMaintenanceMode::class,
+            'session.timeout' => \App\Domains\Shared\Http\Middleware\CheckSessionTimeout::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
