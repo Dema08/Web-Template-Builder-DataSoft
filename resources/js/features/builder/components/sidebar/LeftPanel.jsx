@@ -7,6 +7,7 @@ import SectionLayoutPicker from './SectionLayoutPicker';
 import MediaPanel from './MediaPanel';
 import IconPanel from './IconPanel';
 import UploadsPanel from './UploadsPanel';
+import DraggableSidebarItem from '../../dnd/DraggableSidebarItem';
 import { 
   Layout, Section, Component, Image, Upload, Type, 
   Plus, Star, Layers, ChevronDown, ChevronRight, GripVertical,
@@ -378,17 +379,23 @@ export default function LeftPanel() {
                   </button>
 
                   {isExpanded && layouts.map(l => (
-                    <button
+                    <DraggableSidebarItem
                       key={l.id}
-                      draggable
-                      onDragStart={(e) => handleDragStart(e, 'layout', l.id)}
-                      onClick={() => addSection(layout.id, l.id)}
-                      className="w-full flex items-center gap-2 pl-12 pr-3 py-1.5 rounded-lg hover:bg-indigo-50 transition text-left group"
+                      type="layout"
+                      id={l.id}
+                      data={{ id: l.id, name: l.name, sectionType: layout.id }}
+                      title={l.name}
                     >
-                      <GripVertical className="h-3 w-3 text-slate-300" />
-                      <span className="text-xs text-slate-700">{l.name}</span>
-                      <Plus className="h-3 w-3 text-slate-400 opacity-0 group-hover:opacity-100" />
-                    </button>
+                      <button
+                        type="button"
+                        onClick={() => addSection(layout.id, l.id)}
+                        className="w-full flex items-center gap-2 pl-12 pr-3 py-1.5 rounded-lg hover:bg-indigo-50 transition text-left group"
+                      >
+                        <GripVertical className="h-3 w-3 text-slate-300 group-hover:text-indigo-500" />
+                        <span className="text-xs text-slate-700">{l.name}</span>
+                        <Plus className="h-3 w-3 text-slate-400 opacity-0 group-hover:opacity-100 ml-auto" />
+                      </button>
+                    </DraggableSidebarItem>
                   ))}
                 </div>
               );
@@ -403,32 +410,39 @@ export default function LeftPanel() {
               const isAvailable = allSectionsAvailable || availableSections.some(s => s.type === section.id);
 
               return (
-                <button
+                <DraggableSidebarItem
                   key={section.id}
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, 'section', section.id)}
-                  onClick={() => handleAddSection(section.id)}
+                  type="section"
+                  id={section.id}
+                  data={section}
+                  title={section.label}
                   disabled={!isAvailable}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition text-left group ${
-                    isAvailable 
-                      ? 'hover:bg-slate-50 cursor-pointer' 
-                      : 'opacity-40 cursor-not-allowed'
-                  }`}
                 >
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition ${
-                    isAvailable 
-                      ? 'bg-indigo-50 text-indigo-600 group-hover:bg-indigo-100' 
-                      : 'bg-slate-100 text-slate-400'
-                  }`}>
-                    <Section className="h-4 w-4" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="text-sm font-bold text-slate-900">{section.label}</div>
-                  </div>
-                  {isAvailable && (
-                    <Plus className="h-4 w-4 text-slate-400 opacity-0 group-hover:opacity-100 transition" />
-                  )}
-                </button>
+                  <button
+                    type="button"
+                    onClick={() => handleAddSection(section.id)}
+                    disabled={!isAvailable}
+                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition text-left group ${
+                      isAvailable 
+                        ? 'hover:bg-slate-50 cursor-grab active:cursor-grabbing' 
+                        : 'opacity-40 cursor-not-allowed'
+                    }`}
+                  >
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition ${
+                      isAvailable 
+                        ? 'bg-indigo-50 text-indigo-600 group-hover:bg-indigo-100' 
+                        : 'bg-slate-100 text-slate-400'
+                    }`}>
+                      <Section className="h-4 w-4" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-sm font-bold text-slate-900">{section.label}</div>
+                    </div>
+                    {isAvailable && (
+                      <Plus className="h-4 w-4 text-slate-400 opacity-0 group-hover:opacity-100 transition" />
+                    )}
+                  </button>
+                </DraggableSidebarItem>
               );
             })}
           </div>
@@ -438,21 +452,27 @@ export default function LeftPanel() {
         return (
           <div className="p-3 space-y-1">
             {COMPONENTS.map(component => (
-              <button
+              <DraggableSidebarItem
                 key={component.id}
-                draggable
-                onDragStart={(e) => handleDragStart(e, 'component', component.id)}
-                onClick={() => handleAddComponent(component.id)}
-                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-50 transition text-left group"
+                type="component"
+                id={component.id}
+                data={component}
+                title={component.label}
               >
-                <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:bg-indigo-100 transition">
-                  <Component className="h-4 w-4" />
-                </div>
-                <div className="flex-1">
-                  <div className="text-sm font-bold text-slate-900">{component.label}</div>
-                </div>
-                <Plus className="h-4 w-4 text-slate-400 opacity-0 group-hover:opacity-100 transition" />
-              </button>
+                <button
+                  type="button"
+                  onClick={() => handleAddComponent(component.id)}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-50 transition text-left group cursor-grab active:cursor-grabbing"
+                >
+                  <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:bg-indigo-100 transition">
+                    <Component className="h-4 w-4" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-sm font-bold text-slate-900">{component.label}</div>
+                  </div>
+                  <Plus className="h-4 w-4 text-slate-400 opacity-0 group-hover:opacity-100 transition" />
+                </button>
+              </DraggableSidebarItem>
             ))}
           </div>
         );

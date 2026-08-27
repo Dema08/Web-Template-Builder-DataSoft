@@ -1,10 +1,14 @@
 import { useState, useRef } from 'react';
+import { useDraggable, useDroppable } from '@dnd-kit/core';
 import { useBuilderStore } from '../../stores/builderStore';
-import { Lock, Move } from 'lucide-react';
+import { useBuilderDndContext } from '../../dnd/DndBuilderProvider';
+import { Lock, Move, Sparkles, Image as ImageIcon, CornerDownRight } from 'lucide-react';
+import DropIndicator from '../../dnd/DropIndicator';
 
 export default function EditableComponent({
   component,
   sectionId,
+  parentComponentId = null,
   children,
 }) {
   const {
@@ -18,6 +22,7 @@ export default function EditableComponent({
     isPreviewMode,
   } = useBuilderStore();
 
+  const dnd = useBuilderDndContext();
   const elementRef = useRef(null);
   const [isDraggingLocal, setIsDraggingLocal] = useState(false);
   const [isResizingLocal, setIsResizingLocal] = useState(false);
@@ -26,6 +31,41 @@ export default function EditableComponent({
   const isHovered = hoveredComponent === component.id;
   const isLocked = !!component.isLocked;
   const isHidden = !!component.isHidden;
+  const isContainer = component.type === 'card';
+  const isImageComponent = component.type === 'image' || 'src' in (component.props || {});
+
+  // DnD Droppable registration for this component
+  const { setNodeRef: setDroppableRef, isOver } = useDroppable({
+    id: `comp-drop-${component.id}`,
+    data: {
+      isComponentDropTarget: true,
+      componentId: component.id,
+      sectionId,
+      parentComponentId,
+      type: component.type,
+      isContainer,
+    },
+    disabled: isPreviewMode || isLocked,
+  });
+
+  // DnD Draggable registration for moving this component
+  const {
+    attributes: dndAttributes,
+    listeners: dndListeners,
+    setNodeRef: setDraggableRef,
+    isDragging: isDndDragging,
+  } = useDraggable({
+    id: component.id,
+    data: {
+      isCanvasComponent: true,
+      componentId: component.id,
+      sectionId,
+      parentComponentId,
+      type: component.type,
+      props: component.props,
+    },
+    disabled: isPreviewMode || isLocked || builderMode === 'resize',
+  });
 
   // In Preview Mode, render 100% clean production output without editor UI
   if (isPreviewMode) {
@@ -92,7 +132,6 @@ export default function EditableComponent({
         newHeight = Math.max(24, snapToGrid(startHeight + deltaY));
       }
 
-      // Update component width & height props dynamically
       const updatedProps = {};
       if (direction.includes('e') || direction.includes('se')) {
         updatedProps.width = `${newWidth}px`;
@@ -116,7 +155,6 @@ export default function EditableComponent({
 
   // --- INTERACTIVE POINTER DRAG POSITION HANDLER ---
   const handleDragStart = (e) => {
-    // Always stop propagation in drag mode so the section click doesn't fire
     if (builderMode === 'drag') {
       e.stopPropagation();
       e.preventDefault();
@@ -124,7 +162,7 @@ export default function EditableComponent({
     if (isLocked || builderMode !== 'drag') return;
 
     const el = e.currentTarget;
-    el.setPointerCapture(e.pointerId); // lock pointer to this element during drag
+    el.setPointerCapture(e.pointerId);
 
     const startX = e.clientX;
     const startY = e.clientY;
@@ -165,7 +203,6 @@ export default function EditableComponent({
     el.addEventListener('pointerup', onPointerUp);
   };
 
-  // Determine cursor dynamically
   const getCursor = () => {
     if (isLocked) return 'default';
     if (builderMode === 'drag') return 'grab';
@@ -173,17 +210,23 @@ export default function EditableComponent({
     return 'pointer';
   };
 
+  const activeDragType = dnd?.activeDragItem?.type;
+  const isMediaDragging = activeDragType === 'sidebar-media' || dnd?.activeDragItem?.rawType === 'media';
+  const isComponentDragging = activeDragType === 'sidebar-component' || activeDragType === 'canvas-component' || dnd?.activeDragItem?.rawType === 'component';
+
+  const isInline = ['text', 'heading', 'button', 'icon', 'badge'].includes(component.type);
+
   const wrapperClass = [
     'relative',
-    'transition-colors',
+    'transition-all duration-150',
     'rounded-sm',
     isSelected ? 'z-20' : '',
     !isSelected && isHovered && builderMode !== 'select' ? 'ring-1 ring-indigo-300 ring-offset-1' : '',
     isHidden ? 'opacity-30 pointer-events-none' : '',
-    isDraggingLocal ? 'opacity-70 cursor-grabbing' : '',
+    isDraggingLocal || isDndDragging ? 'opacity-40 scale-95 ring-2 ring-indigo-500 cursor-grabbing' : '',
+    isOver && isContainer && isComponentDragging ? 'ring-2 ring-dashed ring-indigo-500 bg-indigo-500/10' : '',
+    isOver && isImageComponent && isMediaDragging ? 'ring-2 ring-emerald-500 ring-offset-2' : '',
   ].filter(Boolean).join(' ');
-
-  const isInline = ['text', 'heading', 'button', 'icon', 'badge'].includes(component.type);
 
   const wrapperStyle = {
     cursor: getCursor(),
@@ -201,7 +244,11 @@ export default function EditableComponent({
 
   return (
     <div
-      ref={elementRef}
+      ref={(node) => {
+        elementRef.current = node;
+        setDroppableRef(node);
+        setDraggableRef(node);
+      }}
       id={component.id}
       data-component-id={component.id}
       data-section-id={sectionId}
@@ -213,6 +260,26 @@ export default function EditableComponent({
       onMouseEnter={() => setHoveredComponent(component.id)}
       onMouseLeave={() => setHoveredComponent(null)}
     >
+      {/* Container Drop Indicator (e.g. Card receiving child components) */}
+      {isOver && isContainer && isComponentDragging && (
+        <div className="absolute inset-0 z-30 border-2 border-dashed border-indigo-500 bg-indigo-50/20 rounded-xl pointer-events-none flex items-center justify-center">
+          <div className="bg-indigo-600 text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-lg flex items-center gap-1.5 animate-bounce">
+            <CornerDownRight className="h-3 w-3" />
+            <span>Drop inside Card container</span>
+          </div>
+        </div>
+      )}
+
+      {/* Image Replace Drop Indicator */}
+      {isOver && isImageComponent && isMediaDragging && (
+        <div className="absolute inset-0 z-30 bg-emerald-600/20 border-2 border-emerald-500 rounded-xl pointer-events-none flex items-center justify-center backdrop-blur-xs">
+          <div className="bg-emerald-600 text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-lg flex items-center gap-1.5">
+            <ImageIcon className="h-3.5 w-3.5" />
+            <span>Drop to replace image</span>
+          </div>
+        </div>
+      )}
+
       {/* Locked Badge (amber) */}
       {isSelected && isLocked && (
         <div
@@ -223,34 +290,32 @@ export default function EditableComponent({
         </div>
       )}
 
-      {/* Drag Move Handle Indicator (shown in Drag Mode when selected & not locked) */}
-      {isSelected && builderMode === 'drag' && !isLocked && (
+      {/* Canva-style Drag Handle (shown when component is selected & not locked) */}
+      {isSelected && !isLocked && (
         <div
-          onPointerDown={handleDragStart}
-          className="absolute -top-3 left-2 z-30 bg-indigo-600 text-white px-2 py-0.5 rounded-md text-[10px] font-extrabold shadow-md cursor-grab active:cursor-grabbing flex items-center gap-1"
-          title="Click & drag to move component"
+          {...dndAttributes}
+          {...dndListeners}
+          className="absolute -top-3 left-2 z-30 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white px-2 py-0.5 rounded-md text-[10px] font-extrabold shadow-md cursor-grab active:cursor-grabbing flex items-center gap-1 transition-transform hover:scale-105"
+          title="Click & drag to reorder or move component"
         >
           <Move className="h-3 w-3" />
-          <span>Drag Move</span>
+          <span>Move</span>
         </div>
       )}
 
       {/* Interactive Resize Handles (shown in Resize Mode when selected & not locked) */}
       {isSelected && builderMode === 'resize' && !isLocked && (
         <>
-          {/* Bottom-Right Handle */}
           <div
             onMouseDown={(e) => handleResizeStart(e, 'se')}
             className="absolute -bottom-1.5 -right-1.5 w-3.5 h-3.5 bg-indigo-600 border-2 border-white rounded-sm z-40 cursor-se-resize shadow-md hover:scale-125 transition-transform"
             title="Drag to resize width & height (Snap 8px)"
           />
-          {/* Right Edge Handle */}
           <div
             onMouseDown={(e) => handleResizeStart(e, 'e')}
             className="absolute top-1/2 -right-1.5 -translate-y-1/2 w-3 h-5 bg-indigo-600 border-2 border-white rounded-sm z-40 cursor-e-resize shadow-md hover:scale-125 transition-transform"
             title="Drag to resize width (Snap 8px)"
           />
-          {/* Bottom Edge Handle */}
           <div
             onMouseDown={(e) => handleResizeStart(e, 's')}
             className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-5 h-3 bg-indigo-600 border-2 border-white rounded-sm z-40 cursor-s-resize shadow-md hover:scale-125 transition-transform"

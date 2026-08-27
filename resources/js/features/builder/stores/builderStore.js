@@ -177,6 +177,10 @@ export const useBuilderStore = create((set, get) => ({
   },
 
   addSection: (sectionType, layout = null) => {
+    get().insertSectionAt(sectionType, layout, -1);
+  },
+
+  insertSectionAt: (sectionType, layout = null, targetIndex = -1) => {
     const { sections, saveToHistory } = get();
     saveToHistory();
 
@@ -206,7 +210,17 @@ export const useBuilderStore = create((set, get) => ({
       newSection.components = defaultComponents.map((c, ci) => normalizeComponent(c, ci));
     }
 
-    set({ sections: [...sections, newSection], selectedSectionId: newSection.id, selectedComponentId: null });
+    const newSections = [...sections];
+    if (targetIndex >= 0 && targetIndex <= newSections.length) {
+      newSections.splice(targetIndex, 0, newSection);
+    } else {
+      newSections.push(newSection);
+    }
+
+    // Recalculate order indices
+    const updatedSections = newSections.map((s, i) => ({ ...s, order: i }));
+
+    set({ sections: updatedSections, selectedSectionId: newSection.id, selectedComponentId: null });
   },
 
   removeSection: (sectionId) => {
@@ -246,22 +260,131 @@ export const useBuilderStore = create((set, get) => ({
   },
 
   addComponent: (sectionId, componentType) => {
+    get().insertComponentAt(sectionId, componentType, -1);
+  },
+
+  insertComponentAt: (sectionId, componentType, targetIndex = -1, parentComponentId = null, initialProps = null) => {
     const { sections, saveToHistory } = get();
     saveToHistory();
 
     const newComponent = createEmptyComponent(componentType);
+    if (initialProps) {
+      newComponent.props = { ...newComponent.props, ...initialProps };
+    }
+
+    const insertIntoTree = (comps) => {
+      if (parentComponentId) {
+        return comps.map(c => {
+          if (c.id === parentComponentId) {
+            const currentChildren = Array.isArray(c.childrenComponents) ? [...c.childrenComponents] : [];
+            if (targetIndex >= 0 && targetIndex <= currentChildren.length) {
+              currentChildren.splice(targetIndex, 0, newComponent);
+            } else {
+              currentChildren.push(newComponent);
+            }
+            return { ...c, childrenComponents: currentChildren };
+          }
+          if (Array.isArray(c.childrenComponents) && c.childrenComponents.length > 0) {
+            return { ...c, childrenComponents: insertIntoTree(c.childrenComponents) };
+          }
+          return c;
+        });
+      } else {
+        const copy = [...comps];
+        if (targetIndex >= 0 && targetIndex <= copy.length) {
+          copy.splice(targetIndex, 0, newComponent);
+        } else {
+          copy.push(newComponent);
+        }
+        return copy;
+      }
+    };
 
     const newSections = sections.map(s => {
       if (s.id === sectionId) {
         return {
           ...s,
-          components: [...s.components, newComponent],
+          components: insertIntoTree(s.components || []),
         };
       }
       return s;
     });
 
     set({ sections: newSections, selectedComponentId: newComponent.id, selectedSectionId: sectionId });
+  },
+
+  moveComponent: (sourceSectionId, targetSectionId, componentId, targetIndex = -1, targetParentCompId = null) => {
+    const { sections, saveToHistory } = get();
+    saveToHistory();
+
+    // 1. Find and extract the component from the source section
+    let extractedComponent = null;
+
+    const extractFromTree = (comps) => {
+      const remaining = [];
+      for (const c of comps) {
+        if (c.id === componentId) {
+          extractedComponent = c;
+        } else {
+          let updatedChild = c;
+          if (Array.isArray(c.childrenComponents) && c.childrenComponents.length > 0) {
+            updatedChild = { ...c, childrenComponents: extractFromTree(c.childrenComponents) };
+          }
+          remaining.push(updatedChild);
+        }
+      }
+      return remaining;
+    };
+
+    const sectionsWithoutComp = sections.map(s => {
+      if (s.id === sourceSectionId) {
+        return { ...s, components: extractFromTree(s.components || []) };
+      }
+      return s;
+    });
+
+    if (!extractedComponent) return; // Component not found
+
+    // 2. Insert into target section at targetIndex or inside targetParentCompId
+    const insertIntoTree = (comps) => {
+      if (targetParentCompId) {
+        return comps.map(c => {
+          if (c.id === targetParentCompId) {
+            const currentChildren = Array.isArray(c.childrenComponents) ? [...c.childrenComponents] : [];
+            if (targetIndex >= 0 && targetIndex <= currentChildren.length) {
+              currentChildren.splice(targetIndex, 0, extractedComponent);
+            } else {
+              currentChildren.push(extractedComponent);
+            }
+            return { ...c, childrenComponents: currentChildren };
+          }
+          if (Array.isArray(c.childrenComponents) && c.childrenComponents.length > 0) {
+            return { ...c, childrenComponents: insertIntoTree(c.childrenComponents) };
+          }
+          return c;
+        });
+      } else {
+        const copy = [...comps];
+        if (targetIndex >= 0 && targetIndex <= copy.length) {
+          copy.splice(targetIndex, 0, extractedComponent);
+        } else {
+          copy.push(extractedComponent);
+        }
+        return copy;
+      }
+    };
+
+    const newSections = sectionsWithoutComp.map(s => {
+      if (s.id === targetSectionId) {
+        return {
+          ...s,
+          components: insertIntoTree(s.components || []),
+        };
+      }
+      return s;
+    });
+
+    set({ sections: newSections, selectedComponentId: extractedComponent.id, selectedSectionId: targetSectionId });
   },
 
   removeComponent: (sectionId, componentId) => {

@@ -49,7 +49,7 @@ export default function Card({
     >
       {/* If sub-components are provided, render them as editable components */}
       {Array.isArray(childrenComponents) && childrenComponents.length > 0
-        ? renderLayoutComponents(childrenComponents, sectionId)
+        ? renderLayoutComponents(childrenComponents, sectionId, componentId)
         : children}
     </div>
   );

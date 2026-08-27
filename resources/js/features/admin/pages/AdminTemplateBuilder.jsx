@@ -20,6 +20,7 @@ import { getIndustryConfig, INDUSTRY_CONFIGS } from '@builder/utils/industryConf
 import { INDUSTRY_STARTER_TEMPLATES, getCategoryStarterTemplates, getTotalStarterTemplateCount } from '@builder/data/starter-templates/industryStarterTemplates';
 
 import { getLayoutDefaults } from '@builder/engine/layoutDefaults';
+import DndBuilderProvider from '@builder/dnd/DndBuilderProvider';
 import { ArrowLeft, FolderOpen, Sparkles, Layout, Zap, CheckCircle2, Eye, X, Layers, ArrowRight, Image, FileEdit, Send } from 'lucide-react';
 import CustomDropdown from '@shared/components/ui/CustomDropdown';
 import ThumbnailUploader from '@features/admin/components/ThumbnailUploader';
@@ -423,78 +424,80 @@ export default function AdminTemplateBuilder() {
       <FloatingToolbar />
       <ContextMenu />
 
-      <BuilderLayout
-        toolbar={
-          <BuilderToolbar
-            onBack={handleBack}
-            onSave={handleSave}
-            onPublish={handlePublish}
-          />
-        }
-        leftPanel={
-          <BuilderErrorBoundary title="Left Navigation Panel">
-            <LeftPanel />
-          </BuilderErrorBoundary>
-        }
-        rightPanel={
-          <BuilderErrorBoundary title="Inspector Property Panel">
-            <RightInspector />
-          </BuilderErrorBoundary>
-        }
-        statusBar={<StatusBar />}
-      >
-        {!industryId ? (
-          <BuilderCanvas>
-            <div className="flex items-center justify-center h-full">
-              <div className="max-w-2xl w-full space-y-6">
-                <div className="text-center mb-8">
-                  <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100 text-indigo-700 text-xs font-extrabold mb-3">
-                    <Sparkles className="h-4 w-4 text-indigo-600" />
-                    <span>Intelligent Starter Generator 2026</span>
-                    <span className="px-2 py-0.5 bg-indigo-100 text-indigo-700 rounded-full text-[10px]">
-                      {totalStarterCount} Templates &times; 10 Industries
-                    </span>
-                  </div>
-                  <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight mb-2">
-                    Create Industry Website Starter
-                  </h1>
-                  <p className="text-sm text-slate-500">
-                    Select an industry category to generate complete, publishable, ThemeForest-quality starter templates.
-                  </p>
-                </div>
-
-                <div className="bg-white rounded-3xl p-8 shadow-xl border border-slate-100 space-y-6">
-                  <div>
-                  <CustomDropdown
-                    label="Select Industry Category"
-                    options={industryOptions.map(cat => ({ id: cat.id, name: cat.name }))}
-                    value={selectedCategoryId}
-                    onChange={(val) => setSelectedCategoryId(val)}
-                    placeholder="Choose an industry..."
-                  />
+      <DndBuilderProvider>
+        <BuilderLayout
+          toolbar={
+            <BuilderToolbar
+              onBack={handleBack}
+              onSave={handleSave}
+              onPublish={handlePublish}
+            />
+          }
+          leftPanel={
+            <BuilderErrorBoundary title="Left Navigation Panel">
+              <LeftPanel />
+            </BuilderErrorBoundary>
+          }
+          rightPanel={
+            <BuilderErrorBoundary title="Inspector Property Panel">
+              <RightInspector />
+            </BuilderErrorBoundary>
+          }
+          statusBar={<StatusBar />}
+        >
+          {!industryId ? (
+            <BuilderCanvas>
+              <div className="flex items-center justify-center h-full">
+                <div className="max-w-2xl w-full space-y-6">
+                  <div className="text-center mb-8">
+                    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100 text-indigo-700 text-xs font-extrabold mb-3">
+                      <Sparkles className="h-4 w-4 text-indigo-600" />
+                      <span>Intelligent Starter Generator 2026</span>
+                      <span className="px-2 py-0.5 bg-indigo-100 text-indigo-700 rounded-full text-[10px]">
+                        {totalStarterCount} Templates &times; 10 Industries
+                      </span>
+                    </div>
+                    <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight mb-2">
+                      Create Industry Website Starter
+                    </h1>
+                    <p className="text-sm text-slate-500">
+                      Select an industry category to generate complete, publishable, ThemeForest-quality starter templates.
+                    </p>
                   </div>
 
-                  <button
-                    onClick={handleIndustrySelect}
-                    className="w-full px-5 py-3.5 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-extrabold rounded-xl shadow-lg shadow-indigo-600/25 transition flex items-center justify-center gap-2 text-sm"
-                  >
-                    <span>Continue to Template Options</span>
-                    <ArrowRight className="h-4 w-4" />
-                  </button>
+                  <div className="bg-white rounded-3xl p-8 shadow-xl border border-slate-100 space-y-6">
+                    <div>
+                    <CustomDropdown
+                      label="Select Industry Category"
+                      options={industryOptions.map(cat => ({ id: cat.id, name: cat.name }))}
+                      value={selectedCategoryId}
+                      onChange={(val) => setSelectedCategoryId(val)}
+                      placeholder="Choose an industry..."
+                    />
+                    </div>
+
+                    <button
+                      onClick={handleIndustrySelect}
+                      className="w-full px-5 py-3.5 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-extrabold rounded-xl shadow-lg shadow-indigo-600/25 transition flex items-center justify-center gap-2 text-sm"
+                    >
+                      <span>Continue to Template Options</span>
+                      <ArrowRight className="h-4 w-4" />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          </BuilderCanvas>
-        ) : (
-          <BuilderCanvas>
-            <div onClick={handleCanvasClick}>
-              <BuilderErrorBoundary title="Canvas Section Renderer">
-                <SectionCanvas />
-              </BuilderErrorBoundary>
-            </div>
-          </BuilderCanvas>
-        )}
-      </BuilderLayout>
+            </BuilderCanvas>
+          ) : (
+            <BuilderCanvas>
+              <div onClick={handleCanvasClick}>
+                <BuilderErrorBoundary title="Canvas Section Renderer">
+                  <SectionCanvas />
+                </BuilderErrorBoundary>
+              </div>
+            </BuilderCanvas>
+          )}
+        </BuilderLayout>
+      </DndBuilderProvider>
 
       {/* Step 2 & 3: Template Mode & Starter Selection Modal */}
       {showIndustryModal && (

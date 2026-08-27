@@ -3,6 +3,7 @@ import { useBuilderStore } from '../../stores/builderStore';
 import { useMediaStore, STOCK_GALLERY, STOCK_LOGOS } from '../../stores/mediaStore';
 import { Image as ImageIcon, Upload, Search, Check, Plus } from 'lucide-react';
 import { toast } from '@store';
+import DraggableSidebarItem from '../../dnd/DraggableSidebarItem';
 
 export default function MediaPanel() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -168,17 +169,26 @@ export default function MediaPanel() {
           </h3>
           <div className="grid grid-cols-3 gap-2">
             {uploads.map((item) => (
-              <button
+              <DraggableSidebarItem
                 key={item.id}
-                onClick={() => applyImageToComponent(item.url, item.name)}
-                className="group relative aspect-square rounded-xl overflow-hidden border border-slate-200 hover:border-indigo-500 hover:shadow-md transition bg-slate-100"
+                type="media"
+                id={item.id}
+                data={item}
                 title={item.name}
+                preview={item.url}
               >
-                <img src={item.url} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
-                <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <Plus className="h-5 w-5 text-white" />
-                </div>
-              </button>
+                <button
+                  type="button"
+                  onClick={() => applyImageToComponent(item.url, item.name)}
+                  className="w-full group relative aspect-square rounded-xl overflow-hidden border border-slate-200 hover:border-indigo-500 hover:shadow-md transition bg-slate-100 cursor-grab active:cursor-grabbing"
+                  title={item.name}
+                >
+                  <img src={item.url} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                  <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <Plus className="h-5 w-5 text-white" />
+                  </div>
+                </button>
+              </DraggableSidebarItem>
             ))}
           </div>
         </div>
@@ -189,17 +199,26 @@ export default function MediaPanel() {
         <h3 className="text-xs font-extrabold text-slate-800 mb-2">Stock Photos</h3>
         <div className="grid grid-cols-2 gap-2.5">
           {filteredGallery.map((item) => (
-            <button
+            <DraggableSidebarItem
               key={item.id}
-              onClick={() => applyImageToComponent(item.url, item.name)}
-              className="group relative aspect-square rounded-xl overflow-hidden border border-slate-200 hover:border-indigo-500 hover:shadow-md transition text-left bg-slate-100"
+              type="media"
+              id={item.id}
+              data={item}
+              title={item.name}
+              preview={item.url}
             >
-              <img src={item.url} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-2">
-                <span className="text-[10px] font-bold text-white truncate">{item.name}</span>
-                <span className="text-[9px] text-indigo-200 uppercase tracking-wider font-semibold">{item.category}</span>
-              </div>
-            </button>
+              <button
+                type="button"
+                onClick={() => applyImageToComponent(item.url, item.name)}
+                className="w-full group relative aspect-square rounded-xl overflow-hidden border border-slate-200 hover:border-indigo-500 hover:shadow-md transition text-left bg-slate-100 cursor-grab active:cursor-grabbing"
+              >
+                <img src={item.url} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-2">
+                  <span className="text-[10px] font-bold text-white truncate">{item.name}</span>
+                  <span className="text-[9px] text-indigo-200 uppercase tracking-wider font-semibold">{item.category}</span>
+                </div>
+              </button>
+            </DraggableSidebarItem>
           ))}
         </div>
       </div>
@@ -209,13 +228,22 @@ export default function MediaPanel() {
         <h3 className="text-xs font-extrabold text-slate-800 mb-2">Sample Logos</h3>
         <div className="grid grid-cols-3 gap-2">
           {filteredLogos.map((item) => (
-            <button
+            <DraggableSidebarItem
               key={item.id}
-              onClick={() => applyImageToComponent(item.url, item.name)}
-              className="group relative aspect-square rounded-xl overflow-hidden border border-slate-200 hover:border-indigo-500 hover:shadow-md transition bg-slate-50 p-1 flex items-center justify-center"
+              type="media"
+              id={item.id}
+              data={item}
+              title={item.name}
+              preview={item.url}
             >
-              <img src={item.url} alt={item.name} className="w-full h-full object-contain group-hover:scale-110 transition-transform" />
-            </button>
+              <button
+                type="button"
+                onClick={() => applyImageToComponent(item.url, item.name)}
+                className="w-full group relative aspect-square rounded-xl overflow-hidden border border-slate-200 hover:border-indigo-500 hover:shadow-md transition bg-slate-50 p-1 flex items-center justify-center cursor-grab active:cursor-grabbing"
+              >
+                <img src={item.url} alt={item.name} className="w-full h-full object-contain group-hover:scale-110 transition-transform" />
+              </button>
+            </DraggableSidebarItem>
           ))}
         </div>
       </div>

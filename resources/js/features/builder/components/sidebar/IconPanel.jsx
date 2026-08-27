@@ -3,6 +3,7 @@ import { useBuilderStore } from '../../stores/builderStore';
 import * as FaIcons from 'react-icons/fa';
 import { Search, Plus } from 'lucide-react';
 import { toast } from '@store';
+import DraggableSidebarItem from '../../dnd/DraggableSidebarItem';
 
 const FEATURED_ICONS = [
   { key: 'FaTruck', label: 'Truck / Logistics' },
@@ -149,18 +150,25 @@ export default function IconPanel() {
         {filteredIcons.map((item) => {
           const IconComp = FaIcons[item.key] || FaIcons.FaGlobe;
           return (
-            <button
+            <DraggableSidebarItem
               key={item.key}
-              type="button"
-              onClick={() => handleSelectIcon(item.key)}
-              title={item.label}
-              className="group relative aspect-square flex flex-col items-center justify-center p-2 rounded-xl border border-slate-200 bg-white hover:border-indigo-500 hover:bg-indigo-50/50 hover:shadow-md transition text-slate-700 hover:text-indigo-600"
+              type="icon"
+              id={item.key}
+              data={{ id: item.key, name: item.key, label: item.label }}
+              title={item.key.replace('Fa', '')}
             >
-              <IconComp className="h-5 w-5 group-hover:scale-110 transition-transform" />
-              <span className="text-[9px] font-bold text-slate-500 mt-1 truncate max-w-full text-center group-hover:text-indigo-600">
-                {item.key.replace('Fa', '')}
-              </span>
-            </button>
+              <button
+                type="button"
+                onClick={() => handleSelectIcon(item.key)}
+                title={item.label}
+                className="w-full aspect-square flex flex-col items-center justify-center p-2 rounded-xl border border-slate-200 bg-white hover:border-indigo-500 hover:bg-indigo-50/50 hover:shadow-md transition text-slate-700 hover:text-indigo-600 cursor-grab active:cursor-grabbing group"
+              >
+                <IconComp className="h-5 w-5 group-hover:scale-110 transition-transform" />
+                <span className="text-[9px] font-bold text-slate-500 mt-1 truncate max-w-full text-center group-hover:text-indigo-600">
+                  {item.key.replace('Fa', '')}
+                </span>
+              </button>
+            </DraggableSidebarItem>
           );
         })}
       </div>
