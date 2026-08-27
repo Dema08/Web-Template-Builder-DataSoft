@@ -32,8 +32,22 @@ class TemplateService extends BaseService
         }
         unset($attributes['industry_category_id']);
 
-        $attributes['code']       = $attributes['code'] ?? str('TMPL-' . strtoupper(Str::random(6)))->__toString();
-        $attributes['slug']       = $attributes['slug'] ?? str($attributes['name'])->slug()->__toString();
+        // Auto-uniquify template code if missing or duplicate (check withTrashed to respect DB unique constraint)
+        $baseCode = $attributes['code'] ?? str('TMPL-' . strtoupper(Str::random(6)))->__toString();
+        $code = $baseCode;
+        while (Template::withTrashed()->where('code', $code)->exists()) {
+            $code = 'TMPL-' . strtoupper(Str::random(6));
+        }
+        $attributes['code'] = $code;
+
+        // Auto-uniquify template slug to prevent SQL 1062 duplicate entry error (check withTrashed to respect DB unique constraint)
+        $baseSlug = str($attributes['slug'] ?? $attributes['name'])->slug()->__toString();
+        $slug = $baseSlug;
+        while (Template::withTrashed()->where('slug', $slug)->exists()) {
+            $slug = $baseSlug . '-' . Str::random(4);
+        }
+        $attributes['slug'] = $slug;
+
         $attributes['status']     = $attributes['status'] ?? TemplateStatus::Draft;
         $attributes['version']    = $attributes['version'] ?? '1.0.0';
         $attributes['created_by'] = $creator->id;
@@ -51,7 +65,12 @@ class TemplateService extends BaseService
         unset($attributes['industry_category_id']);
 
         if (isset($attributes['name']) && !isset($attributes['slug'])) {
-            $attributes['slug'] = str($attributes['name'])->slug()->__toString();
+            $baseSlug = str($attributes['name'])->slug()->__toString();
+            $slug = $baseSlug;
+            while (Template::withTrashed()->where('slug', $slug)->where('id', '!=', $template->id)->exists()) {
+                $slug = $baseSlug . '-' . Str::random(4);
+            }
+            $attributes['slug'] = $slug;
         }
 
         $attributes['updated_by'] = auth()->id();

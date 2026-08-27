@@ -248,32 +248,29 @@ export default function AdminTemplates() {
     const handleOpenModal = (template = null) => {
         if (template) {
             setEditingTemplate(template);
-            // Normalize thumbnail: API returns full URL, but DB needs relative path
-            let thumbUrl = '';
-            if (template.thumbnail) {
-                if (template.thumbnail.startsWith('http')) {
-                    // Extract relative path from full URL (e.g., http://localhost/storage/templates/... → templates/...)
-                    const url = new URL(template.thumbnail);
-                    thumbUrl = url.pathname.replace(/^\/storage\//, '');
-                } else if (template.thumbnail.startsWith('/storage/')) {
-                    // Remove leading /storage/ to get relative path
-                    thumbUrl = template.thumbnail.replace(/^\/storage\//, '');
-                } else {
-                    // Already a relative path
-                    thumbUrl = template.thumbnail;
-                }
-            }
-            // Set thumbnail preview for the uploader component
-            const previewUrl = thumbUrl ? `/storage/${thumbUrl}` : '';
+            // API now returns the full URL directly — use it as-is for the preview
+            const previewUrl = template.thumbnail || '';
             setThumbnailValue(previewUrl);
             setThumbnailFile(null);
+
+            // Extract relative path for payload (DB stores relative path)
+            let thumbRelative = '';
+            if (template.thumbnail) {
+                try {
+                    const url = new URL(template.thumbnail);
+                    thumbRelative = url.pathname.replace(/^\/storage\//, '');
+                } catch {
+                    thumbRelative = template.thumbnail.replace(/^\/storage\//, '');
+                }
+            }
+
             reset({
                 industry_category_id: template.industry_category_id || '',
                 code: template.code || '',
                 name: template.name,
                 slug: template.slug || '',
                 description: template.description || '',
-                thumbnail: thumbUrl,
+                thumbnail: thumbRelative,
                 preview_image: template.preview_image || '',
                 version: template.version || '1.0.0',
                 sort_order: template.sort_order || 0,

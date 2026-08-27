@@ -60,7 +60,7 @@ export default function Clients01({ components = [], sectionId = null }) {
         <div className="flex flex-col items-center justify-center text-center">
           {renderLayoutComponents(headerComponents, sectionId)}
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {renderLayoutComponents(cardComponents, sectionId)}
         </div>
       </div>

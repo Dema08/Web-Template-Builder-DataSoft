@@ -62,15 +62,17 @@ export default function AdminTemplatePreview() {
   };
 
   useEffect(() => {
-    // Initial load from storage snapshot
-    loadDraftFromStorage();
-
-    // If ID parameter exists and no local storage sections loaded, fetch from API
-    if (id && (!sections || sections.length === 0)) {
+    // If template ID parameter exists in URL, fetch from API
+    if (id) {
       const applyTemplateData = (res) => {
-        const data = res.data?.data;
+        const data = res.data?.data ?? res.data;
         if (data) {
-          const sectionsData = data.draft_json?.sections || data.published_json?.sections || [];
+          const pubSections = data.published_json?.sections;
+          const draftSections = data.draft_json?.sections;
+          const sectionsData = (pubSections && Array.isArray(pubSections) && pubSections.length > 0)
+            ? pubSections
+            : ((draftSections && Array.isArray(draftSections) && draftSections.length > 0) ? draftSections : []);
+
           if (sectionsData.length > 0) {
             loadSections(sectionsData);
           }
@@ -87,8 +89,13 @@ export default function AdminTemplatePreview() {
             .then(applyTemplateData)
             .catch(err => {
               console.warn('Could not load template API preview:', err);
+              // Fallback to local storage if API fails
+              loadDraftFromStorage();
             });
         });
+    } else {
+      // No ID in URL — previewing live unsaved builder state from localStorage
+      loadDraftFromStorage();
     }
   }, [id]);
 
@@ -165,125 +172,101 @@ export default function AdminTemplatePreview() {
   // Viewport width styling
   const getViewportContainerStyle = () => {
     if (viewport === 'tablet') {
-      return 'w-[768px] mx-auto min-h-[90vh] my-6 bg-white shadow-2xl rounded-2xl border border-slate-300/80 overflow-y-auto transition-all duration-300 ease-in-out';
+      return 'w-[768px] max-w-[calc(100vw-2rem)] mx-auto min-h-[90vh] my-6 bg-white shadow-2xl rounded-2xl border border-slate-700/80 overflow-y-auto transition-all duration-300 ease-in-out';
     }
     if (viewport === 'mobile') {
-      return 'w-[375px] mx-auto min-h-[85vh] my-6 bg-white shadow-2xl rounded-3xl border-4 border-slate-800 overflow-y-auto transition-all duration-300 ease-in-out';
+      return 'w-[375px] max-w-[calc(100vw-2rem)] mx-auto min-h-[85vh] my-6 bg-white shadow-2xl rounded-[32px] border-[6px] border-slate-800 overflow-y-auto transition-all duration-300 ease-in-out';
     }
-    return 'w-full min-h-screen bg-white transition-all duration-300 ease-in-out';
+    return 'w-full min-h-[calc(100vh-3.5rem)] bg-white transition-all duration-300 ease-in-out';
   };
 
   return (
-    <div className="min-h-screen bg-slate-900/95 font-sans relative selection:bg-indigo-500 selection:text-white overflow-y-auto">
-      {/* 48px Floating Header Preview Toolbar */}
-      <div
-        onMouseEnter={() => setIsToolbarExpanded(true)}
-        className={`fixed top-3 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ${
-          isToolbarExpanded
-            ? 'opacity-100 translate-y-0 scale-100'
-            : 'opacity-40 hover:opacity-100 hover:scale-105'
-        }`}
-      >
-        {isToolbarExpanded ? (
-          <div className="h-12 bg-slate-900/90 text-white backdrop-blur-xl border border-slate-700/80 rounded-2xl shadow-2xl px-4 flex items-center gap-4 text-xs">
-            {/* Live Indicator */}
-            <div className="flex items-center gap-2 shrink-0">
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-              </span>
-              <div className="flex flex-col">
-                <span className="font-extrabold text-[11px] text-white flex items-center gap-1">
-                  <Eye className="h-3.5 w-3.5 text-indigo-400" />
-                  Live Website Preview
-                </span>
-                <span className="text-[9px] text-slate-400 truncate max-w-[120px] sm:max-w-[200px]">
-                  {templateName || slug || 'DataSoft Template'}
-                </span>
-              </div>
-            </div>
-
-            <div className="h-5 w-px bg-slate-700/80" />
-
-            {/* Viewport Switcher */}
-            <div className="flex items-center bg-slate-800/80 p-0.5 rounded-xl border border-slate-700/60 gap-0.5">
-              <button
-                type="button"
-                onClick={() => setViewport('desktop')}
-                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold transition ${
-                  viewport === 'desktop'
-                    ? 'bg-indigo-600 text-white shadow-xs'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-700/60'
-                }`}
-                title="Desktop View (100%)"
-              >
-                <Monitor className="h-3.5 w-3.5" />
-                <span className="hidden md:inline">Desktop</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setViewport('tablet')}
-                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold transition ${
-                  viewport === 'tablet'
-                    ? 'bg-indigo-600 text-white shadow-xs'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-700/60'
-                }`}
-                title="Tablet View (768px)"
-              >
-                <Tablet className="h-3.5 w-3.5" />
-                <span className="hidden md:inline">Tablet</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setViewport('mobile')}
-                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold transition ${
-                  viewport === 'mobile'
-                    ? 'bg-indigo-600 text-white shadow-xs'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-700/60'
-                }`}
-                title="Mobile View (375px)"
-              >
-                <Smartphone className="h-3.5 w-3.5" />
-                <span className="hidden md:inline">Mobile</span>
-              </button>
-            </div>
-
-            <div className="h-5 w-px bg-slate-700/80" />
-
-            {/* Actions */}
-            <div className="flex items-center gap-1.5">
-              <button
-                type="button"
-                onClick={loadDraftFromStorage}
-                className="p-1.5 hover:bg-slate-800 text-slate-300 hover:text-white rounded-lg transition"
-                title="Refresh Live Data Sync"
-              >
-                <RotateCw className="h-4 w-4" />
-              </button>
-              <button
-                type="button"
-                onClick={handleClose}
-                className="p-1.5 bg-red-500/20 hover:bg-red-500/30 text-red-300 rounded-lg transition"
-                title="Close Live Preview"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
+    <div className="min-h-screen bg-slate-950 font-sans relative selection:bg-indigo-500 selection:text-white overflow-y-auto">
+      {/* Fixed Top Header Preview Toolbar — Never covers canvas content */}
+      <header className="fixed top-0 left-0 right-0 h-14 bg-slate-900/95 backdrop-blur-xl border-b border-slate-800 text-white z-50 px-4 sm:px-6 flex items-center justify-between shadow-2xl">
+        {/* Left: Live Indicator & Title */}
+        <div className="flex items-center gap-2.5 min-w-0">
+          <span className="relative flex h-2.5 w-2.5 shrink-0">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+          </span>
+          <div className="flex flex-col min-w-0">
+            <span className="font-extrabold text-xs text-white flex items-center gap-1.5 truncate">
+              <Eye className="h-3.5 w-3.5 text-indigo-400 shrink-0" />
+              Live Website Preview
+            </span>
+            <span className="text-[10px] text-slate-400 truncate max-w-[150px] sm:max-w-[260px]">
+              {templateName || slug || 'DataSoft Template'}
+            </span>
           </div>
-        ) : (
+        </div>
+
+        {/* Center: Viewport Switcher */}
+        <div className="flex items-center bg-slate-800/90 p-1 rounded-xl border border-slate-700/60 gap-1">
           <button
             type="button"
-            onClick={() => setIsToolbarExpanded(true)}
-            className="h-9 px-3.5 bg-slate-900/90 backdrop-blur-xl border border-slate-700/80 rounded-full text-white text-xs font-extrabold shadow-xl flex items-center gap-2 hover:bg-slate-800 transition"
+            onClick={() => setViewport('desktop')}
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition ${
+              viewport === 'desktop'
+                ? 'bg-indigo-600 text-white shadow-xs'
+                : 'text-slate-400 hover:text-white hover:bg-slate-700/60'
+            }`}
+            title="Desktop View (100%)"
           >
-            <Eye className="h-4 w-4 text-indigo-400" />
-            <span>Preview</span>
+            <Monitor className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">Desktop</span>
           </button>
-        )}
-      </div>
+          <button
+            type="button"
+            onClick={() => setViewport('tablet')}
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition ${
+              viewport === 'tablet'
+                ? 'bg-indigo-600 text-white shadow-xs'
+                : 'text-slate-400 hover:text-white hover:bg-slate-700/60'
+            }`}
+            title="Tablet View (768px)"
+          >
+            <Tablet className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">Tablet</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setViewport('mobile')}
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition ${
+              viewport === 'mobile'
+                ? 'bg-indigo-600 text-white shadow-xs'
+                : 'text-slate-400 hover:text-white hover:bg-slate-700/60'
+            }`}
+            title="Mobile View (375px)"
+          >
+            <Smartphone className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">Mobile</span>
+          </button>
+        </div>
 
-      {/* Main Website Canvas */}
-      <div className={`pt-16 pb-16 transition-all duration-300 ${viewport !== 'desktop' ? 'px-4' : ''}`}>
+        {/* Right: Actions */}
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={loadDraftFromStorage}
+            className="p-1.5 hover:bg-slate-800 text-slate-300 hover:text-white rounded-lg transition"
+            title="Refresh Live Data Sync"
+          >
+            <RotateCw className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            onClick={handleClose}
+            className="p-1.5 bg-red-500/20 hover:bg-red-500/30 text-red-300 rounded-lg transition"
+            title="Close Live Preview"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      </header>
+
+      {/* Main Website Canvas Container */}
+      <div className={`pt-14 pb-12 transition-all duration-300 ${viewport !== 'desktop' ? 'px-4' : ''}`}>
         <div className={getViewportContainerStyle()}>
           {sections && sections.length > 0 ? (
             sections.map((section) => (

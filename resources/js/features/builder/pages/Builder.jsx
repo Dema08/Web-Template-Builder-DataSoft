@@ -1,131 +1,240 @@
-import { useEffect, useRef } from 'react';
-import grapesjs from 'grapesjs';
-import grapesjsPresetWebpage from 'grapesjs-preset-webpage';
-import 'grapesjs/dist/css/grapes.min.css';
-import { Save } from 'lucide-react';
-import { useWebsite } from '@hooks';
-import { useWebsiteStore } from '@store';
-import { Spinner } from '@shared/components/ui';
-import { useSettingsStore } from '@store';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from '@store';
+import { templateApi, websiteApi } from '@api';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import BuilderLayout from '@builder/components/layouts/BuilderLayout';
+import BuilderToolbar from '@builder/components/toolbar/BuilderToolbar';
+import LeftPanel from '@builder/components/sidebar/LeftPanel';
+import RightInspector from '@builder/components/property-panel/RightInspector';
+import StatusBar from '@builder/components/status-bar/StatusBar';
+import BuilderCanvas from '@builder/components/editing/BuilderCanvas';
+import SectionCanvas from '@builder/components/editing/SectionCanvas';
+import FloatingToolbar from '@builder/components/editing/FloatingToolbar';
+import ContextMenu from '@builder/components/editing/ContextMenu';
+import KeyboardShortcuts from '@builder/components/editing/KeyboardShortcuts';
+import { useBuilderStore } from '@builder/stores/builderStore';
+import BuilderErrorBoundary from '@builder/components/common/BuilderErrorBoundary';
+import { ROUTES } from '@constants';
+import { Loader2 } from 'lucide-react';
 
 export default function Builder() {
-    const editorRef = useRef(null);
-    const containerRef = useRef(null);
-    const { content, isContentLoading, saveContent, isSaving } = useWebsite();
-    const { setEditor, markDirty } = useWebsiteStore();
-    const { brandBadge, brandName } = useSettingsStore();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [isLoadingContent, setIsLoadingContent] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isPublishing, setIsPublishing] = useState(false);
 
-    // Initialize GrapesJS once on mount.
-    useEffect(() => {
-        // Guard: don't re-init if already mounted
-        if (editorRef.current) return;
-        // Guard: container must be in the DOM
-        if (!containerRef.current) return;
+  const {
+    sections,
+    loadSections,
+    setTemplateName,
+    selectSection,
+    resetBuilder,
+  } = useBuilderStore();
 
-        const editor = grapesjs.init({
-            container: containerRef.current,
-            height: '100%',
-            width: 'auto',
-            storageManager: false, // We persist via our own API
-            fromElement: false,
-            plugins: [grapesjsPresetWebpage],
-            pluginsOpts: {
-                [grapesjsPresetWebpage]: {
-                    blocksBasicOpts: { flexGrid: true },
-                },
-            },
-            canvas: {
-                styles: [],
-                scripts: [],
-            },
-        });
+  // Load template or user website content on mount
+  useEffect(() => {
+    let isMounted = true;
 
-        editorRef.current = editor;
-        setEditor(editor);
-        markDirty();
+    const initializeBuilderContent = async () => {
+      try {
+        setIsLoadingContent(true);
 
-        // Hook into the editor's "changed" event to track dirty state.
-        editor.on('update', () => markDirty());
+        // 1. Check if user came from Templates page with a pending template selection
+        const pendingTemplateId = sessionStorage.getItem('pending_template_id');
+        const pendingTemplateName = sessionStorage.getItem('pending_template_name');
 
-        return () => {
-            // Safely destroy GrapesJS without crashing React's DOM cleanup.
-            // GrapesJS internally calls removeChild which can fail if React
-            // has already unmounted the container — so we wrap in try/catch.
-            try {
-                if (editorRef.current) {
-                    editorRef.current.destroy();
-                }
-            } catch (_e) {
-                // Intentionally swallowed — GrapesJS DOM cleanup race with React.
-            } finally {
-                editorRef.current = null;
+        if (pendingTemplateId) {
+          sessionStorage.removeItem('pending_template_id');
+          sessionStorage.removeItem('pending_template_name');
+
+          try {
+            const res = await templateApi.getPublicById(pendingTemplateId);
+            const templateData = res.data?.data ?? res.data;
+
+            if (templateData && isMounted) {
+              const pubSections = templateData.published_json?.sections;
+              const draftSections = templateData.draft_json?.sections;
+              const sectionsToLoad = (pubSections && Array.isArray(pubSections) && pubSections.length > 0)
+                ? pubSections
+                : ((draftSections && Array.isArray(draftSections) && draftSections.length > 0) ? draftSections : []);
+
+              if (sectionsToLoad.length > 0) {
+                loadSections(sectionsToLoad);
+              }
+              setTemplateName(templateData.name || pendingTemplateName || 'My Website');
+              toast.success(`Template "${templateData.name || 'Selected Template'}" berhasil dimuat ke Builder!`, 'Template Loaded');
+
+              // Auto-save initial draft for user
+              await websiteApi.saveContent({
+                draft_json: { sections: sectionsToLoad },
+              });
+              setIsLoadingContent(false);
+              return;
             }
-        };
-    }, [setEditor, markDirty]);
-
-    // Load saved content once it's available.
-    useEffect(() => {
-        if (!content || !editorRef.current) return;
-
-        const editor = editorRef.current;
-        try {
-            if (content?.components) {
-                editor.setComponents(content.components);
-            } else if (content?.html) {
-                editor.setComponents(content.html);
-            }
-            if (content?.styles) {
-                editor.setStyle(content.styles);
-            }
-        } catch (_e) {
-            // Content load failed silently — editor may still be initializing
+          } catch (tplErr) {
+            console.warn('Could not fetch selected template, falling back to website content:', tplErr);
+          }
         }
-    }, [content]);
 
-    const handleSave = () => {
-        const editor = editorRef.current;
-        if (!editor) return;
+        // 2. Fetch existing user website content
+        try {
+          const res = await websiteApi.getContent();
+          const content = res.data?.data ?? res.data;
 
-        saveContent({
-            html: editor.getHtml(),
-            css: editor.getCss(),
-            js: editor.getJs(),
-            components: editor.getComponents(),
-            styles: editor.getStyle(),
-        });
+          if (content && isMounted) {
+            const savedSections = content.sections || content.draft_json?.sections || content.published_json?.sections;
+            if (savedSections && Array.isArray(savedSections) && savedSections.length > 0) {
+              loadSections(savedSections);
+            }
+          }
+        } catch (_err) {
+          // New website with no content yet
+        }
+
+      } catch (err) {
+        console.error('Error initializing builder:', err);
+      } finally {
+        if (isMounted) setIsLoadingContent(false);
+      }
     };
 
+    initializeBuilderContent();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [loadSections, setTemplateName]);
+
+  const handleBack = () => {
+    navigate(ROUTES.TEMPLATES);
+  };
+
+  const handleSave = async () => {
+    const currentSections = useBuilderStore.getState().sections;
+    try {
+      setIsSaving(true);
+      const draftJson = {
+        sections: currentSections.map((s) => ({
+          id: s.id,
+          type: s.type,
+          layout: s.layout,
+          styles: s.styles || {},
+          isLocked: s.isLocked || false,
+          isHidden: s.isHidden || false,
+          components: s.components,
+        })),
+      };
+
+      await websiteApi.saveContent({ draft_json: draftJson });
+      queryClient.invalidateQueries([ROUTES.WEBSITES]);
+      toast.success('Perubahan website berhasil disimpan!', 'Disimpan');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Gagal menyimpan perubahan website.', 'Error');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handlePublish = async () => {
+    const currentSections = useBuilderStore.getState().sections;
+    try {
+      setIsPublishing(true);
+      const draftJson = {
+        sections: currentSections.map((s) => ({
+          id: s.id,
+          type: s.type,
+          layout: s.layout,
+          styles: s.styles || {},
+          isLocked: s.isLocked || false,
+          isHidden: s.isHidden || false,
+          components: s.components,
+        })),
+      };
+
+      // Save content first
+      await websiteApi.saveContent({ draft_json: draftJson });
+
+      // Publish website
+      const res = await websiteApi.publish();
+      const pubData = res.data?.data ?? res.data;
+
+      toast.success(
+        <div>
+          <p className="font-bold">Website Berhasil Dipublish!</p>
+          {pubData?.published_url && (
+            <a
+              href={pubData.published_url}
+              target="_blank"
+              rel="noreferrer"
+              className="text-xs text-indigo-200 underline mt-1 inline-block"
+            >
+              Lihat Website Live →
+            </a>
+          )}
+        </div>,
+        'Publish Berhasil'
+      );
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Gagal mempublish website.', 'Error');
+    } finally {
+      setIsPublishing(false);
+    }
+  };
+
+  const handleCanvasClick = (e) => {
+    if (e.target === e.currentTarget) {
+      selectSection(null);
+    }
+  };
+
+  if (isLoadingContent) {
     return (
-        <div className="h-full flex flex-col font-sans">
-            {/* Builder toolbar */}
-            <div className="flex items-center justify-between px-6 py-3 border-b border-slate-200 bg-white shrink-0 shadow-xs">
-                <div className="flex items-center gap-2">
-                    <div className="h-7 w-7 rounded-lg bg-blue-600 flex items-center justify-center text-white font-black text-xs">
-                        {brandBadge || 'DS'}
-                    </div>
-                    <h1 className="text-sm font-extrabold text-slate-900">{brandName} Visual Website Builder</h1>
-                </div>
-
-                <button
-                    onClick={handleSave}
-                    disabled={isSaving || isContentLoading}
-                    className="inline-flex items-center gap-2 px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-md shadow-blue-600/20 transition disabled:opacity-50"
-                >
-                    {isSaving ? <Spinner size="sm" /> : <Save className="h-4 w-4" />}
-                    <span>{isSaving ? 'Saving Website…' : 'Save Changes'}</span>
-                </button>
-            </div>
-
-            {/* GrapesJS canvas — always rendered, hidden during loading */}
-            <div className="flex-1 overflow-hidden relative">
-                {isContentLoading && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-slate-50 z-10">
-                        <Spinner size="lg" />
-                    </div>
-                )}
-                {/* Ref-based container instead of id="gjs" prevents React/GrapesJS DOM conflicts */}
-                <div ref={containerRef} className="w-full h-full" />
-            </div>
-        </div>
+      <div className="h-screen w-full bg-slate-900 flex flex-col items-center justify-center text-white">
+        <Loader2 className="h-10 w-10 animate-spin text-indigo-500 mb-4" />
+        <p className="text-sm font-extrabold tracking-wide">Memuat DataSoft Builder...</p>
+        <p className="text-xs text-slate-400 mt-1">Mengambil struktur template dan section website</p>
+      </div>
     );
+  }
+
+  return (
+    <>
+      <KeyboardShortcuts />
+      <FloatingToolbar />
+      <ContextMenu />
+
+      <BuilderLayout
+        toolbar={
+          <BuilderToolbar
+            onBack={handleBack}
+            onSave={handleSave}
+            onPublish={handlePublish}
+            isSaving={isSaving}
+            isPublishing={isPublishing}
+          />
+        }
+        leftPanel={
+          <BuilderErrorBoundary title="Left Navigation Panel">
+            <LeftPanel />
+          </BuilderErrorBoundary>
+        }
+        rightPanel={
+          <BuilderErrorBoundary title="Inspector Property Panel">
+            <RightInspector />
+          </BuilderErrorBoundary>
+        }
+        statusBar={<StatusBar />}
+      >
+        <BuilderCanvas>
+          <div onClick={handleCanvasClick} className="w-full min-h-full">
+            <BuilderErrorBoundary title="Canvas Section Renderer">
+              <SectionCanvas />
+            </BuilderErrorBoundary>
+          </div>
+        </BuilderCanvas>
+      </BuilderLayout>
+    </>
+  );
 }

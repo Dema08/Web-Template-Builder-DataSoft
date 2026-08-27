@@ -19,7 +19,7 @@ class StoreTemplateRequest extends FormRequest
             'industry_category_id' => ['required', 'integer', 'exists:kategori_industri,id'],
             'code' => ['nullable', 'string', 'max:50', 'unique:template,code'],
             'name' => ['required', 'string', 'max:255'],
-            'slug' => ['nullable', 'string', 'max:255', new SlugRule(), 'unique:template,slug'],
+            'slug' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:2000'],
             'thumbnail' => ['nullable', 'string', 'max:255'],
             'preview_image' => ['nullable', 'string', 'max:255'],

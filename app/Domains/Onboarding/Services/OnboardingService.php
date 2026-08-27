@@ -114,7 +114,7 @@ class OnboardingService
             abort(422, $slugCheck['message']);
         }
 
-        $defaultDraftJson = $template->default_content ?? [
+        $defaultDraftJson = $template->published_json ?? $template->draft_json ?? $template->default_content ?? [
             'sections' => [],
             'settings' => [
                 'siteName' => $data['company_name'],
