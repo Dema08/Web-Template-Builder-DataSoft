@@ -101,6 +101,7 @@ export default function SectionRenderer({ section, isSelected, onClick }) {
       className={`relative cursor-pointer transition-all ${
         isSelected || isSectionSelected ? 'ring-2 ring-indigo-600 ring-offset-2' : 'hover:ring-2 hover:ring-indigo-300'
       }`}
+      style={{ position: 'relative', minHeight: '120px' }}
     >
       <BuilderErrorBoundary title={`Section layout (${section.type} / ${section.layout})`}>
         <LayoutComponent components={section.components || []} sectionId={section.id} />

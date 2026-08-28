@@ -429,16 +429,21 @@ export const useBuilderStore = create((set, get) => ({
     });
   },
 
-  updateComponentPosition: (sectionId, componentId, position, deviceView = null) => {
-    const { sections } = get();
-    const device = deviceView || get().deviceView;
+  updateComponentPosition: (sectionId, componentId, x, y, zIndex) => {
+    const { sections, saveToHistory } = get();
+    saveToHistory();
 
     const updateInTree = (comps) => comps.map(c => {
       if (c.id === componentId) {
-        const deviceOverrides = { ...(c.deviceOverrides || {}) };
-        const currentDevice = deviceOverrides[device] || {};
-        deviceOverrides[device] = { ...currentDevice, ...position };
-        return { ...c, position: { ...c.position, ...position }, deviceOverrides };
+        return {
+          ...c,
+          position: {
+            ...c.position,
+            ...(x !== undefined ? { x } : {}),
+            ...(y !== undefined ? { y } : {}),
+            ...(zIndex !== undefined ? { zIndex } : {}),
+          }
+        };
       }
       if (Array.isArray(c.childrenComponents) && c.childrenComponents.length > 0) {
         return { ...c, childrenComponents: updateInTree(c.childrenComponents) };

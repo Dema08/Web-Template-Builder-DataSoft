@@ -180,16 +180,10 @@ export default function EditableComponent({
       const deltaX = moveEvent.clientX - startX;
       const deltaY = moveEvent.clientY - startY;
 
-      const newMarginLeft = snapToGrid(currentMarginLeft + deltaX);
-      const newMarginTop = snapToGrid(currentMarginTop + deltaY);
       const newPosX = snapToGrid(startPosX + deltaX);
       const newPosY = snapToGrid(startPosY + deltaY);
 
-      updateComponentPosition(sectionId, component.id, { x: newPosX, y: newPosY });
-      updateComponentProps(sectionId, component.id, {
-        marginLeft: `${newMarginLeft}px`,
-        marginTop: `${newMarginTop}px`,
-      });
+      updateComponentPosition(sectionId, component.id, newPosX, newPosY);
     };
 
     const onPointerUp = () => {
@@ -233,6 +227,10 @@ export default function EditableComponent({
     display: isInline ? 'inline-block' : 'block',
     maxWidth: '100%',
     width: component.props?.width ? component.props.width : (isInline ? 'fit-content' : undefined),
+    position: (component.position?.x !== 0 || component.position?.y !== 0) ? 'absolute' : 'relative',
+    left: component.position?.x ? `${component.position.x}px` : undefined,
+    top: component.position?.y ? `${component.position.y}px` : undefined,
+    zIndex: component.position?.zIndex || 1,
     ...(isSelected
       ? {
           outline: '2px solid #4f46e5',

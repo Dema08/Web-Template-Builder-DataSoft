@@ -22,18 +22,18 @@ export const createEmptySection = (type, layout, order) => ({
   order,
 });
 
-export const createEmptyComponent = (componentType) => ({
+export const createEmptyComponent = (componentType, index = 0) => ({
   id: generateComponentId(),
   type: componentType,
   props: {},
   // Position properties for visual builder
   position: {
     x: 0,
-    y: 0,
+    y: index * 10,
     width: null,
     height: null,
     rotation: 0,
     scale: 1,
-    zIndex: 1,
+    zIndex: index,
   },
 });

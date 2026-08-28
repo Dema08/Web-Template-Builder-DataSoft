@@ -7,6 +7,7 @@ import SectionLayoutPicker from './SectionLayoutPicker';
 import MediaPanel from './MediaPanel';
 import IconPanel from './IconPanel';
 import UploadsPanel from './UploadsPanel';
+import LayerPanel from '../layers/LayerPanel';
 import DraggableSidebarItem from '../../dnd/DraggableSidebarItem';
 import { 
   Layout, Section, Component, Image, Upload, Type, 
@@ -354,7 +355,7 @@ export default function LeftPanel() {
   const renderContent = () => {
     switch (activeTab) {
       case 'layers':
-        return renderLayersTab();
+        return <LayerPanel />;
 
       case 'layouts':
         return (
