@@ -4,7 +4,6 @@ import {
     Sparkles,
     Search,
     Eye,
-    ArrowRight,
     Check,
     Star,
     Laptop,
@@ -238,17 +237,15 @@ function TemplateCard({ tpl, onPreview, onUseTemplate }) {
                     <span className="text-xs font-medium">No Preview Available</span>
                 </div>
 
-                {/* Badge */}
-                <div className="absolute top-3 left-3 flex items-center gap-2 z-10">
-                    <span className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider backdrop-blur-md ${
-                        tpl.badge === 'Featured'
-                            ? 'bg-amber-500 text-white'
-                            : 'bg-slate-900/80 text-white'
-                    }`}>
-                        {tpl.badge === 'Featured' && <Star className="inline h-2.5 w-2.5 mr-0.5 fill-current" />}
-                        {tpl.badge}
-                    </span>
-                </div>
+                {/* Badge — only show for Featured, hide Published from user view */}
+                {tpl.badge === 'Featured' && (
+                    <div className="absolute top-3 left-3 flex items-center gap-2 z-10">
+                        <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider backdrop-blur-md bg-amber-500 text-white">
+                            <Star className="inline h-2.5 w-2.5 mr-0.5 fill-current" />
+                            Featured
+                        </span>
+                    </div>
+                )}
 
                 {/* Hover Overlay — Preview & Use Template buttons */}
                 <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-200 flex items-center justify-center gap-3 p-4 z-20">
@@ -311,8 +308,8 @@ function TemplateCard({ tpl, onPreview, onUseTemplate }) {
                         className="flex-1 py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-md shadow-indigo-600/20"
                         variant="primary"
                     >
-                        <span>Customize in Builder</span>
-                        <ArrowRight className="h-3.5 w-3.5" />
+                        <Wand2 className="h-3.5 w-3.5" />
+                        <span>Gunakan Template</span>
                     </Button>
                 </div>
             </div>
