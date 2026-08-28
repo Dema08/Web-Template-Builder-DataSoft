@@ -41,11 +41,11 @@ export default function AppLayout() {
         ? [
               { label: 'Home', icon: Home, to: ROUTES.HOME },
               { label: 'Dashboard', icon: LayoutGrid, to: ROUTES.ADMIN_DASHBOARD },
+              { label: 'Analytics', icon: BarChart3, to: ROUTES.ADMIN_ANALYTICS },
               { label: 'All Websites', icon: Globe, to: ROUTES.ADMIN_WEBSITES },
               { label: 'Manage Templates', icon: FileText, to: ROUTES.ADMIN_TEMPLATES },
               { label: 'Categories', icon: Layers, to: ROUTES.ADMIN_CATEGORIES },
               { label: 'User Management', icon: Users, to: ROUTES.ADMIN_USERS },
-              { label: 'Analytics', icon: BarChart3, to: ROUTES.ADMIN_ANALYTICS },
               { label: 'Edit Landing Page', icon: Sparkles, to: ROUTES.ADMIN_LANDING },
               { label: 'Maintenance & Settings', icon: SettingsIcon, to: ROUTES.ADMIN_SETTINGS },
           ]
