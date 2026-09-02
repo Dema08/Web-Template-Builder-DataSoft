@@ -11,6 +11,8 @@ export const AdminCategories = lazy(() => import('@features/admin/pages/AdminCat
 export const AdminAnalytics = lazy(() => import('@features/admin/pages/AdminAnalytics'));
 export const AdminSettings = lazy(() => import('@features/admin/pages/AdminSettings'));
 export const AdminLandingEditor = lazy(() => import('@features/admin/pages/AdminLandingEditor'));
+export { default as AdminPricelist } from '@features/admin/pages/AdminPricelist';
+export const AdminTransactions = lazy(() => import('@features/admin/pages/AdminTransactions'));
 
 // User Pages
 export const UserDashboard = lazy(() => import('@features/user/pages/UserDashboard'));
@@ -20,6 +22,7 @@ export const Profile = lazy(() => import('@features/user/pages/Profile'));
 export const Settings = lazy(() => import('@features/user/pages/Settings'));
 export const Onboarding = lazy(() => import('@features/onboarding/pages/Onboarding'));
 export const TemplateGalleryPage = lazy(() => import('@features/user/pages/TemplateGalleryPage'));
+export const BillingPage = lazy(() => import('@features/billing/pages/BillingPage'));
 
 // Auth Pages
 export const Login = lazy(() => import('@features/auth/pages/Login'));

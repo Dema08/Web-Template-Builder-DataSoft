@@ -210,4 +210,11 @@ class Template extends Model
             && !$this->trashed()
             && $this->category?->is_active;
     }
+
+    public function isBlankTemplate(): bool
+    {
+        return str_contains(strtolower($this->slug ?? ''), 'blank')
+            || str_contains(strtolower($this->name ?? ''), 'blank')
+            || str_contains(strtolower($this->code ?? ''), 'blank');
+    }
 }

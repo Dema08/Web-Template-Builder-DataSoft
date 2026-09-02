@@ -102,6 +102,14 @@ class OnboardingService
             abort(422, 'Selected template is not available.');
         }
 
+        // Validate plan starter template limit (Free users can only use Blank Template)
+        if (!$user->isAdmin()) {
+            $plan = $user->effective_pricelist;
+            if (!$template->isBlankTemplate() && $plan->maks_starter_template === 0) {
+                abort(403, "Paket Anda ('{$plan->nama}') hanya dapat menggunakan Blank Template. Silakan tingkatkan paket Anda (Harga 1, 2, atau 3) untuk mengakses Starter Template ini.");
+            }
+        }
+
         $category = $template->category;
 
         if (!$category || !$category->is_active) {

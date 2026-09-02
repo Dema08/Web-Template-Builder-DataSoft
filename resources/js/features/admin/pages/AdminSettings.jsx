@@ -9,7 +9,7 @@ import LanguageSelector from '@shared/components/LanguageSelector';
 
 export default function AdminSettings() {
     const { brand_name, brand_badge, brand_color, plan_label, logo_path, setSettings, updateSetting, resetSettings } = useSettingsStore();
-    const { updateSettings, uploadLogo, removeLogo, isUpdating, isUploadingLogo, isRemovingLogo } = useSettings();
+    const { updateSettings, updateSettingsAsync, uploadLogo, removeLogo, isUpdating, isUploadingLogo, isRemovingLogo } = useSettings();
     const queryClient = useQueryClient();
 
     // Theme state
@@ -39,6 +39,11 @@ export default function AdminSettings() {
     const [allowRegistration, setAllowRegistration] = useState(true);
     const [defaultStorageLimit, setDefaultStorageLimit] = useState(100);
 
+    // Midtrans settings state
+    const [midtransServerKey, setMidtransServerKey] = useState('');
+    const [midtransClientKey, setMidtransClientKey] = useState('');
+    const [midtransIsProduction, setMidtransIsProduction] = useState(false);
+
     // Fetch all settings from database
     const { data: settingsData, isLoading: settingsLoading } = useQuery({
         queryKey: ['settings'],
@@ -63,6 +68,10 @@ export default function AdminSettings() {
             setMaintenanceMode(Boolean(system.maintenance_mode));
             setAllowRegistration(Boolean(system.allow_registration));
             setDefaultStorageLimit(Number(system.default_storage_limit) || 100);
+
+            setMidtransServerKey(system.midtrans_server_key || '');
+            setMidtransClientKey(system.midtrans_client_key || '');
+            setMidtransIsProduction(Boolean(system.midtrans_is_production));
         }
     }, [settingsData]);
 
@@ -168,6 +177,9 @@ export default function AdminSettings() {
                 maintenance_mode: maintenanceMode,
                 allow_registration: allowRegistration,
                 default_storage_limit: defaultStorageLimit,
+                midtrans_server_key: midtransServerKey.trim(),
+                midtrans_client_key: midtransClientKey.trim(),
+                midtrans_is_production: midtransIsProduction,
             };
 
             const updated = await updateSettingsAsync(payload);
@@ -513,6 +525,80 @@ export default function AdminSettings() {
                     >
                         <Save className="h-4 w-4" />
                         <span>{updateMaintenanceMutation.isPending || isUpdating ? 'Saving...' : 'Save Settings'}</span>
+                    </button>
+                </div>
+                </form>
+            </Card>
+
+            {/* ===== MIDTRANS PAYMENT GATEWAY SECTION ===== */}
+            <Card className="p-0 overflow-hidden">
+                <form onSubmit={handleSaveSystem} className="p-6 sm:p-8 space-y-6">
+                <div className="flex items-center justify-between border-b border-[rgb(var(--color-border))] pb-4">
+                    <h2 className="text-base font-extrabold text-[rgb(var(--color-text-primary))] flex items-center gap-2">
+                        <Shield className="h-4 w-4 text-indigo-600" /> Pengaturan Midtrans Payment Gateway
+                    </h2>
+                    <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${midtransIsProduction ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300' : 'bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300'}`}>
+                        {midtransIsProduction ? 'Production Mode' : 'Sandbox (Development Mode)'}
+                    </span>
+                </div>
+
+                <div className="space-y-4">
+                    <div>
+                        <label className="block text-xs font-extrabold text-[rgb(var(--color-text-primary))] mb-1.5">
+                            Midtrans Server Key (Backend Only)
+                        </label>
+                        <input
+                            type="password"
+                            value={midtransServerKey}
+                            onChange={(e) => setMidtransServerKey(e.target.value)}
+                            placeholder="SB-Mid-server-xxxxxxxxxxxx / Mid-server-xxxxxxxxxxxx"
+                            className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs font-mono text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 transition"
+                        />
+                        <p className="mt-1 text-[10px] text-[rgb(var(--color-text-tertiary))]">
+                            Server Key rahasia dari Dashboard Midtrans (Access Keys). Jangan disebarkan ke siapapun.
+                        </p>
+                    </div>
+
+                    <div>
+                        <label className="block text-xs font-extrabold text-[rgb(var(--color-text-primary))] mb-1.5">
+                            Midtrans Client Key (Frontend Snap)
+                        </label>
+                        <input
+                            type="text"
+                            value={midtransClientKey}
+                            onChange={(e) => setMidtransClientKey(e.target.value)}
+                            placeholder="SB-Mid-client-xxxxxxxxxxxx / Mid-client-xxxxxxxxxxxx"
+                            className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs font-mono text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 transition"
+                        />
+                        <p className="mt-1 text-[10px] text-[rgb(var(--color-text-tertiary))]">
+                            Client Key publik dari Dashboard Midtrans untuk memuat popup Midtrans Snap.js.
+                        </p>
+                    </div>
+
+                    <div className="flex items-center justify-between py-3 border-t border-[rgb(var(--color-border))]">
+                        <div>
+                            <p className="text-xs font-extrabold text-[rgb(var(--color-text-primary))]">Gunakan Midtrans Production Mode</p>
+                            <p className="text-xs text-[rgb(var(--color-text-secondary))] font-medium">
+                                Centang opsi ini jika Anda sudah siap memproses pembayaran riil dengan uang sungguhan.
+                            </p>
+                        </div>
+                        <input
+                            type="checkbox"
+                            checked={midtransIsProduction}
+                            onChange={(e) => setMidtransIsProduction(e.target.checked)}
+                            className="h-5 w-5 rounded border-[rgb(var(--color-border))] text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                        />
+                    </div>
+                </div>
+
+                <div className="flex justify-end pt-2 border-t border-[rgb(var(--color-border))]">
+                    <button
+                        type="submit"
+                        disabled={isUpdating}
+                        className="flex items-center gap-2 px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold rounded-xl text-xs shadow-md shadow-indigo-600/20 transition disabled:opacity-50 cursor-pointer"
+                    >
+                        <Save className="h-4 w-4" />
+                        <span>{isUpdating ? 'Saving...' : 'Simpan Kunci API Midtrans'}</span>
                     </button>
                 </div>
                 </form>

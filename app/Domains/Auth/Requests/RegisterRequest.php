@@ -23,6 +23,7 @@ class RegisterRequest extends FormRequest
             'name' => ['required', 'string', 'min:2', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:pengguna,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'paket_harga_id' => ['nullable', 'integer', 'exists:paket_harga,id'],
         ];
     }
 }

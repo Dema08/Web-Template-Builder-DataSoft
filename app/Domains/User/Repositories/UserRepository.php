@@ -33,8 +33,16 @@ class UserRepository implements RepositoryContract
      */
     public function createRegularUser(array $attributes): User
     {
+        if (empty($attributes['paket_harga_id'])) {
+            $defaultPlan = \App\Domains\Pricelist\Models\Pricelist::where('is_default', true)->first()
+                ?? \App\Domains\Pricelist\Models\Pricelist::first();
+            if ($defaultPlan) {
+                $attributes['paket_harga_id'] = $defaultPlan->id;
+            }
+        }
+
         return User::create(array_merge($attributes, [
-            'peran'        => UserRole::User,
+            'peran'     => UserRole::User,
             'disetujui' => false, // Needs admin approval before login
         ]));
     }

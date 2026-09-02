@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { ROUTES } from '@constants';
 import {
     Sparkles, Save, RotateCcw, Eye, Layout, Zap, Clock,
     BarChart3, CheckCircle2, AlertCircle, RefreshCw, Layers,
     Plus, Trash2, ArrowRight, Check, Play, Globe, Shield, Users,
     Headphones, Award, Tag, DollarSign, MousePointer2, Monitor, Palette, Image, Rocket,
-    Code2, Lock, Star, Smartphone, Tablet
+    Code2, Lock, Star, Smartphone, Tablet, CreditCard
 } from 'lucide-react';
 import { settingsApi } from '@api';
 import { Toast } from '@shared/components/ui';
@@ -382,7 +384,7 @@ export default function AdminLandingEditor() {
                     { id: 'hero', label: '🚀 Hero Section', icon: Layout },
                     { id: 'features', label: `⚡ Fitur Platform (${(content.features_list || []).length} Kartu)`, icon: Zap },
                     { id: 'steps', label: `⏱️ Cara Kerja (${(content.steps_list || []).length} Langkah)`, icon: Clock },
-                    { id: 'pricing', label: `💎 Paket Harga (${(content.pricing_list || []).length} Plan)`, icon: DollarSign },
+                    { id: 'pricing', label: '💎 Header Pricing (Pricelist DB)', icon: DollarSign },
                     { id: 'stats', label: '📊 Statistik', icon: BarChart3 },
                     { id: 'cta', label: '🎯 CTA Banner', icon: Sparkles },
                     { id: 'footer', label: '🦶 Footer Manager', icon: Globe },
@@ -795,22 +797,40 @@ export default function AdminLandingEditor() {
                     </div>
                 )}
 
-                {/* 4. PRICING TAB (EDIT CONTENT, ADD & DELETE PLANS) */}
+                {/* 4. PRICING TAB (FETCHED DYNAMICALLY FROM PRICELIST MANAGEMENT) */}
                 {activeTab === 'pricing' && (
                     <div className="space-y-8 animate-in fade-in duration-200">
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
                             <div>
-                                <h3 className="text-base font-extrabold text-slate-900">Kelola Paket Harga & Pricing</h3>
-                                <p className="text-xs text-slate-500 mt-1">Ubah nama paket, harga, daftar benefit fitur, serta tambah atau hapus paket harga platform.</p>
+                                <h3 className="text-base font-extrabold text-slate-900">Kelola Header Section Pricing</h3>
+                                <p className="text-xs text-slate-500 mt-1">Ubah badge tag dan judul header section pricing di Landing Page.</p>
                             </div>
-                            <button
-                                type="button"
-                                onClick={handleAddPricing}
-                                className="px-4 py-2.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-extrabold flex items-center justify-center gap-1.5 transition cursor-pointer shrink-0"
+                            <Link
+                                to={ROUTES.ADMIN_PRICELIST || '/admin/pricelist'}
+                                className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-extrabold flex items-center justify-center gap-2 transition shadow-md shadow-indigo-600/20 shrink-0"
                             >
-                                <Plus className="h-4 w-4" />
-                                <span>Tambah Paket Harga</span>
-                            </button>
+                                <CreditCard className="h-4 w-4" />
+                                <span>Buka Pricelist Management Database</span>
+                            </Link>
+                        </div>
+
+                        {/* Notice Banner */}
+                        <div className="p-5 rounded-2xl bg-indigo-50/80 border border-indigo-200/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-indigo-900">
+                            <div className="flex items-start gap-3">
+                                <Sparkles className="h-6 w-6 text-indigo-600 shrink-0 mt-0.5" />
+                                <div>
+                                    <h4 className="text-sm font-extrabold text-indigo-900">Pricelist Terintegrasi Otomatis dengan Database</h4>
+                                    <p className="text-xs text-indigo-700 mt-1 leading-relaxed">
+                                        Data paket harga, nominal tarif, deskripsi, dan poin fitur di Landing Page diambil secara real-time langsung dari <strong>Pricelist Management</strong>. Untuk mengedit atau menambah paket harga, gunakan menu Pricelist Management.
+                                    </p>
+                                </div>
+                            </div>
+                            <Link
+                                to={ROUTES.ADMIN_PRICELIST || '/admin/pricelist'}
+                                className="px-4 py-2 bg-white text-indigo-700 border border-indigo-200 hover:bg-indigo-50 text-xs font-bold rounded-xl whitespace-nowrap shadow-2xs transition"
+                            >
+                                Kelola Paket & Limit →
+                            </Link>
                         </div>
 
                         {/* Section Header Inputs */}
@@ -849,149 +869,6 @@ export default function AdminLandingEditor() {
                                     onChange={(e) => handleChange('pricing_subtitle', e.target.value)}
                                     className="w-full px-4 py-2.5 bg-white rounded-xl border border-slate-200 text-xs font-medium focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 transition outline-none"
                                 />
-                            </div>
-                        </div>
-
-                        {/* Pricing Cards List */}
-                        <div className="space-y-4">
-                            <h4 className="text-xs font-extrabold text-slate-400 uppercase tracking-wider">Daftar Paket Harga (Total: {(content.pricing_list || []).length})</h4>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                {(content.pricing_list || []).map((plan, idx) => (
-                                    <div
-                                        key={idx}
-                                        className={`rounded-2xl p-6 border transition-all space-y-4 relative ${
-                                            plan.highlight
-                                                ? 'bg-gradient-to-br from-indigo-50/80 via-white to-purple-50/50 border-indigo-300 shadow-md ring-2 ring-indigo-500/20'
-                                                : 'bg-white border-slate-200 shadow-sm hover:border-slate-300'
-                                        }`}
-                                    >
-                                        {/* Card Top bar */}
-                                        <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                                            <div className="flex items-center gap-2">
-                                                <span className={`w-6 h-6 rounded-lg font-extrabold text-[10px] flex items-center justify-center ${plan.highlight ? 'bg-indigo-600 text-white' : 'bg-slate-200 text-slate-700'}`}>
-                                                    {idx + 1}
-                                                </span>
-                                                <span className="text-xs font-extrabold text-slate-900">{plan.name || `Paket #${idx + 1}`}</span>
-                                                {plan.highlight && (
-                                                    <span className="px-2 py-0.5 rounded-full bg-amber-400 text-amber-950 text-[9px] font-extrabold">
-                                                        Most Popular
-                                                    </span>
-                                                )}
-                                            </div>
-                                            <button
-                                                type="button"
-                                                onClick={() => handleDeletePricing(idx)}
-                                                className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition cursor-pointer"
-                                                title="Hapus paket ini"
-                                            >
-                                                <Trash2 className="h-4 w-4" />
-                                            </button>
-                                        </div>
-
-                                        {/* Plan Name & Highlight Switcher */}
-                                        <div className="grid grid-cols-2 gap-3">
-                                            <div>
-                                                <label className="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider mb-1">
-                                                    Nama Paket
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    value={plan.name}
-                                                    onChange={(e) => handlePricingChange(idx, 'name', e.target.value)}
-                                                    placeholder="Misal: Growth"
-                                                    className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-900 focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 transition outline-none"
-                                                />
-                                            </div>
-
-                                            <div>
-                                                <label className="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider mb-1">
-                                                    Highlight / Popular?
-                                                </label>
-                                                <label className="flex items-center gap-2 mt-1 cursor-pointer select-none">
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={!!plan.highlight}
-                                                        onChange={(e) => handlePricingChange(idx, 'highlight', e.target.checked)}
-                                                        className="w-4 h-4 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500"
-                                                    />
-                                                    <span className="text-xs font-bold text-slate-700">Ya, Tandai Popular</span>
-                                                </label>
-                                            </div>
-                                        </div>
-
-                                        {/* Price & Period */}
-                                        <div className="grid grid-cols-2 gap-3">
-                                            <div>
-                                                <label className="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider mb-1">
-                                                    Harga (Nominal / Text)
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    value={plan.price}
-                                                    onChange={(e) => handlePricingChange(idx, 'price', e.target.value)}
-                                                    placeholder="Misal: Rp 149K atau Free"
-                                                    className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-extrabold text-slate-900 focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 transition outline-none"
-                                                />
-                                            </div>
-
-                                            <div>
-                                                <label className="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider mb-1">
-                                                    Periode (opsional)
-                                                </label>
-                                                <input
-                                                    type="text"
-                                                    value={plan.period}
-                                                    onChange={(e) => handlePricingChange(idx, 'period', e.target.value)}
-                                                    placeholder="Misal: /bulan atau /tahun"
-                                                    className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 transition outline-none"
-                                                />
-                                            </div>
-                                        </div>
-
-                                        {/* Description */}
-                                        <div>
-                                            <label className="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider mb-1">
-                                                Deskripsi Singkat Paket
-                                            </label>
-                                            <input
-                                                type="text"
-                                                value={plan.desc}
-                                                onChange={(e) => handlePricingChange(idx, 'desc', e.target.value)}
-                                                placeholder="Deskripsi peruntukan paket..."
-                                                className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-normal text-slate-600 focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 transition outline-none"
-                                            />
-                                        </div>
-
-                                        {/* CTA Label */}
-                                        <div>
-                                            <label className="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider mb-1">
-                                                Teks Tombol CTA
-                                            </label>
-                                            <input
-                                                type="text"
-                                                value={plan.cta}
-                                                onChange={(e) => handlePricingChange(idx, 'cta', e.target.value)}
-                                                placeholder="Misal: Start Professional"
-                                                className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-bold text-indigo-700 focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 transition outline-none"
-                                            />
-                                        </div>
-
-                                        {/* Features List Multiline */}
-                                        <div>
-                                            <label className="block text-[10px] font-extrabold text-slate-500 uppercase tracking-wider mb-1">
-                                                Daftar Benefit Fitur (1 per baris)
-                                            </label>
-                                            <textarea
-                                                rows={4}
-                                                value={(plan.features || []).join('\n')}
-                                                onChange={(e) => handlePricingFeaturesChange(idx, e.target.value)}
-                                                placeholder="1 Website&#10;10 Pages&#10;Custom Domain"
-                                                className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-mono text-slate-700 focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 transition outline-none leading-relaxed"
-                                            />
-                                        </div>
-                                    </div>
-                                ))}
                             </div>
                         </div>
                     </div>

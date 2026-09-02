@@ -2,10 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Domains\Category\Models\Category;
+use App\Domains\Pricelist\Models\Pricelist;
 use App\Domains\Shared\Enums\UserRole;
 use App\Domains\User\Models\User;
-use App\Domains\Website\Models\Website;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -14,58 +13,45 @@ class DatabaseSeeder extends Seeder
      * Seed the application's database.
      *
      * Order of operations:
-     *   1. Users (admin + standard user)
+     *   1. Pricelists (Free, Harga 1, Harga 2, Harga 3)
      *   2. System & brand settings
-     *   3. Industry categories
-     *   4. Default templates (one or more per category)
-     *   5. Default website for the standard user (uses the first Koperasi category template)
+     *   3. Users per Pricelist level
+     *   4. Industry categories
      */
     public function run(): void
     {
-        // ── 1. Users ─────────────────────────────────────────────────────
+        // ── 1. Pricelists ────────────────────────────────────────────────
+        $this->call(PricelistSeeder::class);
+
+        // Fetch pricelists for assignment
+        $freePlan = Pricelist::where('slug', 'free')->first();
+        $harga1Plan = Pricelist::where('slug', 'harga-1')->first();
+        $harga2Plan = Pricelist::where('slug', 'harga-2')->first();
+        $harga3Plan = Pricelist::where('slug', 'harga-3')->first();
+
+        // ── 2. System & brand settings ───────────────────────────────────
+        $this->call(SettingsSeeder::class);
+
+        // ── 3. Admin Account ──────────────────────────────────────────────
         // Note: User model auto-hashes 'password' via Attribute cast
 
+        // 3.1 Datasoft Administrator (Super Admin)
         User::updateOrCreate(
             ['email' => 'admin@datasoft.id'],
             [
                 'name'              => 'Datasoft Administrator',
                 'password'          => 'password123',
                 'peran'             => UserRole::Admin,
+                'paket_harga_id'    => $harga3Plan?->id,
                 'email_verified_at' => now(),
                 'disetujui'         => true,
             ]
         );
 
-        User::updateOrCreate(
-            ['email' => 'user@datasoft.id'],
-            [
-                'name'              => 'Koperasi Maju User',
-                'password'          => 'password123',
-                'peran'             => UserRole::User,
-                'email_verified_at' => now(),
-                'disetujui'         => true,
-            ]
-        );
-
-        User::updateOrCreate(
-            ['email' => 'admin@example.com'],
-            [
-                'name'              => 'Admin User',
-                'password'          => 'password123',
-                'peran'             => UserRole::Admin,
-                'email_verified_at' => now(),
-                'disetujui'         => true,
-            ]
-        );
-
-        // ── 2. System & brand settings ───────────────────────────────────
-        $this->call(SettingsSeeder::class);
-
-        // ── 3. Industry categories ───────────────────────────────────────
+        // ── 4. Industry categories ───────────────────────────────────────
         $this->call(CategorySeeder::class);
 
-        // ── 5. Default website for the standard user ─────────────────────
-        // Pick the "Koperasi" category and a published template within it.
-        
+        // ── 5. Published System Templates ────────────────────────────────
+        $this->call(TemplateSeeder::class);
     }
 }

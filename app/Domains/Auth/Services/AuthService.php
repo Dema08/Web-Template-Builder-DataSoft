@@ -52,9 +52,10 @@ class AuthService extends BaseService
     {
         return $this->repository()->transaction(function () use ($dto): array {
             $user = $this->userRepository->createRegularUser([
-                'name'     => $dto->getName(),
-                'email'    => $dto->getEmail(),
-                'password' => $dto->getPassword(), // User model auto-hashes via Attribute cast
+                'name'           => $dto->getName(),
+                'email'          => $dto->getEmail(),
+                'password'       => $dto->getPassword(), // User model auto-hashes via Attribute cast
+                'paket_harga_id' => $dto->getPaketHargaId(),
             ]);
 
             // No token issued — account must be approved by admin before login

@@ -32,6 +32,9 @@ class AdminSettingController extends BaseController
         'allow_registration',
         'default_storage_limit',
         'landing_content',
+        'midtrans_server_key',
+        'midtrans_client_key',
+        'midtrans_is_production',
     ];
 
     /**
@@ -47,6 +50,9 @@ class AdminSettingController extends BaseController
         'allow_registration'    => true,
         'default_storage_limit' => 100,
         'landing_content'       => null,
+        'midtrans_server_key'   => null,
+        'midtrans_client_key'   => null,
+        'midtrans_is_production' => false,
     ];
 
     /**
@@ -64,7 +70,7 @@ class AdminSettingController extends BaseController
 
             if ($key === 'logo_path') {
                 $settings[$key] = $raw ? Storage::url($raw) : null;
-            } elseif ($key === 'maintenance_mode' || $key === 'allow_registration') {
+            } elseif ($key === 'maintenance_mode' || $key === 'allow_registration' || $key === 'midtrans_is_production') {
                 $settings[$key] = (bool) $raw;
             } elseif ($key === 'default_storage_limit') {
                 $settings[$key] = (int) $raw;
@@ -100,6 +106,9 @@ class AdminSettingController extends BaseController
             'allow_registration'    => 'sometimes|boolean',
             'default_storage_limit' => 'sometimes|integer|min:1',
             'landing_content'       => 'sometimes|nullable',
+            'midtrans_server_key'   => 'sometimes|nullable|string',
+            'midtrans_client_key'   => 'sometimes|nullable|string',
+            'midtrans_is_production' => 'sometimes|boolean',
         ]);
 
         foreach ($validated as $key => $value) {

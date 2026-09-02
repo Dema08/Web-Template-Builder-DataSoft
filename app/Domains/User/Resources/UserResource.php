@@ -28,6 +28,8 @@ class UserResource extends JsonResource
             ? '/storage/' . ltrim($user->avatar, '/')
             : null;
 
+        $effectivePlan = $user->effective_pricelist;
+
         return [
             'id'          => $user->id,
             'name'        => $user->name,
@@ -35,6 +37,7 @@ class UserResource extends JsonResource
             'avatar'      => $avatar,
             'role'        => $user->peran?->value ?? 'user',
             'is_approved' => (bool) $user->disetujui,
+            'plan'        => new \App\Domains\Pricelist\Resources\PricelistResource($effectivePlan),
             'created_at'  => $user->created_at?->toISOString(),
         ];
     }

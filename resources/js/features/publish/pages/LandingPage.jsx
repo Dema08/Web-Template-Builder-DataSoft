@@ -8,7 +8,7 @@ import {
     Eye, Code2, Headphones, Award, Edit2, Loader2, Lock,
 } from 'lucide-react';
 import { ROUTES } from '@constants';
-import { templateApi, settingsApi } from '@api';
+import { templateApi, settingsApi, pricelistApi } from '@api';
 import { useAuthStore } from '@store';
 
 /* ─────────────────────────────────────────────────────────
@@ -611,6 +611,8 @@ function StatsSection() {
    Interaction: Horizontal Drag Left/Right to Rotate
 ───────────────────────────────────────────────────────── */
 function PricingSection({ pricingList, pricingMeta }) {
+    const navigate = useNavigate();
+    const { isAuthenticated } = useAuthStore();
     const plans = (pricingList && pricingList.length > 0) ? pricingList : PRICING;
     const stageRef = useRef(null);
     const [rotationAngle, setRotationAngle] = useState(0);
@@ -842,16 +844,23 @@ function PricingSection({ pricingList, pricingMeta }) {
                                             ))}
                                         </ul>
 
-                                        <Link
-                                            to={ROUTES.REGISTER}
-                                            className={`text-center text-sm font-bold py-3 px-4 rounded-xl transition-all shadow-md ${
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                if (isAuthenticated) {
+                                                    navigate(ROUTES.BILLING);
+                                                } else {
+                                                    navigate(ROUTES.REGISTER);
+                                                }
+                                            }}
+                                            className={`text-center text-sm font-bold py-3 px-4 rounded-xl transition-all shadow-md cursor-pointer ${
                                                 p.highlight
                                                     ? 'bg-white text-indigo-600 hover:bg-slate-100 hover:scale-105'
                                                     : 'border-2 border-slate-200 text-slate-700 hover:border-indigo-400 hover:text-indigo-600 bg-white hover:scale-105'
                                             }`}
                                         >
                                             {p.cta}
-                                        </Link>
+                                        </button>
                                     </div>
                                 </div>
                             );
@@ -903,17 +912,7 @@ function TemplatesSection() {
         return () => { isMounted = false; };
     }, []);
 
-    const displayTemplates = publishedTemplates.length > 0 ? publishedTemplates : TEMPLATES.map((t, idx) => ({
-        id: idx + 1,
-        name: t.title,
-        description: 'Template profesional berkualitas tinggi dengan komponen visual drag and drop siap pakai untuk bisnis Anda.',
-        thumbnail: t.img,
-        preview_image: t.img,
-        industry_category: { name: t.tag },
-        code: `TPL-00${idx + 1}`,
-        version: '1.0.0',
-        is_fallback: true,
-    }));
+    const displayTemplates = publishedTemplates;
 
     return (
         <section id="templates" className="py-20 sm:py-28 bg-slate-50 relative">
@@ -934,6 +933,12 @@ function TemplatesSection() {
                 {isLoading ? (
                     <div className="flex items-center justify-center py-20">
                         <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
+                    </div>
+                ) : displayTemplates.length === 0 ? (
+                    <div className="text-center py-16 bg-white rounded-3xl border border-slate-200 p-8 space-y-3">
+                        <Layout className="h-10 w-10 text-slate-300 mx-auto" />
+                        <p className="font-extrabold text-slate-800 text-base">Belum Ada Template Dipublikasikan</p>
+                        <p className="text-xs text-slate-500 max-w-sm mx-auto">Template sistem akan muncul di sini setelah Admin mempublikasikan template dari dashboard.</p>
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -1156,6 +1161,7 @@ export default function LandingPage({ liveContent }) {
     const [demoOpen, setDemoOpen] = useState(false);
     const [activeTemplate, setActiveTemplate] = useState(null);
     const [landingContent, setLandingContent] = useState(liveContent || DEFAULT_LANDING_CONTENT);
+    const [pricingPlans, setPricingPlans] = useState(null);
 
     useEffect(() => {
         if (liveContent) {
@@ -1174,6 +1180,33 @@ export default function LandingPage({ liveContent }) {
         }).catch(() => {});
         return () => { isMounted = false; };
     }, [liveContent]);
+
+    // Fetch dynamic pricelist from API
+    useEffect(() => {
+        let isMounted = true;
+        pricelistApi.getPublic()
+            .then((res) => {
+                if (!isMounted) return;
+                const plans = res?.data ?? res ?? [];
+                if (Array.isArray(plans) && plans.length > 0) {
+                    // Map API resource to the shape expected by PricingSection
+                    const mapped = plans.map((plan) => ({
+                        id: plan.id,
+                        slug: plan.slug,
+                        name: plan.nama,
+                        price: plan.harga === 0 ? 'Free' : `Rp ${Number(plan.harga).toLocaleString('id-ID').replace(/,/g, '.')}`,
+                        period: plan.harga === 0 ? '' : `/${plan.periode || 'bulan'}`,
+                        desc: plan.deskripsi || '',
+                        features: Array.isArray(plan.fitur) ? plan.fitur : [],
+                        cta: plan.harga === 0 ? 'Pilih Paket Free' : `Pilih ${plan.nama}`,
+                        highlight: plan.is_popular === true || plan.is_popular === 1,
+                    }));
+                    setPricingPlans(mapped);
+                }
+            })
+            .catch(() => { /* silently fall back to PRICING constant */ });
+        return () => { isMounted = false; };
+    }, []);
 
     return (
         <div className="min-h-screen bg-white font-sans" style={{ fontFamily: "'Inter', sans-serif" }}>
@@ -1442,7 +1475,7 @@ export default function LandingPage({ liveContent }) {
                 PRICING (With Rotation Entrance & Premium Hover)
             ════════════════════════════════════════════════════ */}
             <PricingSection
-                pricingList={landingContent.pricing_list}
+                pricingList={pricingPlans ?? landingContent.pricing_list}
                 pricingMeta={{
                     badge: landingContent.pricing_badge,
                     title: landingContent.pricing_title,

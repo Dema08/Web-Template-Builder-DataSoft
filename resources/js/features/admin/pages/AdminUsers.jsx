@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Users, Search, Shield, ShieldCheck, Edit2, Trash2, X, Check, UserCheck, Clock } from 'lucide-react';
+import { Users, Search, Shield, ShieldCheck, Edit2, Trash2, X, Check, UserCheck, Clock, CreditCard } from 'lucide-react';
 import { http } from '@api';
 import { Spinner, Alert, Card } from '@shared/components/ui';
 import { toast } from '@store';
@@ -9,7 +9,9 @@ export default function AdminUsers() {
     const [search, setSearch] = useState('');
     const [selectedUser, setSelectedUser] = useState(null);
     const [selectedRole, setSelectedRole] = useState('user');
+    const [selectedPlanId, setSelectedPlanId] = useState('');
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isPlanModalOpen, setIsPlanModalOpen] = useState(false);
     const [filterStatus, setFilterStatus] = useState('all'); // 'all' | 'pending' | 'approved'
 
     const queryClient = useQueryClient();
@@ -18,6 +20,14 @@ export default function AdminUsers() {
         queryKey: ['admin-users'],
         queryFn: async () => {
             const { data } = await http.get('/admin/users');
+            return data.data;
+        },
+    });
+
+    const { data: pricelists } = useQuery({
+        queryKey: ['admin-pricelists'],
+        queryFn: async () => {
+            const { data } = await http.get('/admin/pricelists');
             return data.data;
         },
     });
@@ -56,6 +66,25 @@ export default function AdminUsers() {
         },
     });
 
+    // Mutation to update user plan
+    const updatePlanMutation = useMutation({
+        mutationFn: async ({ userId, planId }) => {
+            const { data } = await http.patch(`/admin/users/${userId}/plan`, { paket_harga_id: planId });
+            return data;
+        },
+        onSuccess: (data) => {
+            queryClient.invalidateQueries(['admin-users']);
+            queryClient.invalidateQueries(['admin-pricelists']);
+            toast.success(data?.message || 'Paket user berhasil diperbarui!', 'Paket Changed');
+            setIsPlanModalOpen(false);
+            setSelectedUser(null);
+        },
+        onError: (error) => {
+            const msg = error?.response?.data?.message || 'Gagal memperbarui paket user.';
+            toast.error(msg, 'Error Update Plan');
+        },
+    });
+
     // Mutation to delete user
     const deleteUserMutation = useMutation({
         mutationFn: async (userId) => {
@@ -78,10 +107,22 @@ export default function AdminUsers() {
         setIsEditModalOpen(true);
     };
 
+    const handleOpenEditPlan = (user) => {
+        setSelectedUser(user);
+        setSelectedPlanId(user.plan?.id || pricelists?.[0]?.id || '');
+        setIsPlanModalOpen(true);
+    };
+
     const handleSaveRole = (e) => {
         e.preventDefault();
         if (!selectedUser) return;
         updateRoleMutation.mutate({ userId: selectedUser.id, role: selectedRole });
+    };
+
+    const handleSavePlan = (e) => {
+        e.preventDefault();
+        if (!selectedUser || !selectedPlanId) return;
+        updatePlanMutation.mutate({ userId: selectedUser.id, planId: selectedPlanId });
     };
 
     const handleDeleteUser = (user) => {
@@ -122,7 +163,7 @@ export default function AdminUsers() {
                     </div>
                     <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">Registered Users</h1>
                     <p className="text-sm text-[rgb(var(--color-text-secondary))] mt-1">
-                        Manage platform registered users, assign roles, and approve pending accounts.
+                        Manage platform registered users, assign roles, approve pending accounts, and manage user subscription plans.
                     </p>
                 </div>
 
@@ -196,6 +237,7 @@ export default function AdminUsers() {
                                     <th className="py-3.5 px-6">User</th>
                                     <th className="py-3.5 px-6">Email</th>
                                     <th className="py-3.5 px-6">Role</th>
+                                    <th className="py-3.5 px-6">Paket Harga</th>
                                     <th className="py-3.5 px-6">Status Akun</th>
                                     <th className="py-3.5 px-6">Created At</th>
                                     <th className="py-3.5 px-6 text-right">Actions</th>
@@ -204,13 +246,16 @@ export default function AdminUsers() {
                             <tbody className="divide-y divide-[rgb(var(--color-border))] text-xs">
                                 {filteredUsers?.length === 0 ? (
                                     <tr>
-                                        <td colSpan={6} className="py-12 text-center text-[rgb(var(--color-text-secondary))]">
+                                        <td colSpan={7} className="py-12 text-center text-[rgb(var(--color-text-secondary))]">
                                             Tidak ada user yang cocok dengan filter ini.
                                         </td>
                                     </tr>
                                 ) : filteredUsers?.map((u) => {
                                     const isAdmin = u.role === 'admin';
                                     const isPending = !u.is_approved;
+                                    const planName = u.plan?.name || u.plan?.nama || 'Free';
+                                    const isFreePlan = u.plan?.slug === 'free' || u.plan?.price === 0;
+
                                     return (
                                         <tr
                                             key={u.id}
@@ -242,6 +287,19 @@ export default function AdminUsers() {
                                                     {isAdmin ? 'Administrator' : 'User'}
                                                 </span>
                                             </td>
+
+                                            {/* Paket Harga Badge */}
+                                            <td className="py-4 px-6">
+                                                <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-extrabold ${
+                                                    isFreePlan
+                                                        ? 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
+                                                        : 'bg-emerald-100 dark:bg-emerald-950/40 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800'
+                                                }`}>
+                                                    <CreditCard className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+                                                    {planName}
+                                                </span>
+                                            </td>
+
                                             <td className="py-4 px-6">
                                                 {isPending ? (
                                                     <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-100 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
@@ -274,6 +332,16 @@ export default function AdminUsers() {
                                                             <UserCheck className="h-4 w-4" />
                                                         </button>
                                                     )}
+
+                                                    {/* Edit User Plan */}
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleOpenEditPlan(u)}
+                                                        className="p-2 text-[rgb(var(--color-text-tertiary))] hover:text-emerald-600 rounded-xl hover:bg-emerald-50 dark:hover:bg-emerald-950/30 transition"
+                                                        title="Ganti Paket Langganan User"
+                                                    >
+                                                        <CreditCard className="h-4 w-4" />
+                                                    </button>
 
                                                     {/* Edit Role */}
                                                     <button
@@ -364,6 +432,73 @@ export default function AdminUsers() {
                                         <>
                                             <Check className="h-4 w-4" />
                                             <span>Simpan Role</span>
+                                        </>
+                                    )}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Edit Plan Modal */}
+            {isPlanModalOpen && selectedUser && (
+                <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+                    <div className="bg-[rgb(var(--color-surface))] rounded-3xl max-w-md w-full p-6 shadow-2xl border border-[rgb(var(--color-border))] space-y-5 animate-in fade-in zoom-in-95 duration-150">
+                        <div className="flex items-center justify-between border-b border-[rgb(var(--color-border))] pb-3">
+                            <div className="flex items-center gap-2">
+                                <CreditCard className="h-5 w-5 text-emerald-600" />
+                                <h3 className="text-base font-extrabold text-[rgb(var(--color-text-primary))]">Ganti Paket Langganan</h3>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => { setIsPlanModalOpen(false); setSelectedUser(null); }}
+                                className="text-[rgb(var(--color-text-tertiary))] hover:text-[rgb(var(--color-text-primary))] p-1 rounded-lg hover:bg-[rgb(var(--color-surface-alt))] transition"
+                            >
+                                <X className="h-5 w-5" />
+                            </button>
+                        </div>
+
+                        <form onSubmit={handleSavePlan} className="space-y-4">
+                            <div className="p-3 bg-[rgb(var(--color-surface-alt))] rounded-2xl border border-[rgb(var(--color-border))]">
+                                <p className="text-sm font-bold text-[rgb(var(--color-text-primary))]">{selectedUser.name}</p>
+                                <p className="text-xs text-[rgb(var(--color-text-secondary))]">{selectedUser.email}</p>
+                            </div>
+
+                            <div>
+                                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Pilih Paket Harga</label>
+                                <select
+                                    value={selectedPlanId}
+                                    onChange={(e) => setSelectedPlanId(e.target.value)}
+                                    className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-emerald-600/20 focus:border-emerald-600 font-semibold"
+                                >
+                                    {pricelists?.map((p) => (
+                                        <option key={p.id} value={p.id}>
+                                            {p.name || p.nama} ({p.formatted_price}) — {p.max_domains === -1 ? 'Unlimited Domain' : `${p.max_domains} Domain`}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div className="pt-4 flex items-center justify-end gap-3 border-t border-[rgb(var(--color-border))]">
+                                <button
+                                    type="button"
+                                    onClick={() => { setIsPlanModalOpen(false); setSelectedUser(null); }}
+                                    className="px-4 py-2 text-xs font-bold text-[rgb(var(--color-text-secondary))] hover:bg-[rgb(var(--color-surface-alt))] rounded-xl transition"
+                                >
+                                    Batal
+                                </button>
+                                <button
+                                    type="submit"
+                                    disabled={updatePlanMutation.isPending}
+                                    className="px-5 py-2 text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-md shadow-emerald-600/20 transition flex items-center gap-1.5 disabled:opacity-50"
+                                >
+                                    {updatePlanMutation.isPending ? (
+                                        <span>Menyimpan...</span>
+                                    ) : (
+                                        <>
+                                            <Check className="h-4 w-4" />
+                                            <span>Simpan Paket User</span>
                                         </>
                                     )}
                                 </button>

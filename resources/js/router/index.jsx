@@ -25,6 +25,9 @@ import {
             AdminAnalytics,
             AdminSettings,
             AdminLandingEditor,
+            AdminPricelist,
+            AdminTransactions,
+            BillingPage,
             Onboarding,
             TemplateGalleryPage,
         } from './pages';
@@ -81,6 +84,7 @@ export default function AppRouter() {
                     <Route path={ROUTES.TEMPLATES} element={<Templates />} />
                     <Route path={ROUTES.PROFILE} element={<Profile />} />
                     <Route path={ROUTES.SETTINGS} element={<Settings />} />
+                    <Route path={ROUTES.BILLING} element={<BillingPage />} />
                     <Route path={ROUTES.ONBOARDING} element={<Onboarding />} />
 
                     {/* Dedicated Admin Panel Routes */}
@@ -92,6 +96,8 @@ export default function AppRouter() {
                     <Route path={ROUTES.ADMIN_CATEGORIES} element={<AdminCategories />} />
                     <Route path={ROUTES.ADMIN_ANALYTICS} element={<AdminAnalytics />} />
                     <Route path={ROUTES.ADMIN_LANDING} element={<AdminLandingEditor />} />
+                    <Route path={ROUTES.ADMIN_PRICELIST} element={<AdminPricelist />} />
+                    <Route path={ROUTES.ADMIN_TRANSACTIONS} element={<AdminTransactions />} />
                     <Route path={ROUTES.ADMIN_SETTINGS} element={<AdminSettings />} />
                 </Route>
 

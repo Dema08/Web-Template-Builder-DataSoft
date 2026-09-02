@@ -17,6 +17,8 @@ import {
     PanelLeftClose,
     PanelLeftOpen,
     Home,
+    CreditCard,
+    DollarSign,
 } from 'lucide-react';
 import { useAuth } from '@hooks';
 import { ROUTES } from '@constants';
@@ -46,6 +48,8 @@ export default function AppLayout() {
               { label: 'Manage Templates', icon: FileText, to: ROUTES.ADMIN_TEMPLATES },
               { label: 'Categories', icon: Layers, to: ROUTES.ADMIN_CATEGORIES },
               { label: 'User Management', icon: Users, to: ROUTES.ADMIN_USERS },
+              { label: 'Pricelist Management', icon: CreditCard, to: ROUTES.ADMIN_PRICELIST },
+              { label: 'Laporan Transaksi', icon: DollarSign, to: ROUTES.ADMIN_TRANSACTIONS },
               { label: 'Edit Landing Page', icon: Sparkles, to: ROUTES.ADMIN_LANDING },
               { label: 'Maintenance & Settings', icon: SettingsIcon, to: ROUTES.ADMIN_SETTINGS },
           ]
@@ -54,6 +58,7 @@ export default function AppLayout() {
               { label: 'Dashboard', icon: LayoutGrid, to: ROUTES.DASHBOARD },
               { label: 'Websites', icon: Globe, to: ROUTES.WEBSITES },
               { label: 'Templates', icon: FileText, to: ROUTES.TEMPLATES },
+              { label: 'Billing & Langganan', icon: CreditCard, to: ROUTES.BILLING },
               { label: 'Profile', icon: UserCircle2, to: ROUTES.PROFILE },
               { label: 'Settings', icon: SettingsIcon, to: ROUTES.SETTINGS },
           ];

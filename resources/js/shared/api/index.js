@@ -8,3 +8,5 @@ export { default as settingsApi } from './settings';
 export { onboardingApi } from './onboarding';
 export { default as categoryApi } from './category';
 export { default as templateApi } from './template';
+export { default as pricelistApi } from './pricelist';
+export { default as billingApi } from './billing';

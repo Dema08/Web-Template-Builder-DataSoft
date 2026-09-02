@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-import { Eye, EyeOff, Sparkles, User, Mail, Lock, ShieldCheck, ArrowRight, ArrowLeft, Layers, Headphones, Clock, CheckCircle2, Info } from 'lucide-react';
+import {
+    Eye, EyeOff, Sparkles, User, Mail, Lock, ShieldCheck, ArrowRight, ArrowLeft,
+    Layers, Headphones, Clock, CheckCircle2, Info
+} from 'lucide-react';
 import { Spinner, Alert, BrandLogo } from '@shared/components/ui';
 import { useRegister } from '@features/auth/hooks/useRegister';
 import { ROUTES } from '@constants';
@@ -17,7 +20,6 @@ function SparkleStarGroup({ className = '', style = {}, size = 'md', color = 'te
 
     return (
         <div className={`relative inline-block select-none pointer-events-none ${className}`} style={style}>
-            {/* Top-left small plus star */}
             <svg
                 className="absolute -top-2 -left-2 w-5 h-5 text-indigo-200 animate-pulse"
                 viewBox="0 0 24 24"
@@ -30,7 +32,6 @@ function SparkleStarGroup({ className = '', style = {}, size = 'md', color = 'te
                 <line x1="5" y1="12" x2="19" y2="12" />
             </svg>
 
-            {/* Main 4-pointed smooth curve star */}
             <svg
                 className={`${currentSize} ${color} filter drop-shadow-lg`}
                 viewBox="0 0 100 100"
@@ -44,7 +45,6 @@ function SparkleStarGroup({ className = '', style = {}, size = 'md', color = 'te
                 <path d="M50 5 C50 30, 70 50, 95 50 C70 50, 50 70, 50 95 C50 70, 30 50, 5 50 C30 50, 50 30, 50 5 Z" />
             </svg>
 
-            {/* Bottom-right small circle */}
             <svg
                 className="absolute -bottom-1 -right-2 w-4 h-4 text-indigo-300 fill-indigo-300 animate-bounce"
                 style={{ animationDuration: '3s' }}
@@ -81,15 +81,13 @@ export default function Register() {
         });
     };
 
-    // Set localStorage flag when registration is successful
     if (doRegister.isSuccess) {
         localStorage.setItem('show_registration_pending_modal', 'true');
     }
 
-    // Show pending approval state after successful registration
     if (doRegister.isSuccess) {
         return (
-            <div className="max-w-5xl w-full bg-[rgb(var(--color-surface))] rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row min-h-[660px] border border-[rgb(var(--color-border))]">
+            <div className="max-w-5xl w-full bg-[rgb(var(--color-surface))] rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row min-h-[660px] border border-[rgb(var(--color-border))] my-6">
                 {/* Left Column — Success Message */}
                 <div className="w-full md:w-1/2 p-8 sm:p-12 flex flex-col items-center justify-center bg-[rgb(var(--color-surface))] text-center gap-5">
                     <div className="h-20 w-20 rounded-full bg-amber-50 border-2 border-amber-200 flex items-center justify-center">
@@ -108,7 +106,7 @@ export default function Register() {
                         </div>
                         <ol className="text-xs text-amber-800/90 space-y-1 list-decimal list-inside pl-1 font-medium">
                             <li>Administrator akan meninjau pendaftaran Anda</li>
-                            <li>Setelah disetujui, Anda dapat login dan menggunakan platform</li>
+                            <li>Setelah disetujui, Anda dapat login dan mulai membuat website</li>
                             <li>Hubungi admin jika menunggu lebih dari 1x24 jam</li>
                         </ol>
                     </div>
@@ -183,7 +181,7 @@ export default function Register() {
 
     return (
         <div
-            className="max-w-[980px] w-full rounded-[32px] overflow-hidden flex flex-col md:flex-row min-h-[580px] relative z-10 transition-all duration-500 bg-white/95 backdrop-blur-xl ds-animate-scale-in"
+            className="max-w-[980px] w-full rounded-[32px] overflow-hidden flex flex-col md:flex-row min-h-[580px] relative z-10 transition-all duration-500 bg-white/95 backdrop-blur-xl ds-animate-scale-in my-6"
             style={{
                 boxShadow: '0 30px 90px rgba(15, 23, 42, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.4)',
             }}
@@ -199,7 +197,7 @@ export default function Register() {
                             className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-100/90 hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 text-xs font-bold transition-all duration-200 border border-slate-200/70 shadow-2xs hover:shadow-xs group hover:scale-[1.02] active:scale-95"
                         >
                             <ArrowLeft className="h-3.5 w-3.5 group-hover:-translate-x-1 transition-transform duration-200" />
-                            <span>Halaman Login </span>
+                            <span>Halaman Login</span>
                         </Link>
                     </div>
 
@@ -213,10 +211,10 @@ export default function Register() {
 
                     {doRegister.isError && (
                         <div className="mb-3 ds-animate-fade-in">
-                            <Alert variant="error" title="Unable to create account">
+                            <Alert variant="error" title="Gagal Membuat Akun">
                                 {doRegister.error?.response?.data?.errors?.email?.[0] ||
                                     doRegister.error?.response?.data?.message ||
-                                    'Please review the form and try again.'}
+                                    'Periksa kembali data formulir Anda.'}
                             </Alert>
                         </div>
                     )}
@@ -225,7 +223,7 @@ export default function Register() {
                     <div className="mb-3 flex items-start gap-2 px-3 py-2 bg-indigo-50/80 border border-indigo-100 rounded-xl ds-animate-fade-in">
                         <Info className="h-4 w-4 text-indigo-600 shrink-0 mt-0.5" />
                         <p className="text-xs text-indigo-700 leading-relaxed font-medium">
-                            <span className="font-bold">Perhatian:</span> Akun baru memerlukan persetujuan admin sebelum dapat login.
+                            <span className="font-bold">Perhatian:</span> Akun baru secara otomatis terdaftar dengan paket Free dan memerlukan persetujuan admin sebelum login.
                         </p>
                     </div>
 
@@ -248,8 +246,8 @@ export default function Register() {
                                             : 'border-slate-200 focus:border-indigo-600'
                                     }`}
                                     {...register('name', {
-                                        required: 'Name is required',
-                                        minLength: { value: 2, message: 'Name must be at least 2 characters' },
+                                        required: 'Nama wajib diisi',
+                                        minLength: { value: 2, message: 'Minimal 2 karakter' },
                                     })}
                                 />
                             </div>
@@ -275,10 +273,10 @@ export default function Register() {
                                             : 'border-slate-200 focus:border-indigo-600'
                                     }`}
                                     {...register('email', {
-                                        required: 'Email is required',
+                                        required: 'Email wajib diisi',
                                         pattern: {
                                             value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                                            message: 'Enter a valid email address',
+                                            message: 'Format email tidak valid',
                                         },
                                     })}
                                 />
@@ -298,15 +296,15 @@ export default function Register() {
                                 <input
                                     type={showPassword ? 'text' : 'password'}
                                     autoComplete="new-password"
-                                    placeholder="Minimum 8 characters"
+                                    placeholder="Minimal 8 karakter"
                                     className={`w-full pl-10 pr-11 py-2.5 rounded-xl border text-sm transition-all duration-200 bg-slate-50/60 focus:bg-white focus:outline-none focus:ring-4 focus:ring-indigo-500/20 text-slate-900 placeholder:text-slate-400 ${
                                         errors.password
                                             ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20'
                                             : 'border-slate-200 focus:border-indigo-600'
                                     }`}
                                     {...register('password', {
-                                        required: 'Password is required',
-                                        minLength: { value: 8, message: 'Password must be at least 8 characters' },
+                                        required: 'Password wajib diisi',
+                                        minLength: { value: 8, message: 'Minimal 8 karakter' },
                                     })}
                                 />
                                 <button
@@ -332,15 +330,15 @@ export default function Register() {
                                 <input
                                     type={showConfirmPassword ? 'text' : 'password'}
                                     autoComplete="new-password"
-                                    placeholder="Re-enter password"
+                                    placeholder="Ulangi password"
                                     className={`w-full pl-10 pr-11 py-2.5 rounded-xl border text-sm transition-all duration-200 bg-slate-50/60 focus:bg-white focus:outline-none focus:ring-4 focus:ring-indigo-500/20 text-slate-900 placeholder:text-slate-400 ${
                                         errors.password_confirmation
                                             ? 'border-red-400 focus:border-red-500 focus:ring-red-500/20'
                                             : 'border-slate-200 focus:border-indigo-600'
                                     }`}
                                     {...register('password_confirmation', {
-                                        required: 'Please confirm your password',
-                                        validate: (value) => value === password || 'Passwords do not match',
+                                        required: 'Konfirmasi password wajib diisi',
+                                        validate: (value) => value === password || 'Password tidak cocok',
                                     })}
                                 />
                                 <button
@@ -366,15 +364,15 @@ export default function Register() {
                                 <Spinner size="sm" />
                             ) : (
                                 <>
-                                    <span>Register</span>
+                                    <span>Register Account</span>
                                     <ArrowRight className="h-4 w-4" />
                                 </>
                             )}
                         </button>
 
                         {/* Footer Link */}
-                        <div className="pt-3 text-center text-xs text-slate-500 font-medium">
-                            Already have an account?{' '}
+                        <div className="pt-2 text-center text-xs text-slate-500 font-medium">
+                            Sudah memiliki akun?{' '}
                             <Link to={ROUTES.LOGIN} className="font-bold text-indigo-600 hover:text-indigo-700 transition-colors hover:underline">
                                 Sign in
                             </Link>
@@ -387,17 +385,10 @@ export default function Register() {
             <div className="hidden md:flex md:w-1/2 relative p-8 sm:p-11 flex-col justify-between text-white overflow-hidden ds-animate-gradient"
                  style={{ background: 'linear-gradient(135deg, #1e3a8a, #2563eb, #4f46e5, #7c3aed, #1e3a8a)' }}>
 
-                {/* Top Right Sparkle Star */}
                 <div className="absolute top-8 right-8 z-10 ds-animate-float-slow">
                     <SparkleStarGroup size="xl" color="text-white" />
                 </div>
 
-                {/* Bottom Left Sparkle Star (smaller) */}
-                <div className="absolute bottom-24 left-8 z-10 ds-animate-float-reverse opacity-60">
-                    <SparkleStarGroup size="md" color="text-blue-200" />
-                </div>
-
-                {/* Top Badge */}
                 <div className="relative z-10 flex justify-start pt-2">
                     <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-[10px] font-bold tracking-wider text-white uppercase shadow-sm hover:scale-105 transition-transform cursor-default">
                         <Sparkles className="h-3 w-3 text-blue-200 animate-spin" style={{ animationDuration: '6s' }} />
@@ -405,7 +396,6 @@ export default function Register() {
                     </div>
                 </div>
 
-                {/* Center Hero Content + Floating Subdomain Preview Widget */}
                 <div className="relative z-10 my-auto py-6 space-y-4">
                     <div>
                         <h2 className="text-3xl lg:text-4xl font-black leading-tight text-white mb-2 tracking-tight">
@@ -418,7 +408,6 @@ export default function Register() {
                         </p>
                     </div>
 
-                    {/* Floating Subdomain Ready Widget */}
                     <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-3.5 shadow-xl ds-animate-float hover:scale-105 transition-transform duration-300">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
@@ -430,7 +419,6 @@ export default function Register() {
                     </div>
                 </div>
 
-                {/* Bottom Stats Footer with Icons */}
                 <div className="relative z-10 grid grid-cols-3 gap-3 pt-6 border-t border-white/20">
                     <div className="flex flex-col items-center text-center group cursor-pointer">
                         <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center mb-2 group-hover:scale-110 group-hover:bg-white/20 transition-all duration-300 shadow-sm">
@@ -464,4 +452,3 @@ export default function Register() {
         </div>
     );
 }
-

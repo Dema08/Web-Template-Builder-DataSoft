@@ -27,6 +27,8 @@ Route::prefix('v1')->group(function (): void {
         Route::get('/templates', [App\Domains\Publish\Http\Controllers\PublicSiteController::class, 'templates']);
         // GET /api/v1/public/templates/{id} — published template detail for public preview
         Route::get('/templates/{id}', [App\Domains\Publish\Http\Controllers\PublicSiteController::class, 'showTemplate']);
+        // GET /api/v1/public/pricelists — public active pricing plans
+        Route::get('/pricelists', [App\Domains\Pricelist\Http\Controllers\PublicPricelistController::class, 'index']);
     });
 
     // -------------------------------------------------------------
@@ -54,7 +56,10 @@ Route::prefix('v1')->group(function (): void {
         Route::get('/users', [App\Domains\Admin\Http\Controllers\AdminUserController::class, 'index']);
         Route::patch('/users/{user}/approve', [App\Domains\Admin\Http\Controllers\AdminUserController::class, 'approveUser']);
         Route::patch('/users/{user}/role', [App\Domains\Admin\Http\Controllers\AdminUserController::class, 'updateRole']);
+        Route::patch('/users/{user}/plan', [App\Domains\Pricelist\Http\Controllers\AdminPricelistController::class, 'updateUserPlan']);
         Route::delete('/users/{user}', [App\Domains\Admin\Http\Controllers\AdminUserController::class, 'destroy']);
+        Route::apiResource('pricelists', App\Domains\Pricelist\Http\Controllers\AdminPricelistController::class);
+        Route::patch('/pricelists/{pricelist}/default', [App\Domains\Pricelist\Http\Controllers\AdminPricelistController::class, 'setDefault']);
         Route::apiResource('categories', App\Domains\Admin\Http\Controllers\AdminCategoryController::class);
         Route::apiResource('templates', App\Domains\Template\Http\Controllers\TemplateController::class);
         Route::apiResource('categories.templates', App\Domains\Admin\Http\Controllers\AdminTemplateController::class);
@@ -81,11 +86,17 @@ Route::prefix('v1')->group(function (): void {
         // Dashboard summary (admin-only, always accessible even in maintenance)
         Route::get('/dashboard-summary', [App\Domains\Admin\Http\Controllers\DashboardController::class, 'index']);
 
-        // Admin websites management
+        // Admin websites & transactions management
         Route::get('/websites', [App\Domains\Admin\Http\Controllers\AdminWebsiteController::class, 'index']);
         Route::patch('/websites/{website}/status', [App\Domains\Admin\Http\Controllers\AdminWebsiteController::class, 'updateStatus']);
         Route::delete('/websites/{website}', [App\Domains\Admin\Http\Controllers\AdminWebsiteController::class, 'destroy']);
+        Route::get('/transactions', [App\Domains\Billing\Http\Controllers\AdminTransactionController::class, 'index']);
     });
+
+    // -------------------------------------------------------------
+    // Midtrans Public Webhook Callback (Signature Verified)
+    // -------------------------------------------------------------
+    Route::post('/billing/webhook', [App\Domains\Billing\Http\Controllers\BillingController::class, 'webhook']);
 
     // Authenticated application endpoints (protected by maintenance mode)
     Route::middleware(['auth:sanctum', 'session.timeout', 'maintenance'])->group(function (): void {
@@ -95,6 +106,13 @@ Route::prefix('v1')->group(function (): void {
             Route::post('/avatar', [App\Domains\User\Http\Controllers\UserController::class, 'uploadAvatar']);
             Route::delete('/avatar', [App\Domains\User\Http\Controllers\UserController::class, 'deleteAvatar']);
             Route::put('/change-password', [App\Domains\User\Http\Controllers\UserController::class, 'changePassword']);
+        });
+
+        // Billing & Subscription Endpoints for User
+        Route::prefix('billing')->group(function (): void {
+            Route::get('/current', [App\Domains\Billing\Http\Controllers\BillingController::class, 'currentPlan']);
+            Route::post('/checkout', [App\Domains\Billing\Http\Controllers\BillingController::class, 'checkout']);
+            Route::get('/history', [App\Domains\Billing\Http\Controllers\BillingController::class, 'history']);
         });
 
         // GET /api/v1/dashboard

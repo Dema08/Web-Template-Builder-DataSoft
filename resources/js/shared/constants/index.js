@@ -33,6 +33,9 @@ export const ROUTES = {
     ADMIN_ANALYTICS: '/admin/analytics',
     ADMIN_SETTINGS: '/admin/settings',
     ADMIN_LANDING: '/admin/landing',
+    ADMIN_PRICELIST: '/admin/pricelist',
+    ADMIN_TRANSACTIONS: '/admin/transactions',
+    BILLING: '/billing',
     ONBOARDING: '/onboarding',
     TEMPLATE_GALLERY: '/templates-gallery',
 };
@@ -50,6 +53,11 @@ export const QUERY_KEYS = {
     ASSETS: 'assets',
     ADMIN_USERS: 'admin-users',
     ADMIN_WEBSITES: 'admin-websites',
+    ADMIN_PRICELISTS: 'admin-pricelists',
+    PUBLIC_PRICELISTS: 'public-pricelists',
+    BILLING_CURRENT: 'billing-current',
+    BILLING_HISTORY: 'billing-history',
+    ADMIN_TRANSACTIONS: 'admin-transactions',
 };
 
 export const HTTP_STATUS = {
