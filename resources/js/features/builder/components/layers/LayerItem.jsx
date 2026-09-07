@@ -5,11 +5,15 @@ import { useBuilderStore } from '../../stores/builderStore';
 export default function LayerItem({ component, sectionId, index }) {
   const actions = useLayerActions(sectionId);
   const isSelected = useBuilderStore(state => state.selectedComponentId === component.id);
+  const isLocked = !!(component.isLocked || component.position?.locked);
+  const isHidden = !!(component.isHidden || component.position?.hidden);
 
   return (
     <div
       onClick={() => actions.handleSelect(component.id)}
       className={`group flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-all cursor-pointer border ${
+        isHidden ? 'opacity-50 bg-slate-100/60' : ''
+      } ${
         isSelected
           ? 'bg-indigo-50/80 border-indigo-200 text-indigo-900 font-bold shadow-xs'
           : 'bg-white border-slate-100 hover:border-slate-200 text-slate-700 hover:bg-slate-50'
@@ -27,16 +31,16 @@ export default function LayerItem({ component, sectionId, index }) {
       <div className="flex items-center gap-1 opacity-85 group-hover:opacity-100 shrink-0" onClick={e => e.stopPropagation()}>
         <button
           onClick={() => actions.handleToggleVisibility(component.id)}
-          className={`p-1 rounded-md hover:bg-slate-200 transition-colors ${component.isHidden ? 'text-rose-500' : 'text-slate-400'}`}
-          title={component.isHidden ? 'Show component' : 'Hide component'}
+          className={`p-1 rounded-md hover:bg-slate-200 transition-colors ${isHidden ? 'text-rose-500 font-bold' : 'text-slate-400'}`}
+          title={isHidden ? 'Show component' : 'Hide component'}
         >
-          {component.isHidden ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+          {isHidden ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
         </button>
 
         <button
           onClick={() => actions.handleToggleLock(component.id)}
-          className={`p-1 rounded-md hover:bg-slate-200 transition-colors ${component.isLocked ? 'text-amber-500' : 'text-slate-400'}`}
-          title={component.isLocked ? 'Unlock component' : 'Lock component'}
+          className={`p-1 rounded-md hover:bg-slate-200 transition-colors ${isLocked ? 'text-amber-500 font-bold' : 'text-slate-400'}`}
+          title={isLocked ? 'Unlock component' : 'Lock component'}
         >
           <Lock className="h-3.5 w-3.5" />
         </button>
@@ -75,7 +79,7 @@ export default function LayerItem({ component, sectionId, index }) {
           <ChevronsDown className="h-3.5 w-3.5" />
         </button>
 
-        {!component.isLocked && (
+        {!isLocked && (
           <button
             onClick={() => actions.handleDelete(component.id)}
             className="p-1 rounded-md hover:bg-rose-50 text-slate-400 hover:text-rose-600 transition-colors ml-1"

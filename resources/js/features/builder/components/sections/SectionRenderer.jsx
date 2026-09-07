@@ -3,6 +3,7 @@ import { getSectionConfig } from '../../utils/industryConfigs';
 import { getLayoutComponent } from '../../engine/layoutComponentMapper';
 import { getUIComponent } from '../../engine/componentMapper';
 import EditableComponent from '../editing/EditableComponent';
+import SnapGrid from '../canvas/SnapGrid';
 import BuilderErrorBoundary from '../common/BuilderErrorBoundary';
 
 // Convert layout ID like "hero-01" to component name "Hero01"
@@ -103,6 +104,7 @@ export default function SectionRenderer({ section, isSelected, onClick }) {
       }`}
       style={{ position: 'relative', minHeight: '120px' }}
     >
+      <SnapGrid />
       <BuilderErrorBoundary title={`Section layout (${section.type} / ${section.layout})`}>
         <LayoutComponent components={section.components || []} sectionId={section.id} />
       </BuilderErrorBoundary>

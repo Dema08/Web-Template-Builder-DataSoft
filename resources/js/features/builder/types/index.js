@@ -35,5 +35,8 @@ export const createEmptyComponent = (componentType, index = 0) => ({
     rotation: 0,
     scale: 1,
     zIndex: index,
+    locked: false,
+    hidden: false,
+    groupId: null,
   },
 });

@@ -2,6 +2,11 @@ import { useState, useRef } from 'react';
 import { useDraggable, useDroppable } from '@dnd-kit/core';
 import { useBuilderStore } from '../../stores/builderStore';
 import { useBuilderDndContext } from '../../dnd/DndBuilderProvider';
+import { useSnapGrid } from '../../hooks/useSnapGrid';
+import { useSmartGuides } from '../../hooks/useSmartGuides';
+import { useResize } from '../../hooks/useResize';
+import SmartGuides from '../canvas/SmartGuides';
+import ResizeHandles from '../canvas/ResizeHandles';
 import { Lock, Move, Sparkles, Image as ImageIcon, CornerDownRight } from 'lucide-react';
 import DropIndicator from '../../dnd/DropIndicator';
 
@@ -23,14 +28,17 @@ export default function EditableComponent({
   } = useBuilderStore();
 
   const dnd = useBuilderDndContext();
+  const { snapPosition } = useSnapGrid();
+  const { guides, calculateGuidesAndSnap, clearGuides } = useSmartGuides();
+  const { startResize } = useResize(sectionId, component.id, component.position);
   const elementRef = useRef(null);
   const [isDraggingLocal, setIsDraggingLocal] = useState(false);
   const [isResizingLocal, setIsResizingLocal] = useState(false);
 
   const isSelected = selectedComponentId === component.id;
   const isHovered = hoveredComponent === component.id;
-  const isLocked = !!component.isLocked;
-  const isHidden = !!component.isHidden;
+  const isLocked = !!(component.isLocked || component.position?.locked);
+  const isHidden = !!(component.isHidden || component.position?.hidden);
   const isContainer = component.type === 'card';
   const isImageComponent = component.type === 'image' || 'src' in (component.props || {});
 
@@ -67,23 +75,30 @@ export default function EditableComponent({
     disabled: isPreviewMode || isLocked || builderMode === 'resize',
   });
 
-  // In Preview Mode, render 100% clean production output without editor UI
-  if (isPreviewMode) {
-    if (isHidden) return null;
-    const isInline = ['text', 'heading', 'button', 'icon', 'badge'].includes(component.type);
+  // In Preview Mode or if hidden, handle visibility
+  if (isHidden && isPreviewMode) return null;
+  if (isHidden) {
     return (
       <div
-        id={component.id}
-        className="relative"
-        style={{
-          display: isInline ? 'inline-block' : 'block',
-          maxWidth: '100%',
-          width: component.props?.width || (isInline ? 'fit-content' : undefined),
-          marginLeft: component.props?.marginLeft,
-          marginTop: component.props?.marginTop,
+        ref={(node) => {
+          elementRef.current = node;
+          setDroppableRef(node);
+          setDraggableRef(node);
         }}
+        id={component.id}
+        data-component-id={component.id}
+        data-section-id={sectionId}
+        className="relative opacity-30 border border-dashed border-slate-400 p-2 my-1 rounded text-xs text-slate-500 flex items-center justify-between"
+        style={{
+          position: (component.position?.x !== 0 || component.position?.y !== 0) ? 'absolute' : 'relative',
+          left: component.position?.x ? `${component.position.x}px` : undefined,
+          top: component.position?.y ? `${component.position.y}px` : undefined,
+          zIndex: component.position?.zIndex || 1,
+        }}
+        onClick={handleClick}
       >
-        {children}
+        <span>[Hidden: {component.type}]</span>
+        <span className="text-[10px] bg-slate-200 px-1.5 py-0.5 rounded font-mono">Hidden</span>
       </div>
     );
   }
@@ -94,7 +109,11 @@ export default function EditableComponent({
   // --- SELECT HANDLER ---
   const handleClick = (e) => {
     e.stopPropagation();
-    selectComponent(component.id, sectionId);
+    if (e.shiftKey) {
+      useBuilderStore.getState().toggleComponentSelection(component.id);
+    } else {
+      selectComponent(component.id, sectionId);
+    }
   };
 
   const handleDoubleClick = (e) => {
@@ -118,6 +137,10 @@ export default function EditableComponent({
 
     setIsResizingLocal(true);
 
+    const storeState = useBuilderStore.getState();
+    const section = storeState.sections.find(s => s.id === sectionId);
+    const allComps = section ? section.components : [];
+
     const onMouseMove = (moveEvent) => {
       const deltaX = moveEvent.clientX - startX;
       const deltaY = moveEvent.clientY - startY;
@@ -130,6 +153,28 @@ export default function EditableComponent({
       }
       if (direction.includes('s') || direction.includes('se')) {
         newHeight = Math.max(24, snapToGrid(startHeight + deltaY));
+      }
+
+      const activeRect = {
+        x: component.position?.x || 0,
+        y: component.position?.y || 0,
+        width: newWidth,
+        height: newHeight,
+      };
+
+      const guideResult = calculateGuidesAndSnap(component.id, activeRect, allComps, 5);
+
+      if (guideResult.hasSnapped) {
+        // If right/bottom edge snapped or similar, adjust width/height accordingly based on alignment guides
+        for (const g of guideResult.guides) {
+          if (g.label === 'right') {
+            const otherCompX = g.position; // approximation or reference
+            newWidth = Math.max(32, otherCompX - (component.position?.x || 0));
+          } else if (g.label === 'bottom') {
+            const otherCompY = g.position;
+            newHeight = Math.max(24, otherCompY - (component.position?.y || 0));
+          }
+        }
       }
 
       const updatedProps = {};
@@ -145,6 +190,7 @@ export default function EditableComponent({
 
     const onMouseUp = () => {
       setIsResizingLocal(false);
+      clearGuides();
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('mouseup', onMouseUp);
     };
@@ -155,6 +201,14 @@ export default function EditableComponent({
 
   // --- INTERACTIVE POINTER DRAG POSITION HANDLER ---
   const handleDragStart = (e) => {
+    // If clicking on a child element (e.g. text/button inside Card) and not the move handle or empty container area, stop propagation or return
+    if (e.target !== e.currentTarget && !e.target.closest('[data-drag-handle]')) {
+      // Check if it's a child component being dragged directly
+      if (e.target.closest('[data-component-id]') && e.target.closest('[data-component-id]') !== e.currentTarget) {
+        return;
+      }
+    }
+
     if (builderMode === 'drag') {
       e.stopPropagation();
       e.preventDefault();
@@ -171,24 +225,72 @@ export default function EditableComponent({
     const startPosX = currentPos.x || 0;
     const startPosY = currentPos.y || 0;
 
-    const currentMarginLeft = parseInt(component.props?.marginLeft || '0', 10);
-    const currentMarginTop = parseInt(component.props?.marginTop || '0', 10);
-
     setIsDraggingLocal(true);
+
+    const storeState = useBuilderStore.getState();
+    const section = storeState.sections.find(s => s.id === sectionId);
+    const allComps = section ? section.components : [];
+    const sectionEl = document.getElementById(sectionId);
+    const sectionRect = sectionEl ? {
+      x: sectionEl.offsetLeft || 0,
+      y: sectionEl.offsetTop || 0,
+      width: sectionEl.offsetWidth || 800,
+      height: sectionEl.offsetHeight || 600,
+    } : { x: 0, y: 0, width: 800, height: 600 };
 
     const onPointerMove = (moveEvent) => {
       const deltaX = moveEvent.clientX - startX;
       const deltaY = moveEvent.clientY - startY;
 
-      const newPosX = snapToGrid(startPosX + deltaX);
-      const newPosY = snapToGrid(startPosY + deltaY);
+      const rawX = startPosX + deltaX;
+      const rawY = startPosY + deltaY;
 
-      updateComponentPosition(sectionId, component.id, newPosX, newPosY);
+      const activeRect = {
+        x: rawX,
+        y: rawY,
+        width: el.offsetWidth || 120,
+        height: el.offsetHeight || 40,
+      };
+
+      // Calculate guides for visual rendering only without forcing position jump during drag
+      calculateGuidesAndSnap(component.id, activeRect, allComps, sectionRect, 8, 3);
+
+      // Follow cursor precisely without forcing snap during drag movement
+      updateComponentPosition(sectionId, component.id, rawX, rawY);
     };
 
-    const onPointerUp = () => {
+    const onPointerUp = (upEvent) => {
       setIsDraggingLocal(false);
-      el.releasePointerCapture(e.pointerId);
+
+      // Apply snap on drop if close enough to an alignment guide (<= 3px) or snap to grid
+      const finalRawX = startPosX + (upEvent.clientX - startX);
+      const finalRawY = startPosY + (upEvent.clientY - startY);
+
+      const activeRect = {
+        x: finalRawX,
+        y: finalRawY,
+        width: el.offsetWidth || 120,
+        height: el.offsetHeight || 40,
+      };
+
+      const finalCheck = calculateGuidesAndSnap(component.id, activeRect, allComps, sectionRect, 8, 3);
+
+      let finalX = finalRawX;
+      let finalY = finalRawY;
+
+      if (finalCheck.hasSnapped) {
+        finalX = finalCheck.snappedPosition.x;
+        finalY = finalCheck.snappedPosition.y;
+      } else {
+        const snapped = snapPosition(finalRawX, finalRawY);
+        finalX = snapped.x;
+        finalY = snapped.y;
+      }
+
+      updateComponentPosition(sectionId, component.id, finalX, finalY);
+      clearGuides();
+
+      el.releasePointerCapture(upEvent.pointerId);
       el.removeEventListener('pointermove', onPointerMove);
       el.removeEventListener('pointerup', onPointerUp);
     };
@@ -276,6 +378,14 @@ export default function EditableComponent({
             <span>Drop to replace image</span>
           </div>
         </div>
+      )}
+
+      {/* Smart Guides Rendering when dragging */}
+      <SmartGuides guides={guides} />
+
+      {/* STEP D: Resize Handles */}
+      {isSelected && !isLocked && (
+        <ResizeHandles onResizeStart={startResize} />
       )}
 
       {/* Locked Badge (amber) */}

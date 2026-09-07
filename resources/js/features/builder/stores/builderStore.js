@@ -26,9 +26,12 @@ export const useBuilderStore = create((set, get) => ({
   builderMode: 'select', // 'select' | 'drag' | 'resize'
   isLeftPanelOpen: true,
   isRightPanelOpen: true,
+  snapEnabled: true, // STEP B: Snap to Grid state
 
   // Actions
   setBuilderMode: (builderMode) => set({ builderMode }),
+  toggleSnap: () => set(state => ({ snapEnabled: !state.snapEnabled })),
+  setSnapEnabled: (snapEnabled) => set({ snapEnabled }),
   toggleLeftPanel: () => set(state => ({ isLeftPanelOpen: !state.isLeftPanelOpen })),
   toggleRightPanel: () => set(state => ({ isRightPanelOpen: !state.isRightPanelOpen })),
   setLeftPanelOpen: (isOpen) => set({ isLeftPanelOpen: isOpen }),
@@ -38,7 +41,14 @@ export const useBuilderStore = create((set, get) => ({
     const { sections, saveToHistory } = get();
     saveToHistory();
     const updateInTree = (comps) => comps.map(c => {
-      if (c.id === componentId) return { ...c, isLocked: !c.isLocked };
+      if (c.id === componentId) {
+        const currentLocked = c.position?.locked ?? c.isLocked ?? false;
+        return {
+          ...c,
+          isLocked: !currentLocked,
+          position: { ...c.position, locked: !currentLocked }
+        };
+      }
       if (Array.isArray(c.childrenComponents) && c.childrenComponents.length > 0) {
         return { ...c, childrenComponents: updateInTree(c.childrenComponents) };
       }
@@ -54,20 +64,18 @@ export const useBuilderStore = create((set, get) => ({
     set({ sections: newSections });
   },
 
-  toggleLockSection: (sectionId) => {
-    const { sections, saveToHistory } = get();
-    saveToHistory();
-    const newSections = sections.map(s =>
-      s.id === sectionId ? { ...s, isLocked: !s.isLocked } : s
-    );
-    set({ sections: newSections });
-  },
-
   toggleVisibilityComponent: (sectionId, componentId) => {
     const { sections, saveToHistory } = get();
     saveToHistory();
     const updateInTree = (comps) => comps.map(c => {
-      if (c.id === componentId) return { ...c, isHidden: !c.isHidden };
+      if (c.id === componentId) {
+        const currentHidden = c.position?.hidden ?? c.isHidden ?? false;
+        return {
+          ...c,
+          isHidden: !currentHidden,
+          position: { ...c.position, hidden: !currentHidden }
+        };
+      }
       if (Array.isArray(c.childrenComponents) && c.childrenComponents.length > 0) {
         return { ...c, childrenComponents: updateInTree(c.childrenComponents) };
       }
@@ -461,6 +469,37 @@ export const useBuilderStore = create((set, get) => ({
     set({ sections: newSections });
   },
 
+  updateComponentSize: (sectionId, componentId, width, height) => {
+    const { sections, saveToHistory } = get();
+    saveToHistory();
+
+    const updateInTree = (comps) => comps.map(c => {
+      if (c.id === componentId) {
+        return {
+          ...c,
+          position: {
+            ...c.position,
+            ...(width !== undefined ? { width } : {}),
+            ...(height !== undefined ? { height } : {}),
+          }
+        };
+      }
+      if (Array.isArray(c.childrenComponents) && c.childrenComponents.length > 0) {
+        return { ...c, childrenComponents: updateInTree(c.childrenComponents) };
+      }
+      return c;
+    });
+
+    const newSections = sections.map(s => {
+      if (s.id === sectionId) {
+        return { ...s, components: updateInTree(s.components) };
+      }
+      return s;
+    });
+
+    set({ sections: newSections });
+  },
+
   updateComponentProps: (sectionId, componentId, props, deviceView = null) => {
     const { sections } = get();
 
@@ -687,45 +726,66 @@ export const useBuilderStore = create((set, get) => ({
     set({ sections: newSections });
   },
 
-  // Multi-select support
-  toggleComponentSelection: (componentId) => {
-    const { selectedLayers } = get();
-    if (selectedLayers.includes(componentId)) {
-      set({ selectedLayers: selectedLayers.filter(id => id !== componentId) });
-    } else {
-      set({ selectedLayers: [...selectedLayers, componentId] });
-    }
-  },
-
-  clearSelection: () => {
-    set({ selectedLayers: [], selectedComponentId: null, selectedSectionId: null });
-  },
-
-  groupSelectedComponents: (sectionId) => {
-    const { sections, selectedLayers, saveToHistory } = get();
-    if (selectedLayers.length < 2) return;
+  groupComponents: (sectionId, componentIds) => {
+    const { sections, saveToHistory } = get();
+    if (!Array.isArray(componentIds) || componentIds.length < 2) return;
     saveToHistory();
+
+    const groupId = `group-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    const updateInTree = (comps) => comps.map(c => {
+      let updated = c;
+      if (componentIds.includes(c.id)) {
+        updated = {
+          ...c,
+          position: { ...c.position, groupId }
+        };
+      }
+      if (Array.isArray(updated.childrenComponents) && updated.childrenComponents.length > 0) {
+        updated.childrenComponents = updateInTree(updated.childrenComponents);
+      }
+      return updated;
+    });
 
     const newSections = sections.map(s => {
       if (s.id === sectionId) {
-        const selectedIds = new Set(selectedLayers);
-        const selectedComponents = s.components.filter(c => selectedIds.has(c.id));
-        const remainingComponents = s.components.filter(c => !selectedIds.has(c.id));
-
-        const group = {
-          id: `group-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-          type: 'group',
-          props: {},
-          position: { x: 0, y: 0, width: null, height: null, rotation: 0, scale: 1, zIndex: 10 },
-          children: selectedComponents,
-        };
-
-        return { ...s, components: [...remainingComponents, group] };
+        return { ...s, components: updateInTree(s.components) };
       }
       return s;
     });
 
     set({ sections: newSections, selectedLayers: [] });
+  },
+
+  ungroupComponents: (sectionId, groupId) => {
+    const { sections, saveToHistory } = get();
+    if (!groupId) return;
+    saveToHistory();
+
+    const updateInTree = (comps) => comps.map(c => {
+      let updated = c;
+      if (c.position?.groupId === groupId) {
+        const newPos = { ...c.position };
+        delete newPos.groupId;
+        updated = { ...c, position: newPos };
+      }
+      if (Array.isArray(updated.childrenComponents) && updated.childrenComponents.length > 0) {
+        updated.childrenComponents = updateInTree(updated.childrenComponents);
+      }
+      return updated;
+    });
+
+    const newSections = sections.map(s => {
+      if (s.id === sectionId) {
+        return { ...s, components: updateInTree(s.components) };
+      }
+      return s;
+    });
+
+    set({ sections: newSections });
+  },
+
+  multiSelectComponents: (sectionId, componentIds) => {
+    set({ selectedLayers: componentIds, selectedSectionId: sectionId });
   },
 
   undo: () => {

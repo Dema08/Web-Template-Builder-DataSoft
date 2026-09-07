@@ -20,6 +20,7 @@ import {
   PanelRight,
   ChevronDown,
   Check,
+  Grid,
 } from 'lucide-react';
 
 export default function BuilderToolbar({ onBack, onSave, onPublish }) {
@@ -39,6 +40,13 @@ export default function BuilderToolbar({ onBack, onSave, onPublish }) {
     isSaving,
     builderMode,
     setBuilderMode,
+    snapEnabled,
+    toggleSnap,
+    selectedLayers,
+    groupComponents,
+    ungroupComponents,
+    selectedSectionId,
+    sections,
     isLeftPanelOpen,
     isRightPanelOpen,
     toggleLeftPanel,
@@ -202,6 +210,34 @@ export default function BuilderToolbar({ onBack, onSave, onPublish }) {
             <span className="hidden sm:inline">Resize</span>
           </button>
         </div>
+
+        {/* Snap to Grid Toggle Button */}
+        <button
+          onClick={toggleSnap}
+          className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-extrabold transition border ${
+            snapEnabled
+              ? 'bg-indigo-50 border-indigo-200 text-indigo-700 shadow-xs'
+              : 'bg-slate-50 border-slate-200 text-slate-500 hover:bg-slate-100'
+          }`}
+          title={snapEnabled ? 'Snap to Grid (10px) is ON' : 'Snap to Grid is OFF'}
+        >
+          <Grid className={`h-3.5 w-3.5 ${snapEnabled ? 'text-indigo-600 animate-pulse' : 'text-slate-400'}`} />
+          <span className="hidden sm:inline">Snap: {snapEnabled ? '10px' : 'Off'}</span>
+        </button>
+
+        {/* Group / Ungroup Buttons when multi-selected */}
+        {selectedLayers && selectedLayers.length >= 2 && (
+          <button
+            onClick={() => {
+              const secId = selectedSectionId || (sections.length > 0 ? sections[0].id : null);
+              if (secId) groupComponents(secId, selectedLayers);
+            }}
+            className="flex items-center gap-1 px-3 py-1.5 bg-indigo-600 text-white rounded-xl text-xs font-bold shadow-sm hover:bg-indigo-700 transition"
+            title="Group selected components"
+          >
+            <span>Group ({selectedLayers.length})</span>
+          </button>
+        )}
 
         <div className="w-px h-5 bg-slate-200 mx-0.5" />
 

@@ -1,9 +1,11 @@
+import { useState } from 'react';
 import { useBuilderStore } from '../../stores/builderStore';
 import LayerItem from './LayerItem';
-import { Layers, Sparkles } from 'lucide-react';
+import { Layers, Sparkles, Folder, ChevronDown, ChevronRight, Ungroup } from 'lucide-react';
 
 export default function LayerPanel() {
-  const { sections, selectedSectionId } = useBuilderStore();
+  const { sections, selectedSectionId, ungroupComponents } = useBuilderStore();
+  const [expandedGroups, setExpandedGroups] = useState({});
 
   const activeSection = sections.find(s => s.id === selectedSectionId) || sections[0];
 
@@ -17,6 +19,27 @@ export default function LayerPanel() {
   }
 
   const components = activeSection.components || [];
+
+  // Group components by groupId
+  const groupsMap = {};
+  const ungrouped = [];
+
+  components.forEach((c, index) => {
+    const groupId = c.position?.groupId;
+    if (groupId) {
+      if (!groupsMap[groupId]) groupsMap[groupId] = [];
+      groupsMap[groupId].push({ component: c, originalIndex: index });
+    } else {
+      ungrouped.push({ component: c, originalIndex: index });
+    }
+  });
+
+  const toggleGroupExpand = (groupId) => {
+    setExpandedGroups(prev => ({
+      ...prev,
+      [groupId]: !prev[groupId]
+    }));
+  };
 
   return (
     <div className="flex flex-col h-full bg-slate-50/50 border-l border-slate-200">
@@ -38,14 +61,56 @@ export default function LayerPanel() {
             <p className="text-[11px] text-slate-400 mt-1">Add components from sidebar or drag assets here</p>
           </div>
         ) : (
-          components.map((component, index) => (
-            <LayerItem
-              key={component.id}
-              component={component}
-              sectionId={activeSection.id}
-              index={index}
-            />
-          ))
+          <>
+            {/* Render Groups First */}
+            {Object.entries(groupsMap).map(([groupId, items], gIdx) => {
+              const isExpanded = expandedGroups[groupId] !== false;
+              return (
+                <div key={groupId} className="border border-indigo-100 bg-indigo-50/30 rounded-xl p-1.5 space-y-1">
+                  <div className="flex items-center justify-between px-2 py-1 text-xs font-bold text-indigo-950">
+                    <button
+                      onClick={() => toggleGroupExpand(groupId)}
+                      className="flex items-center gap-1.5 hover:text-indigo-600 transition"
+                    >
+                      {isExpanded ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronRight className="h-3.5 w-3.5" />}
+                      <Folder className="h-3.5 w-3.5 text-indigo-600" />
+                      <span>Group {gIdx + 1} ({items.length})</span>
+                    </button>
+                    <button
+                      onClick={() => ungroupComponents(activeSection.id, groupId)}
+                      className="p-1 rounded hover:bg-indigo-100 text-indigo-600 transition"
+                      title="Ungroup components"
+                    >
+                      <Ungroup className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+
+                  {isExpanded && (
+                    <div className="pl-3 space-y-1 border-l-2 border-indigo-200 ml-2">
+                      {items.map(({ component, originalIndex }) => (
+                        <LayerItem
+                          key={component.id}
+                          component={component}
+                          sectionId={activeSection.id}
+                          index={originalIndex}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+
+            {/* Render Ungrouped Components */}
+            {ungrouped.map(({ component, originalIndex }) => (
+              <LayerItem
+                key={component.id}
+                component={component}
+                sectionId={activeSection.id}
+                index={originalIndex}
+              />
+            ))}
+          </>
         )}
       </div>
     </div>
