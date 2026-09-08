@@ -9,7 +9,7 @@ import {
     Code2, Lock, Star, Smartphone, Tablet, CreditCard
 } from 'lucide-react';
 import { settingsApi } from '@api';
-import { Toast } from '@shared/components/ui';
+import { Toast, ConfirmModal } from '@shared/components/ui';
 import LandingPage from '@features/publish/pages/LandingPage';
 
 const ICON_OPTIONS = [
@@ -168,6 +168,8 @@ export default function AdminLandingEditor() {
     const [isSaving, setIsSaving] = useState(false);
     const [activeTab, setActiveTab] = useState('hero'); // 'hero' | 'features' | 'pricing' | 'steps' | 'stats' | 'cta' | 'preview'
     const [viewportMode, setViewportMode] = useState('desktop'); // 'desktop' | 'tablet' | 'mobile'
+    const [isResetModalOpen, setIsResetModalOpen] = useState(false);
+
 
     useEffect(() => {
         let isMounted = true;
@@ -321,11 +323,15 @@ export default function AdminLandingEditor() {
     };
 
     const handleReset = () => {
-        if (window.confirm('Apakah Anda yakin ingin mengembalikan seluruh konten landing page ke standar default?')) {
-            setContent(DEFAULT_LANDING_CONTENT);
-            Toast.info('Konten dikembalikan ke standar default. Klik Simpan untuk menerapkan.');
-        }
+        setIsResetModalOpen(true);
     };
+
+    const handleConfirmReset = () => {
+        setContent(DEFAULT_LANDING_CONTENT);
+        Toast.info('Konten dikembalikan ke standar default. Klik Simpan untuk menerapkan.');
+        setIsResetModalOpen(false);
+    };
+
 
     if (isLoading) {
         return (
@@ -1209,6 +1215,20 @@ export default function AdminLandingEditor() {
                 )}
 
             </div>
+
+            {/* Confirm Reset Modal */}
+            <ConfirmModal
+                isOpen={isResetModalOpen}
+                onClose={() => setIsResetModalOpen(false)}
+                onConfirm={handleConfirmReset}
+                title="Reset Konten Landing Page"
+                description="Apakah Anda yakin ingin mengembalikan seluruh konten landing page & teks section ke format standar default?"
+                variant="warning"
+                icon={RotateCcw}
+                confirmText="Ya, Reset Konten"
+                cancelText="Batal"
+            />
         </div>
     );
 }
+

@@ -42,8 +42,16 @@ class AuthController extends BaseController
         $result = $this->authService->register($dto);
 
         return $this->created([
-            'user' => new UserResource($result['user']),
-        ], 'Pendaftaran berhasil! Akun Anda sedang menunggu persetujuan dari administrator.');
+            'user'              => new UserResource($result['user']),
+            'transaction'       => isset($result['transaction']) ? new \App\Domains\Billing\Resources\TransactionResource($result['transaction']) : null,
+            'snap_token'        => $result['snap_token'] ?? null,
+            'snap_redirect_url' => $result['snap_redirect_url'] ?? null,
+            'order_id'          => $result['order_id'] ?? null,
+            'invoice_number'    => $result['invoice_number'] ?? null,
+            'client_key'        => $result['client_key'] ?? null,
+            'snap_js_url'       => $result['snap_js_url'] ?? null,
+            'is_free'           => $result['is_free'] ?? true,
+        ], $result['message'] ?? 'Pendaftaran berhasil!');
     }
 
     /**

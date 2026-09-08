@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Plus, Trash2, Edit2, Shield, Search, X, ChevronUp, ChevronDown, Eye, EyeOff, FileText } from 'lucide-react';
-import { Card } from '@shared/components/ui';
+import { Card, ConfirmModal } from '@shared/components/ui';
 import { toast } from '@store';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { categoryService } from '@features/category/services/categoryService';
@@ -13,6 +13,10 @@ export default function AdminCategories() {
   const [showTemplateModal, setShowTemplateModal] = useState(false);
   const [editingTemplate, setEditingTemplate] = useState(null);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+
+  // Confirm Modal state for deletion
+  const [categoryToDelete, setCategoryToDelete] = useState(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -78,6 +82,8 @@ export default function AdminCategories() {
     onSuccess: () => {
       queryClient.invalidateQueries(['admin', 'categories']);
       toast.success('Category deleted successfully', 'Success');
+      setIsDeleteModalOpen(false);
+      setCategoryToDelete(null);
     },
     onError: () => {
       toast.error('Failed to delete category', 'Error');
@@ -165,9 +171,13 @@ export default function AdminCategories() {
   };
 
   const handleDelete = (id, name) => {
-    if (confirm(`Delete category "${name}"? This action cannot be undone.`)) {
-      deleteMutation.mutate(id);
-    }
+    setCategoryToDelete({ id, name });
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleConfirmDeleteCategory = () => {
+    if (!categoryToDelete) return;
+    deleteMutation.mutate(categoryToDelete.id);
   };
 
   const handleClose = () => {
@@ -657,6 +667,29 @@ export default function AdminCategories() {
           </div>
         </div>
       )}
+      {/* Delete Category Confirm Modal */}
+      <ConfirmModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => {
+          setIsDeleteModalOpen(false);
+          setCategoryToDelete(null);
+        }}
+        onConfirm={handleConfirmDeleteCategory}
+        title="Hapus Kategori Industri"
+        description="Apakah Anda yakin ingin menghapus kategori industri ini? Tindakan ini tidak dapat dibatalkan."
+        variant="danger"
+        confirmText="Ya, Hapus Kategori"
+        cancelText="Batal"
+        isLoading={deleteMutation.isPending}
+        details={
+          categoryToDelete && (
+            <div>
+              <p className="font-extrabold text-[rgb(var(--color-text-primary))] text-sm">{categoryToDelete.name}</p>
+              <p className="text-xs text-[rgb(var(--color-text-tertiary))] mt-0.5">ID Kategori: #{categoryToDelete.id}</p>
+            </div>
+          )
+        }
+      />
     </div>
   );
 }

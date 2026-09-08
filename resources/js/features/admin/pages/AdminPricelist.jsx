@@ -22,7 +22,7 @@ import {
     HelpCircle,
 } from 'lucide-react';
 import { http } from '@api';
-import { Spinner, Alert, Card } from '@shared/components/ui';
+import { Spinner, Alert, Card, ConfirmModal } from '@shared/components/ui';
 import { toast } from '@store';
 
 export default function AdminPricelist() {
@@ -30,6 +30,14 @@ export default function AdminPricelist() {
     const [isPlanModalOpen, setIsPlanModalOpen] = useState(false);
     const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
     const [editingPlan, setEditingPlan] = useState(null);
+
+    // Confirm Modals state
+    const [planToDelete, setPlanToDelete] = useState(null);
+    const [isDeletePlanModalOpen, setIsDeletePlanModalOpen] = useState(false);
+
+    const [planToSetDefault, setPlanToSetDefault] = useState(null);
+    const [isSetDefaultModalOpen, setIsSetDefaultModalOpen] = useState(false);
+
 
     // Form state for Plan Modal
     const [formData, setFormData] = useState({
@@ -104,6 +112,8 @@ export default function AdminPricelist() {
             queryClient.invalidateQueries(['admin-pricelists']);
             queryClient.invalidateQueries(['admin-users']);
             toast.success(data?.message || 'Paket harga berhasil dihapus.', 'Dihapus');
+            setIsDeletePlanModalOpen(false);
+            setPlanToDelete(null);
         },
         onError: (error) => {
             const msg = error?.response?.data?.message || 'Gagal menghapus paket harga.';
@@ -119,7 +129,10 @@ export default function AdminPricelist() {
         onSuccess: (data) => {
             queryClient.invalidateQueries(['admin-pricelists']);
             toast.success(data?.message || 'Paket default berhasil diperbarui.', 'Set Default');
+            setIsSetDefaultModalOpen(false);
+            setPlanToSetDefault(null);
         },
+
         onError: (error) => {
             const msg = error?.response?.data?.message || 'Gagal mengubah paket default.';
             toast.error(msg, 'Error Default');
@@ -216,16 +229,25 @@ export default function AdminPricelist() {
     };
 
     const handleDeletePlan = (plan) => {
-        if (confirm(`Apakah Anda yakin ingin menghapus paket harga "${plan.name || plan.nama}"? User yang berada di paket ini akan otomatis dipindahkan ke Paket Default.`)) {
-            deletePlanMutation.mutate(plan.id);
-        }
+        setPlanToDelete(plan);
+        setIsDeletePlanModalOpen(true);
+    };
+
+    const handleConfirmDeletePlan = () => {
+        if (!planToDelete) return;
+        deletePlanMutation.mutate(planToDelete.id);
     };
 
     const handleSetDefault = (plan) => {
-        if (confirm(`Jadikan paket "${plan.name || plan.nama}" sebagai Paket Default sistem untuk user baru?`)) {
-            setDefaultMutation.mutate(plan.id);
-        }
+        setPlanToSetDefault(plan);
+        setIsSetDefaultModalOpen(true);
     };
+
+    const handleConfirmSetDefault = () => {
+        if (!planToSetDefault) return;
+        setDefaultMutation.mutate(planToSetDefault.id);
+    };
+
 
     const handleOpenAssignModal = (user = null) => {
         if (user) {
@@ -783,7 +805,7 @@ export default function AdminPricelist() {
                                 >
                                     {users?.map((u) => (
                                         <option key={u.id} value={u.id}>
-                                            {u.name} ({u.email}) — Saat ini: {u.plan?.name || u.plan?.nama || 'Free'}
+                                            {u.name} ({u.email}) — {u.role === 'admin' ? 'Akses Admin (Unlimited)' : `Saat ini: ${u.plan?.name || u.plan?.nama || 'Free'}`}
                                         </option>
                                     ))}
                                 </select>
@@ -825,6 +847,56 @@ export default function AdminPricelist() {
                     </div>
                 </div>
             )}
+            {/* Confirm Modal: Hapus Paket */}
+            <ConfirmModal
+                isOpen={isDeletePlanModalOpen}
+                onClose={() => {
+                    setIsDeletePlanModalOpen(false);
+                    setPlanToDelete(null);
+                }}
+                onConfirm={handleConfirmDeletePlan}
+                title="Hapus Paket Harga"
+                description="Apakah Anda yakin ingin menghapus paket harga ini? User yang terdaftar di paket ini akan otomatis dipindahkan ke Paket Default."
+                variant="danger"
+                icon={Trash2}
+                confirmText="Ya, Hapus Paket"
+                cancelText="Batal"
+                isLoading={deletePlanMutation.isPending}
+                details={
+                    planToDelete && (
+                        <div>
+                            <p className="font-extrabold text-[rgb(var(--color-text-primary))] text-sm">{planToDelete.name || planToDelete.nama}</p>
+                            <p className="text-xs text-[rgb(var(--color-text-secondary))] mt-0.5">Harga: {planToDelete.formatted_price || `Rp ${planToDelete.harga}`}</p>
+                        </div>
+                    )
+                }
+            />
+
+            {/* Confirm Modal: Set Default Paket */}
+            <ConfirmModal
+                isOpen={isSetDefaultModalOpen}
+                onClose={() => {
+                    setIsSetDefaultModalOpen(false);
+                    setPlanToSetDefault(null);
+                }}
+                onConfirm={handleConfirmSetDefault}
+                title="Jadikan Paket Default System"
+                description="Jadikan paket ini sebagai Paket Default bawaan sistem yang otomatis diberikan kepada pengguna baru saat mendaftar?"
+                variant="warning"
+                icon={Star}
+                confirmText="Ya, Set Default"
+                cancelText="Batal"
+                isLoading={setDefaultMutation.isPending}
+                details={
+                    planToSetDefault && (
+                        <div>
+                            <p className="font-extrabold text-[rgb(var(--color-text-primary))] text-sm">{planToSetDefault.name || planToSetDefault.nama}</p>
+                            <p className="text-xs text-[rgb(var(--color-text-secondary))] mt-0.5">Harga: {planToSetDefault.formatted_price || `Rp ${planToSetDefault.harga}`}</p>
+                        </div>
+                    )
+                }
+            />
         </div>
     );
 }
+

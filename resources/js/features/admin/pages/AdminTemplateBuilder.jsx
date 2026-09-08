@@ -23,6 +23,7 @@ import { getLayoutDefaults } from '@builder/engine/layoutDefaults';
 import DndBuilderProvider from '@builder/dnd/DndBuilderProvider';
 import { ArrowLeft, FolderOpen, Sparkles, Layout, Zap, CheckCircle2, Eye, X, Layers, ArrowRight, Image, FileEdit, Send } from 'lucide-react';
 import CustomDropdown from '@shared/components/ui/CustomDropdown';
+import ConfirmModal from '@shared/components/ui/ConfirmModal';
 import ThumbnailUploader from '@features/admin/components/ThumbnailUploader';
 
 export default function AdminTemplateBuilder() {
@@ -46,6 +47,8 @@ export default function AdminTemplateBuilder() {
   const [saveThumbnailFile, setSaveThumbnailFile] = useState(null); // File object if user uploads
   const [saveModalError, setSaveModalError] = useState('');
   const [isSavingModal, setIsSavingModal] = useState(false);
+  const [isLeaveModalOpen, setIsLeaveModalOpen] = useState(false);
+
 
   const {
     setIndustry,
@@ -225,17 +228,21 @@ export default function AdminTemplateBuilder() {
 
   const handleBack = () => {
     if (sections.length > 0) {
-      if (confirm('You have unsaved changes. Are you sure you want to leave?')) {
-        clearLocalDraft(id);
-        resetBuilder();
-        navigate('/admin/templates');
-      }
+      setIsLeaveModalOpen(true);
     } else {
       clearLocalDraft(id);
       resetBuilder();
       navigate('/admin/templates');
     }
   };
+
+  const handleConfirmLeave = () => {
+    setIsLeaveModalOpen(false);
+    clearLocalDraft(id);
+    resetBuilder();
+    navigate('/admin/templates');
+  };
+
 
   const handleSave = () => {
     setSaveDescription(templateData?.description || '');
@@ -843,6 +850,18 @@ export default function AdminTemplateBuilder() {
           </div>
         </div>
       )}
+
+      {/* Unsaved Changes Confirm Modal */}
+      <ConfirmModal
+        isOpen={isLeaveModalOpen}
+        onClose={() => setIsLeaveModalOpen(false)}
+        onConfirm={handleConfirmLeave}
+        title="Tinggalkan Template Editor?"
+        description="Terdapat perubahan yang belum disimpan di canvas builder. Apakah Anda yakin ingin keluar?"
+        variant="warning"
+        confirmText="Ya, Tinggalkan"
+        cancelText="Batal Editor"
+      />
     </>
   );
 }

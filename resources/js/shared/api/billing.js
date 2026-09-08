@@ -45,6 +45,18 @@ const billingApi = {
         const { data } = await http.get(`/admin/transactions?${queryParams}`);
         return data.data;
     },
+
+    /**
+     * [DEV ONLY] Simulate Midtrans payment settlement for local testing.
+     * POST /api/v1/billing/dev/simulate-paid
+     * @param {string} orderId
+     */
+    async devSimulatePaid(orderId) {
+        const { data } = await http.post('/billing/dev/simulate-paid', {
+            order_id: orderId,
+        });
+        return data;
+    },
 };
 
 export default billingApi;

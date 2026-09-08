@@ -2,6 +2,8 @@
 
 namespace App\Domains\Billing\Http\Controllers;
 
+use App\Domains\Billing\Enums\TransactionStatus;
+use App\Domains\Billing\Models\Transaction;
 use App\Domains\Billing\Resources\SubscriptionResource;
 use App\Domains\Billing\Resources\TransactionResource;
 use App\Domains\Billing\Services\BillingService;
@@ -126,6 +128,67 @@ class BillingController extends BaseController
             return $this->error($e->getMessage(), 404);
         } catch (\Throwable $e) {
             return $this->error('Gagal memproses webhook Midtrans: ' . $e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * [DEV ONLY] Simulate Midtrans payment settlement for a pending transaction.
+     * Useful when webhook cannot reach localhost during local development.
+     *
+     * POST /api/v1/billing/dev/simulate-paid
+     * Body: { "order_id": "BILL-20260907-XXXXXX" }
+     */
+    public function devSimulatePaid(Request $request): JsonResponse
+    {
+        // STRICT guard — never available in production
+        if (app()->isProduction()) {
+            return $this->error('Endpoint ini hanya tersedia di lingkungan development.', 403);
+        }
+
+        $validated = $request->validate([
+            'order_id' => 'required|string|exists:transaksi,order_id',
+        ]);
+
+        $transaction = Transaction::where('order_id', $validated['order_id'])->firstOrFail();
+
+        if ($transaction->status === TransactionStatus::Paid) {
+            return $this->success([
+                'order_id' => $transaction->order_id,
+                'status'   => 'paid',
+            ], 'Transaksi sudah berstatus PAID sebelumnya. Tidak ada perubahan.');
+        }
+
+        // Build signed fake webhook payload
+        $serverKey   = \App\Domains\System\Models\Setting::get('midtrans_server_key')
+            ?: config('midtrans.server_key', env('MIDTRANS_SERVER_KEY', ''));
+        $grossAmount = number_format((float) $transaction->nominal, 2, '.', '');
+        $statusCode  = '200';
+        $signature   = hash('sha512', $transaction->order_id . $statusCode . $grossAmount . $serverKey);
+
+        $fakePayload = [
+            'order_id'           => $transaction->order_id,
+            'transaction_status' => 'settlement',
+            'fraud_status'       => 'accept',
+            'gross_amount'       => $grossAmount,
+            'status_code'        => $statusCode,
+            'payment_type'       => 'dev_manual_simulate',
+            'signature_key'      => $signature,
+        ];
+
+        try {
+            $updated = $this->billingService->handleWebhook($fakePayload);
+
+            $newStatus = $updated->status instanceof \BackedEnum
+                ? $updated->status->value
+                : $updated->status;
+
+            return $this->success([
+                'order_id'  => $updated->order_id,
+                'status'    => $newStatus,
+                'user_plan' => $updated->user?->pricelist?->nama ?? $updated->pricelist?->nama,
+            ], '[DEV] Pembayaran berhasil disimulasikan dan langganan diaktifkan.');
+        } catch (\Throwable $e) {
+            return $this->error('Gagal simulasi pembayaran: ' . $e->getMessage(), 500);
         }
     }
 }

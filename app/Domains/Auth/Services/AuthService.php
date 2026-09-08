@@ -33,8 +33,10 @@ use Illuminate\Support\Facades\Mail;
  */
 class AuthService extends BaseService
 {
-    public function __construct(protected UserRepository $userRepository)
-    {
+    public function __construct(
+        protected UserRepository $userRepository,
+        protected \App\Domains\Billing\Services\BillingService $billingService
+    ) {
         // AuthService uses custom repository methods, not BaseService CRUD
     }
 
@@ -46,7 +48,7 @@ class AuthService extends BaseService
     /**
      * Register a new user.
      *
-     * @return array{user: User, token: string}
+     * @return array
      */
     public function register(RegisterDTO $dto): array
     {
@@ -58,8 +60,33 @@ class AuthService extends BaseService
                 'paket_harga_id' => $dto->getPaketHargaId(),
             ]);
 
-            // No token issued — account must be approved by admin before login
-            return ['user' => $user];
+            $user->load('pricelist');
+            $pricelist = $user->effective_pricelist;
+
+            if ($pricelist && (float) $pricelist->harga > 0) {
+                // Paid plan selected: create pending checkout transaction & Midtrans snap token
+                $transaction = $this->billingService->checkout($user, $pricelist->id);
+
+                return [
+                    'user'              => $user,
+                    'transaction'       => $transaction,
+                    'snap_token'        => $transaction->snap_token,
+                    'snap_redirect_url' => $transaction->snap_redirect_url,
+                    'order_id'          => $transaction->order_id,
+                    'invoice_number'    => $transaction->invoice_number,
+                    'client_key'        => config('midtrans.client_key'),
+                    'snap_js_url'       => config('midtrans.snap_js_url'),
+                    'is_free'           => false,
+                    'message'           => 'Pendaftaran berhasil! Silakan selesaikan pembayaran untuk mengaktifkan akun Anda secara otomatis.',
+                ];
+            }
+
+            // Free plan: No transaction created, account requires manual admin approval
+            return [
+                'user'    => $user,
+                'is_free' => true,
+                'message' => 'Pendaftaran berhasil! Akun Anda sedang menunggu persetujuan dari administrator.',
+            ];
         });
     }
 
@@ -86,8 +113,20 @@ class AuthService extends BaseService
         }
 
         if (! $user->disetujui) {
+            $pendingTx = $user->transactions()
+                ->where('status', \App\Domains\Billing\Enums\TransactionStatus::Pending)
+                ->latest('id')
+                ->first();
+
+            if ($pendingTx) {
+                throw new DomainException(
+                    "Tagihan pembayaran paket Anda belum dikonfirmasi (Order ID: {$pendingTx->order_id}). Silakan selesaikan pembayaran agar akun otomatis disetujui.",
+                    403
+                );
+            }
+
             throw new DomainException(
-                'Akun Anda belum disetujui oleh administrator. Harap tunggu konfirmasi dari admin.',
+                'Akun Anda (Paket Free) belum disetujui oleh administrator. Harap tunggu konfirmasi persetujuan dari admin.',
                 403
             );
         }

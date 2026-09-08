@@ -98,6 +98,12 @@ Route::prefix('v1')->group(function (): void {
     // -------------------------------------------------------------
     Route::post('/billing/webhook', [App\Domains\Billing\Http\Controllers\BillingController::class, 'webhook']);
 
+    // -------------------------------------------------------------
+    // [DEV ONLY] Simulate Midtrans settlement (localhost testing)
+    // Blocked automatically in production via APP_ENV guard in controller.
+    // -------------------------------------------------------------
+    Route::post('/billing/dev/simulate-paid', [App\Domains\Billing\Http\Controllers\BillingController::class, 'devSimulatePaid']);
+
     // Authenticated application endpoints (protected by maintenance mode)
     Route::middleware(['auth:sanctum', 'session.timeout', 'maintenance'])->group(function (): void {
         Route::prefix('user')->group(function (): void {

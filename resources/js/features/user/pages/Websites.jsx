@@ -13,7 +13,7 @@ import {
 import { Link } from 'react-router-dom';
 import { useWebsite } from '@hooks';
 import { ROUTES } from '@constants';
-import { Card, Button, Spinner, StatusBadge } from '@shared/components/ui';
+import { Card, Button, Spinner, StatusBadge, ConfirmModal } from '@shared/components/ui';
 import { toast } from '@store';
 
 export default function Websites() {
@@ -24,6 +24,10 @@ export default function Websites() {
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [newSiteName, setNewSiteName] = useState('');
     const [newSubdomain, setNewSubdomain] = useState('');
+
+    const [siteToDelete, setSiteToDelete] = useState(null);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
 
     const [websitesList, setWebsitesList] = useState([
         {
@@ -98,11 +102,18 @@ export default function Websites() {
     };
 
     const handleDeleteWebsite = (id, name) => {
-        if (confirm(`Are you sure you want to delete "${name}"?`)) {
-            setWebsitesList(websitesList.filter((w) => w.id !== id));
-            toast.info(`Website "${name}" deleted.`, 'Website Deleted');
-        }
+        setSiteToDelete({ id, name });
+        setIsDeleteModalOpen(true);
     };
+
+    const handleConfirmDeleteWebsite = () => {
+        if (!siteToDelete) return;
+        setWebsitesList(websitesList.filter((w) => w.id !== siteToDelete.id));
+        toast.info(`Website "${siteToDelete.name}" deleted.`, 'Website Deleted');
+        setIsDeleteModalOpen(false);
+        setSiteToDelete(null);
+    };
+
 
     return (
         <div className="p-6 sm:p-8 max-w-7xl mx-auto space-y-8">
@@ -352,6 +363,29 @@ export default function Websites() {
                     </div>
                 </div>
             )}
+            {/* Delete Website Confirm Modal */}
+            <ConfirmModal
+                isOpen={isDeleteModalOpen}
+                onClose={() => {
+                    setIsDeleteModalOpen(false);
+                    setSiteToDelete(null);
+                }}
+                onConfirm={handleConfirmDeleteWebsite}
+                title="Hapus Website"
+                description="Apakah Anda yakin ingin menghapus website ini? Deployment dan data terkait akan dihapus."
+                variant="danger"
+                icon={Trash2}
+                confirmText="Ya, Hapus Website"
+                cancelText="Batal"
+                details={
+                    siteToDelete && (
+                        <div>
+                            <p className="font-extrabold text-[rgb(var(--color-text-primary))] text-sm">{siteToDelete.name}</p>
+                        </div>
+                    )
+                }
+            />
         </div>
     );
 }
+

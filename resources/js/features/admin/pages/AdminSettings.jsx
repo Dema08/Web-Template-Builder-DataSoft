@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Shield, Settings, Save, RefreshCw, Image, Type, Palette, Upload, X, Sun, Moon, AlertTriangle, Wrench, Globe } from 'lucide-react';
 import { toast, useSettingsStore } from '@store';
-import { Card } from '@shared/components/ui';
+import { Card, ConfirmModal } from '@shared/components/ui';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { http } from '@api';
 import { useSettings } from '@hooks';
@@ -11,6 +11,9 @@ export default function AdminSettings() {
     const { brand_name, brand_badge, brand_color, plan_label, logo_path, setSettings, updateSetting, resetSettings } = useSettingsStore();
     const { updateSettings, updateSettingsAsync, uploadLogo, removeLogo, isUpdating, isUploadingLogo, isRemovingLogo } = useSettings();
     const queryClient = useQueryClient();
+
+    const [isResetModalOpen, setIsResetModalOpen] = useState(false);
+
 
     // Theme state
     const [darkMode, setDarkMode] = useState(() => {
@@ -157,7 +160,10 @@ export default function AdminSettings() {
     };
 
     const handleResetBrand = () => {
-        if (!confirm('Reset brand to factory defaults (DataSoft)?')) return;
+        setIsResetModalOpen(true);
+    };
+
+    const handleConfirmResetBrand = () => {
         resetSettings();
         setLocalBrandName('DataSoft');
         setLocalBrandBadge('DS');
@@ -165,7 +171,9 @@ export default function AdminSettings() {
         setLocalPlanLabel('Premium Plan');
         setLogoPreview(null);
         toast.info('Brand identity reset to DataSoft defaults.', 'Brand Reset');
+        setIsResetModalOpen(false);
     };
+
 
     const handleSaveSystem = async (e) => {
         e.preventDefault();
@@ -603,6 +611,19 @@ export default function AdminSettings() {
                 </div>
                 </form>
             </Card>
+
+            {/* Confirm Reset Brand Modal */}
+            <ConfirmModal
+                isOpen={isResetModalOpen}
+                onClose={() => setIsResetModalOpen(false)}
+                onConfirm={handleConfirmResetBrand}
+                title="Reset Identitas Brand"
+                description="Apakah Anda yakin ingin mengembalikan konfigurasi nama brand, warna, badge logo, dan label paket ke pengaturan standar pabrik (DataSoft)?"
+                variant="warning"
+                icon={RefreshCw}
+                confirmText="Ya, Reset Brand"
+                cancelText="Batal"
+            />
         </div>
     );
 }

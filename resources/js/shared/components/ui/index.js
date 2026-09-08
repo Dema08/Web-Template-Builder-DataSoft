@@ -10,3 +10,5 @@ export { default as Toast } from './Toast';
 export { default as CustomDropdown } from './CustomDropdown';
 export { default as StatusBadge } from './StatusBadge';
 export { default as PageLoader } from './PageLoader';
+export { default as ConfirmModal } from './ConfirmModal';
+
