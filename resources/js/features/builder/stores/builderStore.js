@@ -170,6 +170,7 @@ export const useBuilderStore = create((set, get) => ({
         components: components.map((c, ci) => normalizeComponent(c, ci)),
         order: index,
         styles: section.styles || {},
+        background: section.background || null,
         isLocked: section.isLocked || false,
         isHidden: section.isHidden || false,
       };
@@ -551,6 +552,20 @@ export const useBuilderStore = create((set, get) => ({
     set({ sections: newSections });
   },
 
+  updateSectionBackground: (sectionId, background) => {
+    const { sections, saveToHistory } = get();
+    saveToHistory();
+
+    const newSections = sections.map(s => {
+      if (s.id === sectionId) {
+        return { ...s, background };
+      }
+      return s;
+    });
+
+    set({ sections: newSections });
+  },
+
   // Select a component within a section. Sets both selectedSectionId and
   // selectedComponentId so that Property Panel / inspector components can
   // correctly locate the selected component via the section → component tree.
@@ -639,6 +654,7 @@ export const useBuilderStore = create((set, get) => ({
       ...section,
       id: `section-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       order: sections.length,
+      background: section.background ? JSON.parse(JSON.stringify(section.background)) : null,
       components: section.components.map(c => ({
         ...c,
         id: `component-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,

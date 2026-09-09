@@ -20,6 +20,10 @@ export const createEmptySection = (type, layout, order) => ({
   layout,
   components: [],
   order,
+  background: null,
+  styles: {},
+  isLocked: false,
+  isHidden: false,
 });
 
 export const createEmptyComponent = (componentType, index = 0) => ({

@@ -10,8 +10,8 @@ export default function Hero08({ components = [], sectionId = null }) {
   const layoutComponents = components.length > 0 ? components : defaultComponents;
 
   return (
-    <section className="py-28 px-6 bg-indigo-700 relative overflow-hidden">
-      <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_20%_50%,_#ffffff_0%,_transparent_50%)]" />
+    <section className="py-28 px-6 relative overflow-hidden">
+      <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_20%_50%,_#ffffff_0%,_transparent_50%)] pointer-events-none" />
       <div className="relative max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
         <div className="flex flex-col items-start gap-4">
           {renderLayoutComponents(layoutComponents.filter(c => c.type === 'heading' || c.type === 'text' || c.type === 'button' || c.type === 'badge'), sectionId)}
