@@ -119,6 +119,9 @@ Route::prefix('v1')->group(function (): void {
             Route::get('/current', [App\Domains\Billing\Http\Controllers\BillingController::class, 'currentPlan']);
             Route::post('/checkout', [App\Domains\Billing\Http\Controllers\BillingController::class, 'checkout']);
             Route::get('/history', [App\Domains\Billing\Http\Controllers\BillingController::class, 'history']);
+            // Status polling & failsafe activation (untuk handle kasus webhook tidak sampai / localhost)
+            Route::get('/check-order/{orderId}', [App\Domains\Billing\Http\Controllers\BillingController::class, 'checkOrderStatus']);
+            Route::post('/activate/{orderId}', [App\Domains\Billing\Http\Controllers\BillingController::class, 'manualActivate']);
         });
 
         // GET /api/v1/dashboard
@@ -141,6 +144,21 @@ Route::prefix('v1')->group(function (): void {
             Route::get('/template/{id}', [App\Domains\Onboarding\Http\Controllers\OnboardingController::class, 'getTemplate']);
             Route::post('/check-slug', [App\Domains\Onboarding\Http\Controllers\OnboardingController::class, 'checkSlug']);
             Route::post('/create', [App\Domains\Onboarding\Http\Controllers\OnboardingController::class, 'createWebsite']);
+        });
+
+        // Starter Template Access & Quota Subscription endpoints
+        Route::prefix('templates')->group(function (): void {
+            // Daftar template + flag akses (is_premium, can_use, is_activated)
+            Route::get('/', [App\Domains\Template\Http\Controllers\TemplateAccessController::class, 'index']);
+            Route::get('/{id}/check-access', [App\Domains\Template\Http\Controllers\TemplateAccessController::class, 'checkAccess']);
+            Route::post('/{id}/apply', [App\Domains\Template\Http\Controllers\TemplateAccessController::class, 'apply']);
+            Route::post('/{id}/activate', [App\Domains\Template\Http\Controllers\TemplateAccessController::class, 'activate']);
+            Route::delete('/{id}/deactivate', [App\Domains\Template\Http\Controllers\TemplateAccessController::class, 'deactivate']);
+            Route::post('/{id}/use', [App\Domains\Template\Http\Controllers\TemplateAccessController::class, 'use']);
+        });
+
+        Route::prefix('subscription')->group(function (): void {
+            Route::get('/template-quota', [App\Domains\Template\Http\Controllers\TemplateAccessController::class, 'quota']);
         });
     });
 });

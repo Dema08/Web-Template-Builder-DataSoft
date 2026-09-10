@@ -28,6 +28,7 @@ class StoreTemplateRequest extends FormRequest
             'version' => ['nullable', 'string', 'max:20'],
             'sort_order' => ['nullable', 'integer', 'min:0'],
             'is_featured' => ['boolean'],
+            'is_premium' => ['boolean'],
             'status' => ['required', Rule::in(['draft', 'published', 'archived', 'disabled'])],
         ];
     }

@@ -17,6 +17,7 @@ import {
     FileEdit,
     Ban,
     Globe,
+    Crown,
 } from 'lucide-react';
 import { Card } from '@shared/components/ui';
 import { toast } from '@store';
@@ -114,6 +115,7 @@ export default function AdminTemplates() {
             version: '1.0.0',
             sort_order: 0,
             is_featured: false,
+            is_premium: true,
             status: 'draft',
         }
     });
@@ -275,6 +277,7 @@ export default function AdminTemplates() {
                 version: template.version || '1.0.0',
                 sort_order: template.sort_order || 0,
                 is_featured: template.is_featured || false,
+                is_premium: template.is_premium ?? true,
                 status: template.status || 'draft',
             });
         } else {
@@ -314,6 +317,7 @@ export default function AdminTemplates() {
             industry_category_id: parseInt(formData.industry_category_id) || formData.industry_category_id,
             sort_order: parseInt(formData.sort_order) || 0,
             is_featured: Boolean(formData.is_featured),
+            is_premium: Boolean(formData.is_premium),
             // Only include thumbnail in payload if it's a plain URL (not a file upload)
             ...(thumbForPayload !== undefined ? { thumbnail: thumbForPayload } : {}),
         };
@@ -485,6 +489,15 @@ export default function AdminTemplates() {
                                         <span className="px-2.5 py-1 rounded-full bg-amber-500 text-white text-[10px] font-extrabold uppercase backdrop-blur-md flex items-center gap-1 shadow-xs">
                                             <Star className="h-3 w-3 fill-current" />
                                             Featured
+                                        </span>
+                                    </div>
+                                )}
+                                {tpl.is_premium && (
+                                    <div className="absolute top-12 left-3 z-20">
+                                        <span className="px-2.5 py-1 rounded-full text-white text-[10px] font-black uppercase backdrop-blur-md flex items-center gap-1 shadow-xs"
+                                            style={{ background: 'linear-gradient(135deg,#7c3aed,#4f46e5)' }}>
+                                            <Crown className="h-3 w-3" />
+                                            PRO
                                         </span>
                                     </div>
                                 )}
@@ -782,6 +795,18 @@ export default function AdminTemplates() {
                                         <option value="disabled">Disabled</option>
                                     </select>
                                 </div>
+                            </div>
+
+                            <div className="flex items-center gap-2.5">
+                                <input
+                                    type="checkbox"
+                                    {...register('is_premium')}
+                                    id="tpl-premium-check"
+                                    className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                                />
+                                <label htmlFor="tpl-premium-check" className="text-xs font-bold text-slate-700 cursor-pointer">
+                                    <span className="text-indigo-600 font-black uppercase">PRO / Premium</span> — template hanya bisa dipakai paket Starter/Unlimited (gratis user hanya Blank)
+                                </label>
                             </div>
 
                             <div className="pt-4 flex items-center justify-end gap-3 border-t border-slate-100">

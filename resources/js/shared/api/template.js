@@ -54,6 +54,18 @@ const templateApi = {
     http.post(`/admin/templates/${id}/preview`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     }),
+
+  // ── Template Gallery (auth) — daftar + flag akses ──
+  // GET /api/v1/templates → { data: [...is_premium, can_use, is_activated], quota }
+  listWithAccess: (params = {}) => http.get('/templates', { params }),
+
+  // Starter Template Quota & Access Control
+  getQuota: () => http.get('/subscription/template-quota'),
+  checkAccess: (id) => http.get(`/templates/${id}/check-access`),
+  apply: (id) => http.post(`/templates/${id}/apply`),
+  activate: (id) => http.post(`/templates/${id}/activate`),
+  deactivate: (id) => http.delete(`/templates/${id}/deactivate`),
+  useTemplate: (id) => http.post(`/templates/${id}/use`),
 };
 
 export default templateApi;

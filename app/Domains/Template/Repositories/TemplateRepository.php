@@ -159,6 +159,13 @@ class TemplateRepository implements RepositoryContract
             $query->featured();
         }
 
+        if (isset($filters['is_premium']) && $filters['is_premium'] !== '' && $filters['is_premium'] !== null) {
+            $wanted = filter_var($filters['is_premium'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+            if ($wanted !== null) {
+                $query->where('is_premium', $wanted);
+            }
+        }
+
         $sortBy = $filters['sort_by'] ?? 'sort_order';
         $sortDir = $filters['sort_dir'] ?? 'asc';
 

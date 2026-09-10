@@ -91,6 +91,27 @@ class User extends Authenticatable
     }
 
     /**
+     * Relasi riwayat penggunaan starter template pengguna.
+     */
+    public function templateUsages(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\App\Domains\Template\Models\TemplateUsage::class, 'pengguna_id');
+    }
+
+    /**
+     * Relasi many-to-many template yang sudah digunakan pengguna.
+     */
+    public function usedTemplates(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(
+            \App\Domains\Template\Models\Template::class,
+            'user_template_usage',
+            'pengguna_id',
+            'template_id'
+        )->withTimestamps();
+    }
+
+    /**
      * Ambil langganan aktif pengguna saat ini.
      */
     public function activeSubscription(): ?\App\Domains\Billing\Models\Subscription

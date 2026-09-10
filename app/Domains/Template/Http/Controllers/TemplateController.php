@@ -28,6 +28,7 @@ class TemplateController extends BaseController
             'industry_category_id' => $request->query('industry_category_id'),
             'status' => $request->query('status'),
             'is_featured' => $request->query('is_featured'),
+            'is_premium' => $request->query('is_premium'),
             'sort_by' => $request->query('sort_by', 'sort_order'),
             'sort_dir' => $request->query('sort_dir', 'asc'),
         ];

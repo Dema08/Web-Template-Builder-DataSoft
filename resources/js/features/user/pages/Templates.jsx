@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Sparkles,
@@ -12,18 +12,36 @@ import {
     ExternalLink,
     Wand2,
     X,
+    Crown,
+    Lock,
+    Plus,
+    LayoutTemplate,
 } from 'lucide-react';
 import { Card, Button } from '@shared/components/ui';
 import { ROUTES } from '@constants';
-import { toast } from '@store';
-import { useQuery } from '@tanstack/react-query';
+import { toast, useSubscriptionStore } from '@store';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { onboardingApi, templateApi } from '@api';
+import UpgradeModal from '@features/billing/components/UpgradeModal';
 
 export default function Templates() {
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [searchQuery, setSearchQuery] = useState('');
     const [previewModalTemplate, setPreviewModalTemplate] = useState(null);
+    const [usingId, setUsingId] = useState(null);
+
+    const fetchSubStatus = useSubscriptionStore((s) => s.fetchSubscriptionStatus);
+    const planName = useSubscriptionStore((s) => s.planName);
+    const usedCount = useSubscriptionStore((s) => s.usedTemplateCount);
+    const templateLimit = useSubscriptionStore((s) => s.templateLimit);
+    const isUnlimited = useSubscriptionStore((s) => s.isUnlimited);
+    const isFree = useSubscriptionStore((s) => s.isFree);
+    const usedTemplateIds = useSubscriptionStore((s) => s.usedTemplateIds);
+    const useTemplateAction = useSubscriptionStore((s) => s.useTemplate);
+
+    useEffect(() => { fetchSubStatus(); }, []);
 
     /* ─── Categories ──────────────────────────────────────────────── */
     const {
@@ -44,7 +62,7 @@ export default function Templates() {
         ...categoriesData.map((cat) => ({ id: cat.id, name: cat.name })),
     ];
 
-    /* ─── Templates ───────────────────────────────────────────────── */
+    /* ─── Templates (dengan flag akses can_use/is_activated) ─────────── */
     const {
         data: templatesData,
         isLoading: templatesApiLoading,
@@ -53,22 +71,37 @@ export default function Templates() {
         queryKey: ['user-templates', { category: selectedCategory, search: searchQuery }],
         queryFn: () =>
             templateApi
-                .getPublic({
+                .listWithAccess({
                     industry_category_id: selectedCategory !== 'all' ? selectedCategory : undefined,
                     search: searchQuery || undefined,
                 })
                 .then((res) => res.data?.data ?? res.data),
     });
 
-    const templates = (templatesData || []).map((tpl) => ({
-        id: tpl.id,
-        title: tpl.name,
-        category: tpl.industry_category_id || tpl.category_id,
-        badge: tpl.is_featured ? 'Featured' : 'Published',
-        description: tpl.description || '',
-        image: tpl.thumbnail || tpl.preview_image || null,
-        features: [],
-    }));
+    const accessList = templatesData?.data ?? templatesData ?? [];
+    const quotaInfo = templatesData?.quota ?? null;
+
+    const templates = (accessList || []).map((tpl) => {
+        const name = tpl.name || '';
+        const slug = tpl.slug || '';
+        const code = tpl.code || '';
+        const blob = `${slug} ${name} ${code}`.toLowerCase();
+        const isBlank = blob.includes('blank');
+        return {
+            id: tpl.id,
+            title: tpl.name,
+            category: tpl.industry_category_id || tpl.category_id,
+            badge: tpl.is_featured ? 'Featured' : 'Published',
+            description: tpl.description || '',
+            image: tpl.thumbnail || tpl.preview_image || null,
+            features: [],
+            is_premium: !isBlank && Boolean(tpl.is_premium),
+            is_blank: isBlank,
+            can_use: tpl.can_use !== undefined ? Boolean(tpl.can_use) : !(!isBlank && Boolean(tpl.is_premium) && isFree),
+            is_activated: Boolean(tpl.is_activated),
+            reason: tpl.reason || null,
+        };
+    });
 
     const filteredTemplates = templates.filter((tpl) => {
         const matchesCat = selectedCategory === 'all' || tpl.category === selectedCategory;
@@ -85,15 +118,40 @@ export default function Templates() {
         window.open(`/preview/template/${tpl.id}`, '_blank', 'noopener,noreferrer');
     };
 
-    /** Simpan template ID ke sessionStorage lalu arahkan ke Builder */
-    const handleUseTemplate = (tpl) => {
-        try {
-            sessionStorage.setItem('pending_template_id', String(tpl.id));
-            sessionStorage.setItem('pending_template_name', tpl.title);
-        } catch (_) {
-            // sessionStorage might not be available in some envs
+    /** Validasi akses via backend lalu muat template ke Builder */
+    const handleUseTemplate = async (tpl) => {
+        if (tpl.is_premium && !tpl.can_use) {
+            // Free tanpa akses / Starter over-quota → UpgradeModal (403 dari store)
+            await useTemplateAction(tpl.id);
+            queryClient.invalidateQueries(['user-templates']);
+            return;
         }
-        toast.success(`Memuat template "${tpl.title}" ke dalam Builder...`, 'Template Dipilih');
+        setUsingId(tpl.id);
+        try {
+            const result = await useTemplateAction(tpl.id);
+            if (!result.success) {
+                queryClient.invalidateQueries(['user-templates']);
+                return;
+            }
+            try {
+                sessionStorage.setItem('pending_template_id', String(tpl.id));
+                sessionStorage.setItem('pending_template_name', tpl.title);
+            } catch (_) { /* ignore */ }
+            toast.success(`Memuat template "${tpl.title}" ke dalam Builder...`, 'Template Dipilih');
+            navigate(ROUTES.BUILDER);
+        } finally {
+            setUsingId(null);
+        }
+    };
+
+    /** Buat website kosong (Blank Template) — selalu diizinkan semua paket */
+    const handleCreateBlank = () => {
+        try {
+            sessionStorage.removeItem('pending_template_id');
+            sessionStorage.removeItem('pending_template_name');
+            sessionStorage.setItem('blank_template_mode', '1');
+        } catch (_) { /* ignore */ }
+        toast.success('Membuka Builder dengan Template Kosong...', 'Blank Template');
         navigate(ROUTES.BUILDER);
     };
 
@@ -143,7 +201,25 @@ export default function Templates() {
                     <p className="text-sm text-[rgb(var(--color-text-secondary))] mt-1">
                         Pilih template profesional Microdata untuk membangun website perusahaan Anda.
                     </p>
+                    <p className="text-xs mt-2 font-bold text-[rgb(var(--color-text-secondary))]">
+                        Paket: <span className="text-indigo-600">{planName}</span>
+                        {isUnlimited ? (
+                            <span className="ml-1 px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 text-[10px] uppercase">Unlimited</span>
+                        ) : !isFree && typeof templateLimit === 'number' && templateLimit > 0 ? (
+                            <span className="ml-1 text-slate-500">— Kuota Template: {quotaInfo?.used_count ?? usedCount} / {quotaInfo?.limit ?? templateLimit} digunakan</span>
+                        ) : (
+                            <span className="ml-1 text-slate-500">— Free: hanya Blank Template</span>
+                        )}
+                    </p>
                 </div>
+                <button
+                    type="button"
+                    onClick={handleCreateBlank}
+                    className="shrink-0 inline-flex items-center gap-2 px-5 py-3 rounded-2xl text-sm font-bold text-white shadow-lg shadow-indigo-600/25 hover:-translate-y-0.5 transition-all"
+                    style={{ background: 'linear-gradient(135deg,#0ea5e9,#6366f1)' }}
+                >
+                    <Plus className="h-4 w-4" /> Buat Template Web Kosong
+                </button>
             </div>
 
             {/* Search Bar */}
@@ -195,6 +271,7 @@ export default function Templates() {
                             tpl={tpl}
                             onPreview={handlePreview}
                             onUseTemplate={handleUseTemplate}
+                            usingId={usingId}
                         />
                     ))}
                 </div>
@@ -209,12 +286,15 @@ export default function Templates() {
                     onUseTemplate={handleUseTemplate}
                 />
             )}
+            <UpgradeModal />
         </div>
     );
 }
 
 /* ─── Template Card ──────────────────────────────────────────────────── */
-function TemplateCard({ tpl, onPreview, onUseTemplate }) {
+function TemplateCard({ tpl, onPreview, onUseTemplate, usingId }) {
+    const locked = tpl.is_premium && !tpl.can_use;
+    const busy = usingId === tpl.id;
     return (
         <Card className="border border-[rgb(var(--color-border))] hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col group rounded-3xl">
             {/* Thumbnail / Preview Image */}
@@ -237,15 +317,26 @@ function TemplateCard({ tpl, onPreview, onUseTemplate }) {
                     <span className="text-xs font-medium">No Preview Available</span>
                 </div>
 
-                {/* Badge — only show for Featured, hide Published from user view */}
-                {tpl.badge === 'Featured' && (
-                    <div className="absolute top-3 left-3 flex items-center gap-2 z-10">
+                {/* Badge — Featured + PRO/Berbayar untuk premium */}
+                <div className="absolute top-3 left-3 flex items-center gap-2 z-10">
+                    {tpl.badge === 'Featured' && (
                         <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider backdrop-blur-md bg-amber-500 text-white">
                             <Star className="inline h-2.5 w-2.5 mr-0.5 fill-current" />
                             Featured
                         </span>
-                    </div>
-                )}
+                    )}
+                    {tpl.is_premium && (
+                        <span className="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider backdrop-blur-md text-white shadow-md" style={{ background: 'linear-gradient(135deg,#7c3aed,#4f46e5)' }}>
+                            <Crown className="inline h-2.5 w-2.5 mr-0.5" />
+                            PRO
+                        </span>
+                    )}
+                    {tpl.is_activated && (
+                        <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider backdrop-blur-md bg-emerald-500 text-white">
+                            Aktif
+                        </span>
+                    )}
+                </div>
 
                 {/* Hover Overlay — Preview & Use Template buttons */}
                 <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-200 flex items-center justify-center gap-3 p-4 z-20">
@@ -261,11 +352,12 @@ function TemplateCard({ tpl, onPreview, onUseTemplate }) {
                     <button
                         type="button"
                         onClick={() => onUseTemplate(tpl)}
-                        title="Gunakan template ini di Builder"
-                        className="px-4 py-2.5 bg-indigo-600 text-white font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-lg hover:bg-indigo-700 transition active:scale-95"
+                        disabled={busy}
+                        title={locked ? 'Template PRO — upgrade untuk mengakses' : 'Gunakan template ini di Builder'}
+                        className={`px-4 py-2.5 font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-lg transition active:scale-95 disabled:opacity-60 ${locked ? 'bg-amber-500 text-white hover:bg-amber-600' : 'bg-indigo-600 text-white hover:bg-indigo-700'}`}
                     >
-                        <Wand2 className="h-3.5 w-3.5" />
-                        Gunakan
+                        {locked ? <Lock className="h-3.5 w-3.5" /> : <Wand2 className="h-3.5 w-3.5" />}
+                        {locked ? 'Upgrade' : 'Gunakan'}
                     </button>
                 </div>
             </div>
@@ -305,11 +397,12 @@ function TemplateCard({ tpl, onPreview, onUseTemplate }) {
                     </button>
                     <Button
                         onClick={() => onUseTemplate(tpl)}
-                        className="flex-1 py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-md shadow-indigo-600/20"
+                        disabled={busy}
+                        className={`flex-1 py-2 px-4 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-md disabled:opacity-60 ${locked ? 'bg-amber-500 hover:bg-amber-600 text-white shadow-amber-500/20' : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-600/20'}`}
                         variant="primary"
                     >
-                        <Wand2 className="h-3.5 w-3.5" />
-                        <span>Gunakan Template</span>
+                        {locked ? <Lock className="h-3.5 w-3.5" /> : <Wand2 className="h-3.5 w-3.5" />}
+                        <span>{busy ? 'Memeriksa...' : locked ? 'Preview Only / Upgrade' : 'Gunakan Template'}</span>
                     </Button>
                 </div>
             </div>
@@ -319,14 +412,25 @@ function TemplateCard({ tpl, onPreview, onUseTemplate }) {
 
 /* ─── Template Detail Modal ──────────────────────────────────────────── */
 function TemplateDetailModal({ tpl, onClose, onPreview, onUseTemplate }) {
+    const locked = tpl.is_premium && !tpl.can_use;
     return (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
             <div className="bg-[rgb(var(--color-surface))] rounded-3xl max-w-2xl w-full p-6 shadow-2xl border border-[rgb(var(--color-border))] space-y-5">
                 {/* Header */}
                 <div className="flex items-start justify-between border-b border-[rgb(var(--color-border))] pb-4">
                     <div>
-                        <h3 className="text-lg font-extrabold text-[rgb(var(--color-text-primary))]">{tpl.title}</h3>
+                        <h3 className="text-lg font-extrabold text-[rgb(var(--color-text-primary))] flex items-center gap-2">
+                            {tpl.title}
+                            {tpl.is_premium && (
+                                <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase text-white" style={{ background: 'linear-gradient(135deg,#7c3aed,#4f46e5)' }}>
+                                    <Crown className="inline h-2.5 w-2.5 mr-0.5" /> PRO / Berbayar
+                                </span>
+                            )}
+                        </h3>
                         <p className="text-xs text-[rgb(var(--color-text-secondary))] mt-0.5">{tpl.description}</p>
+                        {locked && tpl.reason && (
+                            <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 mt-2">{tpl.reason}</p>
+                        )}
                     </div>
                     <button
                         type="button"
@@ -377,10 +481,10 @@ function TemplateDetailModal({ tpl, onClose, onPreview, onUseTemplate }) {
                             onClick={() => { onClose(); onUseTemplate(tpl); }}
                             variant="primary"
                             size="sm"
-                            className="text-xs flex items-center gap-1.5"
+                            className={`text-xs flex items-center gap-1.5 ${locked ? '!bg-amber-500 hover:!bg-amber-600' : ''}`}
                         >
-                            <Wand2 className="h-3.5 w-3.5" />
-                            <span>Gunakan Template Ini</span>
+                            {locked ? <Lock className="h-3.5 w-3.5" /> : <Wand2 className="h-3.5 w-3.5" />}
+                            <span>{locked ? 'Preview Only / Upgrade' : 'Gunakan Template Ini'}</span>
                         </Button>
                     </div>
                 </div>

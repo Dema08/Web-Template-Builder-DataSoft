@@ -19,9 +19,14 @@ class TemplateData
         public readonly int $sortOrder,
         public readonly bool $isActive,
         public readonly int $usageCount,
+        public readonly bool $isPremium = true,
+        public readonly bool $isPublished = true,
+        public readonly ?bool $canUse = null,
+        public readonly ?bool $isActivated = null,
+        public readonly ?string $accessReason = null,
     ) {}
 
-    public static function fromModel(Template $template): self
+    public static function fromModel(Template $template, ?array $access = null): self
     {
         return new self(
             id: $template->id,
@@ -34,8 +39,13 @@ class TemplateData
             schema: $template->schema ?? [],
             defaultContent: $template->published_json ?? $template->draft_json ?? $template->default_content,
             sortOrder: $template->sort_order,
-            isActive: $template->is_active,
-            usageCount: $template->usage_count,
+            isActive: (bool) ($template->is_active ?? $template->isPublished()),
+            usageCount: (int) ($template->usage_count ?? 0),
+            isPremium: $template->isPremium(),
+            isPublished: $template->isPublished(),
+            canUse: isset($access['allowed']) ? (bool) $access['allowed'] : null,
+            isActivated: isset($access['is_activated']) ? (bool) $access['is_activated'] : null,
+            accessReason: $access['reason'] ?? null,
         );
     }
 
@@ -54,6 +64,11 @@ class TemplateData
             'sort_order' => $this->sortOrder,
             'is_active' => $this->isActive,
             'usage_count' => $this->usageCount,
+            'is_premium' => $this->isPremium,
+            'is_published' => $this->isPublished,
+            'can_use' => $this->canUse,
+            'is_activated' => $this->isActivated,
+            'reason' => $this->accessReason,
         ];
     }
 }

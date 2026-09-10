@@ -48,10 +48,19 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+        User::updateOrCreate(
+            ['email' => 'user@datasoft.id'],
+            [
+                'name'              => 'Datasoft User',
+                'password'          => 'password123',
+                'peran'             => UserRole::User,
+                'paket_harga_id'    => $harga3Plan?->id,
+                'email_verified_at' => now(),
+                'disetujui'         => true,
+            ]
+        );
+
         // ── 4. Industry categories ───────────────────────────────────────
         $this->call(CategorySeeder::class);
-
-        // ── 5. Published System Templates ────────────────────────────────
-        $this->call(TemplateSeeder::class);
     }
 }

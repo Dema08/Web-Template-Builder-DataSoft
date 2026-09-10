@@ -44,14 +44,50 @@ export default function Builder() {
         // 1. Check if user came from Templates page with a pending template selection
         const pendingTemplateId = sessionStorage.getItem('pending_template_id');
         const pendingTemplateName = sessionStorage.getItem('pending_template_name');
+        const blankMode = sessionStorage.getItem('blank_template_mode');
+
+        // Blank Template mode — selalu diizinkan (tanpa memuat layout template manapun)
+        if (blankMode) {
+          sessionStorage.removeItem('blank_template_mode');
+          sessionStorage.removeItem('pending_template_id');
+          sessionStorage.removeItem('pending_template_name');
+          if (isMounted) {
+            loadSections([]);
+            setTemplateName('Blank Website');
+            toast.success('Builder dibuka dengan Template Kosong.', 'Blank Template');
+            await websiteApi.saveContent({ draft_json: { sections: [] } });
+            setIsLoadingContent(false);
+          }
+          return;
+        }
 
         if (pendingTemplateId) {
           sessionStorage.removeItem('pending_template_id');
           sessionStorage.removeItem('pending_template_name');
 
+          // Pengecekan akses awal: template premium tanpa hak → redirect Gallery + notifikasi
           try {
-            const res = await templateApi.getPublicById(pendingTemplateId);
-            const templateData = res.data?.data ?? res.data;
+            const accessRes = await templateApi.checkAccess(pendingTemplateId);
+            const access = accessRes.data?.data ?? accessRes.data ?? {};
+            if (access && access.allowed === false) {
+              toast.error(access.reason || 'Akses ke template ini dibatasi oleh paket langganan Anda.', 'Akses Ditolak');
+              navigate(ROUTES.TEMPLATES, { replace: true });
+              return;
+            }
+          } catch (accessErr) {
+            const msg = accessErr?.response?.data?.message;
+            if (accessErr?.response?.status === 403) {
+              toast.error(msg || 'Template ini memerlukan paket berlangganan.', 'Akses Ditolak');
+              navigate(ROUTES.TEMPLATES, { replace: true });
+              return;
+            }
+            // Non-403 (network/dll) → lanjutkan fallback normal
+          }
+
+          try {
+            const res = await templateApi.useTemplate(pendingTemplateId);
+            const payload = res.data?.data ?? res.data ?? {};
+            const templateData = payload.template ?? (await templateApi.getPublicById(pendingTemplateId).then((r) => r.data?.data ?? r.data));
 
             if (templateData && isMounted) {
               const pubSections = templateData.published_json?.sections;
@@ -74,6 +110,12 @@ export default function Builder() {
               return;
             }
           } catch (tplErr) {
+            // useTemplate 403 → akses ditolak: redirect ke Gallery
+            if (tplErr?.response?.status === 403) {
+              toast.error(tplErr?.response?.data?.message || 'Akses ke template ini dibatasi oleh paket langganan Anda.', 'Akses Ditolak');
+              navigate(ROUTES.TEMPLATES, { replace: true });
+              return;
+            }
             console.warn('Could not fetch selected template, falling back to website content:', tplErr);
           }
         }

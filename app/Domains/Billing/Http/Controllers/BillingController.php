@@ -42,6 +42,103 @@ class BillingController extends BaseController
     }
 
     /**
+     * Check & sync the latest status of a specific transaction from Midtrans Core API.
+     * Useful for polling from frontend when webhook is delayed (especially localhost).
+     * Sekaligus healing: jika transaksi sudah PAID tapi langganan belum aktif,
+     * subscription akan dibuat/diperbaiki di sini.
+     * GET /api/v1/billing/check-order/{orderId}
+     */
+    public function checkOrderStatus(Request $request, string $orderId): JsonResponse
+    {
+        $user = $request->user();
+        $transaction = \App\Domains\Billing\Models\Transaction::where('order_id', $orderId)
+            ->where('pengguna_id', $user->id)
+            ->first();
+
+        if (!$transaction) {
+            return $this->error('Transaksi tidak ditemukan.', 404);
+        }
+
+        // Simpan status lama sebagai string untuk perbandingan yang benar (enum vs enum).
+        $oldStatus = $transaction->status instanceof \BackedEnum
+            ? $transaction->status->value
+            : (string) $transaction->status;
+
+        try {
+            $updated = $this->billingService->checkOrderStatus($orderId);
+
+            $newStatus = $updated->status instanceof \BackedEnum
+                ? $updated->status->value
+                : (string) $updated->status;
+
+            // If now paid, refresh user's plan info
+            $user->refresh();
+            $user->load('pricelist', 'subscriptions');
+            $effectivePlan = $user->effective_pricelist;
+            $activeSub = $user->activeSubscription();
+
+            return $this->success([
+                'transaction' => new TransactionResource($updated),
+                'current_plan' => new PricelistResource($effectivePlan),
+                'subscription' => $activeSub ? new SubscriptionResource($activeSub) : null,
+                'status_changed' => $newStatus !== $oldStatus,
+            ], 'Status transaksi berhasil diperbarui dari Midtrans.');
+        } catch (\Throwable $e) {
+            return $this->error('Gagal memverifikasi status pembayaran: ' . $e->getMessage(), 500);
+        }
+    }
+
+    /**
+     * Manually activate subscription for a paid order (failsafe endpoint).
+     * Healing: jika transaksi sudah PAID tapi subscription belum ada / plan user
+     * belum terupdate, endpoint ini akan memperbaikinya secara idempotent.
+     * POST /api/v1/billing/activate/{orderId}
+     */
+    public function manualActivate(Request $request, string $orderId): JsonResponse
+    {
+        $user = $request->user();
+        $transaction = \App\Domains\Billing\Models\Transaction::where('order_id', $orderId)
+            ->where('pengguna_id', $user->id)
+            ->with(['pricelist', 'user'])
+            ->first();
+
+        if (!$transaction) {
+            return $this->error('Transaksi tidak ditemukan.', 404);
+        }
+
+        if ($transaction->status !== \App\Domains\Billing\Enums\TransactionStatus::Paid) {
+            // Try to sync from Midtrans first
+            try {
+                $transaction = $this->billingService->checkOrderStatus($orderId);
+            } catch (\Throwable $e) {
+                // ignore — akan ditangani pengecekan di bawah
+            }
+
+            if ($transaction->status !== \App\Domains\Billing\Enums\TransactionStatus::Paid) {
+                return $this->error('Pembayaran belum selesai atau belum terverifikasi oleh Midtrans.', 400);
+            }
+        }
+
+        // Force heal: pastikan subscription aktif + paket user sesuai transaksi ini.
+        // Idempotent — tidak membuat duplikat jika subscription sudah ada.
+        $this->billingService->ensureSubscriptionActivated(
+            $transaction->fresh(['user', 'pricelist'])
+        );
+
+        // Force re-activate subscription for this transaction
+        $user->refresh();
+        $user->load('pricelist', 'subscriptions');
+        $effectivePlan = $user->effective_pricelist;
+        $activeSub = $user->activeSubscription();
+
+        return $this->success([
+            'transaction' => new TransactionResource($transaction->fresh(['user', 'pricelist'])),
+            'current_plan' => new PricelistResource($effectivePlan),
+            'subscription' => $activeSub ? new SubscriptionResource($activeSub) : null,
+        ], 'Paket langganan berhasil diperbarui.');
+    }
+
+    /**
      * Initiate checkout transaction and obtain Midtrans Snap Token.
      * POST /api/v1/billing/checkout
      */

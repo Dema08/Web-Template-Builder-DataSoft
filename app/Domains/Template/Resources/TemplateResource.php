@@ -29,6 +29,8 @@ class TemplateResource extends JsonResource
             'version'       => $this->version,
             'sort_order'   => $this->sort_order,
             'is_featured'  => $this->is_featured,
+            'is_premium'   => method_exists($this->resource, 'isPremium') ? $this->resource->isPremium() : (bool) ($this->is_premium ?? false),
+            'is_published' => method_exists($this->resource, 'isPublished') ? $this->resource->isPublished() : (($this->status?->value ?? $this->status) === 'published'),
             'status'       => $this->status?->value ?? $this->status,
             'status_label' => $this->status?->label() ?? $this->status,
             'is_active'    => $this->is_active ?? ($this->status?->value === 'published'),

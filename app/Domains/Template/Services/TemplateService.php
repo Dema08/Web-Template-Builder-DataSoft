@@ -150,6 +150,7 @@ class TemplateService extends BaseService
         $newTemplate->status = TemplateStatus::Draft;
         $newTemplate->version = '1.0.0';
         $newTemplate->is_featured = false;
+        $newTemplate->is_premium = $template->is_premium ?? false;
         $newTemplate->usage_count = 0;
         $newTemplate->created_by = $creator->id;
         $newTemplate->updated_by = $creator->id;

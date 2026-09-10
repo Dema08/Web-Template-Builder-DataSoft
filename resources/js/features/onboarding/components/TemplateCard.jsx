@@ -1,16 +1,33 @@
-import { Eye } from 'lucide-react';
+import { Crown, Eye, Lock } from 'lucide-react';
 import { Card } from '@shared/components/ui';
 import { useOnboardingStore } from '@features/onboarding/stores/onboardingStore';
+import { useSubscriptionStore } from '@store';
 
 export default function TemplateCard({ template }) {
     const selectedTemplateId = useOnboardingStore((state) => state.selectedTemplateId);
     const setSelectedTemplateId = useOnboardingStore((state) => state.setSelectedTemplateId);
     const setTemplatePreview = useOnboardingStore((state) => state.setTemplatePreview);
     const setCurrentStep = useOnboardingStore((state) => state.setCurrentStep);
+    const openUpgradeModal = useSubscriptionStore((s) => s.openUpgradeModal);
+    const canUseStore = useSubscriptionStore((s) => s.canUseTemplate);
 
     const isSelected = selectedTemplateId === template.id;
+    const blob = `${template.slug ?? ''} ${template.name ?? ''}`.toLowerCase();
+    const isBlank = blob.includes('blank');
+    const isPremium = !isBlank && (template.is_premium ?? true);
+    const canUse = template.can_use !== undefined ? Boolean(template.can_use) : canUseStore(template.id, isBlank);
+    const locked = isPremium && !canUse;
 
     const handleClick = () => {
+        if (locked) {
+            openUpgradeModal({
+                title: 'Template ini memerlukan paket berlangganan',
+                message: template.reason || 'Silakan upgrade untuk mengakses template premium ini.',
+                reason: template.reason || '',
+                targetPlan: 'starter',
+            });
+            return;
+        }
         setSelectedTemplateId(template.id);
     };
 
@@ -43,6 +60,16 @@ export default function TemplateCard({ template }) {
                     <div className="w-full h-full flex items-center justify-center text-slate-400">
                         <span className="text-xs">No preview</span>
                     </div>
+                )}
+                {isPremium && (
+                    <span className="absolute top-2 left-2 px-2 py-0.5 rounded-full text-[10px] font-black uppercase text-white shadow" style={{ background: 'linear-gradient(135deg,#7c3aed,#4f46e5)' }}>
+                        <Crown className="inline h-2.5 w-2.5 mr-0.5" /> PRO
+                    </span>
+                )}
+                {locked && (
+                    <span className="absolute inset-0 bg-slate-900/40 flex items-center justify-center">
+                        <Lock className="h-6 w-6 text-white" />
+                    </span>
                 )}
                 <button
                     type="button"

@@ -27,7 +27,7 @@ class OnboardingController extends BaseController
         $skip = (int) $request->query('skip', 0);
         $take = (int) $request->query('take', 20);
 
-        $result = $this->onboardingService->getTemplatesByCategory($categoryId, $skip, $take);
+        $result = $this->onboardingService->getTemplatesByCategory($categoryId, $skip, $take, $request->user());
 
         return ApiResponse::success([
             'data' => $result['data'],

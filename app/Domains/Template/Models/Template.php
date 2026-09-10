@@ -51,6 +51,7 @@ class Template extends Model
         'version',
         'sort_order',
         'is_featured',
+        'is_premium',
         'status',
         'created_by',
         'updated_by',
@@ -65,6 +66,7 @@ class Template extends Model
         'draft_json'     => 'array',
         'published_json' => 'array',
         'is_featured'    => 'boolean',
+        'is_premium'     => 'boolean',
         'sort_order'     => 'integer',
         'status'         => TemplateStatus::class,
     ];
@@ -161,6 +163,14 @@ class Template extends Model
         return $this->belongsTo(User::class, 'updated_by');
     }
 
+    /**
+     * Riwayat penggunaan template ini oleh para pengguna.
+     */
+    public function usages(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(TemplateUsage::class, 'template_id');
+    }
+
     // ------------------------------------------------------------------
     // Scopes
     // ------------------------------------------------------------------
@@ -216,5 +226,26 @@ class Template extends Model
         return str_contains(strtolower($this->slug ?? ''), 'blank')
             || str_contains(strtolower($this->name ?? ''), 'blank')
             || str_contains(strtolower($this->code ?? ''), 'blank');
+    }
+
+    /**
+     * Apakah template ini premium (PRO/Berbayar).
+     * Blank template tidak pernah dianggap premium walau flag-nya true.
+     */
+    public function isPremium(): bool
+    {
+        if ($this->isBlankTemplate()) {
+            return false;
+        }
+
+        return (bool) ($this->is_premium ?? false);
+    }
+
+    /**
+     * Turunan is_published dari kolom status (tanpa kolom DB terpisah).
+     */
+    public function isPublishedFlag(): bool
+    {
+        return $this->isPublished();
     }
 }

@@ -57,6 +57,26 @@ const billingApi = {
         });
         return data;
     },
+
+    /**
+     * Poll Midtrans Core API for latest transaction status.
+     * GET /api/v1/billing/check-order/{orderId}
+     * @param {string} orderId
+     */
+    async checkOrderStatus(orderId) {
+        const { data } = await http.get(`/billing/check-order/${orderId}`);
+        return data.data;
+    },
+
+    /**
+     * Failsafe manual activation — force sync & activate subscription for a paid order.
+     * POST /api/v1/billing/activate/{orderId}
+     * @param {string} orderId
+     */
+    async manualActivate(orderId) {
+        const { data } = await http.post(`/billing/activate/${orderId}`);
+        return data.data;
+    },
 };
 
 export default billingApi;

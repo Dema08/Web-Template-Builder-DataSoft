@@ -30,12 +30,33 @@ class OnboardingService
         }, $categories);
     }
 
-    public function getTemplatesByCategory(int $categoryId, int $skip = 0, int $take = 20): array
+    public function getTemplatesByCategory(int $categoryId, int $skip = 0, int $take = 20, ?User $user = null): array
     {
         $paginator = $this->templateRepository->getAllActiveByCategory($categoryId, $skip, $take);
 
+        $accessMap = [];
+        if ($user) {
+            try {
+                $accessMap = app(\App\Domains\Template\Services\TemplateAccessService::class)
+                    ->mapAccessForTemplates($user, $paginator->getCollection());
+            } catch (\Throwable $e) {
+                $accessMap = [];
+            }
+        }
+
         return [
-            'data' => $paginator->getCollection()->map(fn (Template $template) => TemplateData::fromModel($template)->toArray())->all(),
+            'data' => $paginator->getCollection()->map(function (Template $template) use ($accessMap) {
+                $access = $accessMap[$template->id] ?? null;
+                if ($access) {
+                    $access = [
+                        'allowed' => $access['can_use'] ?? true,
+                        'is_activated' => $access['is_activated'] ?? false,
+                        'reason' => $access['reason'] ?? null,
+                    ];
+                }
+
+                return TemplateData::fromModel($template, $access)->toArray();
+            })->all(),
             'meta' => [
                 'total' => $paginator->total(),
                 'per_page' => $paginator->perPage(),
@@ -49,7 +70,7 @@ class OnboardingService
     {
         $template = $this->templateRepository->findById($id);
 
-        if (!$template || !$template->is_active) {
+        if (!$template || !$template->isPublished()) {
             return null;
         }
 
@@ -102,11 +123,14 @@ class OnboardingService
             abort(422, 'Selected template is not available.');
         }
 
-        // Validate plan starter template limit (Free users can only use Blank Template)
+        // Validasi hak akses template berdasarkan paket (Policy terpusat).
+        // Free (limit 0) hanya Blank; Starter dibatasi kuota N; Unlimited bebas.
+        // Blank template + template non-premium selalu lolos.
         if (!$user->isAdmin()) {
-            $plan = $user->effective_pricelist;
-            if (!$template->isBlankTemplate() && $plan->maks_starter_template === 0) {
-                abort(403, "Paket Anda ('{$plan->nama}') hanya dapat menggunakan Blank Template. Silakan tingkatkan paket Anda (Harga 1, 2, atau 3) untuk mengakses Starter Template ini.");
+            $accessService = app(\App\Domains\Template\Services\TemplateAccessService::class);
+            $access = $accessService->canUseTemplate($user, $template);
+            if (!($access['allowed'] ?? false)) {
+                abort(403, $access['reason'] ?? 'Akses ke template ini dibatasi oleh paket langganan Anda.');
             }
         }
 
@@ -152,6 +176,14 @@ class OnboardingService
         ]);
 
         $this->templateRepository->incrementUsageCount($template);
+
+        // Catat template premium ke kuota user (dipakai untuk batas Starter N).
+        try {
+            app(\App\Domains\Template\Services\TemplateAccessService::class)
+                ->applyTemplate($user, $template);
+        } catch (\Throwable $e) {
+            // Abaikan — akses sudah lolos di atas; pencatatan bersifat best-effort.
+        }
 
         return WebsiteData::fromModel($website);
     }

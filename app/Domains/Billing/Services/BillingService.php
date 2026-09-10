@@ -108,10 +108,13 @@ class BillingService
             throw new \InvalidArgumentException('Nominal pembayaran tidak sesuai dengan pesanan.');
         }
 
-        // 3. Idempotency Check: if transaction is ALREADY paid, return directly without processing twice
+        // 3. Idempotency Check: if transaction is ALREADY paid, heal subscription if missing
+        // then return directly without processing twice
         if ($transaction->status === TransactionStatus::Paid) {
             Log::info('Midtrans Webhook: Idempotent skip - Transaction already paid', ['order_id' => $orderId]);
-            return $transaction;
+            $healed = $transaction->load(['user', 'pricelist']);
+            $this->ensureSubscriptionActivated($healed);
+            return $healed->fresh(['user', 'pricelist']);
         }
 
         // 4. Map status
@@ -124,6 +127,9 @@ class BillingService
 
         // DB Transaction for atomic update
         return DB::transaction(function () use ($transaction, $newStatus, $paymentType, $payload) {
+            // Reload relations before update
+            $transaction->load(['user', 'pricelist']);
+
             $transaction->update([
                 'status' => $newStatus,
                 'metode_pembayaran' => $paymentType,
@@ -133,11 +139,115 @@ class BillingService
 
             // If settlement/capture -> Activate Subscription & Update User Plan
             if ($newStatus === TransactionStatus::Paid) {
-                $this->activateSubscription($transaction);
+                $freshTx = $transaction->fresh(['user', 'pricelist']);
+                $this->activateSubscription($freshTx);
             }
 
             return $transaction->fresh(['user', 'pricelist']);
         });
+    }
+
+    /**
+     * Query Midtrans directly to check the latest status of a transaction order.
+     * Used for manual refresh / polling from frontend when webhook is delayed.
+     *
+     * @param string $orderId
+     * @return Transaction
+     */
+    public function checkOrderStatus(string $orderId): Transaction
+    {
+        $transaction = Transaction::where('order_id', $orderId)->firstOrFail();
+
+        // If already paid, heal subscription if missing (webhook pernah sukses
+        // tapi aktivasi langganan gagal / belum jalan), then return.
+        if ($transaction->status === TransactionStatus::Paid) {
+            $healed = $transaction->load(['user', 'pricelist']);
+            $this->ensureSubscriptionActivated($healed);
+            return $healed->fresh(['user', 'pricelist']);
+        }
+
+        // Query Midtrans Status API
+        $midtransStatus = $this->midtransService->queryTransactionStatus($orderId);
+
+        if (!$midtransStatus) {
+            // Cannot reach Midtrans, return current status
+            return $transaction->load(['user', 'pricelist']);
+        }
+
+        $newStatus = $this->midtransService->mapMidtransStatus(
+            $midtransStatus['transaction_status'] ?? 'pending',
+            $midtransStatus['fraud_status'] ?? null
+        );
+
+        if ($newStatus === $transaction->status) {
+            return $transaction->load(['user', 'pricelist']);
+        }
+
+        return DB::transaction(function () use ($transaction, $newStatus, $midtransStatus) {
+            $transaction->load(['user', 'pricelist']);
+            $transaction->update([
+                'status' => $newStatus,
+                'metode_pembayaran' => $midtransStatus['payment_type'] ?? $transaction->metode_pembayaran,
+                'payload_midtrans' => $midtransStatus,
+                'paid_at' => $newStatus === TransactionStatus::Paid ? now() : $transaction->paid_at,
+            ]);
+
+            if ($newStatus === TransactionStatus::Paid) {
+                $freshTx = $transaction->fresh(['user', 'pricelist']);
+                $this->activateSubscription($freshTx);
+            }
+
+            return $transaction->fresh(['user', 'pricelist']);
+        });
+    }
+
+    /**
+     * Ensure a paid transaction actually has an active subscription + correct user plan.
+     * Healing untuk kasus: transaksi sudah PAID (webhook / check-order sukses)
+     * tapi subscription belum terbentuk atau paket user belum terupdate
+     * (misal webhook double, aktivasi gagal di tengah jalan, dsb).
+     * Idempotent: tidak membuat duplikat jika sudah ada subscription aktif
+     * untuk transaksi ini.
+     *
+     * @param Transaction $transaction
+     */
+    public function ensureSubscriptionActivated(Transaction $transaction): void
+    {
+        if ($transaction->status !== TransactionStatus::Paid) {
+            return;
+        }
+
+        if (!$transaction->relationLoaded('user') || !$transaction->user) {
+            $transaction->load(['user', 'pricelist']);
+        }
+
+        $user = $transaction->user;
+        $pricelist = $transaction->pricelist;
+
+        if (!$user || !$pricelist) {
+            return;
+        }
+
+        // Sudah ada subscription aktif untuk transaksi ini -> cukup pastikan plan user benar.
+        $existing = Subscription::where('transaction_id', $transaction->id)
+            ->where('pengguna_id', $user->id)
+            ->where('status', SubscriptionStatus::Active)
+            ->where(function ($q) {
+                $q->whereNull('expired_at')->orWhere('expired_at', '>', now());
+            })
+            ->first();
+
+        if ($existing) {
+            if ((int) $user->paket_harga_id !== (int) $pricelist->id || !$user->disetujui) {
+                $user->update([
+                    'paket_harga_id' => $pricelist->id,
+                    'disetujui' => true,
+                ]);
+            }
+            return;
+        }
+
+        $this->activateSubscription($transaction->fresh(['user', 'pricelist']));
     }
 
     /**
@@ -147,6 +257,11 @@ class BillingService
      */
     protected function activateSubscription(Transaction $transaction): void
     {
+        // Ensure relations are loaded (critical!)
+        if (!$transaction->relationLoaded('user') || !$transaction->user) {
+            $transaction->load(['user', 'pricelist']);
+        }
+
         $user = $transaction->user;
         $pricelist = $transaction->pricelist;
 
@@ -178,6 +293,12 @@ class BillingService
         $user->update([
             'paket_harga_id' => $pricelist->id,
             'disetujui' => true,
+        ]);
+
+        Log::info('Subscription activated', [
+            'user_id' => $user->id,
+            'plan' => $pricelist->slug,
+            'transaction_id' => $transaction->id,
         ]);
     }
 

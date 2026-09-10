@@ -30,6 +30,7 @@ class UpdateTemplateRequest extends FormRequest
             'version'              => ['nullable', 'string', 'max:20'],
             'sort_order'           => ['nullable', 'integer', 'min:0'],
             'is_featured'          => ['boolean'],
+            'is_premium'           => ['boolean'],
             'status'               => ['sometimes', Rule::in(['draft', 'published', 'archived', 'disabled'])],
         ];
     }

@@ -11,7 +11,7 @@ class TemplateRepository implements TemplateRepositoryInterface
     public function getAllActiveByCategory(int $categoryId, int $skip = 0, int $take = 20): LengthAwarePaginator
     {
         return Template::where('category_id', $categoryId)
-            ->where('is_active', true)
+            ->where('status', 'published')
             ->orderBy('sort_order')
             ->orderBy('name')
             ->skip($skip)

@@ -143,4 +143,45 @@ class MidtransService
             default => TransactionStatus::Pending,
         };
     }
+
+    /**
+     * Query Midtrans Core API for real-time transaction status.
+     * Used for manual status check when webhook has not been received yet.
+     *
+     * @param string $orderId
+     * @return array|null
+     */
+    public function queryTransactionStatus(string $orderId): ?array
+    {
+        $coreApiUrl = $this->isProduction
+            ? "https://api.midtrans.com/v2/{$orderId}/status"
+            : "https://api.sandbox.midtrans.com/v2/{$orderId}/status";
+
+        try {
+            $response = Http::withBasicAuth($this->serverKey, '')
+                ->withHeaders([
+                    'Accept' => 'application/json',
+                    'Content-Type' => 'application/json',
+                ])
+                ->get($coreApiUrl);
+
+            if (!$response->successful()) {
+                Log::warning('Midtrans query transaction status failed', [
+                    'order_id' => $orderId,
+                    'status' => $response->status(),
+                    'body' => $response->body(),
+                ]);
+                return null;
+            }
+
+            return $response->json();
+        } catch (\Throwable $e) {
+            Log::error('Midtrans queryTransactionStatus exception', [
+                'order_id' => $orderId,
+                'error' => $e->getMessage(),
+            ]);
+            return null;
+        }
+    }
 }
+

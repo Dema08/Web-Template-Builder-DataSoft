@@ -5,7 +5,8 @@ import {
     Loader2, X, ChevronRight, ChevronLeft, Sparkles, Grid3X3,
     List, SlidersHorizontal, Rocket, Tag, Home, ShoppingBag,
     Users, Landmark, GraduationCap, Utensils, Building2,
-    HeartHandshake, Factory, Layers, Truck, Stethoscope, Hotel
+    HeartHandshake, Factory, Layers, Truck, Stethoscope, Hotel,
+    Crown
 } from 'lucide-react';
 import { ROUTES } from '@constants';
 import { templateApi } from '@api';
@@ -186,6 +187,14 @@ function TemplateCard({ tpl, onSelect, viewMode }) {
     const categoryName = tpl.industry_category?.name || 'General';
     const imageUrl = tpl.thumbnail || tpl.preview_image
         || 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&auto=format&fit=crop&q=80';
+    const isPremium = Boolean(tpl.is_premium) && !String(tpl.slug || tpl.name || '').toLowerCase().includes('blank');
+
+    const proBadge = (
+        <span className="px-2 py-0.5 rounded-full text-[10px] font-black text-white shadow-md"
+              style={{ background: 'linear-gradient(135deg,#7c3aed,#4f46e5)' }}>
+            <Crown className="inline h-2.5 w-2.5 mr-0.5" /> PRO
+        </span>
+    );
 
     if (viewMode === 'list') {
         return (
@@ -201,6 +210,7 @@ function TemplateCard({ tpl, onSelect, viewMode }) {
                               style={{ background: 'linear-gradient(135deg,#7c3aed,#4f46e5)' }}>
                             {categoryName}
                         </span>
+                        {isPremium && proBadge}
                         {tpl.code && <span className="text-[10px] font-bold text-purple-500">{tpl.code}</span>}
                     </div>
                     <h3 className="text-sm font-extrabold text-slate-900 group-hover:text-purple-600 transition-colors truncate">{tpl.name}</h3>
@@ -226,8 +236,9 @@ function TemplateCard({ tpl, onSelect, viewMode }) {
                     </span>
                 </div>
                 {/* Category badge */}
-                <div className="absolute top-3 left-3 z-10">
-                    <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold text-white shadow-md backdrop-blur-md"
+                <div className="absolute top-3 left-3 z-10 space-y-1.5">
+                    {isPremium && proBadge}
+                    <span className="block px-2.5 py-1 rounded-full text-[10px] font-extrabold text-white shadow-md backdrop-blur-md"
                           style={{ background: 'linear-gradient(135deg,#7c3aed,#4f46e5)' }}>
                         {categoryName}
                     </span>
@@ -280,6 +291,12 @@ function TemplateModal({ tpl, onClose, onEdit }) {
                         <X className="h-5 w-5" />
                     </button>
                     <div className="absolute top-4 left-4 flex items-center gap-2">
+                        {Boolean(tpl.is_premium) && !String(tpl.slug || tpl.name || '').toLowerCase().includes('blank') && (
+                            <span className="px-2.5 py-1 rounded-full text-[10px] font-black text-white shadow-md"
+                                  style={{ background: 'linear-gradient(135deg,#4f46e5,#9333ea)' }}>
+                                <Crown className="inline h-2.5 w-2.5 mr-0.5" /> PRO / Berbayar
+                            </span>
+                        )}
                         <span className="px-3 py-1 rounded-full text-xs font-extrabold text-white shadow-md"
                               style={{ background: 'linear-gradient(135deg,#7c3aed,#4f46e5)' }}>
                             {tpl.industry_category?.name || 'Umum'}

@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Camera, Trash2, Shield, Globe } from 'lucide-react';
+import { Camera, Trash2, Shield, Globe, Crown, LayoutTemplate, X } from 'lucide-react';
 import { Card, Input, Button, Alert, Spinner } from '@shared/components/ui';
 import { useProfile, useWebsite } from '@hooks';
-import { useAuthStore, useSettingsStore } from '@store';
+import { useAuthStore, useSettingsStore, useSubscriptionStore, toast } from '@store';
+import { templateApi } from '@api';
 
 const normalizeApiErrors = (error, form) => {
     const fieldErrors = error?.response?.data?.errors;
@@ -191,6 +192,9 @@ export default function Profile() {
                             <p className="text-[10px] text-[rgb(var(--color-text-secondary))] ml-6">Status: {websiteSummary.status}</p>
                         </div>
                     </div>
+
+                    {/* Subscription Quota */}
+                    <SubscriptionQuotaPanel />
                 </Card>
 
                 {/* Forms */}
@@ -255,6 +259,90 @@ export default function Profile() {
                     </Card>
                 </div>
             </div>
+        </div>
+    );
+}
+
+/**
+ * Panel kuota Starter di Profile: "Kuota Template: 3 / 5 digunakan"
+ * + daftar template yang dipakai + opsi ganti (hapus lalu tambah dari Gallery).
+ */
+function SubscriptionQuotaPanel() {
+    const fetchStatus = useSubscriptionStore((s) => s.fetchSubscriptionStatus);
+    const planName = useSubscriptionStore((s) => s.planName);
+    const usedCount = useSubscriptionStore((s) => s.usedTemplateCount);
+    const limit = useSubscriptionStore((s) => s.templateLimit);
+    const isUnlimited = useSubscriptionStore((s) => s.isUnlimited);
+    const isFree = useSubscriptionStore((s) => s.isFree);
+    const usedIds = useSubscriptionStore((s) => s.usedTemplateIds);
+    const deactivate = useSubscriptionStore((s) => s.deactivateTemplate);
+    const [names, setNames] = useState({});
+    const [removingId, setRemovingId] = useState(null);
+
+    useEffect(() => { fetchStatus(); }, []);
+
+    useEffect(() => {
+        let alive = true;
+        (async () => {
+            const map = {};
+            for (const id of usedIds.slice(0, 20)) {
+                try {
+                    const res = await templateApi.getPublicById(id);
+                    const d = res.data?.data ?? res.data ?? {};
+                    if (d?.name) map[id] = d.name;
+                } catch { /* abaikan */ }
+            }
+            if (alive) setNames(map);
+        })();
+        return () => { alive = false; };
+    }, [usedIds.join(',')]);
+
+    const pct = isUnlimited ? 100 : (typeof limit === 'number' && limit > 0 ? Math.min(100, (usedCount / limit) * 100) : 0);
+
+    return (
+        <div className="mt-4 pt-4 border-t border-[rgb(var(--color-border))]">
+            <h4 className="text-xs font-extrabold text-[rgb(var(--color-text-primary))] uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                <Crown className="h-3.5 w-3.5 text-amber-500" /> Langganan & Kuota Template
+            </h4>
+            <p className="text-xs font-bold text-[rgb(var(--color-text-primary))]">Paket: <span className="text-indigo-600">{planName}</span></p>
+            {isUnlimited ? (
+                <p className="text-[11px] text-emerald-600 font-bold mt-1">Unlimited — semua template premium bebas digunakan.</p>
+            ) : isFree ? (
+                <p className="text-[11px] text-slate-500 mt-1">Free — hanya Blank Template. Upgrade untuk membuka template PRO.</p>
+            ) : (
+                <>
+                    <p className="text-[11px] text-[rgb(var(--color-text-secondary))] mt-1 font-bold">Kuota Template: {usedCount} / {limit} digunakan</p>
+                    <div className="h-2 rounded-full bg-slate-100 mt-2 overflow-hidden">
+                        <div className="h-full rounded-full transition-all" style={{ width: `${pct}%`, background: 'linear-gradient(90deg,#7c3aed,#4f46e5)' }} />
+                    </div>
+                </>
+            )}
+            {!isFree && !isUnlimited && usedIds.length > 0 && (
+                <div className="mt-3 space-y-1.5">
+                    {usedIds.map((id) => (
+                        <div key={id} className="flex items-center justify-between gap-2 rounded-xl border border-[rgb(var(--color-border))] px-2.5 py-1.5">
+                            <span className="text-[11px] font-bold text-[rgb(var(--color-text-primary))] flex items-center gap-1.5 truncate">
+                                <LayoutTemplate className="h-3 w-3 text-indigo-500 shrink-0" />
+                                <span className="truncate">{names[id] || `Template #${id}`}</span>
+                            </span>
+                            <button
+                                type="button"
+                                disabled={removingId === id}
+                                onClick={async () => {
+                                    setRemovingId(id);
+                                    await deactivate(id);
+                                    setRemovingId(null);
+                                }}
+                                className="p-1 rounded-lg text-red-500 hover:bg-red-50 disabled:opacity-50"
+                                title="Hapus dari pilihan (kuota kembali)"
+                            >
+                                <X className="h-3.5 w-3.5" />
+                            </button>
+                        </div>
+                    ))}
+                    <p className="text-[10px] text-slate-400">Hapus salah satu untuk memberi ruang bagi template baru (maks {limit}).</p>
+                </div>
+            )}
         </div>
     );
 }

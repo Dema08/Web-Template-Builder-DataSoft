@@ -24,6 +24,7 @@ import { QUERY_KEYS } from '@constants';
 export default function BillingPage() {
     const [page, setPage] = useState(1);
     const [checkoutPlanId, setCheckoutPlanId] = useState(null);
+    const [verifyingOrderId, setVerifyingOrderId] = useState(null);
     const queryClient = useQueryClient();
 
     // Fetch current plan & active subscription info
@@ -74,19 +75,53 @@ export default function BillingPage() {
             // Load Snap JS script dynamically if not loaded yet
             loadMidtransSnapScript(snapJsUrl, clientKey, () => {
                 if (window.snap) {
+                    const orderId = payload?.order_id;
+                    const verifyAndRefresh = async (source) => {
+                        try {
+                            // 1) Coba sinkron status terbaru dari Midtrans (webhook di localhost sering telat)
+                            if (orderId) {
+                                await billingApi.checkOrderStatus(orderId);
+                            }
+                        } catch (e) {
+                            // Abaikan — fallback ke failsafe activation di bawah
+                        }
+                        try {
+                            // 2) Failsafe: pastikan subscription aktif walau webhook belum sampai
+                            if (orderId) {
+                                await billingApi.manualActivate(orderId);
+                            }
+                        } catch (e) {
+                            // Abaikan — status history tetap di-refresh agar user tahu kondisi real
+                        }
+                        queryClient.invalidateQueries([QUERY_KEYS.BILLING_CURRENT]);
+                        queryClient.invalidateQueries([QUERY_KEYS.BILLING_HISTORY]);
+                        queryClient.invalidateQueries([QUERY_KEYS.USER]);
+                        setCheckoutPlanId(null);
+                        return orderId;
+                    };
+
                     window.snap.pay(snapToken, {
-                        onSuccess: (result) => {
-                            toast.success('Pembayaran berhasil! Paket baru Anda telah diaktifkan.', 'Pembayaran Sukses');
-                            queryClient.invalidateQueries([QUERY_KEYS.BILLING_CURRENT]);
-                            queryClient.invalidateQueries([QUERY_KEYS.BILLING_HISTORY]);
-                            queryClient.invalidateQueries([QUERY_KEYS.USER]);
-                            setCheckoutPlanId(null);
+                        onSuccess: async (result) => {
+                            const verifiedOrderId = result?.order_id || orderId;
+                            await verifyAndRefresh('success');
+                            toast.success(
+                                verifiedOrderId
+                                    ? `Pembayaran ${verifiedOrderId} berhasil diverifikasi! Paket baru Anda telah diaktifkan.`
+                                    : 'Pembayaran berhasil diverifikasi! Paket baru Anda telah diaktifkan.',
+                                'Pembayaran Sukses'
+                            );
                         },
-                        onPending: (result) => {
-                            toast.info('Pembayaran sedang diproses. Silakan selesaikan tagihan Anda.', 'Menunggu Pembayaran');
+                        onPending: async (result) => {
+                            const pendingOrderId = result?.order_id || orderId;
                             queryClient.invalidateQueries([QUERY_KEYS.BILLING_CURRENT]);
                             queryClient.invalidateQueries([QUERY_KEYS.BILLING_HISTORY]);
                             setCheckoutPlanId(null);
+                            toast.info(
+                                pendingOrderId
+                                    ? `Menunggu pembayaran ${pendingOrderId}. Status akan otomatis terupdate setelah Anda membayar — klik "Cek Status" / "Aktifkan Paket" pada riwayat jika masih pending.`
+                                    : 'Pembayaran sedang diproses. Silakan selesaikan tagihan Anda.',
+                                'Menunggu Pembayaran'
+                            );
                         },
                         onError: (result) => {
                             toast.error('Pembayaran gagal atau ditolak. Silakan coba kembali.', 'Pembayaran Gagal');
@@ -336,7 +371,7 @@ export default function BillingPage() {
                             Riwayat Transaksi & Invoice
                         </h2>
                         <p className="text-xs text-[rgb(var(--color-text-secondary))] mt-0.5">
-                            Daftar tagihan dan status pembayaran langganan Anda.
+                            Daftar tagihan dan status pembayaran langganan Anda. Jika status masih Pending padahal sudah membayar, klik Cek lalu Aktifkan pada baris transaksi.
                         </p>
                     </div>
                     <button
@@ -372,6 +407,7 @@ export default function BillingPage() {
                                         <th className="py-3.5 px-4">Metode</th>
                                         <th className="py-3.5 px-4">Status</th>
                                         <th className="py-3.5 px-4">Tanggal</th>
+                                        <th className="py-3.5 px-4 text-right">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-[rgb(var(--color-border))] text-[rgb(var(--color-text-primary))] font-medium">
@@ -411,6 +447,16 @@ export default function BillingPage() {
                                                 <td className="py-3.5 px-4 text-slate-500 text-[11px]">
                                                     {tx.formatted_date}
                                                 </td>
+                                                <td className="py-3.5 px-4">
+                                                    {String(status).toLowerCase() !== 'paid' && (
+                                                        <PendingTxActions
+                                                            tx={tx}
+                                                            verifyingOrderId={verifyingOrderId}
+                                                            setVerifyingOrderId={setVerifyingOrderId}
+                                                            queryClient={queryClient}
+                                                        />
+                                                    )}
+                                                </td>
                                             </tr>
                                         );
                                     })}
@@ -445,6 +491,74 @@ export default function BillingPage() {
                     </div>
                 )}
             </div>
+        </div>
+    );
+}
+
+/**
+ * Tombol aksi untuk transaksi pending: Cek status ke Midtrans + Aktifkan paket.
+ * Diekstrak sebagai komponen agar file tetap ringkas.
+ */
+function PendingTxActions({ tx, verifyingOrderId, setVerifyingOrderId, queryClient }) {
+    const busy = verifyingOrderId === tx.order_id;
+
+    const handleCheck = async () => {
+        setVerifyingOrderId(tx.order_id);
+        try {
+            const res = await billingApi.checkOrderStatus(tx.order_id);
+            await queryClient.invalidateQueries([QUERY_KEYS.BILLING_CURRENT]);
+            await queryClient.invalidateQueries([QUERY_KEYS.BILLING_HISTORY]);
+            await queryClient.invalidateQueries([QUERY_KEYS.USER]);
+            const newStatus = res?.transaction?.status;
+            if (String(newStatus).toLowerCase() === 'paid') {
+                toast.success(`Pembayaran ${tx.order_id} terverifikasi & paket diaktifkan!`, 'Status Terupdate');
+            } else {
+                toast.info(`Status Midtrans: ${newStatus || tx.status}. Selesaikan pembayaran lalu klik Aktifkan.`, 'Belum Lunas');
+            }
+        } catch (e) {
+            toast.error(e?.response?.data?.message || 'Gagal mengecek status ke Midtrans.', 'Cek Status Gagal');
+        } finally {
+            setVerifyingOrderId(null);
+        }
+    };
+
+    const handleActivate = async () => {
+        setVerifyingOrderId(tx.order_id);
+        try {
+            await billingApi.manualActivate(tx.order_id);
+            await queryClient.invalidateQueries([QUERY_KEYS.BILLING_CURRENT]);
+            await queryClient.invalidateQueries([QUERY_KEYS.BILLING_HISTORY]);
+            await queryClient.invalidateQueries([QUERY_KEYS.USER]);
+            toast.success(`Paket untuk ${tx.order_id} berhasil diaktifkan!`, 'Langganan Aktif');
+        } catch (e) {
+            toast.error(e?.response?.data?.message || 'Aktivasi gagal. Pastikan pembayaran sudah lunas.', 'Aktivasi Gagal');
+        } finally {
+            setVerifyingOrderId(null);
+        }
+    };
+
+    return (
+        <div className="flex items-center justify-end gap-1.5">
+            <button
+                type="button"
+                disabled={busy}
+                onClick={handleCheck}
+                className="px-2.5 py-1.5 rounded-lg border border-[rgb(var(--color-border))] text-[10px] font-extrabold uppercase tracking-wide hover:border-indigo-400 hover:text-indigo-600 disabled:opacity-50 flex items-center gap-1"
+                title="Sinkron status terbaru dari Midtrans"
+            >
+                {busy ? <Loader2 className="h-3 w-3 animate-spin" /> : <RefreshCw className="h-3 w-3" />}
+                Cek
+            </button>
+            <button
+                type="button"
+                disabled={busy}
+                onClick={handleActivate}
+                className="px-2.5 py-1.5 rounded-lg bg-indigo-600 text-white text-[10px] font-extrabold uppercase tracking-wide hover:bg-indigo-700 disabled:opacity-50 flex items-center gap-1"
+                title="Paksa aktifkan paket untuk order yang sudah dibayar"
+            >
+                {busy ? <Loader2 className="h-3 w-3 animate-spin" /> : <CheckCircle2 className="h-3 w-3" />}
+                Aktifkan
+            </button>
         </div>
     );
 }
