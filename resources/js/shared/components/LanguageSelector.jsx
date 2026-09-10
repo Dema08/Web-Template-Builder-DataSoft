@@ -110,10 +110,11 @@ export default function LanguageSelector({ variant = 'settings', showLabel = tru
     // Variants
     const isCompact = variant === 'compact';
     const isSettings = variant === 'settings';
+    const isLanding = variant === 'landing';
 
     return (
-        <div className={isSettings ? 'space-y-3' : ''}>
-            {showLabel && (
+        <div className={isSettings ? 'space-y-3' : isLanding ? 'relative inline-block' : ''}>
+            {showLabel && !isLanding && (
                 <label className="block text-xs font-extrabold text-[rgb(var(--color-text-primary))] mb-2 flex items-center gap-1.5">
                     <Globe className="h-3.5 w-3.5 text-[rgb(var(--color-text-tertiary))]" />
                     {isSettings ? 'Application Language' : 'Language'}
@@ -127,7 +128,10 @@ export default function LanguageSelector({ variant = 'settings', showLabel = tru
                     type="button"
                     onClick={() => setIsOpen(!isOpen)}
                     disabled={isChanging}
-                    className={`
+                    className={
+                        isLanding
+                            ? `flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-slate-600 bg-white/80 backdrop-blur border border-slate-200 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50/60 shadow-sm hover:shadow transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed`
+                            : `
                         w-full flex items-center justify-between gap-3 px-4 py-3
                         bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))]
                         rounded-xl text-xs font-semibold text-[rgb(var(--color-text-primary))]
@@ -135,27 +139,52 @@ export default function LanguageSelector({ variant = 'settings', showLabel = tru
                         focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600
                         disabled:opacity-50 disabled:cursor-not-allowed
                         ${isCompact ? 'py-2 px-3' : 'py-3 px-4'}
-                    `}
+                    `
+                    }
                     aria-label="Select language"
                     aria-expanded={isOpen}
                     aria-haspopup="listbox"
+                    title={`Language: ${selectedLang.name}`}
                 >
-                    <span className="flex items-center gap-2.5">
-                        <span className="text-base leading-none">{selectedLang.flag}</span>
-                        <span className={isCompact ? 'text-xs' : 'text-sm'}>{selectedLang.name}</span>
-                    </span>
-                    <ChevronDown
-                        className={`h-4 w-4 text-[rgb(var(--color-text-tertiary))] transition-transform duration-200 ${
-                            isOpen ? 'rotate-180' : ''
-                        }`}
-                    />
+                    {isLanding ? (
+                        <>
+                            <Globe className="h-3.5 w-3.5 shrink-0" />
+                            <span className="text-sm leading-none">{selectedLang.flag}</span>
+                            <span className="uppercase tracking-wide">{selectedLang.code === 'zh-CN' ? 'ZH' : selectedLang.code}</span>
+                            {isChanging ? (
+                                <span className="h-3 w-3 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin" />
+                            ) : (
+                                <ChevronDown
+                                    className={`h-3.5 w-3.5 opacity-60 transition-transform duration-200 ${
+                                        isOpen ? 'rotate-180' : ''
+                                    }`}
+                                />
+                            )}
+                        </>
+                    ) : (
+                        <>
+                            <span className="flex items-center gap-2.5">
+                                <span className="text-base leading-none">{selectedLang.flag}</span>
+                                <span className={isCompact ? 'text-xs' : 'text-sm'}>{selectedLang.name}</span>
+                            </span>
+                            <ChevronDown
+                                className={`h-4 w-4 text-[rgb(var(--color-text-tertiary))] transition-transform duration-200 ${
+                                    isOpen ? 'rotate-180' : ''
+                                }`}
+                            />
+                        </>
+                    )}
                 </button>
 
                 {/* Dropdown */}
                 {isOpen && (
                     <div
                         ref={dropdownRef}
-                        className="absolute z-50 w-full mt-2 bg-[rgb(var(--color-surface))] border border-[rgb(var(--color-border))] rounded-xl shadow-xl py-2 ds-animate-scale-in max-h-80 overflow-y-auto ds-scrollbar-thin"
+                        className={
+                            isLanding
+                                ? 'absolute z-50 right-0 mt-2 w-52 bg-white border border-slate-100 rounded-2xl shadow-xl py-2 ds-animate-scale-in max-h-80 overflow-y-auto ds-scrollbar-thin'
+                                : 'absolute z-50 w-full mt-2 bg-[rgb(var(--color-surface))] border border-[rgb(var(--color-border))] rounded-xl shadow-xl py-2 ds-animate-scale-in max-h-80 overflow-y-auto ds-scrollbar-thin'
+                        }
                         role="listbox"
                         aria-label="Language options"
                     >
@@ -171,9 +200,17 @@ export default function LanguageSelector({ variant = 'settings', showLabel = tru
                                     className={`
                                         w-full flex items-center gap-3 px-4 py-2.5 text-left
                                         transition-all duration-150
-                                        hover:bg-[rgb(var(--color-surface-alt))] hover:text-blue-600
+                                        ${
+                                            isLanding
+                                                ? `hover:bg-indigo-50 hover:text-indigo-600 focus:outline-none focus:bg-indigo-50 focus:text-indigo-600 ${
+                                                      isSelected
+                                                          ? 'bg-indigo-50 text-indigo-700 font-bold'
+                                                          : 'text-slate-700 font-medium'
+                                                  }`
+                                                : `hover:bg-[rgb(var(--color-surface-alt))] hover:text-blue-600
                                         focus:outline-none focus:bg-[rgb(var(--color-surface-alt))] focus:text-blue-600
-                                        ${isSelected ? 'bg-blue-50 text-blue-700 font-bold' : 'text-[rgb(var(--color-text-primary))] font-medium'}
+                                        ${isSelected ? 'bg-blue-50 text-blue-700 font-bold' : 'text-[rgb(var(--color-text-primary))] font-medium'}`
+                                        }
                                     `}
                                     role="option"
                                     aria-selected={isSelected}
@@ -181,10 +218,10 @@ export default function LanguageSelector({ variant = 'settings', showLabel = tru
                                     <span className="text-base leading-none flex-shrink-0">{language.flag}</span>
                                     <span className="flex-1 text-xs">{language.name}</span>
                                     {isSelected && (
-                                        <Check className="h-4 w-4 text-blue-600 flex-shrink-0" />
+                                        <Check className={`h-4 w-4 flex-shrink-0 ${isLanding ? 'text-indigo-600' : 'text-blue-600'}`} />
                                     )}
                                     {isDefault && !isSelected && (
-                                        <span className="text-[10px] text-[rgb(var(--color-text-tertiary))] font-semibold uppercase tracking-wider">
+                                        <span className={`text-[10px] font-semibold uppercase tracking-wider ${isLanding ? 'text-slate-400' : 'text-[rgb(var(--color-text-tertiary))]'}`}>
                                             Default
                                         </span>
                                     )}
@@ -195,7 +232,7 @@ export default function LanguageSelector({ variant = 'settings', showLabel = tru
                         {/* Reset Option */}
                         {selectedLanguage !== DEFAULT_LANGUAGE && (
                             <>
-                                <div className="border-t border-[rgb(var(--color-border))] my-2" />
+                                <div className={`border-t my-2 ${isLanding ? 'border-slate-100' : 'border-[rgb(var(--color-border))]'}`} />
                                 <button
                                     type="button"
                                     onClick={handleReset}
@@ -217,8 +254,8 @@ export default function LanguageSelector({ variant = 'settings', showLabel = tru
                 </p>
             )}
 
-            {/* Loading indicator */}
-            {isChanging && (
+            {/* Loading indicator — hidden for landing navbar (spinner already inline on button) */}
+            {isChanging && !isLanding && (
                 <div className="flex items-center gap-2 text-[10px] text-blue-600 font-semibold">
                     <div className="h-3 w-3 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
                     <span>Changing language...</span>

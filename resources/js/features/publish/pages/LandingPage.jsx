@@ -10,6 +10,7 @@ import {
 import { ROUTES } from '@constants';
 import { templateApi, settingsApi, pricelistApi } from '@api';
 import { useAuthStore } from '@store';
+import LanguageSelector from '@shared/components/LanguageSelector';
 
 /* ─────────────────────────────────────────────────────────
    CONSTANTS
@@ -214,7 +215,8 @@ function Navbar({ onDemo }) {
                     </div>
 
                     {/* CTA buttons */}
-                    <div className="hidden md:flex items-center gap-3">
+                    <div className="hidden md:flex items-center gap-2">
+                        <LanguageSelector variant="landing" showLabel={false} />
                         <Link to={ROUTES.LOGIN}
                               className="text-sm font-bold text-slate-700 hover:text-indigo-600 transition px-3 py-2">
                             Login
@@ -226,11 +228,14 @@ function Navbar({ onDemo }) {
                         </Link>
                     </div>
 
-                    {/* Mobile toggle */}
-                    <button type="button" onClick={() => setMobileOpen(!mobileOpen)}
-                            className="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition">
-                        {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-                    </button>
+                    {/* Mobile toggle + language */}
+                    <div className="md:hidden flex items-center gap-1.5">
+                        <LanguageSelector variant="landing" showLabel={false} />
+                        <button type="button" onClick={() => setMobileOpen(!mobileOpen)}
+                                className="p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition">
+                            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                        </button>
+                    </div>
                 </div>
 
                 {/* Mobile menu */}
