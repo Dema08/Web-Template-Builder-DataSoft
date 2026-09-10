@@ -62,7 +62,7 @@ export default function AdminSettings() {
             const brand = settingsData.data;
             const system = settingsData.data;
 
-            setLocalBrandName(brand.brand_name || 'DataSoft');
+            setLocalBrandName(brand.brand_name || 'Microdata');
             setLocalBrandBadge(brand.brand_badge || 'DS');
             setLocalBrandColor(brand.brand_color || '#2563eb');
             setLocalPlanLabel(brand.plan_label || 'Premium Plan');
@@ -165,12 +165,12 @@ export default function AdminSettings() {
 
     const handleConfirmResetBrand = () => {
         resetSettings();
-        setLocalBrandName('DataSoft');
+        setLocalBrandName('Microdata');
         setLocalBrandBadge('DS');
         setLocalBrandColor('#2563eb');
         setLocalPlanLabel('Premium Plan');
         setLogoPreview(null);
-        toast.info('Brand identity reset to DataSoft defaults.', 'Brand Reset');
+        toast.info('Brand identity reset to Microdata defaults.', 'Brand Reset');
         setIsResetModalOpen(false);
     };
 
@@ -304,7 +304,7 @@ export default function AdminSettings() {
                         )}
                         <div>
                             <div className="text-base font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">
-                                {localBrandName || 'DataSoft'}
+                                {localBrandName || 'Microdata'}
                             </div>
                             <div
                                 className="text-[10px] font-extrabold uppercase tracking-[0.18em]"
@@ -327,7 +327,7 @@ export default function AdminSettings() {
                             required
                             value={localBrandName}
                             onChange={(e) => setLocalBrandName(e.target.value)}
-                            placeholder="e.g. DataSoft"
+                            placeholder="e.g. Microdata"
                             className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] placeholder-[rgb(var(--color-text-tertiary))] focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 transition font-semibold"
                         />
                         <p className="mt-1 text-[10px] text-[rgb(var(--color-text-tertiary))]">Appears in sidebar, navbar, and footer.</p>
@@ -618,7 +618,7 @@ export default function AdminSettings() {
                 onClose={() => setIsResetModalOpen(false)}
                 onConfirm={handleConfirmResetBrand}
                 title="Reset Identitas Brand"
-                description="Apakah Anda yakin ingin mengembalikan konfigurasi nama brand, warna, badge logo, dan label paket ke pengaturan standar pabrik (DataSoft)?"
+                description="Apakah Anda yakin ingin mengembalikan konfigurasi nama brand, warna, badge logo, dan label paket ke pengaturan standar pabrik (Microdata)?"
                 variant="warning"
                 icon={RefreshCw}
                 confirmText="Ya, Reset Brand"

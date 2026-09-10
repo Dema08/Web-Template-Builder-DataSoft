@@ -113,7 +113,7 @@ export default function AdminWebsites() {
                     </div>
                     <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">All Platform Websites</h1>
                     <p className="text-sm text-[rgb(var(--color-text-secondary))] mt-1">
-                        Review, manage, and moderate all websites created across the DataSoft ecosystem.
+                        Review, manage, and moderate all websites created across the Microdata ecosystem.
                     </p>
                 </div>
                 <button

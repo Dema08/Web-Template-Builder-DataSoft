@@ -395,7 +395,7 @@ export default function AdminTemplates() {
                     </div>
                     <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">System Templates</h1>
                     <p className="text-sm text-slate-500 mt-1">
-                        Create, upload, and update default corporate website templates for DataSoft users.
+                        Create, upload, and update default corporate website templates for Microdata users.
                     </p>
                 </div>
 
@@ -716,7 +716,7 @@ export default function AdminTemplates() {
                                 <input
                                     type="text"
                                     {...register('name', { required: 'Template name is required' })}
-                                    placeholder="e.g. DataSoft Corporate"
+                                    placeholder="e.g. Microdata Corporate"
                                     className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input"
                                 />
                                 {errors.name && <p className="text-red-500 text-[10px] mt-1">{errors.name.message}</p>}

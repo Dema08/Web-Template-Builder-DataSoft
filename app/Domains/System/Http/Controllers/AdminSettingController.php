@@ -41,11 +41,11 @@ class AdminSettingController extends BaseController
      * Default fallback values (used when a key row is missing).
      */
     protected const DEFAULTS = [
-        'brand_name'            => 'DataSoft',
-        'brand_badge'           => 'DS',
+        'brand_name'            => 'Microdata',
+        'brand_badge'           => 'MD',
         'brand_color'           => '#2563eb',
         'plan_label'            => 'Premium Plan',
-        'logo_path'             => null,
+        'logo_path'             => '/images/microdata-emblem.png',
         'maintenance_mode'      => false,
         'allow_registration'    => true,
         'default_storage_limit' => 100,

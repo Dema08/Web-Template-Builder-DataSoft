@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Under Maintenance — DataSoft</title>
+    <title>System Under Maintenance — Microdata</title>
+    <link rel="icon" type="image/png" href="/images/microdata-emblem.png">
+    <link rel="shortcut icon" href="/images/microdata-emblem.png">
+    <link rel="apple-touch-icon" href="/images/microdata-emblem.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -41,10 +44,9 @@
                 <div>
                     <!-- Brand Logo -->
                     <div class="flex items-center gap-2.5">
-                        <div class="h-9 w-9 rounded-xl flex items-center justify-center text-white font-extrabold text-sm shadow-md"
-                             style="background-color: #2563eb;">DS</div>
+                        <img src="/images/microdata-emblem.png" alt="Microdata" class="h-9 w-auto object-contain transition-transform duration-200 hover:scale-105" onError="this.style.display='none'">
                         <div>
-                            <div class="text-[15px] font-extrabold text-slate-900 tracking-tight leading-tight">DataSoft</div>
+                            <div class="text-[15px] font-extrabold text-slate-900 tracking-tight leading-tight">Microdata</div>
                             <div class="text-[9px] font-bold uppercase tracking-[0.18em] text-blue-600">Premium Plan</div>
                         </div>
                     </div>
@@ -102,7 +104,7 @@
 
                 <!-- Footer note -->
                 <p class="mt-6 text-center text-xs text-slate-400 font-medium">
-                    © 2026 PT DataSoft Solusindo. All rights reserved.
+                    © 2026 PT Microdata Solusindo. All rights reserved.
                 </p>
             </div>
 
@@ -152,7 +154,7 @@
                         <svg class="h-3 w-3 text-blue-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3l14 9-14 9V3z"/>
                         </svg>
-                        DATASOFT STUDIO
+                        Microdata STUDIO
                     </div>
                 </div>
 
@@ -215,4 +217,4 @@
     </div>
 
 </body>
-</html>
+</html>

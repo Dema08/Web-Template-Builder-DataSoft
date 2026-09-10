@@ -7,11 +7,18 @@ export default function PageLoader({ fullScreen = false }) {
     const loaderContent = (
         <div className="flex flex-col items-center justify-center gap-6 animate-pulse p-8">
             <div className="relative">
-                {logo_path ? (
-                    <img 
-                        src={logo_path} 
-                        alt={brand_name || 'Loading'} 
-                        className="h-16 w-16 rounded-2xl object-contain bg-white shadow-sm border border-[rgb(var(--color-border))] p-1"
+                {logo_path || true ? (
+                    <img
+                        src={logo_path || '/storage/settings/microdata-emblem.png'}
+                        alt={brand_name || 'Microdata'}
+                        className="h-16 w-auto rounded-2xl object-contain"
+                        onError={(e) => {
+                            if (!e.target.src.includes('/images/')) {
+                                e.target.src = '/images/microdata-emblem.png';
+                            } else {
+                                e.target.style.display = 'none';
+                            }
+                        }}
                     />
                 ) : (
                     <div

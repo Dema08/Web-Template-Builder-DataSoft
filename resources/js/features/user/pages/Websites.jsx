@@ -32,9 +32,9 @@ export default function Websites() {
     const [websitesList, setWebsitesList] = useState([
         {
             id: 1,
-            name: website?.name || 'DataSoft Corporate Profile',
-            subdomain: website?.subdomain || 'datasoft',
-            domain: `${website?.subdomain || 'datasoft'}.datasoft.id`,
+            name: website?.name || 'Microdata Corporate Profile',
+            subdomain: website?.subdomain || 'Microdata',
+            domain: `${website?.subdomain || 'Microdata'}.Microdata.id`,
             status: website?.is_published ? 'Published' : 'Draft',
             updatedAt: 'Just now',
             visitors: '14,290',
@@ -46,7 +46,7 @@ export default function Websites() {
             id: 2,
             name: 'Koperasi Maju Profile',
             subdomain: 'koperasimaju',
-            domain: 'koperasimaju.datasoft.id',
+            domain: 'koperasimaju.Microdata.id',
             status: 'Published',
             updatedAt: '2 hours ago',
             visitors: '8,420',
@@ -56,9 +56,9 @@ export default function Websites() {
         },
         {
             id: 3,
-            name: 'DataSoft Solution Hub',
+            name: 'Microdata Solution Hub',
             subdomain: 'solutionhub',
-            domain: 'solutionhub.datasoft.id',
+            domain: 'solutionhub.Microdata.id',
             status: 'Draft',
             updatedAt: '3 days ago',
             visitors: '0',
@@ -85,13 +85,13 @@ export default function Websites() {
             id: Date.now(),
             name: newSiteName,
             subdomain: newSubdomain || newSiteName.toLowerCase().replace(/\s+/g, '-'),
-            domain: `${newSubdomain || newSiteName.toLowerCase().replace(/\s+/g, '-')}.datasoft.id`,
+            domain: `${newSubdomain || newSiteName.toLowerCase().replace(/\s+/g, '-')}.Microdata.id`,
             status: 'Draft',
             updatedAt: 'Just now',
             visitors: '0',
             views: '0',
             thumbnail: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop&q=80',
-            templateName: 'DataSoft Default Template',
+            templateName: 'Microdata Default Template',
         };
 
         setWebsitesList([newSite, ...websitesList]);
@@ -302,7 +302,7 @@ export default function Websites() {
                                 </div>
                                 <div>
                                     <h3 className="text-base font-extrabold text-[rgb(var(--color-text-primary))]">Create New Website</h3>
-                                    <p className="text-xs text-[rgb(var(--color-text-secondary))]">Set up your DataSoft company profile</p>
+                                    <p className="text-xs text-[rgb(var(--color-text-secondary))]">Set up your Microdata company profile</p>
                                 </div>
                             </div>
                             <button
@@ -320,7 +320,7 @@ export default function Websites() {
                                 <input
                                     type="text"
                                     required
-                                    placeholder="e.g. DataSoft Global Profile"
+                                    placeholder="e.g. Microdata Global Profile"
                                     value={newSiteName}
                                     onChange={(e) => setNewSiteName(e.target.value)}
                                     className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input"
@@ -332,13 +332,13 @@ export default function Websites() {
                                 <div className="flex items-center">
                                     <input
                                         type="text"
-                                        placeholder="datasoft-global"
+                                        placeholder="Microdata-global"
                                         value={newSubdomain}
                                         onChange={(e) => setNewSubdomain(e.target.value)}
                                         className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-l-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input rounded-r-none"
                                     />
                                     <span className="bg-[rgb(var(--color-surface-alt))] text-[rgb(var(--color-text-secondary))] px-3 py-2.5 text-xs border border-l-0 border-[rgb(var(--color-border))] rounded-r-xl font-medium">
-                                        .datasoft.id
+                                        .Microdata.id
                                     </span>
                                 </div>
                             </div>

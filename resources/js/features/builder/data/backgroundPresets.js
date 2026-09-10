@@ -1,5 +1,5 @@
 /**
- * Curated Background Images and Videos for DataSoft Template Builder
+ * Curated Background Images and Videos for Microdata Template Builder
  */
 
 export const BACKGROUND_IMAGE_CATEGORIES = [

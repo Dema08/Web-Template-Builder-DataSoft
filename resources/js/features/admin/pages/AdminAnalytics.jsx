@@ -47,7 +47,7 @@ export default function AdminAnalytics() {
                 </div>
                 <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">Platform Analytics</h1>
                 <p className="text-sm text-[rgb(var(--color-text-secondary))] mt-1">
-                    Real-time performance, server load, traffic trends, and user engagement insights across DataSoft.
+                    Real-time performance, server load, traffic trends, and user engagement insights across Microdata.
                 </p>
             </div>
 

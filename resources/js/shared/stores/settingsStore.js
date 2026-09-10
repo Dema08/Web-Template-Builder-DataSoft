@@ -16,11 +16,11 @@ import { persist } from 'zustand/middleware';
  * Keys use snake_case to match the API response shape.
  */
 const initialState = {
-    brand_name: 'DataSoft',
-    brand_badge: 'DS',
+    brand_name: 'Microdata',
+    brand_badge: 'MD',
     brand_color: '#2563eb', // blue-600
     plan_label: 'Premium Plan',
-    logo_path: null,        // Full storage URL, e.g. "/storage/settings/logo.png"
+    logo_path: '/storage/settings/microdata-emblem.png',
     maintenance_mode: false,
     allow_registration: true,
     default_storage_limit: 100,

@@ -135,13 +135,13 @@ export default function Templates() {
                 <div>
                     <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-100 text-indigo-900 text-xs font-bold mb-2 dark:bg-indigo-900/40 dark:text-indigo-100">
                         <Sparkles className="h-3.5 w-3.5" />
-                        <span>DataSoft Template Library</span>
+                        <span>Microdata Template Library</span>
                     </div>
                     <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">
                         Template Gallery
                     </h1>
                     <p className="text-sm text-[rgb(var(--color-text-secondary))] mt-1">
-                        Pilih template profesional DataSoft untuk membangun website perusahaan Anda.
+                        Pilih template profesional Microdata untuk membangun website perusahaan Anda.
                     </p>
                 </div>
             </div>

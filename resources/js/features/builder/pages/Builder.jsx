@@ -193,7 +193,7 @@ export default function Builder() {
     return (
       <div className="h-screen w-full bg-slate-900 flex flex-col items-center justify-center text-white">
         <Loader2 className="h-10 w-10 animate-spin text-indigo-500 mb-4" />
-        <p className="text-sm font-extrabold tracking-wide">Memuat DataSoft Builder...</p>
+        <p className="text-sm font-extrabold tracking-wide">Memuat Microdata Builder...</p>
         <p className="text-xs text-slate-400 mt-1">Mengambil struktur template dan section website</p>
       </div>
     );

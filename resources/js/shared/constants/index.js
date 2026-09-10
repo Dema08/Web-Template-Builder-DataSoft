@@ -3,7 +3,7 @@
  * Centralizing these prevents magic strings scattered across the codebase.
  */
 
-export const APP_NAME = import.meta.env.VITE_APP_NAME || 'DataSoft Profile Builder';
+export const APP_NAME = import.meta.env.VITE_APP_NAME || 'Microdata Profile Builder';
 
 // Dynamically resolve API URL matching the current window origin to prevent CORS / host mismatch
 const DEFAULT_API_BASE_URL = typeof window !== 'undefined' ? `${window.location.origin}/api` : '/api';

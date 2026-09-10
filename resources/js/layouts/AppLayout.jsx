@@ -79,16 +79,18 @@ export default function AppLayout() {
                         }`}
                     >
                         <div className="flex shrink-0 items-center justify-center">
-                            {logo_path ? (
-                                <img src={logo_path} alt={brand_name} className="h-10 w-10 rounded-xl object-contain border border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface))] p-0.5 shadow-sm" />
-                            ) : (
-                                <div
-                                    className="h-10 w-10 rounded-xl flex items-center justify-center text-white font-extrabold text-sm shadow-md"
-                                    style={{ backgroundColor: brand_color }}
-                                >
-                                    {brand_badge || 'DS'}
-                                </div>
-                            )}
+                            <img
+                                src={logo_path || '/storage/settings/microdata-emblem.png'}
+                                alt={brand_name || 'Microdata'}
+                                className="h-10 w-auto object-contain"
+                                onError={(e) => {
+                                    if (!e.target.src.includes('/images/')) {
+                                        e.target.src = '/images/microdata-emblem.png';
+                                    } else {
+                                        e.target.style.display = 'none';
+                                    }
+                                }}
+                            />
                         </div>
 
                         {!isSidebarCollapsed && (
@@ -229,7 +231,7 @@ export default function AppLayout() {
                                             <p className="text-sm font-extrabold text-[rgb(var(--color-text-primary))] truncate">{user?.name || 'User'}</p>
                                             <p className="text-xs text-[rgb(var(--color-text-secondary))] truncate">{user?.email}</p>
                                             <div className="mt-2 inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-indigo-50 text-[10px] font-extrabold text-indigo-700 uppercase tracking-wider">
-                                                {isAdmin ? 'DataSoft Admin' : 'User'}
+                                                {isAdmin ? 'Microdata Admin' : 'User'}
                                             </div>
                                         </div>
 
@@ -271,9 +273,9 @@ export default function AppLayout() {
                         {/* App Footer */}
                         <footer className="mt-12 border-t border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface))] px-8 py-6 flex flex-col sm:flex-row items-center justify-between text-xs text-[rgb(var(--color-text-secondary))] gap-4 transition-colors duration-300">
                             <div className="flex items-center gap-2">
-                                <span className="font-extrabold text-[rgb(var(--color-text-primary))]">{brand_name} Profile Builder</span>
+                                <span className="font-extrabold text-[rgb(var(--color-text-primary))]">{brand_name || 'Microdata'} Profile Builder</span>
                                 <span>•</span>
-                                <span>© 2026 PT DataSoft Solusindo. All rights reserved.</span>
+                                <span>© 2026 PT Microdata. All rights reserved.</span>
                             </div>
                             <a
                                 href="#privacy"

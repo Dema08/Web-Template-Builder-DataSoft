@@ -56,7 +56,7 @@ function SparkleStarGroup({ className = '', style = {}, size = 'md', color = 'te
     );
 }
 
-export default function Login() {
+export default function Login({ onSwitchToRegister }) {
     const [showPassword, setShowPassword] = useState(false);
     const location = useLocation();
     const justRegistered = location.state?.registered === true;
@@ -86,7 +86,7 @@ export default function Login() {
 
     return (
         <div
-            className="max-w-[980px] w-full rounded-[32px] overflow-hidden flex flex-col md:flex-row min-h-[580px] relative z-10 transition-all duration-500 bg-white/95 backdrop-blur-xl ds-animate-scale-in"
+            className="w-full h-full rounded-[32px] overflow-hidden flex flex-col md:flex-row relative bg-white/95 backdrop-blur-xl"
             style={{
                 boxShadow: '0 30px 90px rgba(15, 23, 42, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.4)',
             }}
@@ -244,7 +244,16 @@ export default function Login() {
                         {/* Footer Link */}
                         <div className="pt-4 text-center text-xs text-slate-500 font-medium">
                             Don't have an account?{' '}
-                            <Link to={ROUTES.REGISTER} className="font-bold text-indigo-600 hover:text-indigo-700 transition-colors hover:underline">
+                            <Link
+                                to={ROUTES.REGISTER}
+                                onClick={(e) => {
+                                    if (onSwitchToRegister) {
+                                        e.preventDefault();
+                                        onSwitchToRegister();
+                                    }
+                                }}
+                                className="font-bold text-indigo-600 hover:text-indigo-700 transition-colors hover:underline cursor-pointer"
+                            >
                                 Register
                             </Link>
                         </div>
@@ -270,7 +279,7 @@ export default function Login() {
                 <div className="relative z-10 flex justify-start pt-2">
                     <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-[10px] font-bold tracking-wider text-white uppercase shadow-sm hover:scale-105 transition-transform cursor-default">
                         <Sparkles className="h-3 w-3 text-blue-200 animate-spin" style={{ animationDuration: '6s' }} />
-                        <span>DATASOFT STUDIO 2.0</span>
+                        <span>MICRODATA STUDIO 2.0</span>
                     </div>
                 </div>
 
@@ -279,11 +288,11 @@ export default function Login() {
                     <div>
                         <h2 className="text-3xl lg:text-4xl font-black leading-tight text-white mb-3 tracking-tight">
                             Build the future <br />
-                            <span className="text-blue-200 drop-shadow-md">with DataSoft.</span>
+                            <span className="text-blue-200 drop-shadow-md">with Microdata.</span>
                         </h2>
 
                         <p className="text-xs lg:text-sm text-blue-100/90 leading-relaxed max-w-sm font-medium">
-                            Join thousands of organizations using DataSoft to create stunning digital experiences with precision.
+                            Join thousands of organizations using Microdata to create stunning digital experiences with precision.
                         </p>
                     </div>
 

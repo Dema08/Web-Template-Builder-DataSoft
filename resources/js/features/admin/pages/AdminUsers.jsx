@@ -410,7 +410,7 @@ export default function AdminUsers() {
                 }}
                 onConfirm={handleConfirmApproveUser}
                 title="Setujui Akun User"
-                description="User akan disetujui dan diizinkan untuk login serta mengakses fitur platform DataSoft."
+                description="User akan disetujui dan diizinkan untuk login serta mengakses fitur platform Microdata."
                 variant="success"
                 icon={UserCheck}
                 confirmText="Ya, Setujui Akun"

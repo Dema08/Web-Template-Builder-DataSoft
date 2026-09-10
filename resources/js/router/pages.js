@@ -27,6 +27,7 @@ export const BillingPage = lazy(() => import('@features/billing/pages/BillingPag
 // Auth Pages
 export const Login = lazy(() => import('@features/auth/pages/Login'));
 export const Register = lazy(() => import('@features/auth/pages/Register'));
+export const AuthPage = lazy(() => import('@features/auth/pages/AuthPage'));
 export const ForgotPassword = lazy(() => import('@features/auth/pages/ForgotPassword'));
 export const VerifyOtp = lazy(() => import('@features/auth/pages/VerifyOtp'));
 export const ResetPassword = lazy(() => import('@features/auth/pages/ResetPassword'));

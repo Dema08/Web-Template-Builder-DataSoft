@@ -99,7 +99,7 @@ const TESTIMONIALS = [
     {
         name: 'Ahmad Rizki', role: 'CEO, Maju Bersama Corp',
         avatar: 'https://ui-avatars.com/api/?name=Ahmad+Rizki&background=4f46e5&color=fff&size=64',
-        review: 'DataSoft transformed how we present our business online. We launched our corporate website in just one afternoon!',
+        review: 'Microdata transformed how we present our business online. We launched our corporate website in just one afternoon!',
         rating: 5, company: 'Maju Bersama Corp',
     },
     {
@@ -120,7 +120,7 @@ const PRICING = [
     {
         name: 'Starter', price: 'Free', period: '',
         desc: 'Perfect for personal projects and exploring the platform.',
-        features: ['1 Website', '10 Pages', 'DataSoft Subdomain', 'Basic Templates', 'Community Support'],
+        features: ['1 Website', '10 Pages', 'Microdata Subdomain', 'Basic Templates', 'Community Support'],
         cta: 'Get Started Free', highlight: false,
     },
     {
@@ -187,10 +187,14 @@ function Navbar({ onDemo }) {
                         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                         className="flex items-center gap-2.5 cursor-pointer select-none"
                     >
-                        <div className="h-9 w-9 rounded-xl flex items-center justify-center text-white font-extrabold text-sm shadow-md"
-                             style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>DS</div>
+                        <img
+                            src="/storage/settings/microdata-emblem.png"
+                            alt="Microdata"
+                            className="h-9 w-auto object-contain"
+                            onError={(e) => { e.target.src = '/images/microdata-emblem.png'; }}
+                        />
                         <div>
-                            <div className="text-[15px] font-extrabold text-slate-900 tracking-tight">DataSoft</div>
+                            <div className="text-[15px] font-extrabold text-slate-900 tracking-tight">Microdata</div>
                             <div className="text-[9px] font-bold uppercase tracking-[0.18em] text-indigo-600 leading-none">Studio</div>
                         </div>
                     </div>
@@ -286,7 +290,7 @@ function DashboardIllustration() {
                         <div className="w-3 h-3 rounded-full bg-emerald-400" />
                     </div>
                     <div className="flex-1 bg-slate-800 rounded-lg px-3 py-1 text-[10px] text-slate-300 border border-slate-700 mx-4 font-mono flex items-center justify-between">
-                        <span>datasoft.io/builder</span>
+                        <span>Microdata.io/builder</span>
                         <span className="flex items-center gap-1 text-[9px] text-emerald-400 font-bold">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" /> LIVE ENGINE
                         </span>
@@ -405,7 +409,7 @@ function DashboardIllustration() {
                 </div>
                 <div>
                     <p className="text-[10px] font-extrabold text-slate-900">Website Published!</p>
-                    <p className="text-[9px] text-slate-500 font-mono">datasoft.io/mybrand</p>
+                    <p className="text-[9px] text-slate-500 font-mono">Microdata.io/mybrand</p>
                 </div>
             </div>
 
@@ -1129,7 +1133,7 @@ function TemplatesSection() {
    MAIN PAGE
 ───────────────────────────────────────────────────────── */
 const DEFAULT_LANDING_CONTENT = {
-    hero_badge: 'DataSoft Website Builder 2.0',
+    hero_badge: 'Microdata Website Builder 2.0',
     hero_title: 'Build Professional Websites',
     hero_subtitle: 'With One-Click Hosting',
     hero_desc: 'Create, customize, and publish stunning websites using a visual drag-and-drop builder without writing a single line of code.',
@@ -1143,18 +1147,18 @@ const DEFAULT_LANDING_CONTENT = {
     stats_subtitle: 'Numbers that speak for themselves.',
     cta_badge: 'Get Started Today',
     cta_title: 'Start Building Your Website Today',
-    cta_desc: 'Launch professional websites faster with DataSoft Website Builder. No credit card required.',
+    cta_desc: 'Launch professional websites faster with Microdata Website Builder. No credit card required.',
     cta_button_text: 'Start Building Free',
     // Footer
-    footer_brand_name: 'DataSoft',
+    footer_brand_name: 'Microdata',
     footer_brand_tagline: 'Studio',
     footer_desc: 'Build, customize, and publish professional websites without coding.',
-    footer_email: 'hello@datasoft.id',
+    footer_email: 'hello@Microdata.id',
     footer_social_twitter: '#',
     footer_social_github: '#',
     footer_social_linkedin: '#',
     footer_social_instagram: '#',
-    footer_copyright: '© 2026 PT DataSoft Solusindo. All rights reserved.',
+    footer_copyright: '© 2026 PT Microdata Solusindo. All rights reserved.',
 };
 
 export default function LandingPage({ liveContent }) {
@@ -1521,7 +1525,7 @@ export default function LandingPage({ liveContent }) {
                                 <Sparkles className="h-5 w-5" />
                                 {landingContent.cta_button_text}
                             </Link>
-                            <a href="mailto:hello@datasoft.id"
+                            <a href="mailto:hello@Microdata.id"
                                className="inline-flex items-center justify-center gap-2 px-8 py-4 font-bold rounded-2xl text-base border-2 border-slate-200 text-slate-700 hover:border-indigo-400 hover:text-indigo-600 hover:-translate-y-0.5 transition-all bg-white/80">
                                 Request Demo
                                 <ArrowRight className="h-5 w-5" />
@@ -1541,10 +1545,10 @@ export default function LandingPage({ liveContent }) {
                             <div className="flex items-center gap-2.5 mb-4">
                                 <div className="h-9 w-9 rounded-xl flex items-center justify-center text-white font-extrabold text-sm"
                                      style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
-                                    {(landingContent.footer_brand_name || 'DataSoft').substring(0, 2).toUpperCase()}
+                                    {((landingContent.footer_brand_name || 'Microdata')).substring(0, 2).toUpperCase()}
                                 </div>
                                 <div>
-                                    <div className="text-sm font-extrabold text-white">{landingContent.footer_brand_name || 'DataSoft'}</div>
+                                    <div className="text-sm font-extrabold text-white">{(landingContent.footer_brand_name || 'Microdata')}</div>
                                     <div className="text-[9px] font-bold uppercase tracking-[0.18em] text-indigo-400">{landingContent.footer_brand_tagline || 'Studio'}</div>
                                 </div>
                             </div>
@@ -1619,7 +1623,7 @@ export default function LandingPage({ liveContent }) {
 
                     <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
                         <p className="text-xs text-slate-500">
-                            {landingContent.footer_copyright || '© 2026 PT DataSoft Solusindo. All rights reserved.'}
+                            {landingContent.footer_copyright || '© 2026 PT Microdata Solusindo. All rights reserved.'}
                         </p>
                         <div className="flex gap-4">
                             <a href="#" className="text-xs text-slate-500 hover:text-white transition">Privacy Policy</a>
@@ -1635,7 +1639,7 @@ export default function LandingPage({ liveContent }) {
                      style={{ background: 'rgba(15,23,42,0.8)', backdropFilter: 'blur(8px)' }}>
                     <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden">
                         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
-                            <h3 className="text-base font-extrabold text-slate-900">DataSoft Builder — Platform Demo</h3>
+                            <h3 className="text-base font-extrabold text-slate-900">Microdata Builder — Platform Demo</h3>
                             <button onClick={() => setDemoOpen(false)}
                                     className="p-2 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition">
                                 <X className="h-5 w-5" />

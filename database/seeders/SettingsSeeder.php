@@ -13,13 +13,13 @@ class SettingsSeeder extends Seeder
             // Brand settings
             [
                 'key' => 'brand_name',
-                'value' => 'DataSoft',
+                'value' => 'Microdata',
                 'type' => 'string',
                 'group' => 'brand',
             ],
             [
                 'key' => 'brand_badge',
-                'value' => 'DS',
+                'value' => 'MD',
                 'type' => 'string',
                 'group' => 'brand',
             ],
@@ -37,7 +37,7 @@ class SettingsSeeder extends Seeder
             ],
             [
                 'key' => 'logo_path',
-                'value' => null,
+                'value' => '/images/microdata-emblem.png',
                 'type' => 'string',
                 'group' => 'brand',
             ],

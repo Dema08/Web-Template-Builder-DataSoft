@@ -7,6 +7,11 @@
 
         <title>{{ config('app.name', 'Company Profile Website Builder') }}</title>
 
+        <!-- Favicon / Logo Microdata -->
+        <link rel="icon" type="image/png" href="{{ asset('images/microdata-emblem.png') }}">
+        <link rel="shortcut icon" href="{{ asset('images/microdata-emblem.png') }}">
+        <link rel="apple-touch-icon" href="{{ asset('images/microdata-emblem.png') }}">
+
         @viteReactRefresh
         @vite(['resources/css/app.css', 'resources/js/app.jsx'])
     </head>

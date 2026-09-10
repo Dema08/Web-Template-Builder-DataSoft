@@ -9,23 +9,21 @@ export default function Logo({ className = '' }) {
 
     return (
         <div className={`flex items-center justify-center gap-3 ${className}`}>
-            {logo_path ? (
-                <img
-                    src={logo_path}
-                    alt={brand_name}
-                    className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-white text-white shadow-sm object-contain border border-gray-200 p-0.5"
-                />
-            ) : (
-                <span
-                    className="inline-flex h-11 w-11 items-center justify-center rounded-xl text-white shadow-sm"
-                    style={{ backgroundColor: brand_color }}
-                >
-                    {brand_badge || 'DS'}
-                </span>
-            )}
+            <img
+                src={logo_path || '/storage/settings/microdata-emblem.png'}
+                alt={brand_name || 'Microdata'}
+                className="inline-flex h-11 w-auto items-center justify-center object-contain"
+                onError={(e) => {
+                    if (!e.target.src.includes('/images/')) {
+                        e.target.src = '/images/microdata-emblem.png';
+                    } else {
+                        e.target.style.display = 'none';
+                    }
+                }}
+            />
             <span className="text-left">
                 <span className="block text-lg font-bold text-gray-900 leading-tight">
-                    {brand_name}
+                    {brand_name || 'Microdata'}
                 </span>
                 <span className="block text-xs text-gray-500 leading-tight">
                     {plan_label || 'Build your company website'}

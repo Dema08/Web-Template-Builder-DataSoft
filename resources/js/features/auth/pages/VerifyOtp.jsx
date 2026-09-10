@@ -195,11 +195,11 @@ export default function VerifyOtp() {
                 <div className="relative z-10 my-auto py-6">
                     <h2 className="text-3xl lg:text-4xl font-extrabold leading-tight text-white mb-3 tracking-tight">
                         Build the future <br />
-                        with DataSoft.
+                        with Microdata.
                     </h2>
 
                     <p className="text-xs lg:text-sm text-blue-100/90 leading-relaxed max-w-sm font-normal">
-                        Join thousands of organizations using DataSoft to create stunning digital experiences with precision.
+                        Join thousands of organizations using Microdata to create stunning digital experiences with precision.
                     </p>
                 </div>
 

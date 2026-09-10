@@ -33,11 +33,11 @@ class PublicSettingsController extends BaseController
      * Default fallback values for public settings.
      */
     protected const DEFAULTS = [
-        'brand_name'      => 'DataSoft',
-        'brand_badge'     => 'DS',
+        'brand_name'      => 'Microdata',
+        'brand_badge'     => 'MD',
         'brand_color'     => '#2563eb',
         'plan_label'      => 'Premium Plan',
-        'logo_path'       => null,
+        'logo_path'       => '/images/microdata-emblem.png',
         'landing_content' => null,
     ];
 

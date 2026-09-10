@@ -134,7 +134,7 @@ const DEFAULT_FALLBACK_PLANS = [
     },
 ];
 
-export default function Register() {
+export default function Register({ onSwitchToLogin }) {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [selectedPlanId, setSelectedPlanId] = useState(null);
@@ -321,7 +321,7 @@ export default function Register() {
                         <div className="relative z-10 my-auto py-4">
                             <h2 className="text-3xl font-extrabold leading-tight text-white mb-2 tracking-tight">
                                 Build the future <br />
-                                with DataSoft.
+                                with Microdata.
                             </h2>
                             <p className="text-xs text-blue-100/90 leading-relaxed font-normal">
                                 Bangun website impian Anda menggunakan platform pembuatan website tercepat dan paling fleksibel.
@@ -447,19 +447,25 @@ export default function Register() {
 
     return (
         <div
-            className="max-w-[980px] w-full rounded-[28px] overflow-hidden flex flex-col md:flex-row relative z-10 bg-white/95 backdrop-blur-xl ds-animate-scale-in my-3"
+            className="w-full h-full rounded-[32px] overflow-hidden flex flex-col md:flex-row relative bg-white/95 backdrop-blur-xl"
             style={{
-                boxShadow: '0 25px 80px rgba(15, 23, 42, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.4)',
+                boxShadow: '0 30px 90px rgba(15, 23, 42, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.4)',
             }}
         >
             {/* Left Column — Form Container */}
-            <div className="w-full md:w-7/12 p-5 sm:p-7 flex flex-col justify-between bg-white ds-animate-fade-up">
+            <div className="w-full md:w-1/2 p-8 sm:p-10 flex flex-col justify-between bg-white overflow-y-auto min-h-0">
                 <div>
                     {/* Brand Logo & Back to Login */}
                     <div className="flex items-center justify-between">
                         <BrandLogo />
                         <Link
                             to={ROUTES.LOGIN}
+                            onClick={(e) => {
+                                if (onSwitchToLogin) {
+                                    e.preventDefault();
+                                    onSwitchToLogin();
+                                }
+                            }}
                             className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-100/90 hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 text-xs font-bold transition-all duration-200 border border-slate-200/70 hover:scale-[1.02] active:scale-95"
                         >
                             <ArrowLeft className="h-3.5 w-3.5" />
@@ -740,7 +746,16 @@ export default function Register() {
                         {/* Footer Link */}
                         <div className="text-center text-[11px] text-slate-500 font-medium">
                             Sudah memiliki akun?{' '}
-                            <Link to={ROUTES.LOGIN} className="font-bold text-indigo-600 hover:text-indigo-700 transition-colors hover:underline">
+                            <Link
+                                to={ROUTES.LOGIN}
+                                onClick={(e) => {
+                                    if (onSwitchToLogin) {
+                                        e.preventDefault();
+                                        onSwitchToLogin();
+                                    }
+                                }}
+                                className="font-bold text-indigo-600 hover:text-indigo-700 transition-colors hover:underline cursor-pointer"
+                            >
                                 Sign in
                             </Link>
                         </div>
@@ -749,7 +764,7 @@ export default function Register() {
             </div>
 
             {/* Right Column — Animated Hero Banner */}
-            <div className="hidden md:flex md:w-5/12 relative p-6 sm:p-8 flex-col justify-between text-white overflow-hidden ds-animate-gradient"
+            <div className="hidden md:flex md:w-1/2 relative p-8 sm:p-11 flex-col justify-between text-white overflow-hidden ds-animate-gradient"
                  style={{ background: 'linear-gradient(135deg, #1e3a8a, #2563eb, #4f46e5, #7c3aed, #1e3a8a)' }}>
 
                 <div className="absolute top-6 right-6 z-10 ds-animate-float-slow">
@@ -759,7 +774,7 @@ export default function Register() {
                 <div className="relative z-10 flex justify-start pt-1">
                     <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-[9px] font-bold tracking-wider text-white uppercase shadow-xs">
                         <Sparkles className="h-2.5 w-2.5 text-blue-200 animate-spin" style={{ animationDuration: '6s' }} />
-                        <span>DATASOFT STUDIO 2.0</span>
+                        <span>MICRODATA STUDIO 2.0</span>
                     </div>
                 </div>
 
@@ -767,7 +782,7 @@ export default function Register() {
                     <div>
                         <h2 className="text-2xl lg:text-3xl font-black leading-tight text-white mb-2 tracking-tight">
                             Build the future <br />
-                            <span className="text-blue-200 drop-shadow-md">with DataSoft.</span>
+                            <span className="text-blue-200 drop-shadow-md">with Microdata.</span>
                         </h2>
 
                         <p className="text-xs text-blue-100/90 leading-relaxed font-medium">

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reset Password - DataSoft</title>
+    <title>Reset Password - Microdata</title>
     <style>
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -87,7 +87,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>DataSoft</h1>
+            <h1>Microdata</h1>
         </div>
 
         <div class="content">
@@ -96,7 +96,7 @@
             </div>
 
             <div class="message">
-                Kami menerima permintaan untuk mereset password akun DataSoft Anda.
+                Kami menerima permintaan untuk mereset password akun Microdata Anda.
                 Gunakan kode OTP berikut untuk melanjutkan proses reset password:
             </div>
 
@@ -116,7 +116,7 @@
         </div>
 
         <div class="footer">
-            <p>&copy; 2026 DataSoft Studio Solusindo. All rights reserved.</p>
+            <p>&copy; 2026 Microdata Studio Solusindo. All rights reserved.</p>
             <p>Email ini dikirim secara otomatis. Mohon tidak membalas.</p>
         </div>
     </div>

@@ -90,10 +90,14 @@ function GalleryNavbar() {
                         </Link>
                         <div className="w-px h-5 bg-slate-200" />
                         <div className="flex items-center gap-2">
-                            <div className="h-8 w-8 rounded-lg flex items-center justify-center text-white font-extrabold text-xs shadow-md"
-                                 style={{ background: 'linear-gradient(135deg,#7c3aed,#4f46e5)' }}>DS</div>
+                            <img
+                                src="/storage/settings/microdata-emblem.png"
+                                alt="Microdata"
+                                className="h-8 w-auto object-contain"
+                                onError={(e) => { e.target.src = '/images/microdata-emblem.png'; }}
+                            />
                             <div>
-                                <div className="text-[13px] font-extrabold text-slate-900 leading-none">DataSoft</div>
+                                <div className="text-[13px] font-extrabold text-slate-900 leading-none">Microdata</div>
                                 <div className="text-[8px] font-bold uppercase tracking-widest text-purple-600 leading-none mt-0.5">Studio</div>
                             </div>
                         </div>

@@ -6,6 +6,7 @@ import {
             LandingPage,
             Login,
             Register,
+            AuthPage,
             ForgotPassword,
             VerifyOtp,
             ResetPassword,
@@ -64,8 +65,11 @@ export default function AppRouter() {
                         </GuestRoute>
                     }
                 >
-                    <Route path={ROUTES.LOGIN} element={<Login />} />
-                    <Route path={ROUTES.REGISTER} element={<Register />} />
+                    {/* Login & Register share the SAME AuthPage instance (key="auth-page").
+                        The stable key prevents React from unmounting/remounting the component
+                        when navigating between /login and /register, preserving the 3D flip animation. */}
+                    <Route key="auth-page" path={ROUTES.LOGIN} element={<AuthPage />} />
+                    <Route key="auth-page" path={ROUTES.REGISTER} element={<AuthPage />} />
                     <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
                     <Route path={ROUTES.VERIFY_OTP} element={<VerifyOtp />} />
                     <Route path={ROUTES.RESET_PASSWORD} element={<ResetPassword />} />

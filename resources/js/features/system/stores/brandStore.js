@@ -8,10 +8,10 @@ import { persist } from 'zustand/middleware';
  * across both Admin and User panels without requiring a page reload.
  */
 const initialState = {
-    brandName: 'DataSoft',
-    brandBadge: 'DS',
+    brandName: 'Microdata',
+    brandBadge: 'MD',
     brandColor: '#2563eb', // blue-600
-    logoUrl: null,         // Custom logo URL (null = use text badge)
+    logoUrl: '/storage/settings/microdata-emblem.png',
     planLabel: 'Premium Plan',
 };
 

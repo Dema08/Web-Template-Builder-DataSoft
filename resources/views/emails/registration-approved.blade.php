@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pendaftaran Akun Disetujui - DataSoft</title>
+    <title>Pendaftaran Akun Disetujui - Microdata</title>
     <style>
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -96,7 +96,7 @@
             </div>
 
             <div class="message">
-                Kabar baik untuk Anda! Akun DataSoft Anda telah <strong>disetujui</strong> oleh tim admin.
+                Kabar baik untuk Anda! Akun Microdata Anda telah <strong>disetujui</strong> oleh tim admin.
                 Sekarang Anda dapat login dan mulai menggunakan semua fitur yang tersedia.
             </div>
 
@@ -108,7 +108,7 @@
 
             <div class="info-box">
                 <strong>💡 Langkah Selanjutnya:</strong><br>
-                1. Kunjungi halaman login DataSoft<br>
+                1. Kunjungi halaman login Microdata<br>
                 2. Masukkan email dan password yang Anda daftarkan<br>
                 3. Mulai eksplorasi dan bangun website impian Anda!
             </div>

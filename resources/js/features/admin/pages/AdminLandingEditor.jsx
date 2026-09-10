@@ -81,7 +81,7 @@ const DEFAULT_PRICING = [
     {
         name: 'Starter', price: 'Free', period: '',
         desc: 'Perfect for personal projects and exploring the platform.',
-        features: ['1 Website', '10 Pages', 'DataSoft Subdomain', 'Basic Templates', 'Community Support'],
+        features: ['1 Website', '10 Pages', 'Microdata Subdomain', 'Basic Templates', 'Community Support'],
         cta: 'Get Started Free', highlight: false,
     },
     {
@@ -111,7 +111,7 @@ const DEFAULT_PRICING = [
 ];
 
 const DEFAULT_LANDING_CONTENT = {
-    hero_badge: 'DataSoft Website Builder 2.0',
+    hero_badge: 'Microdata Website Builder 2.0',
     hero_title: 'Build Professional Websites',
     hero_subtitle: 'With One-Click Hosting',
     hero_desc: 'Create, customize, and publish stunning websites using a visual drag-and-drop builder without writing a single line of code.',
@@ -137,19 +137,19 @@ const DEFAULT_LANDING_CONTENT = {
 
     cta_badge: 'Get Started Today',
     cta_title: 'Start Building Your Website Today',
-    cta_desc: 'Launch professional websites faster with DataSoft Website Builder. No credit card required.',
+    cta_desc: 'Launch professional websites faster with Microdata Website Builder. No credit card required.',
     cta_button_text: 'Start Building Free',
 
     // Footer
-    footer_brand_name: 'DataSoft',
+    footer_brand_name: 'Microdata',
     footer_brand_tagline: 'Studio',
     footer_desc: 'Build, customize, and publish professional websites without coding.',
-    footer_email: 'hello@datasoft.id',
+    footer_email: 'hello@Microdata.id',
     footer_social_twitter: '#',
     footer_social_github: '#',
     footer_social_linkedin: '#',
     footer_social_instagram: '#',
-    footer_copyright: '© 2026 PT DataSoft Solusindo. All rights reserved.',
+    footer_copyright: '© 2026 PT Microdata Solusindo. All rights reserved.',
 };
 
 const ACCENT_COLORS = [
@@ -186,15 +186,15 @@ export default function AdminLandingEditor() {
                         features_list: parsed.features_list || DEFAULT_FEATURES,
                         steps_list: parsed.steps_list || DEFAULT_STEPS,
                         pricing_list: parsed.pricing_list || DEFAULT_PRICING,
-                        footer_brand_name: parsed.footer_brand_name || 'DataSoft',
+                        footer_brand_name: parsed.footer_brand_name || 'Microdata',
                         footer_brand_tagline: parsed.footer_brand_tagline || 'Studio',
                         footer_desc: parsed.footer_desc || 'Build, customize, and publish professional websites without coding.',
-                        footer_email: parsed.footer_email || 'hello@datasoft.id',
+                        footer_email: parsed.footer_email || 'hello@Microdata.id',
                         footer_social_twitter: parsed.footer_social_twitter || '#',
                         footer_social_github: parsed.footer_social_github || '#',
                         footer_social_linkedin: parsed.footer_social_linkedin || '#',
                         footer_social_instagram: parsed.footer_social_instagram || '#',
-                        footer_copyright: parsed.footer_copyright || '© 2026 PT DataSoft Solusindo. All rights reserved.',
+                        footer_copyright: parsed.footer_copyright || '© 2026 PT Microdata Solusindo. All rights reserved.',
                     });
                 }
             })
@@ -431,7 +431,7 @@ export default function AdminLandingEditor() {
                                     type="text"
                                     value={content.hero_badge}
                                     onChange={(e) => handleChange('hero_badge', e.target.value)}
-                                    placeholder="Misal: DataSoft Website Builder 2.0"
+                                    placeholder="Misal: Microdata Website Builder 2.0"
                                     className="w-full px-4 py-3 rounded-xl border border-slate-200 text-xs font-medium focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 transition outline-none"
                                 />
                             </div>
@@ -999,9 +999,9 @@ export default function AdminLandingEditor() {
                                     </label>
                                     <input
                                         type="text"
-                                        value={content.footer_brand_name || 'DataSoft'}
+                                        value={content.footer_brand_name || 'Microdata'}
                                         onChange={(e) => handleChange('footer_brand_name', e.target.value)}
-                                        placeholder="Misal: DataSoft"
+                                        placeholder="Misal: Microdata"
                                         className="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 text-xs font-bold text-slate-900 focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 transition outline-none"
                                     />
                                     <p className="text-[10px] text-slate-400 mt-1">Tampil di logo footer kiri atas (maks. 2 huruf jadi initial).</p>
@@ -1049,7 +1049,7 @@ export default function AdminLandingEditor() {
                                         type="email"
                                         value={content.footer_email || ''}
                                         onChange={(e) => handleChange('footer_email', e.target.value)}
-                                        placeholder="Misal: hello@datasoft.id"
+                                        placeholder="Misal: hello@Microdata.id"
                                         className="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 text-xs font-medium text-indigo-700 focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 transition outline-none"
                                     />
                                     <p className="text-[10px] text-slate-400 mt-1">Ditampilkan sebagai link mailto: di footer brand.</p>
@@ -1062,7 +1062,7 @@ export default function AdminLandingEditor() {
                                         type="text"
                                         value={content.footer_copyright || ''}
                                         onChange={(e) => handleChange('footer_copyright', e.target.value)}
-                                        placeholder="Misal: © 2026 PT DataSoft Solusindo. All rights reserved."
+                                        placeholder="Misal: © 2026 PT Microdata Solusindo. All rights reserved."
                                         className="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 text-xs font-medium text-slate-600 focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 transition outline-none"
                                     />
                                     <p className="text-[10px] text-slate-400 mt-1">Muncul di bagian paling bawah footer.</p>
@@ -1079,10 +1079,10 @@ export default function AdminLandingEditor() {
                             <p className="text-xs text-slate-500 -mt-2">Isi URL lengkap. Jika dikosongkan atau diisi '#', ikon sosial media tersebut tidak akan ditampilkan.</p>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-5 bg-slate-50 p-5 rounded-2xl border border-slate-200/80">
                                 {[
-                                    { field: 'footer_social_twitter', label: 'Twitter / X', placeholder: 'https://twitter.com/datasoft', color: 'text-sky-600' },
-                                    { field: 'footer_social_github', label: 'GitHub', placeholder: 'https://github.com/datasoft', color: 'text-slate-700' },
-                                    { field: 'footer_social_linkedin', label: 'LinkedIn', placeholder: 'https://linkedin.com/company/datasoft', color: 'text-blue-600' },
-                                    { field: 'footer_social_instagram', label: 'Instagram', placeholder: 'https://instagram.com/datasoft', color: 'text-pink-600' },
+                                    { field: 'footer_social_twitter', label: 'Twitter / X', placeholder: 'https://twitter.com/Microdata', color: 'text-sky-600' },
+                                    { field: 'footer_social_github', label: 'GitHub', placeholder: 'https://github.com/Microdata', color: 'text-slate-700' },
+                                    { field: 'footer_social_linkedin', label: 'LinkedIn', placeholder: 'https://linkedin.com/company/Microdata', color: 'text-blue-600' },
+                                    { field: 'footer_social_instagram', label: 'Instagram', placeholder: 'https://instagram.com/Microdata', color: 'text-pink-600' },
                                 ].map(({ field, label, placeholder, color }) => (
                                     <div key={field}>
                                         <label className="block text-xs font-extrabold text-slate-700 uppercase tracking-wider mb-2">
@@ -1107,10 +1107,10 @@ export default function AdminLandingEditor() {
                                 <div className="flex items-center gap-2.5 shrink-0">
                                     <div className="h-9 w-9 rounded-xl flex items-center justify-center text-white font-extrabold text-sm"
                                          style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
-                                        {(content.footer_brand_name || 'DataSoft').substring(0, 2).toUpperCase()}
+                                        {(content.footer_brand_name || 'Microdata').substring(0, 2).toUpperCase()}
                                     </div>
                                     <div>
-                                        <div className="text-sm font-extrabold text-white">{content.footer_brand_name || 'DataSoft'}</div>
+                                        <div className="text-sm font-extrabold text-white">{content.footer_brand_name || 'Microdata'}</div>
                                         <div className="text-[9px] font-bold uppercase tracking-[0.18em] text-indigo-400">{content.footer_brand_tagline || 'Studio'}</div>
                                     </div>
                                 </div>
@@ -1135,7 +1135,7 @@ export default function AdminLandingEditor() {
                                             <div className="w-7 h-7 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-pink-400 text-[9px] font-bold">IG</div>
                                         )}
                                     </div>
-                                    <p className="text-[10px] text-slate-600 text-right">{content.footer_copyright || '© 2026 PT DataSoft Solusindo'}</p>
+                                    <p className="text-[10px] text-slate-600 text-right">{content.footer_copyright || '© 2026 PT Microdata Solusindo'}</p>
                                 </div>
                             </div>
                         </div>

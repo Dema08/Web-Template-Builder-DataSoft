@@ -105,7 +105,7 @@ export default function AdminTemplatePreview() {
 
     if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
       try {
-        channel = new BroadcastChannel('datasoft_builder_sync');
+        channel = new BroadcastChannel('Microdata_builder_sync');
         channel.onmessage = (event) => {
           if (event.data && event.data.sections) {
             loadSections(event.data.sections);
@@ -196,7 +196,7 @@ export default function AdminTemplatePreview() {
               Live Website Preview
             </span>
             <span className="text-[10px] text-slate-400 truncate max-w-[150px] sm:max-w-[260px]">
-              {templateName || slug || 'DataSoft Template'}
+              {templateName || slug || 'Microdata Template'}
             </span>
           </div>
         </div>
@@ -286,7 +286,7 @@ export default function AdminTemplatePreview() {
                 No Sections Found in Template
               </h2>
               <p className="text-xs text-slate-500 max-w-md mb-6">
-                Add sections or generate a starter template in the DataSoft Builder tab to view live preview here.
+                Add sections or generate a starter template in the Microdata Builder tab to view live preview here.
               </p>
               <button
                 type="button"

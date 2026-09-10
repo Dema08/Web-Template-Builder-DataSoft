@@ -41,7 +41,7 @@ class ErrorBoundary extends Component {
 
     componentDidCatch(error, info) {
         // Log error for debugging
-        console.error('[DataSoft App Error]', error, info);
+        console.error('[Microdata App Error]', error, info);
     }
 
     render() {
@@ -56,7 +56,7 @@ class ErrorBoundary extends Component {
                         </div>
                         <h2 className="text-lg font-bold text-slate-900 mb-2">Something went wrong</h2>
                         <p className="text-sm text-slate-500 mb-6">
-                            An unexpected error occurred in DataSoft. The error has been logged. Please try refreshing the page.
+                            An unexpected error occurred in Microdata. The error has been logged. Please try refreshing the page.
                         </p>
                         {this.state.error?.message && (
                             <p className="text-xs text-slate-400 bg-slate-50 rounded-xl p-3 mb-6 font-mono text-left break-all">
@@ -96,7 +96,7 @@ class ErrorBoundary extends Component {
  * Does NOT block rendering.
  */
 function SettingsHydrator() {
-    const { loadPublicSettings } = useSettingsStore();
+    const { loadPublicSettings, logo_path } = useSettingsStore();
     const { isAuthenticated } = useAuthStore();
 
     useEffect(() => {
@@ -110,6 +110,18 @@ function SettingsHydrator() {
             }).catch(() => {});
         }
     }, [loadPublicSettings, isAuthenticated]);
+
+    useEffect(() => {
+        const logoUrl = logo_path || '/images/microdata-emblem.png';
+        let link = document.querySelector("link[rel*='icon']");
+        if (!link) {
+            link = document.createElement('link');
+            link.rel = 'icon';
+            document.head.appendChild(link);
+        }
+        link.type = 'image/png';
+        link.href = logoUrl;
+    }, [logo_path]);
 
     return null;
 }

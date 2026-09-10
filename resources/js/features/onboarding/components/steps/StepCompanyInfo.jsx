@@ -23,7 +23,7 @@ export default function StepCompanyInfo() {
                             type="text"
                             value={companyName}
                             onChange={(e) => setCompanyName(e.target.value)}
-                            placeholder="e.g. DataSoft Solusindo"
+                            placeholder="e.g. Microdata Indonesia"
                             className="w-full px-4 py-3 bg-slate-50 border-2 border-slate-200 rounded-xl text-sm focus:outline-none focus:border-indigo-600 transition"
                         />
                         <p className="text-xs text-slate-500 mt-2">
