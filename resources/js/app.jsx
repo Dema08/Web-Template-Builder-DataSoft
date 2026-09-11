@@ -141,14 +141,18 @@ function App() {
     useEffect(() => {
         const initGoogleTranslate = async () => {
             try {
-                const savedLanguage = localStorage.getItem('preferred_language');
-                if (savedLanguage) {
-                    const cookieValue = `/${savedLanguage}`;
-                    document.cookie = `googtrans=${cookieValue}; path=/; domain=.${window.location.hostname}`;
-                    document.cookie = `googtrans=${cookieValue}; path=/`;
-                } else {
-                    document.cookie = 'googtrans=/en; path=/; domain=' + window.location.hostname;
-                    document.cookie = 'googtrans=/en; path=/';
+                // Google Translate reads the googtrans cookie in "source/target"
+                // format (e.g. "/en/id"). A bare "/id" is ignored, so always
+                // write the full pair here — BEFORE the widget script loads.
+                const savedLanguage = localStorage.getItem('preferred_language') || 'en';
+                const target = savedLanguage.includes('-') || savedLanguage.length <= 5
+                    ? savedLanguage
+                    : 'en';
+                document.cookie = `googtrans=/en/${target}; path=/`;
+                try {
+                    document.cookie = `googtrans=/en/${target}; path=/; domain=.${window.location.hostname}`;
+                } catch {
+                    /* ignore — host-only cookie above is enough (localhost/IP) */
                 }
                 setupGoogleTranslateElement();
                 await initializeGoogleTranslate();

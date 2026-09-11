@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { ChevronDown, Globe, Check } from 'lucide-react';
-import { LANGUAGES, DEFAULT_LANGUAGE, getSavedLanguage, saveLanguage, changeLanguage, initializeGoogleTranslate, resetGoogleTranslate, hideGoogleTranslateUI, isInitialized, loadGoogleTranslateScript } from '@utils/googleTranslate';
+import { LANGUAGES, DEFAULT_LANGUAGE, getSavedLanguage, saveLanguage, changeLanguage, resetGoogleTranslate, hideGoogleTranslateUI, isGoogleTranslateAvailable, isGoogleTranslateReady, loadGoogleTranslateScript } from '@utils/googleTranslate';
+import { toast } from '@store';
 
 export default function LanguageSelector({ variant = 'settings', showLabel = true }) {
     const [selectedLanguage, setSelectedLanguage] = useState(() => getSavedLanguage());
@@ -59,22 +60,29 @@ export default function LanguageSelector({ variant = 'settings', showLabel = tru
     }, [isOpen]);
 
     const handleLanguageChange = async (languageCode) => {
+        if (isChanging) return;
         setIsChanging(true);
         setIsOpen(false);
 
         try {
-            // Initialize Google Translate if not already done
-            if (!isInitialized) {
+            // Ensure the Google Translate script/widget is loaded (script load may
+            // take a while on first visit, so wait for the global instead of a
+            // fixed timeout). NOTE: use the live `isGoogleTranslateReady()`
+            // check — the exported `isInitialized` primitive never updates in
+            // importers.
+            if (!isGoogleTranslateReady()) {
                 await loadGoogleTranslateScript();
-                // Wait for Google Translate to fully initialize
-                await new Promise(resolve => setTimeout(resolve, 1500));
+                const start = Date.now();
+                while (!isGoogleTranslateAvailable() && Date.now() - start < 15000) {
+                    await new Promise(resolve => setTimeout(resolve, 200));
+                }
             }
 
             // Change language via Google Translate (await the async function)
             const success = await changeLanguage(languageCode);
 
             if (success) {
-                // Save to localStorage
+                // Save to localStorage BEFORE reload so app.jsx restores it
                 saveLanguage(languageCode);
 
                 // Update local state
@@ -100,9 +108,18 @@ export default function LanguageSelector({ variant = 'settings', showLabel = tru
         }
     };
 
-    const handleReset = () => {
-        handleLanguageChange(DEFAULT_LANGUAGE);
-        resetGoogleTranslate();
+    const handleReset = async () => {
+        if (isChanging) return;
+        setIsOpen(false);
+        setIsChanging(true);
+        try {
+            saveLanguage(DEFAULT_LANGUAGE);
+            setSelectedLanguage(DEFAULT_LANGUAGE);
+            await resetGoogleTranslate();
+        } catch (error) {
+            console.error('Failed to reset language:', error);
+            setIsChanging(false);
+        }
     };
 
     const selectedLang = LANGUAGES.find(lang => lang.code === selectedLanguage) || LANGUAGES[0];
