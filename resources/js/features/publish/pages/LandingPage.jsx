@@ -178,9 +178,8 @@ function Navbar({ onDemo }) {
     };
 
     return (
-        <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-            scrolled ? 'bg-white/90 backdrop-blur-xl shadow-sm border-b border-slate-100' : 'bg-transparent'
-        }`}>
+        <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/90 backdrop-blur-xl shadow-sm border-b border-slate-100' : 'bg-transparent'
+            }`}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16 sm:h-20">
                     {/* Logo */}
@@ -196,7 +195,7 @@ function Navbar({ onDemo }) {
                         />
                         <div>
                             <div className="text-[15px] font-extrabold text-slate-900 tracking-tight">Microdata</div>
-                            <div className="text-[9px] font-bold uppercase tracking-[0.18em] text-indigo-600 leading-none">Studio</div>
+                            <div className="text-[9px] font-bold uppercase tracking-[0.18em] text-indigo-600 leading-none">Website Builder</div>
                         </div>
                     </div>
 
@@ -218,12 +217,12 @@ function Navbar({ onDemo }) {
                     <div className="hidden md:flex items-center gap-2">
                         <LanguageSelector variant="landing" showLabel={false} />
                         <Link to={ROUTES.LOGIN}
-                              className="text-sm font-bold text-slate-700 hover:text-indigo-600 transition px-3 py-2">
+                            className="text-sm font-bold text-slate-700 hover:text-indigo-600 transition px-3 py-2">
                             Login
                         </Link>
                         <Link to={ROUTES.REGISTER}
-                              className="text-sm font-bold text-white px-5 py-2.5 rounded-xl shadow-md hover:shadow-lg hover:scale-105 transition-all"
-                              style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
+                            className="text-sm font-bold text-white px-5 py-2.5 rounded-xl shadow-md hover:shadow-lg hover:scale-105 transition-all"
+                            style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
                             Start Building
                         </Link>
                     </div>
@@ -254,8 +253,8 @@ function Navbar({ onDemo }) {
                         <div className="pt-2 border-t border-slate-100 flex flex-col gap-2">
                             <Link to={ROUTES.LOGIN} className="text-center text-sm font-bold text-slate-700 py-2">Login</Link>
                             <Link to={ROUTES.REGISTER}
-                                  className="text-center text-sm font-bold text-white py-2.5 rounded-xl"
-                                  style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
+                                className="text-center text-sm font-bold text-white py-2.5 rounded-xl"
+                                style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
                                 Start Building Free
                             </Link>
                         </div>
@@ -269,7 +268,7 @@ function Navbar({ onDemo }) {
 /* ── Animated Dashboard Illustration ── */
 function DashboardIllustration() {
     const [activeSec, setActiveSec] = useState(0);
-    const sectionsList = ['Hero Banner','Nav Bar','Feature Grid','Testimonials','Footer','About Us','Contact'];
+    const sectionsList = ['Hero Banner', 'Nav Bar', 'Feature Grid', 'Testimonials', 'Footer', 'About Us', 'Contact'];
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -282,11 +281,11 @@ function DashboardIllustration() {
         <div className="relative w-full max-w-[620px] mx-auto group">
             {/* Pulsing Animated Background Glow */}
             <div className="absolute inset-0 blur-3xl opacity-30 rounded-3xl ds-animate-pulse-slow"
-                 style={{ background: 'radial-gradient(circle,#4f46e5 0%,#2563eb 50%,#7c3aed 80%,transparent 100%)' }} />
+                style={{ background: 'radial-gradient(circle,#4f46e5 0%,#2563eb 50%,#7c3aed 80%,transparent 100%)' }} />
 
             {/* Main Dashboard Window */}
             <div className="relative bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden ds-hover-glow transition-all duration-500"
-                 style={{ boxShadow: '0 30px 80px rgba(79,70,229,0.22)' }}>
+                style={{ boxShadow: '0 30px 80px rgba(79,70,229,0.22)' }}>
                 {/* Toolbar */}
                 <div className="flex items-center gap-2 px-4 py-3 bg-slate-900 border-b border-slate-800 text-white">
                     <div className="flex gap-1.5">
@@ -303,7 +302,7 @@ function DashboardIllustration() {
                     <div className="flex items-center gap-2">
                         <span className="text-[10px] font-bold text-slate-400 px-2 py-1 bg-slate-800 rounded-md">Save</span>
                         <span className="text-[10px] font-bold text-white px-2.5 py-1 rounded-md ds-animate-pulse-glow"
-                              style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>Publish ✓</span>
+                            style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>Publish ✓</span>
                     </div>
                 </div>
 
@@ -342,7 +341,7 @@ function DashboardIllustration() {
                         <div className="absolute inset-2 bg-white rounded-lg shadow-sm overflow-hidden flex flex-col">
                             {/* Hero */}
                             <div className={`h-20 flex items-center px-4 gap-2 transition-all duration-500 ${activeSec === 0 ? 'ring-2 ring-indigo-500 bg-indigo-50/50' : ''}`}
-                                 style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
+                                style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
                                 <div className="w-6 h-6 rounded-lg bg-white/20 flex items-center justify-center text-white text-[8px] font-black animate-pulse">DS</div>
                                 <div className="flex-1 space-y-1 pl-1">
                                     <div className="h-2.5 bg-white/90 rounded w-24 ds-animate-shimmer" />
@@ -378,7 +377,7 @@ function DashboardIllustration() {
                             <div>
                                 <p className="text-[9px] text-slate-500 mb-1">Color Palette</p>
                                 <div className="flex gap-1">
-                                    {['#4f46e5','#2563eb','#7c3aed','#0ea5e9','#10b981'].map(c => (
+                                    {['#4f46e5', '#2563eb', '#7c3aed', '#0ea5e9', '#10b981'].map(c => (
                                         <div key={c} className="w-4 h-4 rounded-full cursor-pointer border border-white shadow-sm hover:scale-125 transition-transform" style={{ background: c }} />
                                     ))}
                                 </div>
@@ -584,11 +583,10 @@ function StatsSection() {
                         return (
                             <div
                                 key={s.label}
-                                className={`flex flex-col items-center text-center rounded-2xl p-6 border ds-hover-glow transition-all duration-600 ease-out group cursor-pointer ${
-                                    isAnimated
+                                className={`flex flex-col items-center text-center rounded-2xl p-6 border ds-hover-glow transition-all duration-600 ease-out group cursor-pointer ${isAnimated
                                         ? 'opacity-100 translate-y-0 scale-100'
                                         : 'opacity-0 translate-y-5 scale-95'
-                                }`}
+                                    }`}
                                 style={{
                                     background: 'rgba(255,255,255,0.04)',
                                     borderColor: 'rgba(255,255,255,0.08)',
@@ -746,11 +744,10 @@ function PricingSection({ pricingList, pricingMeta }) {
                                     onClick={() => {
                                         targetAngleRef.current = -(i * 2 * Math.PI) / plans.length;
                                     }}
-                                    className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
-                                        activeIndex === i
+                                    className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${activeIndex === i
                                             ? 'bg-indigo-600 text-white shadow-md scale-105'
                                             : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
-                                    }`}
+                                        }`}
                                 >
                                     {p.name}
                                 </button>
@@ -816,11 +813,10 @@ function PricingSection({ pricingList, pricingMeta }) {
                                     style={cardStyle}
                                 >
                                     <div
-                                        className={`rounded-2xl p-7 border flex flex-col relative transition-all duration-300 h-full ${
-                                            p.highlight
+                                        className={`rounded-2xl p-7 border flex flex-col relative transition-all duration-300 h-full ${p.highlight
                                                 ? 'text-white shadow-2xl z-10 ds-animate-pulse-glow'
                                                 : 'bg-white border-slate-100 shadow-sm'
-                                        }`}
+                                            }`}
                                         style={p.highlight ? {
                                             background: 'linear-gradient(135deg,#2563eb,#4f46e5)',
                                         } : {}}
@@ -862,11 +858,10 @@ function PricingSection({ pricingList, pricingMeta }) {
                                                     navigate(ROUTES.REGISTER);
                                                 }
                                             }}
-                                            className={`text-center text-sm font-bold py-3 px-4 rounded-xl transition-all shadow-md cursor-pointer ${
-                                                p.highlight
+                                            className={`text-center text-sm font-bold py-3 px-4 rounded-xl transition-all shadow-md cursor-pointer ${p.highlight
                                                     ? 'bg-white text-indigo-600 hover:bg-slate-100 hover:scale-105'
                                                     : 'border-2 border-slate-200 text-slate-700 hover:border-indigo-400 hover:text-indigo-600 bg-white hover:scale-105'
-                                            }`}
+                                                }`}
                                         >
                                             {p.cta}
                                         </button>
@@ -928,7 +923,7 @@ function TemplatesSection() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="mb-10 text-center sm:text-left">
                     <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold mb-4 border"
-                         style={{ background: 'rgba(79,70,229,0.06)', borderColor: 'rgba(79,70,229,0.18)', color: '#4f46e5' }}>
+                        style={{ background: 'rgba(79,70,229,0.06)', borderColor: 'rgba(79,70,229,0.18)', color: '#4f46e5' }}>
                         <Layout className="h-3 w-3" /> Template Library
                     </div>
                     <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
@@ -957,17 +952,17 @@ function TemplatesSection() {
 
                             return (
                                 <div key={tpl.id}
-                                     onClick={() => setSelectedModalTemplate(tpl)}
-                                     className="group relative rounded-2xl overflow-hidden cursor-pointer bg-white border border-slate-200/80 shadow-sm ds-hover-lift ds-hover-glow transition-all duration-300 flex flex-col justify-between">
-                                    
+                                    onClick={() => setSelectedModalTemplate(tpl)}
+                                    className="group relative rounded-2xl overflow-hidden cursor-pointer bg-white border border-slate-200/80 shadow-sm ds-hover-lift ds-hover-glow transition-all duration-300 flex flex-col justify-between">
+
                                     {/* Thumbnail Image Container */}
                                     <div className="relative h-52 overflow-hidden bg-slate-100">
                                         <img src={imageUrl} alt={tpl.name}
-                                             className="w-full h-full object-cover group-hover:scale-105 transition duration-700" />
-                                        
+                                            className="w-full h-full object-cover group-hover:scale-105 transition duration-700" />
+
                                         {/* Overlay on hover */}
                                         <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center gap-2"
-                                             style={{ background: 'rgba(15,23,42,0.65)', backdropFilter: 'blur(3px)' }}>
+                                            style={{ background: 'rgba(15,23,42,0.65)', backdropFilter: 'blur(3px)' }}>
                                             <span className="px-4 py-2 bg-white text-slate-900 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-lg hover:bg-slate-50 transition">
                                                 <Eye className="h-3.5 w-3.5 text-indigo-600" /> Lihat Detail & Preview
                                             </span>
@@ -976,7 +971,7 @@ function TemplatesSection() {
                                         {/* Category Badge */}
                                         <div className="absolute top-3 left-3 z-10">
                                             <span className="px-3 py-1 rounded-full text-[10px] font-extrabold text-white shadow-md backdrop-blur-md"
-                                                  style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
+                                                style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
                                                 {categoryName}
                                             </span>
                                         </div>
@@ -1032,9 +1027,9 @@ function TemplatesSection() {
             ════════════════════════════════════════════════════ */}
             {selectedModalTemplate && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
-                     style={{ background: 'rgba(15,23,42,0.75)', backdropFilter: 'blur(8px)' }}>
+                    style={{ background: 'rgba(15,23,42,0.75)', backdropFilter: 'blur(8px)' }}>
                     <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full overflow-hidden border border-slate-100 animate-in fade-in zoom-in-95 duration-200 max-h-[90vh] flex flex-col">
-                        
+
                         {/* Header Image / Thumbnail Preview */}
                         <div className="relative h-64 sm:h-72 bg-slate-900 overflow-hidden shrink-0">
                             <img
@@ -1056,7 +1051,7 @@ function TemplatesSection() {
                             {/* Top Left Badges */}
                             <div className="absolute top-4 left-4 flex items-center gap-2">
                                 <span className="px-3 py-1 rounded-full text-xs font-extrabold text-white shadow-md"
-                                      style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
+                                    style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
                                     {selectedModalTemplate.industry_category?.name || 'Corporate'}
                                 </span>
                                 <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-500/90 text-white backdrop-blur-md flex items-center gap-1 shadow-md">
@@ -1186,7 +1181,7 @@ export default function LandingPage({ liveContent }) {
                     : settings.landing_content;
                 setLandingContent({ ...DEFAULT_LANDING_CONTENT, ...parsed });
             }
-        }).catch(() => {});
+        }).catch(() => { });
         return () => { isMounted = false; };
     }, [liveContent]);
 
@@ -1227,11 +1222,11 @@ export default function LandingPage({ liveContent }) {
             <section className="relative overflow-hidden pt-24 pb-20 sm:pt-32 sm:pb-28">
                 {/* Background drifting glowing orbs */}
                 <div className="absolute -top-40 -left-40 w-[500px] h-[500px] rounded-full pointer-events-none ds-animate-float-slow opacity-60"
-                     style={{ background: 'radial-gradient(circle,rgba(79,70,229,0.2) 0%,transparent 70%)', filter: 'blur(70px)' }} />
+                    style={{ background: 'radial-gradient(circle,rgba(79,70,229,0.2) 0%,transparent 70%)', filter: 'blur(70px)' }} />
                 <div className="absolute -top-20 right-0 w-[450px] h-[450px] rounded-full pointer-events-none ds-animate-float-reverse opacity-50"
-                     style={{ background: 'radial-gradient(circle,rgba(37,99,235,0.18) 0%,transparent 70%)', filter: 'blur(70px)' }} />
+                    style={{ background: 'radial-gradient(circle,rgba(37,99,235,0.18) 0%,transparent 70%)', filter: 'blur(70px)' }} />
                 <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[900px] h-72 rounded-full pointer-events-none ds-animate-pulse-slow opacity-40"
-                     style={{ background: 'radial-gradient(circle,rgba(124,58,237,0.12) 0%,transparent 70%)', filter: 'blur(90px)' }} />
+                    style={{ background: 'radial-gradient(circle,rgba(124,58,237,0.12) 0%,transparent 70%)', filter: 'blur(90px)' }} />
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
@@ -1239,7 +1234,7 @@ export default function LandingPage({ liveContent }) {
                         <div className="flex-1 text-center lg:text-left ds-animate-fade-up">
                             {/* Badge */}
                             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold mb-6 border shadow-sm hover:scale-105 transition-transform cursor-pointer"
-                                 style={{ background: 'rgba(79,70,229,0.06)', borderColor: 'rgba(79,70,229,0.18)', color: '#4f46e5' }}>
+                                style={{ background: 'rgba(79,70,229,0.06)', borderColor: 'rgba(79,70,229,0.18)', color: '#4f46e5' }}>
                                 <span className="w-2 h-2 rounded-full bg-indigo-600 animate-ping" />
                                 <Sparkles className="h-3.5 w-3.5" />
                                 <span>{landingContent.hero_badge}</span>
@@ -1264,14 +1259,14 @@ export default function LandingPage({ liveContent }) {
                             {/* CTAs */}
                             <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
                                 <Link to={ROUTES.REGISTER}
-                                      className="inline-flex items-center justify-center gap-2 px-7 py-3.5 text-white font-bold rounded-2xl text-sm shadow-xl transition-all hover:shadow-2xl hover:-translate-y-1 ds-animate-pulse-glow"
-                                      style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
+                                    className="inline-flex items-center justify-center gap-2 px-7 py-3.5 text-white font-bold rounded-2xl text-sm shadow-xl transition-all hover:shadow-2xl hover:-translate-y-1 ds-animate-pulse-glow"
+                                    style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
                                     <Sparkles className="h-4 w-4" />
                                     {landingContent.hero_cta_primary}
                                     <ArrowRight className="h-4 w-4" />
                                 </Link>
                                 <button onClick={() => setDemoOpen(true)}
-                                        className="inline-flex items-center justify-center gap-2 px-7 py-3.5 font-bold rounded-2xl text-sm border-2 border-slate-200 text-slate-700 hover:border-indigo-400 hover:text-indigo-600 hover:-translate-y-0.5 transition-all bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md">
+                                    className="inline-flex items-center justify-center gap-2 px-7 py-3.5 font-bold rounded-2xl text-sm border-2 border-slate-200 text-slate-700 hover:border-indigo-400 hover:text-indigo-600 hover:-translate-y-0.5 transition-all bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md">
                                     <div className="w-6 h-6 rounded-full bg-indigo-600 flex items-center justify-center animate-pulse">
                                         <Play className="h-3 w-3 text-white fill-white ml-0.5" />
                                     </div>
@@ -1311,7 +1306,7 @@ export default function LandingPage({ liveContent }) {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <div className="text-center mb-14">
                         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold mb-4 border shadow-2xs"
-                             style={{ background: 'rgba(79,70,229,0.06)', borderColor: 'rgba(79,70,229,0.18)', color: '#4f46e5' }}>
+                            style={{ background: 'rgba(79,70,229,0.06)', borderColor: 'rgba(79,70,229,0.18)', color: '#4f46e5' }}>
                             <Zap className="h-3 w-3 animate-bounce" /> {landingContent.features_badge}
                         </div>
                         <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
@@ -1357,7 +1352,7 @@ export default function LandingPage({ liveContent }) {
 
                             return (
                                 <div key={f.title + idx}
-                                     className="group bg-white rounded-2xl p-6 border border-slate-100 shadow-sm ds-hover-lift ds-hover-glow cursor-pointer">
+                                    className="group bg-white rounded-2xl p-6 border border-slate-100 shadow-sm ds-hover-lift ds-hover-glow cursor-pointer">
                                     <div className={`w-12 h-12 rounded-2xl ${bgClass} flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shadow-sm`}>
                                         <Icon className={`h-5 w-5 ${accentClass}`} />
                                     </div>
@@ -1377,7 +1372,7 @@ export default function LandingPage({ liveContent }) {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-14">
                         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold mb-4 border"
-                             style={{ background: 'rgba(79,70,229,0.06)', borderColor: 'rgba(79,70,229,0.18)', color: '#4f46e5' }}>
+                            style={{ background: 'rgba(79,70,229,0.06)', borderColor: 'rgba(79,70,229,0.18)', color: '#4f46e5' }}>
                             <Clock className="h-3 w-3 animate-spin" style={{ animationDuration: '10s' }} /> {landingContent.steps_badge || 'How It Works'}
                         </div>
                         <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
@@ -1389,7 +1384,7 @@ export default function LandingPage({ liveContent }) {
                         {/* Connector line (desktop only) */}
                         <div className="hidden lg:block absolute top-10 left-[12.5%] right-[12.5%] h-1 rounded-full overflow-hidden bg-slate-100">
                             <div className="w-full h-full ds-animate-shimmer"
-                                 style={{ background: 'linear-gradient(90deg,transparent,#4f46e5,#7c3aed,transparent)' }} />
+                                style={{ background: 'linear-gradient(90deg,transparent,#4f46e5,#7c3aed,transparent)' }} />
                         </div>
 
                         {((landingContent.steps_list && landingContent.steps_list.length > 0)
@@ -1415,7 +1410,7 @@ export default function LandingPage({ liveContent }) {
                                 <div key={i} className="relative text-center group cursor-pointer">
                                     <div className="relative inline-flex">
                                         <div className="w-20 h-20 rounded-2xl flex items-center justify-center mx-auto mb-5 relative z-10 shadow-lg group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-300"
-                                             style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
+                                            style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
                                             <Icon className="h-8 w-8 text-white group-hover:rotate-6 transition-transform" />
                                         </div>
                                         <span className="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-slate-900 text-white text-[11px] font-black flex items-center justify-center z-20 shadow-md border-2 border-white animate-pulse">
@@ -1448,7 +1443,7 @@ export default function LandingPage({ liveContent }) {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center mb-12">
                         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold mb-4 border"
-                             style={{ background: 'rgba(79,70,229,0.06)', borderColor: 'rgba(79,70,229,0.18)', color: '#4f46e5' }}>
+                            style={{ background: 'rgba(79,70,229,0.06)', borderColor: 'rgba(79,70,229,0.18)', color: '#4f46e5' }}>
                             <Star className="h-3 w-3 fill-current text-amber-400 animate-pulse" /> Testimonials
                         </div>
                         <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
@@ -1459,7 +1454,7 @@ export default function LandingPage({ liveContent }) {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {TESTIMONIALS.map((t, i) => (
                             <div key={i}
-                                 className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm ds-hover-lift ds-hover-glow transition-all duration-300">
+                                className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm ds-hover-lift ds-hover-glow transition-all duration-300">
                                 <Quote className="h-8 w-8 text-indigo-200 mb-3" />
                                 <p className="text-sm text-slate-600 leading-relaxed mb-5">"{t.review}"</p>
                                 <div className="flex items-center gap-3 pt-4 border-t border-slate-100">
@@ -1498,23 +1493,23 @@ export default function LandingPage({ liveContent }) {
             <section className="py-20 sm:py-28 relative overflow-hidden">
                 <div className="absolute inset-0 pointer-events-none">
                     <div className="absolute -top-20 -left-20 w-96 h-96 rounded-full opacity-30 ds-animate-float-slow"
-                         style={{ background: 'radial-gradient(circle,rgba(79,70,229,0.5),transparent)', filter: 'blur(80px)' }} />
+                        style={{ background: 'radial-gradient(circle,rgba(79,70,229,0.5),transparent)', filter: 'blur(80px)' }} />
                     <div className="absolute -bottom-20 -right-20 w-96 h-96 rounded-full opacity-30 ds-animate-float-reverse"
-                         style={{ background: 'radial-gradient(circle,rgba(124,58,237,0.5),transparent)', filter: 'blur(80px)' }} />
+                        style={{ background: 'radial-gradient(circle,rgba(124,58,237,0.5),transparent)', filter: 'blur(80px)' }} />
                 </div>
 
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
                     <div className="rounded-3xl p-12 sm:p-16 border relative overflow-hidden ds-hover-glow"
-                         style={{
-                             background: 'linear-gradient(135deg,rgba(37,99,235,0.06),rgba(79,70,229,0.08))',
-                             borderColor: 'rgba(79,70,229,0.15)',
-                             boxShadow: '0 25px 80px rgba(79,70,229,0.12)',
-                         }}>
+                        style={{
+                            background: 'linear-gradient(135deg,rgba(37,99,235,0.06),rgba(79,70,229,0.08))',
+                            borderColor: 'rgba(79,70,229,0.15)',
+                            boxShadow: '0 25px 80px rgba(79,70,229,0.12)',
+                        }}>
                         <div className="absolute top-4 right-4 opacity-10 ds-animate-pulse-slow">
                             <Sparkles className="h-24 w-24 text-indigo-500 animate-spin" style={{ animationDuration: '15s' }} />
                         </div>
                         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold mb-5 border"
-                             style={{ background: 'rgba(79,70,229,0.08)', borderColor: 'rgba(79,70,229,0.2)', color: '#4f46e5' }}>
+                            style={{ background: 'rgba(79,70,229,0.08)', borderColor: 'rgba(79,70,229,0.2)', color: '#4f46e5' }}>
                             <Rocket className="h-3 w-3 animate-bounce" /> {landingContent.cta_badge}
                         </div>
                         <h2 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight mb-4 leading-tight">
@@ -1525,13 +1520,13 @@ export default function LandingPage({ liveContent }) {
                         </p>
                         <div className="flex flex-col sm:flex-row gap-3 justify-center">
                             <Link to={ROUTES.REGISTER}
-                                  className="inline-flex items-center justify-center gap-2 px-8 py-4 text-white font-bold rounded-2xl text-base shadow-xl hover:-translate-y-1 transition-all ds-animate-pulse-glow"
-                                  style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
+                                className="inline-flex items-center justify-center gap-2 px-8 py-4 text-white font-bold rounded-2xl text-base shadow-xl hover:-translate-y-1 transition-all ds-animate-pulse-glow"
+                                style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
                                 <Sparkles className="h-5 w-5" />
                                 {landingContent.cta_button_text}
                             </Link>
                             <a href="mailto:hello@Microdata.id"
-                               className="inline-flex items-center justify-center gap-2 px-8 py-4 font-bold rounded-2xl text-base border-2 border-slate-200 text-slate-700 hover:border-indigo-400 hover:text-indigo-600 hover:-translate-y-0.5 transition-all bg-white/80">
+                                className="inline-flex items-center justify-center gap-2 px-8 py-4 font-bold rounded-2xl text-base border-2 border-slate-200 text-slate-700 hover:border-indigo-400 hover:text-indigo-600 hover:-translate-y-0.5 transition-all bg-white/80">
                                 Request Demo
                                 <ArrowRight className="h-5 w-5" />
                             </a>
@@ -1549,7 +1544,7 @@ export default function LandingPage({ liveContent }) {
                         <div className="col-span-2 md:col-span-1">
                             <div className="flex items-center gap-2.5 mb-4">
                                 <div className="h-9 w-9 rounded-xl flex items-center justify-center text-white font-extrabold text-sm"
-                                     style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
+                                    style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
                                     {((landingContent.footer_brand_name || 'Microdata')).substring(0, 2).toUpperCase()}
                                 </div>
                                 <div>
@@ -1564,31 +1559,31 @@ export default function LandingPage({ liveContent }) {
                             <div className="flex gap-2">
                                 {landingContent.footer_social_twitter && landingContent.footer_social_twitter !== '#' && (
                                     <a href={landingContent.footer_social_twitter} target="_blank" rel="noreferrer"
-                                       className="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 hover:text-white hover:bg-sky-500 cursor-pointer transition text-[10px] font-bold" title="Twitter/X">
+                                        className="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 hover:text-white hover:bg-sky-500 cursor-pointer transition text-[10px] font-bold" title="Twitter/X">
                                         𝕏
                                     </a>
                                 )}
                                 {landingContent.footer_social_github && landingContent.footer_social_github !== '#' && (
                                     <a href={landingContent.footer_social_github} target="_blank" rel="noreferrer"
-                                       className="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-600 cursor-pointer transition text-[10px] font-bold" title="GitHub">
+                                        className="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-600 cursor-pointer transition text-[10px] font-bold" title="GitHub">
                                         G
                                     </a>
                                 )}
                                 {landingContent.footer_social_linkedin && landingContent.footer_social_linkedin !== '#' && (
                                     <a href={landingContent.footer_social_linkedin} target="_blank" rel="noreferrer"
-                                       className="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 hover:text-white hover:bg-blue-600 cursor-pointer transition text-[10px] font-bold" title="LinkedIn">
+                                        className="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 hover:text-white hover:bg-blue-600 cursor-pointer transition text-[10px] font-bold" title="LinkedIn">
                                         in
                                     </a>
                                 )}
                                 {landingContent.footer_social_instagram && landingContent.footer_social_instagram !== '#' && (
                                     <a href={landingContent.footer_social_instagram} target="_blank" rel="noreferrer"
-                                       className="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 hover:text-white hover:bg-pink-600 cursor-pointer transition text-[10px] font-bold" title="Instagram">
+                                        className="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 hover:text-white hover:bg-pink-600 cursor-pointer transition text-[10px] font-bold" title="Instagram">
                                         IG
                                     </a>
                                 )}
                                 {/* Fallback if no social links configured */}
                                 {[landingContent.footer_social_twitter, landingContent.footer_social_github, landingContent.footer_social_linkedin, landingContent.footer_social_instagram].every(l => !l || l === '#') && (
-                                    ['T','G','in'].map(s => (
+                                    ['T', 'G', 'in'].map(s => (
                                         <div key={s} className="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 hover:text-white hover:bg-indigo-600 cursor-pointer transition text-[10px] font-bold">{s}</div>
                                     ))
                                 )}
@@ -1596,7 +1591,7 @@ export default function LandingPage({ liveContent }) {
                             {/* Contact Email */}
                             {landingContent.footer_email && (
                                 <a href={`mailto:${landingContent.footer_email}`}
-                                   className="mt-4 inline-flex items-center gap-1.5 text-xs text-indigo-400 hover:text-indigo-300 transition">
+                                    className="mt-4 inline-flex items-center gap-1.5 text-xs text-indigo-400 hover:text-indigo-300 transition">
                                     <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                     </svg>
@@ -1606,10 +1601,10 @@ export default function LandingPage({ liveContent }) {
                         </div>
 
                         {[
-                            { title: 'Product', links: ['Features','Templates','Builder','Pricing','Changelog'] },
-                            { title: 'Templates', links: ['Corporate','Logistics','Education','Startup','Organization'] },
-                            { title: 'Resources', links: ['Documentation','Blog','Support','API Reference','Status'] },
-                            { title: 'Company', links: ['About','Careers','Privacy Policy','Terms of Service','Contact'] },
+                            { title: 'Product', links: ['Features', 'Templates', 'Builder', 'Pricing', 'Changelog'] },
+                            { title: 'Templates', links: ['Corporate', 'Logistics', 'Education', 'Startup', 'Organization'] },
+                            { title: 'Resources', links: ['Documentation', 'Blog', 'Support', 'API Reference', 'Status'] },
+                            { title: 'Company', links: ['About', 'Careers', 'Privacy Policy', 'Terms of Service', 'Contact'] },
                         ].map(col => (
                             <div key={col.title}>
                                 <p className="text-xs font-extrabold text-white uppercase tracking-wider mb-4">{col.title}</p>
@@ -1641,12 +1636,12 @@ export default function LandingPage({ liveContent }) {
             {/* Video Demo Modal */}
             {demoOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
-                     style={{ background: 'rgba(15,23,42,0.8)', backdropFilter: 'blur(8px)' }}>
+                    style={{ background: 'rgba(15,23,42,0.8)', backdropFilter: 'blur(8px)' }}>
                     <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full overflow-hidden">
                         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
                             <h3 className="text-base font-extrabold text-slate-900">Microdata Builder — Platform Demo</h3>
                             <button onClick={() => setDemoOpen(false)}
-                                    className="p-2 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition">
+                                className="p-2 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition">
                                 <X className="h-5 w-5" />
                             </button>
                         </div>
@@ -1660,8 +1655,8 @@ export default function LandingPage({ liveContent }) {
                         </div>
                         <div className="p-4 flex justify-end">
                             <Link to={ROUTES.REGISTER}
-                                  className="inline-flex items-center gap-2 px-5 py-2.5 text-white font-bold rounded-xl text-sm transition"
-                                  style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
+                                className="inline-flex items-center gap-2 px-5 py-2.5 text-white font-bold rounded-xl text-sm transition"
+                                style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
                                 <Sparkles className="h-4 w-4" />
                                 Try for Free
                             </Link>

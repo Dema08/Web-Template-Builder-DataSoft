@@ -135,6 +135,21 @@ class AdminPricelistController extends BaseController
         );
     }
 
+    public function toggleFavorite(Pricelist $pricelist): JsonResponse
+    {
+        $newValue = !$pricelist->is_popular;
+        $pricelist->update(['is_popular' => $newValue]);
+
+        $message = $newValue
+            ? "Paket harga '{$pricelist->nama}' telah ditandai sebagai Favorit (Most Popular)."
+            : "Paket harga '{$pricelist->nama}' tidak lagi ditandai sebagai Favorit.";
+
+        return $this->success(
+            new PricelistResource($pricelist->fresh()),
+            $message
+        );
+    }
+
     public function updateUserPlan(Request $request, User $user): JsonResponse
     {
         $validated = $request->validate([

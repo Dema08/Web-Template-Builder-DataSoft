@@ -60,6 +60,7 @@ Route::prefix('v1')->group(function (): void {
         Route::delete('/users/{user}', [App\Domains\Admin\Http\Controllers\AdminUserController::class, 'destroy']);
         Route::apiResource('pricelists', App\Domains\Pricelist\Http\Controllers\AdminPricelistController::class);
         Route::patch('/pricelists/{pricelist}/default', [App\Domains\Pricelist\Http\Controllers\AdminPricelistController::class, 'setDefault']);
+        Route::patch('/pricelists/{pricelist}/favorite', [App\Domains\Pricelist\Http\Controllers\AdminPricelistController::class, 'toggleFavorite']);
         Route::apiResource('categories', App\Domains\Admin\Http\Controllers\AdminCategoryController::class);
         Route::apiResource('templates', App\Domains\Template\Http\Controllers\TemplateController::class);
         Route::apiResource('categories.templates', App\Domains\Admin\Http\Controllers\AdminTemplateController::class);

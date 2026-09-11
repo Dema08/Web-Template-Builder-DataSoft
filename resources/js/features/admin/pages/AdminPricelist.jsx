@@ -38,6 +38,9 @@ export default function AdminPricelist() {
     const [planToSetDefault, setPlanToSetDefault] = useState(null);
     const [isSetDefaultModalOpen, setIsSetDefaultModalOpen] = useState(false);
 
+    const [planToToggleFavorite, setPlanToToggleFavorite] = useState(null);
+    const [isToggleFavoriteModalOpen, setIsToggleFavoriteModalOpen] = useState(false);
+
 
     // Form state for Plan Modal
     const [formData, setFormData] = useState({
@@ -136,6 +139,23 @@ export default function AdminPricelist() {
         onError: (error) => {
             const msg = error?.response?.data?.message || 'Gagal mengubah paket default.';
             toast.error(msg, 'Error Default');
+        },
+    });
+
+    const toggleFavoriteMutation = useMutation({
+        mutationFn: async (planId) => {
+            const { data } = await http.patch(`/admin/pricelists/${planId}/favorite`);
+            return data;
+        },
+        onSuccess: (data) => {
+            queryClient.invalidateQueries(['admin-pricelists']);
+            toast.success(data?.message || 'Status favorit paket berhasil diperbarui.', 'Favorit');
+            setIsToggleFavoriteModalOpen(false);
+            setPlanToToggleFavorite(null);
+        },
+        onError: (error) => {
+            const msg = error?.response?.data?.message || 'Gagal mengubah status favorit.';
+            toast.error(msg, 'Error Favorit');
         },
     });
 
@@ -246,6 +266,16 @@ export default function AdminPricelist() {
     const handleConfirmSetDefault = () => {
         if (!planToSetDefault) return;
         setDefaultMutation.mutate(planToSetDefault.id);
+    };
+
+    const handleToggleFavorite = (plan) => {
+        setPlanToToggleFavorite(plan);
+        setIsToggleFavoriteModalOpen(true);
+    };
+
+    const handleConfirmToggleFavorite = () => {
+        if (!planToToggleFavorite) return;
+        toggleFavoriteMutation.mutate(planToToggleFavorite.id);
     };
 
 
@@ -384,6 +414,7 @@ export default function AdminPricelist() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {filteredPricelists?.map((plan) => {
                         const isDefault = plan.is_default;
+                        const isPopular = Boolean(plan.is_popular);
                         const isFree = plan.slug === 'free' || plan.price === 0;
                         const maxDomainsLabel = plan.max_domains === -1 ? 'Unlimited' : plan.max_domains === 0 ? '0 (Subdomain)' : `${plan.max_domains} Domain`;
                         const maxTemplatesLabel = plan.max_starter_templates === -1 ? 'Unlimited' : plan.max_starter_templates === 0 ? 'Blank Template Only' : `${plan.max_starter_templates} Starter Templates`;
@@ -394,12 +425,23 @@ export default function AdminPricelist() {
                                 className={`relative rounded-3xl border transition-all duration-200 flex flex-col justify-between p-6 bg-[rgb(var(--color-surface))] shadow-lg ${
                                     isDefault
                                         ? 'border-indigo-600 ring-2 ring-indigo-600/20'
+                                        : isPopular
+                                        ? 'border-amber-400 ring-2 ring-amber-400/20'
                                         : 'border-[rgb(var(--color-border))] hover:border-indigo-300'
                                 }`}
                             >
+                                {/* Favorite "Most Popular" ribbon */}
+                                {isPopular && (
+                                    <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10">
+                                        <span className="bg-gradient-to-r from-amber-400 to-orange-400 text-amber-950 text-[10px] font-black px-3 py-1 rounded-full shadow-md flex items-center gap-1 whitespace-nowrap">
+                                            <Star className="h-3 w-3 fill-amber-900 text-amber-900" /> ✦ Favorit — Most Popular
+                                        </span>
+                                    </div>
+                                )}
+
                                 {/* Top Badges */}
                                 <div>
-                                    <div className="flex items-center justify-between gap-2 mb-3">
+                                    <div className={`flex items-center justify-between gap-2 mb-3 ${isPopular ? 'mt-2' : ''}`}>
                                         <span className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${
                                             isFree
                                                 ? 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
@@ -488,17 +530,35 @@ export default function AdminPricelist() {
 
                                 {/* Bottom Action Buttons */}
                                 <div className="mt-6 pt-4 border-t border-[rgb(var(--color-border))] flex items-center justify-between gap-2">
-                                    {!isDefault && (
+                                    <div className="flex items-center gap-1">
+                                        {/* Toggle Favorite Star */}
                                         <button
                                             type="button"
-                                            onClick={() => handleSetDefault(plan)}
-                                            disabled={setDefaultMutation.isPending}
-                                            className="p-2 text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/40 rounded-xl transition text-xs font-bold flex items-center gap-1"
-                                            title="Jadikan paket default"
+                                            onClick={() => handleToggleFavorite(plan)}
+                                            disabled={toggleFavoriteMutation.isPending}
+                                            className={`p-2 rounded-xl transition text-xs font-bold flex items-center gap-1 ${
+                                                isPopular
+                                                    ? 'text-amber-500 bg-amber-50 dark:bg-amber-950/30 hover:bg-amber-100'
+                                                    : 'text-[rgb(var(--color-text-tertiary))] hover:text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-950/30'
+                                            }`}
+                                            title={isPopular ? 'Hapus dari Favorit (Most Popular)' : 'Tandai sebagai Favorit (Most Popular)'}
                                         >
-                                            <Star className="h-4 w-4" />
+                                            <Star className={`h-4 w-4 ${isPopular ? 'fill-amber-400 text-amber-400' : ''}`} />
                                         </button>
-                                    )}
+
+                                        {/* Set as Default */}
+                                        {!isDefault && (
+                                            <button
+                                                type="button"
+                                                onClick={() => handleSetDefault(plan)}
+                                                disabled={setDefaultMutation.isPending}
+                                                className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 rounded-xl transition text-xs font-bold flex items-center gap-1"
+                                                title="Jadikan paket default sistem"
+                                            >
+                                                <Shield className="h-4 w-4" />
+                                            </button>
+                                        )}
+                                    </div>
 
                                     <div className="flex items-center gap-1 ml-auto">
                                         <button
@@ -892,6 +952,35 @@ export default function AdminPricelist() {
                         <div>
                             <p className="font-extrabold text-[rgb(var(--color-text-primary))] text-sm">{planToSetDefault.name || planToSetDefault.nama}</p>
                             <p className="text-xs text-[rgb(var(--color-text-secondary))] mt-0.5">Harga: {planToSetDefault.formatted_price || `Rp ${planToSetDefault.harga}`}</p>
+                        </div>
+                    )
+                }
+            />
+
+            {/* Confirm Modal: Toggle Favorit */}
+            <ConfirmModal
+                isOpen={isToggleFavoriteModalOpen}
+                onClose={() => {
+                    setIsToggleFavoriteModalOpen(false);
+                    setPlanToToggleFavorite(null);
+                }}
+                onConfirm={handleConfirmToggleFavorite}
+                title={planToToggleFavorite?.is_popular ? 'Hapus dari Favorit' : 'Tandai sebagai Favorit'}
+                description={
+                    planToToggleFavorite?.is_popular
+                        ? 'Hapus tanda "Most Popular" dari paket ini? Tampilan di Landing Page dan Billing akan kembali normal.'
+                        : 'Tandai paket ini sebagai "Most Popular"? Badge Favorit akan muncul di Landing Page dan Billing Page sebagai paket unggulan.'
+                }
+                variant={planToToggleFavorite?.is_popular ? 'warning' : 'info'}
+                icon={Star}
+                confirmText={planToToggleFavorite?.is_popular ? 'Ya, Hapus Favorit' : 'Ya, Tandai Favorit'}
+                cancelText="Batal"
+                isLoading={toggleFavoriteMutation.isPending}
+                details={
+                    planToToggleFavorite && (
+                        <div>
+                            <p className="font-extrabold text-[rgb(var(--color-text-primary))] text-sm">{planToToggleFavorite.name || planToToggleFavorite.nama}</p>
+                            <p className="text-xs text-[rgb(var(--color-text-secondary))] mt-0.5">Harga: {planToToggleFavorite.formatted_price || `Rp ${planToToggleFavorite.harga}`}</p>
                         </div>
                     )
                 }
