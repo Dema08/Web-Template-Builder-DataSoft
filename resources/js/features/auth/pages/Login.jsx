@@ -241,11 +241,6 @@ export default function Login({ onSwitchToRegister }) {
                     <SparkleStarGroup size="xl" color="text-white" />
                 </div>
 
-                {/* Bottom Left Sparkle Star (smaller) */}
-                <div className="absolute bottom-24 left-8 z-10 ds-animate-float-reverse opacity-60">
-                    <SparkleStarGroup size="md" color="text-blue-200" />
-                </div>
-
                 {/* Top Badge */}
                 <div className="relative z-10 flex justify-start pt-2">
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-[10px] font-bold tracking-wider text-white uppercase shadow-sm hover:scale-105 transition-transform cursor-default">
