@@ -138,6 +138,25 @@ export const useBuilderStore = create((set, get) => ({
     return normalized;
   },
 
+  // Serialize the CURRENT canvas into the draft_json shape the backend expects.
+  // MUST stay in sync with what loadSections() reads back (incl. background),
+  // otherwise edits (e.g. section background) silently disappear on save/publish.
+  serializeDraftJson: () => {
+    const { sections } = get();
+    return {
+      sections: (sections || []).map(s => ({
+        id: s.id,
+        type: s.type,
+        layout: s.layout,
+        styles: s.styles || {},
+        background: s.background || null,
+        isLocked: s.isLocked || false,
+        isHidden: s.isHidden || false,
+        components: s.components,
+      })),
+    };
+  },
+
   loadSections: (sectionsData) => {
     const normalizeComponent = (c, idx = 0) => {
       const normalized = {

@@ -154,20 +154,9 @@ export default function Builder() {
   };
 
   const handleSave = async () => {
-    const currentSections = useBuilderStore.getState().sections;
     try {
       setIsSaving(true);
-      const draftJson = {
-        sections: currentSections.map((s) => ({
-          id: s.id,
-          type: s.type,
-          layout: s.layout,
-          styles: s.styles || {},
-          isLocked: s.isLocked || false,
-          isHidden: s.isHidden || false,
-          components: s.components,
-        })),
-      };
+      const draftJson = useBuilderStore.getState().serializeDraftJson();
 
       await websiteApi.saveContent({ draft_json: draftJson });
       queryClient.invalidateQueries([ROUTES.WEBSITES]);
@@ -180,20 +169,9 @@ export default function Builder() {
   };
 
   const handlePublish = async () => {
-    const currentSections = useBuilderStore.getState().sections;
     try {
       setIsPublishing(true);
-      const draftJson = {
-        sections: currentSections.map((s) => ({
-          id: s.id,
-          type: s.type,
-          layout: s.layout,
-          styles: s.styles || {},
-          isLocked: s.isLocked || false,
-          isHidden: s.isHidden || false,
-          components: s.components,
-        })),
-      };
+      const draftJson = useBuilderStore.getState().serializeDraftJson();
 
       // Save content first
       await websiteApi.saveContent({ draft_json: draftJson });

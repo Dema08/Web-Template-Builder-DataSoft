@@ -81,7 +81,18 @@ export default function AdminTemplateBuilder() {
   // Activate automatic draft persistence (localStorage & backend autosave)
   useAutosave();
 
-  // Restore unsaved local draft on mount (preserves edits on browser restart/refresh)
+  // Setiap ganti template yang dibuka (atau masuk mode create): reset builder
+  // supaya state template sebelumnya tidak bocor ke template yang dibuka.
+  useEffect(() => {
+    const { resetBuilder, setTemplateId } = useBuilderStore.getState();
+    resetBuilder();
+    setTemplateId(id ? Number(id) : null);
+    // Bersihkan sisa seleksi kategori dari template sebelumnya
+    setSelectedCategoryId('');
+    setSelectedCategoryObj(null);
+  }, [id]);
+
+  // Restore unsaved local draft untuk route /create (belum ada template id).
   useEffect(() => {
     const localDraft = loadLocalDraft(id);
     if (localDraft && (localDraft.sections?.length > 0 || localDraft.industryId)) {
@@ -97,7 +108,9 @@ export default function AdminTemplateBuilder() {
     }
   }, [id, setIndustry, setTemplateName, loadSections]);
 
-  // Load template data into store if editing an existing template
+  // Load template data into store if editing an existing template.
+  // Server selalu menang atas local draft basi: local draft hanya dipakai
+  // kalau updatedAt-nya LEBIH BARU dari updated_at server (edit yang belum sempat save).
   useEffect(() => {
     if (templateData) {
       setTemplateId(templateData.id);
@@ -111,15 +124,20 @@ export default function AdminTemplateBuilder() {
         setSelectedCategoryObj(templateData.industry_category);
       }
 
-      // Check if there are unsaved local edits for this template ID
+      // Pakai local draft hanya jika benar-benar lebih baru dari data server
       const localDraft = loadLocalDraft(templateData.id);
-      const sectionsToLoad = (localDraft?.sections?.length > 0) ? localDraft.sections : serverSections;
+      const serverUpdatedAt = templateData.updated_at ? new Date(templateData.updated_at).getTime() : 0;
+      const localIsFresher =
+        localDraft?.sections?.length > 0 &&
+        localDraft?.updatedAt && serverUpdatedAt &&
+        localDraft.updatedAt > serverUpdatedAt;
+      const sectionsToLoad = localIsFresher ? localDraft.sections : serverSections;
 
-      if (sectionsToLoad.length > 0) {
-        setTimeout(() => {
-          loadSections(sectionsToLoad);
-        }, 10);
-      }
+      // Selalu terapkan hasil server (walau kosong) supaya canvas tidak
+      // menampilkan sisa section template sebelumnya
+      setTimeout(() => {
+        loadSections(sectionsToLoad);
+      }, 10);
     }
   }, [templateData, setTemplateId, setTemplateName, loadSections, setIndustry]);
 
@@ -254,23 +272,14 @@ export default function AdminTemplateBuilder() {
   };
 
   const executeSave = async (desc, thumb, thumbFile, action) => {
-    const { templateId, templateName, sections, status, industryId } = useBuilderStore.getState();
+    const { templateId, templateName, status, industryId, serializeDraftJson } = useBuilderStore.getState();
     const categoryId = selectedCategoryId || industryId;
     if (!categoryId) {
       toast.error('Please select an industry category for this template.', 'Category Required');
       return;
     }
-    const draftJson = {
-      sections: sections.map(s => ({
-        id: s.id,
-        type: s.type,
-        layout: s.layout,
-        styles: s.styles || {},
-        isLocked: s.isLocked || false,
-        isHidden: s.isHidden || false,
-        components: s.components,
-      })),
-    };
+    // Single source of truth — includes `background` per section
+    const draftJson = serializeDraftJson();
     try {
       setIsSavingModal(true);
       // Build thumb URL to use: if file was picked, we'll upload after creating/updating template
@@ -326,10 +335,12 @@ export default function AdminTemplateBuilder() {
               fd.append('thumbnail', thumbFile);
               await templateApi.uploadThumbnail(newId, fd);
             }
-            navigate(`/admin/templates/builder/${newId}`, { replace: true });
           }
           useBuilderStore.getState().setStatus('published');
+          try { clearLocalDraft(newId); } catch { /* abaikan */ }
           toast.success('Template created and published successfully!', 'Success');
+          // Kembali otomatis ke halaman Manage Template setelah publish
+          navigate('/admin/templates', { replace: true });
         } else {
           await templateApi.update(templateId, payload);
           await templateApi.publish(templateId);
@@ -339,7 +350,10 @@ export default function AdminTemplateBuilder() {
             await templateApi.uploadThumbnail(templateId, fd);
           }
           useBuilderStore.getState().setStatus('published');
+          try { clearLocalDraft(templateId); } catch { /* abaikan */ }
           toast.success('Template published successfully!', 'Success');
+          // Kembali otomatis ke halaman Manage Template setelah publish
+          navigate('/admin/templates', { replace: true });
         }
       }
       queryClient.invalidateQueries(['admin-templates']);
@@ -353,6 +367,9 @@ export default function AdminTemplateBuilder() {
   };
 
   const handlePublish = () => {
+    // NOTE: templateId boleh null (mode create). Modal + executeSave yang
+    // bertanggung kaperlu create+publish (create payload dengan published_json).
+    // Jadi TIDAK perlu blok klik Publish di mode create.
     setSaveDescription(templateData?.description || '');
     setSaveThumbnail(templateData?.thumbnail ? `/storage/${templateData.thumbnail}` : (templateData?.thumbnail || ''));
     setSaveThumbnailFile(null);

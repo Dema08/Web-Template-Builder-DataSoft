@@ -81,15 +81,7 @@ export default function useAutosave() {
 
         const payload = {
           name: templateName || 'Untitled Template',
-          draft_json: {
-            sections: sections.map(s => ({
-              id: s.id,
-              type: s.type,
-              layout: s.layout,
-              components: s.components,
-              styles: s.styles || {},
-            })),
-          },
+          draft_json: useBuilderStore.getState().serializeDraftJson(),
           status: status,
         };
 
