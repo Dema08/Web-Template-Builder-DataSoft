@@ -20,7 +20,7 @@ function SparkleStarGroup({ className = '', style = {}, size = 'md', color = 'te
             <img
                 src="/images/microdata-emblem.png"
                 alt="Microdata"
-                className={`${currentSize} object-contain filter drop-shadow-xl animate-spin`}
+                className={`${currentSize} object-contain filter drop-shadow-xl ds-animate-float-slow`}
                 style={{ animationDuration: '12s' }}
             />
         </div>
@@ -237,14 +237,14 @@ export default function Login({ onSwitchToRegister }) {
                  style={{ background: 'linear-gradient(135deg, #1e3a8a, #2563eb, #4f46e5, #7c3aed, #1e3a8a)' }}>
 
                 {/* Top Right Sparkle Star */}
-                <div className="absolute top-8 right-8 z-10 ds-animate-float-slow">
+                <div className="absolute top-16 right-12 z-10 ds-animate-float-slow">
                     <SparkleStarGroup size="xl" color="text-white" />
                 </div>
 
                 {/* Top Badge */}
                 <div className="relative z-10 flex justify-start pt-2">
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-[10px] font-bold tracking-wider text-white uppercase shadow-sm hover:scale-105 transition-transform cursor-default">
-                        <img src="/images/microdata-emblem.png" alt="Microdata" className="w-3.5 h-3.5 object-contain animate-spin" style={{ animationDuration: '8s' }} />
+                        <img src="/images/microdata-emblem.png" alt="Microdata" className="w-3.5 h-3.5 object-contain" />
                         <span>MICRODATA STUDIO 2.0</span>
                     </div>
                 </div>

@@ -26,7 +26,7 @@ function SparkleStarGroup({ className = '', style = {}, size = 'md', color = 'te
             <img
                 src="/images/microdata-emblem.png"
                 alt="Microdata"
-                className={`${currentSize} object-contain filter drop-shadow-xl animate-spin`}
+                className={`${currentSize} object-contain filter drop-shadow-xl ds-animate-float-slow`}
                 style={{ animationDuration: '12s' }}
             />
         </div>
@@ -741,13 +741,13 @@ export default function Register({ onSwitchToLogin }) {
             <div className="hidden md:flex md:w-1/2 relative p-8 sm:p-11 flex-col justify-between text-white overflow-hidden ds-animate-gradient"
                  style={{ background: 'linear-gradient(135deg, #1e3a8a, #2563eb, #4f46e5, #7c3aed, #1e3a8a)' }}>
 
-                <div className="absolute top-6 right-6 z-10 ds-animate-float-slow">
-                    <SparkleStarGroup size="lg" color="text-white" />
+                <div className="absolute top-16 right-12 z-10 ds-animate-float-slow">
+                    <SparkleStarGroup size="xl" color="text-white" />
                 </div>
 
                 <div className="relative z-10 flex justify-start pt-1">
                     <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-[9px] font-bold tracking-wider text-white uppercase shadow-xs">
-                        <img src="/images/microdata-emblem.png" alt="Microdata" className="w-3 h-3 object-contain animate-spin" style={{ animationDuration: '8s' }} />
+                        <img src="/images/microdata-emblem.png" alt="Microdata" className="w-3 h-3 object-contain" />
                         <span>MICRODATA STUDIO 2.0</span>
                     </div>
                 </div>
