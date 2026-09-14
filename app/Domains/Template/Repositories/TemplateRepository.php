@@ -95,7 +95,8 @@ class TemplateRepository implements RepositoryContract
 
     public function getActiveByCategory(int $categoryId, int $perPage = 15): LengthAwarePaginator
     {
-        return Template::with(['industryCategory'])
+        return Template::forList()
+            ->with(['industryCategory'])
             ->byCategory($categoryId)
             ->byStatus(TemplateStatus::Published)
             ->orderByDesc('is_featured')
@@ -105,7 +106,8 @@ class TemplateRepository implements RepositoryContract
 
     public function getFeatured(int $limit = 10): Collection
     {
-        return Template::with(['industryCategory'])
+        return Template::forList()
+            ->with(['industryCategory'])
             ->featured()
             ->byStatus(TemplateStatus::Published)
             ->orderBy('sort_order')
@@ -115,7 +117,8 @@ class TemplateRepository implements RepositoryContract
 
     public function search(string $query, int $perPage = 15): LengthAwarePaginator
     {
-        return Template::with(['industryCategory', 'creator'])
+        return Template::forList()
+            ->with(['industryCategory', 'creator'])
             ->where('name', 'like', "%{$query}%")
             ->orWhere('code', 'like', "%{$query}%")
             ->orWhere('description', 'like', "%{$query}%")
@@ -125,7 +128,8 @@ class TemplateRepository implements RepositoryContract
 
     public function filterByStatus(TemplateStatus $status, int $perPage = 15): LengthAwarePaginator
     {
-        return Template::with(['industryCategory', 'creator'])
+        return Template::forList()
+            ->with(['industryCategory', 'creator'])
             ->byStatus($status)
             ->orderBy('sort_order')
             ->paginate($perPage);
@@ -133,7 +137,7 @@ class TemplateRepository implements RepositoryContract
 
     public function getFiltered(array $filters = [], int $perPage = 15): LengthAwarePaginator
     {
-        $query = Template::with(['industryCategory', 'creator', 'updater']);
+        $query = Template::forList()->with(['industryCategory', 'creator', 'updater']);
 
         if (!empty($filters['search'])) {
             $search = $filters['search'];

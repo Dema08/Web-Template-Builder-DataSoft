@@ -77,7 +77,8 @@ class PublicSiteController extends BaseController
      */
     public function templates(): JsonResponse
     {
-        $query = \App\Domains\Template\Models\Template::where('status', 'published')
+        $query = \App\Domains\Template\Models\Template::forList()
+            ->where('status', 'published')
             ->with('industryCategory');
 
         if ($categoryId = request('industry_category_id')) {

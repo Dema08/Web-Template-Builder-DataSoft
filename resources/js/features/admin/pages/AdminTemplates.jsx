@@ -621,23 +621,23 @@ export default function AdminTemplates() {
                                                         <button
                                                             type="button"
                                                             onClick={() => handleOpenInBuilder(tpl)}
-                                                            className="w-full text-left px-3 py-2 text-xs font-bold text-slate-800 hover:bg-indigo-600 hover:text-white rounded-xl flex items-center justify-between group transition-all duration-150"
+                                                            className="w-full text-left px-3 py-2 text-xs font-bold text-slate-800 hover:bg-indigo-600 hover:text-white rounded-xl flex items-center justify-between group/item transition-all duration-150"
                                                         >
                                                             <div className="flex items-center gap-2.5">
-                                                                <div className="p-1.5 rounded-lg bg-indigo-50 text-indigo-600 group-hover:bg-white/20 group-hover:text-white transition-colors">
+                                                                <div className="p-1.5 rounded-lg bg-indigo-50 text-indigo-600 group-hover/item:bg-white/20 group-hover/item:text-white transition-colors">
                                                                     <Layout className="h-3.5 w-3.5" />
                                                                 </div>
                                                                 <span>Open in Builder</span>
                                                             </div>
-                                                            <span className="text-[10px] opacity-0 group-hover:opacity-100 font-semibold transition-opacity">Edit →</span>
+                                                            <span className="text-[10px] opacity-0 group-hover/item:opacity-100 font-semibold transition-opacity">Edit →</span>
                                                         </button>
 
                                                         <button
                                                             type="button"
                                                             onClick={() => { handleOpenModal(tpl); setActionDropdown(null); }}
-                                                            className="w-full text-left px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100 hover:text-slate-900 rounded-xl flex items-center gap-2.5 group transition-all duration-150"
+                                                            className="w-full text-left px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100 hover:text-slate-900 rounded-xl flex items-center gap-2.5 group/item transition-all duration-150"
                                                         >
-                                                            <div className="p-1.5 rounded-lg bg-slate-100 text-slate-600 group-hover:bg-slate-200 transition-colors">
+                                                            <div className="p-1.5 rounded-lg bg-slate-100 text-slate-600 group-hover/item:bg-slate-200 transition-colors">
                                                                 <Edit2 className="h-3.5 w-3.5" />
                                                             </div>
                                                             <span>Edit Details</span>
@@ -646,9 +646,9 @@ export default function AdminTemplates() {
                                                         <button
                                                             type="button"
                                                             onClick={() => { duplicateMutation.mutate(tpl.id); setActionDropdown(null); }}
-                                                            className="w-full text-left px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100 hover:text-slate-900 rounded-xl flex items-center gap-2.5 group transition-all duration-150"
+                                                            className="w-full text-left px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-100 hover:text-slate-900 rounded-xl flex items-center gap-2.5 group/item transition-all duration-150"
                                                         >
-                                                            <div className="p-1.5 rounded-lg bg-slate-100 text-slate-600 group-hover:bg-slate-200 transition-colors">
+                                                            <div className="p-1.5 rounded-lg bg-slate-100 text-slate-600 group-hover/item:bg-slate-200 transition-colors">
                                                                 <Copy className="h-3.5 w-3.5" />
                                                             </div>
                                                             <span>Duplicate</span>
@@ -665,10 +665,10 @@ export default function AdminTemplates() {
                                                             <button
                                                                 type="button"
                                                                 onClick={() => updateStatusMutation.mutate({ id: tpl.id, status: 'published', template: tpl })}
-                                                                className="w-full text-left px-3 py-2 text-xs font-bold text-emerald-700 hover:bg-emerald-600 hover:text-white rounded-xl flex items-center justify-between group transition-all duration-150"
+                                                                className="w-full text-left px-3 py-2 text-xs font-bold text-emerald-700 hover:bg-emerald-600 hover:text-white rounded-xl flex items-center justify-between group/item transition-all duration-150"
                                                             >
                                                                 <div className="flex items-center gap-2.5">
-                                                                    <div className="p-1.5 rounded-lg bg-emerald-50 text-emerald-600 group-hover:bg-white/20 group-hover:text-white transition-colors">
+                                                                    <div className="p-1.5 rounded-lg bg-emerald-50 text-emerald-600 group-hover/item:bg-white/20 group-hover/item:text-white transition-colors">
                                                                         <CheckCircle2 className="h-3.5 w-3.5" />
                                                                     </div>
                                                                     <span>Publish (Aktifkan)</span>
@@ -680,10 +680,10 @@ export default function AdminTemplates() {
                                                             <button
                                                                 type="button"
                                                                 onClick={() => updateStatusMutation.mutate({ id: tpl.id, status: 'draft', template: tpl })}
-                                                                className="w-full text-left px-3 py-2 text-xs font-bold text-slate-700 hover:bg-amber-500 hover:text-white rounded-xl flex items-center justify-between group transition-all duration-150"
+                                                                className="w-full text-left px-3 py-2 text-xs font-bold text-slate-700 hover:bg-amber-500 hover:text-white rounded-xl flex items-center justify-between group/item transition-all duration-150"
                                                             >
                                                                 <div className="flex items-center gap-2.5">
-                                                                    <div className="p-1.5 rounded-lg bg-amber-50 text-amber-600 group-hover:bg-white/20 group-hover:text-white transition-colors">
+                                                                    <div className="p-1.5 rounded-lg bg-amber-50 text-amber-600 group-hover/item:bg-white/20 group-hover/item:text-white transition-colors">
                                                                         <FileEdit className="h-3.5 w-3.5" />
                                                                     </div>
                                                                     <span>Set to Draft</span>
@@ -695,10 +695,10 @@ export default function AdminTemplates() {
                                                             <button
                                                                 type="button"
                                                                 onClick={() => updateStatusMutation.mutate({ id: tpl.id, status: 'disabled', template: tpl })}
-                                                                className="w-full text-left px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-700 hover:text-white rounded-xl flex items-center justify-between group transition-all duration-150"
+                                                                className="w-full text-left px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-700 hover:text-white rounded-xl flex items-center justify-between group/item transition-all duration-150"
                                                             >
                                                                 <div className="flex items-center gap-2.5">
-                                                                    <div className="p-1.5 rounded-lg bg-slate-100 text-slate-600 group-hover:bg-white/20 group-hover:text-white transition-colors">
+                                                                    <div className="p-1.5 rounded-lg bg-slate-100 text-slate-600 group-hover/item:bg-white/20 group-hover/item:text-white transition-colors">
                                                                         <Ban className="h-3.5 w-3.5" />
                                                                     </div>
                                                                     <span>Disable (Sembunyikan)</span>
@@ -715,10 +715,10 @@ export default function AdminTemplates() {
                                                                 setDeleteConfirmTemplate(tpl);
                                                                 setActionDropdown(null);
                                                             }}
-                                                            className="w-full text-left px-3 py-2 text-xs font-bold text-rose-600 hover:bg-rose-600 hover:text-white rounded-xl flex items-center justify-between group transition-all duration-150"
+                                                            className="w-full text-left px-3 py-2 text-xs font-bold text-rose-600 hover:bg-rose-600 hover:text-white rounded-xl flex items-center justify-between group/item transition-all duration-150"
                                                         >
                                                             <div className="flex items-center gap-2.5">
-                                                                <div className="p-1.5 rounded-lg bg-rose-50 text-rose-600 group-hover:bg-white/20 group-hover:text-white transition-colors">
+                                                                <div className="p-1.5 rounded-lg bg-rose-50 text-rose-600 group-hover/item:bg-white/20 group-hover/item:text-white transition-colors">
                                                                     <Trash2 className="h-3.5 w-3.5" />
                                                                 </div>
                                                                 <span>Delete Template</span>

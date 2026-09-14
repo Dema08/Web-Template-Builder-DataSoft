@@ -171,9 +171,29 @@ class Template extends Model
         return $this->hasMany(TemplateUsage::class, 'template_id');
     }
 
-    // ------------------------------------------------------------------
-    // Scopes
-    // ------------------------------------------------------------------
+    public function scopeForList(Builder $query): Builder
+    {
+        return $query->select([
+            'id',
+            'category_id',
+            'code',
+            'name',
+            'slug',
+            'description',
+            'thumbnail',
+            'preview_image',
+            'version',
+            'sort_order',
+            'is_featured',
+            'is_premium',
+            'status',
+            'created_by',
+            'updated_by',
+            'created_at',
+            'updated_at',
+            'deleted_at',
+        ]);
+    }
 
     public function scopeByStatus(Builder $query, TemplateStatus $status): Builder
     {

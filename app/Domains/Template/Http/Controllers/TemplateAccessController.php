@@ -29,7 +29,7 @@ class TemplateAccessController extends BaseController
     {
         $user = $request->user();
 
-        $query = Template::with('industryCategory')->where('status', 'published');
+        $query = Template::forList()->with('industryCategory')->where('status', 'published');
 
         if ($categoryId = $request->integer('industry_category_id') ?: $request->integer('category_id')) {
             $query->where('category_id', $categoryId);

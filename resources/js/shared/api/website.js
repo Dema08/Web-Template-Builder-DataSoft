@@ -42,8 +42,8 @@ const websiteApi = {
     /**
      * Publish the website to be publicly accessible.
      */
-    async publish() {
-        const { data } = await http.post('/website/publish');
+    async publish(payload = {}) {
+        const { data } = await http.post('/website/publish', payload);
         return data.data;
     },
 

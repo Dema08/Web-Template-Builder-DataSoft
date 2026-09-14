@@ -15,7 +15,8 @@ import ContextMenu from '@builder/components/editing/ContextMenu';
 import KeyboardShortcuts from '@builder/components/editing/KeyboardShortcuts';
 import { useBuilderStore } from '@builder/stores/builderStore';
 import BuilderErrorBoundary from '@builder/components/common/BuilderErrorBoundary';
-import { ROUTES } from '@constants';
+import { PublishDomainModal } from '@shared/components/ui';
+import { ROUTES, QUERY_KEYS } from '@constants';
 import { Loader2 } from 'lucide-react';
 
 export default function Builder() {
@@ -24,6 +25,8 @@ export default function Builder() {
   const [isLoadingContent, setIsLoadingContent] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
+  const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
+  const [websiteInfo, setWebsiteInfo] = useState(null);
 
   const {
     sections,
@@ -40,6 +43,16 @@ export default function Builder() {
     const initializeBuilderContent = async () => {
       try {
         setIsLoadingContent(true);
+
+        // Fetch website metadata first
+        try {
+          const site = await websiteApi.getWebsite();
+          if (site && isMounted) {
+            setWebsiteInfo(site);
+          }
+        } catch (_siteErr) {
+          // ignore
+        }
 
         // 1. Check if user came from Templates page with a pending template selection
         const pendingTemplateId = sessionStorage.getItem('pending_template_id');
@@ -81,7 +94,6 @@ export default function Builder() {
               navigate(ROUTES.TEMPLATES, { replace: true });
               return;
             }
-            // Non-403 (network/dll) → lanjutkan fallback normal
           }
 
           try {
@@ -110,7 +122,6 @@ export default function Builder() {
               return;
             }
           } catch (tplErr) {
-            // useTemplate 403 → akses ditolak: redirect ke Gallery
             if (tplErr?.response?.status === 403) {
               toast.error(tplErr?.response?.data?.message || 'Akses ke template ini dibatasi oleh paket langganan Anda.', 'Akses Ditolak');
               navigate(ROUTES.TEMPLATES, { replace: true });
@@ -168,17 +179,33 @@ export default function Builder() {
     }
   };
 
-  const handlePublish = async () => {
+  const handleOpenPublishModal = async () => {
+    try {
+      const site = await websiteApi.getWebsite();
+      if (site) setWebsiteInfo(site);
+    } catch (_e) {
+      // ignore
+    }
+    setIsPublishModalOpen(true);
+  };
+
+  const handleConfirmPublish = async (domainConfig) => {
     try {
       setIsPublishing(true);
       const draftJson = useBuilderStore.getState().serializeDraftJson();
 
-      // Save content first
+      // 1. Save current canvas draft
       await websiteApi.saveContent({ draft_json: draftJson });
 
-      // Publish website
-      const res = await websiteApi.publish();
-      const pubData = res.data?.data ?? res.data;
+      // 2. Execute publish with domain settings
+      const res = await websiteApi.publish(domainConfig);
+      const pubData = res?.data ?? res;
+
+      setIsPublishModalOpen(false);
+      queryClient.invalidateQueries({ queryKey: [ROUTES.WEBSITES] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.WEBSITE] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.WEBSITE_CONTENT] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.DASHBOARD] });
 
       toast.success(
         <div>
@@ -190,12 +217,15 @@ export default function Builder() {
               rel="noreferrer"
               className="text-xs text-indigo-200 underline mt-1 inline-block"
             >
-              Lihat Website Live →
+              Lihat Website Live ({pubData?.domain_type === 'custom' ? pubData.custom_domain : `${pubData.website?.slug}.microdata.id`}) →
             </a>
           )}
         </div>,
         'Publish Berhasil'
       );
+
+      // Keluar dari builder menuju ke halaman website
+      navigate(ROUTES.WEBSITES);
     } catch (err) {
       toast.error(err.response?.data?.message || 'Gagal mempublish website.', 'Error');
     } finally {
@@ -230,7 +260,7 @@ export default function Builder() {
           <BuilderToolbar
             onBack={handleBack}
             onSave={handleSave}
-            onPublish={handlePublish}
+            onPublish={handleOpenPublishModal}
             isSaving={isSaving}
             isPublishing={isPublishing}
           />
@@ -255,6 +285,16 @@ export default function Builder() {
           </div>
         </BuilderCanvas>
       </BuilderLayout>
+
+      <PublishDomainModal
+        isOpen={isPublishModalOpen}
+        onClose={() => setIsPublishModalOpen(false)}
+        onPublish={handleConfirmPublish}
+        initialSlug={websiteInfo?.slug || ''}
+        initialCustomDomain={websiteInfo?.settings?.custom_domain || ''}
+        initialDomainType={websiteInfo?.settings?.domain_type || 'subdomain'}
+        isPublishing={isPublishing}
+      />
     </>
   );
 }

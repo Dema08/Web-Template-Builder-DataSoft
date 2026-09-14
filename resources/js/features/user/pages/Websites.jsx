@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import {
     Globe,
     Plus,
@@ -11,13 +11,14 @@ import {
     Eye,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useWebsite } from '@hooks';
+import { useWebsite, useDashboard } from '@hooks';
 import { ROUTES } from '@constants';
 import { Card, Button, Spinner, StatusBadge, ConfirmModal } from '@shared/components/ui';
 import { toast } from '@store';
 
 export default function Websites() {
-    const { website } = useWebsite();
+    const { website, isWebsiteLoading } = useWebsite();
+    const { websites: dbWebsites, analytics } = useDashboard();
 
     const [searchQuery, setSearchQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
@@ -27,46 +28,39 @@ export default function Websites() {
 
     const [siteToDelete, setSiteToDelete] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [extraWebsites, setExtraWebsites] = useState([]);
 
+    const websitesList = useMemo(() => {
+        const list = [];
+        if (website && website.id) {
+            const isPub = website.status === 'published';
+            const customDomain = website.settings?.custom_domain;
+            const domainType = website.settings?.domain_type;
+            const domainStr = (domainType === 'custom' && customDomain)
+                ? customDomain
+                : `${website.slug || 'my-website'}.microdata.id`;
 
-    const [websitesList, setWebsitesList] = useState([
-        {
-            id: 1,
-            name: website?.name || 'Microdata Corporate Profile',
-            subdomain: website?.subdomain || 'Microdata',
-            domain: `${website?.subdomain || 'Microdata'}.Microdata.id`,
-            status: website?.is_published ? 'Published' : 'Draft',
-            updatedAt: 'Just now',
-            visitors: '14,290',
-            views: '45.2k',
-            thumbnail: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop&q=80',
-            templateName: 'Enterprise Corporate',
-        },
-        {
-            id: 2,
-            name: 'Koperasi Maju Profile',
-            subdomain: 'koperasimaju',
-            domain: 'koperasimaju.Microdata.id',
-            status: 'Published',
-            updatedAt: '2 hours ago',
-            visitors: '8,420',
-            views: '24.1k',
-            thumbnail: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=600&auto=format&fit=crop&q=80',
-            templateName: 'Modern Business',
-        },
-        {
-            id: 3,
-            name: 'Microdata Solution Hub',
-            subdomain: 'solutionhub',
-            domain: 'solutionhub.Microdata.id',
-            status: 'Draft',
-            updatedAt: '3 days ago',
-            visitors: '0',
-            views: '0',
-            thumbnail: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&auto=format&fit=crop&q=80',
-            templateName: 'SaaS Showcase',
-        },
-    ]);
+            const publicUrlStr = (domainType === 'custom' && customDomain)
+                ? (customDomain.startsWith('http') ? customDomain : `https://${customDomain}`)
+                : `/public/site?slug=${website.slug}`;
+
+            list.push({
+                id: website.id,
+                name: website.name || 'Website Perusahaan Saya',
+                subdomain: website.slug || 'my-website',
+                domain: domainStr,
+                publicUrl: publicUrlStr,
+                status: isPub ? 'Published' : 'Draft',
+                updatedAt: website.updated_at ? new Date(website.updated_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Baru saja',
+                visitors: analytics?.unique_visitors ? analytics.unique_visitors.toLocaleString() : '0',
+                views: analytics?.total_views ? analytics.total_views.toLocaleString() : '0',
+                thumbnail: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop&q=80',
+                templateName: website.template?.name || 'Microdata Corporate Template',
+            });
+        }
+
+        return [...list, ...extraWebsites];
+    }, [website, analytics, extraWebsites]);
 
     const filteredWebsites = websitesList.filter((site) => {
         const matchesSearch =
@@ -94,7 +88,7 @@ export default function Websites() {
             templateName: 'Microdata Default Template',
         };
 
-        setWebsitesList([newSite, ...websitesList]);
+        setExtraWebsites([newSite, ...extraWebsites]);
         setIsCreateModalOpen(false);
         setNewSiteName('');
         setNewSubdomain('');
@@ -108,7 +102,7 @@ export default function Websites() {
 
     const handleConfirmDeleteWebsite = () => {
         if (!siteToDelete) return;
-        setWebsitesList(websitesList.filter((w) => w.id !== siteToDelete.id));
+        setExtraWebsites(extraWebsites.filter((w) => w.id !== siteToDelete.id));
         toast.info(`Website "${siteToDelete.name}" deleted.`, 'Website Deleted');
         setIsDeleteModalOpen(false);
         setSiteToDelete(null);
@@ -260,7 +254,7 @@ export default function Websites() {
                             {/* Card Footer Actions */}
                             <div className="pt-3 border-t border-[rgb(var(--color-border))] flex items-center justify-between gap-2">
                                 <a
-                                    href={`http://${site.domain}`}
+                                    href={site.publicUrl || `http://${site.domain}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="p-2 text-[rgb(var(--color-text-secondary))] hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition border border-[rgb(var(--color-border))]"
