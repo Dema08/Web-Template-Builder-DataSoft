@@ -133,17 +133,17 @@ export default function ThumbnailUploader({
                             ${isDragging
                                 ? 'border-indigo-500 bg-indigo-50'
                                 : localFile
-                                    ? 'border-emerald-400 bg-emerald-50'
+                                    ? 'border-indigo-400 bg-indigo-50'
                                     : 'border-slate-300 bg-slate-50 hover:border-indigo-400 hover:bg-indigo-50/50'
                             }
                             ${error ? 'border-red-400 bg-red-50' : ''}`}
                     >
                         {localFile ? (
                             <div className="flex items-center gap-3 px-4 py-3">
-                                <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+                                <CheckCircle2 className="h-4 w-4 text-indigo-600 shrink-0" />
                                 <div className="flex-1 min-w-0">
-                                    <p className="text-xs font-bold text-emerald-800 truncate">{localFile.name}</p>
-                                    <p className="text-[10px] text-emerald-600">
+                                    <p className="text-xs font-bold text-indigo-800 truncate">{localFile.name}</p>
+                                    <p className="text-[10px] text-indigo-600">
                                         {(localFile.size / 1024).toFixed(1)} KB
                                         {dimensions && ` • ${dimensions.width}×${dimensions.height}`}
                                     </p>

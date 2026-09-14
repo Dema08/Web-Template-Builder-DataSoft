@@ -16,12 +16,12 @@ import KeyboardShortcuts from '@builder/components/editing/KeyboardShortcuts';
 import { useBuilderStore } from '@builder/stores/builderStore';
 import useAutosave, { loadLocalDraft, clearLocalDraft } from '@builder/hooks/useAutosave';
 import BuilderErrorBoundary from '@builder/components/common/BuilderErrorBoundary';
-import { getIndustryConfig, INDUSTRY_CONFIGS } from '@builder/utils/industryConfigs';
-import { INDUSTRY_STARTER_TEMPLATES, getCategoryStarterTemplates, getTotalStarterTemplateCount } from '@builder/data/starter-templates/industryStarterTemplates';
+import { getIndustryConfig } from '@builder/utils/industryConfigs';
+import { getCategoryStarterTemplates, getTotalStarterTemplateCount } from '@builder/data/starter-templates/industryStarterTemplates';
 
 import { getLayoutDefaults } from '@builder/engine/layoutDefaults';
 import DndBuilderProvider from '@builder/dnd/DndBuilderProvider';
-import { ArrowLeft, FolderOpen, Sparkles, Layout, Zap, CheckCircle2, Eye, X, Layers, ArrowRight, Image, FileEdit, Send } from 'lucide-react';
+import { ArrowLeft, Sparkles, Layout, Zap, CheckCircle2, Eye, X, Layers, ArrowRight, FileEdit, Send } from 'lucide-react';
 import CustomDropdown from '@shared/components/ui/CustomDropdown';
 import ConfirmModal from '@shared/components/ui/ConfirmModal';
 import ThumbnailUploader from '@features/admin/components/ThumbnailUploader';
@@ -798,9 +798,9 @@ export default function AdminTemplateBuilder() {
             {/* Header */}
             <div className="flex items-center justify-between border-b border-slate-100 pb-4">
               <div className="flex items-center gap-3">
-                <div className={`p-2.5 rounded-xl ${pendingSaveAction === 'publish' || pendingSaveAction === 'update_choice' ? 'bg-emerald-50' : 'bg-indigo-50'}`}>
+                <div className="p-2.5 rounded-xl bg-indigo-50">
                   {pendingSaveAction === 'publish' || pendingSaveAction === 'update_choice'
-                    ? <CheckCircle2 className="h-5 w-5 text-emerald-600" />
+                    ? <CheckCircle2 className="h-5 w-5 text-indigo-600" />
                     : <FileEdit className="h-5 w-5 text-indigo-600" />}
                 </div>
                 <div>
@@ -828,9 +828,9 @@ export default function AdminTemplateBuilder() {
             {/* Form */}
             <div className="space-y-4">
               {pendingSaveAction === 'update_choice' && (
-                <div className="bg-emerald-50/60 border border-emerald-100 rounded-2xl p-3.5 text-xs text-emerald-900 space-y-1">
-                  <p className="font-extrabold flex items-center gap-1.5 text-emerald-700">
-                    <Sparkles className="h-4 w-4 text-emerald-600" />
+                <div className="bg-indigo-50/60 border border-indigo-100 rounded-2xl p-3.5 text-xs text-indigo-900 space-y-1">
+                  <p className="font-extrabold flex items-center gap-1.5 text-indigo-700">
+                    <Sparkles className="h-4 w-4 text-indigo-600" />
                     Apakah Anda ingin mempublikasikan (Publish) template ini?
                   </p>
                   <p className="text-[11px] text-slate-600 leading-relaxed">
@@ -864,7 +864,7 @@ export default function AdminTemplateBuilder() {
                 value={saveThumbnail}
                 onChange={(url) => setSaveThumbnail(url)}
                 onFileSelect={(file) => setSaveThumbnailFile(file)}
-                error={saveModalError && !saveDescription.trim() === false && !saveThumbnail ? 'URL atau file thumbnail wajib diisi' : null}
+                error={saveModalError && saveDescription.trim() && !saveThumbnail && !saveThumbnailFile ? 'URL atau file thumbnail wajib diisi' : null}
               />
             </div>
 
@@ -908,7 +908,7 @@ export default function AdminTemplateBuilder() {
                       setSaveModalError('');
                       executeSave(desc, thumb, saveThumbnailFile, 'publish');
                     }}
-                    className="px-5 py-2.5 text-xs font-extrabold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow-md shadow-emerald-600/20 transition flex items-center gap-1.5 disabled:opacity-60 disabled:cursor-not-allowed"
+                    className="px-5 py-2.5 text-xs font-extrabold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-md shadow-indigo-600/20 transition flex items-center gap-1.5 disabled:opacity-60 disabled:cursor-not-allowed"
                   >
                     {isSavingModal ? (
                       <><span className="animate-spin h-3.5 w-3.5 border-2 border-white border-t-transparent rounded-full" /> Memproses...</>
@@ -929,11 +929,7 @@ export default function AdminTemplateBuilder() {
                     setSaveModalError('');
                     executeSave(desc, thumb, saveThumbnailFile, pendingSaveAction);
                   }}
-                  className={`px-5 py-2.5 text-xs font-extrabold text-white rounded-xl shadow-md transition flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed ${
-                    pendingSaveAction === 'publish'
-                      ? 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/20'
-                      : 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-600/20'
-                  }`}
+                  className="px-5 py-2.5 text-xs font-extrabold text-white rounded-xl shadow-md transition flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed bg-indigo-600 hover:bg-indigo-700 shadow-indigo-600/20"
                 >
                   {isSavingModal ? (
                     <><span className="animate-spin h-3.5 w-3.5 border-2 border-white border-t-transparent rounded-full" /> Menyimpan...</>

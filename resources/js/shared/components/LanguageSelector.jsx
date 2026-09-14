@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { ChevronDown, Globe, Check } from 'lucide-react';
-import { LANGUAGES, DEFAULT_LANGUAGE, getSavedLanguage, saveLanguage, changeLanguage, resetGoogleTranslate, hideGoogleTranslateUI, isGoogleTranslateAvailable, isGoogleTranslateReady, loadGoogleTranslateScript } from '@utils/googleTranslate';
+import { LANGUAGES, DEFAULT_LANGUAGE, STORAGE_KEY, getSavedLanguage, saveLanguage, changeLanguage, resetGoogleTranslate, hideGoogleTranslateUI, isGoogleTranslateAvailable, isGoogleTranslateReady, loadGoogleTranslateScript } from '@utils/googleTranslate';
 import { toast } from '@store';
 
 export default function LanguageSelector({ variant = 'settings', showLabel = true }) {
@@ -13,6 +13,21 @@ export default function LanguageSelector({ variant = 'settings', showLabel = tru
     // Hide Google Translate UI on mount
     useEffect(() => {
         hideGoogleTranslateUI();
+    }, []);
+
+    // Re-sync the checkmark when the language is changed from another selector
+    // instance (settings vs admin vs landing) or another tab.
+    useEffect(() => {
+        const sync = () => setSelectedLanguage(getSavedLanguage());
+        window.addEventListener('preferred-language-changed', sync);
+        const onStorage = (e) => {
+            if (!e.key || e.key === STORAGE_KEY) sync();
+        };
+        window.addEventListener('storage', onStorage);
+        return () => {
+            window.removeEventListener('preferred-language-changed', sync);
+            window.removeEventListener('storage', onStorage);
+        };
     }, []);
 
     // Close dropdown when clicking outside
@@ -65,17 +80,8 @@ export default function LanguageSelector({ variant = 'settings', showLabel = tru
         setIsOpen(false);
 
         try {
-            // Ensure the Google Translate script/widget is loaded (script load may
-            // take a while on first visit, so wait for the global instead of a
-            // fixed timeout). NOTE: use the live `isGoogleTranslateReady()`
-            // check — the exported `isInitialized` primitive never updates in
-            // importers.
             if (!isGoogleTranslateReady()) {
-                await loadGoogleTranslateScript();
-                const start = Date.now();
-                while (!isGoogleTranslateAvailable() && Date.now() - start < 15000) {
-                    await new Promise(resolve => setTimeout(resolve, 200));
-                }
+                loadGoogleTranslateScript().catch(() => {});
             }
 
             // Change language via Google Translate (await the async function)
@@ -143,6 +149,8 @@ export default function LanguageSelector({ variant = 'settings', showLabel = tru
                 <button
                     ref={buttonRef}
                     type="button"
+                    onMouseEnter={() => { loadGoogleTranslateScript().catch(() => {}); }}
+                    onFocus={() => { loadGoogleTranslateScript().catch(() => {}); }}
                     onClick={() => setIsOpen(!isOpen)}
                     disabled={isChanging}
                     className={

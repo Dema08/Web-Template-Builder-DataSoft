@@ -59,21 +59,21 @@ const loadGoogleTranslateScript = () => {
         // Fail-safe: never hang forever if Google is blocked (offline/adblock/CSP)
         const timeoutId = setTimeout(() => {
             safeReject(new Error('Google Translate load timeout (check connection/adblock)'));
-        }, 20000);
+        }, 12000);
 
         // Check if script already exists
         if (document.getElementById('google-translate-script')) {
             checkInterval = setInterval(() => {
                 if (window.google && window.google.translate) {
-                    isInitialized = true;
-
-                    // Wait for Google Translate to fully initialize before hiding UI
-                    setTimeout(() => {
+                    const holder = document.getElementById('google_translate_element');
+                    const combo = (holder && holder.querySelector('select.goog-te-combo')) || document.querySelector('.goog-te-combo');
+                    const widgetReady = !!((combo && combo.options && combo.options.length > 1) || document.querySelector('iframe.goog-te-menu-frame'));
+                    if (widgetReady) {
+                        isInitialized = true;
                         hideGoogleTranslateUI();
                         setupMutationObserver();
-                    }, 2000);
-
-                    safeResolve();
+                        safeResolve();
+                    }
                 }
             }, 100);
             return;
@@ -156,6 +156,7 @@ export const saveLanguage = (language) => {
     if (typeof window === 'undefined') return;
     try {
         localStorage.setItem(STORAGE_KEY, language);
+        try { window.dispatchEvent(new Event('preferred-language-changed')); } catch { /* ignore */ }
     } catch (error) {
         console.error('Failed to save language preference:', error);
     }
@@ -228,21 +229,67 @@ const clearGoogtransCookie = () => {
 export const changeLanguage = async (languageCode) => {
     if (typeof window === 'undefined') return false;
 
+    // Persist FIRST so a reload always boots into the picked language.
+    saveLanguage(languageCode);
+    const lang = LANGUAGE_MAP[languageCode] || languageCode;
+    setGoogtransCookie(lang);
+
+    // Fast path: translate in place if the widget is usable within ~3.5s.
+    // Bounded — never the old 15s stacked waits.
     try {
-        const lang = setGoogtransCookie(languageCode);
-
-        console.log(`Language cookie set to: /en/${lang}, reloading...`);
-
-        // Reload the page to apply translation
-        setTimeout(() => {
-            window.location.reload();
-        }, 300);
-
-        return true;
-    } catch (error) {
-        console.error('Failed to change language:', error);
-        return false;
+        if (await tryInPlaceTranslate(lang, 3500)) {
+            hideGoogleTranslateUI();
+            return true;
+        }
+    } catch {
+        /* fall through to cookie + reload */
     }
+
+    // Fallback: cookie already set above, one quick reload applies it.
+    setTimeout(() => {
+        window.location.reload();
+    }, 250);
+
+    return true;
+};
+
+// Bounded in-place attempt: fire the widget <select> change once it has
+// options, then confirm via the translated marker. Returns true on success,
+// false so the caller falls back to cookie + reload. Never hangs past timeoutMs.
+const tryInPlaceTranslate = async (lang, timeoutMs = 3500) => {
+    if (typeof window === 'undefined' || typeof document === 'undefined') return false;
+    const start = Date.now();
+    let fired = false;
+    let firedAt = 0;
+    while (Date.now() - start < timeoutMs) {
+        try {
+            const holder = document.getElementById('google_translate_element');
+            const combo =
+                (holder && holder.querySelector('select.goog-te-combo')) ||
+                document.querySelector('.goog-te-combo');
+            if (combo && combo.options && combo.options.length > 1) {
+                if (!Array.from(combo.options).some((o) => o.value === lang)) return false;
+                if (!fired) {
+                    tryDirectChangeToLanguage(lang);
+                    fired = true;
+                    firedAt = Date.now();
+                }
+                const html = document.documentElement;
+                const done =
+                    (html &&
+                        (html.classList.contains('translated-ltr') ||
+                            html.classList.contains('translated-rtl'))) ||
+                    getCurrentLanguageTarget() === lang;
+                if (done && Date.now() - firedAt > 300) return true;
+                // Fired but no marker yet: give Google ~2s max, then reload.
+                if (fired && Date.now() - firedAt > 2000) return false;
+            }
+        } catch {
+            /* keep polling */
+        }
+        await new Promise((r) => setTimeout(r, 100));
+    }
+    return false;
 };
 
 // Get current language
@@ -530,6 +577,30 @@ export const setupGoogleTranslateElement = () => {
 export const isGoogleTranslateAvailable = () => {
     if (typeof window === 'undefined') return false;
     return !!(window.google && window.google.translate);
+};
+
+// Wait until the TranslateElement has rendered its (Google-populated) language
+// options — the script being loaded is NOT enough on a cold page. Returns true
+// when the in-place change can run, false on timeout (caller falls back to
+// cookie + reload).
+export const waitForTranslateWidgetReady = async (timeoutMs = 4000) => {
+    if (typeof window === 'undefined') return false;
+    const start = Date.now();
+    while (Date.now() - start < timeoutMs) {
+        try {
+            const holder = document.getElementById('google_translate_element');
+            const combo =
+                (holder && holder.querySelector('select.goog-te-combo')) ||
+                document.querySelector('.goog-te-combo');
+            if (combo && combo.options && combo.options.length > 1) return true;
+            // Menu-style layouts render an iframe instead of a <select>.
+            if (document.querySelector('iframe.goog-te-menu-frame')) return true;
+        } catch {
+            /* ignore and keep polling */
+        }
+        await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+    return false;
 };
 
 // `isGoogleTranslateReady` is a LIVE check (call it as a function). Do NOT use
