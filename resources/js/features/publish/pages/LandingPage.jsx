@@ -273,30 +273,30 @@ function DashboardIllustration() {
     useEffect(() => {
         const interval = setInterval(() => {
             setActiveSec((prev) => (prev + 1) % sectionsList.length);
-        }, 2500);
+        }, 3000);
         return () => clearInterval(interval);
     }, []);
 
     return (
         <div className="relative w-full max-w-[620px] mx-auto group">
             {/* Pulsing Animated Background Glow */}
-            <div className="absolute inset-0 blur-3xl opacity-30 rounded-3xl ds-animate-pulse-slow"
+            <div className="absolute inset-0 blur-3xl opacity-25 rounded-3xl ds-animate-pulse-slow pointer-events-none"
                 style={{ background: 'radial-gradient(circle,#4f46e5 0%,#2563eb 50%,#7c3aed 80%,transparent 100%)' }} />
 
             {/* Main Dashboard Window */}
-            <div className="relative bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden ds-hover-glow transition-all duration-500"
-                style={{ boxShadow: '0 30px 80px rgba(79,70,229,0.22)' }}>
+            <div className="relative bg-white rounded-2xl shadow-2xl border border-slate-200/90 overflow-hidden transition-all duration-700"
+                style={{ boxShadow: '0 25px 60px rgba(79,70,229,0.18)' }}>
                 {/* Toolbar */}
                 <div className="flex items-center gap-2 px-4 py-3 bg-slate-900 border-b border-slate-800 text-white">
                     <div className="flex gap-1.5">
-                        <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
-                        <div className="w-3 h-3 rounded-full bg-amber-400" />
-                        <div className="w-3 h-3 rounded-full bg-emerald-400" />
+                        <div className="w-3 h-3 rounded-full bg-red-500 shadow-xs" />
+                        <div className="w-3 h-3 rounded-full bg-amber-400 shadow-xs" />
+                        <div className="w-3 h-3 rounded-full bg-emerald-400 shadow-xs" />
                     </div>
-                    <div className="flex-1 bg-slate-800 rounded-lg px-3 py-1 text-[10px] text-slate-300 border border-slate-700 mx-4 font-mono flex items-center justify-between">
-                        <span>Microdata.io/builder</span>
-                        <span className="flex items-center gap-1 text-[9px] text-emerald-400 font-bold">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" /> LIVE ENGINE
+                    <div className="flex-1 bg-slate-800/90 rounded-lg px-3 py-1 text-[10px] text-slate-300 border border-slate-700/60 mx-4 font-mono flex items-center justify-between shadow-inner">
+                        <span className="truncate">Microdata.io/builder</span>
+                        <span className="flex items-center gap-1.5 text-[9px] text-emerald-400 font-bold shrink-0">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" /> LIVE
                         </span>
                     </div>
                     <div className="flex items-center gap-2">
@@ -307,108 +307,112 @@ function DashboardIllustration() {
                 </div>
 
                 {/* Builder Layout */}
-                <div className="flex" style={{ height: '290px' }}>
+                <div className="flex" style={{ height: '295px' }}>
                     {/* Left Sidebar */}
-                    <div className="w-14 bg-slate-950 flex flex-col items-center py-3 gap-3">
+                    <div className="w-14 bg-slate-950 flex flex-col items-center py-3 gap-3 border-r border-slate-800/60">
                         {[Layout, Image, Palette, Layers, Globe].map((Icon, i) => (
-                            <div key={i} className={`w-9 h-9 rounded-xl flex items-center justify-center cursor-pointer transition-all duration-300 ${i === (activeSec % 5) ? 'bg-indigo-600 text-white scale-110 shadow-lg shadow-indigo-500/50' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}>
+                            <div key={i} className={`w-9 h-9 rounded-xl flex items-center justify-center cursor-pointer transition-all duration-300 ${i === (activeSec % 5) ? 'bg-indigo-600 text-white scale-105 shadow-md shadow-indigo-600/40' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}>
                                 <Icon className="h-4 w-4" />
                             </div>
                         ))}
                     </div>
 
                     {/* Components Panel */}
-                    <div className="w-32 bg-slate-900 p-2 space-y-1.5 overflow-hidden">
+                    <div className="w-32 bg-slate-900 p-2 space-y-1.5 overflow-hidden border-r border-slate-800/60">
                         <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider px-1 mb-2">Sections</p>
                         {sectionsList.map((s, i) => (
-                            <div key={i} className={`px-2 py-1.5 rounded-lg text-[10px] font-semibold cursor-pointer transition-all duration-300 ${i === activeSec ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md font-bold' : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'}`}>
+                            <div key={i} className={`px-2.5 py-1.5 rounded-lg text-[10px] font-semibold cursor-pointer transition-all duration-300 ${i === activeSec ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md font-bold translate-x-0.5' : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'}`}>
                                 {s}
                             </div>
                         ))}
                     </div>
 
                     {/* Canvas */}
-                    <div className="flex-1 bg-slate-100 relative overflow-hidden">
-                        {/* Animated Live Cursor moving around */}
-                        <div className="absolute z-40 pointer-events-none ds-animate-cursor transition-all duration-1000">
-                            <MousePointer2 className="h-5 w-5 text-indigo-600 fill-indigo-600 drop-shadow-md" />
-                            <div className="ml-3 -mt-2 bg-indigo-600 text-white text-[8px] font-bold px-1.5 py-0.5 rounded shadow">
-                                User Dragging...
+                    <div className="flex-1 bg-slate-100/80 relative overflow-hidden flex flex-col">
+                        {/* Animated Live Cursor moving smoothly to match sections */}
+                        <div className="absolute z-30 pointer-events-none ds-animate-cursor" style={{ animationDuration: '21s' }}>
+                            <MousePointer2 className="h-5 w-5 text-indigo-600 fill-indigo-600 drop-shadow-lg" />
+                            <div className="ml-3 -mt-2 bg-indigo-600 text-white text-[8px] font-bold px-2 py-0.5 rounded-full shadow-md whitespace-nowrap">
+                                Editing {sectionsList[activeSec]}...
                             </div>
                         </div>
 
                         {/* Website preview */}
-                        <div className="absolute inset-2 bg-white rounded-lg shadow-sm overflow-hidden flex flex-col">
+                        <div className="absolute inset-2 bg-white rounded-xl shadow-sm border border-slate-200/60 overflow-hidden flex flex-col">
                             {/* Hero */}
-                            <div className={`h-20 flex items-center px-4 gap-2 transition-all duration-500 ${activeSec === 0 ? 'ring-2 ring-indigo-500 bg-indigo-50/50' : ''}`}
+                            <div className={`h-20 flex items-center px-4 gap-2.5 relative overflow-hidden transition-all duration-500 ${activeSec === 0 ? 'ring-2 ring-indigo-500 bg-indigo-50/60' : ''}`}
                                 style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
-                                <div className="w-6 h-6 rounded-lg bg-white/20 flex items-center justify-center text-white text-[8px] font-black animate-pulse">DS</div>
-                                <div className="flex-1 space-y-1 pl-1">
-                                    <div className="h-2.5 bg-white/90 rounded w-24 ds-animate-shimmer" />
-                                    <div className="h-1.5 bg-white/50 rounded w-36" />
+                                <div className="w-6 h-6 rounded-lg bg-white/20 flex items-center justify-center relative z-10 p-1 shrink-0 shadow-inner">
+                                    <img src="/images/microdata-emblem.png" alt="Microdata" className="w-full h-full object-contain filter brightness-0 invert" />
                                 </div>
-                                <div className="h-5 px-2 bg-white rounded text-[8px] font-bold text-indigo-600 flex items-center hover:scale-105 transition">Get Started</div>
+                                <div className="flex-1 space-y-1.5 pl-1 relative z-10 overflow-hidden">
+                                    <div className="h-2.5 bg-white/95 rounded-full w-28 ds-animate-shimmer shadow-xs" />
+                                    <div className="h-1.5 bg-white/60 rounded-full w-40" />
+                                </div>
+                                <div className="h-6 px-3 bg-white rounded-lg text-[9px] font-extrabold text-indigo-600 flex items-center shadow-md hover:scale-105 transition relative z-10 shrink-0">Get Started</div>
                             </div>
                             {/* Feature grid */}
-                            <div className={`grid grid-cols-3 gap-1.5 p-2 transition-all duration-500 ${activeSec === 2 ? 'ring-2 ring-indigo-500 bg-indigo-50/50' : ''}`}>
+                            <div className={`grid grid-cols-3 gap-2 p-2.5 transition-all duration-500 ${activeSec === 2 ? 'ring-2 ring-indigo-500 bg-indigo-50/60' : ''}`}>
                                 {[...Array(6)].map((_, i) => (
-                                    <div key={i} className="bg-slate-50 rounded p-1.5 space-y-1 border border-slate-100 hover:border-indigo-300 transition">
-                                        <div className={`w-4 h-4 rounded ${i % 2 === 0 ? 'bg-indigo-500' : 'bg-blue-500'}`} />
-                                        <div className="h-1.5 bg-slate-200 rounded w-full" />
-                                        <div className="h-1 bg-slate-100 rounded w-3/4" />
+                                    <div key={i} className="bg-slate-50 rounded-lg p-2 space-y-1.5 border border-slate-100 shadow-2xs hover:border-indigo-300 transition">
+                                        <div className={`w-4 h-4 rounded-md ${i % 2 === 0 ? 'bg-indigo-500' : 'bg-blue-500'} shadow-xs`} />
+                                        <div className="h-2 bg-slate-200/80 rounded-full w-full" />
+                                        <div className="h-1 bg-slate-100 rounded-full w-3/4" />
                                     </div>
                                 ))}
                             </div>
                         </div>
 
                         {/* Selection Highlight Box dynamically moving */}
-                        <div className="absolute top-2 left-2 right-2 h-20 border-2 border-dashed border-indigo-500 rounded-lg pointer-events-none transition-all duration-500 bg-indigo-500/5">
-                            <div className="absolute -top-3 left-2 bg-gradient-to-r from-indigo-600 to-blue-600 text-white text-[9px] font-bold px-2 py-0.5 rounded shadow-sm flex items-center gap-1">
+                        <div className="absolute top-2 left-2 right-2 h-20 border-2 border-dashed border-indigo-500/80 rounded-xl pointer-events-none transition-all duration-500 bg-indigo-500/5 backdrop-blur-[1px]">
+                            <div className="absolute -top-2.5 left-3 bg-gradient-to-r from-indigo-600 to-blue-600 text-white text-[9px] font-extrabold px-2.5 py-0.5 rounded-full shadow-md flex items-center gap-1.5">
                                 <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
-                                Active: {sectionsList[activeSec]}
+                                Active Section: {sectionsList[activeSec]}
                             </div>
                         </div>
                     </div>
 
                     {/* Right Properties Panel */}
-                    <div className="w-36 bg-white border-l border-slate-200 p-2 space-y-3">
-                        <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Properties</p>
-                        <div className="space-y-2">
-                            <div>
-                                <p className="text-[9px] text-slate-500 mb-1">Color Palette</p>
-                                <div className="flex gap-1">
-                                    {['#4f46e5', '#2563eb', '#7c3aed', '#0ea5e9', '#10b981'].map(c => (
-                                        <div key={c} className="w-4 h-4 rounded-full cursor-pointer border border-white shadow-sm hover:scale-125 transition-transform" style={{ background: c }} />
-                                    ))}
+                    <div className="w-36 bg-white border-l border-slate-200/90 p-2.5 space-y-3 flex flex-col justify-between">
+                        <div className="space-y-3">
+                            <p className="text-[9px] font-black text-slate-400 uppercase tracking-wider">Properties</p>
+                            <div className="space-y-2">
+                                <div>
+                                    <p className="text-[9px] text-slate-500 mb-1 font-semibold">Color Palette</p>
+                                    <div className="flex gap-1">
+                                        {['#4f46e5', '#2563eb', '#7c3aed', '#0ea5e9', '#10b981'].map(c => (
+                                            <div key={c} className="w-4 h-4 rounded-full cursor-pointer border border-slate-200 shadow-xs hover:scale-125 transition-transform" style={{ background: c }} />
+                                        ))}
+                                    </div>
                                 </div>
-                            </div>
-                            <div>
-                                <p className="text-[9px] text-slate-500 mb-1">Font Family</p>
-                                <div className="h-5 bg-indigo-50 border border-indigo-200 rounded text-[9px] px-2 flex items-center text-indigo-700 font-bold">Inter (Google)</div>
-                            </div>
-                            <div>
-                                <p className="text-[9px] text-slate-500 mb-1">Container Gap</p>
-                                <div className="grid grid-cols-2 gap-1">
-                                    <div className="h-4 bg-slate-100 rounded text-[9px] text-center text-slate-600 flex items-center justify-center font-mono">40px</div>
-                                    <div className="h-4 bg-slate-100 rounded text-[9px] text-center text-slate-600 flex items-center justify-center font-mono">24px</div>
+                                <div>
+                                    <p className="text-[9px] text-slate-500 mb-1 font-semibold">Font Family</p>
+                                    <div className="h-5 bg-indigo-50/80 border border-indigo-200/80 rounded-md text-[9px] px-2 flex items-center text-indigo-700 font-bold shadow-2xs">Inter (Google)</div>
+                                </div>
+                                <div>
+                                    <p className="text-[9px] text-slate-500 mb-1 font-semibold">Container Gap</p>
+                                    <div className="grid grid-cols-2 gap-1">
+                                        <div className="h-4 bg-slate-100 rounded text-[9px] text-center text-slate-600 flex items-center justify-center font-mono font-semibold">40px</div>
+                                        <div className="h-4 bg-slate-100 rounded text-[9px] text-center text-slate-600 flex items-center justify-center font-mono font-semibold">24px</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div className="space-y-1">
-                            <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Responsive</p>
+                        <div className="space-y-1.5 pt-2 border-t border-slate-100">
+                            <p className="text-[9px] font-black text-slate-400 uppercase tracking-wider">Responsive</p>
                             <div className="flex gap-1.5">
-                                <div className="p-1 bg-indigo-600 text-white rounded shadow-sm hover:scale-110 transition"><Monitor className="h-3 w-3" /></div>
-                                <div className="p-1 bg-slate-100 text-slate-400 hover:bg-slate-200 rounded transition"><Tablet className="h-3 w-3" /></div>
-                                <div className="p-1 bg-slate-100 text-slate-400 hover:bg-slate-200 rounded transition"><Smartphone className="h-3 w-3" /></div>
+                                <div className="p-1 bg-indigo-600 text-white rounded-md shadow-xs hover:scale-110 transition"><Monitor className="h-3 w-3" /></div>
+                                <div className="p-1 bg-slate-100 text-slate-400 hover:bg-slate-200 rounded-md transition"><Tablet className="h-3 w-3" /></div>
+                                <div className="p-1 bg-slate-100 text-slate-400 hover:bg-slate-200 rounded-md transition"><Smartphone className="h-3 w-3" /></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* Floating Drifting Cards with CSS animations */}
-            <div className="absolute -top-4 -right-8 bg-white rounded-2xl shadow-xl border border-slate-100 px-3 py-2.5 flex items-center gap-2.5 ds-animate-float-slow z-20 hover:scale-110 transition-transform">
-                <div className="w-8 h-8 rounded-xl bg-emerald-500 flex items-center justify-center shadow-lg shadow-emerald-500/30">
+            {/* Floating Drifting Cards with CSS animations and staggered delays */}
+            <div className="absolute -top-4 -right-8 bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-slate-100 px-3.5 py-2.5 flex items-center gap-3 ds-animate-float-slow z-20 hover:scale-105 transition-transform">
+                <div className="w-8 h-8 rounded-xl bg-emerald-500 flex items-center justify-center shadow-md shadow-emerald-500/30">
                     <CheckCircle2 className="h-4 w-4 text-white animate-bounce" />
                 </div>
                 <div>
@@ -417,8 +421,8 @@ function DashboardIllustration() {
                 </div>
             </div>
 
-            <div className="absolute -bottom-4 -left-8 bg-white rounded-2xl shadow-xl border border-slate-100 px-3 py-2.5 flex items-center gap-2.5 ds-animate-float-reverse z-20 hover:scale-110 transition-transform">
-                <div className="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-600/30">
+            <div className="absolute -bottom-4 -left-8 bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-slate-100 px-3.5 py-2.5 flex items-center gap-3 ds-animate-float-reverse z-20 hover:scale-105 transition-transform" style={{ animationDelay: '1.5s' }}>
+                <div className="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center shadow-md shadow-indigo-600/30">
                     <TrendingUp className="h-4 w-4 text-white" />
                 </div>
                 <div>
@@ -427,9 +431,9 @@ function DashboardIllustration() {
                 </div>
             </div>
 
-            <div className="absolute top-1/2 -right-12 bg-white rounded-2xl shadow-xl border border-slate-100 px-3 py-2.5 flex items-center gap-2.5 ds-animate-float-slow z-20 hover:scale-110 transition-transform" style={{ animationDelay: '1s' }}>
-                <div className="w-8 h-8 rounded-xl bg-violet-600 flex items-center justify-center shadow-lg shadow-violet-600/30">
-                    <Sparkles className="h-4 w-4 text-white animate-spin" style={{ animationDuration: '8s' }} />
+            <div className="absolute top-2/3 -right-12 bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-slate-100 px-3.5 py-2.5 flex items-center gap-3 ds-animate-float-slow z-20 hover:scale-105 transition-transform" style={{ animationDelay: '2s' }}>
+                <div className="w-8 h-8 rounded-xl bg-violet-600 flex items-center justify-center shadow-md shadow-violet-600/30">
+                    <img src="/images/microdata-emblem.png" alt="Microdata" className="h-4 w-4 object-contain filter brightness-0 invert animate-spin" style={{ animationDuration: '10s' }} />
                 </div>
                 <div>
                     <p className="text-[10px] font-extrabold text-slate-900">120+ Templates</p>
@@ -1220,23 +1224,20 @@ export default function LandingPage({ liveContent }) {
                 HERO SECTION
             ════════════════════════════════════════════════════ */}
             <section className="relative overflow-hidden pt-24 pb-20 sm:pt-32 sm:pb-28">
-                {/* Background drifting glowing orbs */}
-                <div className="absolute -top-40 -left-40 w-[500px] h-[500px] rounded-full pointer-events-none ds-animate-float-slow opacity-60"
-                    style={{ background: 'radial-gradient(circle,rgba(79,70,229,0.2) 0%,transparent 70%)', filter: 'blur(70px)' }} />
-                <div className="absolute -top-20 right-0 w-[450px] h-[450px] rounded-full pointer-events-none ds-animate-float-reverse opacity-50"
-                    style={{ background: 'radial-gradient(circle,rgba(37,99,235,0.18) 0%,transparent 70%)', filter: 'blur(70px)' }} />
-                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[900px] h-72 rounded-full pointer-events-none ds-animate-pulse-slow opacity-40"
-                    style={{ background: 'radial-gradient(circle,rgba(124,58,237,0.12) 0%,transparent 70%)', filter: 'blur(90px)' }} />
+                {/* Background drifting glowing orbs with distinct non-colliding durations */}
+                <div className="absolute -top-40 -left-40 w-[500px] h-[500px] rounded-full pointer-events-none ds-animate-float-slow opacity-50"
+                    style={{ background: 'radial-gradient(circle,rgba(79,70,229,0.16) 0%,transparent 70%)', filter: 'blur(80px)' }} />
+                <div className="absolute -top-20 right-0 w-[450px] h-[450px] rounded-full pointer-events-none ds-animate-float-reverse opacity-40"
+                    style={{ background: 'radial-gradient(circle,rgba(37,99,235,0.14) 0%,transparent 70%)', filter: 'blur(80px)' }} />
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
                         {/* Left Content */}
-                        <div className="flex-1 text-center lg:text-left ds-animate-fade-up">
+                        <div className="flex-1 text-center lg:text-left">
                             {/* Badge */}
                             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold mb-6 border shadow-sm hover:scale-105 transition-transform cursor-pointer"
                                 style={{ background: 'rgba(79,70,229,0.06)', borderColor: 'rgba(79,70,229,0.18)', color: '#4f46e5' }}>
-                                <span className="w-2 h-2 rounded-full bg-indigo-600 animate-ping" />
-                                <Sparkles className="h-3.5 w-3.5" />
+                                <img src="/images/microdata-emblem.png" alt="Microdata" className="w-4 h-4 object-contain animate-spin" style={{ animationDuration: '8s' }} />
                                 <span>{landingContent.hero_badge}</span>
                             </div>
 
@@ -1259,16 +1260,16 @@ export default function LandingPage({ liveContent }) {
                             {/* CTAs */}
                             <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
                                 <Link to={ROUTES.REGISTER}
-                                    className="inline-flex items-center justify-center gap-2 px-7 py-3.5 text-white font-bold rounded-2xl text-sm shadow-xl transition-all hover:shadow-2xl hover:-translate-y-1 ds-animate-pulse-glow"
+                                    className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 text-white font-bold rounded-2xl text-sm shadow-xl transition-all hover:shadow-2xl hover:-translate-y-1 ds-animate-pulse-glow"
                                     style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
-                                    <Sparkles className="h-4 w-4" />
+                                    <img src="/images/microdata-emblem.png" alt="Microdata" className="w-4 h-4 object-contain filter brightness-0 invert animate-spin" style={{ animationDuration: '6s' }} />
                                     {landingContent.hero_cta_primary}
                                     <ArrowRight className="h-4 w-4" />
                                 </Link>
                                 <button onClick={() => setDemoOpen(true)}
-                                    className="inline-flex items-center justify-center gap-2 px-7 py-3.5 font-bold rounded-2xl text-sm border-2 border-slate-200 text-slate-700 hover:border-indigo-400 hover:text-indigo-600 hover:-translate-y-0.5 transition-all bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md">
-                                    <div className="w-6 h-6 rounded-full bg-indigo-600 flex items-center justify-center animate-pulse">
-                                        <Play className="h-3 w-3 text-white fill-white ml-0.5" />
+                                    className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 font-bold rounded-2xl text-sm border-2 border-slate-200 text-slate-700 hover:border-indigo-400 hover:text-indigo-600 hover:-translate-y-0.5 transition-all bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md">
+                                    <div className="w-6 h-6 rounded-full bg-indigo-50 flex items-center justify-center">
+                                        <img src="/images/microdata-emblem.png" alt="Microdata" className="w-3.5 h-3.5 object-contain animate-pulse" />
                                     </div>
                                     {landingContent.hero_cta_secondary}
                                 </button>
@@ -1292,7 +1293,7 @@ export default function LandingPage({ liveContent }) {
                         </div>
 
                         {/* Right: Builder illustration */}
-                        <div className="flex-1 w-full lg:max-w-[600px] ds-animate-fade-up">
+                        <div className="flex-1 w-full lg:max-w-[600px]">
                             <DashboardIllustration />
                         </div>
                     </div>
@@ -1505,12 +1506,12 @@ export default function LandingPage({ liveContent }) {
                             borderColor: 'rgba(79,70,229,0.15)',
                             boxShadow: '0 25px 80px rgba(79,70,229,0.12)',
                         }}>
-                        <div className="absolute top-4 right-4 opacity-10 ds-animate-pulse-slow">
-                            <Sparkles className="h-24 w-24 text-indigo-500 animate-spin" style={{ animationDuration: '15s' }} />
+                        <div className="absolute top-4 right-4 opacity-15 ds-animate-pulse-slow">
+                            <img src="/images/microdata-emblem.png" alt="Microdata" className="h-24 w-24 object-contain animate-spin" style={{ animationDuration: '15s' }} />
                         </div>
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold mb-5 border"
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold mb-5 border"
                             style={{ background: 'rgba(79,70,229,0.08)', borderColor: 'rgba(79,70,229,0.2)', color: '#4f46e5' }}>
-                            <Rocket className="h-3 w-3 animate-bounce" /> {landingContent.cta_badge}
+                            <img src="/images/microdata-emblem.png" alt="Microdata" className="h-3.5 w-3.5 object-contain animate-bounce" /> {landingContent.cta_badge}
                         </div>
                         <h2 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight mb-4 leading-tight">
                             {landingContent.cta_title}
@@ -1520,9 +1521,9 @@ export default function LandingPage({ liveContent }) {
                         </p>
                         <div className="flex flex-col sm:flex-row gap-3 justify-center">
                             <Link to={ROUTES.REGISTER}
-                                className="inline-flex items-center justify-center gap-2 px-8 py-4 text-white font-bold rounded-2xl text-base shadow-xl hover:-translate-y-1 transition-all ds-animate-pulse-glow"
+                                className="inline-flex items-center justify-center gap-2.5 px-8 py-4 text-white font-bold rounded-2xl text-base shadow-xl hover:-translate-y-1 transition-all ds-animate-pulse-glow"
                                 style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
-                                <Sparkles className="h-5 w-5" />
+                                <img src="/images/microdata-emblem.png" alt="Microdata" className="h-5 w-5 object-contain filter brightness-0 invert animate-spin" style={{ animationDuration: '6s' }} />
                                 {landingContent.cta_button_text}
                             </Link>
                             <a href="mailto:hello@Microdata.id"
@@ -1655,9 +1656,9 @@ export default function LandingPage({ liveContent }) {
                         </div>
                         <div className="p-4 flex justify-end">
                             <Link to={ROUTES.REGISTER}
-                                className="inline-flex items-center gap-2 px-5 py-2.5 text-white font-bold rounded-xl text-sm transition"
+                                className="inline-flex items-center gap-2.5 px-5 py-2.5 text-white font-bold rounded-xl text-sm transition"
                                 style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
-                                <Sparkles className="h-4 w-4" />
+                                <img src="/images/microdata-emblem.png" alt="Microdata" className="h-4 w-4 object-contain filter brightness-0 invert animate-spin" style={{ animationDuration: '6s' }} />
                                 Try for Free
                             </Link>
                         </div>
