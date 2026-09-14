@@ -23,10 +23,11 @@ import {
   Grid,
 } from 'lucide-react';
 
-export default function BuilderToolbar({ onBack, onSave, onPublish }) {
+export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, isEditing }) {
   const [showDeviceMenu, setShowDeviceMenu] = useState(false);
   const [showZoomMenu, setShowZoomMenu] = useState(false);
   const {
+    templateId,
     deviceView,
     setDeviceView,
     undo,
@@ -94,6 +95,19 @@ export default function BuilderToolbar({ onBack, onSave, onPublish }) {
     setIsSaving(true);
     try {
       await onSave?.();
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleUpdate = async () => {
+    setIsSaving(true);
+    try {
+      if (onUpdate) {
+        await onUpdate();
+      } else {
+        await onSave?.();
+      }
     } finally {
       setIsSaving(false);
     }
@@ -375,18 +389,33 @@ export default function BuilderToolbar({ onBack, onSave, onPublish }) {
           onClick={handleSave}
           disabled={isSaving}
           className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition font-bold disabled:opacity-50 text-xs"
+          title="Simpan sebagai draft"
         >
           <Save className="h-3.5 w-3.5" />
           <span className="hidden sm:inline">Save Draft</span>
         </button>
-        <button
-          onClick={handlePublish}
-          disabled={isSaving}
-          className="flex items-center gap-1.5 px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition font-extrabold shadow-xs shadow-indigo-600/20 disabled:opacity-50 text-xs"
-        >
-          <Send className="h-3.5 w-3.5" />
-          <span>Publish</span>
-        </button>
+
+        {(isEditing !== undefined ? isEditing : !!templateId) ? (
+          <button
+            onClick={handleUpdate}
+            disabled={isSaving}
+            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition font-extrabold shadow-xs shadow-indigo-600/20 disabled:opacity-50 text-xs"
+            title="Simpan perubahan & konfirmasi publish template"
+          >
+            <Send className="h-3.5 w-3.5" />
+            <span>Update</span>
+          </button>
+        ) : (
+          <button
+            onClick={handlePublish}
+            disabled={isSaving}
+            className="flex items-center gap-1.5 px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition font-extrabold shadow-xs shadow-indigo-600/20 disabled:opacity-50 text-xs"
+            title="Publish template baru"
+          >
+            <Send className="h-3.5 w-3.5" />
+            <span>Publish</span>
+          </button>
+        )}
       </div>
     </div>
   );

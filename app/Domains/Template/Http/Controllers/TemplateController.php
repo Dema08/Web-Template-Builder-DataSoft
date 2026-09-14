@@ -61,6 +61,7 @@ class TemplateController extends BaseController
     public function show(TemplateModel $template): JsonResponse
     {
         $this->authorize('view', $template);
+        $template->load(['industryCategory', 'creator', 'updater']);
 
         return $this->success(
             new TemplateResource($template),

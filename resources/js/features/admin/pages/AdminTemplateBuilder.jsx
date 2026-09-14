@@ -116,12 +116,21 @@ export default function AdminTemplateBuilder() {
       setTemplateId(templateData.id);
       setTemplateName(templateData.name);
 
-      const serverSections = templateData.draft_json?.sections || templateData.published_json?.sections || [];
+      const draftSecs = templateData.draft_json?.sections;
+      const pubSecs = templateData.published_json?.sections;
+      const serverSections = (Array.isArray(draftSecs) && draftSecs.length > 0)
+        ? draftSecs
+        : ((Array.isArray(pubSecs) && pubSecs.length > 0) ? pubSecs : []);
 
-      if (templateData.industry_category) {
-        setIndustry(templateData.industry_category.id, templateData.industry_category.slug, templateData.industry_category.name);
-        setSelectedCategoryId(templateData.industry_category.id);
-        setSelectedCategoryObj(templateData.industry_category);
+      const catId = templateData.industry_category?.id || templateData.industry_category_id || templateData.category_id;
+      const matchedCategory = categoriesData?.find(c => String(c.id) === String(catId)) || templateData.industry_category;
+      if (matchedCategory) {
+        setIndustry(matchedCategory.id, matchedCategory.slug, matchedCategory.name);
+        setSelectedCategoryId(matchedCategory.id);
+        setSelectedCategoryObj(matchedCategory);
+      } else if (catId) {
+        setIndustry(catId, 'default', 'Category #' + catId);
+        setSelectedCategoryId(catId);
       }
 
       // Pakai local draft hanya jika benar-benar lebih baru dari data server
@@ -139,7 +148,7 @@ export default function AdminTemplateBuilder() {
         loadSections(sectionsToLoad);
       }, 10);
     }
-  }, [templateData, setTemplateId, setTemplateName, loadSections, setIndustry]);
+  }, [templateData, categoriesData, setTemplateId, setTemplateName, loadSections, setIndustry]);
 
   // Prompt warning when reloading/closing if there are unsaved sections
   useEffect(() => {
@@ -239,10 +248,10 @@ export default function AdminTemplateBuilder() {
     setModalStep(1);
   };
 
-  // Check if category still exists when editing
-  const categoryExists = templateData?.industry_category
-    ? categoriesData?.some(c => String(c.id) === String(templateData.industry_category.id))
-    : true;
+  // Check if category still exists when editing (default to true while categoriesData is loading)
+  const categoryExists = (!categoriesData || !templateData?.industry_category)
+    ? true
+    : categoriesData.some(c => String(c.id) === String(templateData.industry_category.id));
 
   const handleBack = () => {
     if (sections.length > 0) {
@@ -268,6 +277,15 @@ export default function AdminTemplateBuilder() {
     setSaveThumbnailFile(null);
     setSaveModalError('');
     setPendingSaveAction('draft');
+    setShowSaveModal(true);
+  };
+
+  const handleUpdate = () => {
+    setSaveDescription(templateData?.description || '');
+    setSaveThumbnail(templateData?.thumbnail ? `/storage/${templateData.thumbnail}` : (templateData?.thumbnail || ''));
+    setSaveThumbnailFile(null);
+    setSaveModalError('');
+    setPendingSaveAction('update_choice');
     setShowSaveModal(true);
   };
 
@@ -396,7 +414,7 @@ export default function AdminTemplateBuilder() {
   }
 
   // Show warning if category was deleted
-  if (templateData?.industry_category && !categoryExists && id) {
+  if (templateData?.industry_category && categoriesData && !categoryExists && id) {
     return (
       <div className="h-screen flex items-center justify-center">
         <div className="max-w-2xl w-full space-y-6">
@@ -454,7 +472,9 @@ export default function AdminTemplateBuilder() {
             <BuilderToolbar
               onBack={handleBack}
               onSave={handleSave}
+              onUpdate={handleUpdate}
               onPublish={handlePublish}
+              isEditing={!!id}
             />
           }
           leftPanel={
@@ -771,23 +791,29 @@ export default function AdminTemplateBuilder() {
         </div>
       )}
 
-      {/* Save/Publish Modal — Description & Thumbnail Required */}
+      {/* Save/Publish/Update Modal — Description & Thumbnail Required */}
       {showSaveModal && (
         <div className="fixed inset-0 z-[999] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl max-w-lg w-full p-7 shadow-2xl border border-slate-100 space-y-5">
             {/* Header */}
             <div className="flex items-center justify-between border-b border-slate-100 pb-4">
               <div className="flex items-center gap-3">
-                <div className={`p-2.5 rounded-xl ${pendingSaveAction === 'publish' ? 'bg-emerald-50' : 'bg-indigo-50'}`}>
-                  {pendingSaveAction === 'publish'
+                <div className={`p-2.5 rounded-xl ${pendingSaveAction === 'publish' || pendingSaveAction === 'update_choice' ? 'bg-emerald-50' : 'bg-indigo-50'}`}>
+                  {pendingSaveAction === 'publish' || pendingSaveAction === 'update_choice'
                     ? <CheckCircle2 className="h-5 w-5 text-emerald-600" />
                     : <FileEdit className="h-5 w-5 text-indigo-600" />}
                 </div>
                 <div>
                   <h3 className="text-sm font-extrabold text-slate-900">
-                    {pendingSaveAction === 'publish' ? 'Publish Template' : 'Save as Draft'}
+                    {pendingSaveAction === 'update_choice'
+                      ? 'Publish Template?'
+                      : (pendingSaveAction === 'publish' ? 'Publish Template' : 'Save as Draft')}
                   </h3>
-                  <p className="text-[11px] text-slate-500 mt-0.5">Lengkapi informasi wajib sebelum menyimpan</p>
+                  <p className="text-[11px] text-slate-500 mt-0.5">
+                    {pendingSaveAction === 'update_choice'
+                      ? 'Konfirmasi publikasi template setelah update'
+                      : 'Lengkapi informasi wajib sebelum menyimpan'}
+                  </p>
                 </div>
               </div>
               <button
@@ -801,6 +827,18 @@ export default function AdminTemplateBuilder() {
 
             {/* Form */}
             <div className="space-y-4">
+              {pendingSaveAction === 'update_choice' && (
+                <div className="bg-emerald-50/60 border border-emerald-100 rounded-2xl p-3.5 text-xs text-emerald-900 space-y-1">
+                  <p className="font-extrabold flex items-center gap-1.5 text-emerald-700">
+                    <Sparkles className="h-4 w-4 text-emerald-600" />
+                    Apakah Anda ingin mempublikasikan (Publish) template ini?
+                  </p>
+                  <p className="text-[11px] text-slate-600 leading-relaxed">
+                    Pilih <strong>Ya</strong> untuk langsung mengaktifkan template secara publik, atau <strong>Tidak</strong> untuk menyimpannya sebagai draft.
+                  </p>
+                </div>
+              )}
+
               {saveModalError && (
                 <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-xs font-semibold text-red-700 flex items-center gap-2">
                   <span>⚠️</span> {saveModalError}
@@ -831,38 +869,79 @@ export default function AdminTemplateBuilder() {
             </div>
 
             {/* Actions */}
-            <div className="pt-4 flex items-center justify-end gap-3 border-t border-slate-100">
+            <div className="pt-4 flex items-center justify-end gap-2.5 border-t border-slate-100">
               <button
                 type="button"
                 onClick={() => setShowSaveModal(false)}
                 disabled={isSavingModal}
-                className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl transition disabled:opacity-50"
+                className="px-4 py-2.5 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl transition disabled:opacity-50"
               >
                 Batal
               </button>
-              <button
-                type="button"
-                disabled={isSavingModal}
-                onClick={() => {
-                  const desc = saveDescription.trim();
-                  const thumb = saveThumbnail;
-                  if (!desc) { setSaveModalError('Deskripsi template wajib diisi.'); return; }
-                  if (!thumb && !saveThumbnailFile) { setSaveModalError('Thumbnail wajib diisi — masukkan URL atau upload file gambar.'); return; }
-                  setSaveModalError('');
-                  executeSave(desc, thumb, saveThumbnailFile, pendingSaveAction);
-                }}
-                className={`px-5 py-2.5 text-xs font-extrabold text-white rounded-xl shadow-md transition flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed ${
-                  pendingSaveAction === 'publish'
-                    ? 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/20'
-                    : 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-600/20'
-                }`}
-              >
-                {isSavingModal ? (
-                  <><span className="animate-spin h-3.5 w-3.5 border-2 border-white border-t-transparent rounded-full" /> Menyimpan...</>
-                ) : pendingSaveAction === 'publish'
-                  ? <><Send className="h-3.5 w-3.5" /> Publish Sekarang</>
-                  : <><FileEdit className="h-3.5 w-3.5" /> Simpan sebagai Draft</>}
-              </button>
+
+              {pendingSaveAction === 'update_choice' ? (
+                <>
+                  <button
+                    type="button"
+                    disabled={isSavingModal}
+                    onClick={() => {
+                      const desc = saveDescription.trim();
+                      const thumb = saveThumbnail;
+                      if (!desc) { setSaveModalError('Deskripsi template wajib diisi.'); return; }
+                      if (!thumb && !saveThumbnailFile) { setSaveModalError('Thumbnail wajib diisi — masukkan URL atau upload file gambar.'); return; }
+                      setSaveModalError('');
+                      executeSave(desc, thumb, saveThumbnailFile, 'draft');
+                    }}
+                    className="px-4 py-2.5 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition disabled:opacity-50"
+                  >
+                    {isSavingModal ? 'Memproses...' : 'Tidak, Simpan Draft'}
+                  </button>
+
+                  <button
+                    type="button"
+                    disabled={isSavingModal}
+                    onClick={() => {
+                      const desc = saveDescription.trim();
+                      const thumb = saveThumbnail;
+                      if (!desc) { setSaveModalError('Deskripsi template wajib diisi.'); return; }
+                      if (!thumb && !saveThumbnailFile) { setSaveModalError('Thumbnail wajib diisi — masukkan URL atau upload file gambar.'); return; }
+                      setSaveModalError('');
+                      executeSave(desc, thumb, saveThumbnailFile, 'publish');
+                    }}
+                    className="px-5 py-2.5 text-xs font-extrabold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow-md shadow-emerald-600/20 transition flex items-center gap-1.5 disabled:opacity-60 disabled:cursor-not-allowed"
+                  >
+                    {isSavingModal ? (
+                      <><span className="animate-spin h-3.5 w-3.5 border-2 border-white border-t-transparent rounded-full" /> Memproses...</>
+                    ) : (
+                      <><Send className="h-3.5 w-3.5" /> Ya, Publish Template</>
+                    )}
+                  </button>
+                </>
+              ) : (
+                <button
+                  type="button"
+                  disabled={isSavingModal}
+                  onClick={() => {
+                    const desc = saveDescription.trim();
+                    const thumb = saveThumbnail;
+                    if (!desc) { setSaveModalError('Deskripsi template wajib diisi.'); return; }
+                    if (!thumb && !saveThumbnailFile) { setSaveModalError('Thumbnail wajib diisi — masukkan URL atau upload file gambar.'); return; }
+                    setSaveModalError('');
+                    executeSave(desc, thumb, saveThumbnailFile, pendingSaveAction);
+                  }}
+                  className={`px-5 py-2.5 text-xs font-extrabold text-white rounded-xl shadow-md transition flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed ${
+                    pendingSaveAction === 'publish'
+                      ? 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/20'
+                      : 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-600/20'
+                  }`}
+                >
+                  {isSavingModal ? (
+                    <><span className="animate-spin h-3.5 w-3.5 border-2 border-white border-t-transparent rounded-full" /> Menyimpan...</>
+                  ) : pendingSaveAction === 'publish'
+                    ? <><Send className="h-3.5 w-3.5" /> Publish Sekarang</>
+                    : <><FileEdit className="h-3.5 w-3.5" /> Simpan sebagai Draft</>}
+                </button>
+              )}
             </div>
           </div>
         </div>

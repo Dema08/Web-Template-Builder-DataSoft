@@ -19,7 +19,7 @@ import {
     Globe,
     Crown,
 } from 'lucide-react';
-import { Card } from '@shared/components/ui';
+import { Card, ConfirmModal } from '@shared/components/ui';
 import { toast } from '@store';
 import { templateApi } from '@api';
 import { categoryService } from '@features/category/services/categoryService';
@@ -86,10 +86,36 @@ export default function AdminTemplates() {
     const [editingTemplate, setEditingTemplate] = useState(null);
     const [previewTemplate, setPreviewTemplate] = useState(null);
     const [deleteConfirmTemplate, setDeleteConfirmTemplate] = useState(null);
+    const [draftConfirmTemplate, setDraftConfirmTemplate] = useState(null);
+    const [isChangingStatusToDraft, setIsChangingStatusToDraft] = useState(false);
     const [actionDropdown, setActionDropdown] = useState(null);
     const [thumbnailValue, setThumbnailValue] = useState(''); // for ThumbnailUploader (URL or blob)
     const [thumbnailFile, setThumbnailFile] = useState(null);  // File object if user uploads
     const queryClient = useQueryClient();
+
+    const handleOpenInBuilder = (tpl) => {
+        setActionDropdown(null);
+        if (tpl.status === 'draft') {
+            navigate(`/admin/templates/builder/${tpl.id}`);
+        } else {
+            setDraftConfirmTemplate(tpl);
+        }
+    };
+
+    const handleConfirmSetDraftAndEdit = async () => {
+        if (!draftConfirmTemplate) return;
+        try {
+            setIsChangingStatusToDraft(true);
+            await updateStatusMutation.mutateAsync({ id: draftConfirmTemplate.id, status: 'draft', template: draftConfirmTemplate });
+            const targetId = draftConfirmTemplate.id;
+            setDraftConfirmTemplate(null);
+            navigate(`/admin/templates/builder/${targetId}`);
+        } catch (err) {
+            console.error('Failed to change template status to draft', err);
+        } finally {
+            setIsChangingStatusToDraft(false);
+        }
+    };
 
     useEffect(() => {
         const handleOutsideClick = (e) => {
@@ -368,6 +394,13 @@ export default function AdminTemplates() {
                 }
                 return templateApi.publish(id);
             }
+            if (status === 'draft' && template) {
+                const draftSecs = template.draft_json?.sections;
+                const pubSecs = template.published_json?.sections;
+                if ((!Array.isArray(draftSecs) || draftSecs.length === 0) && (Array.isArray(pubSecs) && pubSecs.length > 0)) {
+                    return templateApi.update(id, { status: 'draft', draft_json: template.published_json });
+                }
+            }
             return templateApi.update(id, { status });
         },
         onSuccess: (_, variables) => {
@@ -587,7 +620,7 @@ export default function AdminTemplates() {
                                                     <div className="space-y-0.5 py-1">
                                                         <button
                                                             type="button"
-                                                            onClick={() => { navigate(`/admin/templates/builder/${tpl.id}`); setActionDropdown(null); }}
+                                                            onClick={() => handleOpenInBuilder(tpl)}
                                                             className="w-full text-left px-3 py-2 text-xs font-bold text-slate-800 hover:bg-indigo-600 hover:text-white rounded-xl flex items-center justify-between group transition-all duration-150"
                                                         >
                                                             <div className="flex items-center gap-2.5">
@@ -970,6 +1003,19 @@ export default function AdminTemplates() {
                     </div>
                 </div>
             )}
+
+            {/* Draft Confirmation Modal before opening builder */}
+            <ConfirmModal
+                isOpen={!!draftConfirmTemplate}
+                onClose={() => setDraftConfirmTemplate(null)}
+                onConfirm={handleConfirmSetDraftAndEdit}
+                title="Ubah Status ke Draft?"
+                description={`Untuk mengedit template "${draftConfirmTemplate?.name}" di Builder, status template harus diubah ke Draft terlebih dahulu. Apakah Anda setuju untuk mengubah status ke Draft dan membuka di Builder?`}
+                variant="warning"
+                confirmText="Ya, Ubah ke Draft & Edit"
+                cancelText="Batal"
+                isLoading={isChangingStatusToDraft}
+            />
 
             {/* Click outside to close dropdown */}
             {actionDropdown && (
