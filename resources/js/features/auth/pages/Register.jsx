@@ -22,39 +22,13 @@ function SparkleStarGroup({ className = '', style = {}, size = 'md', color = 'te
     const currentSize = scaleMap[size] || scaleMap.md;
 
     return (
-        <div className={`relative inline-block select-none pointer-events-none ${className}`} style={style}>
-            <svg
-                className="absolute -top-2 -left-2 w-4 h-4 text-indigo-200 animate-pulse"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="3.5"
-                strokeLinecap="round"
-            >
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-            </svg>
-
-            <svg
-                className={`${currentSize} ${color} filter drop-shadow-lg`}
-                viewBox="0 0 100 100"
-                fill="currentColor"
-                fillOpacity="0.15"
-                stroke="currentColor"
-                strokeWidth="6.5"
-                strokeLinejoin="round"
-                strokeLinecap="round"
-            >
-                <path d="M50 5 C50 30, 70 50, 95 50 C70 50, 50 70, 50 95 C50 70, 30 50, 5 50 C30 50, 50 30, 50 5 Z" />
-            </svg>
-
-            <svg
-                className="absolute -bottom-1 -right-2 w-3.5 h-3.5 text-indigo-300 fill-indigo-300 animate-bounce"
-                style={{ animationDuration: '3s' }}
-                viewBox="0 0 24 24"
-            >
-                <circle cx="12" cy="12" r="8" />
-            </svg>
+        <div className={`relative inline-flex items-center justify-center select-none pointer-events-none ${className}`} style={style}>
+            <img
+                src="/images/microdata-emblem.png"
+                alt="Microdata"
+                className={`${currentSize} object-contain filter drop-shadow-xl animate-spin`}
+                style={{ animationDuration: '12s' }}
+            />
         </div>
     );
 }
@@ -772,8 +746,8 @@ export default function Register({ onSwitchToLogin }) {
                 </div>
 
                 <div className="relative z-10 flex justify-start pt-1">
-                    <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-[9px] font-bold tracking-wider text-white uppercase shadow-xs">
-                        <Sparkles className="h-2.5 w-2.5 text-blue-200 animate-spin" style={{ animationDuration: '6s' }} />
+                    <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-[9px] font-bold tracking-wider text-white uppercase shadow-xs">
+                        <img src="/images/microdata-emblem.png" alt="Microdata" className="w-3 h-3 object-contain animate-spin" style={{ animationDuration: '8s' }} />
                         <span>MICRODATA STUDIO 2.0</span>
                     </div>
                 </div>
