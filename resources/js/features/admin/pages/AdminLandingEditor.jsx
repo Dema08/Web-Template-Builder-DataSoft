@@ -354,7 +354,7 @@ export default function AdminLandingEditor() {
                         <span>Landing Page Content Studio</span>
                     </div>
                     <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                        Edit Landing Page & Pricing
+                        Edit Landing Page 
                     </h1>
                     <p className="text-xs sm:text-sm text-slate-500 font-medium max-w-xl leading-relaxed">
                         Kelola teks hero, daftar fitur, langkah cara kerja (ikon & deskripsi), paket harga, dan CTA banner.
