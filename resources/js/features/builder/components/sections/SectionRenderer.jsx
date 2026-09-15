@@ -63,7 +63,7 @@ export default function SectionRenderer({ section, isSelected, onClick }) {
   // Compute background style
   const getSectionStyle = () => {
     const bg = section.background;
-    let style = { position: 'relative', minHeight: '120px' };
+    let style = { position: 'relative', minHeight: section.type === 'navbar' || section.type === 'header' || section.type === 'footer' ? 0 : '120px' };
     if (!bg || bg.type === 'none') return style;
 
     if (bg.type === 'color') {
