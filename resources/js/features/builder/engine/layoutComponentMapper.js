@@ -67,6 +67,22 @@ import Footer01 from '@builder/sections/footer/layouts/Footer01';
 import Footer02 from '@builder/sections/footer/layouts/Footer02';
 import Footer03 from '@builder/sections/footer/layouts/Footer03';
 import Footer04 from '@builder/sections/footer/layouts/Footer04';
+import Footer05 from '@builder/sections/footer/layouts/Footer05';
+import Footer06 from '@builder/sections/footer/layouts/Footer06';
+import Footer07 from '@builder/sections/footer/layouts/Footer07';
+import Footer08 from '@builder/sections/footer/layouts/Footer08';
+import Footer09 from '@builder/sections/footer/layouts/Footer09';
+import Footer10 from '@builder/sections/footer/layouts/Footer10';
+import Footer11 from '@builder/sections/footer/layouts/Footer11';
+import Footer12 from '@builder/sections/footer/layouts/Footer12';
+import Footer13 from '@builder/sections/footer/layouts/Footer13';
+import Footer14 from '@builder/sections/footer/layouts/Footer14';
+import Footer15 from '@builder/sections/footer/layouts/Footer15';
+import Footer16 from '@builder/sections/footer/layouts/Footer16';
+import Footer17 from '@builder/sections/footer/layouts/Footer17';
+import Footer18 from '@builder/sections/footer/layouts/Footer18';
+import Footer19 from '@builder/sections/footer/layouts/Footer19';
+import Footer20 from '@builder/sections/footer/layouts/Footer20';
 
 import Statistics01 from '@builder/sections/statistics/layouts/Statistics01';
 import Fleet01 from '@builder/sections/fleet/layouts/Fleet01';
@@ -164,6 +180,22 @@ export const LAYOUT_COMPONENTS = {
   'Footer02': Footer02,
   'Footer03': Footer03,
   'Footer04': Footer04,
+  'Footer05': Footer05,
+  'Footer06': Footer06,
+  'Footer07': Footer07,
+  'Footer08': Footer08,
+  'Footer09': Footer09,
+  'Footer10': Footer10,
+  'Footer11': Footer11,
+  'Footer12': Footer12,
+  'Footer13': Footer13,
+  'Footer14': Footer14,
+  'Footer15': Footer15,
+  'Footer16': Footer16,
+  'Footer17': Footer17,
+  'Footer18': Footer18,
+  'Footer19': Footer19,
+  'Footer20': Footer20,
 
   // Other section layouts
   'Statistics01': Statistics01,
