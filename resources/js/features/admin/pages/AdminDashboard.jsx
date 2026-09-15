@@ -80,37 +80,6 @@ export default function AdminDashboard() {
         },
     ];
 
-    const quickLinks = [
-        {
-            title: 'Website Management',
-            desc: 'Review & kelola seluruh website pengguna platform',
-            icon: Globe,
-            href: ROUTES.ADMIN_WEBSITES,
-            color: 'text-blue-600 bg-blue-50 dark:bg-blue-950/50 dark:text-blue-300',
-        },
-        {
-            title: 'Template Builder',
-            desc: 'Kelola starter template & desain industri',
-            icon: Layout,
-            href: ROUTES.ADMIN_TEMPLATES,
-            color: 'text-indigo-600 bg-indigo-50 dark:bg-indigo-950/50 dark:text-indigo-300',
-        },
-        {
-            title: 'Pengguna Platform',
-            desc: 'Kelola peran admin, approval akun & paket',
-            icon: UsersIcon,
-            href: ROUTES.ADMIN_USERS,
-            color: 'text-emerald-600 bg-emerald-50 dark:bg-emerald-950/50 dark:text-emerald-300',
-        },
-        {
-            title: 'Paket & Pricelist',
-            desc: 'Pengaturan fitur & batasan paket langganan',
-            icon: CreditCard,
-            href: ROUTES.ADMIN_PRICELISTS,
-            color: 'text-purple-600 bg-purple-50 dark:bg-purple-950/50 dark:text-purple-300',
-        },
-    ];
-
     return (
         <div className="p-6 sm:p-8 max-w-7xl mx-auto space-y-8">
             {/* Header Title + Action Buttons */}
@@ -170,34 +139,6 @@ export default function AdminDashboard() {
                         <p className="text-xs font-bold text-[rgb(var(--color-text-secondary))] mt-1">{card.label}</p>
                     </Card>
                 ))}
-            </div>
-
-            {/* Quick Admin Shortlinks */}
-            <div>
-                <h2 className="text-xs font-extrabold uppercase tracking-wider text-[rgb(var(--color-text-tertiary))] mb-3">
-                    Modul Pengelolaan Admin
-                </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {quickLinks.map((item) => (
-                        <Link
-                            key={item.title}
-                            to={item.href}
-                            className="bg-[rgb(var(--color-surface))] p-4 rounded-2xl border border-[rgb(var(--color-border))] hover:border-indigo-500/50 hover:shadow-md transition-all flex items-start gap-3 group"
-                        >
-                            <div className={`p-2.5 rounded-xl shrink-0 ${item.color}`}>
-                                <item.icon className="h-5 w-5" />
-                            </div>
-                            <div className="min-w-0">
-                                <p className="text-xs font-extrabold text-[rgb(var(--color-text-primary))] group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">
-                                    {item.title}
-                                </p>
-                                <p className="text-[11px] text-[rgb(var(--color-text-tertiary))] mt-0.5 line-clamp-2">
-                                    {item.desc}
-                                </p>
-                            </div>
-                        </Link>
-                    ))}
-                </div>
             </div>
 
             {/* Recent Websites & Activity Grid */}
