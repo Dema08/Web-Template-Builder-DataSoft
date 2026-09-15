@@ -792,11 +792,11 @@ export default function Register({ onSwitchToLogin }) {
                                                 <div className="text-xs font-black text-indigo-600 mt-0.5">
                                                     {plan.is_promo_discounted ? (
                                                         <div className="inline-flex items-center gap-1.5 animate-in fade-in zoom-in-90 duration-300">
-                                                            <span className="line-through text-slate-400 font-bold text-[10px] opacity-75 decoration-red-500 decoration-2 animate-pulse">
+                                                            <span className="line-through text-slate-400 font-extrabold text-[10px] opacity-80 decoration-red-500 decoration-2">
                                                                 Rp {Number(minPrice).toLocaleString('id-ID').replace(/,/g, '.')}
                                                             </span>
-                                                            <span className="bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 font-extrabold text-[10px] px-1.5 py-0.5 rounded-md border border-emerald-300 shadow-2xs animate-bounce inline-flex items-center gap-0.5">
-                                                                <Sparkles className="h-3 w-3 text-emerald-600 shrink-0" /> FREE
+                                                            <span className="bg-gradient-to-r from-red-600 via-red-500 to-rose-600 text-white font-black text-[10px] px-2 py-0.5 rounded-md border border-red-400/80 shadow-xs ds-animate-free-red inline-flex items-center gap-1">
+                                                                <Sparkles className="h-3 w-3 text-amber-300 fill-amber-300 shrink-0" /> FREE
                                                             </span>
                                                         </div>
                                                     ) : (
@@ -825,19 +825,6 @@ export default function Register({ onSwitchToLogin }) {
                                         </div>
                                     );
                                 })}
-                            </div>
-                        </div>
-
-                        {/* INSTANT ACTIVATION CALLOUT */}
-                        <div className="flex items-start gap-2 p-2.5 rounded-xl border border-emerald-200 bg-emerald-50/80 text-emerald-900 text-[11px] transition-colors duration-200">
-                            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                            <div>
-                                <p className="font-bold">Aktivasi Instan Tanpa Persetujuan Admin:</p>
-                                <p className="text-[10px] text-emerald-800/90 leading-tight mt-0.5">
-                                    {isSelectedFree
-                                        ? 'Akun Anda otomatis aktif secara instan dan dapat langsung digunakan untuk login.'
-                                        : 'Setelah pembayaran Midtrans berhasil, akun otomatis aktif secara instan untuk langsung login.'}
-                                </p>
                             </div>
                         </div>
 

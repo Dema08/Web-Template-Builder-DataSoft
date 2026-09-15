@@ -477,8 +477,23 @@ html, body, * {
     57% { transform: translate(40px, 150px); }
     71% { transform: translate(130px, 180px); }
     85% { transform: translate(70px, 70px); }
-    100% { transform: translate(20px, 20px); }
 }
+
+@keyframes ds-badge-pulse-red {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+    }
+    50% {
+        transform: scale(1.08);
+        box-shadow: 0 0 12px 3px rgba(239, 68, 68, 0.55);
+    }
+}
+
+.ds-animate-free-red {
+    animation: ds-badge-pulse-red 1.6s ease-in-out infinite;
+}
+
 
 .ds-animate-gradient {
     background-size: 200% 200% !important;
