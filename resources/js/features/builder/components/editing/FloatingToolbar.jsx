@@ -10,6 +10,7 @@ export default function FloatingToolbar() {
     updateComponentProps,
     setSelectedProperty,
     toggleLockComponent,
+    isPreviewMode,
   } = useBuilderStore();
   const [position, setPosition] = useState(null);
 
@@ -44,7 +45,7 @@ export default function FloatingToolbar() {
     }
   }, [selectedComponentId, selectedComponent?.props]);
 
-  if (!selectedComponent || !componentConfig || !position) return null;
+  if (isPreviewMode || !selectedComponent || !componentConfig || !position) return null;
 
   const handleUpdate = (prop, value) => {
     updateComponentProps(selectedSectionId, selectedComponentId, { [prop]: value });

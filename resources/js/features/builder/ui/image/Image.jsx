@@ -16,7 +16,7 @@ export default function Image({
   componentId = null,
   sectionId = null,
 }) {
-  const { updateComponentProps } = useBuilderStore();
+  const { updateComponentProps, isPreviewMode } = useBuilderStore();
   const fileInputRef = useRef(null);
 
   const shadowStyles = {
@@ -41,7 +41,7 @@ export default function Image({
 
   const handleFileUpload = (e) => {
     const file = e.target.files?.[0];
-    if (!file || !sectionId || !componentId) return;
+    if (!file || !sectionId || !componentId || isPreviewMode) return;
 
     // Read as data URL for immediate preview
     const reader = new FileReader();
@@ -50,6 +50,19 @@ export default function Image({
     };
     reader.readAsDataURL(file);
   };
+
+  if (isPreviewMode) {
+    return (
+      <div className="relative pointer-events-none select-none">
+        <img
+          src={src}
+          alt={alt}
+          style={style}
+          className={`${shadowStyles[shadow]} bg-slate-100 transition-all`}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="relative group">

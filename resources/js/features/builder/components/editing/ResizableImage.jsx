@@ -13,10 +13,10 @@ export default function ResizableImage({
   componentId = null,
   sectionId = null,
 }) {
-  const { selectedComponentId, hoveredComponent, setHoveredComponent, updateComponentProps } = useBuilderStore();
+  const { selectedComponentId, hoveredComponent, setHoveredComponent, updateComponentProps, isPreviewMode } = useBuilderStore();
 
-  const isSelected = selectedComponentId === componentId;
-  const isHovered = hoveredComponent === componentId;
+  const isSelected = !isPreviewMode && selectedComponentId === componentId;
+  const isHovered = !isPreviewMode && hoveredComponent === componentId;
 
   const shadowStyles = {
     none: '',
@@ -30,6 +30,18 @@ export default function ResizableImage({
     borderRadius,
     opacity: opacity / 100,
   };
+
+  if (isPreviewMode) {
+    return (
+      <img
+        id={componentId}
+        src={src}
+        alt={alt}
+        style={{ ...style, width, height }}
+        className={`${shadowStyles[shadow]} bg-slate-100 transition-all pointer-events-none select-none`}
+      />
+    );
+  }
 
   // If not selected and not resizable mode, render normal image
   if (!isSelected) {

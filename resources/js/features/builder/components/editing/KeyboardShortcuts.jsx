@@ -13,6 +13,7 @@ export default function KeyboardShortcuts() {
     duplicateComponent,
     removeComponent,
     removeSection,
+    isPreviewMode,
   } = useBuilderStore();
 
   // Helper: find component (recursive) and check if it's locked
@@ -36,6 +37,7 @@ export default function KeyboardShortcuts() {
 
   useEffect(() => {
     const handleKeyDown = (e) => {
+      if (isPreviewMode) return;
       // Ctrl/Cmd + Z = Undo
       if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
         e.preventDefault();

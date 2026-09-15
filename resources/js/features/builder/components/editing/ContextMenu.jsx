@@ -17,7 +17,10 @@ export default function ContextMenu() {
     sendBackward,
     bringToFront,
     sendToBack,
+    isPreviewMode,
   } = useBuilderStore();
+
+  if (isPreviewMode) return null;
 
   useEffect(() => {
     const handleContextMenu = (e) => {
