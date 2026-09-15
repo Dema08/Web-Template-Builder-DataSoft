@@ -21,6 +21,7 @@ import {
   ChevronDown,
   Check,
   Grid,
+  Plus,
 } from 'lucide-react';
 
 export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, isEditing }) {
@@ -48,15 +49,23 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
     ungroupComponents,
     selectedSectionId,
     sections,
+    pages,
+    currentPageId,
+    switchPage,
+    addSubPage,
     isLeftPanelOpen,
     isRightPanelOpen,
     toggleLeftPanel,
     toggleRightPanel,
   } = useBuilderStore();
 
+  const [showPageMenu, setShowPageMenu] = useState(false);
+  const [showNewPageModal, setShowNewPageModal] = useState(false);
+  const [newPageNameInput, setNewPageNameInput] = useState('');
+
   const handleOpenPreview = () => {
     const currentState = useBuilderStore.getState();
-    const { sections, templateName, industryName, industrySlug, status, templateId } = currentState;
+    const { sections, pages, templateName, industryName, industrySlug, status, templateId } = currentState;
 
     if (!sections || sections.length === 0) {
       toast.error('Canvas is empty. Please add sections or load a template before previewing.', 'Preview Error');
@@ -66,6 +75,7 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
     // Save snapshot to localStorage for instant new tab preview
     const payload = {
       sections,
+      pages,
       templateName: templateName || 'Untitled Template',
       industryName,
       industrySlug,
@@ -301,7 +311,80 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
                     <div className="flex items-center gap-2">
                       <device.icon className="h-4 w-4 shrink-0 text-slate-500" />
                       <span>{device.label}</span>
-                    </div>
+        </div>
+
+        <div className="w-px h-5 bg-slate-200 mx-0.5" />
+
+        {/* Page Switcher Dropdown */}
+        <div className="relative">
+          <button
+            onClick={() => {
+              setShowPageMenu(!showPageMenu);
+              setShowDeviceMenu(false);
+              setShowZoomMenu(false);
+            }}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50/80 hover:bg-indigo-100 rounded-xl transition border border-indigo-200 text-indigo-700 font-extrabold shadow-xs"
+            title="Switch between Landing Page and Subpages to edit on canvas"
+          >
+            <span className="text-xs">
+              {currentPageId === 'landing' ? '🏠 Landing Page' : `📄 ${pages[currentPageId]?.name || 'Subpage'}`}
+            </span>
+            <ChevronDown className="h-3.5 w-3.5 text-indigo-500 shrink-0" />
+          </button>
+
+          {showPageMenu && (
+            <>
+              <div className="fixed inset-0 z-40" onClick={() => setShowPageMenu(false)} />
+              <div className="absolute top-full mt-1.5 left-0 bg-white border border-slate-200/90 rounded-2xl shadow-2xl py-1.5 z-50 min-w-[200px]">
+                <div className="px-3 py-1 text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">
+                  Pages & Subpages
+                </div>
+                <button
+                  onClick={() => {
+                    switchPage('landing');
+                    setShowPageMenu(false);
+                    toast.success('Switched to Landing Page', 'Page');
+                  }}
+                  className={`w-full flex items-center justify-between px-3 py-2 text-xs font-bold transition ${
+                    currentPageId === 'landing' ? 'text-indigo-600 bg-indigo-50/70' : 'text-slate-700 hover:bg-slate-50'
+                  }`}
+                >
+                  <span>🏠 Landing Page (Main)</span>
+                  {currentPageId === 'landing' && <Check className="h-3.5 w-3.5 text-indigo-600" />}
+                </button>
+
+                {Object.values(pages).map(p => (
+                  <button
+                    key={p.id}
+                    onClick={() => {
+                      switchPage(p.id);
+                      setShowPageMenu(false);
+                      toast.success(`Switched to "${p.name}" page`, 'Page');
+                    }}
+                    className={`w-full flex items-center justify-between px-3 py-2 text-xs font-bold transition ${
+                      currentPageId === p.id ? 'text-indigo-600 bg-indigo-50/70' : 'text-slate-700 hover:bg-slate-50'
+                    }`}
+                  >
+                    <span>📄 {p.name}</span>
+                    {currentPageId === p.id && <Check className="h-3.5 w-3.5 text-indigo-600" />}
+                  </button>
+                ))}
+
+                <div className="border-t border-slate-100 my-1" />
+                <button
+                  onClick={() => {
+                    setShowPageMenu(false);
+                    setShowNewPageModal(true);
+                  }}
+                  className="w-full flex items-center gap-1.5 px-3 py-2 text-xs font-extrabold text-indigo-600 hover:bg-indigo-50 transition"
+                >
+                  <Plus className="h-3.5 w-3.5" />
+                  <span>+ Create New Subpage</span>
+                </button>
+              </div>
+            </>
+          )}
+        </div>
                     {deviceView === device.id && <Check className="h-3.5 w-3.5 text-indigo-600" />}
                   </button>
                 ))}
@@ -417,6 +500,50 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
           </button>
         )}
       </div>
+
+      {/* New Subpage Modal */}
+      {showNewPageModal && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-100 space-y-4">
+            <h3 className="text-sm font-extrabold text-slate-900">Create New Subpage</h3>
+            <p className="text-xs text-slate-500">
+              Buat halaman baru terpisah dari landing page (misal: Detail Produk, Kontak Lengkap, dll).
+            </p>
+            <input
+              type="text"
+              placeholder="Nama Halaman (e.g. Portfolio Detail)"
+              value={newPageNameInput}
+              onChange={(e) => setNewPageNameInput(e.target.value)}
+              className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-800"
+            />
+            <div className="flex justify-end gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowNewPageModal(false)}
+                className="px-3 py-1.5 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl"
+              >
+                Batal
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  if (!newPageNameInput.trim()) {
+                    toast.error('Nama halaman wajib diisi', 'Error');
+                    return;
+                  }
+                  addSubPage(newPageNameInput.trim());
+                  setNewPageNameInput('');
+                  setShowNewPageModal(false);
+                  toast.success('Halaman baru berhasil dibuat dan dimuat di canvas!', 'Success');
+                }}
+                className="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-extrabold shadow-sm"
+              >
+                Buat & Edit di Canvas
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -19,6 +19,10 @@ export const useBuilderStore = create((set, get) => ({
   templateId: null,
   templateName: '',
   sections: [],
+  landingSections: [],
+  pages: {}, // { [pageId]: { id, name, slug, sections: [] } }
+  currentPageId: 'landing', // 'landing' or page id
+  currentPreviewPageId: 'landing', // for preview mode page switching
   history: [[]],
   historyIndex: 0,
   isPreviewMode: false,
@@ -139,12 +143,17 @@ export const useBuilderStore = create((set, get) => ({
   },
 
   // Serialize the CURRENT canvas into the draft_json shape the backend expects.
-  // MUST stay in sync with what loadSections() reads back (incl. background),
-  // otherwise edits (e.g. section background) silently disappear on save/publish.
   serializeDraftJson: () => {
-    const { sections } = get();
+    const { sections, landingSections, pages, currentPageId } = get();
+    // Sync current active sections back to correct store bucket first
+    const activeLanding = currentPageId === 'landing' ? sections : landingSections;
+    const activePages = { ...pages };
+    if (currentPageId !== 'landing' && activePages[currentPageId]) {
+      activePages[currentPageId] = { ...activePages[currentPageId], sections };
+    }
+
     return {
-      sections: (sections || []).map(s => ({
+      sections: (activeLanding || []).map(s => ({
         id: s.id,
         type: s.type,
         layout: s.layout,
@@ -154,10 +163,11 @@ export const useBuilderStore = create((set, get) => ({
         isHidden: s.isHidden || false,
         components: s.components,
       })),
+      pages: activePages,
     };
   },
 
-  loadSections: (sectionsData) => {
+  loadSections: (sectionsData, pagesData = {}) => {
     const normalizeComponent = (c, idx = 0) => {
       const normalized = {
         id: c.id || `comp-${Date.now()}-${idx}-${Math.random().toString(36).substr(2, 9)}`,
@@ -175,8 +185,7 @@ export const useBuilderStore = create((set, get) => ({
       return normalized;
     };
 
-    const loadedSections = sectionsData.map((section, index) => {
-      // If section has no components defined, fall back to layoutDefaults
+    const processSections = (secList) => (secList || []).map((section, index) => {
       let components = section.components || [];
       if (components.length === 0 && section.layout) {
         components = getLayoutDefaults(section.layout);
@@ -195,13 +204,123 @@ export const useBuilderStore = create((set, get) => ({
       };
     });
 
+    const loadedLanding = processSections(sectionsData);
+    const loadedPages = {};
+    if (pagesData && typeof pagesData === 'object') {
+      Object.entries(pagesData).forEach(([pid, pval]) => {
+        loadedPages[pid] = {
+          id: pval.id || pid,
+          name: pval.name || 'Sub Page',
+          slug: pval.slug || pid,
+          sections: processSections(pval.sections || []),
+        };
+      });
+    }
+
     set({
-      sections: loadedSections,
-      history: [JSON.parse(JSON.stringify(loadedSections))],
+      landingSections: loadedLanding,
+      sections: loadedLanding,
+      pages: loadedPages,
+      currentPageId: 'landing',
+      currentPreviewPageId: 'landing',
+      history: [JSON.parse(JSON.stringify(loadedLanding))],
       historyIndex: 0,
       selectedSectionId: null,
       selectedComponentId: null,
     });
+  },
+
+  switchPreviewPage: (pageId) => {
+    set({ currentPreviewPageId: pageId });
+  },
+
+  // Multi-page management actions
+  addSubPage: (name, slug) => {
+    const { sections, landingSections, pages, currentPageId } = get();
+    // Save current active sections first
+    const activeLanding = currentPageId === 'landing' ? sections : landingSections;
+    const activePages = { ...pages };
+    if (currentPageId !== 'landing' && activePages[currentPageId]) {
+      activePages[currentPageId] = { ...activePages[currentPageId], sections };
+    }
+
+    const pageId = `page-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`;
+    const pageSlug = slug || name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    
+    // Default initial section for new subpage (hero or content section)
+    const defaultSec = createEmptySection('hero', getDefaultLayout('hero'), 0);
+    const defaultComps = getLayoutDefaults('hero');
+    if (defaultComps.length > 0) {
+      defaultSec.components = defaultComps.map((c, ci) => ({
+        ...c,
+        id: `comp-${Date.now()}-${ci}-${Math.random().toString(36).substr(2, 6)}`
+      }));
+    }
+
+    activePages[pageId] = {
+      id: pageId,
+      name: name || 'New Page',
+      slug: pageSlug,
+      sections: [defaultSec],
+    };
+
+    set({
+      landingSections: activeLanding,
+      pages: activePages,
+      currentPageId: pageId,
+      sections: [defaultSec],
+      history: [JSON.parse(JSON.stringify([defaultSec]))],
+      historyIndex: 0,
+      selectedSectionId: defaultSec.id,
+      selectedComponentId: null,
+    });
+
+    return pageId;
+  },
+
+  switchPage: (targetPageId) => {
+    const { sections, landingSections, pages, currentPageId } = get();
+    if (targetPageId === currentPageId) return;
+
+    // Save current sections to current bucket
+    const activeLanding = currentPageId === 'landing' ? sections : landingSections;
+    const activePages = { ...pages };
+    if (currentPageId === 'landing') {
+      // landingSections updated
+    } else if (activePages[currentPageId]) {
+      activePages[currentPageId] = { ...activePages[currentPageId], sections };
+    }
+
+    let targetSections = [];
+    if (targetPageId === 'landing') {
+      targetSections = activeLanding;
+    } else if (activePages[targetPageId]) {
+      targetSections = activePages[targetPageId].sections || [];
+    }
+
+    set({
+      landingSections: activeLanding,
+      pages: activePages,
+      currentPageId: targetPageId,
+      sections: targetSections,
+      history: [JSON.parse(JSON.stringify(targetSections))],
+      historyIndex: 0,
+      selectedSectionId: targetSections[0]?.id || null,
+      selectedComponentId: null,
+    });
+  },
+
+  deletePage: (pageId) => {
+    const { pages, currentPageId } = get();
+    const newPages = { ...pages };
+    delete newPages[pageId];
+
+    if (currentPageId === pageId) {
+      // Switch back to landing page
+      get().switchPage('landing');
+    } else {
+      set({ pages: newPages });
+    }
   },
 
   addSection: (sectionType, layout = null) => {
@@ -926,6 +1045,7 @@ if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
 export const broadcastBuilderState = (state) => {
   const payload = {
     sections: state.sections,
+    pages: state.pages,
     templateName: state.templateName,
     industryName: state.industryName,
     industrySlug: state.industrySlug,
@@ -953,6 +1073,7 @@ export const broadcastBuilderState = (state) => {
 useBuilderStore.subscribe((state, previousState) => {
   if (
     state.sections !== previousState.sections ||
+    state.pages !== previousState.pages ||
     state.templateName !== previousState.templateName ||
     state.status !== previousState.status
   ) {

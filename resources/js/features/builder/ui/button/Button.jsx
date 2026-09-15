@@ -4,6 +4,8 @@ import InlineEditableText from '../../components/editing/InlineEditableText';
 export default function Button({
   label = 'Button',
   href = '#',
+  linkType = 'section',
+  linkTarget = '',
   variant = 'primary',
   size = 'medium',
   radius = 'md',
@@ -19,7 +21,7 @@ export default function Button({
   componentId = null,
   sectionId = null,
 }) {
-  const { updateComponentProps } = useBuilderStore();
+  const { updateComponentProps, isPreviewMode, switchPreviewPage, selectComponent } = useBuilderStore();
 
   const baseStyles = [
     'group',
@@ -154,10 +156,12 @@ export default function Button({
 
     /**
      * Outline / ghost / glass use the configured color.
+     * Ghost menus in navbar pass `background: 'transparent'` + `color: <text>`,
+     * so prefer `color` when background is transparent.
      */
     ...(variant === 'outline' || variant === 'ghost'
       ? {
-          color: background,
+          color: background && background !== 'transparent' && background !== '' ? background : color,
         }
       : {}),
 
@@ -180,10 +184,37 @@ export default function Button({
       : {}),
   };
 
+  const finalHref = linkType === 'section' ? (linkTarget || href) : '#';
+
   return (
     <a
-      href={href}
-      onClick={(e) => e.preventDefault()}
+      href={finalHref}
+      onClick={(e) => {
+        if (!isPreviewMode) {
+          e.preventDefault();
+          e.stopPropagation();
+          // Penting: pilih component button ini supaya Right Inspector
+          // menampilkan panel Button, bukan Section Background.
+          if (componentId) {
+            selectComponent(componentId, sectionId);
+          }
+          return;
+        }
+
+        e.preventDefault();
+        e.stopPropagation();
+        if (linkType === 'page' && linkTarget) {
+          switchPreviewPage(linkTarget);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+          const target = linkTarget || href;
+          const targetId = target.replace('#', '');
+          const el = document.getElementById(targetId) || document.querySelector(target);
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth' });
+          }
+        }
+      }}
       className={className}
       style={style}
     >

@@ -11,12 +11,38 @@ import Hero07 from '@builder/sections/hero/layouts/Hero07';
 import Hero08 from '@builder/sections/hero/layouts/Hero08';
 import Hero09 from '@builder/sections/hero/layouts/Hero09';
 
+import Hero10 from '@builder/sections/hero/layouts/Hero10';
+import Hero11 from '@builder/sections/hero/layouts/Hero11';
+import Hero12 from '@builder/sections/hero/layouts/Hero12';
+import Hero13 from '@builder/sections/hero/layouts/Hero13';
+import Hero14 from '@builder/sections/hero/layouts/Hero14';
+import Hero15 from '@builder/sections/hero/layouts/Hero15';
+import Hero16 from '@builder/sections/hero/layouts/Hero16';
+import Hero17 from '@builder/sections/hero/layouts/Hero17';
+import Hero18 from '@builder/sections/hero/layouts/Hero18';
+import Hero19 from '@builder/sections/hero/layouts/Hero19';
+import Hero20 from '@builder/sections/hero/layouts/Hero20';
+
 import Navbar01 from '@builder/sections/navbar/layouts/Navbar01';
 import Navbar02 from '@builder/sections/navbar/layouts/Navbar02';
 import Navbar03 from '@builder/sections/navbar/layouts/Navbar03';
 import Navbar04 from '@builder/sections/navbar/layouts/Navbar04';
 import Navbar05 from '@builder/sections/navbar/layouts/Navbar05';
 import Navbar06 from '@builder/sections/navbar/layouts/Navbar06';
+import Navbar07 from '@builder/sections/navbar/layouts/Navbar07';
+import Navbar08 from '@builder/sections/navbar/layouts/Navbar08';
+import Navbar09 from '@builder/sections/navbar/layouts/Navbar09';
+import Navbar10 from '@builder/sections/navbar/layouts/Navbar10';
+import Navbar11 from '@builder/sections/navbar/layouts/Navbar11';
+import Navbar12 from '@builder/sections/navbar/layouts/Navbar12';
+import Navbar13 from '@builder/sections/navbar/layouts/Navbar13';
+import Navbar14 from '@builder/sections/navbar/layouts/Navbar14';
+import Navbar15 from '@builder/sections/navbar/layouts/Navbar15';
+import Navbar16 from '@builder/sections/navbar/layouts/Navbar16';
+import Navbar17 from '@builder/sections/navbar/layouts/Navbar17';
+import Navbar18 from '@builder/sections/navbar/layouts/Navbar18';
+import Navbar19 from '@builder/sections/navbar/layouts/Navbar19';
+import Navbar20 from '@builder/sections/navbar/layouts/Navbar20';
 
 import About01 from '@builder/sections/about/layouts/About01';
 import About02 from '@builder/sections/about/layouts/About02';
@@ -76,6 +102,17 @@ export const LAYOUT_COMPONENTS = {
   'Hero07': Hero07,
   'Hero08': Hero08,
   'Hero09': Hero09,
+  'Hero10': Hero10,
+  'Hero11': Hero11,
+  'Hero12': Hero12,
+  'Hero13': Hero13,
+  'Hero14': Hero14,
+  'Hero15': Hero15,
+  'Hero16': Hero16,
+  'Hero17': Hero17,
+  'Hero18': Hero18,
+  'Hero19': Hero19,
+  'Hero20': Hero20,
 
   // Navbar layouts
   'Navbar01': Navbar01,
@@ -84,6 +121,20 @@ export const LAYOUT_COMPONENTS = {
   'Navbar04': Navbar04,
   'Navbar05': Navbar05,
   'Navbar06': Navbar06,
+  'Navbar07': Navbar07,
+  'Navbar08': Navbar08,
+  'Navbar09': Navbar09,
+  'Navbar10': Navbar10,
+  'Navbar11': Navbar11,
+  'Navbar12': Navbar12,
+  'Navbar13': Navbar13,
+  'Navbar14': Navbar14,
+  'Navbar15': Navbar15,
+  'Navbar16': Navbar16,
+  'Navbar17': Navbar17,
+  'Navbar18': Navbar18,
+  'Navbar19': Navbar19,
+  'Navbar20': Navbar20,
 
   // About layouts
   'About01': About01,

@@ -8,7 +8,7 @@ export default function BuilderLayout({
   rightPanel,
   statusBar,
 }) {
-  const { isLeftPanelOpen, isRightPanelOpen, setLeftPanelOpen, setRightPanelOpen } = useBuilderStore();
+  const { isLeftPanelOpen, isRightPanelOpen, setLeftPanelOpen, setRightPanelOpen, currentPageId, pages, switchPage } = useBuilderStore();
 
   return (
     <div className="h-screen flex flex-col bg-slate-100 overflow-hidden font-sans selection:bg-indigo-600 selection:text-white">
@@ -49,6 +49,23 @@ export default function BuilderLayout({
 
         {/* Center Canvas Workspace */}
         <div className="flex-1 overflow-hidden flex flex-col bg-slate-200/70 min-w-0">
+          {/* Subpage editing banner */}
+          {currentPageId !== 'landing' && (
+            <div className="bg-indigo-900 text-white px-4 py-2 flex items-center justify-between shrink-0 shadow-md z-20">
+              <div className="flex items-center gap-2 text-xs">
+                <span className="px-2 py-0.5 bg-indigo-700 rounded-md font-extrabold uppercase text-[10px] tracking-wider">Subpage Mode</span>
+                <span>Sedang mengedit halaman: <strong className="underline decoration-indigo-400 font-bold">{pages[currentPageId]?.name || currentPageId}</strong></span>
+              </div>
+              <button
+                type="button"
+                onClick={() => switchPage('landing')}
+                className="flex items-center gap-2 px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-extrabold shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 active:scale-95"
+              >
+                <span>⬅️</span>
+                <span>Kembali ke Landing Page</span>
+              </button>
+            </div>
+          )}
           {children}
         </div>
 

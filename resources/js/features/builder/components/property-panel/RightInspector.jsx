@@ -31,7 +31,10 @@ import {
   Check,
   RefreshCw,
   SlidersHorizontal,
-  X
+  X,
+  ExternalLink,
+  FileText,
+  Plus
 } from 'lucide-react';
 import { toast } from '@store';
 
@@ -64,6 +67,11 @@ export default function RightInspector() {
   const { addUpload } = useMediaStore();
   const {
     sections,
+    landingSections,
+    pages,
+    currentPageId,
+    addSubPage,
+    switchPage,
     selectedSectionId,
     selectedComponentId,
     updateComponentProps,
@@ -73,6 +81,7 @@ export default function RightInspector() {
   } = useBuilderStore();
   
   const [formValues, setFormValues] = useState({});
+  const [newSubpageName, setNewSubpageName] = useState('');
   const [positionValues, setPositionValues] = useState({
     x: 0,
     y: 0,
@@ -1007,6 +1016,128 @@ export default function RightInspector() {
               {componentConfig?.label || selectedComponent.type}
             </span>
           </div>
+
+          {/* Button Link & Page Routing Card */}
+          {selectedComponent?.type === 'button' && (
+            <div className="p-4 bg-indigo-50/70 border border-indigo-100 rounded-2xl space-y-3 mb-4">
+              <h4 className="text-xs font-extrabold text-indigo-900 uppercase tracking-wide flex items-center gap-1.5">
+                <ExternalLink className="h-3.5 w-3.5 text-indigo-600" />
+                <span>Button Page Link & Routing</span>
+              </h4>
+
+              {/* Link Type Selector */}
+              <div>
+                <label className="block text-[11px] font-bold text-slate-700 mb-1">Link Destination Type</label>
+                <div className="grid grid-cols-2 gap-2">
+                  {[
+                    { id: 'section', label: 'Landing Section' },
+                    { id: 'page', label: 'New Subpage' },
+                  ].map(t => (
+                    <button
+                      key={t.id}
+                      type="button"
+                      onClick={() => handleChange('linkType', t.id)}
+                      className={`py-2 px-3 text-xs font-bold rounded-xl border transition ${
+                        (formValues.linkType || 'section') === t.id
+                          ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs'
+                          : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+                      }`}
+                    >
+                      {t.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* If Link Type === 'section' */}
+              {(!formValues.linkType || formValues.linkType === 'section') && (
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-700 mb-1">Target Landing Section</label>
+                  <select
+                    value={formValues.linkTarget || ''}
+                    onChange={(e) => handleChange('linkTarget', e.target.value)}
+                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-800"
+                  >
+                    <option value="">-- Select Section --</option>
+                    {(landingSections.length > 0 ? landingSections : sections).map(sec => (
+                      <option key={sec.id} value={`#${sec.id}`}>
+                        {sec.type.toUpperCase()} ({sec.layout})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {/* If Link Type === 'page' */}
+              {formValues.linkType === 'page' && (
+                <div className="space-y-3">
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-700 mb-1">Select Existing Subpage</label>
+                    <select
+                      value={formValues.linkTarget || ''}
+                      onChange={(e) => handleChange('linkTarget', e.target.value)}
+                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-800"
+                    >
+                      <option value="">-- Select Subpage --</option>
+                      {Object.values(pages).map(p => (
+                        <option key={p.id} value={p.id}>
+                          📄 {p.name} (/{p.slug})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Create New Subpage directly */}
+                  <div className="pt-2 border-t border-indigo-100/70 space-y-2">
+                    <label className="block text-[11px] font-extrabold text-indigo-900">Create New Subpage for This Button</label>
+                    <div className="flex flex-col gap-2">
+                      <input
+                        type="text"
+                        placeholder="Subpage name (e.g. Product Catalog)"
+                        value={newSubpageName}
+                        onChange={(e) => setNewSubpageName(e.target.value)}
+                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs text-slate-800 font-medium"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (!newSubpageName.trim()) {
+                            toast.error('Please enter a subpage name', 'Name Required');
+                            return;
+                          }
+                          const newPid = addSubPage(newSubpageName.trim());
+                          handleChange('linkTarget', newPid);
+                          setNewSubpageName('');
+                          toast.success('New subpage created & canvas switched for editing!', 'Subpage');
+                        }}
+                        className="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1 shadow-xs"
+                      >
+                        <Plus className="h-3.5 w-3.5" />
+                        <span>Create & Edit Page</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Quick Switch to Edit Selected Page */}
+                  {formValues.linkTarget && pages[formValues.linkTarget] && (
+                    <div className="pt-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          switchPage(formValues.linkTarget);
+                          toast.success(`Switched canvas to edit "${pages[formValues.linkTarget].name}" page!`, 'Canvas Switch');
+                        }}
+                        className="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-extrabold shadow-sm flex items-center justify-center gap-1.5 transition"
+                      >
+                        <FileText className="h-3.5 w-3.5" />
+                        <span>Switch Canvas to Edit "{pages[formValues.linkTarget].name}"</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
 
           {Object.entries(propertyConfig?.props || {}).map(([key, config]) => (
             <div key={key}>

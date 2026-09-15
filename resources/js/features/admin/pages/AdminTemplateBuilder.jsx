@@ -150,17 +150,11 @@ export default function AdminTemplateBuilder() {
     }
   }, [templateData, categoriesData, setTemplateId, setTemplateName, loadSections, setIndustry]);
 
-  // Prompt warning when reloading/closing if there are unsaved sections
+  // Clear any hash on mount to prevent window scrolling or layout stacking
   useEffect(() => {
-    const handleBeforeUnload = (e) => {
-      const currentSections = useBuilderStore.getState().sections;
-      if (currentSections.length > 0) {
-        e.preventDefault();
-        e.returnValue = '';
-      }
-    };
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+    if (window.location.hash) {
+      window.history.replaceState(null, '', window.location.pathname);
+    }
   }, []);
 
   // Step 1 -> Step 2
@@ -461,7 +455,7 @@ export default function AdminTemplateBuilder() {
   const totalStarterCount = getTotalStarterTemplateCount();
 
   return (
-    <>
+    <div className="fixed inset-0 z-50 bg-slate-100 overflow-hidden flex flex-col h-screen w-screen">
       <KeyboardShortcuts />
       <FloatingToolbar />
       <ContextMenu />
@@ -954,6 +948,6 @@ export default function AdminTemplateBuilder() {
         confirmText="Ya, Tinggalkan"
         cancelText="Batal Editor"
       />
-    </>
+    </div>
   );
 }

@@ -85,6 +85,17 @@ export const PROPERTY_ENGINE = {
     groups: ['content', 'color', 'spacing', 'border', 'shadow', 'animation', 'transform', 'position'],
     props: {
       ...COMPONENT_REGISTRY.button.props,
+      linkType: {
+        type: 'select',
+        label: 'Link Type',
+        default: 'section',
+        options: ['section', 'page'],
+      },
+      linkTarget: {
+        type: 'string',
+        label: 'Link Target (Section ID or Page ID)',
+        default: '',
+      },
       padding: { type: 'string', label: 'Padding', default: '0' },
       hoverBackground: { type: 'color', label: 'Hover Background', default: '#4338ca' },
       hoverColor: { type: 'color', label: 'Hover Text Color', default: '#ffffff' },

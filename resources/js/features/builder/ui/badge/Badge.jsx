@@ -4,17 +4,36 @@ export default function Badge({
   content = 'Badge',
   variant = 'primary',
   size = 'medium',
+  background = '',
+  color = '',
+  radius = 'full',
+  fontSize = '',
+  fontWeight = '',
+  letterSpacing = '',
+  textTransform = '',
+  padding = '',
+  margin = '',
+  shadow = 'none',
   componentId = null,
   sectionId = null,
 }) {
   const { selectedComponentId, hoveredComponent, setHoveredComponent, selectComponent, isPreviewMode } = useBuilderStore();
 
-  const variantStyles = {
-    primary: 'bg-indigo-600 text-white',
-    secondary: 'bg-slate-600 text-white',
-    success: 'bg-green-600 text-white',
-    warning: 'bg-yellow-600 text-white',
-    danger: 'bg-red-600 text-white',
+  // Variant acts as fallback when no explicit colors are provided
+  const variantBg = {
+    primary: 'bg-indigo-600',
+    secondary: 'bg-slate-600',
+    success: 'bg-green-600',
+    warning: 'bg-yellow-600',
+    danger: 'bg-red-600',
+  };
+
+  const variantText = {
+    primary: 'text-white',
+    secondary: 'text-white',
+    success: 'text-white',
+    warning: 'text-white',
+    danger: 'text-white',
   };
 
   const sizeStyles = {
@@ -23,10 +42,44 @@ export default function Badge({
     large: 'px-4 py-1.5 text-base',
   };
 
+  const radiusStyles = {
+    none: 'rounded-none',
+    sm: 'rounded-sm',
+    md: 'rounded-md',
+    lg: 'rounded-lg',
+    xl: 'rounded-xl',
+    full: 'rounded-full',
+  };
+
+  const shadowStyles = {
+    none: '',
+    sm: 'shadow-sm',
+    md: 'shadow-md',
+    lg: 'shadow-lg',
+    glow: 'shadow-lg shadow-indigo-500/30',
+  };
+
+  // Only use inline colors when the author explicitly set them (layout presets / inspector)
+  const hasCustomBg = typeof background === 'string' && background.trim() !== '';
+  const hasCustomColor = typeof color === 'string' && color.trim() !== '';
+
+  const inlineStyle = {
+    ...(hasCustomBg ? { backgroundColor: background, backgroundImage: 'none' } : {}),
+    ...(hasCustomColor ? { color } : {}),
+    ...(fontSize ? { fontSize } : {}),
+    ...(fontWeight ? { fontWeight } : {}),
+    ...(letterSpacing ? { letterSpacing } : {}),
+    ...(textTransform ? { textTransform } : {}),
+  };
+
   const isSelected = !isPreviewMode && selectedComponentId === componentId;
   const isHovered = !isPreviewMode && hoveredComponent === componentId;
 
-  const className = `${variantStyles[variant]} ${sizeStyles[size]} rounded-full font-medium inline-block ${
+  const className = `${hasCustomBg ? '' : variantBg[variant] || variantBg.primary} ${
+    hasCustomColor ? '' : variantText[variant] || variantText.primary
+  } ${sizeStyles[size] || sizeStyles.medium} ${radiusStyles[radius] || radiusStyles.full} ${
+    shadowStyles[shadow] || ''
+  } font-medium inline-block whitespace-nowrap ${
     isSelected
       ? 'ring-2 ring-indigo-600 ring-offset-2'
       : isHovered
@@ -39,6 +92,7 @@ export default function Badge({
       id={componentId}
       data-component-id={componentId}
       data-section-id={sectionId}
+      style={{ ...inlineStyle, ...(padding ? { padding } : {}), ...(margin ? { margin } : {}) }}
       onClick={(e) => {
         if (isPreviewMode) return;
         e.stopPropagation();

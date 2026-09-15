@@ -26,6 +26,9 @@ export default function AdminTemplatePreview() {
 
   const {
     sections,
+    pages,
+    currentPreviewPageId,
+    switchPreviewPage,
     templateName,
     loadSections,
     setTemplateName,
@@ -67,7 +70,7 @@ export default function AdminTemplatePreview() {
           setIndustry(null, parsed.industrySlug, parsed.industryName || '', false);
         }
         if (parsed.sections && Array.isArray(parsed.sections) && parsed.sections.length > 0) {
-          loadSections(parsed.sections);
+          loadSections(parsed.sections, parsed.pages || {});
         }
         setLastUpdated(Date.now());
       }
@@ -84,12 +87,15 @@ export default function AdminTemplatePreview() {
         if (data) {
           const pubSections = data.published_json?.sections;
           const draftSections = data.draft_json?.sections;
+          const pubPages = data.published_json?.pages;
+          const draftPages = data.draft_json?.pages;
           const sectionsData = (pubSections && Array.isArray(pubSections) && pubSections.length > 0)
             ? pubSections
             : ((draftSections && Array.isArray(draftSections) && draftSections.length > 0) ? draftSections : []);
+          const pagesData = pubPages || draftPages || {};
 
           if (sectionsData.length > 0) {
-            loadSections(sectionsData);
+            loadSections(sectionsData, pagesData);
           }
           if (data.name) setTemplateName(data.name);
         }
@@ -299,6 +305,64 @@ export default function AdminTemplatePreview() {
         </div>
       </header>
 
+      {/* Subpage banner in preview mode if viewing a subpage */}
+      {currentPreviewPageId !== 'landing' && (
+        <div className="fixed top-14 left-0 right-0 bg-indigo-900 text-white px-6 py-3 flex items-center justify-between z-40 shadow-xl border-b border-indigo-800">
+          <div className="flex items-center gap-2.5 text-xs font-bold">
+            <span className="px-2 py-0.5 bg-indigo-600 rounded-md text-[10px] uppercase">Subpage Preview</span>
+            <span>Viewing Page: <strong className="underline decoration-indigo-400">{pages[currentPreviewPageId]?.name || currentPreviewPageId}</strong></span>
+          </div>
+          <button
+            type="button"
+            onClick={() => switchPreviewPage('landing')}
+            className="flex items-center gap-2 px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-extrabold shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 active:scale-95"
+          >
+            <span>⬅️</span>
+            <span>Kembali ke Landing Page</span>
+          </button>
+        </div>
+      )}
+
+      {/* Main Website Canvas Container */}
+      <div className={`pt-14 ${currentPreviewPageId !== 'landing' ? 'pt-28' : ''} pb-12 transition-all duration-300 ${viewport !== 'desktop' ? 'px-4' : ''}`}>
+        <div className={getViewportContainerStyle()}>
+          {(() => {
+            const activeSections = currentPreviewPageId === 'landing'
+              ? sections
+              : (pages[currentPreviewPageId]?.sections || []);
+
+            return activeSections && activeSections.length > 0 ? (
+              activeSections.map((section) => (
+                <SectionRenderer
+                  key={section.id}
+                  section={section}
+                  isSelected={false}
+                  onClick={() => {}}
+                />
+              ))
+            ) : (
+              <div className="flex flex-col items-center justify-center py-32 px-4 text-center bg-white">
+                <div className="p-4 bg-indigo-50 text-indigo-600 rounded-2xl mb-4">
+                  <Layers className="h-8 w-8" />
+                </div>
+                <h2 className="text-xl font-extrabold text-slate-900 mb-1">
+                  No Sections Found in Subpage
+                </h2>
+                <p className="text-xs text-slate-500 max-w-md mb-6">
+                  This subpage is currently empty. You can add sections to it in the Builder.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => switchPreviewPage('landing')}
+                  className="px-5 py-2.5 bg-indigo-600 text-white text-xs font-bold rounded-xl shadow-md hover:bg-indigo-700 transition"
+                >
+                  Return to Landing Page
+                </button>
+              </div>
+            );
+          })()}
+        </div>
+      </div>
       {/* Main Preview Container with Zoom Scale & Realistic Device Mockups */}
       <div className="pt-20 pb-16 px-4 transition-all duration-300 flex justify-center items-start min-h-[calc(100vh-3.5rem)]">
         <div
