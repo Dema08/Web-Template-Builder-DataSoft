@@ -48,6 +48,22 @@ import About01 from '@builder/sections/about/layouts/About01';
 import About02 from '@builder/sections/about/layouts/About02';
 import About03 from '@builder/sections/about/layouts/About03';
 import About04 from '@builder/sections/about/layouts/About04';
+import About05 from '@builder/sections/about/layouts/About05';
+import About06 from '@builder/sections/about/layouts/About06';
+import About07 from '@builder/sections/about/layouts/About07';
+import About08 from '@builder/sections/about/layouts/About08';
+import About09 from '@builder/sections/about/layouts/About09';
+import About10 from '@builder/sections/about/layouts/About10';
+import About11 from '@builder/sections/about/layouts/About11';
+import About12 from '@builder/sections/about/layouts/About12';
+import About13 from '@builder/sections/about/layouts/About13';
+import About14 from '@builder/sections/about/layouts/About14';
+import About15 from '@builder/sections/about/layouts/About15';
+import About16 from '@builder/sections/about/layouts/About16';
+import About17 from '@builder/sections/about/layouts/About17';
+import About18 from '@builder/sections/about/layouts/About18';
+import About19 from '@builder/sections/about/layouts/About19';
+import About20 from '@builder/sections/about/layouts/About20';
 
 import Services01 from '@builder/sections/services/layouts/Services01';
 import Services02 from '@builder/sections/services/layouts/Services02';
@@ -157,6 +173,22 @@ export const LAYOUT_COMPONENTS = {
   'About02': About02,
   'About03': About03,
   'About04': About04,
+  'About05': About05,
+  'About06': About06,
+  'About07': About07,
+  'About08': About08,
+  'About09': About09,
+  'About10': About10,
+  'About11': About11,
+  'About12': About12,
+  'About13': About13,
+  'About14': About14,
+  'About15': About15,
+  'About16': About16,
+  'About17': About17,
+  'About18': About18,
+  'About19': About19,
+  'About20': About20,
 
   // Services layouts
   'Services01': Services01,
