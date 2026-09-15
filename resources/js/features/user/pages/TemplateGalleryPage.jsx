@@ -11,6 +11,7 @@ import {
 import { ROUTES } from '@constants';
 import { templateApi } from '@api';
 import { useAuthStore } from '@store';
+import { getTemplateImage, handleImageError } from '@utils/templateHelpers';
 
 /* ─────────────────────────────────────────────────────────
    FALLBACK TEMPLATES
@@ -185,8 +186,7 @@ function CanvaCategoryBar({ categories, activeCategory, onSelect }) {
 ───────────────────────────────────────────────────────── */
 function TemplateCard({ tpl, onSelect, viewMode }) {
     const categoryName = tpl.industry_category?.name || 'General';
-    const imageUrl = tpl.thumbnail || tpl.preview_image
-        || 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&auto=format&fit=crop&q=80';
+    const imageUrl = getTemplateImage(tpl);
     const isPremium = Boolean(tpl.is_premium) && !String(tpl.slug || tpl.name || '').toLowerCase().includes('blank');
 
     const proBadge = (
@@ -202,6 +202,7 @@ function TemplateCard({ tpl, onSelect, viewMode }) {
                  className="group flex items-center gap-5 bg-white rounded-2xl border border-slate-200/80 shadow-sm p-4 cursor-pointer hover:border-purple-300 hover:shadow-md transition-all duration-200">
                 <div className="relative h-20 w-32 shrink-0 rounded-xl overflow-hidden bg-slate-100">
                     <img src={imageUrl} alt={tpl.name}
+                         onError={(e) => handleImageError(e, tpl)}
                          className="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -227,6 +228,7 @@ function TemplateCard({ tpl, onSelect, viewMode }) {
             {/* Thumbnail */}
             <div className="relative h-48 sm:h-52 overflow-hidden bg-slate-100">
                 <img src={imageUrl} alt={tpl.name}
+                     onError={(e) => handleImageError(e, tpl)}
                      className="w-full h-full object-cover group-hover:scale-105 transition duration-700" />
                 {/* Hover overlay */}
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center"
@@ -235,9 +237,13 @@ function TemplateCard({ tpl, onSelect, viewMode }) {
                         <Eye className="h-3.5 w-3.5 text-purple-600" /> Lihat Detail
                     </span>
                 </div>
-                {/* Category badge */}
+                {/* Category badge & PRO / FREE */}
                 <div className="absolute top-3 left-3 z-10 space-y-1.5">
-                    {isPremium && proBadge}
+                    {isPremium ? proBadge : (
+                        <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-extrabold text-white bg-emerald-500 shadow-md">
+                            FREE
+                        </span>
+                    )}
                     <span className="block px-2.5 py-1 rounded-full text-[10px] font-extrabold text-white shadow-md backdrop-blur-md"
                           style={{ background: 'linear-gradient(135deg,#7c3aed,#4f46e5)' }}>
                         {categoryName}
@@ -268,8 +274,7 @@ function TemplateCard({ tpl, onSelect, viewMode }) {
 ───────────────────────────────────────────────────────── */
 function TemplateModal({ tpl, onClose, onEdit }) {
     const { isAuthenticated } = useAuthStore();
-    const imageUrl = tpl.thumbnail || tpl.preview_image
-        || 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&auto=format&fit=crop&q=80';
+    const imageUrl = getTemplateImage(tpl);
 
     useEffect(() => {
         const fn = (e) => { if (e.key === 'Escape') onClose(); };
@@ -284,7 +289,7 @@ function TemplateModal({ tpl, onClose, onEdit }) {
             <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full overflow-hidden border border-slate-100 max-h-[90vh] flex flex-col animate-in fade-in zoom-in-95 duration-200">
                 {/* Header image */}
                 <div className="relative h-64 sm:h-72 bg-slate-900 overflow-hidden shrink-0">
-                    <img src={imageUrl} alt={tpl.name} className="w-full h-full object-cover opacity-90" />
+                    <img src={imageUrl} alt={tpl.name} onError={(e) => handleImageError(e, tpl)} className="w-full h-full object-cover opacity-90" />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/30" />
                     <button type="button" onClick={onClose}
                             className="absolute top-4 right-4 p-2 rounded-full bg-slate-900/60 text-white hover:bg-slate-900 transition backdrop-blur-md shadow-lg z-10">

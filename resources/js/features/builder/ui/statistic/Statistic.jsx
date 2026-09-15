@@ -6,10 +6,10 @@ export default function Statistic({
   componentId = null,
   sectionId = null,
 }) {
-  const { selectedComponentId, hoveredComponent, setHoveredComponent, selectComponent } = useBuilderStore();
+  const { selectedComponentId, hoveredComponent, setHoveredComponent, selectComponent, isPreviewMode } = useBuilderStore();
 
-  const isSelected = selectedComponentId === componentId;
-  const isHovered = hoveredComponent === componentId;
+  const isSelected = !isPreviewMode && selectedComponentId === componentId;
+  const isHovered = !isPreviewMode && hoveredComponent === componentId;
 
   return (
     <div
@@ -17,11 +17,12 @@ export default function Statistic({
       data-component-id={componentId}
       data-section-id={sectionId}
       onClick={(e) => {
+        if (isPreviewMode) return;
         e.stopPropagation();
         selectComponent(componentId, sectionId);
       }}
-      onMouseEnter={() => setHoveredComponent(componentId)}
-      onMouseLeave={() => setHoveredComponent(null)}
+      onMouseEnter={() => !isPreviewMode && setHoveredComponent(componentId)}
+      onMouseLeave={() => !isPreviewMode && setHoveredComponent(null)}
       className={`text-center p-2 rounded-lg transition-all ${
         isSelected
           ? 'ring-2 ring-indigo-600 ring-offset-2'

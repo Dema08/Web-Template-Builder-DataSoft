@@ -527,7 +527,7 @@ export default function AdminTemplates() {
                             <div className="relative h-[220px] overflow-hidden rounded-t-[24px]">
                                 <TemplateCardThumbnail template={tpl} />
 
-                                {/* Kiri atas: Featured + PRO menumpuk vertikal */}
+                                {/* Kiri atas: Featured + PRO / FREE menumpuk vertikal */}
                                 <div className="absolute top-3 left-3 z-20 flex flex-col items-start gap-1.5">
                                     {tpl.is_featured && (
                                         <span className="px-2.5 py-1 rounded-full bg-amber-500 text-white text-[10px] font-extrabold uppercase backdrop-blur-md flex items-center gap-1 shadow-xs">
@@ -535,29 +535,24 @@ export default function AdminTemplates() {
                                             Featured
                                         </span>
                                     )}
-                                    {tpl.is_premium && (
+                                    {tpl.is_premium ? (
                                         <span className="px-2.5 py-1 rounded-full text-white text-[10px] font-black uppercase backdrop-blur-md flex items-center gap-1 shadow-xs"
                                             style={{ background: 'linear-gradient(135deg,#7c3aed,#4f46e5)' }}>
                                             <Crown className="h-3 w-3" />
                                             PRO
                                         </span>
+                                    ) : (
+                                        <span className="px-2.5 py-1 rounded-full bg-emerald-500 text-white text-[10px] font-extrabold uppercase backdrop-blur-md flex items-center gap-1 shadow-xs">
+                                            FREE
+                                        </span>
                                     )}
                                 </div>
-                                {/* Kanan atas: status */}
+                                {/* Kanan atas: status (Draft / Published / Archived) */}
                                 <div className="absolute top-3 right-3 z-20">
                                     <span className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase shadow-xs ${getStatusColor(tpl.status)}`}>
                                         {tpl.status_label || tpl.status}
                                     </span>
                                 </div>
-                                {/* Kiri bawah: Aktif — khusus template published */}
-                                {tpl.status === 'published' && (
-                                    <div className="absolute bottom-3 left-3 z-20">
-                                        <span className="px-2.5 py-1 rounded-full bg-emerald-500 text-white text-[10px] font-extrabold uppercase backdrop-blur-md flex items-center gap-1 shadow-xs">
-                                            <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />
-                                            Aktif
-                                        </span>
-                                    </div>
-                                )}
                             </div>
 
                             <div className="p-4 space-y-3">

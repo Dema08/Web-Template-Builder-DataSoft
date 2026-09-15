@@ -77,6 +77,27 @@ export default function EditableComponent({
 
   // In Preview Mode or if hidden, handle visibility
   if (isHidden && isPreviewMode) return null;
+  if (isPreviewMode) {
+    const isInline = ['text', 'heading', 'button', 'icon', 'badge'].includes(component.type);
+    const wrapperStyle = {
+      display: isInline ? 'inline-block' : 'block',
+      maxWidth: '100%',
+      width: component.props?.width ? component.props.width : (isInline ? 'fit-content' : undefined),
+      position: (component.position?.x !== 0 || component.position?.y !== 0) ? 'absolute' : 'relative',
+      left: component.position?.x ? `${component.position.x}px` : undefined,
+      top: component.position?.y ? `${component.position.y}px` : undefined,
+      zIndex: component.position?.zIndex || 1,
+    };
+    return (
+      <div
+        id={component.id}
+        style={wrapperStyle}
+        className={isInline ? 'inline-block' : 'block'}
+      >
+        {children}
+      </div>
+    );
+  }
   if (isHidden) {
     return (
       <div

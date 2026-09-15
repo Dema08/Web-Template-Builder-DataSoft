@@ -11,6 +11,7 @@ import { ROUTES } from '@constants';
 import { templateApi, settingsApi, pricelistApi } from '@api';
 import { useAuthStore } from '@store';
 import LanguageSelector from '@shared/components/LanguageSelector';
+import { getTemplateImage, handleImageError } from '@utils/templateHelpers';
 
 /* ─────────────────────────────────────────────────────────
    CONSTANTS
@@ -946,7 +947,7 @@ function TemplatesSection() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         {displayTemplates.slice(0, 6).map((tpl) => {
                             const categoryName = tpl.industry_category?.name || 'General';
-                            const imageUrl = tpl.thumbnail || tpl.preview_image || 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&auto=format&fit=crop&q=80';
+                            const imageUrl = getTemplateImage(tpl);
 
                             return (
                                 <div key={tpl.id}
@@ -956,6 +957,7 @@ function TemplatesSection() {
                                     {/* Thumbnail Image Container */}
                                     <div className="relative h-52 overflow-hidden bg-slate-100">
                                         <img src={imageUrl} alt={tpl.name}
+                                            onError={(e) => handleImageError(e, tpl)}
                                             className="w-full h-full object-cover group-hover:scale-105 transition duration-700" />
 
                                         {/* Overlay on hover */}
@@ -1031,8 +1033,9 @@ function TemplatesSection() {
                         {/* Header Image / Thumbnail Preview */}
                         <div className="relative h-64 sm:h-72 bg-slate-900 overflow-hidden shrink-0">
                             <img
-                                src={selectedModalTemplate.thumbnail || selectedModalTemplate.preview_image || 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&auto=format&fit=crop&q=80'}
+                                src={getTemplateImage(selectedModalTemplate)}
                                 alt={selectedModalTemplate.name}
+                                onError={(e) => handleImageError(e, selectedModalTemplate)}
                                 className="w-full h-full object-cover opacity-90"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/30" />
@@ -1051,9 +1054,6 @@ function TemplatesSection() {
                                 <span className="px-3 py-1 rounded-full text-xs font-extrabold text-white shadow-md"
                                     style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
                                     {selectedModalTemplate.industry_category?.name || 'Corporate'}
-                                </span>
-                                <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-500/90 text-white backdrop-blur-md flex items-center gap-1 shadow-md">
-                                    <CheckCircle2 className="h-3.5 w-3.5" /> Published
                                 </span>
                             </div>
 

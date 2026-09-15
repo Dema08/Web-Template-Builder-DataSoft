@@ -23,6 +23,7 @@ import { toast, useSubscriptionStore } from '@store';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { onboardingApi, templateApi } from '@api';
 import UpgradeModal from '@features/billing/components/UpgradeModal';
+import { getTemplateImage, handleImageError } from '@utils/templateHelpers';
 
 export default function Templates() {
     const navigate = useNavigate();
@@ -93,7 +94,7 @@ export default function Templates() {
             category: tpl.industry_category_id || tpl.category_id,
             badge: tpl.is_featured ? 'Featured' : 'Published',
             description: tpl.description || '',
-            image: tpl.thumbnail || tpl.preview_image || null,
+            image: getTemplateImage(tpl),
             features: [],
             is_premium: !isBlank && Boolean(tpl.is_premium),
             is_blank: isBlank,
@@ -299,25 +300,14 @@ function TemplateCard({ tpl, onPreview, onUseTemplate, usingId }) {
         <Card className="border border-[rgb(var(--color-border))] hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col group rounded-3xl">
             {/* Thumbnail / Preview Image */}
             <div className="relative h-[220px] overflow-hidden rounded-t-[24px]">
-                {tpl.image ? (
-                    <img
-                        src={tpl.image}
-                        alt={tpl.title}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        onError={(e) => {
-                            e.target.style.display = 'none';
-                            e.target.nextSibling?.classList.remove('hidden');
-                        }}
-                    />
-                ) : null}
+                <img
+                    src={tpl.image || getTemplateImage(tpl)}
+                    alt={tpl.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    onError={(e) => handleImageError(e, tpl)}
+                />
 
-                {/* Fallback jika gambar gagal / tidak ada */}
-                <div className={`${tpl.image ? 'hidden' : ''} w-full h-full flex flex-col items-center justify-center text-slate-400 bg-gradient-to-br from-slate-50 to-slate-100`}>
-                    <Layout className="h-10 w-10 mb-2 opacity-30" />
-                    <span className="text-xs font-medium">No Preview Available</span>
-                </div>
-
-                {/* Badge — Featured + PRO/Berbayar untuk premium */}
+                {/* Badge — Featured + PRO / FREE */}
                 <div className="absolute top-3 left-3 flex items-center gap-2 z-10">
                     {tpl.badge === 'Featured' && (
                         <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider backdrop-blur-md bg-amber-500 text-white">
@@ -325,15 +315,14 @@ function TemplateCard({ tpl, onPreview, onUseTemplate, usingId }) {
                             Featured
                         </span>
                     )}
-                    {tpl.is_premium && (
+                    {tpl.is_premium ? (
                         <span className="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider backdrop-blur-md text-white shadow-md" style={{ background: 'linear-gradient(135deg,#7c3aed,#4f46e5)' }}>
                             <Crown className="inline h-2.5 w-2.5 mr-0.5" />
                             PRO
                         </span>
-                    )}
-                    {tpl.is_activated && (
-                        <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider backdrop-blur-md bg-emerald-500 text-white">
-                            Aktif
+                    ) : (
+                        <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider backdrop-blur-md bg-emerald-500 text-white shadow-md">
+                            FREE
                         </span>
                     )}
                 </div>
@@ -421,9 +410,13 @@ function TemplateDetailModal({ tpl, onClose, onPreview, onUseTemplate }) {
                     <div>
                         <h3 className="text-lg font-extrabold text-[rgb(var(--color-text-primary))] flex items-center gap-2">
                             {tpl.title}
-                            {tpl.is_premium && (
+                            {tpl.is_premium ? (
                                 <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase text-white" style={{ background: 'linear-gradient(135deg,#7c3aed,#4f46e5)' }}>
-                                    <Crown className="inline h-2.5 w-2.5 mr-0.5" /> PRO / Berbayar
+                                    <Crown className="inline h-2.5 w-2.5 mr-0.5" /> PRO
+                                </span>
+                            ) : (
+                                <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase text-white bg-emerald-500">
+                                    FREE
                                 </span>
                             )}
                         </h3>

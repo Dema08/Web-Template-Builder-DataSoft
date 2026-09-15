@@ -7,7 +7,7 @@ export default function Badge({
   componentId = null,
   sectionId = null,
 }) {
-  const { selectedComponentId, hoveredComponent, setHoveredComponent, selectComponent } = useBuilderStore();
+  const { selectedComponentId, hoveredComponent, setHoveredComponent, selectComponent, isPreviewMode } = useBuilderStore();
 
   const variantStyles = {
     primary: 'bg-indigo-600 text-white',
@@ -23,8 +23,8 @@ export default function Badge({
     large: 'px-4 py-1.5 text-base',
   };
 
-  const isSelected = selectedComponentId === componentId;
-  const isHovered = hoveredComponent === componentId;
+  const isSelected = !isPreviewMode && selectedComponentId === componentId;
+  const isHovered = !isPreviewMode && hoveredComponent === componentId;
 
   const className = `${variantStyles[variant]} ${sizeStyles[size]} rounded-full font-medium inline-block ${
     isSelected
@@ -40,11 +40,12 @@ export default function Badge({
       data-component-id={componentId}
       data-section-id={sectionId}
       onClick={(e) => {
+        if (isPreviewMode) return;
         e.stopPropagation();
         selectComponent(componentId, sectionId);
       }}
-      onMouseEnter={() => setHoveredComponent(componentId)}
-      onMouseLeave={() => setHoveredComponent(null)}
+      onMouseEnter={() => !isPreviewMode && setHoveredComponent(componentId)}
+      onMouseLeave={() => !isPreviewMode && setHoveredComponent(null)}
       className={className}
     >
       {content}

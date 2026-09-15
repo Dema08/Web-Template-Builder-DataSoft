@@ -29,15 +29,19 @@ export default function AdminTemplatePreview() {
     setTemplateName,
     setIndustry,
     setIsPreviewMode,
+    selectComponent,
+    selectSection,
   } = useBuilderStore();
 
-  // 1. Force isPreviewMode = true on mount and cleanup on unmount
+  // 1. Force isPreviewMode = true on mount and clear selections
   useEffect(() => {
     setIsPreviewMode(true);
+    if (selectComponent) selectComponent(null);
+    if (selectSection) selectSection(null);
     return () => {
       setIsPreviewMode(false);
     };
-  }, [setIsPreviewMode]);
+  }, [setIsPreviewMode, selectComponent, selectSection]);
 
   // 2. Load template data from localStorage or API
   const loadDraftFromStorage = () => {

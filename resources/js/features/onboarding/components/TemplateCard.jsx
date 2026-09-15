@@ -2,6 +2,7 @@ import { Crown, Eye, Lock } from 'lucide-react';
 import { Card } from '@shared/components/ui';
 import { useOnboardingStore } from '@features/onboarding/stores/onboardingStore';
 import { useSubscriptionStore } from '@store';
+import { getTemplateImage, handleImageError } from '@utils/templateHelpers';
 
 export default function TemplateCard({ template }) {
     const selectedTemplateId = useOnboardingStore((state) => state.selectedTemplateId);
@@ -50,17 +51,12 @@ export default function TemplateCard({ template }) {
             }`}
         >
             <div className="relative aspect-video bg-slate-100 overflow-hidden">
-                {template.thumbnail ? (
-                    <img
-                        src={template.thumbnail}
-                        alt={template.name}
-                        className="w-full h-full object-cover"
-                    />
-                ) : (
-                    <div className="w-full h-full flex items-center justify-center text-slate-400">
-                        <span className="text-xs">No preview</span>
-                    </div>
-                )}
+                <img
+                    src={getTemplateImage(template)}
+                    alt={template.name}
+                    onError={(e) => handleImageError(e, template)}
+                    className="w-full h-full object-cover"
+                />
                 {isPremium && (
                     <span className="absolute top-2 left-2 px-2 py-0.5 rounded-full text-[10px] font-black uppercase text-white shadow" style={{ background: 'linear-gradient(135deg,#7c3aed,#4f46e5)' }}>
                         <Crown className="inline h-2.5 w-2.5 mr-0.5" /> PRO
