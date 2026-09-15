@@ -11,6 +11,8 @@ import {
   X,
   Eye,
   Layers,
+  ZoomIn,
+  Check,
 } from 'lucide-react';
 
 export default function AdminTemplatePreview() {
@@ -18,9 +20,9 @@ export default function AdminTemplatePreview() {
   const navigate = useNavigate();
 
   const [viewport, setViewport] = useState('desktop'); // 'desktop' | 'tablet' | 'mobile'
-  const [isToolbarExpanded, setIsToolbarExpanded] = useState(true);
+  const [zoom, setZoom] = useState(100); // 100 | 90 | 80 | 75
+  const [showZoomMenu, setShowZoomMenu] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(Date.now());
-  const hideTimerRef = useRef(null);
 
   const {
     sections,
@@ -29,9 +31,18 @@ export default function AdminTemplatePreview() {
     setTemplateName,
     setIndustry,
     setIsPreviewMode,
+    setDeviceView,
     selectComponent,
     selectSection,
   } = useBuilderStore();
+
+  // Handle viewport changes and sync with builder store
+  const handleViewportChange = (newViewport) => {
+    setViewport(newViewport);
+    if (setDeviceView) {
+      setDeviceView(newViewport);
+    }
+  };
 
   // 1. Force isPreviewMode = true on mount and clear selections
   useEffect(() => {
@@ -145,26 +156,6 @@ export default function AdminTemplatePreview() {
     };
   }, [loadSections, setTemplateName]);
 
-  // 4. Auto-Hide Toolbar System (collapses after 3 seconds of mouse inactivity)
-  const resetHideTimer = () => {
-    setIsToolbarExpanded(true);
-    if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
-    hideTimerRef.current = setTimeout(() => {
-      setIsToolbarExpanded(false);
-    }, 3000);
-  };
-
-  useEffect(() => {
-    resetHideTimer();
-    const handleMouseMove = () => resetHideTimer();
-    window.addEventListener('mousemove', handleMouseMove);
-
-    return () => {
-      if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
-      window.removeEventListener('mousemove', handleMouseMove);
-    };
-  }, []);
-
   const handleClose = () => {
     if (typeof window !== 'undefined' && window.opener) {
       window.close();
@@ -173,20 +164,21 @@ export default function AdminTemplatePreview() {
     }
   };
 
-  // Viewport width styling
-  const getViewportContainerStyle = () => {
-    if (viewport === 'tablet') {
-      return 'w-[768px] max-w-[calc(100vw-2rem)] mx-auto min-h-[90vh] my-6 bg-white shadow-2xl rounded-2xl border border-slate-700/80 overflow-y-auto transition-all duration-300 ease-in-out';
+  const getViewportBadge = () => {
+    switch (viewport) {
+      case 'mobile':
+        return 'Mobile • 375px';
+      case 'tablet':
+        return 'Tablet • 768px';
+      case 'desktop':
+      default:
+        return 'Desktop • 100%';
     }
-    if (viewport === 'mobile') {
-      return 'w-[375px] max-w-[calc(100vw-2rem)] mx-auto min-h-[85vh] my-6 bg-white shadow-2xl rounded-[32px] border-[6px] border-slate-800 overflow-y-auto transition-all duration-300 ease-in-out';
-    }
-    return 'w-full min-h-[calc(100vh-3.5rem)] bg-white transition-all duration-300 ease-in-out';
   };
 
   return (
     <div className="min-h-screen bg-slate-950 font-sans relative selection:bg-indigo-500 selection:text-white overflow-y-auto">
-      {/* Fixed Top Header Preview Toolbar — Never covers canvas content */}
+      {/* Fixed Top Header Preview Toolbar */}
       <header className="fixed top-0 left-0 right-0 h-14 bg-slate-900/95 backdrop-blur-xl border-b border-slate-800 text-white z-50 px-4 sm:px-6 flex items-center justify-between shadow-2xl">
         {/* Left: Live Indicator & Title */}
         <div className="flex items-center gap-2.5 min-w-0">
@@ -198,6 +190,9 @@ export default function AdminTemplatePreview() {
             <span className="font-extrabold text-xs text-white flex items-center gap-1.5 truncate">
               <Eye className="h-3.5 w-3.5 text-indigo-400 shrink-0" />
               Live Website Preview
+              <span className="ml-1 text-[10px] bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-2 py-0.5 rounded-md font-semibold hidden md:inline-block">
+                {getViewportBadge()}
+              </span>
             </span>
             <span className="text-[10px] text-slate-400 truncate max-w-[150px] sm:max-w-[260px]">
               {templateName || slug || 'Microdata Template'}
@@ -206,26 +201,26 @@ export default function AdminTemplatePreview() {
         </div>
 
         {/* Center: Viewport Switcher */}
-        <div className="flex items-center bg-slate-800/90 p-1 rounded-xl border border-slate-700/60 gap-1">
+        <div className="flex items-center bg-slate-800/90 p-1 rounded-xl border border-slate-700/60 gap-1 shadow-inner">
           <button
             type="button"
-            onClick={() => setViewport('desktop')}
-            className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition ${
+            onClick={() => handleViewportChange('desktop')}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 ${
               viewport === 'desktop'
-                ? 'bg-indigo-600 text-white shadow-xs'
+                ? 'bg-indigo-600 text-white shadow-md'
                 : 'text-slate-400 hover:text-white hover:bg-slate-700/60'
             }`}
-            title="Desktop View (100%)"
+            title="Desktop View (Full Width)"
           >
             <Monitor className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">Desktop</span>
           </button>
           <button
             type="button"
-            onClick={() => setViewport('tablet')}
-            className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition ${
+            onClick={() => handleViewportChange('tablet')}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 ${
               viewport === 'tablet'
-                ? 'bg-indigo-600 text-white shadow-xs'
+                ? 'bg-indigo-600 text-white shadow-md'
                 : 'text-slate-400 hover:text-white hover:bg-slate-700/60'
             }`}
             title="Tablet View (768px)"
@@ -235,10 +230,10 @@ export default function AdminTemplatePreview() {
           </button>
           <button
             type="button"
-            onClick={() => setViewport('mobile')}
-            className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition ${
+            onClick={() => handleViewportChange('mobile')}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 ${
               viewport === 'mobile'
-                ? 'bg-indigo-600 text-white shadow-xs'
+                ? 'bg-indigo-600 text-white shadow-md'
                 : 'text-slate-400 hover:text-white hover:bg-slate-700/60'
             }`}
             title="Mobile View (375px)"
@@ -248,16 +243,51 @@ export default function AdminTemplatePreview() {
           </button>
         </div>
 
-        {/* Right: Actions */}
+        {/* Right: Zoom Controls, Refresh & Close */}
         <div className="flex items-center gap-2">
+          {/* Zoom Selector Dropdown */}
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setShowZoomMenu(!showZoomMenu)}
+              className="flex items-center gap-1 px-2.5 py-1.5 bg-slate-800/80 hover:bg-slate-800 text-slate-300 hover:text-white rounded-lg text-xs font-bold border border-slate-700/60 transition"
+              title="Zoom Scale"
+            >
+              <ZoomIn className="h-3.5 w-3.5 text-indigo-400" />
+              <span>{zoom}%</span>
+            </button>
+
+            {showZoomMenu && (
+              <div className="absolute right-0 mt-2 w-32 bg-slate-900 border border-slate-800 rounded-xl shadow-2xl py-1.5 z-50">
+                {[100, 90, 80, 75].map((z) => (
+                  <button
+                    key={z}
+                    type="button"
+                    onClick={() => {
+                      setZoom(z);
+                      setShowZoomMenu(false);
+                    }}
+                    className={`w-full text-left px-3 py-1.5 text-xs font-semibold flex items-center justify-between transition ${
+                      zoom === z ? 'bg-indigo-600/30 text-indigo-300' : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                    }`}
+                  >
+                    <span>{z}%</span>
+                    {zoom === z && <Check className="h-3.5 w-3.5 text-indigo-400" />}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
           <button
             type="button"
             onClick={loadDraftFromStorage}
-            className="p-1.5 hover:bg-slate-800 text-slate-300 hover:text-white rounded-lg transition"
+            className="p-1.5 bg-slate-800/80 hover:bg-slate-800 text-slate-300 hover:text-white rounded-lg border border-slate-700/60 transition"
             title="Refresh Live Data Sync"
           >
             <RotateCw className="h-4 w-4" />
           </button>
+
           <button
             type="button"
             onClick={handleClose}
@@ -269,40 +299,146 @@ export default function AdminTemplatePreview() {
         </div>
       </header>
 
-      {/* Main Website Canvas Container */}
-      <div className={`pt-14 pb-12 transition-all duration-300 ${viewport !== 'desktop' ? 'px-4' : ''}`}>
-        <div className={getViewportContainerStyle()}>
-          {sections && sections.length > 0 ? (
-            sections.map((section) => (
-              <SectionRenderer
-                key={section.id}
-                section={section}
-                isSelected={false}
-                onClick={() => {}}
-              />
-            ))
-          ) : (
-            <div className="flex flex-col items-center justify-center py-32 px-4 text-center bg-white">
-              <div className="p-4 bg-indigo-50 text-indigo-600 rounded-2xl mb-4">
-                <Layers className="h-8 w-8" />
+      {/* Main Preview Container with Zoom Scale & Realistic Device Mockups */}
+      <div className="pt-20 pb-16 px-4 transition-all duration-300 flex justify-center items-start min-h-[calc(100vh-3.5rem)]">
+        <div
+          style={{
+            transform: zoom !== 100 ? `scale(${zoom / 100})` : 'none',
+            transformOrigin: 'top center',
+            width: viewport === 'desktop' ? '100%' : undefined,
+          }}
+          className="transition-transform duration-300 w-full flex justify-center"
+        >
+          {/* MOBILE VIEWPORT MOCKUP (375px) */}
+          {viewport === 'mobile' && (
+            <div className="w-[375px] max-w-full bg-slate-900 border-[10px] border-slate-900 rounded-[48px] shadow-2xl shadow-indigo-950/80 relative transition-all duration-300 my-2">
+              {/* iPhone Dynamic Island / Speaker Notch */}
+              <div className="w-full bg-slate-900 pt-3 pb-2 flex justify-center items-center rounded-t-[38px] select-none">
+                <div className="w-28 h-4 bg-slate-950 rounded-full flex items-center justify-between px-3 border border-slate-800/60">
+                  <span className="w-2 h-2 rounded-full bg-slate-800"></span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-950"></span>
+                </div>
               </div>
-              <h2 className="text-xl font-extrabold text-slate-900 mb-1">
-                No Sections Found in Template
-              </h2>
-              <p className="text-xs text-slate-500 max-w-md mb-6">
-                Add sections or generate a starter template in the Microdata Builder tab to view live preview here.
-              </p>
-              <button
-                type="button"
-                onClick={() => window.close()}
-                className="px-5 py-2.5 bg-indigo-600 text-white text-xs font-bold rounded-xl shadow-md hover:bg-indigo-700 transition"
-              >
-                Return to Builder
-              </button>
+
+              {/* Scrollable Screen Content */}
+              <div className="w-full bg-white min-h-[667px] max-h-[820px] overflow-y-auto ds-scrollbar-thin rounded-[22px]">
+                {sections && sections.length > 0 ? (
+                  sections.map((section) => (
+                    <SectionRenderer
+                      key={section.id}
+                      section={section}
+                      isSelected={false}
+                      onClick={() => {}}
+                    />
+                  ))
+                ) : (
+                  <EmptyStateContent />
+                )}
+              </div>
+
+              {/* iPhone Home Bar */}
+              <div className="w-full bg-slate-900 py-2.5 flex justify-center items-center rounded-b-[38px] select-none">
+                <div className="w-32 h-1 bg-slate-500/50 rounded-full"></div>
+              </div>
+            </div>
+          )}
+
+          {/* TABLET VIEWPORT MOCKUP (768px) */}
+          {viewport === 'tablet' && (
+            <div className="w-[768px] max-w-full bg-slate-900 border-[12px] border-slate-900 rounded-[32px] shadow-2xl shadow-indigo-950/80 relative transition-all duration-300 my-2">
+              {/* iPad Camera Dot */}
+              <div className="w-full bg-slate-900 pt-2.5 pb-1.5 flex justify-center items-center rounded-t-[20px] select-none">
+                <div className="w-3 h-3 bg-slate-950 rounded-full border border-slate-800"></div>
+              </div>
+
+              {/* Scrollable Screen Content */}
+              <div className="w-full bg-white min-h-[720px] max-h-[860px] overflow-y-auto ds-scrollbar-thin rounded-[12px]">
+                {sections && sections.length > 0 ? (
+                  sections.map((section) => (
+                    <SectionRenderer
+                      key={section.id}
+                      section={section}
+                      isSelected={false}
+                      onClick={() => {}}
+                    />
+                  ))
+                ) : (
+                  <EmptyStateContent />
+                )}
+              </div>
+
+              {/* iPad Home Bar */}
+              <div className="w-full bg-slate-900 py-2 flex justify-center items-center rounded-b-[20px] select-none">
+                <div className="w-36 h-1 bg-slate-500/50 rounded-full"></div>
+              </div>
+            </div>
+          )}
+
+          {/* DESKTOP VIEWPORT MOCKUP (Full Width Browser Frame) */}
+          {viewport === 'desktop' && (
+            <div className="w-full max-w-[1536px] mx-auto bg-white rounded-2xl shadow-2xl border border-slate-800/80 overflow-hidden transition-all duration-300 my-2">
+              {/* macOS Browser Bar Mockup */}
+              <div className="w-full bg-slate-900 border-b border-slate-800 px-4 py-2.5 flex items-center justify-between text-slate-400 text-xs select-none">
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-3 h-3 rounded-full bg-red-500/90 inline-block shadow-xs"></span>
+                    <span className="w-3 h-3 rounded-full bg-amber-500/90 inline-block shadow-xs"></span>
+                    <span className="w-3 h-3 rounded-full bg-emerald-500/90 inline-block shadow-xs"></span>
+                  </div>
+                </div>
+                <div className="flex-1 max-w-md bg-slate-800/90 rounded-lg px-3 py-1 text-[11px] text-slate-300 flex items-center justify-center gap-2 border border-slate-700/60 mx-4 shadow-inner">
+                  <span className="text-emerald-400 font-bold">🔒 https://</span>
+                  <span className="text-slate-200 font-mono truncate">
+                    {templateName ? `${templateName.toLowerCase().replace(/[^a-z0-9]+/g, '-')}.microdata.id` : 'preview.microdata.id'}
+                  </span>
+                </div>
+                <div className="text-[10px] text-slate-400 font-bold hidden sm:block bg-slate-800 px-2 py-0.5 rounded">
+                  Desktop • 100%
+                </div>
+              </div>
+
+              {/* Desktop Website Canvas */}
+              <div className="w-full bg-white min-h-[calc(100vh-8rem)]">
+                {sections && sections.length > 0 ? (
+                  sections.map((section) => (
+                    <SectionRenderer
+                      key={section.id}
+                      section={section}
+                      isSelected={false}
+                      onClick={() => {}}
+                    />
+                  ))
+                ) : (
+                  <EmptyStateContent />
+                )}
+              </div>
             </div>
           )}
         </div>
       </div>
+    </div>
+  );
+}
+
+function EmptyStateContent() {
+  return (
+    <div className="flex flex-col items-center justify-center py-32 px-4 text-center bg-white">
+      <div className="p-4 bg-indigo-50 text-indigo-600 rounded-2xl mb-4">
+        <Layers className="h-8 w-8" />
+      </div>
+      <h2 className="text-xl font-extrabold text-slate-900 mb-1">
+        No Sections Found in Template
+      </h2>
+      <p className="text-xs text-slate-500 max-w-md mb-6">
+        Add sections or generate a starter template in the Microdata Builder tab to view live preview here.
+      </p>
+      <button
+        type="button"
+        onClick={() => window.close()}
+        className="px-5 py-2.5 bg-indigo-600 text-white text-xs font-bold rounded-xl shadow-md hover:bg-indigo-700 transition"
+      >
+        Return to Builder
+      </button>
     </div>
   );
 }
