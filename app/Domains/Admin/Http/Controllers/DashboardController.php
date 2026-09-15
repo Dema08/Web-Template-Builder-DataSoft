@@ -17,7 +17,7 @@ class DashboardController extends BaseController
 
     public function index(Request $request): JsonResponse
     {
-        $payload = $this->dashboardService->getDashboardPayload($request->user());
+        $payload = $this->dashboardService->getDashboardPayload($request->user(), true);
 
         return $this->success(
             $payload,

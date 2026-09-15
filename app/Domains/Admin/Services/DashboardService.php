@@ -21,37 +21,72 @@ class DashboardService extends BaseService
         return $this->dashboardRepository;
     }
 
-    public function getDashboardPayload(User $user): array
+    public function getDashboardPayload(User $user, bool $forceAdmin = false): array
     {
         $range = request()->query('range', '7days');
         $startDateParam = request()->query('start_date', '');
         $endDateParam = request()->query('end_date', '');
 
-        $cacheKey = "dashboard:{$user->id}:{$range}:{$startDateParam}:{$endDateParam}";
+        $cacheKey = "dashboard:{$user->id}:{$range}:{$startDateParam}:{$endDateParam}:" . ($forceAdmin ? 'admin' : 'user');
 
-        return Cache::remember($cacheKey, 5, function () use ($user, $range, $startDateParam, $endDateParam) {
+        return Cache::remember($cacheKey, 5, function () use ($user, $range, $startDateParam, $endDateParam, $forceAdmin) {
             // Admin-specific dashboard metrics
-            if ($user->isAdmin() || request()->is('api/v1/admin/*')) {
+            if ($forceAdmin || $user->isAdmin() || request()->is('api/v1/admin/*') || request()->is('api/admin/*') || request()->is('admin/*')) {
                 $totalWebsites = Website::count();
                 $totalUsers = User::count();
                 $totalViews = \Illuminate\Support\Facades\Schema::hasTable('website_view') ? \DB::table('website_view')->count() : 0;
                 $publishedTemplatesCount = \App\Domains\Template\Models\Template::where('status', 'published')->count();
+                $publishedWebsitesCount = Website::where('status', 'published')->count();
+                $draftWebsitesCount = Website::where('status', 'draft')->count();
 
-                $websitesFormatted = Website::with('user', 'template')
-                    ->orderByDesc('created_at')
-                    ->limit(10)
-                    ->get()
-                    ->map(fn($site) => [
-                        'id' => $site->id,
-                        'name' => $site->name,
-                        'subdomain' => $site->slug,
-                        'is_published' => $site->status === 'published',
-                        'template' => $site->template?->name ?? 'Default Template',
-                        'owner' => [
-                            'name' => $site->user?->name ?? 'Unknown',
-                        ],
-                    ])
-                    ->toArray();
+                $websitesFormatted = Website::select([
+                    'id', 'user_id', 'category_id', 'template_id', 'name', 'slug', 'status', 'published_at', 'created_at', 'updated_at'
+                ])
+                ->with(['user', 'template'])
+                ->orderByDesc('created_at')
+                ->limit(10)
+                ->get()
+                ->map(fn($site) => [
+                    'id' => $site->id,
+                    'name' => $site->name,
+                    'subdomain' => $site->slug,
+                    'is_published' => $site->status === 'published',
+                    'template' => $site->template?->name ?? 'Default Template',
+                    'owner' => [
+                        'name' => $site->user?->name ?? 'Unknown',
+                        'email' => $site->user?->email ?? '',
+                    ],
+                    'created_at' => $site->created_at?->toISOString(),
+                ])
+                ->toArray();
+
+                // Dynamic Recent Activities generated from real system events
+                $recentActivities = [];
+                $recentUsers = User::latest()->limit(5)->get();
+                foreach ($recentUsers as $u) {
+                    $recentActivities[] = [
+                        'action' => 'Pengguna Baru Terdaftar',
+                        'description' => "{$u->name} ({$u->email}) mendaftar di platform.",
+                        'created_at' => $u->created_at?->toISOString(),
+                    ];
+                }
+
+                $recentPublishedSites = Website::select([
+                    'id', 'user_id', 'category_id', 'template_id', 'name', 'slug', 'status', 'published_at', 'created_at', 'updated_at'
+                ])->where('status', 'published')->with('user')->latest('updated_at')->limit(5)->get();
+                foreach ($recentPublishedSites as $site) {
+                    $ownerName = $site->user?->name ?? 'Pengguna';
+                    $recentActivities[] = [
+                        'action' => 'Website Dipublikasikan',
+                        'description' => "Website \"{$site->name}\" dipublikasikan oleh {$ownerName}.",
+                        'created_at' => $site->updated_at?->toISOString(),
+                    ];
+                }
+
+                // Sort activity by created_at descending
+                usort($recentActivities, function ($a, $b) {
+                    return strtotime($b['created_at']) <=> strtotime($a['created_at']);
+                });
 
                 return [
                     'user' => [
@@ -67,15 +102,18 @@ class DashboardService extends BaseService
                         'total_views' => $totalViews,
                         'published_templates_count' => $publishedTemplatesCount,
                         'total_websites' => $totalWebsites,
-                        'published_count' => Website::where('status', 'published')->count(),
+                        'published_count' => $publishedWebsitesCount,
+                        'draft_count' => $draftWebsitesCount,
                     ],
-                'websites' => $websitesFormatted,
-                    'recentActivity' => array_slice($this->dashboardRepository->getLatestActivitiesForUser($user->id), 0, 10),
+                    'websites' => $websitesFormatted,
+                    'recentActivity' => array_slice($recentActivities, 0, 10),
                 ];
             }
 
             // Standard user dashboard metrics
-            $websites = Website::where('user_id', $user->id)->with('template')->get();
+            $websites = Website::select([
+                'id', 'user_id', 'category_id', 'template_id', 'name', 'slug', 'status', 'published_at', 'created_at', 'updated_at'
+            ])->where('user_id', $user->id)->with('template')->get();
             $websitesFormatted = [];
             $totalViews = 0;
             $uniqueVisitors = 0;
