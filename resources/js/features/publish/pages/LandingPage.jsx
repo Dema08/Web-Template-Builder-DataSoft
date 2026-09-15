@@ -433,7 +433,7 @@ function DashboardIllustration() {
 
             <div className="absolute top-2/3 -right-12 bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-slate-100 px-3.5 py-2.5 flex items-center gap-3 ds-animate-float-slow z-20 hover:scale-105 transition-transform" style={{ animationDelay: '2s' }}>
                 <div className="w-8 h-8 rounded-xl bg-violet-600 flex items-center justify-center shadow-md shadow-violet-600/30">
-                    <img src="/images/microdata-emblem.png" alt="Microdata" className="h-4 w-4 object-contain filter brightness-0 invert animate-spin" style={{ animationDuration: '10s' }} />
+                    <img src="/images/microdata-emblem.png" alt="Microdata" className="h-4 w-4 object-contain filter brightness-0 invert" />
                 </div>
                 <div>
                     <p className="text-[10px] font-extrabold text-slate-900">120+ Templates</p>
@@ -1237,7 +1237,7 @@ export default function LandingPage({ liveContent }) {
                             {/* Badge */}
                             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold mb-6 border shadow-sm hover:scale-105 transition-transform cursor-pointer"
                                 style={{ background: 'rgba(79,70,229,0.06)', borderColor: 'rgba(79,70,229,0.18)', color: '#4f46e5' }}>
-                                <img src="/images/microdata-emblem.png" alt="Microdata" className="w-4 h-4 object-contain animate-spin" style={{ animationDuration: '8s' }} />
+                                <img src="/images/microdata-emblem.png" alt="Microdata" className="w-4 h-4 object-contain" />
                                 <span>{landingContent.hero_badge}</span>
                             </div>
 
@@ -1269,7 +1269,7 @@ export default function LandingPage({ liveContent }) {
                                 <button onClick={() => setDemoOpen(true)}
                                     className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 font-bold rounded-2xl text-sm border-2 border-slate-200 text-slate-700 hover:border-indigo-400 hover:text-indigo-600 hover:-translate-y-0.5 transition-all bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md">
                                     <div className="w-6 h-6 rounded-full bg-indigo-50 flex items-center justify-center">
-                                        <img src="/images/microdata-emblem.png" alt="Microdata" className="w-3.5 h-3.5 object-contain animate-pulse" />
+                                        <img src="/images/microdata-emblem.png" alt="Microdata" className="w-3.5 h-3.5 object-contain" />
                                     </div>
                                     {landingContent.hero_cta_secondary}
                                 </button>
@@ -1507,11 +1507,11 @@ export default function LandingPage({ liveContent }) {
                             boxShadow: '0 25px 80px rgba(79,70,229,0.12)',
                         }}>
                         <div className="absolute top-4 right-4 opacity-15 ds-animate-pulse-slow">
-                            <img src="/images/microdata-emblem.png" alt="Microdata" className="h-24 w-24 object-contain animate-spin" style={{ animationDuration: '15s' }} />
+                            <img src="/images/microdata-emblem.png" alt="Microdata" className="h-24 w-24 object-contain ds-animate-float-slow" />
                         </div>
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold mb-5 border"
                             style={{ background: 'rgba(79,70,229,0.08)', borderColor: 'rgba(79,70,229,0.2)', color: '#4f46e5' }}>
-                            <img src="/images/microdata-emblem.png" alt="Microdata" className="h-3.5 w-3.5 object-contain animate-bounce" /> {landingContent.cta_badge}
+                            <img src="/images/microdata-emblem.png" alt="Microdata" className="h-3.5 w-3.5 object-contain" /> {landingContent.cta_badge}
                         </div>
                         <h2 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight mb-4 leading-tight">
                             {landingContent.cta_title}
@@ -1523,7 +1523,7 @@ export default function LandingPage({ liveContent }) {
                             <Link to={ROUTES.REGISTER}
                                 className="inline-flex items-center justify-center gap-2.5 px-8 py-4 text-white font-bold rounded-2xl text-base shadow-xl hover:-translate-y-1 transition-all ds-animate-pulse-glow"
                                 style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
-                                <img src="/images/microdata-emblem.png" alt="Microdata" className="h-5 w-5 object-contain filter brightness-0 invert animate-spin" style={{ animationDuration: '6s' }} />
+                                <img src="/images/microdata-emblem.png" alt="Microdata" className="h-5 w-5 object-contain filter brightness-0 invert ds-animate-float-slow" />
                                 {landingContent.cta_button_text}
                             </Link>
                             <a href="mailto:hello@Microdata.id"
