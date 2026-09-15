@@ -170,6 +170,60 @@ export default function AdminTemplatePreview() {
     }
   };
 
+  const getViewportContainerStyle = () => {
+    if (viewport === 'tablet') {
+      return 'w-[768px] max-w-[calc(100vw-2rem)] mx-auto bg-white shadow-2xl rounded-2xl border border-slate-700/80 overflow-hidden transition-all duration-300 ease-in-out';
+    }
+    if (viewport === 'mobile') {
+      return 'w-[375px] max-w-[calc(100vw-2rem)] mx-auto bg-white shadow-2xl rounded-[32px] border-[6px] border-slate-800 overflow-hidden transition-all duration-300 ease-in-out';
+    }
+    return 'w-full max-w-[1536px] mx-auto bg-white rounded-2xl shadow-2xl border border-slate-800/80 overflow-hidden transition-all duration-300 ease-in-out';
+  };
+
+  const getActiveSections = () => {
+    if (currentPreviewPageId && currentPreviewPageId !== 'landing') {
+      return pages?.[currentPreviewPageId]?.sections || [];
+    }
+    return sections || [];
+  };
+
+  const renderActiveSections = () => {
+    const activeSections = getActiveSections();
+    if (activeSections && activeSections.length > 0) {
+      return activeSections.map((section) => (
+        <SectionRenderer
+          key={section.id}
+          section={section}
+          isSelected={false}
+          onClick={() => {}}
+        />
+      ));
+    }
+    if (currentPreviewPageId && currentPreviewPageId !== 'landing') {
+      return (
+        <div className="flex flex-col items-center justify-center py-32 px-4 text-center bg-white">
+          <div className="p-4 bg-indigo-50 text-indigo-600 rounded-2xl mb-4">
+            <Layers className="h-8 w-8" />
+          </div>
+          <h2 className="text-xl font-extrabold text-slate-900 mb-1">
+            No Sections Found in Subpage
+          </h2>
+          <p className="text-xs text-slate-500 max-w-md mb-6">
+            This subpage is currently empty. You can add sections to it in the Builder.
+          </p>
+          <button
+            type="button"
+            onClick={() => switchPreviewPage('landing')}
+            className="px-5 py-2.5 bg-indigo-600 text-white text-xs font-bold rounded-xl shadow-md hover:bg-indigo-700 transition"
+          >
+            Return to Landing Page
+          </button>
+        </div>
+      );
+    }
+    return <EmptyStateContent />;
+  };
+
   const getViewportBadge = () => {
     switch (viewport) {
       case 'mobile':
@@ -306,16 +360,16 @@ export default function AdminTemplatePreview() {
       </header>
 
       {/* Subpage banner in preview mode if viewing a subpage */}
-      {currentPreviewPageId !== 'landing' && (
+      {currentPreviewPageId && currentPreviewPageId !== 'landing' && (
         <div className="fixed top-14 left-0 right-0 bg-indigo-900 text-white px-6 py-3 flex items-center justify-between z-40 shadow-xl border-b border-indigo-800">
           <div className="flex items-center gap-2.5 text-xs font-bold">
             <span className="px-2 py-0.5 bg-indigo-600 rounded-md text-[10px] uppercase">Subpage Preview</span>
-            <span>Viewing Page: <strong className="underline decoration-indigo-400">{pages[currentPreviewPageId]?.name || currentPreviewPageId}</strong></span>
+            <span>Viewing Page: <strong className="underline decoration-indigo-400">{pages?.[currentPreviewPageId]?.name || currentPreviewPageId}</strong></span>
           </div>
           <button
             type="button"
             onClick={() => switchPreviewPage('landing')}
-            className="flex items-center gap-2 px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-extrabold shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 active:scale-95"
+            className="flex items-center gap-2 px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-extrabold shadow-md transition-all duration-200"
           >
             <span>⬅️</span>
             <span>Kembali ke Landing Page</span>
@@ -323,48 +377,8 @@ export default function AdminTemplatePreview() {
         </div>
       )}
 
-      {/* Main Website Canvas Container */}
-      <div className={`pt-14 ${currentPreviewPageId !== 'landing' ? 'pt-28' : ''} pb-12 transition-all duration-300 ${viewport !== 'desktop' ? 'px-4' : ''}`}>
-        <div className={getViewportContainerStyle()}>
-          {(() => {
-            const activeSections = currentPreviewPageId === 'landing'
-              ? sections
-              : (pages[currentPreviewPageId]?.sections || []);
-
-            return activeSections && activeSections.length > 0 ? (
-              activeSections.map((section) => (
-                <SectionRenderer
-                  key={section.id}
-                  section={section}
-                  isSelected={false}
-                  onClick={() => {}}
-                />
-              ))
-            ) : (
-              <div className="flex flex-col items-center justify-center py-32 px-4 text-center bg-white">
-                <div className="p-4 bg-indigo-50 text-indigo-600 rounded-2xl mb-4">
-                  <Layers className="h-8 w-8" />
-                </div>
-                <h2 className="text-xl font-extrabold text-slate-900 mb-1">
-                  No Sections Found in Subpage
-                </h2>
-                <p className="text-xs text-slate-500 max-w-md mb-6">
-                  This subpage is currently empty. You can add sections to it in the Builder.
-                </p>
-                <button
-                  type="button"
-                  onClick={() => switchPreviewPage('landing')}
-                  className="px-5 py-2.5 bg-indigo-600 text-white text-xs font-bold rounded-xl shadow-md hover:bg-indigo-700 transition"
-                >
-                  Return to Landing Page
-                </button>
-              </div>
-            );
-          })()}
-        </div>
-      </div>
       {/* Main Preview Container with Zoom Scale & Realistic Device Mockups */}
-      <div className="pt-20 pb-16 px-4 transition-all duration-300 flex justify-center items-start min-h-[calc(100vh-3.5rem)]">
+      <div className={`pb-16 px-4 transition-all duration-300 flex justify-center items-start min-h-[calc(100vh-3.5rem)] ${currentPreviewPageId && currentPreviewPageId !== 'landing' ? 'pt-28' : 'pt-20'}`}>
         <div
           style={{
             transform: zoom !== 100 ? `scale(${zoom / 100})` : 'none',
@@ -386,18 +400,7 @@ export default function AdminTemplatePreview() {
 
               {/* Scrollable Screen Content */}
               <div className="w-full bg-white min-h-[667px] max-h-[820px] overflow-y-auto ds-scrollbar-thin rounded-[22px]">
-                {sections && sections.length > 0 ? (
-                  sections.map((section) => (
-                    <SectionRenderer
-                      key={section.id}
-                      section={section}
-                      isSelected={false}
-                      onClick={() => {}}
-                    />
-                  ))
-                ) : (
-                  <EmptyStateContent />
-                )}
+                {renderActiveSections()}
               </div>
 
               {/* iPhone Home Bar */}
@@ -417,18 +420,7 @@ export default function AdminTemplatePreview() {
 
               {/* Scrollable Screen Content */}
               <div className="w-full bg-white min-h-[720px] max-h-[860px] overflow-y-auto ds-scrollbar-thin rounded-[12px]">
-                {sections && sections.length > 0 ? (
-                  sections.map((section) => (
-                    <SectionRenderer
-                      key={section.id}
-                      section={section}
-                      isSelected={false}
-                      onClick={() => {}}
-                    />
-                  ))
-                ) : (
-                  <EmptyStateContent />
-                )}
+                {renderActiveSections()}
               </div>
 
               {/* iPad Home Bar */}
@@ -463,18 +455,7 @@ export default function AdminTemplatePreview() {
 
               {/* Desktop Website Canvas */}
               <div className="w-full bg-white min-h-[calc(100vh-8rem)]">
-                {sections && sections.length > 0 ? (
-                  sections.map((section) => (
-                    <SectionRenderer
-                      key={section.id}
-                      section={section}
-                      isSelected={false}
-                      onClick={() => {}}
-                    />
-                  ))
-                ) : (
-                  <EmptyStateContent />
-                )}
+                {renderActiveSections()}
               </div>
             </div>
           )}

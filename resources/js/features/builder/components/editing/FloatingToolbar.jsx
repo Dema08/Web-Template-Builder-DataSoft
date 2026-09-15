@@ -40,8 +40,7 @@ export default function FloatingToolbar() {
     }
   }, [selectedComponentId, selectedComponent?.props]);
 
-  if (!selectedComponent || !position) return null;
-  if (isPreviewMode || !selectedComponent || !componentConfig || !position) return null;
+  if (isPreviewMode || !selectedComponent || !position) return null;
 
   const isLocked = !!selectedComponent?.isLocked;
 
