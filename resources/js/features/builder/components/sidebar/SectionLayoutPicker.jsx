@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useBuilderStore } from '../../stores/builderStore';
 import { getLayoutsForSection } from '../../engine/layoutRegistry';
 import LayoutPreview from './LayoutPreview';
@@ -16,8 +17,8 @@ export default function SectionLayoutPicker({ sectionType, onClose }) {
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+  return createPortal(
+    <div className="fixed inset-0 z-[99999] bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl max-w-3xl w-full max-h-[80vh] flex flex-col shadow-2xl border border-slate-100">
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
@@ -103,6 +104,7 @@ export default function SectionLayoutPicker({ sectionType, onClose }) {
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
