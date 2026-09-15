@@ -855,13 +855,7 @@ function PricingSection({ pricingList, pricingMeta }) {
 
                                         <button
                                             type="button"
-                                            onClick={() => {
-                                                if (isAuthenticated) {
-                                                    navigate(ROUTES.BILLING);
-                                                } else {
-                                                    navigate(ROUTES.REGISTER);
-                                                }
-                                            }}
+                                            onClick={() => navigate(ROUTES.REGISTER)}
                                             className={`text-center text-sm font-bold py-3 px-4 rounded-xl transition-all shadow-md cursor-pointer ${p.highlight
                                                     ? 'bg-white text-indigo-600 hover:bg-slate-100 hover:scale-105'
                                                     : 'border-2 border-slate-200 text-slate-700 hover:border-indigo-400 hover:text-indigo-600 bg-white hover:scale-105'

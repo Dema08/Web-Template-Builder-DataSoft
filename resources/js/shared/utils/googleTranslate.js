@@ -363,11 +363,17 @@ const setupMutationObserver = () => {
         try {
             // The top bar is an iframe with class goog-te-banner-frame, sometimes
             // wrapped in body > .skiptranslate. Remove ALL of them.
+            const appElem = document.getElementById('app');
             document.querySelectorAll(
                 'iframe.goog-te-banner-frame, body > .skiptranslate, .goog-te-banner-frame, .goog-te-banner'
             ).forEach((el) => {
-                // Never touch our hidden widget element or the app root
-                if (el && el.id !== 'google_translate_element' && el.id !== 'app') {
+                // Never touch our hidden widget element, the app root, or any container related to #app
+                if (
+                    el &&
+                    el.id !== 'google_translate_element' &&
+                    el.id !== 'app' &&
+                    (!appElem || (!el.contains(appElem) && !appElem.contains(el)))
+                ) {
                     el.remove();
                     killed = true;
                 }
@@ -449,10 +455,16 @@ const startBannerKiller = (durationMs = 30000) => {
             if (typeof window.__killGoogleBanner === 'function') {
                 window.__killGoogleBanner();
             } else {
+                const appElem = document.getElementById('app');
                 document.querySelectorAll(
                     'iframe.goog-te-banner-frame, body > .skiptranslate, .goog-te-banner-frame'
                 ).forEach((el) => {
-                    if (el && el.id !== 'google_translate_element' && el.id !== 'app') el.remove();
+                    if (
+                        el &&
+                        el.id !== 'google_translate_element' &&
+                        el.id !== 'app' &&
+                        (!appElem || (!el.contains(appElem) && !appElem.contains(el)))
+                    ) el.remove();
                 });
                 if (document.body && document.body.style.top !== '0px') {
                     document.body.style.top = '0px';
@@ -551,10 +563,16 @@ export const hideGoogleTranslateUI = () => {
         if (typeof window.__killGoogleBanner === 'function') {
             window.__killGoogleBanner();
         } else {
+            const appElem = document.getElementById('app');
             document.querySelectorAll(
                 'iframe.goog-te-banner-frame, body > .skiptranslate, .goog-te-banner-frame, .goog-te-banner'
             ).forEach((el) => {
-                if (el && el.id !== 'google_translate_element' && el.id !== 'app') el.remove();
+                if (
+                    el &&
+                    el.id !== 'google_translate_element' &&
+                    el.id !== 'app' &&
+                    (!appElem || (!el.contains(appElem) && !appElem.contains(el)))
+                ) el.remove();
             });
             if (document.body && document.body.style.top !== '0px') {
                 document.body.style.top = '0px';
