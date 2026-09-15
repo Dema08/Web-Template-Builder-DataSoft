@@ -62,5 +62,16 @@ class DatabaseSeeder extends Seeder
 
         // ── 4. Industry categories ───────────────────────────────────────
         $this->call(CategorySeeder::class);
+
+        // ── 5. Default Promo Code ───────────────────────────────────────
+        \App\Domains\Pricelist\Models\PromoCode::firstOrCreate(
+            ['code' => 'FREE2026'],
+            [
+                'description'    => 'Promo Spesial Gratis Paket Starter 20k',
+                'discount_type'  => 'free',
+                'discount_value' => 0,
+                'is_active'      => true,
+            ]
+        );
     }
 }

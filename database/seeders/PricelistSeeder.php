@@ -12,21 +12,21 @@ class PricelistSeeder extends Seeder
     {
         $plans = [
             [
-                'slug' => 'free',
-                'nama' => 'Free',
-                'harga' => 0,
+                'slug' => 'starter-20k',
+                'nama' => 'Starter (20k)',
+                'harga' => 20000,
                 'deskripsi' => 'Cocok untuk proyek pribadi dan mencoba platform.',
-                'periode' => 'selamanya',
-                'maks_domain' => 0, // Hanya subdomain (.datasoft.id)
-                'maks_starter_template' => 0, // Hanya Blank Template
-                'bisa_upload_website' => false,
-                'bisa_custom_domain' => false,
+                'periode' => 'bulan',
+                'maks_domain' => 1,
+                'maks_starter_template' => 5,
+                'bisa_upload_website' => true,
+                'bisa_custom_domain' => true,
                 'fitur' => [
-                    'Akses ke Blank Template',
-                    'Subdomain Gratis (.datasoft.id)',
-                    'Builder Visual Dasar',
-                    'Tidak Bisa Custom Domain',
-                    'Tidak Bisa Upload HTML/Zip',
+                    'Akses ke Starter Templates',
+                    'Subdomain + Custom Domain',
+                    'Builder Visual Lengkap',
+                    'Upload Website HTML/Zip',
+                    'Keamanan & SSL Standar',
                 ],
                 'is_active' => true,
                 'is_default' => true,

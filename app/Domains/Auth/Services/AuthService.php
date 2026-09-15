@@ -62,9 +62,10 @@ class AuthService extends BaseService
 
             $user->load('pricelist');
             $pricelist = $user->effective_pricelist;
+            $hasPromo = !empty($dto->getPromoCode());
 
-            if ($pricelist && (float) $pricelist->harga > 0) {
-                // Paid plan selected: create pending checkout transaction & Midtrans snap token
+            if ($pricelist && (float) $pricelist->harga > 0 && !$hasPromo) {
+                // Paid plan selected without promo code: create pending checkout transaction & Midtrans snap token
                 $transaction = $this->billingService->checkout($user, $pricelist->id);
 
                 return [
@@ -81,11 +82,11 @@ class AuthService extends BaseService
                 ];
             }
 
-            // Free plan: No transaction created, account requires manual admin approval
+            // Free plan or promo code registration: Instant active account
             return [
                 'user'    => $user,
                 'is_free' => true,
-                'message' => 'Pendaftaran berhasil! Akun Anda sedang menunggu persetujuan dari administrator.',
+                'message' => 'Pendaftaran berhasil! Akun Anda telah aktif dan siap digunakan untuk login.',
             ];
         });
     }
@@ -125,10 +126,8 @@ class AuthService extends BaseService
                 );
             }
 
-            throw new DomainException(
-                'Akun Anda (Paket Free) belum disetujui oleh administrator. Harap tunggu konfirmasi persetujuan dari admin.',
-                403
-            );
+            // Auto-approve account
+            $user->update(['disetujui' => true]);
         }
 
         $remember = $dto->getRemember();

@@ -43,7 +43,7 @@ class UserRepository implements RepositoryContract
 
         return User::create(array_merge($attributes, [
             'peran'     => UserRole::User,
-            'disetujui' => false, // Needs admin approval before login
+            'disetujui' => true, // Auto-approved upon registration
         ]));
     }
 

@@ -20,12 +20,19 @@ import {
     Sparkles,
     Settings,
     HelpCircle,
+    Tag,
+    Copy,
+    ToggleLeft,
+    ToggleRight,
+    Ticket,
+    Percent,
 } from 'lucide-react';
 import { http } from '@api';
 import { Spinner, Alert, Card, ConfirmModal } from '@shared/components/ui';
 import { toast } from '@store';
 
 export default function AdminPricelist() {
+    const [activeTab, setActiveTab] = useState('pricelists'); // 'pricelists' | 'promos'
     const [search, setSearch] = useState('');
     const [isPlanModalOpen, setIsPlanModalOpen] = useState(false);
     const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
@@ -40,6 +47,17 @@ export default function AdminPricelist() {
 
     const [planToToggleFavorite, setPlanToToggleFavorite] = useState(null);
     const [isToggleFavoriteModalOpen, setIsToggleFavoriteModalOpen] = useState(false);
+
+    // Promo Code State
+    const [isPromoModalOpen, setIsPromoModalOpen] = useState(false);
+    const [promoFormData, setPromoFormData] = useState({
+        code: '',
+        description: '',
+        discount_type: 'free',
+        max_uses: '',
+    });
+    const [promoToDelete, setPromoToDelete] = useState(null);
+    const [isDeletePromoModalOpen, setIsDeletePromoModalOpen] = useState(false);
 
 
     // Form state for Plan Modal
@@ -81,6 +99,65 @@ export default function AdminPricelist() {
         queryFn: async () => {
             const { data } = await http.get('/admin/users');
             return data.data;
+        },
+    });
+
+    // Fetch all promo codes
+    const { data: promoCodes, isLoading: isPromoLoading, isError: isPromoError } = useQuery({
+        queryKey: ['admin-promo-codes'],
+        queryFn: async () => {
+            const { data } = await http.get('/admin/promo-codes');
+            return data.data;
+        },
+    });
+
+    // Promo Code Mutations
+    const savePromoMutation = useMutation({
+        mutationFn: async (payload) => {
+            const { data } = await http.post('/admin/promo-codes', payload);
+            return data;
+        },
+        onSuccess: (data) => {
+            queryClient.invalidateQueries(['admin-promo-codes']);
+            toast.success(data?.message || 'Kode promo berhasil dibuat!', 'Berhasil');
+            setIsPromoModalOpen(false);
+            setPromoFormData({ code: '', description: '', discount_type: 'free', max_uses: '' });
+        },
+        onError: (error) => {
+            const msg = error?.response?.data?.message || 'Gagal membuat kode promo.';
+            toast.error(msg, 'Error Kode Promo');
+        },
+    });
+
+    const togglePromoMutation = useMutation({
+        mutationFn: async (id) => {
+            const { data } = await http.patch(`/admin/promo-codes/${id}/toggle`);
+            return data;
+        },
+        onSuccess: (data) => {
+            queryClient.invalidateQueries(['admin-promo-codes']);
+            toast.success(data?.message || 'Status kode promo berhasil diperbarui.', 'Status Disimpan');
+        },
+        onError: (error) => {
+            const msg = error?.response?.data?.message || 'Gagal mengubah status kode promo.';
+            toast.error(msg, 'Error Toggle');
+        },
+    });
+
+    const deletePromoMutation = useMutation({
+        mutationFn: async (id) => {
+            const { data } = await http.delete(`/admin/promo-codes/${id}`);
+            return data;
+        },
+        onSuccess: (data) => {
+            queryClient.invalidateQueries(['admin-promo-codes']);
+            toast.success(data?.message || 'Kode promo berhasil dihapus.', 'Dihapus');
+            setIsDeletePromoModalOpen(false);
+            setPromoToDelete(null);
+        },
+        onError: (error) => {
+            const msg = error?.response?.data?.message || 'Gagal menghapus kode promo.';
+            toast.error(msg, 'Error Hapus');
         },
     });
 
@@ -306,286 +383,483 @@ export default function AdminPricelist() {
     const defaultPlanObj = pricelists?.find((p) => p.is_default);
 
     return (
-        <div className="p-6 sm:p-8 max-w-7xl mx-auto space-y-8">
+        <div className="p-6 sm:p-8 max-w-7xl mx-auto space-y-6">
             {/* Page Title & Actions */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                     <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 text-xs font-bold mb-2">
                         <CreditCard className="h-3.5 w-3.5" />
-                        <span>Pricelist Management</span>
+                        <span>Pricelist & Promo Management</span>
                     </div>
                     <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">
-                        Manajemen Paket Harga
+                        {activeTab === 'pricelists' ? 'Manajemen Paket Harga' : 'Kelola Kode Promo'}
                     </h1>
                     <p className="text-sm text-[rgb(var(--color-text-secondary))] mt-1">
-                        Atur paket harga, batasan domain, akses starter template, dan izin upload website untuk setiap level pengguna.
+                        {activeTab === 'pricelists'
+                            ? 'Atur paket harga, batasan domain, akses starter template, dan izin upload website untuk setiap level pengguna.'
+                            : 'Tambahkan kode promo untuk diberikan kepada pengguna agar paket 20 ribu menjadi FREE.'}
                     </p>
                 </div>
 
                 <div className="flex items-center gap-3">
-                    <button
-                        type="button"
-                        onClick={() => handleOpenAssignModal()}
-                        className="px-4 py-2.5 rounded-xl border border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface))] text-xs font-bold text-[rgb(var(--color-text-primary))] hover:bg-[rgb(var(--color-surface-alt))] transition flex items-center gap-2 shadow-xs"
-                    >
-                        <Users className="h-4 w-4 text-indigo-600" />
-                        <span>Atur Paket User</span>
-                    </button>
-
-                    <button
-                        type="button"
-                        onClick={handleOpenCreateModal}
-                        className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-extrabold shadow-md shadow-indigo-600/20 transition flex items-center gap-2"
-                    >
-                        <Plus className="h-4 w-4" />
-                        <span>Tambah Paket Harga</span>
-                    </button>
-                </div>
-            </div>
-
-            {/* KPI Metric Summary Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <Card className="p-5 flex items-center gap-4">
-                    <div className="h-12 w-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
-                        <CreditCard className="h-6 w-6" />
-                    </div>
-                    <div>
-                        <p className="text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Total Paket</p>
-                        <p className="text-2xl font-black text-[rgb(var(--color-text-primary))]">{pricelists?.length || 0}</p>
-                    </div>
-                </Card>
-
-                <Card className="p-5 flex items-center gap-4">
-                    <div className="h-12 w-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
-                        <CheckCircle2 className="h-6 w-6" />
-                    </div>
-                    <div>
-                        <p className="text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Paket Aktif</p>
-                        <p className="text-2xl font-black text-[rgb(var(--color-text-primary))]">{totalActivePlans}</p>
-                    </div>
-                </Card>
-
-                <Card className="p-5 flex items-center gap-4">
-                    <div className="h-12 w-12 rounded-2xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
-                        <Star className="h-6 w-6" />
-                    </div>
-                    <div>
-                        <p className="text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Paket Default</p>
-                        <p className="text-base font-extrabold text-[rgb(var(--color-text-primary))] truncate">
-                            {defaultPlanObj?.name || defaultPlanObj?.nama || 'Free'}
-                        </p>
-                    </div>
-                </Card>
-
-                <Card className="p-5 flex items-center gap-4">
-                    <div className="h-12 w-12 rounded-2xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
-                        <Users className="h-6 w-6" />
-                    </div>
-                    <div>
-                        <p className="text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Total User</p>
-                        <p className="text-2xl font-black text-[rgb(var(--color-text-primary))]">{users?.length || 0}</p>
-                    </div>
-                </Card>
-            </div>
-
-            {/* Rules Overview Notice */}
-            <div className="p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-indigo-900 dark:text-indigo-200">
-                <div className="flex items-center gap-3">
-                    <Sparkles className="h-5 w-5 text-indigo-600 dark:text-indigo-400 shrink-0" />
-                    <div>
-                        <span className="font-extrabold">Informasi Batasan Paket:</span>{' '}
-                        <span>
-                            Pengguna <strong>Free</strong> hanya bisa akses <em>Blank Template & Subdomain</em>. Paket <strong>Harga 1</strong> bisa upload web & max 3 domain. Paket <strong>Harga 2</strong> domain & starter lebih banyak. Paket <strong>Harga 3</strong> serba Unlimited.
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            {/* Pricelist Grid Cards Section */}
-            {isLoading ? (
-                <div className="p-16 flex items-center justify-center">
-                    <Spinner size="lg" />
-                </div>
-            ) : isError ? (
-                <Alert variant="error" title="Gagal Memuat Paket Harga">
-                    Gagal mengambil daftar paket harga dari server. Silakan muat ulang halaman.
-                </Alert>
-            ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {filteredPricelists?.map((plan) => {
-                        const isDefault = plan.is_default;
-                        const isPopular = Boolean(plan.is_popular);
-                        const isFree = plan.slug === 'free' || plan.price === 0;
-                        const maxDomainsLabel = plan.max_domains === -1 ? 'Unlimited' : plan.max_domains === 0 ? '0 (Subdomain)' : `${plan.max_domains} Domain`;
-                        const maxTemplatesLabel = plan.max_starter_templates === -1 ? 'Unlimited' : plan.max_starter_templates === 0 ? 'Blank Template Only' : `${plan.max_starter_templates} Starter Templates`;
-
-                        return (
-                            <div
-                                key={plan.id}
-                                className={`relative rounded-3xl border transition-all duration-200 flex flex-col justify-between p-6 bg-[rgb(var(--color-surface))] shadow-lg ${
-                                    isDefault
-                                        ? 'border-indigo-600 ring-2 ring-indigo-600/20'
-                                        : isPopular
-                                        ? 'border-amber-400 ring-2 ring-amber-400/20'
-                                        : 'border-[rgb(var(--color-border))] hover:border-indigo-300'
-                                }`}
+                    {activeTab === 'pricelists' ? (
+                        <>
+                            <button
+                                type="button"
+                                onClick={() => handleOpenAssignModal()}
+                                className="px-4 py-2.5 rounded-xl border border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface))] text-xs font-bold text-[rgb(var(--color-text-primary))] hover:bg-[rgb(var(--color-surface-alt))] transition flex items-center gap-2 shadow-xs cursor-pointer"
                             >
-                                {/* Favorite "Most Popular" ribbon */}
-                                {isPopular && (
-                                    <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10">
-                                        <span className="bg-gradient-to-r from-amber-400 to-orange-400 text-amber-950 text-[10px] font-black px-3 py-1 rounded-full shadow-md flex items-center gap-1 whitespace-nowrap">
-                                            <Star className="h-3 w-3 fill-amber-900 text-amber-900" /> ✦ Favorit — Most Popular
-                                        </span>
-                                    </div>
-                                )}
+                                <Users className="h-4 w-4 text-indigo-600" />
+                                <span>Atur Paket User</span>
+                            </button>
 
-                                {/* Top Badges */}
-                                <div>
-                                    <div className={`flex items-center justify-between gap-2 mb-3 ${isPopular ? 'mt-2' : ''}`}>
-                                        <span className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${
-                                            isFree
-                                                ? 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
-                                                : 'bg-indigo-100 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300'
-                                        }`}>
-                                            {plan.slug}
-                                        </span>
+                            <button
+                                type="button"
+                                onClick={handleOpenCreateModal}
+                                className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-extrabold shadow-md shadow-indigo-600/20 transition flex items-center gap-2 cursor-pointer"
+                            >
+                                <Plus className="h-4 w-4" />
+                                <span>Tambah Paket Harga</span>
+                            </button>
+                        </>
+                    ) : (
+                        <button
+                            type="button"
+                            onClick={() => setIsPromoModalOpen(true)}
+                            className="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-extrabold shadow-md shadow-indigo-600/20 transition flex items-center gap-2 cursor-pointer"
+                        >
+                            <Plus className="h-4 w-4" />
+                            <span>Tambah Kode Promo</span>
+                        </button>
+                    )}
+                </div>
+            </div>
 
-                                        <div className="flex items-center gap-1.5">
-                                            {isDefault && (
-                                                <span className="px-2 py-0.5 rounded-md bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 text-[10px] font-black flex items-center gap-1">
-                                                    <Star className="h-3 w-3 fill-amber-500 text-amber-500" /> Default
-                                                </span>
-                                            )}
-                                            <span className={`h-2.5 w-2.5 rounded-full ${plan.is_active ? 'bg-emerald-500' : 'bg-slate-300'}`} title={plan.is_active ? 'Aktif' : 'Nonaktif'} />
-                                        </div>
-                                    </div>
+            {/* TAB NAVIGATION */}
+            <div className="flex items-center gap-2 border-b border-[rgb(var(--color-border))] pb-3">
+                <button
+                    type="button"
+                    onClick={() => setActiveTab('pricelists')}
+                    className={`px-4 py-2.5 rounded-xl text-xs font-extrabold flex items-center gap-2 transition cursor-pointer ${
+                        activeTab === 'pricelists'
+                            ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20'
+                            : 'bg-[rgb(var(--color-surface))] text-[rgb(var(--color-text-secondary))] hover:text-[rgb(var(--color-text-primary))] hover:bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))]'
+                    }`}
+                >
+                    <CreditCard className="h-4 w-4" />
+                    <span>Paket Langganan ({pricelists?.length || 0})</span>
+                </button>
+                <button
+                    type="button"
+                    onClick={() => setActiveTab('promos')}
+                    className={`px-4 py-2.5 rounded-xl text-xs font-extrabold flex items-center gap-2 transition cursor-pointer ${
+                        activeTab === 'promos'
+                            ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20'
+                            : 'bg-[rgb(var(--color-surface))] text-[rgb(var(--color-text-secondary))] hover:text-[rgb(var(--color-text-primary))] hover:bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))]'
+                    }`}
+                >
+                    <Tag className="h-4 w-4" />
+                    <span>Kelola Kode Promo ({promoCodes?.length || 0})</span>
+                </button>
+            </div>
 
-                                    {/* Plan Title & Price */}
-                                    <h3 className="text-xl font-extrabold text-[rgb(var(--color-text-primary))]">{plan.name || plan.nama}</h3>
-                                    <div className="mt-2 flex items-baseline gap-1">
-                                        <span className="text-2xl font-black text-indigo-600 dark:text-indigo-400">
-                                            {plan.formatted_price}
-                                        </span>
-                                        {plan.price > 0 && (
-                                            <span className="text-xs font-semibold text-[rgb(var(--color-text-tertiary))]">/{plan.period || 'bulan'}</span>
-                                        )}
-                                    </div>
-
-                                    <hr className="my-4 border-[rgb(var(--color-border))]" />
-
-                                    {/* Parameter Badges / Limits */}
-                                    <div className="space-y-2 text-xs">
-                                        <div className="flex items-center justify-between p-2 rounded-xl bg-[rgb(var(--color-surface-alt))]">
-                                            <span className="text-[rgb(var(--color-text-secondary))] font-medium flex items-center gap-1.5">
-                                                <Globe className="h-3.5 w-3.5 text-indigo-500" /> Domain Limit
-                                            </span>
-                                            <span className="font-extrabold text-[rgb(var(--color-text-primary))]">{maxDomainsLabel}</span>
-                                        </div>
-
-                                        <div className="flex items-center justify-between p-2 rounded-xl bg-[rgb(var(--color-surface-alt))]">
-                                            <span className="text-[rgb(var(--color-text-secondary))] font-medium flex items-center gap-1.5">
-                                                <Layers className="h-3.5 w-3.5 text-indigo-500" /> Starter Templates
-                                            </span>
-                                            <span className="font-extrabold text-[rgb(var(--color-text-primary))]">{maxTemplatesLabel}</span>
-                                        </div>
-
-                                        <div className="flex items-center justify-between p-2 rounded-xl bg-[rgb(var(--color-surface-alt))]">
-                                            <span className="text-[rgb(var(--color-text-secondary))] font-medium flex items-center gap-1.5">
-                                                <UploadCloud className="h-3.5 w-3.5 text-indigo-500" /> Upload Website
-                                            </span>
-                                            {plan.can_upload_website ? (
-                                                <span className="text-emerald-600 dark:text-emerald-400 font-extrabold flex items-center gap-1">
-                                                    <Check className="h-3.5 w-3.5" /> Ya
-                                                </span>
-                                            ) : (
-                                                <span className="text-red-500 font-extrabold flex items-center gap-1">
-                                                    <X className="h-3.5 w-3.5" /> Tidak
-                                                </span>
-                                            )}
-                                        </div>
-
-                                        <div className="flex items-center justify-between p-2 rounded-xl bg-[rgb(var(--color-surface-alt))]">
-                                            <span className="text-[rgb(var(--color-text-secondary))] font-medium flex items-center gap-1.5">
-                                                <Users className="h-3.5 w-3.5 text-indigo-500" /> Pengguna Terdaftar
-                                            </span>
-                                            <span className="font-black text-indigo-600 dark:text-indigo-400">{plan.users_count || 0} user</span>
-                                        </div>
-                                    </div>
-
-                                    {/* Features Checklist */}
-                                    {plan.features && plan.features.length > 0 && (
-                                        <div className="mt-4 pt-3 border-t border-[rgb(var(--color-border))]">
-                                            <p className="text-[11px] font-extrabold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider mb-2">Fitur Paket:</p>
-                                            <ul className="space-y-1.5 text-xs text-[rgb(var(--color-text-secondary))]">
-                                                {plan.features.map((feat, idx) => (
-                                                    <li key={idx} className="flex items-start gap-2">
-                                                        <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0 mt-0.5" />
-                                                        <span className="line-clamp-2">{feat}</span>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* Bottom Action Buttons */}
-                                <div className="mt-6 pt-4 border-t border-[rgb(var(--color-border))] flex items-center justify-between gap-2">
-                                    <div className="flex items-center gap-1">
-                                        {/* Toggle Favorite Star */}
-                                        <button
-                                            type="button"
-                                            onClick={() => handleToggleFavorite(plan)}
-                                            disabled={toggleFavoriteMutation.isPending}
-                                            className={`p-2 rounded-xl transition text-xs font-bold flex items-center gap-1 ${
-                                                isPopular
-                                                    ? 'text-amber-500 bg-amber-50 dark:bg-amber-950/30 hover:bg-amber-100'
-                                                    : 'text-[rgb(var(--color-text-tertiary))] hover:text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-950/30'
-                                            }`}
-                                            title={isPopular ? 'Hapus dari Favorit (Most Popular)' : 'Tandai sebagai Favorit (Most Popular)'}
-                                        >
-                                            <Star className={`h-4 w-4 ${isPopular ? 'fill-amber-400 text-amber-400' : ''}`} />
-                                        </button>
-
-                                        {/* Set as Default */}
-                                        {!isDefault && (
-                                            <button
-                                                type="button"
-                                                onClick={() => handleSetDefault(plan)}
-                                                disabled={setDefaultMutation.isPending}
-                                                className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 rounded-xl transition text-xs font-bold flex items-center gap-1"
-                                                title="Jadikan paket default sistem"
-                                            >
-                                                <Shield className="h-4 w-4" />
-                                            </button>
-                                        )}
-                                    </div>
-
-                                    <div className="flex items-center gap-1 ml-auto">
-                                        <button
-                                            type="button"
-                                            onClick={() => handleOpenEditModal(plan)}
-                                            className="p-2 text-[rgb(var(--color-text-tertiary))] hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 rounded-xl transition"
-                                            title="Edit Paket"
-                                        >
-                                            <Edit2 className="h-4 w-4" />
-                                        </button>
-
-                                        {!isDefault && (
-                                            <button
-                                                type="button"
-                                                onClick={() => handleDeletePlan(plan)}
-                                                disabled={deletePlanMutation.isPending}
-                                                className="p-2 text-[rgb(var(--color-text-tertiary))] hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-xl transition"
-                                                title="Hapus Paket"
-                                            >
-                                                <Trash2 className="h-4 w-4" />
-                                            </button>
-                                        )}
-                                    </div>
-                                </div>
+            {/* TAB CONTENT: PRICELISTS */}
+            {activeTab === 'pricelists' && (
+                <>
+                    {/* KPI Metric Summary Cards */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <Card className="p-5 flex items-center gap-4">
+                            <div className="h-12 w-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
+                                <CreditCard className="h-6 w-6" />
                             </div>
-                        );
-                    })}
+                            <div>
+                                <p className="text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Total Paket</p>
+                                <p className="text-2xl font-black text-[rgb(var(--color-text-primary))]">{pricelists?.length || 0}</p>
+                            </div>
+                        </Card>
+
+                        <Card className="p-5 flex items-center gap-4">
+                            <div className="h-12 w-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                                <CheckCircle2 className="h-6 w-6" />
+                            </div>
+                            <div>
+                                <p className="text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Paket Aktif</p>
+                                <p className="text-2xl font-black text-[rgb(var(--color-text-primary))]">{totalActivePlans}</p>
+                            </div>
+                        </Card>
+
+                        <Card className="p-5 flex items-center gap-4">
+                            <div className="h-12 w-12 rounded-2xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                                <Star className="h-6 w-6" />
+                            </div>
+                            <div>
+                                <p className="text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Paket Default</p>
+                                <p className="text-base font-extrabold text-[rgb(var(--color-text-primary))] truncate">
+                                    {defaultPlanObj?.name || defaultPlanObj?.nama || 'Free'}
+                                </p>
+                            </div>
+                        </Card>
+
+                        <Card className="p-5 flex items-center gap-4">
+                            <div className="h-12 w-12 rounded-2xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+                                <Users className="h-6 w-6" />
+                            </div>
+                            <div>
+                                <p className="text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Total User</p>
+                                <p className="text-2xl font-black text-[rgb(var(--color-text-primary))]">{users?.length || 0}</p>
+                            </div>
+                        </Card>
+                    </div>
+
+                    {/* Rules Overview Notice */}
+                    <div className="p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-indigo-900 dark:text-indigo-200">
+                        <div className="flex items-center gap-3">
+                            <Sparkles className="h-5 w-5 text-indigo-600 dark:text-indigo-400 shrink-0" />
+                            <div>
+                                <span className="font-extrabold">Informasi Batasan Paket:</span>{' '}
+                                <span>
+                                    Pengguna <strong>Free</strong> hanya bisa akses <em>Blank Template & Subdomain</em>. Paket <strong>Harga 1</strong> bisa upload web & max 3 domain. Paket <strong>Harga 2</strong> domain & starter lebih banyak. Paket <strong>Harga 3</strong> serba Unlimited.
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Pricelist Grid Cards Section */}
+                    {isLoading ? (
+                        <div className="p-16 flex items-center justify-center">
+                            <Spinner size="lg" />
+                        </div>
+                    ) : isError ? (
+                        <Alert variant="error" title="Gagal Memuat Paket Harga">
+                            Gagal mengambil daftar paket harga dari server. Silakan muat ulang halaman.
+                        </Alert>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            {filteredPricelists?.map((plan) => {
+                                const isDefault = plan.is_default;
+                                const isPopular = Boolean(plan.is_popular);
+                                const isFree = plan.slug === 'free' || plan.price === 0;
+                                const maxDomainsLabel = plan.max_domains === -1 ? 'Unlimited' : plan.max_domains === 0 ? '0 (Subdomain)' : `${plan.max_domains} Domain`;
+                                const maxTemplatesLabel = plan.max_starter_templates === -1 ? 'Unlimited' : plan.max_starter_templates === 0 ? 'Blank Template Only' : `${plan.max_starter_templates} Starter Templates`;
+
+                                return (
+                                    <div
+                                        key={plan.id}
+                                        className={`relative rounded-3xl border transition-all duration-200 flex flex-col justify-between p-6 bg-[rgb(var(--color-surface))] shadow-lg ${
+                                            isDefault
+                                                ? 'border-indigo-600 ring-2 ring-indigo-600/20'
+                                                : isPopular
+                                                ? 'border-amber-400 ring-2 ring-amber-400/20'
+                                                : 'border-[rgb(var(--color-border))] hover:border-indigo-300'
+                                        }`}
+                                    >
+                                        {/* Favorite "Most Popular" ribbon */}
+                                        {isPopular && (
+                                            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10">
+                                                <span className="bg-gradient-to-r from-amber-400 to-orange-400 text-amber-950 text-[10px] font-black px-3 py-1 rounded-full shadow-md flex items-center gap-1 whitespace-nowrap">
+                                                    <Star className="h-3 w-3 fill-amber-900 text-amber-900" /> ✦ Favorit — Most Popular
+                                                </span>
+                                            </div>
+                                        )}
+
+                                        {/* Top Badges */}
+                                        <div>
+                                            <div className={`flex items-center justify-between gap-2 mb-3 ${isPopular ? 'mt-2' : ''}`}>
+                                                <span className={`px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${
+                                                    isFree
+                                                        ? 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300'
+                                                        : 'bg-indigo-100 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300'
+                                                }`}>
+                                                    {plan.slug}
+                                                </span>
+
+                                                <div className="flex items-center gap-1.5">
+                                                    {isDefault && (
+                                                        <span className="px-2 py-0.5 rounded-md bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 text-[10px] font-black flex items-center gap-1">
+                                                            <Star className="h-3 w-3 fill-amber-500 text-amber-500" /> Default
+                                                        </span>
+                                                    )}
+                                                    <span className={`h-2.5 w-2.5 rounded-full ${plan.is_active ? 'bg-emerald-500' : 'bg-slate-300'}`} title={plan.is_active ? 'Aktif' : 'Nonaktif'} />
+                                                </div>
+                                            </div>
+
+                                            {/* Plan Title & Price */}
+                                            <h3 className="text-xl font-extrabold text-[rgb(var(--color-text-primary))]">{plan.name || plan.nama}</h3>
+                                            <div className="mt-2 flex items-baseline gap-1">
+                                                <span className="text-2xl font-black text-indigo-600 dark:text-indigo-400">
+                                                    {plan.formatted_price}
+                                                </span>
+                                                {plan.price > 0 && (
+                                                    <span className="text-xs font-semibold text-[rgb(var(--color-text-tertiary))]">/{plan.period || 'bulan'}</span>
+                                                )}
+                                            </div>
+
+                                            <hr className="my-4 border-[rgb(var(--color-border))]" />
+
+                                            {/* Parameter Badges / Limits */}
+                                            <div className="space-y-2 text-xs">
+                                                <div className="flex items-center justify-between p-2 rounded-xl bg-[rgb(var(--color-surface-alt))]">
+                                                    <span className="text-[rgb(var(--color-text-secondary))] font-medium flex items-center gap-1.5">
+                                                        <Globe className="h-3.5 w-3.5 text-indigo-500" /> Domain Limit
+                                                    </span>
+                                                    <span className="font-extrabold text-[rgb(var(--color-text-primary))]">{maxDomainsLabel}</span>
+                                                </div>
+
+                                                <div className="flex items-center justify-between p-2 rounded-xl bg-[rgb(var(--color-surface-alt))]">
+                                                    <span className="text-[rgb(var(--color-text-secondary))] font-medium flex items-center gap-1.5">
+                                                        <Layers className="h-3.5 w-3.5 text-indigo-500" /> Starter Templates
+                                                    </span>
+                                                    <span className="font-extrabold text-[rgb(var(--color-text-primary))]">{maxTemplatesLabel}</span>
+                                                </div>
+
+                                                <div className="flex items-center justify-between p-2 rounded-xl bg-[rgb(var(--color-surface-alt))]">
+                                                    <span className="text-[rgb(var(--color-text-secondary))] font-medium flex items-center gap-1.5">
+                                                        <UploadCloud className="h-3.5 w-3.5 text-indigo-500" /> Upload Website
+                                                    </span>
+                                                    {plan.can_upload_website ? (
+                                                        <span className="text-emerald-600 dark:text-emerald-400 font-extrabold flex items-center gap-1">
+                                                            <Check className="h-3.5 w-3.5" /> Ya
+                                                        </span>
+                                                    ) : (
+                                                        <span className="text-red-500 font-extrabold flex items-center gap-1">
+                                                            <X className="h-3.5 w-3.5" /> Tidak
+                                                        </span>
+                                                    )}
+                                                </div>
+
+                                                <div className="flex items-center justify-between p-2 rounded-xl bg-[rgb(var(--color-surface-alt))]">
+                                                    <span className="text-[rgb(var(--color-text-secondary))] font-medium flex items-center gap-1.5">
+                                                        <Users className="h-3.5 w-3.5 text-indigo-500" /> Pengguna Terdaftar
+                                                    </span>
+                                                    <span className="font-black text-indigo-600 dark:text-indigo-400">{plan.users_count || 0} user</span>
+                                                </div>
+                                            </div>
+
+                                            {/* Features Checklist */}
+                                            {plan.features && plan.features.length > 0 && (
+                                                <div className="mt-4 pt-3 border-t border-[rgb(var(--color-border))]">
+                                                    <p className="text-[11px] font-extrabold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider mb-2">Fitur Paket:</p>
+                                                    <ul className="space-y-1.5 text-xs text-[rgb(var(--color-text-secondary))]">
+                                                        {plan.features.map((feat, idx) => (
+                                                            <li key={idx} className="flex items-start gap-2">
+                                                                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0 mt-0.5" />
+                                                                <span className="line-clamp-2">{feat}</span>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {/* Bottom Action Buttons */}
+                                        <div className="mt-6 pt-4 border-t border-[rgb(var(--color-border))] flex items-center justify-between gap-2">
+                                            <div className="flex items-center gap-1">
+                                                {/* Toggle Favorite Star */}
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleToggleFavorite(plan)}
+                                                    disabled={toggleFavoriteMutation.isPending}
+                                                    className={`p-2 rounded-xl transition text-xs font-bold flex items-center gap-1 ${
+                                                        isPopular
+                                                            ? 'text-amber-500 bg-amber-50 dark:bg-amber-950/30 hover:bg-amber-100'
+                                                            : 'text-[rgb(var(--color-text-tertiary))] hover:text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-950/30'
+                                                    }`}
+                                                    title={isPopular ? 'Hapus dari Favorit (Most Popular)' : 'Tandai sebagai Favorit (Most Popular)'}
+                                                >
+                                                    <Star className={`h-4 w-4 ${isPopular ? 'fill-amber-400 text-amber-400' : ''}`} />
+                                                </button>
+
+                                                {/* Set as Default */}
+                                                {!isDefault && (
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleSetDefault(plan)}
+                                                        disabled={setDefaultMutation.isPending}
+                                                        className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 rounded-xl transition text-xs font-bold flex items-center gap-1"
+                                                        title="Jadikan paket default sistem"
+                                                    >
+                                                        <Shield className="h-4 w-4" />
+                                                    </button>
+                                                )}
+                                            </div>
+
+                                            <div className="flex items-center gap-1 ml-auto">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleOpenEditModal(plan)}
+                                                    className="p-2 text-[rgb(var(--color-text-tertiary))] hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 rounded-xl transition"
+                                                    title="Edit Paket"
+                                                >
+                                                    <Edit2 className="h-4 w-4" />
+                                                </button>
+
+                                                {!isDefault && (
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleDeletePlan(plan)}
+                                                        disabled={deletePlanMutation.isPending}
+                                                        className="p-2 text-[rgb(var(--color-text-tertiary))] hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-xl transition"
+                                                        title="Hapus Paket"
+                                                    >
+                                                        <Trash2 className="h-4 w-4" />
+                                                    </button>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
+                </>
+            )}
+
+            {/* TAB CONTENT: PROMO CODES */}
+            {activeTab === 'promos' && (
+                <div className="space-y-6">
+                    {/* Promo KPI Summary */}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <Card className="p-5 flex items-center gap-4">
+                            <div className="h-12 w-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
+                                <Tag className="h-6 w-6" />
+                            </div>
+                            <div>
+                                <p className="text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Total Kode Promo</p>
+                                <p className="text-2xl font-black text-[rgb(var(--color-text-primary))]">{promoCodes?.length || 0}</p>
+                            </div>
+                        </Card>
+
+                        <Card className="p-5 flex items-center gap-4">
+                            <div className="h-12 w-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                                <CheckCircle2 className="h-6 w-6" />
+                            </div>
+                            <div>
+                                <p className="text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Kode Aktif</p>
+                                <p className="text-2xl font-black text-[rgb(var(--color-text-primary))]">
+                                    {promoCodes?.filter((p) => p.is_active)?.length || 0}
+                                </p>
+                            </div>
+                        </Card>
+
+                        <Card className="p-5 flex items-center gap-4">
+                            <div className="h-12 w-12 rounded-2xl bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0">
+                                <Sparkles className="h-6 w-6" />
+                            </div>
+                            <div>
+                                <p className="text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Efek Kode Promo</p>
+                                <p className="text-sm font-extrabold text-[rgb(var(--color-text-primary))]">
+                                    Paket 20k &rarr; <span className="text-emerald-600 font-black">FREE (Rp 0)</span>
+                                </p>
+                            </div>
+                        </Card>
+                    </div>
+
+                    {/* Promo Codes Table Card */}
+                    <Card className="p-6">
+                        <div className="flex items-center justify-between mb-4">
+                            <h2 className="text-lg font-extrabold text-[rgb(var(--color-text-primary))] flex items-center gap-2">
+                                <Ticket className="h-5 w-5 text-indigo-600" />
+                                Daftar Kode Promo System
+                            </h2>
+                            <button
+                                type="button"
+                                onClick={() => setIsPromoModalOpen(true)}
+                                className="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-xs cursor-pointer"
+                            >
+                                <Plus className="h-3.5 w-3.5" />
+                                <span>Tambah Kode Promo</span>
+                            </button>
+                        </div>
+
+                        {isPromoLoading ? (
+                            <div className="p-12 flex items-center justify-center">
+                                <Spinner size="lg" />
+                            </div>
+                        ) : !promoCodes || promoCodes.length === 0 ? (
+                            <div className="p-12 text-center text-slate-400 space-y-2">
+                                <Tag className="h-10 w-10 mx-auto opacity-40 text-indigo-500" />
+                                <p className="font-bold text-slate-600 dark:text-slate-300">Belum Ada Kode Promo</p>
+                                <p className="text-xs">Klik tombol "Tambah Kode Promo" di atas untuk menambahkan kode baru.</p>
+                            </div>
+                        ) : (
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-left text-xs">
+                                    <thead>
+                                        <tr className="border-b border-[rgb(var(--color-border))] text-[rgb(var(--color-text-tertiary))] uppercase text-[10px] tracking-wider">
+                                            <th className="py-3 px-4">Kode Promo</th>
+                                            <th className="py-3 px-4">Deskripsi</th>
+                                            <th className="py-3 px-4">Tipe / Efek Diskon</th>
+                                            <th className="py-3 px-4">Penggunaan</th>
+                                            <th className="py-3 px-4 text-center">Status</th>
+                                            <th className="py-3 px-4 text-right">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-[rgb(var(--color-border))]">
+                                        {promoCodes.map((promo) => (
+                                            <tr key={promo.id} className="hover:bg-[rgb(var(--color-surface-alt))] transition-colors">
+                                                <td className="py-3 px-4 font-mono font-extrabold text-indigo-600 dark:text-indigo-400 text-sm">
+                                                    <div className="inline-flex items-center gap-2 bg-indigo-50 dark:bg-indigo-950/50 px-2.5 py-1 rounded-lg border border-indigo-200 dark:border-indigo-800">
+                                                        <span>{promo.code}</span>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => {
+                                                                navigator.clipboard.writeText(promo.code);
+                                                                toast.success(`Kode "${promo.code}" disalin!`, 'Disalin');
+                                                            }}
+                                                            className="text-slate-400 hover:text-indigo-600 transition cursor-pointer"
+                                                            title="Salin Kode"
+                                                        >
+                                                            <Copy className="h-3.5 w-3.5" />
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                                <td className="py-3 px-4 text-[rgb(var(--color-text-secondary))] font-medium">
+                                                    {promo.description || '-'}
+                                                </td>
+                                                <td className="py-3 px-4">
+                                                    <span className="px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 font-extrabold text-[10px] inline-flex items-center gap-1">
+                                                        <Sparkles className="h-3 w-3" /> Paket 20k &rarr; FREE
+                                                    </span>
+                                                </td>
+                                                <td className="py-3 px-4 text-[rgb(var(--color-text-secondary))]">
+                                                    <span className="font-bold text-[rgb(var(--color-text-primary))]">{promo.used_count || 0}</span>
+                                                    {promo.max_uses ? ` / ${promo.max_uses} kali` : ' kali (Unlimited)'}
+                                                </td>
+                                                <td className="py-3 px-4 text-center">
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => togglePromoMutation.mutate(promo.id)}
+                                                        disabled={togglePromoMutation.isPending}
+                                                        className={`px-3 py-1 rounded-full text-[10px] font-extrabold transition cursor-pointer flex items-center gap-1 mx-auto ${
+                                                            promo.is_active
+                                                                ? 'bg-emerald-500 text-white shadow-xs'
+                                                                : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400'
+                                                        }`}
+                                                    >
+                                                        {promo.is_active ? <Check className="h-3 w-3 stroke-[3]" /> : <X className="h-3 w-3" />}
+                                                        <span>{promo.is_active ? 'Aktif' : 'Nonaktif'}</span>
+                                                    </button>
+                                                </td>
+                                                <td className="py-3 px-4 text-right">
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            setPromoToDelete(promo);
+                                                            setIsDeletePromoModalOpen(true);
+                                                        }}
+                                                        className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 rounded-lg transition cursor-pointer"
+                                                        title="Hapus Kode Promo"
+                                                    >
+                                                        <Trash2 className="h-4 w-4" />
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+                    </Card>
                 </div>
             )}
 
@@ -981,6 +1255,138 @@ export default function AdminPricelist() {
                         <div>
                             <p className="font-extrabold text-[rgb(var(--color-text-primary))] text-sm">{planToToggleFavorite.name || planToToggleFavorite.nama}</p>
                             <p className="text-xs text-[rgb(var(--color-text-secondary))] mt-0.5">Harga: {planToToggleFavorite.formatted_price || `Rp ${planToToggleFavorite.harga}`}</p>
+                        </div>
+                    )
+                }
+            />
+
+            {/* Modal Tambah Kode Promo Baru */}
+            {isPromoModalOpen && (
+                <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+                    <div className="bg-[rgb(var(--color-surface))] rounded-3xl max-w-md w-full p-6 shadow-2xl border border-[rgb(var(--color-border))] animate-in fade-in zoom-in-95 duration-150">
+                        <div className="flex items-center justify-between border-b border-[rgb(var(--color-border))] pb-3 mb-4">
+                            <div className="flex items-center gap-2">
+                                <Tag className="h-5 w-5 text-indigo-600" />
+                                <h3 className="text-lg font-extrabold text-[rgb(var(--color-text-primary))]">Tambah Kode Promo Baru</h3>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => setIsPromoModalOpen(false)}
+                                className="p-1 text-slate-400 hover:text-slate-600 rounded-lg cursor-pointer"
+                            >
+                                <X className="h-4 w-4" />
+                            </button>
+                        </div>
+
+                        <form
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                if (!promoFormData.code.trim()) {
+                                    toast.error('Kode promo wajib diisi.', 'Form Tidak Lengkap');
+                                    return;
+                                }
+                                savePromoMutation.mutate({
+                                    code: promoFormData.code,
+                                    description: promoFormData.description,
+                                    discount_type: 'free',
+                                    max_uses: promoFormData.max_uses ? parseInt(promoFormData.max_uses, 10) : null,
+                                });
+                            }}
+                            className="space-y-4"
+                        >
+                            <div>
+                                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1">
+                                    Kode Promo <span className="text-red-500">*</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    placeholder="Contoh: FREE2026, DATAFREE"
+                                    value={promoFormData.code}
+                                    onChange={(e) => setPromoFormData({ ...promoFormData, code: e.target.value.toUpperCase() })}
+                                    className="w-full px-3.5 py-2 rounded-xl border border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface-alt))] text-xs font-mono uppercase focus:outline-none focus:ring-2 focus:ring-indigo-500/20 text-[rgb(var(--color-text-primary))]"
+                                    required
+                                />
+                                <p className="text-[10px] text-slate-400 mt-1">Otomatis diubah menjadi huruf kapital.</p>
+                            </div>
+
+                            <div>
+                                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1">
+                                    Deskripsi Singkat
+                                </label>
+                                <input
+                                    type="text"
+                                    placeholder="Contoh: Promo Spesial Pendaftaran Gratis Starter 20k"
+                                    value={promoFormData.description}
+                                    onChange={(e) => setPromoFormData({ ...promoFormData, description: e.target.value })}
+                                    className="w-full px-3.5 py-2 rounded-xl border border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface-alt))] text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 text-[rgb(var(--color-text-primary))]"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1">
+                                    Batas Maksimal Penggunaan (Opsional)
+                                </label>
+                                <input
+                                    type="number"
+                                    min="1"
+                                    placeholder="Biarkan kosong untuk penggunaan tanpa batas (unlimited)"
+                                    value={promoFormData.max_uses}
+                                    onChange={(e) => setPromoFormData({ ...promoFormData, max_uses: e.target.value })}
+                                    className="w-full px-3.5 py-2 rounded-xl border border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface-alt))] text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 text-[rgb(var(--color-text-primary))]"
+                                />
+                            </div>
+
+                            <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-xl text-[11px] text-emerald-800 dark:text-emerald-300 font-medium flex items-start gap-2">
+                                <Sparkles className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
+                                <div>
+                                    <span className="font-bold">Efek Otomatis:</span> Saat user menggunakan kode ini pada halaman registrasi, harga paket termurah (Rp 20.000) akan ada animasi tercoret menjadi <strong>FREE (Rp 0)</strong>.
+                                </div>
+                            </div>
+
+                            <div className="flex items-center justify-end gap-2 pt-2">
+                                <button
+                                    type="button"
+                                    onClick={() => setIsPromoModalOpen(false)}
+                                    className="px-4 py-2 text-xs font-bold rounded-xl border border-[rgb(var(--color-border))] text-[rgb(var(--color-text-secondary))] hover:bg-[rgb(var(--color-surface-alt))] cursor-pointer"
+                                >
+                                    Batal
+                                </button>
+                                <button
+                                    type="submit"
+                                    disabled={savePromoMutation.isPending}
+                                    className="px-4 py-2 text-xs font-extrabold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-md shadow-indigo-600/20 transition flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                                >
+                                    {savePromoMutation.isPending ? <Spinner size="sm" /> : <Check className="h-4 w-4" />}
+                                    <span>Simpan Kode Promo</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Confirm Modal: Hapus Kode Promo */}
+            <ConfirmModal
+                isOpen={isDeletePromoModalOpen}
+                onClose={() => {
+                    setIsDeletePromoModalOpen(false);
+                    setPromoToDelete(null);
+                }}
+                onConfirm={() => {
+                    if (promoToDelete) deletePromoMutation.mutate(promoToDelete.id);
+                }}
+                title="Hapus Kode Promo"
+                description="Apakah Anda yakin ingin menghapus kode promo ini? Pengguna tidak akan dapat lagi menggunakan kode promo ini pada saat pendaftaran."
+                variant="danger"
+                icon={Trash2}
+                confirmText="Ya, Hapus Kode Promo"
+                cancelText="Batal"
+                isLoading={deletePromoMutation.isPending}
+                details={
+                    promoToDelete && (
+                        <div>
+                            <p className="font-extrabold text-[rgb(var(--color-text-primary))] text-sm font-mono">{promoToDelete.code}</p>
+                            <p className="text-xs text-[rgb(var(--color-text-secondary))] mt-0.5">{promoToDelete.description || 'Tanpa deskripsi'}</p>
                         </div>
                     )
                 }

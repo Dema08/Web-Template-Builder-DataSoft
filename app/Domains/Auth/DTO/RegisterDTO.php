@@ -13,7 +13,7 @@ class RegisterDTO extends BaseDTO
 {
     protected function keys(): array
     {
-        return ['name', 'email', 'password', 'paket_harga_id'];
+        return ['name', 'email', 'password', 'paket_harga_id', 'promo_code'];
     }
 
     public function getName(): string
@@ -34,5 +34,10 @@ class RegisterDTO extends BaseDTO
     public function getPaketHargaId(): ?int
     {
         return $this->get('paket_harga_id') ? (int) $this->get('paket_harga_id') : null;
+    }
+
+    public function getPromoCode(): ?string
+    {
+        return $this->get('promo_code');
     }
 }

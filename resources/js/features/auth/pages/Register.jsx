@@ -4,10 +4,10 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import {
     Eye, EyeOff, Sparkles, User, Mail, Lock, ShieldCheck, ArrowRight, ArrowLeft,
-    Layers, Headphones, Clock, CheckCircle2, Check, Loader2, CreditCard
+    Layers, Headphones, Clock, CheckCircle2, Check, Loader2, CreditCard, Tag
 } from 'lucide-react';
 import { Spinner, Alert, BrandLogo } from '@shared/components/ui';
-import { pricelistApi, billingApi } from '@api';
+import { pricelistApi, billingApi, http } from '@api';
 import { useRegister } from '@features/auth/hooks/useRegister';
 import { ROUTES, QUERY_KEYS } from '@constants';
 import { toast } from '@store';
@@ -38,29 +38,11 @@ function loadMidtransSnapScript(snapJsUrl, clientKey, callback) {
         callback();
         return;
     }
-
-    const scriptId = 'midtrans-snap-script';
-    let existingScript = document.getElementById(scriptId);
-
-    if (!existingScript) {
-        const script = document.createElement('script');
-        script.id = scriptId;
-        script.src = snapJsUrl || 'https://app.sandbox.midtrans.com/snap/snap.js';
-        if (clientKey) {
-            script.setAttribute('data-client-key', clientKey);
-        }
-        script.onload = () => {
-            if (callback) callback();
-        };
-        script.onerror = () => {
-            console.error('Failed to load Midtrans Snap JS');
-        };
-        document.body.appendChild(script);
-    } else {
-        existingScript.onload = () => {
-            if (callback) callback();
-        };
-    }
+    const script = document.createElement('script');
+    script.src = snapJsUrl;
+    script.setAttribute('data-client-key', clientKey);
+    script.onload = () => callback();
+    document.body.appendChild(script);
 }
 
 const DEFAULT_FALLBACK_PLANS = [
@@ -73,14 +55,13 @@ const DEFAULT_FALLBACK_PLANS = [
         periode: 'selamanya',
         maks_domain: 0,
         bisa_upload_website: false,
-        is_default: true,
     },
     {
         id: 2,
-        nama: 'Harga 1 (Starter)',
-        name: 'Harga 1 (Starter)',
-        harga: 99000,
-        price: 99000,
+        nama: 'Harga 1 (Basic)',
+        name: 'Harga 1 (Basic)',
+        harga: 20000,
+        price: 20000,
         periode: 'bulan',
         maks_domain: 3,
         bisa_upload_website: true,
@@ -114,6 +95,82 @@ export default function Register({ onSwitchToLogin }) {
     const [selectedPlanId, setSelectedPlanId] = useState(null);
     const [registeredState, setRegisteredState] = useState(null);
     const [isLaunchingSnap, setIsLaunchingSnap] = useState(false);
+    const [promoCodeInput, setPromoCodeInput] = useState('');
+    const [appliedPromo, setAppliedPromo] = useState('');
+    const [isValidatingPromo, setIsValidatingPromo] = useState(false);
+
+    // Fetch public active promo codes to display to user
+    const { data: publicPromoCodes } = useQuery({
+        queryKey: ['public-promo-codes'],
+        queryFn: async () => {
+            try {
+                const { data } = await http.get('/public/promo-codes');
+                return data?.data ?? [];
+            } catch {
+                return [];
+            }
+        },
+        staleTime: 2 * 60 * 1000,
+    });
+
+    const handleApplyPromo = async () => {
+        const code = promoCodeInput.trim().toUpperCase();
+        if (!code) {
+            toast.error('Masukkan kode promo terlebih dahulu.', 'Kode Promo Kosong');
+            return;
+        }
+
+        setIsValidatingPromo(true);
+        try {
+            const { data } = await http.post('/public/promo-codes/validate', { code });
+            if (data?.success || data?.data?.is_valid) {
+                setAppliedPromo(code);
+                toast.success(
+                    data?.message || `Kode promo "${code}" berhasil diterapkan! Paket termurah (20k) menjadi FREE (Rp 0).`,
+                    'Promo Berhasil'
+                );
+            } else {
+                toast.error(data?.message || 'Kode promo tidak valid.', 'Promo Tidak Valid');
+            }
+        } catch (err) {
+            const errorMsg = err?.response?.data?.message || 'Kode promo tidak valid atau telah kadaluarsa.';
+            toast.error(errorMsg, 'Promo Tidak Valid');
+        } finally {
+            setIsValidatingPromo(false);
+        }
+    };
+
+    // Helper: apply promo with explicit code (used when user clicks a badge)
+    const handleApplyPromoWithCode = async (code) => {
+        const upperCode = code.trim().toUpperCase();
+        if (!upperCode) return;
+
+        setPromoCodeInput(upperCode);
+        setIsValidatingPromo(true);
+        try {
+            const { data } = await http.post('/public/promo-codes/validate', { code: upperCode });
+            if (data?.success || data?.data?.is_valid) {
+                setAppliedPromo(upperCode);
+                toast.success(
+                    data?.message || `Kode promo "${upperCode}" berhasil diterapkan! Paket termurah (20k) menjadi FREE (Rp 0).`,
+                    'Promo Berhasil'
+                );
+            } else {
+                toast.error(data?.message || 'Kode promo tidak valid.', 'Promo Tidak Valid');
+            }
+        } catch (err) {
+            const errorMsg = err?.response?.data?.message || 'Kode promo tidak valid atau telah kadaluarsa.';
+            toast.error(errorMsg, 'Promo Tidak Valid');
+        } finally {
+            setIsValidatingPromo(false);
+        }
+    };
+
+    const handleRemovePromo = () => {
+        setAppliedPromo('');
+        setPromoCodeInput('');
+        toast.info('Kode promo dibatalkan.', 'Promo Dibatalkan');
+    };
 
     // Fetch public active pricelists from admin database
     const { data: fetchedPlans } = useQuery({
@@ -130,9 +187,24 @@ export default function Register({ onSwitchToLogin }) {
         staleTime: 5 * 60 * 1000,
     });
 
-    const plans = fetchedPlans && fetchedPlans.length > 0 ? fetchedPlans : DEFAULT_FALLBACK_PLANS;
+    const rawPlans = fetchedPlans && fetchedPlans.length > 0 ? fetchedPlans : DEFAULT_FALLBACK_PLANS;
+    const minPrice = rawPlans.length > 0 ? Math.min(...rawPlans.map(p => (p.harga ?? p.price ?? 0))) : 20000;
 
-    // Auto-select default or free plan on load
+    // Transform plans when promo code is applied (discount lowest price to 0)
+    const plans = rawPlans.map(plan => {
+        const originalPrice = plan.harga ?? plan.price ?? 0;
+        if (appliedPromo && originalPrice === minPrice) {
+            return {
+                ...plan,
+                harga: 0,
+                price: 0,
+                is_promo_discounted: true,
+            };
+        }
+        return plan;
+    });
+
+    // Auto-select default plan on load
     useEffect(() => {
         if (plans.length > 0 && !selectedPlanId) {
             const defaultPlan = plans.find((p) => (p.harga === 0 || p.price === 0) || p.is_default) || plans[0];
@@ -155,7 +227,7 @@ export default function Register({ onSwitchToLogin }) {
     const password = watch('password');
 
     const selectedPlan = plans.find((p) => p.id === selectedPlanId);
-    const isSelectedFree = selectedPlan ? (selectedPlan.harga === 0 || selectedPlan.price === 0) : true;
+    const isSelectedFree = selectedPlan ? (selectedPlan.harga === 0 || selectedPlan.price === 0) : false;
 
     const triggerSnapPayment = (snapToken, snapJsUrl, clientKey, orderId) => {
         setIsLaunchingSnap(true);
@@ -217,6 +289,7 @@ export default function Register({ onSwitchToLogin }) {
                 password: values.password,
                 password_confirmation: values.password_confirmation,
                 paket_harga_id: selectedPlanId,
+                promo_code: appliedPromo || undefined,
             },
             {
                 onSuccess: (response) => {
@@ -228,9 +301,9 @@ export default function Register({ onSwitchToLogin }) {
                         setRegisteredState({
                             isFree: true,
                             paidSuccess: false,
-                            message: resData?.message || 'Pendaftaran berhasil! Akun Anda sedang menunggu persetujuan dari administrator.',
+                            message: resData?.message || 'Pendaftaran berhasil! Akun Anda telah aktif.',
                         });
-                        toast.success('Pendaftaran berhasil! Menunggu persetujuan admin.', 'Registrasi Berhasil');
+                        toast.success('Pendaftaran berhasil! Akun Anda otomatis aktif.', 'Registrasi Berhasil');
                     } else {
                         const snapJsUrl = resData?.snap_js_url || 'https://app.sandbox.midtrans.com/snap/snap.js';
                         const clientKey = resData?.client_key;
@@ -263,41 +336,34 @@ export default function Register({ onSwitchToLogin }) {
             return (
                 <div className="max-w-4xl w-full bg-[rgb(var(--color-surface))] rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row border border-[rgb(var(--color-border))] my-4">
                     <div className="w-full md:w-1/2 p-8 sm:p-10 flex flex-col items-center justify-center text-center gap-4">
-                        <div className="h-16 w-16 rounded-full bg-amber-50 border-2 border-amber-200 flex items-center justify-center">
-                            <Clock className="h-8 w-8 text-amber-500" />
+                        <div className="h-16 w-16 rounded-full bg-emerald-50 border-2 border-emerald-200 flex items-center justify-center">
+                            <CheckCircle2 className="h-8 w-8 text-emerald-500" />
                         </div>
                         <div>
-                            <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">Pendaftaran Berhasil!</h2>
+                            <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-black uppercase tracking-wider">
+                                Otomatis Disetujui System
+                            </span>
+                            <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight mt-2">Pendaftaran Berhasil!</h2>
                             <p className="text-xs text-slate-500 mt-1.5 leading-relaxed max-w-xs font-medium">
-                                Akun Anda telah terdaftar dengan <span className="font-bold text-indigo-600">Paket Free</span>. Akun sedang menunggu persetujuan <span className="font-bold text-slate-800">Administrator</span>.
+                                Akun Anda telah terdaftar dan <span className="font-bold text-emerald-600">langsung aktif</span>. Silakan login untuk mulai membuat website.
                             </p>
-                        </div>
-                        <div className="w-full bg-amber-50/80 border border-amber-200/80 rounded-2xl p-3.5 text-left space-y-1.5">
-                            <div className="flex items-center gap-1.5">
-                                <CheckCircle2 className="h-4 w-4 text-amber-600 shrink-0" />
-                                <p className="text-xs font-semibold text-amber-900">Langkah selanjutnya:</p>
-                            </div>
-                            <ol className="text-xs text-amber-800/90 space-y-1 list-decimal list-inside pl-1 font-medium">
-                                <li>Administrator akan meninjau pendaftaran Anda</li>
-                                <li>Setelah disetujui, Anda dapat langsung login</li>
-                            </ol>
                         </div>
                         <Link
                             to={ROUTES.LOGIN}
-                            className="mt-1 inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl text-xs shadow-md shadow-blue-500/20 transition-all"
+                            className="mt-1 inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold rounded-xl text-xs shadow-md shadow-emerald-500/20 transition-all"
                         >
-                            <span>Kembali ke Halaman Login</span>
+                            <span>Login Sekarang</span>
                             <ArrowRight className="h-3.5 w-3.5" />
                         </Link>
                     </div>
 
-                    <div className="hidden md:flex md:w-1/2 relative p-8 flex-col justify-between text-white overflow-hidden bg-gradient-to-br from-[#3b82f6] via-[#4f46e5] to-[#6d28d9]">
+                    <div className="hidden md:flex md:w-1/2 relative p-8 flex-col justify-between text-white overflow-hidden bg-gradient-to-br from-[#059669] via-[#0d9488] to-[#4f46e5]">
                         <div className="relative z-10 my-auto py-4">
                             <h2 className="text-3xl font-extrabold leading-tight text-white mb-2 tracking-tight">
                                 Build the future <br />
                                 with Microdata.
                             </h2>
-                            <p className="text-xs text-blue-100/90 leading-relaxed font-normal">
+                            <p className="text-xs text-emerald-100/90 leading-relaxed font-normal">
                                 Bangun website impian Anda menggunakan platform pembuatan website tercepat dan paling fleksibel.
                             </p>
                         </div>
@@ -595,6 +661,87 @@ export default function Register({ onSwitchToLogin }) {
                             </div>
                         </div>
 
+                        {/* PROMO CODE SECTION */}
+                        <div className="group pt-0.5">
+                            <label className="block text-[11px] font-semibold text-slate-700 mb-0.5">
+                                Kode Promo
+                            </label>
+                            <div className="flex items-center gap-2">
+                                <div className="relative flex-1">
+                                    <Tag className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 group-focus-within:text-indigo-600 transition-colors" />
+                                    <input
+                                        type="text"
+                                        placeholder="Masukkan kode promo (contoh: FREE2026)"
+                                        value={promoCodeInput}
+                                        onChange={(e) => setPromoCodeInput(e.target.value.toUpperCase())}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') {
+                                                e.preventDefault();
+                                                handleApplyPromo();
+                                            }
+                                        }}
+                                        className="w-full pl-9 pr-3 py-1.5 rounded-xl border text-xs transition-all duration-200 bg-slate-50/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 text-slate-900 placeholder:text-slate-400 border-slate-200 focus:border-indigo-600 font-mono uppercase"
+                                    />
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={handleApplyPromo}
+                                    disabled={isValidatingPromo}
+                                    className="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition shadow-xs flex items-center gap-1 shrink-0 cursor-pointer disabled:opacity-50"
+                                >
+                                    {isValidatingPromo ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Sparkles className="h-3.5 w-3.5" />}
+                                    <span>Gunakan</span>
+                                </button>
+                            </div>
+                            {/* Available Promo Codes List */}
+                            {!appliedPromo && publicPromoCodes && publicPromoCodes.length > 0 && (
+                                <div className="mt-1.5 p-2.5 bg-indigo-50/70 border border-indigo-200/80 rounded-xl space-y-1.5 animate-in fade-in duration-200">
+                                    <p className="text-[10px] font-extrabold text-indigo-700 uppercase tracking-wider flex items-center gap-1">
+                                        <Sparkles className="h-3 w-3" />
+                                        Kode Promo Tersedia — Klik untuk menggunakan
+                                    </p>
+                                    <div className="flex flex-wrap gap-1.5">
+                                        {publicPromoCodes.map((promo) => (
+                                            <button
+                                                key={promo.code}
+                                                type="button"
+                                                onClick={() => {
+                                                    setPromoCodeInput(promo.code);
+                                                    handleApplyPromoWithCode(promo.code);
+                                                }}
+                                                title={promo.description || promo.code}
+                                                className="group inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-indigo-300 hover:border-indigo-500 hover:bg-indigo-600 text-indigo-700 hover:text-white transition-all duration-150 shadow-xs cursor-pointer"
+                                            >
+                                                <Tag className="h-3 w-3 shrink-0" />
+                                                <span className="font-mono font-black text-[11px]">{promo.code}</span>
+                                                {promo.description && (
+                                                    <span className="text-[9px] font-medium text-indigo-500 group-hover:text-indigo-100 max-w-[120px] truncate hidden sm:inline">
+                                                        — {promo.description}
+                                                    </span>
+                                                )}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {appliedPromo && (
+                                <div className="mt-1 p-2 bg-emerald-50 border border-emerald-200 rounded-xl text-[11px] text-emerald-800 flex items-center justify-between font-medium animate-in fade-in duration-200">
+                                    <span className="flex items-center gap-1">
+                                        <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+                                        Kode <strong>{appliedPromo}</strong> aktif! Paket termurah (20k) menjadi <strong>FREE (Rp 0)</strong>.
+                                    </span>
+                                    <button
+                                        type="button"
+                                        onClick={handleRemovePromo}
+                                        className="text-[10px] text-red-500 hover:text-red-700 font-bold ml-2 underline cursor-pointer"
+                                    >
+                                        Batal
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+
                         {/* PLAN SELECTION SECTION (2x2 Balanced Grid) */}
                         <div className="pt-1">
                             <div className="flex items-center justify-between mb-1.5">
@@ -643,8 +790,21 @@ export default function Register({ onSwitchToLogin }) {
                                                     </div>
                                                 </div>
                                                 <div className="text-xs font-black text-indigo-600 mt-0.5">
-                                                    {formattedPrice}
-                                                    {!isFree && <span className="text-[9px] text-slate-400 font-normal">/bulan</span>}
+                                                    {plan.is_promo_discounted ? (
+                                                        <div className="inline-flex items-center gap-1.5 animate-in fade-in zoom-in-90 duration-300">
+                                                            <span className="line-through text-slate-400 font-bold text-[10px] opacity-75 decoration-red-500 decoration-2 animate-pulse">
+                                                                Rp {Number(minPrice).toLocaleString('id-ID').replace(/,/g, '.')}
+                                                            </span>
+                                                            <span className="bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 font-extrabold text-[10px] px-1.5 py-0.5 rounded-md border border-emerald-300 shadow-2xs animate-bounce inline-flex items-center gap-0.5">
+                                                                <Sparkles className="h-3 w-3 text-emerald-600 shrink-0" /> FREE
+                                                            </span>
+                                                        </div>
+                                                    ) : (
+                                                        <>
+                                                            {formattedPrice}
+                                                            {!isFree && <span className="text-[9px] text-slate-400 font-normal">/bulan</span>}
+                                                        </>
+                                                    )}
                                                 </div>
                                             </div>
 
@@ -668,33 +828,17 @@ export default function Register({ onSwitchToLogin }) {
                             </div>
                         </div>
 
-                        {/* PLAN APPROVAL NOTICE CALLOUT */}
-                        <div className={`flex items-start gap-2 p-2.5 rounded-xl border text-[11px] transition-colors duration-200 ${
-                            isSelectedFree
-                                ? 'bg-amber-50/80 border-amber-200 text-amber-900'
-                                : 'bg-emerald-50/80 border-emerald-200 text-emerald-900'
-                        }`}>
-                            {isSelectedFree ? (
-                                <>
-                                    <Clock className="h-3.5 w-3.5 text-amber-600 shrink-0 mt-0.5" />
-                                    <div>
-                                        <p className="font-bold">Ketentuan Paket Free:</p>
-                                        <p className="text-[10px] text-amber-800/90 leading-tight mt-0.5">
-                                            Akun baru Paket Free harus menunggu <span className="font-bold">persetujuan dari Admin</span> sebelum dapat login.
-                                        </p>
-                                    </div>
-                                </>
-                            ) : (
-                                <>
-                                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                                    <div>
-                                        <p className="font-bold">Ketentuan Paket Berbayar:</p>
-                                        <p className="text-[10px] text-emerald-800/90 leading-tight mt-0.5">
-                                            Setelah pembayaran Midtrans berhasil, akun <span className="font-bold text-emerald-700">otomatis disetujui sistem</span> untuk langsung login.
-                                        </p>
-                                    </div>
-                                </>
-                            )}
+                        {/* INSTANT ACTIVATION CALLOUT */}
+                        <div className="flex items-start gap-2 p-2.5 rounded-xl border border-emerald-200 bg-emerald-50/80 text-emerald-900 text-[11px] transition-colors duration-200">
+                            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                            <div>
+                                <p className="font-bold">Aktivasi Instan Tanpa Persetujuan Admin:</p>
+                                <p className="text-[10px] text-emerald-800/90 leading-tight mt-0.5">
+                                    {isSelectedFree
+                                        ? 'Akun Anda otomatis aktif secara instan dan dapat langsung digunakan untuk login.'
+                                        : 'Setelah pembayaran Midtrans berhasil, akun otomatis aktif secara instan untuk langsung login.'}
+                                </p>
+                            </div>
                         </div>
 
                         {/* Submit Button */}

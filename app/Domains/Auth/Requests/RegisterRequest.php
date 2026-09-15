@@ -24,6 +24,7 @@ class RegisterRequest extends FormRequest
             'email' => ['required', 'string', 'email', 'max:255', 'unique:pengguna,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'paket_harga_id' => ['nullable', 'integer', 'exists:paket_harga,id'],
+            'promo_code' => ['nullable', 'string', 'max:50'],
         ];
     }
 }

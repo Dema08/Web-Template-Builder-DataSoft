@@ -29,6 +29,10 @@ Route::prefix('v1')->group(function (): void {
         Route::get('/templates/{id}', [App\Domains\Publish\Http\Controllers\PublicSiteController::class, 'showTemplate']);
         // GET /api/v1/public/pricelists — public active pricing plans
         Route::get('/pricelists', [App\Domains\Pricelist\Http\Controllers\PublicPricelistController::class, 'index']);
+        // GET /api/v1/public/promo-codes — list active promo codes for public (Register page)
+        Route::get('/promo-codes', [App\Domains\Pricelist\Http\Controllers\AdminPromoCodeController::class, 'publicList']);
+        // POST /api/v1/public/promo-codes/validate — public validate promo code
+        Route::post('/promo-codes/validate', [App\Domains\Pricelist\Http\Controllers\AdminPromoCodeController::class, 'validatePublic']);
     });
 
     // -------------------------------------------------------------
@@ -61,6 +65,12 @@ Route::prefix('v1')->group(function (): void {
         Route::apiResource('pricelists', App\Domains\Pricelist\Http\Controllers\AdminPricelistController::class);
         Route::patch('/pricelists/{pricelist}/default', [App\Domains\Pricelist\Http\Controllers\AdminPricelistController::class, 'setDefault']);
         Route::patch('/pricelists/{pricelist}/favorite', [App\Domains\Pricelist\Http\Controllers\AdminPricelistController::class, 'toggleFavorite']);
+
+        // Admin Promo Code Management
+        Route::get('/promo-codes', [App\Domains\Pricelist\Http\Controllers\AdminPromoCodeController::class, 'index']);
+        Route::post('/promo-codes', [App\Domains\Pricelist\Http\Controllers\AdminPromoCodeController::class, 'store']);
+        Route::patch('/promo-codes/{promoCode}/toggle', [App\Domains\Pricelist\Http\Controllers\AdminPromoCodeController::class, 'toggle']);
+        Route::delete('/promo-codes/{promoCode}', [App\Domains\Pricelist\Http\Controllers\AdminPromoCodeController::class, 'destroy']);
         Route::apiResource('categories', App\Domains\Admin\Http\Controllers\AdminCategoryController::class);
         Route::apiResource('templates', App\Domains\Template\Http\Controllers\TemplateController::class);
         Route::apiResource('categories.templates', App\Domains\Admin\Http\Controllers\AdminTemplateController::class);
