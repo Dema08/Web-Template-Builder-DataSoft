@@ -266,6 +266,49 @@ export const COMPONENT_REGISTRY = {
         default: 'medium',
         options: ['small', 'medium', 'large'],
       },
+      background: {
+        type: 'color',
+        label: 'Background Color',
+        default: '',
+      },
+      color: {
+        type: 'color',
+        label: 'Text Color',
+        default: '',
+      },
+      fontSize: {
+        type: 'string',
+        label: 'Font Size',
+        default: '',
+      },
+      fontWeight: {
+        type: 'select',
+        label: 'Font Weight',
+        default: '600',
+        options: ['400', '500', '600', '700', '800'],
+      },
+      padding: {
+        type: 'string',
+        label: 'Padding',
+        default: '',
+      },
+      margin: {
+        type: 'string',
+        label: 'Margin',
+        default: '',
+      },
+      radius: {
+        type: 'select',
+        label: 'Border Radius',
+        default: 'full',
+        options: ['none', 'sm', 'md', 'lg', 'xl', 'full'],
+      },
+      shadow: {
+        type: 'select',
+        label: 'Shadow Effect',
+        default: 'none',
+        options: ['none', 'sm', 'md', 'lg', 'glow'],
+      },
     },
   },
 
@@ -287,6 +330,41 @@ export const COMPONENT_REGISTRY = {
         type: 'string',
         label: 'Label',
         default: 'Statistic',
+      },
+      background: {
+        type: 'color',
+        label: 'Background Color',
+        default: '',
+      },
+      color: {
+        type: 'color',
+        label: 'Value Text Color',
+        default: '#4f46e5',
+      },
+      labelColor: {
+        type: 'color',
+        label: 'Label Text Color',
+        default: '#64748b',
+      },
+      fontSize: {
+        type: 'string',
+        label: 'Value Font Size',
+        default: '36px',
+      },
+      padding: {
+        type: 'string',
+        label: 'Padding',
+        default: '16px',
+      },
+      margin: {
+        type: 'string',
+        label: 'Margin',
+        default: '0px',
+      },
+      borderRadius: {
+        type: 'string',
+        label: 'Border Radius',
+        default: '12px',
       },
     },
   },
@@ -363,8 +441,28 @@ export const COMPONENT_REGISTRY = {
       },
       color: {
         type: 'color',
-        label: 'Color',
+        label: 'Icon Color',
         default: '#4f46e5',
+      },
+      background: {
+        type: 'color',
+        label: 'Background Color',
+        default: '',
+      },
+      borderRadius: {
+        type: 'string',
+        label: 'Border Radius',
+        default: '',
+      },
+      padding: {
+        type: 'string',
+        label: 'Padding',
+        default: '0',
+      },
+      margin: {
+        type: 'string',
+        label: 'Margin',
+        default: '0',
       },
       align: {
         type: 'select',
@@ -392,8 +490,43 @@ export const COMPONENT_REGISTRY = {
       },
       background: {
         type: 'color',
-        label: 'Background',
+        label: 'Background Color',
         default: '#ffffff',
+      },
+      backgroundGradient: {
+        type: 'string',
+        label: 'Background Gradient (CSS)',
+        default: '',
+      },
+      width: {
+        type: 'string',
+        label: 'Width',
+        default: '100%',
+      },
+      height: {
+        type: 'string',
+        label: 'Height',
+        default: 'auto',
+      },
+      minHeight: {
+        type: 'string',
+        label: 'Min Height',
+        default: 'auto',
+      },
+      maxWidth: {
+        type: 'string',
+        label: 'Max Width',
+        default: 'none',
+      },
+      padding: {
+        type: 'string',
+        label: 'Padding',
+        default: '24px',
+      },
+      margin: {
+        type: 'string',
+        label: 'Margin',
+        default: '0px',
       },
       borderRadius: {
         type: 'string',
@@ -405,6 +538,12 @@ export const COMPONENT_REGISTRY = {
         label: 'Border Width',
         default: '1px',
       },
+      borderStyle: {
+        type: 'select',
+        label: 'Border Style',
+        default: 'solid',
+        options: ['solid', 'dashed', 'dotted', 'none'],
+      },
       borderColor: {
         type: 'color',
         label: 'Border Color',
@@ -412,30 +551,39 @@ export const COMPONENT_REGISTRY = {
       },
       shadow: {
         type: 'select',
-        label: 'Shadow',
+        label: 'Shadow Effect',
         default: 'md',
-        options: ['none', 'sm', 'md', 'lg', 'xl'],
-      },
-      padding: {
-        type: 'string',
-        label: 'Padding',
-        default: '24px',
+        options: ['none', 'sm', 'md', 'lg', 'xl', '2xl'],
       },
       hoverEffect: {
         type: 'select',
-        label: 'Hover Effect',
+        label: 'Hover Animation',
         default: 'lift',
-        options: ['none', 'lift', 'scale', 'glow'],
+        options: ['none', 'lift', 'scale', 'glow', 'border'],
       },
-      width: {
-        type: 'string',
-        label: 'Width',
-        default: '100%',
+      opacity: {
+        type: 'range',
+        label: 'Opacity',
+        default: 100,
+        min: 0,
+        max: 100,
       },
-      height: {
+      alignItems: {
+        type: 'select',
+        label: 'Align Items',
+        default: 'stretch',
+        options: ['stretch', 'flex-start', 'center', 'flex-end'],
+      },
+      justifyContent: {
+        type: 'select',
+        label: 'Justify Content',
+        default: 'flex-start',
+        options: ['flex-start', 'center', 'flex-end', 'space-between'],
+      },
+      gap: {
         type: 'string',
-        label: 'Height',
-        default: 'auto',
+        label: 'Content Gap',
+        default: '0px',
       },
     },
   },

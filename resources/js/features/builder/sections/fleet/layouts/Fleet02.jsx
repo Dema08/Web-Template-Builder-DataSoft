@@ -4,51 +4,42 @@ export default function Fleet02({ components = [], sectionId = null }) {
   const defaultComponents = [
     { id: 'fleet02-heading', type: 'heading', props: { content: 'Armada & Fasilitas Transit Modern', level: 'h2', fontSize: '40px', fontWeight: '800', color: '#0f172a', align: 'center', margin: '0 0 12px 0' } },
     { id: 'fleet02-desc', type: 'text', props: { content: 'Armada transportasi multi-modal berteknologi tinggi yang dipasangi GPS real-time untuk menjamin keamanan barang Anda di setiap rute.', fontSize: '17px', color: '#64748b', align: 'center', margin: '0 0 48px 0' } },
-    { id: 'fleet02-img', type: 'image', props: { src: 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=1200&auto=format&fit=crop&q=80', alt: 'Logistics Fleet', width: '100%', height: '100%', objectFit: 'cover' } }
+    { id: 'fleet02-img', type: 'image', props: { src: 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=1200&auto=format&fit=crop&q=80', alt: 'Logistics Fleet', width: '100%', height: '100%', objectFit: 'cover' } },
+    {
+      id: 'fleet02-card-1', type: 'card', props: { variant: 'feature', background: '#ffffff', borderRadius: '16px', borderWidth: '1px', borderColor: '#f1f5f9', shadow: 'sm', hoverEffect: 'lift', padding: '20px' },
+      childrenComponents: [
+        { id: 'fleet02-c1-t', type: 'heading', props: { content: 'GPS Tracking Real-time', level: 'h3', fontSize: '16px', fontWeight: '700', color: '#0f172a', margin: '0 0 4px 0' } },
+        { id: 'fleet02-c1-d', type: 'text', props: { content: 'Pemantauan koordinat GPS presisi secara real-time dari panel kontrol Anda 24 jam sehari.', fontSize: '14px', color: '#64748b', margin: '0' } },
+      ]
+    },
+    {
+      id: 'fleet02-card-2', type: 'card', props: { variant: 'feature', background: '#ffffff', borderRadius: '16px', borderWidth: '1px', borderColor: '#f1f5f9', shadow: 'sm', hoverEffect: 'lift', padding: '20px' },
+      childrenComponents: [
+        { id: 'fleet02-c2-t', type: 'heading', props: { content: 'Temperature Control (Cold Chain)', level: 'h3', fontSize: '16px', fontWeight: '700', color: '#0f172a', margin: '0 0 4px 0' } },
+        { id: 'fleet02-c2-d', type: 'text', props: { content: 'Fasilitas pendingin canggih -20°C untuk muatan farmasi, produk segar, dan pangan beku.', fontSize: '14px', color: '#64748b', margin: '0' } },
+      ]
+    },
+    {
+      id: 'fleet02-card-3', type: 'card', props: { variant: 'feature', background: '#ffffff', borderRadius: '16px', borderWidth: '1px', borderColor: '#f1f5f9', shadow: 'sm', hoverEffect: 'lift', padding: '20px' },
+      childrenComponents: [
+        { id: 'fleet02-c3-t', type: 'heading', props: { content: 'Monitoring Keamanan 24/7', level: 'h3', fontSize: '16px', fontWeight: '700', color: '#0f172a', margin: '0 0 4px 0' } },
+        { id: 'fleet02-c3-d', type: 'text', props: { content: 'Dukungan keamanan terpusat dengan sensor anti-intrusi dan kamera pengawas aktif selama transit.', fontSize: '14px', color: '#64748b', margin: '0' } },
+      ]
+    },
+    {
+      id: 'fleet02-card-4', type: 'card', props: { variant: 'feature', background: '#ffffff', borderRadius: '16px', borderWidth: '1px', borderColor: '#f1f5f9', shadow: 'sm', hoverEffect: 'lift', padding: '20px' },
+      childrenComponents: [
+        { id: 'fleet02-c4-t', type: 'heading', props: { content: 'Kapasitas FTL & LTL', level: 'h3', fontSize: '16px', fontWeight: '700', color: '#0f172a', margin: '0 0 4px 0' } },
+        { id: 'fleet02-c4-d', type: 'text', props: { content: 'Layanan Full Truckload dan Less Than Truckload untuk menyesuaikan volume pengiriman skala apapun.', fontSize: '14px', color: '#64748b', margin: '0' } },
+      ]
+    },
   ];
 
   const layoutComponents = components.length > 0 ? components : defaultComponents;
-  const allHeadings = layoutComponents.filter(c => c.type === 'heading');
-  const allTexts = layoutComponents.filter(c => c.type === 'text');
+  const titleComp = layoutComponents.find(c => c.id === 'fleet02-heading') || layoutComponents.find(c => c.type === 'heading');
+  const descComp = layoutComponents.find(c => c.id === 'fleet02-desc') || layoutComponents.find(c => c.type === 'text');
   const imageComp = layoutComponents.find(c => c.type === 'image');
-
-  const titleComp = allHeadings[0];
-  const descComp = allTexts[0];
-
-  const technicalSpecs = [
-    {
-      title: 'GPS Tracking Real-time',
-      desc: 'Pemantauan koordinat GPS presisi secara real-time dari panel kontrol Anda 24 jam sehari.',
-      icon: '📡',
-      color: '#2563eb',
-      bg: 'rgba(37,99,235,0.1)',
-      badge: 'Terintegrasi Penuh',
-    },
-    {
-      title: 'Temperature Control (Cold Chain)',
-      desc: 'Fasilitas pendingin canggih -20°C untuk muatan farmasi, produk segar, dan pangan beku.',
-      icon: '❄️',
-      color: '#0891b2',
-      bg: 'rgba(8,145,178,0.1)',
-      badge: 'BPOM Compliant',
-    },
-    {
-      title: 'Monitoring Keamanan 24/7',
-      desc: 'Dukungan keamanan terpusat dengan sensor anti-intrusi dan kamera pengawas aktif selama transit.',
-      icon: '🛡️',
-      color: '#059669',
-      bg: 'rgba(5,150,105,0.1)',
-      badge: 'ISO 27001',
-    },
-    {
-      title: 'Kapasitas FTL & LTL',
-      desc: 'Layanan Full Truckload dan Less Than Truckload untuk menyesuaikan volume pengiriman skala apapun.',
-      icon: '⚖️',
-      color: '#d97706',
-      bg: 'rgba(217,119,6,0.1)',
-      badge: 'Fleksibel',
-    },
-  ];
+  const cardComponents = layoutComponents.filter(c => c.type === 'card');
 
   return (
     <section className="py-20 bg-white" style={{ fontFamily: 'Inter, sans-serif' }}>
@@ -96,38 +87,7 @@ export default function Fleet02({ components = [], sectionId = null }) {
 
           {/* Right: Technical Specs */}
           <div className="space-y-4">
-            {technicalSpecs.map((spec, idx) => (
-              <div
-                key={idx}
-                className="flex gap-4 p-5 rounded-2xl border border-slate-100 hover:border-blue-200 hover:bg-slate-50 hover:shadow-md transition-all duration-300 group cursor-default"
-              >
-                {/* Icon box */}
-                <div
-                  className="w-12 h-12 rounded-xl flex items-center justify-center text-xl shrink-0 transition-transform duration-300 group-hover:scale-110"
-                  style={{ background: spec.bg }}
-                >
-                  {spec.icon}
-                </div>
-
-                {/* Text */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex flex-wrap items-center gap-2 mb-1">
-                    <h3 className="text-[15px] font-bold text-slate-900 group-hover:text-blue-700 transition-colors duration-300">
-                      {spec.title}
-                    </h3>
-                    <span
-                      className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider"
-                      style={{ background: spec.bg, color: spec.color }}
-                    >
-                      {spec.badge}
-                    </span>
-                  </div>
-                  <p className="text-sm text-slate-500 leading-relaxed">
-                    {spec.desc}
-                  </p>
-                </div>
-              </div>
-            ))}
+            {renderLayoutComponents(cardComponents, sectionId)}
           </div>
         </div>
       </div>

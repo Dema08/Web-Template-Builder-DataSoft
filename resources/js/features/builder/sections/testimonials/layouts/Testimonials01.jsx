@@ -73,57 +73,7 @@ export default function Testimonials01({ components = [], sectionId = null }) {
 
         {/* Testimonial Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {cardComponents.length > 0 ? (
-            cardComponents.map((card, idx) => {
-              const textComp = card.childrenComponents?.find(c => c.type === 'text' && c.id.includes('text'));
-              const nameComp = card.childrenComponents?.find(c => c.type === 'heading');
-              const roleComp = card.childrenComponents?.find(c => c.type === 'text' && c.id.includes('role'));
-
-              return (
-                <div
-                  key={card.id || idx}
-                  className="relative bg-white border border-slate-100 rounded-2xl p-7 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group flex flex-col"
-                >
-                  {/* Top accent bar */}
-                  <div
-                    className="absolute top-0 left-6 right-6 h-[3px] rounded-b-full transition-all duration-300 opacity-0 group-hover:opacity-100"
-                    style={{ background: `linear-gradient(90deg, ${avatarColors[idx] || '#2563eb'}, transparent)` }}
-                  />
-
-                  {/* Quote mark */}
-                  <div className="text-4xl leading-none font-serif text-slate-100 mb-3 select-none">"</div>
-
-                  {/* Stars */}
-                  <StarRating count={5} />
-
-                  {/* Quote text */}
-                  {textComp && (
-                    <div className="mt-3 mb-6 flex-1">
-                      {renderLayoutComponents([textComp], card.id)}
-                    </div>
-                  )}
-
-                  {/* Author row */}
-                  <div className="flex items-center gap-3 pt-4 border-t border-slate-50 mt-auto">
-                    {/* Avatar */}
-                    <div
-                      className="w-10 h-10 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0"
-                      style={{ background: `linear-gradient(135deg, ${avatarColors[idx] || '#2563eb'}, ${avatarColors[(idx + 1) % 3]})` }}
-                    >
-                      {avatarInitials[idx] || 'C'}
-                    </div>
-                    <div className="min-w-0">
-                      {nameComp && renderLayoutComponents([nameComp], card.id)}
-                      {roleComp && renderLayoutComponents([roleComp], card.id)}
-                    </div>
-                  </div>
-                </div>
-              );
-            })
-          ) : (
-            /* Fallback when no card components found */
-            renderLayoutComponents(cardComponents, sectionId)
-          )}
+          {renderLayoutComponents(cardComponents, sectionId)}
         </div>
       </div>
     </section>

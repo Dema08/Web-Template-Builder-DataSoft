@@ -3,21 +3,34 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 export default function Coverage02({ components = [], sectionId = null }) {
   const defaultComponents = [
     { id: 'cov02-heading', type: 'heading', props: { content: 'Jangkauan Distribusi Nasional', level: 'h2', fontSize: '36px', fontWeight: '800', color: '#0f172a', align: 'left', margin: '0 0 12px 0' } },
-    { id: 'cov02-desc', type: 'text', props: { content: 'Jaringan logistik multi-modal kami menghubungkan pulau-pulau utama di Indonesia dengan kepastian jadwal pengiriman.', fontSize: '16px', color: '#64748b', align: 'left', margin: '0 0 32px 0' } }
+    { id: 'cov02-desc', type: 'text', props: { content: 'Jaringan logistik multi-modal kami menghubungkan pulau-pulau utama di Indonesia dengan kepastian jadwal pengiriman.', fontSize: '16px', color: '#64748b', align: 'left', margin: '0 0 32px 0' } },
+    {
+      id: 'cov02-card-1', type: 'card', props: { variant: 'default', background: '#ffffff', borderRadius: '16px', shadow: 'sm', borderWidth: '1px', borderColor: '#f1f5f9', hoverEffect: 'lift', padding: '16px' },
+      childrenComponents: [
+        { id: 'cov02-c1-val', type: 'heading', props: { content: '50+', level: 'h3', fontSize: '24px', fontWeight: '800', color: '#2563eb', margin: '0 0 2px 0' } },
+        { id: 'cov02-c1-lbl', type: 'text', props: { content: 'Kota Jangkauan', fontSize: '12px', fontWeight: '700', color: '#64748b', margin: '0' } }
+      ]
+    },
+    {
+      id: 'cov02-card-2', type: 'card', props: { variant: 'default', background: '#ffffff', borderRadius: '16px', shadow: 'sm', borderWidth: '1px', borderColor: '#f1f5f9', hoverEffect: 'lift', padding: '16px' },
+      childrenComponents: [
+        { id: 'cov02-c2-val', type: 'heading', props: { content: '15+', level: 'h3', fontSize: '24px', fontWeight: '800', color: '#059669', margin: '0 0 2px 0' } },
+        { id: 'cov02-c2-lbl', type: 'text', props: { content: 'Hub Logistik Utama', fontSize: '12px', fontWeight: '700', color: '#64748b', margin: '0' } }
+      ]
+    },
+    {
+      id: 'cov02-card-3', type: 'card', props: { variant: 'default', background: '#ffffff', borderRadius: '16px', shadow: 'sm', borderWidth: '1px', borderColor: '#f1f5f9', hoverEffect: 'lift', padding: '16px' },
+      childrenComponents: [
+        { id: 'cov02-c3-val', type: 'heading', props: { content: '250+', level: 'h3', fontSize: '24px', fontWeight: '800', color: '#d97706', margin: '0 0 2px 0' } },
+        { id: 'cov02-c3-lbl', type: 'text', props: { content: 'Rute Pengiriman Aktif', fontSize: '12px', fontWeight: '700', color: '#64748b', margin: '0' } }
+      ]
+    }
   ];
 
   const layoutComponents = components.length > 0 ? components : defaultComponents;
-  const allHeadings = layoutComponents.filter(c => c.type === 'heading');
-  const allTexts = layoutComponents.filter(c => c.type === 'text');
-
-  const titleComp = allHeadings[0];
-  const descComp = allTexts[0];
-
-  const stats = [
-    { value: '50+', label: 'Kota Jangkauan', icon: '📍', color: '#2563eb', bg: 'rgba(37,99,235,0.08)' },
-    { value: '15+', label: 'Hub Logistik Utama', icon: '🏭', color: '#059669', bg: 'rgba(5,150,105,0.08)' },
-    { value: '250+', label: 'Rute Pengiriman Aktif', icon: '🛣️', color: '#d97706', bg: 'rgba(217,119,6,0.08)' },
-  ];
+  const titleComp = layoutComponents.find(c => c.id === 'cov02-heading') || layoutComponents.find(c => c.type === 'heading');
+  const descComp = layoutComponents.find(c => c.id === 'cov02-desc') || layoutComponents.find(c => c.type === 'text');
+  const cardComponents = layoutComponents.filter(c => c.type === 'card');
 
   // City nodes for the map
   const cities = [
@@ -56,30 +69,7 @@ export default function Coverage02({ components = [], sectionId = null }) {
 
             {/* Stat Cards */}
             <div className="space-y-3">
-              {stats.map((stat, idx) => (
-                <div
-                  key={idx}
-                  className="flex items-center gap-4 p-4 bg-white rounded-xl border border-slate-100 shadow-sm hover:shadow-md hover:border-blue-100 transition-all duration-300 group"
-                >
-                  <div
-                    className="w-11 h-11 rounded-xl flex items-center justify-center text-xl shrink-0 group-hover:scale-110 transition-transform duration-300"
-                    style={{ background: stat.bg }}
-                  >
-                    {stat.icon}
-                  </div>
-                  <div>
-                    <div
-                      className="text-2xl font-extrabold leading-none"
-                      style={{ color: stat.color }}
-                    >
-                      {stat.value}
-                    </div>
-                    <div className="text-xs text-slate-500 font-semibold uppercase tracking-wide mt-0.5">
-                      {stat.label}
-                    </div>
-                  </div>
-                </div>
-              ))}
+              {renderLayoutComponents(cardComponents, sectionId)}
             </div>
 
             {/* Legend */}
