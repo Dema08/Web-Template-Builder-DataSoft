@@ -70,6 +70,8 @@ export default function Badge({
     ...(fontWeight ? { fontWeight } : {}),
     ...(letterSpacing ? { letterSpacing } : {}),
     ...(textTransform ? { textTransform } : {}),
+    ...(padding ? { padding } : {}),
+    ...(margin ? { margin } : {}),
   };
 
   const isSelected = !isPreviewMode && selectedComponentId === componentId;
@@ -79,7 +81,7 @@ export default function Badge({
     hasCustomColor ? '' : variantText[variant] || variantText.primary
   } ${sizeStyles[size] || sizeStyles.medium} ${radiusStyles[radius] || radiusStyles.full} ${
     shadowStyles[shadow] || ''
-  } font-medium inline-block whitespace-nowrap ${
+  } font-medium inline-block whitespace-nowrap cursor-pointer transition-all ${
     isSelected
       ? 'ring-2 ring-indigo-600 ring-offset-2'
       : isHovered
@@ -92,7 +94,7 @@ export default function Badge({
       id={componentId}
       data-component-id={componentId}
       data-section-id={sectionId}
-      style={{ ...inlineStyle, ...(padding ? { padding } : {}), ...(margin ? { margin } : {}) }}
+      style={inlineStyle}
       onClick={(e) => {
         if (isPreviewMode) return;
         e.stopPropagation();

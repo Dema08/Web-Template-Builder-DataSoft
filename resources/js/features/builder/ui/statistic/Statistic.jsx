@@ -3,6 +3,13 @@ import { useBuilderStore } from '../../stores/builderStore';
 export default function Statistic({
   value = '100+',
   label = 'Statistic',
+  background = '',
+  color = '#4f46e5',
+  labelColor = '#64748b',
+  fontSize = '',
+  padding = '',
+  margin = '',
+  borderRadius = '',
   componentId = null,
   sectionId = null,
 }) {
@@ -11,11 +18,19 @@ export default function Statistic({
   const isSelected = !isPreviewMode && selectedComponentId === componentId;
   const isHovered = !isPreviewMode && hoveredComponent === componentId;
 
+  const style = {
+    ...(background ? { backgroundColor: background } : {}),
+    ...(padding ? { padding } : {}),
+    ...(margin ? { margin } : {}),
+    ...(borderRadius ? { borderRadius } : {}),
+  };
+
   return (
     <div
       id={componentId}
       data-component-id={componentId}
       data-section-id={sectionId}
+      style={style}
       onClick={(e) => {
         if (isPreviewMode) return;
         e.stopPropagation();
@@ -23,7 +38,7 @@ export default function Statistic({
       }}
       onMouseEnter={() => !isPreviewMode && setHoveredComponent(componentId)}
       onMouseLeave={() => !isPreviewMode && setHoveredComponent(null)}
-      className={`text-center p-2 rounded-lg transition-all ${
+      className={`text-center transition-all cursor-pointer ${
         isSelected
           ? 'ring-2 ring-indigo-600 ring-offset-2'
           : isHovered
@@ -31,8 +46,8 @@ export default function Statistic({
             : ''
       }`}
     >
-      <div className="text-4xl font-bold text-indigo-600 mb-2">{value}</div>
-      <div className="text-sm text-slate-600">{label}</div>
+      <div className="font-extrabold mb-1" style={{ color: color || '#4f46e5', fontSize: fontSize || '36px' }}>{value}</div>
+      <div className="text-sm font-semibold" style={{ color: labelColor || '#64748b' }}>{label}</div>
     </div>
   );
 }

@@ -113,12 +113,12 @@ export const PROPERTY_ENGINE = {
   },
 
   badge: {
-    groups: ['content', 'color', 'spacing', 'animation', 'transform'],
+    groups: ['content', 'typography', 'color', 'spacing', 'border', 'shadow', 'animation', 'transform'],
     props: COMPONENT_REGISTRY.badge.props,
   },
 
   statistic: {
-    groups: ['content', 'color', 'spacing', 'animation', 'transform'],
+    groups: ['content', 'typography', 'color', 'spacing', 'border', 'shadow', 'animation', 'transform'],
     props: COMPONENT_REGISTRY.statistic.props,
   },
 
@@ -130,6 +130,11 @@ export const PROPERTY_ENGINE = {
   social: {
     groups: ['content', 'color', 'spacing', 'animation', 'transform'],
     props: COMPONENT_REGISTRY.social.props,
+  },
+
+  card: {
+    groups: ['content', 'size', 'color', 'spacing', 'border', 'shadow', 'animation', 'position'],
+    props: COMPONENT_REGISTRY.card.props,
   },
 };
 

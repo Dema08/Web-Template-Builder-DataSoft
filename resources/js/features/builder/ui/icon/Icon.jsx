@@ -6,6 +6,8 @@ export default function Icon({
   name = null,
   size = '24px',
   color = '#4f46e5',
+  background = '',
+  borderRadius = '',
   align = 'center',
   margin = '0',
   padding = '0',
@@ -24,10 +26,13 @@ export default function Icon({
   }
 
   const containerStyle = {
-    display: 'flex',
+    display: 'inline-flex',
+    alignItems: 'center',
     justifyContent: align === 'center' ? 'center' : align === 'right' ? 'flex-end' : 'flex-start',
     margin,
     padding,
+    ...(background ? { backgroundColor: background } : {}),
+    ...(borderRadius ? { borderRadius } : {}),
   };
 
   const parsedSize = typeof size === 'number' ? `${size}px` : size;
