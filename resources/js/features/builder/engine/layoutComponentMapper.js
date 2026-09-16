@@ -69,6 +69,22 @@ import Services01 from '@builder/sections/services/layouts/Services01';
 import Services02 from '@builder/sections/services/layouts/Services02';
 import Services03 from '@builder/sections/services/layouts/Services03';
 import Services04 from '@builder/sections/services/layouts/Services04';
+import Services05 from '@builder/sections/services/layouts/Services05';
+import Services06 from '@builder/sections/services/layouts/Services06';
+import Services07 from '@builder/sections/services/layouts/Services07';
+import Services08 from '@builder/sections/services/layouts/Services08';
+import Services09 from '@builder/sections/services/layouts/Services09';
+import Services10 from '@builder/sections/services/layouts/Services10';
+import Services11 from '@builder/sections/services/layouts/Services11';
+import Services12 from '@builder/sections/services/layouts/Services12';
+import Services13 from '@builder/sections/services/layouts/Services13';
+import Services14 from '@builder/sections/services/layouts/Services14';
+import Services15 from '@builder/sections/services/layouts/Services15';
+import Services16 from '@builder/sections/services/layouts/Services16';
+import Services17 from '@builder/sections/services/layouts/Services17';
+import Services18 from '@builder/sections/services/layouts/Services18';
+import Services19 from '@builder/sections/services/layouts/Services19';
+import Services20 from '@builder/sections/services/layouts/Services20';
 
 import Gallery01 from '@builder/sections/gallery/layouts/Gallery01';
 import Gallery02 from '@builder/sections/gallery/layouts/Gallery02';
@@ -115,7 +131,45 @@ import Registration01 from '@builder/sections/registration/layouts/Registration0
 import Products01 from '@builder/sections/products/layouts/Products01';
 import Certifications01 from '@builder/sections/certifications/layouts/Certifications01';
 import Vision01 from '@builder/sections/vision/layouts/Vision01';
+import Vision02 from '@builder/sections/vision/layouts/Vision02';
+import Vision03 from '@builder/sections/vision/layouts/Vision03';
+import Vision04 from '@builder/sections/vision/layouts/Vision04';
+import Vision05 from '@builder/sections/vision/layouts/Vision05';
+import Vision06 from '@builder/sections/vision/layouts/Vision06';
+import Vision07 from '@builder/sections/vision/layouts/Vision07';
+import Vision08 from '@builder/sections/vision/layouts/Vision08';
+import Vision09 from '@builder/sections/vision/layouts/Vision09';
+import Vision10 from '@builder/sections/vision/layouts/Vision10';
+import Vision11 from '@builder/sections/vision/layouts/Vision11';
+import Vision12 from '@builder/sections/vision/layouts/Vision12';
+import Vision13 from '@builder/sections/vision/layouts/Vision13';
+import Vision14 from '@builder/sections/vision/layouts/Vision14';
+import Vision15 from '@builder/sections/vision/layouts/Vision15';
+import Vision16 from '@builder/sections/vision/layouts/Vision16';
+import Vision17 from '@builder/sections/vision/layouts/Vision17';
+import Vision18 from '@builder/sections/vision/layouts/Vision18';
+import Vision19 from '@builder/sections/vision/layouts/Vision19';
+import Vision20 from '@builder/sections/vision/layouts/Vision20';
 import Mission01 from '@builder/sections/mission/layouts/Mission01';
+import Mission02 from '@builder/sections/mission/layouts/Mission02';
+import Mission03 from '@builder/sections/mission/layouts/Mission03';
+import Mission04 from '@builder/sections/mission/layouts/Mission04';
+import Mission05 from '@builder/sections/mission/layouts/Mission05';
+import Mission06 from '@builder/sections/mission/layouts/Mission06';
+import Mission07 from '@builder/sections/mission/layouts/Mission07';
+import Mission08 from '@builder/sections/mission/layouts/Mission08';
+import Mission09 from '@builder/sections/mission/layouts/Mission09';
+import Mission10 from '@builder/sections/mission/layouts/Mission10';
+import Mission11 from '@builder/sections/mission/layouts/Mission11';
+import Mission12 from '@builder/sections/mission/layouts/Mission12';
+import Mission13 from '@builder/sections/mission/layouts/Mission13';
+import Mission14 from '@builder/sections/mission/layouts/Mission14';
+import Mission15 from '@builder/sections/mission/layouts/Mission15';
+import Mission16 from '@builder/sections/mission/layouts/Mission16';
+import Mission17 from '@builder/sections/mission/layouts/Mission17';
+import Mission18 from '@builder/sections/mission/layouts/Mission18';
+import Mission19 from '@builder/sections/mission/layouts/Mission19';
+import Mission20 from '@builder/sections/mission/layouts/Mission20';
 import Timeline01 from '@builder/sections/timeline/layouts/Timeline01';
 import Timeline02 from '@builder/sections/timeline/layouts/Timeline02';
 import Team01 from '@builder/sections/team/layouts/Team01';
@@ -195,6 +249,22 @@ export const LAYOUT_COMPONENTS = {
   'Services02': Services02,
   'Services03': Services03,
   'Services04': Services04,
+  'Services05': Services05,
+  'Services06': Services06,
+  'Services07': Services07,
+  'Services08': Services08,
+  'Services09': Services09,
+  'Services10': Services10,
+  'Services11': Services11,
+  'Services12': Services12,
+  'Services13': Services13,
+  'Services14': Services14,
+  'Services15': Services15,
+  'Services16': Services16,
+  'Services17': Services17,
+  'Services18': Services18,
+  'Services19': Services19,
+  'Services20': Services20,
 
   // Gallery layouts
   'Gallery01': Gallery01,
@@ -244,8 +314,47 @@ export const LAYOUT_COMPONENTS = {
   'Registration01': Registration01,
   'Products01': Products01,
   'Certifications01': Certifications01,
+  // Vision layouts
   'Vision01': Vision01,
+  'Vision02': Vision02,
+  'Vision03': Vision03,
+  'Vision04': Vision04,
+  'Vision05': Vision05,
+  'Vision06': Vision06,
+  'Vision07': Vision07,
+  'Vision08': Vision08,
+  'Vision09': Vision09,
+  'Vision10': Vision10,
+  'Vision11': Vision11,
+  'Vision12': Vision12,
+  'Vision13': Vision13,
+  'Vision14': Vision14,
+  'Vision15': Vision15,
+  'Vision16': Vision16,
+  'Vision17': Vision17,
+  'Vision18': Vision18,
+  'Vision19': Vision19,
+  'Vision20': Vision20,
   'Mission01': Mission01,
+  'Mission02': Mission02,
+  'Mission03': Mission03,
+  'Mission04': Mission04,
+  'Mission05': Mission05,
+  'Mission06': Mission06,
+  'Mission07': Mission07,
+  'Mission08': Mission08,
+  'Mission09': Mission09,
+  'Mission10': Mission10,
+  'Mission11': Mission11,
+  'Mission12': Mission12,
+  'Mission13': Mission13,
+  'Mission14': Mission14,
+  'Mission15': Mission15,
+  'Mission16': Mission16,
+  'Mission17': Mission17,
+  'Mission18': Mission18,
+  'Mission19': Mission19,
+  'Mission20': Mission20,
   'Timeline01': Timeline01,
   'Timeline02': Timeline02,
   'Team01': Team01,

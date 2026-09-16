@@ -503,6 +503,323 @@ export const LAYOUT_DEFAULTS = {
       { id: 'svc4-c3-desc', type: 'text', props: { content: 'Strategi pemasaran digital yang terukur untuk meningkatkan pertumbuhan bisnis Anda.', fontSize: '14px', color: '#64748b', margin: '0' } },
     ]},
   ],
+  'services-05': [
+    { id: 'svc5-badge', type: 'badge', props: { content: '✓ KEUNGGULAN KAMI', background: '#dcfce7', color: '#16a34a' } },
+    { id: 'svc5-heading', type: 'heading', props: { content: 'Layanan Terbaik Kami', level: 'h2', fontSize: '36px', fontWeight: '800', color: '#0f172a', align: 'center', margin: '0 0 12px 0' } },
+    { id: 'svc5-subtext', type: 'text', props: { content: 'Solusi handal dengan standar kualitas tertinggi untuk mendukung kemajuan bisnis Anda', fontSize: '16px', color: '#64748b', align: 'center', margin: '0 0 48px 0' } },
+    { id: 'svc5-card-1', type: 'card', props: { variant: 'service', background: '#ffffff', borderRadius: '16px', shadow: 'lg', hoverEffect: 'lift', padding: '32px' }, childrenComponents: [
+      { id: 'svc5-c1-icon', type: 'icon', props: { icon: 'FaCheckCircle', size: '36px', color: '#16a34a', align: 'left' } },
+      { id: 'svc5-c1-title', type: 'heading', props: { content: 'Kualitas Terjamin', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#0f172a', margin: '16px 0 8px 0' } },
+      { id: 'svc5-c1-desc', type: 'text', props: { content: 'Setiap layanan melalui uji kualitas ketat demi kepuasan maksimal.', fontSize: '14px', color: '#64748b', margin: '0' } },
+    ]},
+    { id: 'svc5-card-2', type: 'card', props: { variant: 'service', background: '#ffffff', borderRadius: '16px', shadow: 'lg', hoverEffect: 'lift', padding: '32px' }, childrenComponents: [
+      { id: 'svc5-c2-icon', type: 'icon', props: { icon: 'FaHeadset', size: '36px', color: '#16a34a', align: 'left' } },
+      { id: 'svc5-c2-title', type: 'heading', props: { content: 'Support Responsif', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#0f172a', margin: '16px 0 8px 0' } },
+      { id: 'svc5-c2-desc', type: 'text', props: { content: 'Tim support yang siap mendampingi kebutuhan Anda setiap saat.', fontSize: '14px', color: '#64748b', margin: '0' } },
+    ]},
+    { id: 'svc5-card-3', type: 'card', props: { variant: 'service', background: '#ffffff', borderRadius: '16px', shadow: 'lg', hoverEffect: 'lift', padding: '32px' }, childrenComponents: [
+      { id: 'svc5-c3-icon', type: 'icon', props: { icon: 'FaShieldAlt', size: '36px', color: '#16a34a', align: 'left' } },
+      { id: 'svc5-c3-title', type: 'heading', props: { content: 'Keamanan Mutlak', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#0f172a', margin: '16px 0 8px 0' } },
+      { id: 'svc5-c3-desc', type: 'text', props: { content: 'Perlindungan menyeluruh atas privasi dan data transaksi Anda.', fontSize: '14px', color: '#64748b', margin: '0' } },
+    ]},
+  ],
+  'services-06': [
+    { id: 'svc6-badge', type: 'badge', props: { content: '🌸 KELAS KHUSUS', background: '#fce7f3', color: '#be185d' } },
+    { id: 'svc6-heading', type: 'heading', props: { content: 'Layanan Eksklusif Sakura', level: 'h2', fontSize: '38px', fontWeight: '700', color: '#831843', align: 'center', margin: '0 0 12px 0' } },
+    { id: 'svc6-subtext', type: 'text', props: { content: 'Dirancang dengan kelembutan dan perhatian penuh pada setiap detail estetika', fontSize: '16px', color: '#9d7b8c', align: 'center', margin: '0 0 48px 0' } },
+    { id: 'svc6-card-1', type: 'card', props: { variant: 'service', background: '#fff1f2', borderRadius: '32px', shadow: 'sm', hoverEffect: 'lift', padding: '32px' }, childrenComponents: [
+      { id: 'svc6-c1-icon', type: 'icon', props: { icon: 'FaHeart', size: '36px', color: '#db2777', align: 'center' } },
+      { id: 'svc6-c1-title', type: 'heading', props: { content: 'Styling Pernikahan', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#831843', align: 'center', margin: '16px 0 8px 0' } },
+      { id: 'svc6-c1-desc', type: 'text', props: { content: 'Penataan dekorasi impian dengan bunga segar pilihan terbaik.', fontSize: '14px', color: '#9d7b8c', align: 'center', margin: '0' } },
+    ]},
+    { id: 'svc6-card-2', type: 'card', props: { variant: 'service', background: '#fff1f2', borderRadius: '32px', shadow: 'sm', hoverEffect: 'lift', padding: '32px' }, childrenComponents: [
+      { id: 'svc6-c2-icon', type: 'icon', props: { icon: 'FaSpa', size: '36px', color: '#db2777', align: 'center' } },
+      { id: 'svc6-c2-title', type: 'heading', props: { content: 'Perawatan Estetika', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#831843', align: 'center', margin: '16px 0 8px 0' } },
+      { id: 'svc6-c2-desc', type: 'text', props: { content: 'Relaksasi menyeluruh untuk memulihkan kesegaran tubuh dan pikiran.', fontSize: '14px', color: '#9d7b8c', align: 'center', margin: '0' } },
+    ]},
+    { id: 'svc6-card-3', type: 'card', props: { variant: 'service', background: '#fff1f2', borderRadius: '32px', shadow: 'sm', hoverEffect: 'lift', padding: '32px' }, childrenComponents: [
+      { id: 'svc6-c3-icon', type: 'icon', props: { icon: 'FaGift', size: '36px', color: '#db2777', align: 'center' } },
+      { id: 'svc6-c3-title', type: 'heading', props: { content: 'Hampers & Gift Box', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#831843', align: 'center', margin: '16px 0 8px 0' } },
+      { id: 'svc6-c3-desc', type: 'text', props: { content: 'Paket hantaran artistik untuk momen spesial orang terkasih.', fontSize: '14px', color: '#9d7b8c', align: 'center', margin: '0' } },
+    ]},
+  ],
+  'services-07': [
+    { id: 'svc7-badge', type: 'badge', props: { content: '◆ ENTERPRISE SOLUTION', background: '#0f172a', color: '#67e8f9' } },
+    { id: 'svc7-heading', type: 'heading', props: { content: 'Infrastruktur Skala Enterprise', level: 'h2', fontSize: '40px', fontWeight: '900', color: '#ffffff', align: 'left', margin: '0 0 12px 0' } },
+    { id: 'svc7-subtext', type: 'text', props: { content: 'Performa tanpa kompromi, latensi rendah, dan ketersediaan 99.99%', fontSize: '16px', color: '#94a3b8', align: 'left', margin: '0 0 48px 0' } },
+    { id: 'svc7-card-1', type: 'card', props: { variant: 'service-dark', background: '#1e293b', borderRadius: '16px', shadow: 'xl', borderWidth: '1px', borderColor: '#334155', hoverEffect: 'glow', padding: '32px' }, childrenComponents: [
+      { id: 'svc7-c1-icon', type: 'icon', props: { icon: 'FaServer', size: '36px', color: '#67e8f9', align: 'left' } },
+      { id: 'svc7-c1-title', type: 'heading', props: { content: 'Global Edge Cloud', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#ffffff', margin: '16px 0 8px 0' } },
+      { id: 'svc7-c1-desc', type: 'text', props: { content: 'Deploy aplikasi di 40 wilayah region edge secara instan.', fontSize: '14px', color: '#94a3b8', margin: '0' } },
+    ]},
+    { id: 'svc7-card-2', type: 'card', props: { variant: 'service-dark', background: '#1e293b', borderRadius: '16px', shadow: 'xl', borderWidth: '1px', borderColor: '#334155', hoverEffect: 'glow', padding: '32px' }, childrenComponents: [
+      { id: 'svc7-c2-icon', type: 'icon', props: { icon: 'FaLock', size: '36px', color: '#67e8f9', align: 'left' } },
+      { id: 'svc7-c2-title', type: 'heading', props: { content: 'Zero-Trust Security', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#ffffff', margin: '16px 0 8px 0' } },
+      { id: 'svc7-c2-desc', type: 'text', props: { content: 'Enkrpsi end-to-end dan kepatuhan standar SOC2 serta ISO 27001.', fontSize: '14px', color: '#94a3b8', margin: '0' } },
+    ]},
+    { id: 'svc7-card-3', type: 'card', props: { variant: 'service-dark', background: '#1e293b', borderRadius: '16px', shadow: 'xl', borderWidth: '1px', borderColor: '#334155', hoverEffect: 'glow', padding: '32px' }, childrenComponents: [
+      { id: 'svc7-c3-icon', type: 'icon', props: { icon: 'FaChartBar', size: '36px', color: '#67e8f9', align: 'left' } },
+      { id: 'svc7-c3-title', type: 'heading', props: { content: 'Real-time Analytics', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#ffffff', margin: '16px 0 8px 0' } },
+      { id: 'svc7-c3-desc', type: 'text', props: { content: 'Monitoring log dan metrik performa secara real-time detik ini juga.', fontSize: '14px', color: '#94a3b8', margin: '0' } },
+    ]},
+  ],
+  'services-08': [
+    { id: 'svc8-badge', type: 'badge', props: { content: '★ LAYANAN KAMI', background: '#000000', color: '#facc15' } },
+    { id: 'svc8-heading', type: 'heading', props: { content: 'BERISIK & BERBEDA', level: 'h2', fontSize: '48px', fontWeight: '900', color: '#000000', align: 'left', margin: '0 0 12px 0' } },
+    { id: 'svc8-subtext', type: 'text', props: { content: 'Layanan brutalist anti-mainstream untuk brand yang berani tampil beda', fontSize: '16px', color: '#000000', align: 'left', margin: '0 0 48px 0' } },
+    { id: 'svc8-card-1', type: 'card', props: { variant: 'service-brutalist', background: '#ffffff', borderRadius: '0px', shadow: 'none', borderWidth: '3px', borderColor: '#000000', hoverEffect: 'none', padding: '32px' }, childrenComponents: [
+      { id: 'svc8-c1-icon', type: 'icon', props: { icon: 'FaBolt', size: '36px', color: '#000000', align: 'left' } },
+      { id: 'svc8-c1-title', type: 'heading', props: { content: 'BRUTAL BRANDING', level: 'h3', fontSize: '22px', fontWeight: '900', color: '#000000', margin: '16px 0 8px 0' } },
+      { id: 'svc8-c1-desc', type: 'text', props: { content: 'Identitas visual yang mencolok dan sulit dilupakan audiens Anda.', fontSize: '14px', color: '#000000', margin: '0' } },
+    ]},
+    { id: 'svc8-card-2', type: 'card', props: { variant: 'service-brutalist', background: '#ffffff', borderRadius: '0px', shadow: 'none', borderWidth: '3px', borderColor: '#000000', hoverEffect: 'none', padding: '32px' }, childrenComponents: [
+      { id: 'svc8-c2-icon', type: 'icon', props: { icon: 'FaLaptopCode', size: '36px', color: '#000000', align: 'left' } },
+      { id: 'svc8-c2-title', type: 'heading', props: { content: 'RAW WEB DEV', level: 'h3', fontSize: '22px', fontWeight: '900', color: '#000000', margin: '16px 0 8px 0' } },
+      { id: 'svc8-c2-desc', type: 'text', props: { content: 'Situs web performa tinggi tanpa template membosankan.', fontSize: '14px', color: '#000000', margin: '0' } },
+    ]},
+    { id: 'svc8-card-3', type: 'card', props: { variant: 'service-brutalist', background: '#ffffff', borderRadius: '0px', shadow: 'none', borderWidth: '3px', borderColor: '#000000', hoverEffect: 'none', padding: '32px' }, childrenComponents: [
+      { id: 'svc8-c3-icon', type: 'icon', props: { icon: 'FaBullhorn', size: '36px', color: '#000000', align: 'left' } },
+      { id: 'svc8-c3-title', type: 'heading', props: { content: 'LOUD MARKETING', level: 'h3', fontSize: '22px', fontWeight: '900', color: '#000000', margin: '16px 0 8px 0' } },
+      { id: 'svc8-c3-desc', type: 'text', props: { content: 'Kampanye pemasaran yang langsung menarik perhatian pasar.', fontSize: '14px', color: '#000000', margin: '0' } },
+    ]},
+  ],
+  'services-09': [
+    { id: 'svc9-heading', type: 'heading', props: { content: 'Serenity Services', level: 'h2', fontSize: '38px', fontWeight: '400', color: '#1c1917', align: 'center', margin: '0 0 12px 0' } },
+    { id: 'svc9-subtext', type: 'text', props: { content: 'Perawatan tenang dan terarah untuk ketenangan batin dan pikiran', fontSize: '16px', color: '#78716c', align: 'center', margin: '0 0 48px 0' } },
+    { id: 'svc9-card-1', type: 'card', props: { variant: 'service-zen', background: '#fafaf9', borderRadius: '16px', shadow: 'sm', hoverEffect: 'lift', padding: '32px' }, childrenComponents: [
+      { id: 'svc9-c1-icon', type: 'icon', props: { icon: 'FaLeaf', size: '36px', color: '#78716c', align: 'center' } },
+      { id: 'svc9-c1-title', type: 'heading', props: { content: 'Retret Meditasi', level: 'h3', fontSize: '20px', fontWeight: '500', color: '#1c1917', align: 'center', margin: '16px 0 8px 0' } },
+      { id: 'svc9-c1-desc', type: 'text', props: { content: 'Sesi hening untuk menemukan kembali keseimbangan jiwa dan raga.', fontSize: '14px', color: '#78716c', align: 'center', margin: '0' } },
+    ]},
+    { id: 'svc9-card-2', type: 'card', props: { variant: 'service-zen', background: '#fafaf9', borderRadius: '16px', shadow: 'sm', hoverEffect: 'lift', padding: '32px' }, childrenComponents: [
+      { id: 'svc9-c2-icon', type: 'icon', props: { icon: 'FaSpa', size: '36px', color: '#78716c', align: 'center' } },
+      { id: 'svc9-c2-title', type: 'heading', props: { content: 'Yoga & Pemulihan', level: 'h3', fontSize: '20px', fontWeight: '500', color: '#1c1917', align: 'center', margin: '16px 0 8px 0' } },
+      { id: 'svc9-c2-desc', type: 'text', props: { content: 'Gerakan lembut di alam terbuka dengan instruktur berpengalaman.', fontSize: '14px', color: '#78716c', align: 'center', margin: '0' } },
+    ]},
+    { id: 'svc9-card-3', type: 'card', props: { variant: 'service-zen', background: '#fafaf9', borderRadius: '16px', shadow: 'sm', hoverEffect: 'lift', padding: '32px' }, childrenComponents: [
+      { id: 'svc9-c3-icon', type: 'icon', props: { icon: 'FaWater', size: '36px', color: '#78716c', align: 'center' } },
+      { id: 'svc9-c3-title', type: 'heading', props: { content: 'Terapi Alam', level: 'h3', fontSize: '20px', fontWeight: '500', color: '#1c1917', align: 'center', margin: '16px 0 8px 0' } },
+      { id: 'svc9-c3-desc', type: 'text', props: { content: 'Penyembuhan holistik bersentuhan langsung dengan keasrian alam.', fontSize: '14px', color: '#78716c', align: 'center', margin: '0' } },
+    ]},
+  ],
+  'services-10': [
+    { id: 'svc10-badge', type: 'badge', props: { content: '● NEBULA SERVICES', background: '#1e1b4b', color: '#a5b4fc' } },
+    { id: 'svc10-heading', type: 'heading', props: { content: 'Eksplorasi Layanan Nebula', level: 'h2', fontSize: '38px', fontWeight: '900', color: '#ffffff', align: 'center', margin: '0 0 12px 0' } },
+    { id: 'svc10-subtext', type: 'text', props: { content: 'Teknologi masa depan untuk membawa misi digital Anda melesat jauh', fontSize: '16px', color: '#a5b4fc', align: 'center', margin: '0 0 48px 0' } },
+    { id: 'svc10-card-1', type: 'card', props: { variant: 'service-glass', background: 'rgba(255,255,255,0.05)', borderRadius: '24px', shadow: 'xl', borderWidth: '1px', borderColor: 'rgba(255,255,255,0.1)', hoverEffect: 'glow', padding: '32px' }, childrenComponents: [
+      { id: 'svc10-c1-icon', type: 'icon', props: { icon: 'FaRocket', size: '36px', color: '#8b5cf6', align: 'left' } },
+      { id: 'svc10-c1-title', type: 'heading', props: { content: 'Misi Peluncuran', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#ffffff', margin: '16px 0 8px 0' } },
+      { id: 'svc10-c1-desc', type: 'text', props: { content: 'Akselerasi penuh produk digital Anda menuju pasar global.', fontSize: '14px', color: '#c4b5fd', margin: '0' } },
+    ]},
+    { id: 'svc10-card-2', type: 'card', props: { variant: 'service-glass', background: 'rgba(255,255,255,0.05)', borderRadius: '24px', shadow: 'xl', borderWidth: '1px', borderColor: 'rgba(255,255,255,0.1)', hoverEffect: 'glow', padding: '32px' }, childrenComponents: [
+      { id: 'svc10-c2-icon', type: 'icon', props: { icon: 'FaSatellite', size: '36px', color: '#8b5cf6', align: 'left' } },
+      { id: 'svc10-c2-title', type: 'heading', props: { content: 'Telemetry & Radar', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#ffffff', margin: '16px 0 8px 0' } },
+      { id: 'svc10-c2-desc', type: 'text', props: { content: 'Pantau metrik performa secara akurat dari pusat kendali.', fontSize: '14px', color: '#c4b5fd', margin: '0' } },
+    ]},
+    { id: 'svc10-card-3', type: 'card', props: { variant: 'service-glass', background: 'rgba(255,255,255,0.05)', borderRadius: '24px', shadow: 'xl', borderWidth: '1px', borderColor: 'rgba(255,255,255,0.1)', hoverEffect: 'glow', padding: '32px' }, childrenComponents: [
+      { id: 'svc10-c3-icon', type: 'icon', props: { icon: 'FaShieldAlt', size: '36px', color: '#8b5cf6', align: 'left' } },
+      { id: 'svc10-c3-title', type: 'heading', props: { content: 'Perisai Pertahanan', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#ffffff', margin: '16px 0 8px 0' } },
+      { id: 'svc10-c3-desc', type: 'text', props: { content: 'Keamanan tingkat tinggi melindungi seluruh sistem dari ancaman.', fontSize: '14px', color: '#c4b5fd', margin: '0' } },
+    ]},
+  ],
+  'services-11': [
+    { id: 'svc11-heading', type: 'heading', props: { content: 'Editorial Services', level: 'h2', fontSize: '38px', fontWeight: '700', color: '#1c1917', align: 'left', margin: '0 0 12px 0' } },
+    { id: 'svc11-subtext', type: 'text', props: { content: 'Layanan kurasi berita, opini, dan publikasi media berstandar tinggi', fontSize: '16px', color: '#44403c', align: 'left', margin: '0 0 48px 0' } },
+    { id: 'svc11-card-1', type: 'card', props: { variant: 'service', background: '#f5f5f4', borderRadius: '8px', shadow: 'none', borderWidth: '1px', borderColor: '#d6d3d1', hoverEffect: 'lift', padding: '32px' }, childrenComponents: [
+      { id: 'svc11-c1-icon', type: 'icon', props: { icon: 'FaNewspaper', size: '36px', color: '#1c1917', align: 'left' } },
+      { id: 'svc11-c1-title', type: 'heading', props: { content: 'Kurasi Berita', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#1c1917', margin: '16px 0 8px 0' } },
+      { id: 'svc11-c1-desc', type: 'text', props: { content: 'Penyusunan laporan investigasi dan berita aktual pilihan pembaca.', fontSize: '14px', color: '#57534e', margin: '0' } },
+    ]},
+    { id: 'svc11-card-2', type: 'card', props: { variant: 'service', background: '#f5f5f4', borderRadius: '8px', shadow: 'none', borderWidth: '1px', borderColor: '#d6d3d1', hoverEffect: 'lift', padding: '32px' }, childrenComponents: [
+      { id: 'svc11-c2-icon', type: 'icon', props: { icon: 'FaPenNib', size: '36px', color: '#1c1917', align: 'left' } },
+      { id: 'svc11-c2-title', type: 'heading', props: { content: 'Kolom Opini', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#1c1917', margin: '16px 0 8px 0' } },
+      { id: 'svc11-c2-desc', type: 'text', props: { content: 'Tulisan analitis mendalam dari para kolumnis dan pakar industri.', fontSize: '14px', color: '#57534e', margin: '0' } },
+    ]},
+    { id: 'svc11-card-3', type: 'card', props: { variant: 'service', background: '#f5f5f4', borderRadius: '8px', shadow: 'none', borderWidth: '1px', borderColor: '#d6d3d1', hoverEffect: 'lift', padding: '32px' }, childrenComponents: [
+      { id: 'svc11-c3-icon', type: 'icon', props: { icon: 'FaBookOpen', size: '36px', color: '#1c1917', align: 'left' } },
+      { id: 'svc11-c3-title', type: 'heading', props: { content: 'Publikasi Majalah', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#1c1917', margin: '16px 0 8px 0' } },
+      { id: 'svc11-c3-desc', type: 'text', props: { content: 'Edisi cetak dan digital bulanan dengan kualitas desain berkelas.', fontSize: '14px', color: '#57534e', margin: '0' } },
+    ]},
+  ],
+  'services-12': [
+    { id: 'svc12-badge', type: 'badge', props: { content: '~/services', background: '#052e16', color: '#4ade80' } },
+    { id: 'svc12-heading', type: 'heading', props: { content: 'Developer Services & API', level: 'h2', fontSize: '38px', fontWeight: '800', color: '#e2e8f0', align: 'left', margin: '0 0 12px 0' } },
+    { id: 'svc12-subtext', type: 'text', props: { content: 'API handal dan alat bantu pengembangan untuk produktivitas tim engineering', fontSize: '16px', color: '#94a3b8', align: 'left', margin: '0 0 48px 0' } },
+    { id: 'svc12-card-1', type: 'card', props: { variant: 'service-terminal', background: '#090d16', borderRadius: '12px', shadow: 'lg', borderWidth: '1px', borderColor: '#1e293b', hoverEffect: 'glow', padding: '32px' }, childrenComponents: [
+      { id: 'svc12-c1-icon', type: 'icon', props: { icon: 'FaTerminal', size: '36px', color: '#4ade80', align: 'left' } },
+      { id: 'svc12-c1-title', type: 'heading', props: { content: 'CLI Integration', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#f8fafc', margin: '16px 0 8px 0' } },
+      { id: 'svc12-c1-desc', type: 'text', props: { content: 'Deploy dan kelola project langsung dari command line terminal.', fontSize: '14px', color: '#94a3b8', margin: '0' } },
+    ]},
+    { id: 'svc12-card-2', type: 'card', props: { variant: 'service-terminal', background: '#090d16', borderRadius: '12px', shadow: 'lg', borderWidth: '1px', borderColor: '#1e293b', hoverEffect: 'glow', padding: '32px' }, childrenComponents: [
+      { id: 'svc12-c2-icon', type: 'icon', props: { icon: 'FaCode', size: '36px', color: '#4ade80', align: 'left' } },
+      { id: 'svc12-c2-title', type: 'heading', props: { content: 'REST & GraphQL API', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#f8fafc', margin: '16px 0 8px 0' } },
+      { id: 'svc12-c2-desc', type: 'text', props: { content: 'Endpoint terdokumentasi lengkap dengan response sangat cepat.', fontSize: '14px', color: '#94a3b8', margin: '0' } },
+    ]},
+    { id: 'svc12-card-3', type: 'card', props: { variant: 'service-terminal', background: '#090d16', borderRadius: '12px', shadow: 'lg', borderWidth: '1px', borderColor: '#1e293b', hoverEffect: 'glow', padding: '32px' }, childrenComponents: [
+      { id: 'svc12-c3-icon', type: 'icon', props: { icon: 'FaServer', size: '36px', color: '#4ade80', align: 'left' } },
+      { id: 'svc12-c3-title', type: 'heading', props: { content: 'Auto-Scaling Server', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#f8fafc', margin: '16px 0 8px 0' } },
+      { id: 'svc12-c3-desc', type: 'text', props: { content: 'Infrastruktur otomatis menyesuaikan beban trafik aplikasi Anda.', fontSize: '14px', color: '#94a3b8', margin: '0' } },
+    ]},
+  ],
+  'services-13': [
+    { id: 'svc13-heading', type: 'heading', props: { content: 'Solstice Features', level: 'h2', fontSize: '38px', fontWeight: '800', color: '#0f172a', align: 'center', margin: '0 0 12px 0' } },
+    { id: 'svc13-subtext', type: 'text', props: { content: 'Fitur interaktif modern yang dirancang untuk pengalaman pengguna terbaik', fontSize: '16px', color: '#64748b', align: 'center', margin: '0 0 48px 0' } },
+    { id: 'svc13-card-1', type: 'card', props: { variant: 'service', background: '#ffffff', borderRadius: '24px', shadow: 'md', hoverEffect: 'lift', padding: '32px' }, childrenComponents: [
+      { id: 'svc13-c1-icon', type: 'icon', props: { icon: 'FaCompass', size: '36px', color: '#f97316', align: 'center' } },
+      { id: 'svc13-c1-title', type: 'heading', props: { content: 'Navigasi Pintar', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#0f172a', align: 'center', margin: '16px 0 8px 0' } },
+      { id: 'svc13-c1-desc', type: 'text', props: { content: 'Eksplorasi fitur aplikasi dengan mudah dan intuitif tanpa hambatan.', fontSize: '14px', color: '#64748b', align: 'center', margin: '0' } },
+    ]},
+    { id: 'svc13-card-2', type: 'card', props: { variant: 'service', background: '#ffffff', borderRadius: '24px', shadow: 'md', hoverEffect: 'lift', padding: '32px' }, childrenComponents: [
+      { id: 'svc13-c2-icon', type: 'icon', props: { icon: 'FaShoppingCart', size: '36px', color: '#f97316', align: 'center' } },
+      { id: 'svc13-c2-title', type: 'heading', props: { content: 'Transaksi Cepat', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#0f172a', align: 'center', margin: '16px 0 8px 0' } },
+      { id: 'svc13-c2-desc', type: 'text', props: { content: 'Proses checkout aman dan kilat dalam hitungan detik saja.', fontSize: '14px', color: '#64748b', align: 'center', margin: '0' } },
+    ]},
+    { id: 'svc13-card-3', type: 'card', props: { variant: 'service', background: '#ffffff', borderRadius: '24px', shadow: 'md', hoverEffect: 'lift', padding: '32px' }, childrenComponents: [
+      { id: 'svc13-c3-icon', type: 'icon', props: { icon: 'FaUserCheck', size: '36px', color: '#f97316', align: 'center' } },
+      { id: 'svc13-c3-title', type: 'heading', props: { content: 'Membership Eksklusif', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#0f172a', align: 'center', margin: '16px 0 8px 0' } },
+      { id: 'svc13-c3-desc', type: 'text', props: { content: 'Dapatkan berbagai benefit dan penawaran khusus anggota.', fontSize: '14px', color: '#64748b', align: 'center', margin: '0' } },
+    ]},
+  ],
+  'services-14': [
+    { id: 'svc14-badge', type: 'badge', props: { content: '✓ LAYANAN INSTITUSI', background: '#dbeafe', color: '#1e40af' } },
+    { id: 'svc14-heading', type: 'heading', props: { content: 'Layanan Akademik & Kampus', level: 'h2', fontSize: '38px', fontWeight: '900', color: '#1e3a8a', align: 'left', margin: '0 0 12px 0' } },
+    { id: 'svc14-subtext', type: 'text', props: { content: 'Fasilitas pendidikan unggulan untuk mencetak generasi profesional berprestasi', fontSize: '16px', color: '#475569', align: 'left', margin: '0 0 48px 0' } },
+    { id: 'svc14-card-1', type: 'card', props: { variant: 'service', background: '#ffffff', borderRadius: '16px', shadow: 'md', borderWidth: '1px', borderColor: '#e2e8f0', hoverEffect: 'lift', padding: '32px' }, childrenComponents: [
+      { id: 'svc14-c1-icon', type: 'icon', props: { icon: 'FaGraduationCap', size: '36px', color: '#1e40af', align: 'left' } },
+      { id: 'svc14-c1-title', type: 'heading', props: { content: 'Program Studi Unggulan', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#1e3a8a', margin: '16px 0 8px 0' } },
+      { id: 'svc14-c1-desc', type: 'text', props: { content: '28 program studi terakreditasi A dengan kurikulum berbasis industri.', fontSize: '14px', color: '#475569', margin: '0' } },
+    ]},
+    { id: 'svc14-card-2', type: 'card', props: { variant: 'service', background: '#ffffff', borderRadius: '16px', shadow: 'md', borderWidth: '1px', borderColor: '#e2e8f0', hoverEffect: 'lift', padding: '32px' }, childrenComponents: [
+      { id: 'svc14-c2-icon', type: 'icon', props: { icon: 'FaChalkboardTeacher', size: '36px', color: '#1e40af', align: 'left' } },
+      { id: 'svc14-c2-title', type: 'heading', props: { content: 'Dosen Praktisi', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#1e3a8a', margin: '16px 0 8px 0' } },
+      { id: 'svc14-c2-desc', type: 'text', props: { content: 'Pengajar profesional dan berpengalaman luas di bidangnya.', fontSize: '14px', color: '#475569', margin: '0' } },
+    ]},
+    { id: 'svc14-card-3', type: 'card', props: { variant: 'service', background: '#ffffff', borderRadius: '16px', shadow: 'md', borderWidth: '1px', borderColor: '#e2e8f0', hoverEffect: 'lift', padding: '32px' }, childrenComponents: [
+      { id: 'svc14-c3-icon', type: 'icon', props: { icon: 'FaBriefcase', size: '36px', color: '#1e40af', align: 'left' } },
+      { id: 'svc14-c3-title', type: 'heading', props: { content: 'Pusat Karir & Alumni', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#1e3a8a', margin: '16px 0 8px 0' } },
+      { id: 'svc14-c3-desc', type: 'text', props: { content: 'Jaringan luas dengan perusahaan nasional dan multinasional.', fontSize: '14px', color: '#475569', margin: '0' } },
+    ]},
+  ],
+  'services-15': [
+    { id: 'svc15-badge', type: 'badge', props: { content: '✦ IRIS SERVICES', background: '#f3e8ff', color: '#7c3aed' } },
+    { id: 'svc15-heading', type: 'heading', props: { content: 'Layanan AI Canvas & Desain', level: 'h2', fontSize: '38px', fontWeight: '900', color: '#0f172a', align: 'left', margin: '0 0 12px 0' } },
+    { id: 'svc15-subtext', type: 'text', props: { content: 'Ubah sketsa ide menjadi antarmuka siap pakai dengan teknologi cerdas Iris', fontSize: '16px', color: '#64748b', align: 'left', margin: '0 0 48px 0' } },
+    { id: 'svc15-card-1', type: 'card', props: { variant: 'service', background: '#ffffff', borderRadius: '24px', shadow: 'lg', hoverEffect: 'lift', padding: '32px' }, childrenComponents: [
+      { id: 'svc15-c1-icon', type: 'icon', props: { icon: 'FaMagic', size: '36px', color: '#7c3aed', align: 'left' } },
+      { id: 'svc15-c1-title', type: 'heading', props: { content: 'AI Generative UI', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#0f172a', margin: '16px 0 8px 0' } },
+      { id: 'svc15-c1-desc', type: 'text', props: { content: 'Generate komponen desain web berkualitas tinggi dalam hitungan detik.', fontSize: '14px', color: '#64748b', margin: '0' } },
+    ]},
+    { id: 'svc15-card-2', type: 'card', props: { variant: 'service', background: '#ffffff', borderRadius: '24px', shadow: 'lg', hoverEffect: 'lift', padding: '32px' }, childrenComponents: [
+      { id: 'svc15-c2-icon', type: 'icon', props: { icon: 'FaPalette', size: '36px', color: '#7c3aed', align: 'left' } },
+      { id: 'svc15-c2-title', type: 'heading', props: { content: 'Design System Sinkron', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#0f172a', margin: '16px 0 8px 0' } },
+      { id: 'svc15-c2-desc', type: 'text', props: { content: 'Konsistensi warna, tipografi, dan komponen otomatis terjaga.', fontSize: '14px', color: '#64748b', margin: '0' } },
+    ]},
+    { id: 'svc15-card-3', type: 'card', props: { variant: 'service', background: '#ffffff', borderRadius: '24px', shadow: 'lg', hoverEffect: 'lift', padding: '32px' }, childrenComponents: [
+      { id: 'svc15-c3-icon', type: 'icon', props: { icon: 'FaCode', size: '36px', color: '#7c3aed', align: 'left' } },
+      { id: 'svc15-c3-title', type: 'heading', props: { content: 'Export React Code', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#0f172a', margin: '16px 0 8px 0' } },
+      { id: 'svc15-c3-desc', type: 'text', props: { content: 'Unduh hasil desain langsung menjadi kode React & Tailwind bersih.', fontSize: '14px', color: '#64748b', margin: '0' } },
+    ]},
+  ],
+  'services-16': [
+    { id: 'svc16-badge', type: 'badge', props: { content: '✦ GOLDLEAF HERITAGE', background: '#fef3c7', color: '#92400e' } },
+    { id: 'svc16-heading', type: 'heading', props: { content: 'Layanan Premium Goldleaf', level: 'h2', fontSize: '38px', fontWeight: '700', color: '#451a03', align: 'center', margin: '0 0 12px 0' } },
+    { id: 'svc16-subtext', type: 'text', props: { content: 'Koleksi perhiasan dan layanan warisan budaya dengan sentuhan emas murni', fontSize: '16px', color: '#92600e', align: 'center', margin: '0 0 48px 0' } },
+    { id: 'svc16-card-1', type: 'card', props: { variant: 'service', background: '#fffbeb', borderRadius: '20px', shadow: 'md', borderWidth: '1px', borderColor: '#fde68a', hoverEffect: 'lift', padding: '32px' }, childrenComponents: [
+      { id: 'svc16-c1-icon', type: 'icon', props: { icon: 'FaGem', size: '36px', color: '#b45309', align: 'center' } },
+      { id: 'svc16-c1-title', type: 'heading', props: { content: 'Perhiasan Custom', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#451a03', align: 'center', margin: '16px 0 8px 0' } },
+      { id: 'svc16-c1-desc', type: 'text', props: { content: 'Pemesanan perhiasan eksklusif sesuai desain pesanan pribadi Anda.', fontSize: '14px', color: '#92600e', align: 'center', margin: '0' } },
+    ]},
+    { id: 'svc16-card-2', type: 'card', props: { variant: 'service', background: '#fffbeb', borderRadius: '20px', shadow: 'md', borderWidth: '1px', borderColor: '#fde68a', hoverEffect: 'lift', padding: '32px' }, childrenComponents: [
+      { id: 'svc16-c2-icon', type: 'icon', props: { icon: 'FaAward', size: '36px', color: '#b45309', align: 'center' } },
+      { id: 'svc16-c2-title', type: 'heading', props: { content: 'Sertifikasi Keaslian', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#451a03', align: 'center', margin: '16px 0 8px 0' } },
+      { id: 'svc16-c2-desc', type: 'text', props: { content: 'Setiap produk dilengkapi sertifikat resmi dan jaminan kadar emas.', fontSize: '14px', color: '#92600e', align: 'center', margin: '0' } },
+    ]},
+    { id: 'svc16-card-3', type: 'card', props: { variant: 'service', background: '#fffbeb', borderRadius: '20px', shadow: 'md', borderWidth: '1px', borderColor: '#fde68a', hoverEffect: 'lift', padding: '32px' }, childrenComponents: [
+      { id: 'svc16-c3-icon', type: 'icon', props: { icon: 'FaHandshake', size: '36px', color: '#b45309', align: 'center' } },
+      { id: 'svc16-c3-title', type: 'heading', props: { content: 'Konsultasi Pribadi', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#451a03', align: 'center', margin: '16px 0 8px 0' } },
+      { id: 'svc16-c3-desc', type: 'text', props: { content: 'Layanan temu janji privat di butik bersama kurator berpengalaman.', fontSize: '14px', color: '#92600e', align: 'center', margin: '0' } },
+    ]},
+  ],
+  'services-17': [
+    { id: 'svc17-badge', type: 'badge', props: { content: '🔥 MARKETPLACE PULSE', background: '#fef2f2', color: '#dc2626' } },
+    { id: 'svc17-heading', type: 'heading', props: { content: 'Layanan Seller & Pembeli', level: 'h2', fontSize: '38px', fontWeight: '900', color: '#0f172a', align: 'left', margin: '0 0 12px 0' } },
+    { id: 'svc17-subtext', type: 'text', props: { content: 'Ekosistem perdagangan online terpadu dengan jutaan produk pilihan', fontSize: '16px', color: '#64748b', align: 'left', margin: '0 0 48px 0' } },
+    { id: 'svc17-card-1', type: 'card', props: { variant: 'service', background: '#ffffff', borderRadius: '20px', shadow: 'md', borderWidth: '1px', borderColor: '#e2e8f0', hoverEffect: 'lift', padding: '32px' }, childrenComponents: [
+      { id: 'svc17-c1-icon', type: 'icon', props: { icon: 'FaStore', size: '36px', color: '#dc2626', align: 'left' } },
+      { id: 'svc17-c1-title', type: 'heading', props: { content: 'Buka Toko Instan', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#0f172a', margin: '16px 0 8px 0' } },
+      { id: 'svc17-c1-desc', type: 'text', props: { content: 'Mulai jualan online dalam hitungan menit tanpa ribet.', fontSize: '14px', color: '#64748b', margin: '0' } },
+    ]},
+    { id: 'svc17-card-2', type: 'card', props: { variant: 'service', background: '#ffffff', borderRadius: '20px', shadow: 'md', borderWidth: '1px', borderColor: '#e2e8f0', hoverEffect: 'lift', padding: '32px' }, childrenComponents: [
+      { id: 'svc17-c2-icon', type: 'icon', props: { icon: 'FaTruckFast', size: '36px', color: '#dc2626', align: 'left' } },
+      { id: 'svc17-c2-title', type: 'heading', props: { content: 'Logistik Terintegrasi', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#0f172a', margin: '16px 0 8px 0' } },
+      { id: 'svc17-c2-desc', type: 'text', props: { content: 'Pilihan kurir lengkap dengan layanan same-day dan instant delivery.', fontSize: '14px', color: '#64748b', margin: '0' } },
+    ]},
+    { id: 'svc17-card-3', type: 'card', props: { variant: 'service', background: '#ffffff', borderRadius: '20px', shadow: 'md', borderWidth: '1px', borderColor: '#e2e8f0', hoverEffect: 'lift', padding: '32px' }, childrenComponents: [
+      { id: 'svc17-c3-icon', type: 'icon', props: { icon: 'FaShieldAlt', size: '36px', color: '#dc2626', align: 'left' } },
+      { id: 'svc17-c3-title', type: 'heading', props: { content: 'Rekber Aman', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#0f172a', margin: '16px 0 8px 0' } },
+      { id: 'svc17-c3-desc', type: 'text', props: { content: 'Dana aman 100% sampai barang diterima dengan baik oleh pembeli.', fontSize: '14px', color: '#64748b', margin: '0' } },
+    ]},
+  ],
+  'services-18': [
+    { id: 'svc18-badge', type: 'badge', props: { content: '🚚 TRANSGO LOGISTICS', background: '#fff7ed', color: '#f97316' } },
+    { id: 'svc18-heading', type: 'heading', props: { content: 'Layanan Pengiriman Kargo Pro', level: 'h2', fontSize: '38px', fontWeight: '900', color: '#0f172a', align: 'left', margin: '0 0 12px 0' } },
+    { id: 'svc18-subtext', type: 'text', props: { content: 'Solusi logistik darat, laut, dan udara handal lintas kepulauan Indonesia', fontSize: '16px', color: '#64748b', align: 'left', margin: '0 0 48px 0' } },
+    { id: 'svc18-card-1', type: 'card', props: { variant: 'service', background: '#ffffff', borderRadius: '20px', shadow: 'md', borderWidth: '1px', borderColor: '#fed7aa', hoverEffect: 'lift', padding: '32px' }, childrenComponents: [
+      { id: 'svc18-c1-icon', type: 'icon', props: { icon: 'FaTruck', size: '36px', color: '#f97316', align: 'left' } },
+      { id: 'svc18-c1-title', type: 'heading', props: { content: 'Pengiriman Darat', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#0f172a', margin: '16px 0 8px 0' } },
+      { id: 'svc18-c1-desc', type: 'text', props: { content: 'Armada truk box & container siap melayani antar kota dan provinsi.', fontSize: '14px', color: '#64748b', margin: '0' } },
+    ]},
+    { id: 'svc18-card-2', type: 'card', props: { variant: 'service', background: '#ffffff', borderRadius: '20px', shadow: 'md', borderWidth: '1px', borderColor: '#fed7aa', hoverEffect: 'lift', padding: '32px' }, childrenComponents: [
+      { id: 'svc18-c2-icon', type: 'icon', props: { icon: 'FaShip', size: '36px', color: '#f97316', align: 'left' } },
+      { id: 'svc18-c2-title', type: 'heading', props: { content: 'Kargo Laut & Pelabuhan', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#0f172a', margin: '16px 0 8px 0' } },
+      { id: 'svc18-c2-desc', type: 'text', props: { content: 'Pengiriman muatan besar antar pulau dengan tarif kompetitif.', fontSize: '14px', color: '#64748b', margin: '0' } },
+    ]},
+    { id: 'svc18-card-3', type: 'card', props: { variant: 'service', background: '#ffffff', borderRadius: '20px', shadow: 'md', borderWidth: '1px', borderColor: '#fed7aa', hoverEffect: 'lift', padding: '32px' }, childrenComponents: [
+      { id: 'svc18-c3-icon', type: 'icon', props: { icon: 'FaPlane', size: '36px', color: '#f97316', align: 'left' } },
+      { id: 'svc18-c3-title', type: 'heading', props: { content: 'Kargo Udara Kilat', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#0f172a', margin: '16px 0 8px 0' } },
+      { id: 'svc18-c3-desc', type: 'text', props: { content: 'Layanan express untuk dokumen dan barang penting sampai 1 hari.', fontSize: '14px', color: '#64748b', margin: '0' } },
+    ]},
+  ],
+  'services-19': [
+    { id: 'svc19-badge', type: 'badge', props: { content: '🍔 KIOSO! EATS', background: '#fce7f3', color: '#ec4899' } },
+    { id: 'svc19-heading', type: 'heading', props: { content: 'Menu & Layanan Paling Yummy', level: 'h2', fontSize: '38px', fontWeight: '900', color: '#0f172a', align: 'center', margin: '0 0 12px 0' } },
+    { id: 'svc19-subtext', type: 'text', props: { content: 'Burger juicy, kentang renyah, dan minuman segar disajikan hangat setiap hari', fontSize: '16px', color: '#64748b', align: 'center', margin: '0 0 48px 0' } },
+    { id: 'svc19-card-1', type: 'card', props: { variant: 'service', background: '#ffffff', borderRadius: '28px', shadow: 'lg', hoverEffect: 'lift', padding: '32px' }, childrenComponents: [
+      { id: 'svc19-c1-icon', type: 'icon', props: { icon: 'FaHamburger', size: '36px', color: '#ec4899', align: 'center' } },
+      { id: 'svc19-c1-title', type: 'heading', props: { content: 'Burger Premium', level: 'h3', fontSize: '20px', fontWeight: '800', color: '#0f172a', align: 'center', margin: '16px 0 8px 0' } },
+      { id: 'svc19-c1-desc', type: 'text', props: { content: 'Daging sapi panggang pilihan dengan keju meleleh di setiap gigitan.', fontSize: '14px', color: '#64748b', align: 'center', margin: '0' } },
+    ]},
+    { id: 'svc19-card-2', type: 'card', props: { variant: 'service', background: '#ffffff', borderRadius: '28px', shadow: 'lg', hoverEffect: 'lift', padding: '32px' }, childrenComponents: [
+      { id: 'svc19-c2-icon', type: 'icon', props: { icon: 'FaIceCream', size: '36px', color: '#ec4899', align: 'center' } },
+      { id: 'svc19-c2-title', type: 'heading', props: { content: 'Milkshake & Dessert', level: 'h3', fontSize: '20px', fontWeight: '800', color: '#0f172a', align: 'center', margin: '16px 0 8px 0' } },
+      { id: 'svc19-c2-desc', type: 'text', props: { content: 'Minuman dingin manis lembut pelepas dahaga yang menyegarkan.', fontSize: '14px', color: '#64748b', align: 'center', margin: '0' } },
+    ]},
+    { id: 'svc19-card-3', type: 'card', props: { variant: 'service', background: '#ffffff', borderRadius: '28px', shadow: 'lg', hoverEffect: 'lift', padding: '32px' }, childrenComponents: [
+      { id: 'svc19-c3-icon', type: 'icon', props: { icon: 'FaUtensils', size: '36px', color: '#ec4899', align: 'center' } },
+      { id: 'svc19-c3-title', type: 'heading', props: { content: 'Delivery Cepat', level: 'h3', fontSize: '20px', fontWeight: '800', color: '#0f172a', align: 'center', margin: '16px 0 8px 0' } },
+      { id: 'svc19-c3-desc', type: 'text', props: { content: 'Pesanan diantar kilat dalam 20 menit tetap hangat di meja Anda.', fontSize: '14px', color: '#64748b', align: 'center', margin: '0' } },
+    ]},
+  ],
+  'services-20': [
+    { id: 'svc20-badge', type: 'badge', props: { content: '✦ AETHER FINALE', background: '#1e1b4b', color: '#c4b5fd' } },
+    { id: 'svc20-heading', type: 'heading', props: { content: 'Solusi Unggulan Aether OS', level: 'h2', fontSize: '40px', fontWeight: '900', color: '#ffffff', align: 'center', margin: '0 0 12px 0' } },
+    { id: 'svc20-subtext', type: 'text', props: { content: 'Platform terintegrasi penuh untuk mengelola seluruh aspek operasional bisnis modern', fontSize: '16px', color: '#a5b4fc', align: 'center', margin: '0 0 48px 0' } },
+    { id: 'svc20-card-1', type: 'card', props: { variant: 'service-dark', background: '#1e1b4b', borderRadius: '24px', shadow: '2xl', borderWidth: '1px', borderColor: 'rgba(196,181,253,0.2)', hoverEffect: 'glow', padding: '32px' }, childrenComponents: [
+      { id: 'svc20-c1-icon', type: 'icon', props: { icon: 'FaCogs', size: '36px', color: '#c4b5fd', align: 'center' } },
+      { id: 'svc20-c1-title', type: 'heading', props: { content: 'Automasi Menyeluruh', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#ffffff', align: 'center', margin: '16px 0 8px 0' } },
+      { id: 'svc20-c1-desc', type: 'text', props: { content: 'Otomatisasi alur kerja repetitif dengan engine cerdas berkecepatan tinggi.', fontSize: '14px', color: '#a5b4fc', align: 'center', margin: '0' } },
+    ]},
+    { id: 'svc20-card-2', type: 'card', props: { variant: 'service-dark', background: '#1e1b4b', borderRadius: '24px', shadow: '2xl', borderWidth: '1px', borderColor: 'rgba(196,181,253,0.2)', hoverEffect: 'glow', padding: '32px' }, childrenComponents: [
+      { id: 'svc20-c2-icon', type: 'icon', props: { icon: 'FaShieldAlt', size: '36px', color: '#c4b5fd', align: 'center' } },
+      { id: 'svc20-c2-title', type: 'heading', props: { content: 'Keamanan Tingkat Tinggi', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#ffffff', align: 'center', margin: '16px 0 8px 0' } },
+      { id: 'svc20-c2-desc', type: 'text', props: { content: 'Proteksi data enterprise berlapis dengan pemantauan ancaman 24/7.', fontSize: '14px', color: '#a5b4fc', align: 'center', margin: '0' } },
+    ]},
+    { id: 'svc20-card-3', type: 'card', props: { variant: 'service-dark', background: '#1e1b4b', borderRadius: '24px', shadow: '2xl', borderWidth: '1px', borderColor: 'rgba(196,181,253,0.2)', hoverEffect: 'glow', padding: '32px' }, childrenComponents: [
+      { id: 'svc20-c3-icon', type: 'icon', props: { icon: 'FaChartLine', size: '36px', color: '#c4b5fd', align: 'center' } },
+      { id: 'svc20-c3-title', type: 'heading', props: { content: 'Analitik Prediktif', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#ffffff', align: 'center', margin: '16px 0 8px 0' } },
+      { id: 'svc20-c3-desc', type: 'text', props: { content: 'Wawasan bisnis masa depan berbasis kecerdasan buatan data historis.', fontSize: '14px', color: '#a5b4fc', align: 'center', margin: '0' } },
+    ]},
+  ],
 
   // === GALLERY LAYOUTS ===
   'gallery-01': [
@@ -929,9 +1246,131 @@ export const LAYOUT_DEFAULTS = {
     { id: 'text-1', type: 'text', props: { content: 'To be the leading company in our industry, delivering innovative solutions that transform the way people live and work.', fontSize: '18px', color: '#64748b', align: 'center', lineHeight: '1.8' } },
   ],
   'mission-01': [
-    { id: 'badge-1', type: 'badge', props: { content: 'Our Mission', variant: 'secondary', size: 'medium' } },
-    { id: 'heading-1', type: 'heading', props: { content: 'Our Mission', level: 'h2', fontSize: '36px', fontWeight: '700', color: '#0f172a', align: 'center', margin: '0 0 24px 0' } },
-    { id: 'text-1', type: 'text', props: { content: 'To provide exceptional value to our customers through quality products, dedicated service, and continuous innovation.', fontSize: '18px', color: '#64748b', align: 'center', lineHeight: '1.8' } },
+    { id: 'badge-1', type: 'badge', props: { content: '✦ Our Mission', background: '#eef2ff', color: '#4f46e5' } },
+    { id: 'heading-1', type: 'heading', props: { content: 'Empowering makers to build the future', level: 'h2', fontSize: '44px', fontWeight: '800', color: '#0f172a', align: 'center', margin: '0 0 16px 0' } },
+    { id: 'text-1', type: 'text', props: { content: 'Our mission is to democratize software creation through intuitive tools, unmatched speed, and uncompromising design quality.', fontSize: '18px', color: '#64748b', align: 'center', margin: '0 0 28px 0' } },
+    { id: 'btn-primary', type: 'button', props: { label: 'Explore Our Vision →', href: '#vision', variant: 'primary', size: 'large', radius: 'full', background: '#4f46e5', color: '#ffffff' } },
+  ],
+  'mission-02': [
+    { id: 'badge-2', type: 'badge', props: { content: 'MISSION STATEMENT — 2026', background: '#1c1917', color: '#e7c873' } },
+    { id: 'heading-2', type: 'heading', props: { content: 'To curate perfection without compromise', level: 'h2', fontSize: '48px', fontWeight: '700', color: '#fafaf9', align: 'center', margin: '0 0 18px 0' } },
+    { id: 'text-2', type: 'text', props: { content: 'We exist to elevate everyday experiences through meticulous craftsmanship and timeless design.', fontSize: '18px', color: '#a8a29e', align: 'center', margin: '0 0 30px 0' } },
+    { id: 'btn-gold', type: 'button', props: { label: 'Discover Our Values →', href: '#values', variant: 'primary', size: 'large', radius: 'full', background: '#c9a227', color: '#0c0a09' } },
+  ],
+  'mission-03': [
+    { id: 'badge-3', type: 'badge', props: { content: '🎯 Misi Utama Kami', background: '#fff7ed', color: '#ea580c' } },
+    { id: 'heading-3', type: 'heading', props: { content: 'Menghubungkan setiap sudut nusantara dengan cepat', level: 'h2', fontSize: '42px', fontWeight: '900', color: '#0f172a', align: 'left', margin: '0 0 16px 0' } },
+    { id: 'text-3', type: 'text', props: { content: 'Memastikan efisiensi rantai pasok nasional melalui teknologi canggih, armada handal, dan pelayanan sepenuh hati.', fontSize: '17px', color: '#64748b', align: 'left', margin: '0 0 26px 0' } },
+    { id: 'btn-quote', type: 'button', props: { label: 'Pelajari Layanan →', href: '#services', variant: 'primary', size: 'large', radius: 'lg', background: '#f97316', color: '#ffffff' } },
+    { id: 'img-3', type: 'image', props: { src: '', alt: 'Mission', width: '100%', height: '380px', objectFit: 'cover', borderRadius: '24px' } },
+  ],
+  'mission-04': [
+    { id: 'badge-4', type: 'badge', props: { content: '★ OUR MISSION 2026', background: '#000000', color: '#facc15' } },
+    { id: 'heading-4', type: 'heading', props: { content: 'DESTROYING BORING SOFTWARE', level: 'h2', fontSize: '56px', fontWeight: '900', color: '#000000', align: 'left', margin: '0 0 14px 0' } },
+    { id: 'text-4', type: 'text', props: { content: 'We build brutal, uncompromising digital tools that stand out in a sea of sameness.', fontSize: '18px', color: '#000000', align: 'left', margin: '0 0 26px 0' } },
+    { id: 'btn-hire', type: 'button', props: { label: 'JOIN THE REVOLT ★', href: '#join', variant: 'primary', size: 'large', radius: 'none', background: '#000000', color: '#facc15' } },
+  ],
+  'mission-05': [
+    { id: 'heading-5', type: 'heading', props: { content: 'To restore balance and inner peace', level: 'h2', fontSize: '48px', fontWeight: '400', color: '#1c1917', align: 'center', margin: '0 0 16px 0' } },
+    { id: 'text-5', type: 'text', props: { content: 'Creating intentional sanctuaries where modern minds can pause, breathe, and realign.', fontSize: '17px', color: '#78716c', align: 'center', margin: '0 0 30px 0' } },
+    { id: 'btn-reserve', type: 'button', props: { label: 'Our Philosophy —', href: '#philosophy', variant: 'ghost', size: 'large', background: 'transparent', color: '#1c1917' } },
+  ],
+  'mission-06': [
+    { id: 'badge-6', type: 'badge', props: { content: '✦ INTERSTELLAR MISSION', background: '#1e1b4b', color: '#a5b4fc' } },
+    { id: 'heading-6', type: 'heading', props: { content: 'Mapping the infinite cosmos of play', level: 'h2', fontSize: '50px', fontWeight: '900', color: '#ffffff', align: 'center', margin: '0 0 16px 0' } },
+    { id: 'text-6', type: 'text', props: { content: 'Our mission is to build decentralized universes where every explorer can stake claim to their destiny.', fontSize: '17px', color: '#a5b4fc', align: 'center', margin: '0 0 28px 0' } },
+    { id: 'btn-launch', type: 'button', props: { label: 'Join Mission ✦', href: '#join', variant: 'primary', size: 'large', radius: 'full', background: '#8b5cf6', color: '#ffffff' } },
+  ],
+  'mission-07': [
+    { id: 'heading-7', type: 'heading', props: { content: '$ datasoft --mission', level: 'h2', fontSize: '42px', fontWeight: '800', color: '#e2e8f0', align: 'left', margin: '0 0 14px 0' } },
+    { id: 'text-7', type: 'text', props: { content: 'Empowering developers worldwide with lightning-fast CI/CD pipelines and instant cloud primitives.', fontSize: '16px', color: '#94a3b8', align: 'left', margin: '0 0 24px 0' } },
+    { id: 'btn-deploy', type: 'button', props: { label: '▸ Read Manifest', href: '#manifest', variant: 'primary', size: 'large', radius: 'md', background: '#22c55e', color: '#052e16' } },
+  ],
+  'mission-08': [
+    { id: 'badge-8', type: 'badge', props: { content: '🌸 Our Mission & Promise', background: '#fce7f3', color: '#be185d' } },
+    { id: 'heading-8', type: 'heading', props: { content: 'Crafting moments that blossom for a lifetime', level: 'h2', fontSize: '50px', fontWeight: '700', color: '#831843', align: 'center', margin: '0 0 16px 0' } },
+    { id: 'text-8', type: 'text', props: { content: 'We are dedicated to turning your most cherished milestones into breathtaking floral artistry.', fontSize: '17px', color: '#9d7b8c', align: 'center', margin: '0 0 28px 0' } },
+    { id: 'btn-book', type: 'button', props: { label: 'Our Floral Values ♡', href: '#values', variant: 'primary', size: 'large', radius: 'full', background: '#db2777', color: '#ffffff' } },
+  ],
+  'mission-09': [
+    { id: 'badge-9', type: 'badge', props: { content: '✦ OUR HERITAGE MISSION', background: '#fef3c7', color: '#92400e' } },
+    { id: 'heading-9', type: 'heading', props: { content: 'Preserving the gold standard of craftsmanship', level: 'h2', fontSize: '52px', fontWeight: '700', color: '#451a03', align: 'center', margin: '0 0 16px 0' } },
+    { id: 'text-9', type: 'text', props: { content: 'For nearly four decades, our mission has remained unchanged: uncompromised jewelry passed down through generations.', fontSize: '17px', color: '#92600e', align: 'center', margin: '0 0 28px 0' } },
+    { id: 'btn-visit', type: 'button', props: { label: '✦ Learn Our Story', href: '#story', variant: 'primary', size: 'large', radius: 'full', background: '#b45309', color: '#fffbeb' } },
+  ],
+  'mission-10': [
+    { id: 'badge-10', type: 'badge', props: { content: '🔥 MARKETPLACE MISSION', background: '#fef2f2', color: '#dc2626' } },
+    { id: 'heading-10', type: 'heading', props: { content: 'Empowering millions of local merchants', level: 'h2', fontSize: '48px', fontWeight: '900', color: '#0f172a', align: 'center', margin: '0 0 16px 0' } },
+    { id: 'text-10', type: 'text', props: { content: 'Our mission is to connect buyers and trusted sellers with instant search, secure escrow, and rapid delivery.', fontSize: '17px', color: '#64748b', align: 'center', margin: '0 0 26px 0' } },
+    { id: 'btn-sell', type: 'button', props: { label: 'Join as Merchant →', href: '#merchant', variant: 'primary', size: 'large', radius: 'full', background: '#0f172a', color: '#ffffff' } },
+  ],
+  'mission-11': [
+    { id: 'badge-11', type: 'badge', props: { content: '✦ IRIS MISSION', background: '#ffffff', color: '#7c3aed' } },
+    { id: 'heading-11', type: 'heading', props: { content: 'Accelerating human creativity with AI', level: 'h2', fontSize: '52px', fontWeight: '900', color: '#ffffff', align: 'center', margin: '0 0 16px 0' } },
+    { id: 'text-11', type: 'text', props: { content: 'We build intelligent design systems that bridge the gap between imagination and production.', fontSize: '18px', color: '#ddd6fe', align: 'center', margin: '0 0 28px 0' } },
+    { id: 'btn-try', type: 'button', props: { label: 'Try Iris Free ✦', href: '#try', variant: 'primary', size: 'large', radius: 'full', background: '#ffffff', color: '#6d28d9' } },
+  ],
+  'mission-12': [
+    { id: 'badge-12', type: 'badge', props: { content: '◆ ENTERPRISE MISSION', background: '#0f172a', color: '#67e8f9' } },
+    { id: 'heading-12', type: 'heading', props: { content: 'Unbreakable cloud security for global enterprises', level: 'h2', fontSize: '46px', fontWeight: '900', color: '#ffffff', align: 'left', margin: '0 0 16px 0' } },
+    { id: 'text-12', type: 'text', props: { content: 'Our mission is to safeguard mission-critical infrastructure with zero-trust architecture and 99.99% reliability.', fontSize: '17px', color: '#94a3b8', align: 'left', margin: '0 0 26px 0' } },
+    { id: 'btn-trial', type: 'button', props: { label: 'Enterprise Security →', href: '#security', variant: 'primary', size: 'large', radius: 'lg', background: '#ffffff', color: '#0f172a' } },
+    { id: 'img-12', type: 'image', props: { src: '', alt: 'Enterprise', width: '100%', height: '380px', objectFit: 'cover', borderRadius: '16px' } },
+  ],
+  'mission-13': [
+    { id: 'badge-13', type: 'badge', props: { content: '🍔 OUR YUMMY MISSION', background: '#fce7f3', color: '#db2777' } },
+    { id: 'heading-13', type: 'heading', props: { content: 'Bringing smiles through mouthwatering food', level: 'h2', fontSize: '48px', fontWeight: '900', color: '#0f172a', align: 'left', margin: '0 0 14px 0' } },
+    { id: 'text-13', type: 'text', props: { content: 'We promise fresh ingredients, fast delivery, and burgers that make your day instantly better.', fontSize: '17px', color: '#64748b', align: 'left', margin: '0 0 24px 0' } },
+    { id: 'btn-order', type: 'button', props: { label: 'Order Yum! 🍔', href: '#order', variant: 'primary', size: 'large', radius: 'full', background: '#ec4899', color: '#ffffff' } },
+    { id: 'img-13', type: 'image', props: { src: '', alt: 'Food', width: '100%', height: '380px', objectFit: 'cover', borderRadius: '32px' } },
+  ],
+  'mission-14': [
+    { id: 'badge-14', type: 'badge', props: { content: '✓ Misi Pendidikan Indonesia', background: '#dbeafe', color: '#1e40af' } },
+    { id: 'heading-14', type: 'heading', props: { content: 'Mencerdaskan kehidupan bangsa melalui keunggulan akademik', level: 'h2', fontSize: '42px', fontWeight: '900', color: '#1e3a8a', align: 'left', margin: '0 0 14px 0' } },
+    { id: 'text-14', type: 'text', props: { content: 'Komitmen kami dalam menghasilkan lulusan profesional yang berakhlak mulia dan siap bersaing di kancah global.', fontSize: '17px', color: '#475569', align: 'left', margin: '0 0 24px 0' } },
+    { id: 'btn-daftar', type: 'button', props: { label: 'Pelajari Program →', href: '#programs', variant: 'primary', size: 'large', radius: 'md', background: '#1e40af', color: '#ffffff' } },
+    { id: 'img-14', type: 'image', props: { src: '', alt: 'Campus', width: '100%', height: '380px', objectFit: 'cover', borderRadius: '20px' } },
+  ],
+  'mission-15': [
+    { id: 'badge-15', type: 'badge', props: { content: 'EDITORIAL MISSION — 2026', background: '#1c1917', color: '#fafaf9' } },
+    { id: 'heading-15', type: 'heading', props: { content: 'Chasing the stories that others overlook', level: 'h2', fontSize: '48px', fontWeight: '700', color: '#1c1917', align: 'left', margin: '0 0 16px 0' } },
+    { id: 'text-15', type: 'text', props: { content: 'Our editorial mission is rooted in fearless investigative journalism and profound cultural critique.', fontSize: '17px', color: '#57534e', align: 'left', margin: '0 0 24px 0' } },
+    { id: 'btn-read', type: 'button', props: { label: 'Read Our Manifesto →', href: '#manifesto', variant: 'primary', size: 'large', radius: 'none', background: '#1c1917', color: '#fafaf9' } },
+    { id: 'img-15', type: 'image', props: { src: '', alt: 'Editorial', width: '100%', height: '400px', objectFit: 'cover', borderRadius: '0' } },
+  ],
+  'mission-16': [
+    { id: 'badge-16', type: 'badge', props: { content: '🌿 SUSTAINABILITY MISSION', background: '#dcfce7', color: '#15803d' } },
+    { id: 'heading-16', type: 'heading', props: { content: 'Pure botanicals for a regenerative future', level: 'h2', fontSize: '46px', fontWeight: '900', color: '#052e16', align: 'left', margin: '0 0 14px 0' } },
+    { id: 'text-16', type: 'text', props: { content: 'We formulate 100% natural skin rituals that respect both your skin and the planetary ecosystem.', fontSize: '17px', color: '#4d7c0f', align: 'left', margin: '0 0 24px 0' } },
+    { id: 'btn-shop', type: 'button', props: { label: 'Explore Our Standards →', href: '#standards', variant: 'primary', size: 'large', radius: 'full', background: '#16a34a', color: '#ffffff' } },
+    { id: 'img-16', type: 'image', props: { src: '', alt: 'Eco', width: '100%', height: '380px', objectFit: 'cover', borderRadius: '24px' } },
+  ],
+  'mission-17': [
+    { id: 'badge-17', type: 'badge', props: { content: '🏁 VELOCE MISSION', background: '#fef2f2', color: '#dc2626' } },
+    { id: 'heading-17', type: 'heading', props: { content: 'Redefining the limits of automotive engineering', level: 'h2', fontSize: '54px', fontWeight: '900', color: '#ffffff', align: 'left', margin: '0 0 14px 0' } },
+    { id: 'text-17', type: 'text', props: { content: 'Every vehicle we build is engineered to push performance boundaries while keeping drivers connected to the road.', fontSize: '18px', color: '#fecaca', align: 'left', margin: '0 0 26px 0' } },
+    { id: 'btn-test', type: 'button', props: { label: 'Explore GT Series →', href: '#gt', variant: 'primary', size: 'large', radius: 'md', background: '#ef4444', color: '#ffffff' } },
+    { id: 'img-17', type: 'image', props: { src: '', alt: 'Sport', width: '100%', height: '400px', objectFit: 'cover', borderRadius: '16px' } },
+  ],
+  'mission-18': [
+    { id: 'badge-18', type: 'badge', props: { content: '✦ FINTECH MISSION', background: '#fff7ed', color: '#ea580c' } },
+    { id: 'heading-18', type: 'heading', props: { content: 'Democratizing financial freedom for everyone', level: 'h2', fontSize: '48px', fontWeight: '900', color: '#0f172a', align: 'left', margin: '0 0 14px 0' } },
+    { id: 'text-18', type: 'text', props: { content: 'Our mission is to simplify money management so you can spend less time worrying and more time living.', fontSize: '17px', color: '#64748b', align: 'left', margin: '0 0 24px 0' } },
+    { id: 'btn-ios', type: 'button', props: { label: 'Download App →', href: '#download', variant: 'primary', size: 'large', radius: 'lg', background: '#0f172a', color: '#ffffff' } },
+    { id: 'img-18', type: 'image', props: { src: '', alt: 'App', width: '260px', height: '480px', objectFit: 'cover', borderRadius: '32px' } },
+  ],
+  'mission-19': [
+    { id: 'badge-19', type: 'badge', props: { content: '✦ AGENCY MISSION', background: '#ecfdf5', color: '#059669' } },
+    { id: 'heading-19', type: 'heading', props: { content: 'Crafting unforgettable brand narratives', level: 'h2', fontSize: '50px', fontWeight: '900', color: '#0f172a', align: 'left', margin: '0 0 14px 0' } },
+    { id: 'text-19', type: 'text', props: { content: 'We believe every brand has a unique soul. Our mission is to translate that soul into world-class digital experiences.', fontSize: '17px', color: '#64748b', align: 'left', margin: '0 0 24px 0' } },
+    { id: 'btn-work', type: 'button', props: { label: 'Explore Our Process →', href: '#process', variant: 'primary', size: 'large', radius: 'full', background: '#0f172a', color: '#ffffff' } },
+    { id: 'img-19', type: 'image', props: { src: '', alt: 'Agency', width: '100%', height: '360px', objectFit: 'cover', borderRadius: '20px' } },
+  ],
+  'mission-20': [
+    { id: 'badge-20', type: 'badge', props: { content: '✦ AETHER MISSION 2026', background: '#1e1b4b', color: '#c4b5fd' } },
+    { id: 'heading-20', type: 'heading', props: { content: 'Empowering ambitious teams to scale infinitely', level: 'h2', fontSize: '60px', fontWeight: '900', color: '#ffffff', align: 'center', margin: '0 0 16px 0' } },
+    { id: 'text-20', type: 'text', props: { content: 'Our ultimate mission is to build the unified operating system for high-velocity organizations worldwide.', fontSize: '18px', color: '#a5b4fc', align: 'center', margin: '0 0 28px 0' } },
+    { id: 'btn-trial', type: 'button', props: { label: 'Join Our Journey ✦', href: '#join', variant: 'primary', size: 'large', radius: 'full', background: '#6366f1', color: '#ffffff' } },
   ],
   'timeline-01': [
     { id: 'tml1-badge', type: 'badge', props: { content: 'PERJALANAN KAMI', background: '#ede9fe', color: '#4f46e5', borderRadius: '999px', padding: '6px 16px', fontSize: '13px', fontWeight: '600', align: 'center', margin: '0 0 12px 0' } },
@@ -1175,9 +1614,306 @@ export const LAYOUT_DEFAULTS = {
     { id: 'cov02-heading', type: 'heading', props: { content: 'Jangkauan Distribusi Nasional', level: 'h2', fontSize: '36px', color: '#ffffff' } },
     { id: 'cov02-desc', type: 'text', props: { content: 'Menghubungkan bisnis Anda ke seluruh wilayah di Indonesia.', fontSize: '16px', color: '#94a3b8' } }
   ],
-  'timeline-02': [
-    { id: 'tm02-heading', type: 'heading', props: { content: 'Proses Pengiriman Cargo', level: 'h2', fontSize: '36px', color: '#ffffff' } },
-    { id: 'tm02-desc', type: 'text', props: { content: 'Alur kerja profesional dari pengambilan barang hingga tiba di tujuan.', fontSize: '16px', color: '#94a3b8' } }
+  // === VISION LAYOUTS ===
+  'vision-01': [
+    { id: 'v1-badge', type: 'badge', props: { content: '01 LUMIÈRE — VISSION', background: '#eef2ff', color: '#4f46e5' } },
+    { id: 'v1-heading', type: 'heading', props: { content: 'Membentuk Masa Depan Digital Berkelanjutan', level: 'h2', fontSize: '38px', fontWeight: '800', color: '#0f172a', align: 'center', margin: '0 0 16px 0' } },
+    { id: 'v1-text', type: 'text', props: { content: 'Menjadi pionir terdepan dalam ekosistem teknologi digital yang mengintegrasikan inovasi tanpa batas dengan standar integritas tertinggi.', fontSize: '16px', color: '#64748b', align: 'center', margin: '0 0 32px 0' } },
+    { id: 'v1-card-1', type: 'card', props: { variant: 'service', background: '#ffffff', borderRadius: '20px', shadow: 'md', padding: '24px' }, childrenComponents: [
+      { id: 'v1-c1-icon', type: 'icon', props: { icon: 'FaLightbulb', size: '32px', color: '#4f46e5', align: 'left' } },
+      { id: 'v1-c1-title', type: 'heading', props: { content: 'Inovasi Tanpa Henti', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#0f172a', margin: '12px 0 6px 0' } },
+      { id: 'v1-c1-desc', type: 'text', props: { content: 'Selalu menghadirkan solusi terdepan yang mendahului kebutuhan zaman.', fontSize: '14px', color: '#64748b', margin: '0' } },
+    ]},
+    { id: 'v1-card-2', type: 'card', props: { variant: 'service', background: '#ffffff', borderRadius: '20px', shadow: 'md', padding: '24px' }, childrenComponents: [
+      { id: 'v1-c2-icon', type: 'icon', props: { icon: 'FaGlobe', size: '32px', color: '#4f46e5', align: 'left' } },
+      { id: 'v1-c2-title', type: 'heading', props: { content: 'Jangkauan Global', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#0f172a', margin: '12px 0 6px 0' } },
+      { id: 'v1-c2-desc', type: 'text', props: { content: 'Menghubungkan bisnis lokal ke kancah internasional dengan mulus.', fontSize: '14px', color: '#64748b', margin: '0' } },
+    ]},
+  ],
+  'vision-02': [
+    { id: 'v2-badge', type: 'badge', props: { content: '02 NOIR — LUXURY VISION', background: '#1c1917', color: '#c9a227' } },
+    { id: 'v2-heading', type: 'heading', props: { content: 'Visi Eksklusif Menuju Kesempurnaan', level: 'h2', fontSize: '40px', fontWeight: '700', color: '#fafaf9', align: 'center', margin: '0 0 16px 0' } },
+    { id: 'v2-text', type: 'text', props: { content: 'Mendefinisikan ulang standar kemewahan dan keanggunan dalam setiap layanan premium yang kami persembahkan.', fontSize: '16px', color: '#a8a29e', align: 'center', margin: '0 0 36px 0' } },
+    { id: 'v2-card-1', type: 'card', props: { variant: 'service-dark', background: '#1c1917', borderRadius: '16px', borderWidth: '1px', borderColor: 'rgba(201,162,39,0.3)', padding: '28px' }, childrenComponents: [
+      { id: 'v2-c1-icon', type: 'icon', props: { icon: 'FaGem', size: '32px', color: '#c9a227', align: 'center' } },
+      { id: 'v2-c1-title', type: 'heading', props: { content: 'Kualitas Tanpa Kompromi', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#fafaf9', align: 'center', margin: '14px 0 6px 0' } },
+      { id: 'v2-c1-desc', type: 'text', props: { content: 'Setiap detail dirancang dengan presisi dan cita rasa seni tinggi.', fontSize: '14px', color: '#a8a29e', align: 'center', margin: '0' } },
+    ]},
+    { id: 'v2-card-2', type: 'card', props: { variant: 'service-dark', background: '#1c1917', borderRadius: '16px', borderWidth: '1px', borderColor: 'rgba(201,162,39,0.3)', padding: '28px' }, childrenComponents: [
+      { id: 'v2-c2-icon', type: 'icon', props: { icon: 'FaCrown', size: '32px', color: '#c9a227', align: 'center' } },
+      { id: 'v2-c2-title', type: 'heading', props: { content: 'Warisan Keunggulan', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#fafaf9', align: 'center', margin: '14px 0 6px 0' } },
+      { id: 'v2-c2-desc', type: 'text', props: { content: 'Menjaga tradisi prestisius lintas generasi dengan sentuhan modern.', fontSize: '14px', color: '#a8a29e', align: 'center', margin: '0' } },
+    ]},
+  ],
+  'vision-03': [
+    { id: 'v3-badge', type: 'badge', props: { content: '03 AURORA — GRADIENT BENTO', background: '#eef2ff', color: '#6366f1' } },
+    { id: 'v3-heading', type: 'heading', props: { content: 'Misi & Visi Aurora Cloud', level: 'h2', fontSize: '42px', fontWeight: '800', color: '#0f172a', align: 'center', margin: '0 0 14px 0' } },
+    { id: 'v3-text', type: 'text', props: { content: 'Membangun infrastruktur awan masa depan yang cepat, aman, dan mudah diakses oleh seluruh developer dunia.', fontSize: '16px', color: '#64748b', align: 'center', margin: '0 0 36px 0' } },
+    { id: 'v3-card-1', type: 'card', props: { variant: 'service', background: 'linear-gradient(135deg, #eef2ff 0%, #fae8ff 100%)', borderRadius: '24px', padding: '32px' }, childrenComponents: [
+      { id: 'v3-c1-icon', type: 'icon', props: { icon: 'FaRocket', size: '36px', color: '#6366f1', align: 'left' } },
+      { id: 'v3-c1-title', type: 'heading', props: { content: 'Kecepatan Ekstrem', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#0f172a', margin: '14px 0 8px 0' } },
+      { id: 'v3-c1-desc', type: 'text', props: { content: 'Performa tinggi tanpa kompromi untuk aplikasi skala enterprise.', fontSize: '14px', color: '#475569', margin: '0' } },
+    ]},
+    { id: 'v3-card-2', type: 'card', props: { variant: 'service', background: 'linear-gradient(135deg, #ecfdf5 0%, #eef2ff 100%)', borderRadius: '24px', padding: '32px' }, childrenComponents: [
+      { id: 'v3-c2-icon', type: 'icon', props: { icon: 'FaShieldAlt', size: '36px', color: '#059669', align: 'left' } },
+      { id: 'v3-c2-title', type: 'heading', props: { content: 'Keamanan Mutlak', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#0f172a', margin: '14px 0 8px 0' } },
+      { id: 'v3-c2-desc', type: 'text', props: { content: 'Enkripsi end-to-end dan kepatuhan standar global.', fontSize: '14px', color: '#475569', margin: '0' } },
+    ]},
+  ],
+  'vision-04': [
+    { id: 'v4-badge', type: 'badge', props: { content: '04 EMERALD — ECO VISION', background: '#dcfce7', color: '#15803d' } },
+    { id: 'v4-heading', type: 'heading', props: { content: 'Visi Lingkungan & Keberlanjutan Hijau', level: 'h2', fontSize: '40px', fontWeight: '800', color: '#052e16', align: 'center', margin: '0 0 16px 0' } },
+    { id: 'v4-text', type: 'text', props: { content: 'Mewujudkan industri yang selaras dengan kelestarian alam melalui energi terbarukan dan rantai pasok ramah lingkungan.', fontSize: '16px', color: '#166534', align: 'center', margin: '0 0 36px 0' } },
+    { id: 'v4-card-1', type: 'card', props: { variant: 'service', background: '#f0fdf4', borderRadius: '20px', borderWidth: '1px', borderColor: '#bbf7d0', padding: '28px' }, childrenComponents: [
+      { id: 'v4-c1-icon', type: 'icon', props: { icon: 'FaLeaf', size: '32px', color: '#16a34a', align: 'left' } },
+      { id: 'v4-c1-title', type: 'heading', props: { content: '100% Zero Emission', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#052e16', margin: '12px 0 6px 0' } },
+      { id: 'v4-c1-desc', type: 'text', props: { content: 'Komitmen penuh menekan jejak karbon di seluruh lini operasional.', fontSize: '14px', color: '#166534', margin: '0' } },
+    ]},
+    { id: 'v4-card-2', type: 'card', props: { variant: 'service', background: '#f0fdf4', borderRadius: '20px', borderWidth: '1px', borderColor: '#bbf7d0', padding: '28px' }, childrenComponents: [
+      { id: 'v4-c2-icon', type: 'icon', props: { icon: 'FaTree', size: '32px', color: '#16a34a', align: 'left' } },
+      { id: 'v4-c2-title', type: 'heading', props: { content: 'Reboisasi Berkelanjutan', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#052e16', margin: '12px 0 6px 0' } },
+      { id: 'v4-c2-desc', type: 'text', props: { content: 'Setiap produk yang terjual berkontribusi langsung pada penanaman pohon.', fontSize: '14px', color: '#166534', margin: '0' } },
+    ]},
+  ],
+  'vision-05': [
+    { id: 'v5-badge', type: 'badge', props: { content: '05 VELOCE — SPEED & PERFORMANCE', background: '#fef2f2', color: '#ef4444' } },
+    { id: 'v5-heading', type: 'heading', props: { content: 'Visi Akselerasi & Performa Maksimal', level: 'h2', fontSize: '42px', fontWeight: '900', color: '#ffffff', align: 'center', margin: '0 0 16px 0' } },
+    { id: 'v5-text', type: 'text', props: { content: 'Mendorong batas kecepatan dan inovasi teknik otomotif untuk menghadirkan pengalaman berkendara paling mendebarkan.', fontSize: '16px', color: '#fca5a5', align: 'center', margin: '0 0 36px 0' } },
+    { id: 'v5-card-1', type: 'card', props: { variant: 'service-dark', background: '#111827', borderRadius: '16px', borderWidth: '1px', borderColor: '#374151', padding: '28px' }, childrenComponents: [
+      { id: 'v5-c1-icon', type: 'icon', props: { icon: 'FaBolt', size: '32px', color: '#ef4444', align: 'left' } },
+      { id: 'v5-c1-title', type: 'heading', props: { content: 'Responsif & Kilat', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#ffffff', margin: '12px 0 6px 0' } },
+      { id: 'v5-c1-desc', type: 'text', props: { content: 'Akselerasi instan tanpa jeda merespons setiap detik.', fontSize: '14px', color: '#9ca3af', margin: '0' } },
+    ]},
+    { id: 'v5-card-2', type: 'card', props: { variant: 'service-dark', background: '#111827', borderRadius: '16px', borderWidth: '1px', borderColor: '#374151', padding: '28px' }, childrenComponents: [
+      { id: 'v5-c2-icon', type: 'icon', props: { icon: 'FaTachometerAlt', size: '32px', color: '#ef4444', align: 'left' } },
+      { id: 'v5-c2-title', type: 'heading', props: { content: 'Aerodinamika Sempurna', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#ffffff', margin: '12px 0 6px 0' } },
+      { id: 'v5-c2-desc', type: 'text', props: { content: 'Desain bodi teruji angin untuk stabilitas maksimal di kecepatan tinggi.', fontSize: '14px', color: '#9ca3af', margin: '0' } },
+    ]},
+  ],
+  'vision-06': [
+    { id: 'v6-badge', type: 'badge', props: { content: '🌸 06 SAKURA — FLORAL VISION', background: '#fce7f3', color: '#be185d' } },
+    { id: 'v6-heading', type: 'heading', props: { content: 'Visi Keindahan & Kehangatan Personal', level: 'h2', fontSize: '40px', fontWeight: '700', color: '#831843', align: 'center', margin: '0 0 16px 0' } },
+    { id: 'v6-text', type: 'text', props: { content: 'Menyebarkan keindahan dan kebahagiaan melalui setiap detail acara spesial yang dirancang penuh cinta.', fontSize: '16px', color: '#9d7b8c', align: 'center', margin: '0 0 36px 0' } },
+    { id: 'v6-card-1', type: 'card', props: { variant: 'service', background: '#fff1f2', borderRadius: '32px 8px 32px 8px', padding: '28px' }, childrenComponents: [
+      { id: 'v6-c1-icon', type: 'icon', props: { icon: 'FaHeart', size: '32px', color: '#db2777', align: 'center' } },
+      { id: 'v6-c1-title', type: 'heading', props: { content: 'Sentuhan Penuh Cinta', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#831843', align: 'center', margin: '14px 0 6px 0' } },
+      { id: 'v6-c1-desc', type: 'text', props: { content: 'Perhatian istimewa pada setiap tangkai bunga dan dekorasi.', fontSize: '14px', color: '#9d7b8c', align: 'center', margin: '0' } },
+    ]},
+    { id: 'v6-card-2', type: 'card', props: { variant: 'service', background: '#fff1f2', borderRadius: '8px 32px 8px 32px', padding: '28px' }, childrenComponents: [
+      { id: 'v6-c2-icon', type: 'icon', props: { icon: 'FaSmile', size: '32px', color: '#db2777', align: 'center' } },
+      { id: 'v6-c2-title', type: 'heading', props: { content: 'Kebahagiaan Abadi', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#831843', align: 'center', margin: '14px 0 6px 0' } },
+      { id: 'v6-c2-desc', type: 'text', props: { content: 'Menciptakan momen tak terlupakan yang dikenang sepanjang masa.', fontSize: '14px', color: '#9d7b8c', align: 'center', margin: '0' } },
+    ]},
+  ],
+  'vision-07': [
+    { id: 'v7-badge', type: 'badge', props: { content: '07 OBSIDIAN — ENTERPRISE VISION', background: '#0f172a', color: '#38bdf8' } },
+    { id: 'v7-heading', type: 'heading', props: { content: 'Visi Infrastruktur Skala Enterprise', level: 'h2', fontSize: '42px', fontWeight: '900', color: '#ffffff', align: 'center', margin: '0 0 16px 0' } },
+    { id: 'v7-text', type: 'text', props: { content: 'Menjadi tulang punggung digital bagi institusi finansial dan pemerintahan dengan keandalan 99.99%.', fontSize: '16px', color: '#94a3b8', align: 'center', margin: '0 0 36px 0' } },
+    { id: 'v7-card-1', type: 'card', props: { variant: 'service-dark', background: '#1e293b', borderRadius: '16px', borderWidth: '1px', borderColor: '#334155', padding: '28px' }, childrenComponents: [
+      { id: 'v7-c1-icon', type: 'icon', props: { icon: 'FaServer', size: '32px', color: '#38bdf8', align: 'left' } },
+      { id: 'v7-c1-title', type: 'heading', props: { content: 'Skalabilitas Tak Terbatas', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#ffffff', margin: '12px 0 6px 0' } },
+      { id: 'v7-c1-desc', type: 'text', props: { content: 'Arsitektur terdistribusi global yang menangani miliaran transaksi.', fontSize: '14px', color: '#94a3b8', margin: '0' } },
+    ]},
+    { id: 'v7-card-2', type: 'card', props: { variant: 'service-dark', background: '#1e293b', borderRadius: '16px', borderWidth: '1px', borderColor: '#334155', padding: '28px' }, childrenComponents: [
+      { id: 'v7-c2-icon', type: 'icon', props: { icon: 'FaLock', size: '32px', color: '#38bdf8', align: 'left' } },
+      { id: 'v7-c2-title', type: 'heading', props: { content: 'Kepatuhan & Sertifikasi', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#ffffff', margin: '12px 0 6px 0' } },
+      { id: 'v7-c2-desc', type: 'text', props: { content: 'Standar keamanan SOC2 dan ISO tertinggi di industri.', fontSize: '14px', color: '#94a3b8', margin: '0' } },
+    ]},
+  ],
+  'vision-08': [
+    { id: 'v8-badge', type: 'badge', props: { content: '★ 08 PAPERCUT — BRUTALIST VISION', background: '#000000', color: '#facc15' } },
+    { id: 'v8-heading', type: 'heading', props: { content: 'VISI Kami: Lawan Kebosanan', level: 'h2', fontSize: '44px', fontWeight: '900', color: '#000000', align: 'left', margin: '0 0 16px 0' } },
+    { id: 'v8-text', type: 'text', props: { content: 'Menghancurkan batasan desain web generik dengan karya digital yang berani, lantang, dan autentik.', fontSize: '16px', color: '#000000', align: 'left', margin: '0 0 36px 0' } },
+    { id: 'v8-card-1', type: 'card', props: { variant: 'service', background: '#facc15', borderRadius: '0px', borderWidth: '3px', borderColor: '#000000', shadow: 'none', padding: '28px' }, childrenComponents: [
+      { id: 'v8-c1-icon', type: 'icon', props: { icon: 'FaBolt', size: '32px', color: '#000000', align: 'left' } },
+      { id: 'v8-c1-title', type: 'heading', props: { content: 'TIDAK ADA ATURAN', level: 'h3', fontSize: '20px', fontWeight: '900', color: '#000000', margin: '12px 0 6px 0' } },
+      { id: 'v8-c1-desc', type: 'text', props: { content: 'Eksperimen radikal yang menembus batas estetika digital.', fontSize: '14px', color: '#000000', margin: '0' } },
+    ]},
+    { id: 'v8-card-2', type: 'card', props: { variant: 'service', background: '#ffffff', borderRadius: '0px', borderWidth: '3px', borderColor: '#000000', shadow: 'none', padding: '28px' }, childrenComponents: [
+      { id: 'v8-c2-icon', type: 'icon', props: { icon: 'FaBullhorn', size: '32px', color: '#000000', align: 'left' } },
+      { id: 'v8-c2-title', type: 'heading', props: { content: 'SUARA NYARING', level: 'h3', fontSize: '20px', fontWeight: '900', color: '#000000', margin: '12px 0 6px 0' } },
+      { id: 'v8-c2-desc', type: 'text', props: { content: 'Pesan brand Anda disampaikan tanpa filter dan basa-basi.', fontSize: '14px', color: '#000000', margin: '0' } },
+    ]},
+  ],
+  'vision-09': [
+    { id: 'v9-badge', type: 'badge', props: { content: '09 SERENITY — ZEN VISION', background: '#f5f5f4', color: '#78716c' } },
+    { id: 'v9-heading', type: 'heading', props: { content: 'Visi Ketenangan & Keseimbangan', level: 'h2', fontSize: '42px', fontWeight: '400', color: '#1c1917', align: 'center', margin: '0 0 16px 0' } },
+    { id: 'v9-text', type: 'text', props: { content: 'Menciptakan ruang retret dan pengalaman digital yang menghadirkan ketenangan jiwa serta kesadaran penuh.', fontSize: '16px', color: '#78716c', align: 'center', margin: '0 0 36px 0' } },
+    { id: 'v9-card-1', type: 'card', props: { variant: 'service', background: '#fafaf9', borderRadius: '24px', padding: '32px' }, childrenComponents: [
+      { id: 'v9-c1-icon', type: 'icon', props: { icon: 'FaSpa', size: '32px', color: '#78716c', align: 'center' } },
+      { id: 'v9-c1-title', type: 'heading', props: { content: 'Ruang Refleksi', level: 'h3', fontSize: '18px', fontWeight: '500', color: '#1c1917', align: 'center', margin: '14px 0 6px 0' } },
+      { id: 'v9-c1-desc', type: 'text', props: { content: 'Menemukan kembali kedamaian batin di tengah kesibukan dunia.', fontSize: '14px', color: '#78716c', align: 'center', margin: '0' } },
+    ]},
+    { id: 'v9-card-2', type: 'card', props: { variant: 'service', background: '#fafaf9', borderRadius: '24px', padding: '32px' }, childrenComponents: [
+      { id: 'v9-c2-icon', type: 'icon', props: { icon: 'FaLeaf', size: '32px', color: '#78716c', align: 'center' } },
+      { id: 'v9-c2-title', type: 'heading', props: { content: 'Keselarasan Alam', level: 'h3', fontSize: '18px', fontWeight: '500', color: '#1c1917', align: 'center', margin: '14px 0 6px 0' } },
+      { id: 'v9-c2-desc', type: 'text', props: { content: 'Hidup berdampingan secara harmonis dengan alam sekitar.', fontSize: '14px', color: '#78716c', align: 'center', margin: '0' } },
+    ]},
+  ],
+  'vision-10': [
+    { id: 'v10-badge', type: 'badge', props: { content: '● 10 NEBULA — COSMIC VISION', background: '#1e1b4b', color: '#c4b5fd' } },
+    { id: 'v10-heading', type: 'heading', props: { content: 'Visi Eksplorasi Antariksa Digital', level: 'h2', fontSize: '42px', fontWeight: '900', color: '#ffffff', align: 'center', margin: '0 0 16px 0' } },
+    { id: 'v10-text', type: 'text', props: { content: 'Membawa komunitas penjelajah lintas galaksi digital menuju peradaban web3 yang terdesentralisasi dan imersif.', fontSize: '16px', color: '#a5b4fc', align: 'center', margin: '0 0 36px 0' } },
+    { id: 'v10-card-1', type: 'card', props: { variant: 'service-dark', background: '#312e81', borderRadius: '24px', borderWidth: '1px', borderColor: 'rgba(196,181,253,0.3)', padding: '28px' }, childrenComponents: [
+      { id: 'v10-c1-icon', type: 'icon', props: { icon: 'FaGlobeAmericas', size: '32px', color: '#c4b5fd', align: 'left' } },
+      { id: 'v10-c1-title', type: 'heading', props: { content: 'Galaksi Komunitas', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#ffffff', margin: '12px 0 6px 0' } },
+      { id: 'v10-c1-desc', type: 'text', props: { content: 'Menghubungkan ratusan ribu kreator dalam satu ekosistem kosmik.', fontSize: '14px', color: '#c4b5fd', margin: '0' } },
+    ]},
+    { id: 'v10-card-2', type: 'card', props: { variant: 'service-dark', background: '#312e81', borderRadius: '24px', borderWidth: '1px', borderColor: 'rgba(196,181,253,0.3)', padding: '28px' }, childrenComponents: [
+      { id: 'v10-c2-icon', type: 'icon', props: { icon: 'FaStar', size: '32px', color: '#c4b5fd', align: 'left' } },
+      { id: 'v10-c2-title', type: 'heading', props: { content: 'Misi & Imbalan', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#ffffff', margin: '12px 0 6px 0' } },
+      { id: 'v10-c2-desc', type: 'text', props: { content: 'Sistem penghargaan berbasis pencapaian untuk setiap kontributor aktif.', fontSize: '14px', color: '#c4b5fd', margin: '0' } },
+    ]},
+  ],
+  'vision-11': [
+    { id: 'v11-badge', type: 'badge', props: { content: '11 MONOCLE — EDITORIAL VISION', background: '#1c1917', color: '#fafaf9' } },
+    { id: 'v11-heading', type: 'heading', props: { content: 'Visi Jurnalisme & Wawasan Global', level: 'h2', fontSize: '44px', fontWeight: '700', color: '#1c1917', align: 'left', margin: '0 0 16px 0' } },
+    { id: 'v11-text', type: 'text', props: { content: 'Menyajikan liputan mendalam dan sudut pandang independen mengenai budaya, bisnis, dan desain di seluruh dunia.', fontSize: '17px', color: '#57534e', align: 'left', margin: '0 0 36px 0' } },
+    { id: 'v11-card-1', type: 'card', props: { variant: 'service', background: '#f5f5f4', borderRadius: '0px', padding: '32px' }, childrenComponents: [
+      { id: 'v11-c1-icon', type: 'icon', props: { icon: 'FaNewspaper', size: '32px', color: '#1c1917', align: 'left' } },
+      { id: 'v11-c1-title', type: 'heading', props: { content: 'Laporan Independen', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#1c1917', margin: '14px 0 6px 0' } },
+      { id: 'v11-c1-desc', type: 'text', props: { content: 'Investigasi mendalam tanpa bias kepentingan komersial.', fontSize: '14px', color: '#57534e', margin: '0' } },
+    ]},
+    { id: 'v11-card-2', type: 'card', props: { variant: 'service', background: '#f5f5f4', borderRadius: '0px', padding: '32px' }, childrenComponents: [
+      { id: 'v11-c2-icon', type: 'icon', props: { icon: 'FaGlobe', size: '32px', color: '#1c1917', align: 'left' } },
+      { id: 'v11-c2-title', type: 'heading', props: { content: 'Perspektif Global', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#1c1917', margin: '14px 0 6px 0' } },
+      { id: 'v11-c2-desc', type: 'text', props: { content: 'Membawa pembaca menelusuri inovasi kota-kota besar dunia.', fontSize: '14px', color: '#57534e', margin: '0' } },
+    ]},
+  ],
+  'vision-12': [
+    { id: 'v12-badge', type: 'badge', props: { content: '12 TERMINAL — DEV VISION', background: '#052e16', color: '#4ade80' } },
+    { id: 'v12-heading', type: 'heading', props: { content: 'Visi Pengembang & Otomasi CLI', level: 'h2', fontSize: '40px', fontWeight: '800', color: '#e2e8f0', align: 'left', margin: '0 0 16px 0' } },
+    { id: 'v12-text', type: 'text', props: { content: 'Memberdayakan insinyur perangkat lunak dengan perkakas baris perintah tercepat dan alur kerja deployment mulus.', fontSize: '16px', color: '#94a3b8', align: 'left', margin: '0 0 36px 0' } },
+    { id: 'v12-card-1', type: 'card', props: { variant: 'service-dark', background: '#0f172a', borderRadius: '12px', borderWidth: '1px', borderColor: '#1e293b', padding: '28px' }, childrenComponents: [
+      { id: 'v12-c1-icon', type: 'icon', props: { icon: 'FaTerminal', size: '32px', color: '#4ade80', align: 'left' } },
+      { id: 'v12-c1-title', type: 'heading', props: { content: '$ datasoft deploy', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#e2e8f0', margin: '12px 0 6px 0' } },
+      { id: 'v12-c1-desc', type: 'text', props: { content: 'Deployment instan ke edge network hanya dengan satu perintah.', fontSize: '14px', color: '#94a3b8', margin: '0' } },
+    ]},
+    { id: 'v12-card-2', type: 'card', props: { variant: 'service-dark', background: '#0f172a', borderRadius: '12px', borderWidth: '1px', borderColor: '#1e293b', padding: '28px' }, childrenComponents: [
+      { id: 'v12-c2-icon', type: 'icon', props: { icon: 'FaCode', size: '32px', color: '#4ade80', align: 'left' } },
+      { id: 'v12-c2-title', type: 'heading', props: { content: 'Open Source First', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#e2e8f0', margin: '12px 0 6px 0' } },
+      { id: 'v12-c2-desc', type: 'text', props: { content: 'Didukung penuh oleh komunitas dan transparansi kode sumber.', fontSize: '14px', color: '#94a3b8', margin: '0' } },
+    ]},
+  ],
+  'vision-13': [
+    { id: 'v13-badge', type: 'badge', props: { content: '13 SOLSTICE — APP VISION', background: '#ffedd5', color: '#f97316' } },
+    { id: 'v13-heading', type: 'heading', props: { content: 'Visi Kemudahan Akses Aplikasi Mobile', level: 'h2', fontSize: '40px', fontWeight: '800', color: '#0f172a', align: 'center', margin: '0 0 16px 0' } },
+    { id: 'v13-text', type: 'text', props: { content: 'Menghubungkan pengguna dengan layanan digital dalam genggaman tangan melalui antarmuka super intuitif.', fontSize: '16px', color: '#64748b', align: 'center', margin: '0 0 36px 0' } },
+    { id: 'v13-card-1', type: 'card', props: { variant: 'service', background: '#fff7ed', borderRadius: '24px', padding: '28px' }, childrenComponents: [
+      { id: 'v13-c1-icon', type: 'icon', props: { icon: 'FaMobileAlt', size: '32px', color: '#f97316', align: 'center' } },
+      { id: 'v13-c1-title', type: 'heading', props: { content: 'Mobile First Experience', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#0f172a', align: 'center', margin: '14px 0 6px 0' } },
+      { id: 'v13-c1-desc', type: 'text', props: { content: 'Dioptimalkan khusus untuk kenyamanan navigasi perangkat seluler.', fontSize: '14px', color: '#64748b', align: 'center', margin: '0' } },
+    ]},
+    { id: 'v13-card-2', type: 'card', props: { variant: 'service', background: '#fff7ed', borderRadius: '24px', padding: '28px' }, childrenComponents: [
+      { id: 'v13-c2-icon', type: 'icon', props: { icon: 'FaBolt', size: '32px', color: '#f97316', align: 'center' } },
+      { id: 'v13-c2-title', type: 'heading', props: { content: 'Aksi Instan', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#0f172a', align: 'center', margin: '14px 0 6px 0' } },
+      { id: 'v13-c2-desc', type: 'text', props: { content: 'Pesan, lacak, dan selesaikan transaksi hanya dalam tiga ketukan.', fontSize: '14px', color: '#64748b', align: 'center', margin: '0' } },
+    ]},
+  ],
+  'vision-14': [
+    { id: 'v14-badge', type: 'badge', props: { content: '14 MAISON DOUBLE — INSTITUTIONAL VISION', background: '#dbeafe', color: '#1e40af' } },
+    { id: 'v14-heading', type: 'heading', props: { content: 'Visi Pendidikan & Pengabdian Masyarakat', level: 'h2', fontSize: '42px', fontWeight: '900', color: '#1e3a8a', align: 'left', margin: '0 0 16px 0' } },
+    { id: 'v14-text', type: 'text', props: { content: 'Menjadi institusi terkemuka yang menghasilkan lulusan berkarakter mulia, cerdas, dan siap bersaing di tingkat global.', fontSize: '16px', color: '#475569', align: 'left', margin: '0 0 36px 0' } },
+    { id: 'v14-card-1', type: 'card', props: { variant: 'service', background: '#eff6ff', borderRadius: '16px', borderWidth: '1px', borderColor: '#bfdbfe', padding: '28px' }, childrenComponents: [
+      { id: 'v14-c1-icon', type: 'icon', props: { icon: 'FaGraduationCap', size: '32px', color: '#1d4ed8', align: 'left' } },
+      { id: 'v14-c1-title', type: 'heading', props: { content: 'Akademik Unggul', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#1e3a8a', margin: '12px 0 6px 0' } },
+      { id: 'v14-c1-desc', type: 'text', props: { content: 'Kurikulum berbasis industri modern dan riset mendalam.', fontSize: '14px', color: '#475569', margin: '0' } },
+    ]},
+    { id: 'v14-card-2', type: 'card', props: { variant: 'service', background: '#eff6ff', borderRadius: '16px', borderWidth: '1px', borderColor: '#bfdbfe', padding: '28px' }, childrenComponents: [
+      { id: 'v14-c2-icon', type: 'icon', props: { icon: 'FaUsers', size: '32px', color: '#1d4ed8', align: 'left' } },
+      { id: 'v14-c2-title', type: 'heading', props: { content: 'Karakter & Integritas', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#1e3a8a', margin: '12px 0 6px 0' } },
+      { id: 'v14-c2-desc', type: 'text', props: { content: 'Membina moral dan etika kepemimpinan yang kuat pada setiap mahasiswa.', fontSize: '14px', color: '#475569', margin: '0' } },
+    ]},
+  ],
+  'vision-15': [
+    { id: 'v15-badge', type: 'badge', props: { content: '15 IRIS — MESH VISION', background: '#f3e8ff', color: '#7c3aed' } },
+    { id: 'v15-heading', type: 'heading', props: { content: 'Visi Kolaborasi & Desain AI Cerdas', level: 'h2', fontSize: '42px', fontWeight: '900', color: '#0f172a', align: 'center', margin: '0 0 16px 0' } },
+    { id: 'v15-text', type: 'text', props: { content: 'Menghubungkan imajinasi kreator dengan kecerdasan buatan untuk mewujudkan desain antarmuka dalam hitungan detik.', fontSize: '16px', color: '#64748b', align: 'center', margin: '0 0 36px 0' } },
+    { id: 'v15-card-1', type: 'card', props: { variant: 'service', background: '#faf5ff', borderRadius: '24px', borderWidth: '1px', borderColor: '#e9d5ff', padding: '28px' }, childrenComponents: [
+      { id: 'v15-c1-icon', type: 'icon', props: { icon: 'FaMagic', size: '32px', color: '#7c3aed', align: 'left' } },
+      { id: 'v15-c1-title', type: 'heading', props: { content: 'Generasi Otomatis', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#0f172a', margin: '12px 0 6px 0' } },
+      { id: 'v15-c1-desc', type: 'text', props: { content: 'Ubah teks sketsa menjadi komponen layout siap pakai secara instan.', fontSize: '14px', color: '#64748b', margin: '0' } },
+    ]},
+    { id: 'v15-card-2', type: 'card', props: { variant: 'service', background: '#faf5ff', borderRadius: '24px', borderWidth: '1px', borderColor: '#e9d5ff', padding: '28px' }, childrenComponents: [
+      { id: 'v15-c2-icon', type: 'icon', props: { icon: 'FaUsers', size: '32px', color: '#7c3aed', align: 'left' } },
+      { id: 'v15-c2-title', type: 'heading', props: { content: 'Kolaborasi Real-Time', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#0f172a', margin: '12px 0 6px 0' } },
+      { id: 'v15-c2-desc', type: 'text', props: { content: 'Bekerja bersama tim dalam satu kanvas tanpa batasan jarak.', fontSize: '14px', color: '#64748b', margin: '0' } },
+    ]},
+  ],
+  'vision-16': [
+    { id: 'v16-badge', type: 'badge', props: { content: '16 GOLDLEAF — FOIL VISION', background: '#fef3c7', color: '#b45309' } },
+    { id: 'v16-heading', type: 'heading', props: { content: 'Visi Kerajinan Emas & Warisan Seni', level: 'h2', fontSize: '42px', fontWeight: '700', color: '#451a03', align: 'center', margin: '0 0 16px 0' } },
+    { id: 'v16-text', type: 'text', props: { content: 'Melestarikan seni kerajinan emas tradisional dengan standar kualitas butik mewah lintas generasi.', fontSize: '16px', color: '#92400e', align: 'center', margin: '0 0 36px 0' } },
+    { id: 'v16-card-1', type: 'card', props: { variant: 'service', background: '#fffbeb', borderRadius: '16px', borderWidth: '1px', borderColor: '#fde68a', padding: '28px' }, childrenComponents: [
+      { id: 'v16-c1-icon', type: 'icon', props: { icon: 'FaGem', size: '32px', color: '#b45309', align: 'center' } },
+      { id: 'v16-c1-title', type: 'heading', props: { content: 'Sentuhan Seni Murni', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#451a03', align: 'center', margin: '14px 0 6px 0' } },
+      { id: 'v16-c1-desc', type: 'text', props: { content: 'Setiap perhiasan ditempa tangan oleh pengrajin berpengalaman.', fontSize: '14px', color: '#92400e', align: 'center', margin: '0' } },
+    ]},
+    { id: 'v16-card-2', type: 'card', props: { variant: 'service', background: '#fffbeb', borderRadius: '16px', borderWidth: '1px', borderColor: '#fde68a', padding: '28px' }, childrenComponents: [
+      { id: 'v16-c2-icon', type: 'icon', props: { icon: 'FaCrown', size: '32px', color: '#b45309', align: 'center' } },
+      { id: 'v16-c2-title', type: 'heading', props: { content: 'Eksklusivitas Koleksi', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#451a03', align: 'center', margin: '14px 0 6px 0' } },
+      { id: 'v16-c2-desc', type: 'text', props: { content: 'Koleksi terbatas yang dirancang khusus untuk momen berharga Anda.', fontSize: '14px', color: '#92400e', align: 'center', margin: '0' } },
+    ]},
+  ],
+  'vision-17': [
+    { id: 'v17-badge', type: 'badge', props: { content: '17 PULSE — MARKETPLACE VISION', background: '#fef2f2', color: '#dc2626' } },
+    { id: 'v17-heading', type: 'heading', props: { content: 'Visi Ekonomi Digital & UMKM Nusantara', level: 'h2', fontSize: '42px', fontWeight: '900', color: '#0f172a', align: 'left', margin: '0 0 16px 0' } },
+    { id: 'v17-text', type: 'text', props: { content: 'Menjadi penggerak utama pertumbuhan ekonomi digital dengan memberdayakan jutaan penjual lokal di seluruh Indonesia.', fontSize: '16px', color: '#64748b', align: 'left', margin: '0 0 36px 0' } },
+    { id: 'v17-card-1', type: 'card', props: { variant: 'service', background: '#ffffff', borderRadius: '20px', shadow: 'md', padding: '28px' }, childrenComponents: [
+      { id: 'v17-c1-icon', type: 'icon', props: { icon: 'FaStore', size: '32px', color: '#dc2626', align: 'left' } },
+      { id: 'v17-c1-title', type: 'heading', props: { content: 'Pemberdayaan UMKM', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#0f172a', margin: '12px 0 6px 0' } },
+      { id: 'v17-c1-desc', type: 'text', props: { content: 'Membuka akses pasar digital seluas-luasnya bagi pelaku usaha lokal.', fontSize: '14px', color: '#64748b', margin: '0' } },
+    ]},
+    { id: 'v17-card-2', type: 'card', props: { variant: 'service', background: '#ffffff', borderRadius: '20px', shadow: 'md', padding: '28px' }, childrenComponents: [
+      { id: 'v17-c2-icon', type: 'icon', props: { icon: 'FaChartLine', size: '32px', color: '#dc2626', align: 'left' } },
+      { id: 'v17-c2-title', type: 'heading', props: { content: 'Pertumbuhan Cepat', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#0f172a', margin: '12px 0 6px 0' } },
+      { id: 'v17-c2-desc', type: 'text', props: { content: 'Sistem transaksi aman dan analitik penjualan real-time untuk mitra.', fontSize: '14px', color: '#64748b', margin: '0' } },
+    ]},
+  ],
+  'vision-18': [
+    { id: 'v18-badge', type: 'badge', props: { content: '18 TRANSGO — LOGISTICS VISION', background: '#fff7ed', color: '#f97316' } },
+    { id: 'v18-heading', type: 'heading', props: { content: 'Visi Konektivitas Logistik Nasional', level: 'h2', fontSize: '42px', fontWeight: '900', color: '#0f172a', align: 'center', margin: '0 0 16px 0' } },
+    { id: 'v18-text', type: 'text', props: { content: 'Menghubungkan setiap pulau dan kota di Indonesia melalui jaringan pengiriman kargo darat, laut, dan udara yang andal.', fontSize: '16px', color: '#64748b', align: 'center', margin: '0 0 36px 0' } },
+    { id: 'v18-card-1', type: 'card', props: { variant: 'service', background: '#ffffff', borderRadius: '20px', shadow: 'lg', padding: '28px' }, childrenComponents: [
+      { id: 'v18-c1-icon', type: 'icon', props: { icon: 'FaShippingFast', size: '32px', color: '#f97316', align: 'left' } },
+      { id: 'v18-c1-title', type: 'heading', props: { content: 'Ketepatan Waktu 99.8%', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#0f172a', margin: '12px 0 6px 0' } },
+      { id: 'v18-c1-desc', type: 'text', props: { content: 'Pengiriman aman dan tepat waktu sampai ke alamat tujuan.', fontSize: '14px', color: '#64748b', margin: '0' } },
+    ]},
+    { id: 'v18-card-2', type: 'card', props: { variant: 'service', background: '#ffffff', borderRadius: '20px', shadow: 'lg', padding: '28px' }, childrenComponents: [
+      { id: 'v18-c2-icon', type: 'icon', props: { icon: 'FaWarehouse', size: '32px', color: '#f97316', align: 'left' } },
+      { id: 'v18-c2-title', type: 'heading', props: { content: 'Hub Modern Terpadu', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#0f172a', margin: '12px 0 6px 0' } },
+      { id: 'v18-c2-desc', type: 'text', props: { content: 'Fasilitas gudang otomatis dengan sistem inventori cerdas.', fontSize: '14px', color: '#64748b', margin: '0' } },
+    ]},
+  ],
+  'vision-19': [
+    { id: 'v19-badge', type: 'badge', props: { content: '19 KIOSO — PLAYFUL VISION', background: '#fce7f3', color: '#ec4899' } },
+    { id: 'v19-heading', type: 'heading', props: { content: 'Visi Kuliner Seru & Ceria', level: 'h2', fontSize: '42px', fontWeight: '900', color: '#0f172a', align: 'center', margin: '0 0 16px 0' } },
+    { id: 'v19-text', type: 'text', props: { content: 'Menghadirkan kelezatan burger dan makanan cepat saji berkualitas tinggi yang menyatukan kebahagiaan setiap keluarga.', fontSize: '16px', color: '#64748b', align: 'center', margin: '0 0 36px 0' } },
+    { id: 'v19-card-1', type: 'card', props: { variant: 'service', background: '#fff1f2', borderRadius: '28px', padding: '28px' }, childrenComponents: [
+      { id: 'v19-c1-icon', type: 'icon', props: { icon: 'FaHamburger', size: '32px', color: '#ec4899', align: 'center' } },
+      { id: 'v19-c1-title', type: 'heading', props: { content: 'Bahan Segar Setiap Hari', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#0f172a', align: 'center', margin: '14px 0 6px 0' } },
+      { id: 'v19-c1-desc', type: 'text', props: { content: 'Roti dipanggang setiap jam dan daging pilihan berkualitas premium.', fontSize: '14px', color: '#64748b', align: 'center', margin: '0' } },
+    ]},
+    { id: 'v19-card-2', type: 'card', props: { variant: 'service', background: '#fff1f2', borderRadius: '28px', padding: '28px' }, childrenComponents: [
+      { id: 'v19-c2-icon', type: 'icon', props: { icon: 'FaSmileBeam', size: '32px', color: '#ec4899', align: 'center' } },
+      { id: 'v19-c2-title', type: 'heading', props: { content: 'Suasana Ceria', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#0f172a', align: 'center', margin: '14px 0 6px 0' } },
+      { id: 'v19-c2-desc', type: 'text', props: { content: 'Tempat bersantai yang menyenangkan untuk kumpul bersama sahabat.', fontSize: '14px', color: '#64748b', align: 'center', margin: '0' } },
+    ]},
+  ],
+  'vision-20': [
+    { id: 'v20-badge', type: 'badge', props: { content: '✦ 20 AETHER FINALE — ULTIMATE VISION', background: '#1e1b4b', color: '#c4b5fd' } },
+    { id: 'v20-heading', type: 'heading', props: { content: 'Visi Utama Aether OS: Skala Tanpa Batas', level: 'h2', fontSize: '42px', fontWeight: '900', color: '#ffffff', align: 'center', margin: '0 0 16px 0' } },
+    { id: 'v20-text', type: 'text', props: { content: 'Menyatukan seluruh sistem operasi bisnis modern ke dalam satu platform terintegrasi dengan kecerdasan buatan tingkat lanjut.', fontSize: '16px', color: '#a5b4fc', align: 'center', margin: '0 0 36px 0' } },
+    { id: 'v20-card-1', type: 'card', props: { variant: 'service-dark', background: '#1e1b4b', borderRadius: '24px', borderWidth: '1px', borderColor: 'rgba(196,181,253,0.3)', padding: '28px' }, childrenComponents: [
+      { id: 'v20-c1-icon', type: 'icon', props: { icon: 'FaCogs', size: '32px', color: '#c4b5fd', align: 'center' } },
+      { id: 'v20-c1-title', type: 'heading', props: { content: 'Automasi Menyeluruh', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#ffffff', align: 'center', margin: '14px 0 6px 0' } },
+      { id: 'v20-c1-desc', type: 'text', props: { content: 'Sistem otonom yang mengelola operasional harian tanpa kendala.', fontSize: '14px', color: '#a5b4fc', align: 'center', margin: '0' } },
+    ]},
+    { id: 'v20-card-2', type: 'card', props: { variant: 'service-dark', background: '#1e1b4b', borderRadius: '24px', borderWidth: '1px', borderColor: 'rgba(196,181,253,0.3)', padding: '28px' }, childrenComponents: [
+      { id: 'v20-c2-icon', type: 'icon', props: { icon: 'FaChartLine', size: '32px', color: '#c4b5fd', align: 'center' } },
+      { id: 'v20-c2-title', type: 'heading', props: { content: 'Prediksi Cerdas', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#ffffff', align: 'center', margin: '14px 0 6px 0' } },
+      { id: 'v20-c2-desc', type: 'text', props: { content: 'Analitik masa depan berbasis AI untuk keputusan bisnis yang akurat.', fontSize: '14px', color: '#a5b4fc', align: 'center', margin: '0' } },
+    ]},
   ],
 };
 
