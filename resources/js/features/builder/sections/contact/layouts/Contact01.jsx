@@ -1,19 +1,17 @@
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
-
 export default function Contact01({ components = [], sectionId = null }) {
   const defaultComponents = [
-    { id: 'heading-1', type: 'heading', props: { content: 'Contact Us', level: 'h2', fontSize: '32px', fontWeight: '700', color: '#000000', align: 'center', margin: '0 0 32px 0' } },
-    { id: 'text-1', type: 'text', props: { content: 'Email: hello@company.com', fontSize: '16px', color: '#64748b', align: 'center' } },
-    { id: 'text-2', type: 'text', props: { content: 'Phone: +62 123 456 789', fontSize: '16px', color: '#64748b', align: 'center' } },
+    { id: 'ct1-badge', type: 'badge', props: { content: 'Kontak', background: '#eef2ff', color: '#4f46e5' } },
+    { id: 'ct1-heading', type: 'heading', props: { content: 'Hubungi Kami', level: 'h2', fontSize: '40px', fontWeight: '800', color: '#0f172a', align: 'center', margin: '0 0 12px 0' } },
+    { id: 'ct1-text', type: 'text', props: { content: 'Tim kami siap membantu Senin-Sabtu 08.00-17.00.', fontSize: '15px', color: '#64748b', align: 'center', margin: '0 0 20px 0' } },
+    { id: 'ct1-cta', type: 'button', props: { label: 'Kirim Pesan', href: '#pesan', variant: 'primary', size: 'medium', radius: 'full', background: '#4f46e5', color: '#ffffff' } },
+    { id: 'ct1-cta2', type: 'button', props: { label: 'WhatsApp', href: '#wa', variant: 'ghost', size: 'medium', background: 'transparent', color: '#0f172a' } },
+    { id: 'ct1-card-1', type: 'card', props: { variant: 'default', background: '#ffffff', borderRadius: '16px', shadow: 'sm', borderWidth: '1px', borderColor: '#e2e8f0', hoverEffect: 'lift', padding: '20px' }, childrenComponents: [ { id: 'ct1-c1-icon', type: 'icon', props: { icon: 'FaMapMarkerAlt', size: '28px', color: '#4f46e5', align: 'left' } }, { id: 'ct1-c1-title', type: 'heading', props: { content: 'Address', level: 'h4', fontSize: '15px', fontWeight: '700', color: '#0f172a', margin: '8px 0 2px 0' } }, { id: 'ct1-c1-desc', type: 'text', props: { content: 'Jl. Merdeka No. 123, Jakarta', fontSize: '14px', color: '#64748b', margin: '0' } } ] },
+    { id: 'ct1-card-2', type: 'card', props: { variant: 'default', background: '#ffffff', borderRadius: '16px', shadow: 'sm', borderWidth: '1px', borderColor: '#e2e8f0', hoverEffect: 'lift', padding: '20px' }, childrenComponents: [ { id: 'ct1-c2-icon', type: 'icon', props: { icon: 'FaPhone', size: '28px', color: '#4f46e5', align: 'left' } }, { id: 'ct1-c2-title', type: 'heading', props: { content: 'Phone', level: 'h4', fontSize: '15px', fontWeight: '700', color: '#0f172a', margin: '8px 0 2px 0' } }, { id: 'ct1-c2-desc', type: 'text', props: { content: '+62 21 555 0123', fontSize: '14px', color: '#64748b', margin: '0' } } ] },
+    { id: 'ct1-card-3', type: 'card', props: { variant: 'default', background: '#ffffff', borderRadius: '16px', shadow: 'sm', borderWidth: '1px', borderColor: '#e2e8f0', hoverEffect: 'lift', padding: '20px' }, childrenComponents: [ { id: 'ct1-c3-icon', type: 'icon', props: { icon: 'FaEnvelope', size: '28px', color: '#4f46e5', align: 'left' } }, { id: 'ct1-c3-title', type: 'heading', props: { content: 'Email', level: 'h4', fontSize: '15px', fontWeight: '700', color: '#0f172a', margin: '8px 0 2px 0' } }, { id: 'ct1-c3-desc', type: 'text', props: { content: 'hello@company.com', fontSize: '14px', color: '#64748b', margin: '0' } } ] },
   ];
-
   const layoutComponents = components.length > 0 ? components : defaultComponents;
-
-  return (
-    <section className="py-16 px-6 bg-slate-50">
-      <div className="max-w-4xl mx-auto flex flex-col gap-4">
-        {renderLayoutComponents(layoutComponents, sectionId)}
-      </div>
-    </section>
-  );
+  const header = layoutComponents.filter((c) => c.type !== 'card');
+  const cards = layoutComponents.filter((c) => c.type === 'card');
+  return ( <section className="relative py-24 px-6 bg-white overflow-hidden"> <div className="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 w-[700px] h-[700px] rounded-full bg-gradient-to-br from-indigo-200/60 via-fuchsia-200/50 to-cyan-200/60 blur-3xl animate-pulse" /> <div className="relative max-w-6xl mx-auto flex flex-col items-center text-center"> {renderLayoutComponents(header.filter((c) => c.type === 'badge'), sectionId)} <div className="mt-4 w-full">{renderLayoutComponents(header.filter((c) => c.type === 'heading'), sectionId)}</div> <div className="max-w-2xl">{renderLayoutComponents(header.filter((c) => c.type === 'text'), sectionId)}</div> <div className="flex flex-wrap justify-center gap-3 mt-1">{renderLayoutComponents(header.filter((c) => c.type === 'button'), sectionId)}</div> <div className="grid grid-cols-1 md:grid-cols-3 gap-5 w-full mt-10 text-left"> {renderLayoutComponents(cards, sectionId)} </div> <div className="w-full max-w-2xl mt-8 rounded-2xl border p-4 flex gap-3 select-none pointer-events-none" style={{ borderColor: '#e2e8f0', background: '#ffffff' }}> <input placeholder="Nama" /> <input placeholder="Email" /> </div> </div> </section> );
 }

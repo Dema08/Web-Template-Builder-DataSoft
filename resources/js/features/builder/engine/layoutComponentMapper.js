@@ -90,11 +90,42 @@ import Gallery01 from '@builder/sections/gallery/layouts/Gallery01';
 import Gallery02 from '@builder/sections/gallery/layouts/Gallery02';
 import Gallery03 from '@builder/sections/gallery/layouts/Gallery03';
 import Gallery04 from '@builder/sections/gallery/layouts/Gallery04';
-
+import Gallery05 from '@builder/sections/gallery/layouts/Gallery05';
+import Gallery06 from '@builder/sections/gallery/layouts/Gallery06';
+import Gallery07 from '@builder/sections/gallery/layouts/Gallery07';
+import Gallery08 from '@builder/sections/gallery/layouts/Gallery08';
+import Gallery09 from '@builder/sections/gallery/layouts/Gallery09';
+import Gallery10 from '@builder/sections/gallery/layouts/Gallery10';
+import Gallery11 from '@builder/sections/gallery/layouts/Gallery11';
+import Gallery12 from '@builder/sections/gallery/layouts/Gallery12';
+import Gallery13 from '@builder/sections/gallery/layouts/Gallery13';
+import Gallery14 from '@builder/sections/gallery/layouts/Gallery14';
+import Gallery15 from '@builder/sections/gallery/layouts/Gallery15';
+import Gallery16 from '@builder/sections/gallery/layouts/Gallery16';
+import Gallery17 from '@builder/sections/gallery/layouts/Gallery17';
+import Gallery18 from '@builder/sections/gallery/layouts/Gallery18';
+import Gallery19 from '@builder/sections/gallery/layouts/Gallery19';
+import Gallery20 from '@builder/sections/gallery/layouts/Gallery20';
 import Contact01 from '@builder/sections/contact/layouts/Contact01';
 import Contact02 from '@builder/sections/contact/layouts/Contact02';
 import Contact03 from '@builder/sections/contact/layouts/Contact03';
-
+import Contact04 from '@builder/sections/contact/layouts/Contact04';
+import Contact05 from '@builder/sections/contact/layouts/Contact05';
+import Contact06 from '@builder/sections/contact/layouts/Contact06';
+import Contact07 from '@builder/sections/contact/layouts/Contact07';
+import Contact08 from '@builder/sections/contact/layouts/Contact08';
+import Contact09 from '@builder/sections/contact/layouts/Contact09';
+import Contact10 from '@builder/sections/contact/layouts/Contact10';
+import Contact11 from '@builder/sections/contact/layouts/Contact11';
+import Contact12 from '@builder/sections/contact/layouts/Contact12';
+import Contact13 from '@builder/sections/contact/layouts/Contact13';
+import Contact14 from '@builder/sections/contact/layouts/Contact14';
+import Contact15 from '@builder/sections/contact/layouts/Contact15';
+import Contact16 from '@builder/sections/contact/layouts/Contact16';
+import Contact17 from '@builder/sections/contact/layouts/Contact17';
+import Contact18 from '@builder/sections/contact/layouts/Contact18';
+import Contact19 from '@builder/sections/contact/layouts/Contact19';
+import Contact20 from '@builder/sections/contact/layouts/Contact20';
 import Footer01 from '@builder/sections/footer/layouts/Footer01';
 import Footer02 from '@builder/sections/footer/layouts/Footer02';
 import Footer03 from '@builder/sections/footer/layouts/Footer03';
@@ -123,12 +154,50 @@ import Coverage01 from '@builder/sections/coverage/layouts/Coverage01';
 import Coverage02 from '@builder/sections/coverage/layouts/Coverage02';
 import Testimonials01 from '@builder/sections/testimonials/layouts/Testimonials01';
 import Clients01 from '@builder/sections/clients/layouts/Clients01';
+import Clients02 from '@builder/sections/clients/layouts/Clients02';
+import Clients03 from '@builder/sections/clients/layouts/Clients03';
+import Clients04 from '@builder/sections/clients/layouts/Clients04';
+import Clients05 from '@builder/sections/clients/layouts/Clients05';
+import Clients06 from '@builder/sections/clients/layouts/Clients06';
+import Clients07 from '@builder/sections/clients/layouts/Clients07';
+import Clients08 from '@builder/sections/clients/layouts/Clients08';
+import Clients09 from '@builder/sections/clients/layouts/Clients09';
+import Clients10 from '@builder/sections/clients/layouts/Clients10';
+import Clients11 from '@builder/sections/clients/layouts/Clients11';
+import Clients12 from '@builder/sections/clients/layouts/Clients12';
+import Clients13 from '@builder/sections/clients/layouts/Clients13';
+import Clients14 from '@builder/sections/clients/layouts/Clients14';
+import Clients15 from '@builder/sections/clients/layouts/Clients15';
+import Clients16 from '@builder/sections/clients/layouts/Clients16';
+import Clients17 from '@builder/sections/clients/layouts/Clients17';
+import Clients18 from '@builder/sections/clients/layouts/Clients18';
+import Clients19 from '@builder/sections/clients/layouts/Clients19';
+import Clients20 from '@builder/sections/clients/layouts/Clients20';
 import Programs01 from '@builder/sections/programs/layouts/Programs01';
 import Teachers01 from '@builder/sections/teachers/layouts/Teachers01';
 import Facilities01 from '@builder/sections/facilities/layouts/Facilities01';
 import Achievements01 from '@builder/sections/achievements/layouts/Achievements01';
 import Registration01 from '@builder/sections/registration/layouts/Registration01';
 import Products01 from '@builder/sections/products/layouts/Products01';
+import Products02 from '@builder/sections/products/layouts/Products02';
+import Products03 from '@builder/sections/products/layouts/Products03';
+import Products04 from '@builder/sections/products/layouts/Products04';
+import Products05 from '@builder/sections/products/layouts/Products05';
+import Products06 from '@builder/sections/products/layouts/Products06';
+import Products07 from '@builder/sections/products/layouts/Products07';
+import Products08 from '@builder/sections/products/layouts/Products08';
+import Products09 from '@builder/sections/products/layouts/Products09';
+import Products10 from '@builder/sections/products/layouts/Products10';
+import Products11 from '@builder/sections/products/layouts/Products11';
+import Products12 from '@builder/sections/products/layouts/Products12';
+import Products13 from '@builder/sections/products/layouts/Products13';
+import Products14 from '@builder/sections/products/layouts/Products14';
+import Products15 from '@builder/sections/products/layouts/Products15';
+import Products16 from '@builder/sections/products/layouts/Products16';
+import Products17 from '@builder/sections/products/layouts/Products17';
+import Products18 from '@builder/sections/products/layouts/Products18';
+import Products19 from '@builder/sections/products/layouts/Products19';
+import Products20 from '@builder/sections/products/layouts/Products20';
 import Certifications01 from '@builder/sections/certifications/layouts/Certifications01';
 import Vision01 from '@builder/sections/vision/layouts/Vision01';
 import Vision02 from '@builder/sections/vision/layouts/Vision02';
@@ -173,9 +242,85 @@ import Mission20 from '@builder/sections/mission/layouts/Mission20';
 import Timeline01 from '@builder/sections/timeline/layouts/Timeline01';
 import Timeline02 from '@builder/sections/timeline/layouts/Timeline02';
 import Team01 from '@builder/sections/team/layouts/Team01';
+import Team02 from '@builder/sections/team/layouts/Team02';
+import Team03 from '@builder/sections/team/layouts/Team03';
+import Team04 from '@builder/sections/team/layouts/Team04';
+import Team05 from '@builder/sections/team/layouts/Team05';
+import Team06 from '@builder/sections/team/layouts/Team06';
+import Team07 from '@builder/sections/team/layouts/Team07';
+import Team08 from '@builder/sections/team/layouts/Team08';
+import Team09 from '@builder/sections/team/layouts/Team09';
+import Team10 from '@builder/sections/team/layouts/Team10';
+import Team11 from '@builder/sections/team/layouts/Team11';
+import Team12 from '@builder/sections/team/layouts/Team12';
+import Team13 from '@builder/sections/team/layouts/Team13';
+import Team14 from '@builder/sections/team/layouts/Team14';
+import Team15 from '@builder/sections/team/layouts/Team15';
+import Team16 from '@builder/sections/team/layouts/Team16';
+import Team17 from '@builder/sections/team/layouts/Team17';
+import Team18 from '@builder/sections/team/layouts/Team18';
+import Team19 from '@builder/sections/team/layouts/Team19';
+import Team20 from '@builder/sections/team/layouts/Team20';
 import Faq01 from '@builder/sections/faq/layouts/Faq01';
+import Faq02 from '@builder/sections/faq/layouts/Faq02';
+import Faq03 from '@builder/sections/faq/layouts/Faq03';
+import Faq04 from '@builder/sections/faq/layouts/Faq04';
+import Faq05 from '@builder/sections/faq/layouts/Faq05';
+import Faq06 from '@builder/sections/faq/layouts/Faq06';
+import Faq07 from '@builder/sections/faq/layouts/Faq07';
+import Faq08 from '@builder/sections/faq/layouts/Faq08';
+import Faq09 from '@builder/sections/faq/layouts/Faq09';
+import Faq10 from '@builder/sections/faq/layouts/Faq10';
+import Faq11 from '@builder/sections/faq/layouts/Faq11';
+import Faq12 from '@builder/sections/faq/layouts/Faq12';
+import Faq13 from '@builder/sections/faq/layouts/Faq13';
+import Faq14 from '@builder/sections/faq/layouts/Faq14';
+import Faq15 from '@builder/sections/faq/layouts/Faq15';
+import Faq16 from '@builder/sections/faq/layouts/Faq16';
+import Faq17 from '@builder/sections/faq/layouts/Faq17';
+import Faq18 from '@builder/sections/faq/layouts/Faq18';
+import Faq19 from '@builder/sections/faq/layouts/Faq19';
+import Faq20 from '@builder/sections/faq/layouts/Faq20';
 import Pricing01 from '@builder/sections/pricing/layouts/Pricing01';
+import Pricing02 from '@builder/sections/pricing/layouts/Pricing02';
+import Pricing03 from '@builder/sections/pricing/layouts/Pricing03';
+import Pricing04 from '@builder/sections/pricing/layouts/Pricing04';
+import Pricing05 from '@builder/sections/pricing/layouts/Pricing05';
+import Pricing06 from '@builder/sections/pricing/layouts/Pricing06';
+import Pricing07 from '@builder/sections/pricing/layouts/Pricing07';
+import Pricing08 from '@builder/sections/pricing/layouts/Pricing08';
+import Pricing09 from '@builder/sections/pricing/layouts/Pricing09';
+import Pricing10 from '@builder/sections/pricing/layouts/Pricing10';
+import Pricing11 from '@builder/sections/pricing/layouts/Pricing11';
+import Pricing12 from '@builder/sections/pricing/layouts/Pricing12';
+import Pricing13 from '@builder/sections/pricing/layouts/Pricing13';
+import Pricing14 from '@builder/sections/pricing/layouts/Pricing14';
+import Pricing15 from '@builder/sections/pricing/layouts/Pricing15';
+import Pricing16 from '@builder/sections/pricing/layouts/Pricing16';
+import Pricing17 from '@builder/sections/pricing/layouts/Pricing17';
+import Pricing18 from '@builder/sections/pricing/layouts/Pricing18';
+import Pricing19 from '@builder/sections/pricing/layouts/Pricing19';
+import Pricing20 from '@builder/sections/pricing/layouts/Pricing20';
 import Map01 from '@builder/sections/map/layouts/Map01';
+import Map02 from '@builder/sections/map/layouts/Map02';
+import Map03 from '@builder/sections/map/layouts/Map03';
+import Map04 from '@builder/sections/map/layouts/Map04';
+import Map05 from '@builder/sections/map/layouts/Map05';
+import Map06 from '@builder/sections/map/layouts/Map06';
+import Map07 from '@builder/sections/map/layouts/Map07';
+import Map08 from '@builder/sections/map/layouts/Map08';
+import Map09 from '@builder/sections/map/layouts/Map09';
+import Map10 from '@builder/sections/map/layouts/Map10';
+import Map11 from '@builder/sections/map/layouts/Map11';
+import Map12 from '@builder/sections/map/layouts/Map12';
+import Map13 from '@builder/sections/map/layouts/Map13';
+import Map14 from '@builder/sections/map/layouts/Map14';
+import Map15 from '@builder/sections/map/layouts/Map15';
+import Map16 from '@builder/sections/map/layouts/Map16';
+import Map17 from '@builder/sections/map/layouts/Map17';
+import Map18 from '@builder/sections/map/layouts/Map18';
+import Map19 from '@builder/sections/map/layouts/Map19';
+import Map20 from '@builder/sections/map/layouts/Map20';
 
 export const LAYOUT_COMPONENTS = {
   // Hero layouts
@@ -271,12 +416,43 @@ export const LAYOUT_COMPONENTS = {
   'Gallery02': Gallery02,
   'Gallery03': Gallery03,
   'Gallery04': Gallery04,
-
+  'Gallery05': Gallery05,
+  'Gallery06': Gallery06,
+  'Gallery07': Gallery07,
+  'Gallery08': Gallery08,
+  'Gallery09': Gallery09,
+  'Gallery10': Gallery10,
+  'Gallery11': Gallery11,
+  'Gallery12': Gallery12,
+  'Gallery13': Gallery13,
+  'Gallery14': Gallery14,
+  'Gallery15': Gallery15,
+  'Gallery16': Gallery16,
+  'Gallery17': Gallery17,
+  'Gallery18': Gallery18,
+  'Gallery19': Gallery19,
+  'Gallery20': Gallery20,
   // Contact layouts
   'Contact01': Contact01,
   'Contact02': Contact02,
   'Contact03': Contact03,
-
+  'Contact04': Contact04,
+  'Contact05': Contact05,
+  'Contact06': Contact06,
+  'Contact07': Contact07,
+  'Contact08': Contact08,
+  'Contact09': Contact09,
+  'Contact10': Contact10,
+  'Contact11': Contact11,
+  'Contact12': Contact12,
+  'Contact13': Contact13,
+  'Contact14': Contact14,
+  'Contact15': Contact15,
+  'Contact16': Contact16,
+  'Contact17': Contact17,
+  'Contact18': Contact18,
+  'Contact19': Contact19,
+  'Contact20': Contact20,
   // Footer layouts
   'Footer01': Footer01,
   'Footer02': Footer02,
@@ -307,12 +483,50 @@ export const LAYOUT_COMPONENTS = {
   'Coverage02': Coverage02,
   'Testimonials01': Testimonials01,
   'Clients01': Clients01,
+  'Clients02': Clients02,
+  'Clients03': Clients03,
+  'Clients04': Clients04,
+  'Clients05': Clients05,
+  'Clients06': Clients06,
+  'Clients07': Clients07,
+  'Clients08': Clients08,
+  'Clients09': Clients09,
+  'Clients10': Clients10,
+  'Clients11': Clients11,
+  'Clients12': Clients12,
+  'Clients13': Clients13,
+  'Clients14': Clients14,
+  'Clients15': Clients15,
+  'Clients16': Clients16,
+  'Clients17': Clients17,
+  'Clients18': Clients18,
+  'Clients19': Clients19,
+  'Clients20': Clients20,
   'Programs01': Programs01,
   'Teachers01': Teachers01,
   'Facilities01': Facilities01,
   'Achievements01': Achievements01,
   'Registration01': Registration01,
   'Products01': Products01,
+  'Products02': Products02,
+  'Products03': Products03,
+  'Products04': Products04,
+  'Products05': Products05,
+  'Products06': Products06,
+  'Products07': Products07,
+  'Products08': Products08,
+  'Products09': Products09,
+  'Products10': Products10,
+  'Products11': Products11,
+  'Products12': Products12,
+  'Products13': Products13,
+  'Products14': Products14,
+  'Products15': Products15,
+  'Products16': Products16,
+  'Products17': Products17,
+  'Products18': Products18,
+  'Products19': Products19,
+  'Products20': Products20,
   'Certifications01': Certifications01,
   // Vision layouts
   'Vision01': Vision01,
@@ -358,9 +572,85 @@ export const LAYOUT_COMPONENTS = {
   'Timeline01': Timeline01,
   'Timeline02': Timeline02,
   'Team01': Team01,
+  'Team02': Team02,
+  'Team03': Team03,
+  'Team04': Team04,
+  'Team05': Team05,
+  'Team06': Team06,
+  'Team07': Team07,
+  'Team08': Team08,
+  'Team09': Team09,
+  'Team10': Team10,
+  'Team11': Team11,
+  'Team12': Team12,
+  'Team13': Team13,
+  'Team14': Team14,
+  'Team15': Team15,
+  'Team16': Team16,
+  'Team17': Team17,
+  'Team18': Team18,
+  'Team19': Team19,
+  'Team20': Team20,
   'Faq01': Faq01,
+  'Faq02': Faq02,
+  'Faq03': Faq03,
+  'Faq04': Faq04,
+  'Faq05': Faq05,
+  'Faq06': Faq06,
+  'Faq07': Faq07,
+  'Faq08': Faq08,
+  'Faq09': Faq09,
+  'Faq10': Faq10,
+  'Faq11': Faq11,
+  'Faq12': Faq12,
+  'Faq13': Faq13,
+  'Faq14': Faq14,
+  'Faq15': Faq15,
+  'Faq16': Faq16,
+  'Faq17': Faq17,
+  'Faq18': Faq18,
+  'Faq19': Faq19,
+  'Faq20': Faq20,
   'Pricing01': Pricing01,
+  'Pricing02': Pricing02,
+  'Pricing03': Pricing03,
+  'Pricing04': Pricing04,
+  'Pricing05': Pricing05,
+  'Pricing06': Pricing06,
+  'Pricing07': Pricing07,
+  'Pricing08': Pricing08,
+  'Pricing09': Pricing09,
+  'Pricing10': Pricing10,
+  'Pricing11': Pricing11,
+  'Pricing12': Pricing12,
+  'Pricing13': Pricing13,
+  'Pricing14': Pricing14,
+  'Pricing15': Pricing15,
+  'Pricing16': Pricing16,
+  'Pricing17': Pricing17,
+  'Pricing18': Pricing18,
+  'Pricing19': Pricing19,
+  'Pricing20': Pricing20,
   'Map01': Map01,
+  'Map02': Map02,
+  'Map03': Map03,
+  'Map04': Map04,
+  'Map05': Map05,
+  'Map06': Map06,
+  'Map07': Map07,
+  'Map08': Map08,
+  'Map09': Map09,
+  'Map10': Map10,
+  'Map11': Map11,
+  'Map12': Map12,
+  'Map13': Map13,
+  'Map14': Map14,
+  'Map15': Map15,
+  'Map16': Map16,
+  'Map17': Map17,
+  'Map18': Map18,
+  'Map19': Map19,
+  'Map20': Map20,
 };
 
 export const getLayoutComponent = (componentName) => {
