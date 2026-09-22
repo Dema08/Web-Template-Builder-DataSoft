@@ -22,13 +22,17 @@ export default function Navbar17({ components = [], sectionId = null }) {
   const menuComps = layoutComponents.filter(c => c.type === 'button' && !String(c.id || '').startsWith('cta'));
   const ctaComps = layoutComponents.filter(c => c.type === 'button' && String(c.id || '').startsWith('cta'));
 
+  const hasImageLogo = logoComps.some(c => c.type === 'image');
+
   return (
     <nav className="sticky top-0 z-50 bg-white border-b border-slate-200 px-4 sm:px-6 py-3">
       <div className="max-w-7xl mx-auto flex items-center gap-3">
         <div className="flex items-center gap-2 shrink-0">
-          <div className="w-9 h-9 rounded-xl bg-slate-900 flex items-center justify-center select-none">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
-          </div>
+          {!hasImageLogo && (
+            <div className="w-9 h-9 rounded-xl bg-slate-900 flex items-center justify-center select-none shrink-0">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
+            </div>
+          )}
           {renderLayoutComponents(logoComps, sectionId)}
         </div>
         <div className="hidden md:flex items-center gap-1 shrink-0">

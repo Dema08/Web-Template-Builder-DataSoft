@@ -23,11 +23,13 @@ export default function Navbar15({ components = [], sectionId = null }) {
   const menuComps = layoutComponents.filter(c => c.type === 'button' && !String(c.id || '').startsWith('cta'));
   const ctaComps = layoutComponents.filter(c => c.type === 'button' && String(c.id || '').startsWith('cta'));
 
+  const hasImageLogo = logoComps.some(c => c.type === 'image');
+
   return (
     <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200/70 px-6 py-3.5">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
         <div className="flex items-center gap-2 shrink-0">
-          <div className="w-8 h-8 rounded-full bg-[conic-gradient(from_0deg,#7c3aed,#ec4899,#f59e0b,#7c3aed)] animate-spin select-none" style={{ animationDuration: '8s' }} />
+          {!hasImageLogo && <div className="w-8 h-8 rounded-full bg-[conic-gradient(from_0deg,#7c3aed,#ec4899,#f59e0b,#7c3aed)] animate-spin select-none shrink-0" style={{ animationDuration: '8s' }} />}
           {renderLayoutComponents(logoComps, sectionId)}
         </div>
         <div className="hidden md:flex items-center gap-1">

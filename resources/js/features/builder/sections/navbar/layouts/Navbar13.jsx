@@ -23,11 +23,13 @@ export default function Navbar13({ components = [], sectionId = null }) {
   const dockComps = layoutComponents.filter(c => c.type === 'button' && !String(c.id || '').startsWith('cta'));
   const ctaComps = layoutComponents.filter(c => c.type === 'button' && String(c.id || '').startsWith('cta'));
 
+  const hasImageLogo = logoComps.some(c => c.type === 'image');
+
   return (
     <div className="px-4 pt-4">
       <nav className="max-w-6xl mx-auto flex items-center justify-between gap-4 px-5 py-3 rounded-2xl bg-white/85 backdrop-blur-xl border border-slate-200/80 shadow-[0_16px_50px_-16px_rgba(15,23,42,0.3)]">
         <div className="flex items-center gap-2 shrink-0">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-400 to-rose-500 flex items-center justify-center text-white font-black shadow select-none">S</div>
+          {!hasImageLogo && <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-400 to-rose-500 flex items-center justify-center text-white font-black shadow select-none shrink-0">S</div>}
           {renderLayoutComponents(logoComps, sectionId)}
         </div>
         <div

@@ -22,17 +22,19 @@ export default function Navbar12({ components = [], sectionId = null }) {
   const menuComps = layoutComponents.filter(c => c.type === 'button' && !String(c.id || '').startsWith('cta'));
   const ctaComps = layoutComponents.filter(c => c.type === 'button' && String(c.id || '').startsWith('cta'));
 
+  const hasImageLogo = logoComps.some(c => c.type === 'image');
+
   return (
     <nav className="sticky top-0 z-50 bg-[#0d1117] border-b border-green-500/20 px-4 sm:px-6 py-2.5" style={{ fontFamily: 'monospace' }}>
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
         <div className="flex items-center gap-3 shrink-0">
-          <div className="flex gap-1.5">
+          <div className="flex gap-1.5 shrink-0">
             <span className="w-3 h-3 rounded-full bg-red-500/80" />
             <span className="w-3 h-3 rounded-full bg-yellow-500/80" />
             <span className="w-3 h-3 rounded-full bg-green-500/80 animate-pulse" />
           </div>
           {renderLayoutComponents(logoComps, sectionId)}
-          <span className="hidden md:inline text-xs text-slate-500 select-none">$ main ✓</span>
+          {!hasImageLogo && <span className="hidden md:inline text-xs text-slate-500 select-none">$ main ✓</span>}
         </div>
         <div className="hidden md:flex items-center gap-1 text-sm">
           {menuComps.length > 0 ? renderLayoutComponents(menuComps, sectionId) : (

@@ -23,6 +23,8 @@ export default function Navbar20({ components = [], sectionId = null }) {
   const menuComps = layoutComponents.filter(c => c.type === 'button' && !String(c.id || '').startsWith('cta'));
   const ctaComps = layoutComponents.filter(c => c.type === 'button' && String(c.id || '').startsWith('cta'));
 
+  const hasImageLogo = logoComps.some(c => c.type === 'image');
+
   return (
     <div className="relative">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-28 overflow-hidden">
@@ -36,10 +38,12 @@ export default function Navbar20({ components = [], sectionId = null }) {
         <div className="max-w-6xl mx-auto rounded-2xl border border-white/15 bg-slate-950/70 backdrop-blur-2xl px-5 py-3 shadow-[0_24px_70px_-20px_rgba(99,102,241,0.55)]">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-2.5 shrink-0">
-              <div className="relative w-9 h-9">
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-indigo-400 via-fuchsia-400 to-cyan-300 animate-spin select-none" style={{ animationDuration: '6s' }} />
-                <div className="absolute inset-[3px] rounded-[9px] bg-slate-950 flex items-center justify-center text-white text-sm font-black select-none">Æ</div>
-              </div>
+              {!hasImageLogo && (
+                <div className="relative w-9 h-9 shrink-0">
+                  <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-indigo-400 via-fuchsia-400 to-cyan-300 animate-spin select-none" style={{ animationDuration: '6s' }} />
+                  <div className="absolute inset-[3px] rounded-[9px] bg-slate-950 flex items-center justify-center text-white text-sm font-black select-none">Æ</div>
+                </div>
+              )}
               {renderLayoutComponents(logoComps, sectionId)}
             </div>
             <div className="hidden lg:flex items-center gap-1" onMouseEnter={() => setMega(true)}>

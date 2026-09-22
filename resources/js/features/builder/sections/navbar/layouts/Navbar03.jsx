@@ -20,14 +20,16 @@ export default function Navbar03({ components = [], sectionId = null }) {
   const menuComps = layoutComponents.filter(c => c.type === 'button' && !String(c.id || '').startsWith('cta'));
   const ctaComps = layoutComponents.filter(c => c.type === 'button' && String(c.id || '').startsWith('cta'));
 
+  const hasImageLogo = logoComps.some(c => c.type === 'image');
+
   return (
     <div className="px-4 sm:px-6 pt-5">
       <div className="max-w-6xl mx-auto rounded-2xl p-[1.5px] bg-gradient-to-r from-indigo-400 via-fuchsia-400 to-cyan-400 shadow-[0_18px_50px_-12px_rgba(99,102,241,0.45)]">
         <nav className="flex items-center justify-between gap-4 rounded-2xl bg-white/95 backdrop-blur-xl px-5 py-3">
           <div className="flex items-center gap-2 shrink-0">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 via-fuchsia-500 to-cyan-400 flex items-center justify-center text-white text-sm font-black shadow">a</div>
+            {!hasImageLogo && <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 via-fuchsia-500 to-cyan-400 flex items-center justify-center text-white text-sm font-black shadow shrink-0">a</div>}
             {renderLayoutComponents(logoComps, sectionId)}
-            <span className="ml-1 text-[10px] font-bold text-white bg-gradient-to-r from-indigo-500 to-fuchsia-500 rounded-full px-2 py-0.5 select-none">v3.0</span>
+            {!hasImageLogo && <span className="ml-1 text-[10px] font-bold text-white bg-gradient-to-r from-indigo-500 to-fuchsia-500 rounded-full px-2 py-0.5 select-none">v3.0</span>}
           </div>
           <div className="hidden lg:flex items-center gap-1">
             {menuComps.length > 0 ? renderLayoutComponents(menuComps, sectionId) : (

@@ -19,14 +19,18 @@ export default function Navbar16({ components = [], sectionId = null }) {
   const menuComps = layoutComponents.filter(c => c.type === 'button' && !String(c.id || '').startsWith('cta'));
   const ctaComps = layoutComponents.filter(c => c.type === 'button' && String(c.id || '').startsWith('cta'));
 
+  const hasImageLogo = logoComps.some(c => c.type === 'image');
+
   return (
     <nav className="sticky top-0 z-50 bg-gradient-to-b from-[#fffbeb] to-[#fef3c7] px-6 pt-5 pb-3 border-b border-amber-200">
       <div className="max-w-6xl mx-auto">
-        <div className="flex items-center justify-center gap-3 mb-3">
-          <div className="h-px flex-1 bg-gradient-to-r from-transparent to-amber-400" />
-          <div className="w-10 h-10 rounded-full border-2 border-amber-500 bg-gradient-to-br from-amber-200 to-amber-400 flex items-center justify-center font-black text-amber-900 shadow select-none">G</div>
-          <div className="h-px flex-1 bg-gradient-to-l from-transparent to-amber-400" />
-        </div>
+        {!hasImageLogo && (
+          <div className="flex items-center justify-center gap-3 mb-3">
+            <div className="h-px flex-1 bg-gradient-to-r from-transparent to-amber-400" />
+            <div className="w-10 h-10 rounded-full border-2 border-amber-500 bg-gradient-to-br from-amber-200 to-amber-400 flex items-center justify-center font-black text-amber-900 shadow select-none">G</div>
+            <div className="h-px flex-1 bg-gradient-to-l from-transparent to-amber-400" />
+          </div>
+        )}
         <div className="flex items-center justify-between gap-4">
           <div className="hidden lg:flex items-center gap-1 flex-1">
             {menuComps.slice(0, 2).length > 0 ? renderLayoutComponents(menuComps.slice(0, 2), sectionId) : (

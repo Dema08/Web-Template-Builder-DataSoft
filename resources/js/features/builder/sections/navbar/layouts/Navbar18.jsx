@@ -23,6 +23,8 @@ export default function Navbar18({ components = [], sectionId = null }) {
   const menuComps = layoutComponents.filter(c => c.type === 'button' && !String(c.id || '').startsWith('cta'));
   const ctaComps = layoutComponents.filter(c => c.type === 'button' && String(c.id || '').startsWith('cta'));
 
+  const hasImageLogo = logoComps.some(c => c.type === 'image');
+
   return (
     <header className="sticky top-0 z-50">
       <div className="bg-gradient-to-r from-orange-600 via-orange-500 to-amber-500 px-6 py-1.5">
@@ -34,10 +36,10 @@ export default function Navbar18({ components = [], sectionId = null }) {
       <nav className="bg-slate-950/95 backdrop-blur-xl border-b border-white/10 px-4 sm:px-6 py-3">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5 shrink-0">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-amber-400 flex items-center justify-center text-slate-950 font-black text-lg shadow-lg shadow-orange-500/40 select-none">T</div>
+            {!hasImageLogo && <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-amber-400 flex items-center justify-center text-slate-950 font-black text-lg shadow-lg shadow-orange-500/40 select-none shrink-0">T</div>}
             <div className="leading-tight">
               {renderLayoutComponents(logoComps, sectionId)}
-              <p className="text-[9px] tracking-[0.3em] text-orange-400 font-bold select-none">LOGISTICS</p>
+              {!hasImageLogo && <p className="text-[9px] tracking-[0.3em] text-orange-400 font-bold select-none">LOGISTICS</p>}
             </div>
           </div>
           <div className="hidden xl:flex items-center gap-1 bg-white/5 border border-white/10 rounded-full px-1.5 py-1">

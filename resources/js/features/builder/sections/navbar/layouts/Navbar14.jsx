@@ -23,6 +23,8 @@ export default function Navbar14({ components = [], sectionId = null }) {
   const menuComps = layoutComponents.filter(c => c.type === 'button' && !String(c.id || '').startsWith('cta'));
   const ctaComps = layoutComponents.filter(c => c.type === 'button' && String(c.id || '').startsWith('cta'));
 
+  const hasImageLogo = logoComps.some(c => c.type === 'image');
+
   return (
     <header className="sticky top-0 z-50">
       <div className="bg-[#1e3a8a] text-white/90 px-6 py-1.5">
@@ -48,10 +50,10 @@ export default function Navbar14({ components = [], sectionId = null }) {
       <nav className="bg-white border-b-2 border-blue-900/10 px-6 py-3.5 shadow-sm">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 shrink-0">
-            <div className="w-11 h-11 rounded-lg bg-blue-900 flex items-center justify-center text-white font-black text-lg select-none">M</div>
+            {!hasImageLogo && <div className="w-11 h-11 rounded-lg bg-blue-900 flex items-center justify-center text-white font-black text-lg select-none shrink-0">M</div>}
             <div className="leading-tight">
               {renderLayoutComponents(logoComps, sectionId)}
-              <p className="text-[10px] text-slate-500 tracking-widest select-none">TRUSTED SINCE 1998</p>
+              {!hasImageLogo && <p className="text-[10px] text-slate-500 tracking-widest select-none">TRUSTED SINCE 1998</p>}
             </div>
           </div>
           <div className="hidden lg:flex items-center gap-1">

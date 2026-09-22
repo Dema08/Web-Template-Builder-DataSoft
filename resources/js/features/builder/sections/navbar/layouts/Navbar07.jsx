@@ -31,11 +31,13 @@ export default function Navbar07({ components = [], sectionId = null }) {
   const menuComps = layoutComponents.filter(c => c.type === 'button' && !String(c.id || '').startsWith('cta'));
   const ctaComps = layoutComponents.filter(c => c.type === 'button' && String(c.id || '').startsWith('cta'));
 
+  const hasImageLogo = logoComps.some(c => c.type === 'image');
+
   return (
     <nav className={`sticky top-0 z-50 px-6 transition-all duration-500 ${scrolled ? 'py-2.5 bg-slate-950/85 backdrop-blur-xl border-b border-white/10 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.6)]' : 'py-5 bg-gradient-to-b from-slate-950/80 to-transparent border-b border-transparent'}`}>
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
         <div className="flex items-center gap-2.5 shrink-0">
-          <div className={`rounded-lg bg-gradient-to-br from-indigo-400 to-cyan-300 transition-all duration-500 flex items-center justify-center text-slate-950 font-black select-none ${scrolled ? 'w-8 h-8 text-sm' : 'w-10 h-10 text-base'}`}>◈</div>
+          {!hasImageLogo && <div className={`rounded-lg bg-gradient-to-br from-indigo-400 to-cyan-300 transition-all duration-500 flex items-center justify-center text-slate-950 font-black select-none shrink-0 ${scrolled ? 'w-8 h-8 text-sm' : 'w-10 h-10 text-base'}`}>◈</div>}
           {renderLayoutComponents(logoComps, sectionId)}
         </div>
         <div className="hidden lg:flex items-center gap-1">

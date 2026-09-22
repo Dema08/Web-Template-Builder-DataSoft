@@ -23,6 +23,8 @@ export default function Navbar06({ components = [], sectionId = null }) {
   const rightComps = layoutComponents.filter(c => c.type === 'button' && (c.id.includes('right') || String(c.id || '').startsWith('cta')));
   const allMenu = layoutComponents.filter(c => c.type === 'button');
 
+  const hasImageLogo = logoComps.some(c => c.type === 'image');
+
   return (
     <nav className="sticky top-0 z-50 bg-[#fff7f8]/95 backdrop-blur border-b border-pink-100 px-6 py-4">
       <div className="max-w-6xl mx-auto grid grid-cols-[1fr_auto_1fr] items-center gap-4">
@@ -32,13 +34,15 @@ export default function Navbar06({ components = [], sectionId = null }) {
           )}
         </div>
         <div className="flex flex-col items-center leading-none">
-          <span className="text-[10px] tracking-[0.4em] text-pink-400 font-bold select-none">EST • 2026</span>
+          {!hasImageLogo && <span className="text-[10px] tracking-[0.4em] text-pink-400 font-bold select-none mb-1">EST • 2026</span>}
           {renderLayoutComponents(logoComps, sectionId)}
-          <div className="flex items-center gap-1.5 mt-1.5">
-            <div className="w-8 h-px bg-pink-300" />
-            <div className="w-1.5 h-1.5 rotate-45 bg-pink-400" />
-            <div className="w-8 h-px bg-pink-300" />
-          </div>
+          {!hasImageLogo && (
+            <div className="flex items-center gap-1.5 mt-1.5">
+              <div className="w-8 h-px bg-pink-300" />
+              <div className="w-1.5 h-1.5 rotate-45 bg-pink-400" />
+              <div className="w-8 h-px bg-pink-300" />
+            </div>
+          )}
         </div>
         <div className="hidden md:flex items-center gap-1">
           {rightComps.length > 0 ? renderLayoutComponents(rightComps, sectionId) : (

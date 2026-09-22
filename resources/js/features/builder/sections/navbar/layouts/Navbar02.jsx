@@ -20,12 +20,14 @@ export default function Navbar02({ components = [], sectionId = null }) {
   const menuComps = layoutComponents.filter(c => c.type === 'button' && !String(c.id || '').startsWith('cta'));
   const ctaComps = layoutComponents.filter(c => c.type === 'button' && String(c.id || '').startsWith('cta'));
 
+  const hasImageLogo = logoComps.some(c => c.type === 'image');
+
   return (
     <nav className="bg-[#0a0a0b] border-b border-white/10 px-6 py-4 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-6">
         <div className="flex flex-col leading-none shrink-0">
           {renderLayoutComponents(logoComps, sectionId)}
-          <span className="text-[9px] tracking-[0.45em] text-amber-200/70 font-semibold mt-1 select-none">PARIS — JAKARTA</span>
+          {!hasImageLogo && <span className="text-[9px] tracking-[0.45em] text-amber-200/70 font-semibold mt-1 select-none">PARIS — JAKARTA</span>}
         </div>
         <div className="hidden md:flex items-center gap-8">
           {menuComps.length > 0 ? renderLayoutComponents(menuComps, sectionId) : (

@@ -203,7 +203,7 @@ export default function MyTemplates() {
 
                 <div className="p-5 rounded-2xl bg-white border border-[rgb(var(--color-border))] shadow-xs flex items-center justify-between">
                     <div>
-                        <p className="text-xs font-bold text-[rgb(var(--color-text-secondary))] uppercase tracking-wider">Draft Auto-Save</p>
+                        <p className="text-xs font-bold text-[rgb(var(--color-text-secondary))] uppercase tracking-wider">Draft</p>
                         <p className="text-2xl font-black text-amber-600 mt-1">{draftCount}</p>
                     </div>
                     <div className="p-3 rounded-xl bg-amber-50 text-amber-600">

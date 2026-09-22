@@ -22,11 +22,13 @@ export default function Navbar05({ components = [], sectionId = null }) {
   const menuComps = layoutComponents.filter(c => c.type === 'button' && !String(c.id || '').startsWith('cta'));
   const ctaComps = layoutComponents.filter(c => c.type === 'button' && String(c.id || '').startsWith('cta'));
 
+  const hasImageLogo = logoComps.some(c => c.type === 'image');
+
   return (
     <nav className="sticky top-0 z-50 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border-b border-red-500/30 px-6 py-3.5">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
         <div className="flex items-center gap-3 shrink-0">
-          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center text-white font-black italic shadow-lg shadow-red-500/40 select-none">V</div>
+          {!hasImageLogo && <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center text-white font-black italic shadow-lg shadow-red-500/40 select-none shrink-0">V</div>}
           {renderLayoutComponents(logoComps, sectionId)}
         </div>
         <div className="hidden lg:flex items-center gap-2">

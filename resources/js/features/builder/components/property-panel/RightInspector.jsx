@@ -37,6 +37,7 @@ import {
   Plus
 } from 'lucide-react';
 import { toast } from '@store';
+import NavbarEditor from '../sections/NavbarEditor';
 
 const FONT_FAMILIES = [
   { value: 'Inter', label: 'Inter' },
@@ -75,6 +76,7 @@ const PROP_TAB_MAPPING = {
 
 export default function RightInspector() {
   const [activeTab, setActiveTab] = useState('content');
+  const [sectionTab, setSectionTab] = useState('logo');
   const { addUpload } = useMediaStore();
   const {
     sections,
@@ -298,10 +300,11 @@ export default function RightInspector() {
   }
 
   // ==========================================
-  // SECTION SELECTED -> LIVE BACKGROUND STUDIO
+  // SECTION SELECTED -> LIVE BACKGROUND & NAVBAR STUDIO
   // ==========================================
   if (!selectedComponent && selectedSection) {
     const currentType = bgConfig.type || 'none';
+    const isNavbarSection = selectedSection.type === 'navbar';
 
     return (
       <div className="h-full flex flex-col bg-white">
@@ -322,23 +325,59 @@ export default function RightInspector() {
         />
 
         {/* Section Header Tab Bar */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200 bg-slate-50/70">
-          <div className="flex items-center gap-2">
-            <div className="p-1.5 bg-indigo-50 text-indigo-600 rounded-lg">
-              <Palette className="h-4 w-4" />
+        <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200 bg-slate-50/70 shrink-0">
+          {isNavbarSection ? (
+            <div className="flex items-center gap-1 bg-white p-1 rounded-xl border border-slate-200 shadow-2xs">
+              <button
+                type="button"
+                onClick={() => setSectionTab('logo')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-extrabold flex items-center gap-1.5 transition cursor-pointer ${
+                  sectionTab === 'logo'
+                    ? 'bg-indigo-600 text-white shadow-2xs'
+                    : 'text-slate-600 hover:bg-slate-100'
+                }`}
+              >
+                <Sparkles className="h-3.5 w-3.5" />
+                <span>Logo & Navbar</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setSectionTab('background')}
+                className={`px-3 py-1.5 rounded-lg text-xs font-extrabold flex items-center gap-1.5 transition cursor-pointer ${
+                  sectionTab === 'background'
+                    ? 'bg-indigo-600 text-white shadow-2xs'
+                    : 'text-slate-600 hover:bg-slate-100'
+                }`}
+              >
+                <Palette className="h-3.5 w-3.5" />
+                <span>Background</span>
+              </button>
             </div>
-            <div>
-              <h3 className="text-xs font-extrabold text-slate-900">Section Background</h3>
-              <p className="text-[10px] text-slate-500">Live Real-time Editing</p>
+          ) : (
+            <div className="flex items-center gap-2">
+              <div className="p-1.5 bg-indigo-50 text-indigo-600 rounded-lg">
+                <Palette className="h-4 w-4" />
+              </div>
+              <div>
+                <h3 className="text-xs font-extrabold text-slate-900">Section Background</h3>
+                <p className="text-[10px] text-slate-500">Live Real-time Editing</p>
+              </div>
             </div>
-          </div>
+          )}
           <span className="text-[10px] px-2 py-0.5 bg-indigo-100/70 text-indigo-700 rounded-md font-bold uppercase">
             {selectedSection.type}
           </span>
         </div>
 
-        {/* Section Background Body */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-5 ds-scrollbar-thin">
+        {/* Section Content Body */}
+        {isNavbarSection && sectionTab === 'logo' && (
+          <div className="flex-1 overflow-y-auto p-4 ds-scrollbar-thin">
+            <NavbarEditor sectionId={selectedSection.id} section={selectedSection} />
+          </div>
+        )}
+
+        {(!isNavbarSection || sectionTab === 'background') && (
+          <div className="flex-1 overflow-y-auto p-4 space-y-5 ds-scrollbar-thin">
 
           {/* 1. Background Type Selection (Auto-Apply on click) */}
           <div>
@@ -986,10 +1025,10 @@ export default function RightInspector() {
               />
             </div>
           </div>
-
         </div>
-      </div>
-    );
+      )}
+    </div>
+  );
   }
 
   // ==========================================

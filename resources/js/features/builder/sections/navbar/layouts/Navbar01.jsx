@@ -20,11 +20,13 @@ export default function Navbar01({ components = [], sectionId = null }) {
   const menuComps = layoutComponents.filter(c => c.type === 'button' && !String(c.id || '').startsWith('cta'));
   const ctaComps = layoutComponents.filter(c => c.type === 'button' && String(c.id || '').startsWith('cta'));
 
+  const hasImageLogo = logoComps.some(c => c.type === 'image');
+
   return (
     <div className="px-4 sm:px-6 pt-4 pb-2">
       <nav className="max-w-6xl mx-auto flex items-center justify-between gap-4 pl-6 pr-2 py-2 rounded-full bg-white/80 backdrop-blur-xl border border-white/60 shadow-[0_20px_60px_-15px_rgba(15,23,42,0.25)]">
         <div className="flex items-center gap-2.5 shrink-0">
-          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-amber-300 via-rose-400 to-indigo-500 shadow-md" />
+          {!hasImageLogo && <div className="w-9 h-9 rounded-full bg-gradient-to-br from-amber-300 via-rose-400 to-indigo-500 shadow-md shrink-0" />}
           {renderLayoutComponents(logoComps, sectionId)}
         </div>
         <div className="hidden lg:flex items-center gap-1 bg-slate-100/80 rounded-full px-1.5 py-1">

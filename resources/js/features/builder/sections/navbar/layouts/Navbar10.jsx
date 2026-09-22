@@ -22,6 +22,8 @@ export default function Navbar10({ components = [], sectionId = null }) {
   const menuComps = layoutComponents.filter(c => c.type === 'button' && !String(c.id || '').startsWith('cta'));
   const ctaComps = layoutComponents.filter(c => c.type === 'button' && String(c.id || '').startsWith('cta'));
 
+  const hasImageLogo = logoComps.some(c => c.type === 'image');
+
   return (
     <div className="px-4 sm:px-6 pt-4">
       <nav className="relative max-w-6xl mx-auto overflow-hidden rounded-2xl border border-violet-400/30 bg-slate-950/60 backdrop-blur-2xl px-5 py-3 shadow-[0_0_60px_-15px_rgba(139,92,246,0.5)]">
@@ -29,17 +31,11 @@ export default function Navbar10({ components = [], sectionId = null }) {
         <div className="pointer-events-none absolute -bottom-24 -right-16 w-72 h-72 rounded-full bg-cyan-500/30 blur-3xl animate-pulse" />
         <div className="relative flex items-center justify-between gap-4">
           <div className="flex items-center gap-2.5 shrink-0">
-            <div className="relative">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500 via-fuchsia-500 to-cyan-400 shadow-lg shadow-violet-500/50 select-none" />
-              <button
-                type="button"
-                onClick={(e) => { e.preventDefault(); e.stopPropagation(); setNotif(0); }}
-                className="absolute -top-1.5 -right-1.5 min-w-5 h-5 px-1 rounded-full bg-rose-500 text-white text-[10px] font-black flex items-center justify-center animate-bounce select-none"
-                title="Clear notifications"
-              >
-                {notif}
-              </button>
-            </div>
+            {!hasImageLogo && (
+              <div className="relative shrink-0">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500 via-fuchsia-500 to-cyan-400 shadow-lg shadow-violet-500/50 select-none" />
+              </div>
+            )}
             {renderLayoutComponents(logoComps, sectionId)}
           </div>
           <div className="hidden lg:flex items-center gap-1 bg-white/5 border border-white/10 rounded-full px-1.5 py-1">
