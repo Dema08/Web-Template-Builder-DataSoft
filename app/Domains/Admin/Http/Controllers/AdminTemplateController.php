@@ -14,6 +14,10 @@ class AdminTemplateController extends BaseController
     public function index(Category $category): JsonResponse
     {
         $templates = Template::where('category_id', $category->id)
+            ->where(function ($q) {
+                $q->whereNull('owner_id')
+                  ->orWhere('visibility', 'public');
+            })
             ->orderBy('sort_order')
             ->orderBy('name')
             ->get();

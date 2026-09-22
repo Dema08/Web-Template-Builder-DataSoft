@@ -18,6 +18,7 @@ import {
     Ban,
     Globe,
     Crown,
+    User,
 } from 'lucide-react';
 import { Card, ConfirmModal } from '@shared/components/ui';
 import { toast } from '@store';
@@ -26,46 +27,35 @@ import { categoryService } from '@features/category/services/categoryService';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import ThumbnailUploader from '@features/admin/components/ThumbnailUploader';
+import { getTemplateImage, handleImageError } from '@utils/templateHelpers';
 
 function TemplateCardThumbnail({ template }) {
-    const [imgError, setImgError] = useState(false);
     const [imgLoaded, setImgLoaded] = useState(false);
-    const imageUrl = template.thumbnail;
+    const imageUrl = getTemplateImage(template);
 
     useEffect(() => {
-        setImgError(false);
         setImgLoaded(false);
     }, [template?.id, template?.thumbnail]);
 
-    if (imageUrl && !imgError) {
-        return (
-            <div className="w-full h-full relative bg-slate-100">
-                {!imgLoaded && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-slate-50">
-                        <div className="h-8 w-8 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
-                    </div>
-                )}
-                <img
-                    src={imageUrl}
-                    alt={template.name}
-                    onError={(e) => {
-                        console.error('Failed to load template image:', imageUrl, e);
-                        setImgError(true);
-                    }}
-                    onLoad={() => {
-                        setImgLoaded(true);
-                    }}
-                    className="w-full h-full object-cover transition-opacity duration-300"
-                    style={{ opacity: imgLoaded ? 1 : 0 }}
-                />
-            </div>
-        );
-    }
-
     return (
-        <div className="w-full h-full flex flex-col items-center justify-center text-slate-400 bg-slate-50">
-            <Layout className="h-10 w-10 mb-2 opacity-40" />
-            <span className="text-xs font-medium">No Preview Available</span>
+        <div className="w-full h-full relative bg-slate-100">
+            {!imgLoaded && (
+                <div className="absolute inset-0 flex items-center justify-center bg-slate-50">
+                    <div className="h-8 w-8 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+                </div>
+            )}
+            <img
+                src={imageUrl}
+                alt={template.name}
+                onError={(e) => {
+                    handleImageError(e, template);
+                }}
+                onLoad={() => {
+                    setImgLoaded(true);
+                }}
+                className="w-full h-full object-cover transition-opacity duration-300"
+                style={{ opacity: imgLoaded ? 1 : 0 }}
+            />
         </div>
     );
 }
@@ -527,12 +517,18 @@ export default function AdminTemplates() {
                             <div className="relative h-[220px] overflow-hidden rounded-t-[24px]">
                                 <TemplateCardThumbnail template={tpl} />
 
-                                {/* Kiri atas: Featured + PRO / FREE menumpuk vertikal */}
+                                {/* Kiri atas: Featured + PRO / FREE / User Template menumpuk vertikal */}
                                 <div className="absolute top-3 left-3 z-20 flex flex-col items-start gap-1.5">
                                     {tpl.is_featured && (
                                         <span className="px-2.5 py-1 rounded-full bg-amber-500 text-white text-[10px] font-extrabold uppercase backdrop-blur-md flex items-center gap-1 shadow-xs">
                                             <Star className="h-3 w-3 fill-current" />
                                             Featured
+                                        </span>
+                                    )}
+                                    {tpl.is_user_template && (
+                                        <span className="px-2.5 py-1 rounded-full bg-indigo-600 text-white text-[10px] font-extrabold uppercase backdrop-blur-md flex items-center gap-1 shadow-xs">
+                                            <User className="h-3 w-3" />
+                                            User Template
                                         </span>
                                     )}
                                     {tpl.is_premium ? (
@@ -561,6 +557,12 @@ export default function AdminTemplates() {
                                     <p className="text-xs font-bold text-indigo-600 mt-0.5">{tpl.code}</p>
                                     {tpl.industry_category && (
                                         <p className="text-[11px] text-slate-500 mt-1 font-medium">{tpl.industry_category.name}</p>
+                                    )}
+                                    {(tpl.is_user_template || tpl.owner_name || tpl.creator_name) && (
+                                        <div className="mt-2 flex items-center gap-1.5 text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-100/80 px-2.5 py-1 rounded-xl w-fit">
+                                            <User className="h-3.5 w-3.5 shrink-0 text-indigo-600" />
+                                            <span>Oleh: <strong className="font-extrabold text-indigo-900">{tpl.owner_name || tpl.creator_name || 'User'}</strong></span>
+                                        </div>
                                     )}
                                 </div>
 

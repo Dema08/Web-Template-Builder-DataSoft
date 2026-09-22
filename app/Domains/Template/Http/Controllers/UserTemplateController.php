@@ -35,7 +35,7 @@ class UserTemplateController extends BaseController
         $user = $request->user();
 
         $query = Template::forList()
-            ->with('industryCategory')
+            ->with(['industryCategory', 'creator', 'owner'])
             ->where('owner_id', $user->id)
             ->orderByDesc('created_at');
 
