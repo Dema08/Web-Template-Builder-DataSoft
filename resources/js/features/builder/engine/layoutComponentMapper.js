@@ -189,6 +189,24 @@ import Fleet19 from '@builder/sections/fleet/layouts/Fleet19';
 import Fleet20 from '@builder/sections/fleet/layouts/Fleet20';
 import Coverage01 from '@builder/sections/coverage/layouts/Coverage01';
 import Coverage02 from '@builder/sections/coverage/layouts/Coverage02';
+import Coverage03 from '@builder/sections/coverage/layouts/Coverage03';
+import Coverage04 from '@builder/sections/coverage/layouts/Coverage04';
+import Coverage05 from '@builder/sections/coverage/layouts/Coverage05';
+import Coverage06 from '@builder/sections/coverage/layouts/Coverage06';
+import Coverage07 from '@builder/sections/coverage/layouts/Coverage07';
+import Coverage08 from '@builder/sections/coverage/layouts/Coverage08';
+import Coverage09 from '@builder/sections/coverage/layouts/Coverage09';
+import Coverage10 from '@builder/sections/coverage/layouts/Coverage10';
+import Coverage11 from '@builder/sections/coverage/layouts/Coverage11';
+import Coverage12 from '@builder/sections/coverage/layouts/Coverage12';
+import Coverage13 from '@builder/sections/coverage/layouts/Coverage13';
+import Coverage14 from '@builder/sections/coverage/layouts/Coverage14';
+import Coverage15 from '@builder/sections/coverage/layouts/Coverage15';
+import Coverage16 from '@builder/sections/coverage/layouts/Coverage16';
+import Coverage17 from '@builder/sections/coverage/layouts/Coverage17';
+import Coverage18 from '@builder/sections/coverage/layouts/Coverage18';
+import Coverage19 from '@builder/sections/coverage/layouts/Coverage19';
+import Coverage20 from '@builder/sections/coverage/layouts/Coverage20';
 import Testimonials01 from '@builder/sections/testimonials/layouts/Testimonials01';
 import Clients01 from '@builder/sections/clients/layouts/Clients01';
 import Clients02 from '@builder/sections/clients/layouts/Clients02';
@@ -557,6 +575,24 @@ export const LAYOUT_COMPONENTS = {
   'Fleet20': Fleet20,
   'Coverage01': Coverage01,
   'Coverage02': Coverage02,
+  'Coverage03': Coverage03,
+  'Coverage04': Coverage04,
+  'Coverage05': Coverage05,
+  'Coverage06': Coverage06,
+  'Coverage07': Coverage07,
+  'Coverage08': Coverage08,
+  'Coverage09': Coverage09,
+  'Coverage10': Coverage10,
+  'Coverage11': Coverage11,
+  'Coverage12': Coverage12,
+  'Coverage13': Coverage13,
+  'Coverage14': Coverage14,
+  'Coverage15': Coverage15,
+  'Coverage16': Coverage16,
+  'Coverage17': Coverage17,
+  'Coverage18': Coverage18,
+  'Coverage19': Coverage19,
+  'Coverage20': Coverage20,
   'Testimonials01': Testimonials01,
   'Clients01': Clients01,
   'Clients02': Clients02,

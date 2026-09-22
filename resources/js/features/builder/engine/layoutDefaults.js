@@ -6707,9 +6707,712 @@ export const LAYOUT_DEFAULTS = {
           }
       }
   ],
+  'coverage-01': [
+      {
+          "id": "cov1-badge",
+          "type": "badge",
+          "props": {
+              "content": "✦ Jaringan Distribusi Nasional 2026",
+              "background": "#eef2ff",
+              "color": "#4f46e5"
+          }
+      },
+      {
+          "id": "cov1-heading",
+          "type": "heading",
+          "props": {
+              "content": "Jangkauan Pengiriman Seluruh Nusantara",
+              "level": "h2",
+              "fontSize": "40px",
+              "fontWeight": "800",
+              "color": "#0f172a",
+              "align": "center",
+              "margin": "0 0 12px 0"
+          }
+      },
+      {
+          "id": "cov1-subtext",
+          "type": "text",
+          "props": {
+              "content": "Melayani rute pengiriman ke 38 provinsi, 514 kota/kabupaten, dan pelabuhan utama di seluruh kepulauan Indonesia dengan jaminan kepastian waktu.",
+              "fontSize": "16px",
+              "color": "#64748b",
+              "align": "center",
+              "margin": "0 0 48px 0"
+          }
+      }
+  ],
   'coverage-02': [
-    { id: 'cov02-heading', type: 'heading', props: { content: 'Jangkauan Distribusi Nasional', level: 'h2', fontSize: '36px', color: '#ffffff' } },
-    { id: 'cov02-desc', type: 'text', props: { content: 'Menghubungkan bisnis Anda ke seluruh wilayah di Indonesia.', fontSize: '16px', color: '#94a3b8' } }
+      {
+          "id": "cov02-badge",
+          "type": "badge",
+          "props": {
+              "content": "✦ PREMIER DISTRIBUTION NETWORK",
+              "background": "#1c1917",
+              "color": "#e7c873"
+          }
+      },
+      {
+          "id": "cov02-heading",
+          "type": "heading",
+          "props": {
+              "content": "Jangkauan Distribusi Nasional Berstandar Tinggi",
+              "level": "h2",
+              "fontSize": "40px",
+              "fontWeight": "800",
+              "color": "#fafaf9",
+              "align": "left",
+              "margin": "0 0 14px 0"
+          }
+      },
+      {
+          "id": "cov02-desc",
+          "type": "text",
+          "props": {
+              "content": "Infrastruktur rute logistik multi-modal yang menghubungkan hub metropolitan ke seluruh penjuru kepulauan dengan kepastian jadwal tanpa jeda.",
+              "fontSize": "16px",
+              "color": "#a8a29e",
+              "align": "left",
+              "margin": "0 0 32px 0"
+          }
+      }
+  ],
+  'coverage-03': [
+      {
+          "id": "cov3-badge",
+          "type": "badge",
+          "props": {
+              "content": "⚡ 24H EXPRESS CORRIDOR",
+              "background": "#1c1917",
+              "color": "#f97316"
+          }
+      },
+      {
+          "id": "cov3-heading",
+          "type": "heading",
+          "props": {
+              "content": "Jalur Ekspres Logistik Antar Kota & Pulau",
+              "level": "h2",
+              "fontSize": "42px",
+              "fontWeight": "900",
+              "color": "#fafaf9",
+              "margin": "0 0 16px 0"
+          }
+      },
+      {
+          "id": "cov3-text",
+          "type": "text",
+          "props": {
+              "content": "Koneksi rute ekspres non-stop menghubungkan pusat manufaktur ke gerbang distribusi utama tanpa hambatan.",
+              "fontSize": "16px",
+              "color": "#a8a29e",
+              "margin": "0 0 32px 0"
+          }
+      },
+      {
+          "id": "cov3-btn",
+          "type": "button",
+          "props": {
+              "label": "Lihat Seluruh Rute Transit →",
+              "href": "#routes",
+              "variant": "primary",
+              "background": "#f97316",
+              "color": "#ffffff"
+          }
+      }
+  ],
+  'coverage-04': [
+      {
+          "id": "cov4-badge",
+          "type": "badge",
+          "props": {
+              "content": "★ 38 PROVINSI TERKONEKSI",
+              "background": "#fef08a",
+              "color": "#000000"
+          }
+      },
+      {
+          "id": "cov4-heading",
+          "type": "heading",
+          "props": {
+              "content": "KAPASITAS JANGKAUAN LOGISTIK",
+              "level": "h2",
+              "fontSize": "44px",
+              "fontWeight": "900",
+              "color": "#000000",
+              "align": "center",
+              "margin": "0 0 12px 0"
+          }
+      },
+      {
+          "id": "cov4-text",
+          "type": "text",
+          "props": {
+              "content": "Distribusi barang tanpa kompromi. Rute darat, laut, dan udara aktif setiap hari di seluruh pelosok Indonesia.",
+              "fontSize": "16px",
+              "color": "#1e293b",
+              "align": "center",
+              "margin": "0 0 40px 0"
+          }
+      }
+  ],
+  'coverage-05': [
+      {
+          "id": "cov5-badge",
+          "type": "badge",
+          "props": {
+              "content": "Jangkauan Layanan",
+              "background": "#f1f5f9",
+              "color": "#475569"
+          }
+      },
+      {
+          "id": "cov5-heading",
+          "type": "heading",
+          "props": {
+              "content": "Menghubungkan Titik Distribusi Tanpa Hambatan",
+              "level": "h2",
+              "fontSize": "38px",
+              "fontWeight": "700",
+              "color": "#0f172a",
+              "align": "center",
+              "margin": "0 0 12px 0"
+          }
+      },
+      {
+          "id": "cov5-text",
+          "type": "text",
+          "props": {
+              "content": "Kami membangun jaringan distribusi yang konsisten, transparan, dan terukur di setiap provinsi.",
+              "fontSize": "16px",
+              "color": "#64748b",
+              "align": "center",
+              "margin": "0 0 48px 0"
+          }
+      }
+  ],
+  'coverage-06': [
+      {
+          "id": "cov6-badge",
+          "type": "badge",
+          "props": {
+              "content": "✦ SATELLITE TELEMETRY MAPPING",
+              "background": "#0e1726",
+              "color": "#38bdf8"
+          }
+      },
+      {
+          "id": "cov6-heading",
+          "type": "heading",
+          "props": {
+              "content": "Jaringan Logistik Cerdas Terhubung Satelit",
+              "level": "h2",
+              "fontSize": "40px",
+              "fontWeight": "800",
+              "color": "#f8fafc",
+              "align": "center",
+              "margin": "0 0 14px 0"
+          }
+      },
+      {
+          "id": "cov6-text",
+          "type": "text",
+          "props": {
+              "content": "Monitoring titik singgah armada dan gudang transit dengan latensi sub-detik di seluruh koordinat Indonesia.",
+              "fontSize": "16px",
+              "color": "#94a3b8",
+              "align": "center",
+              "margin": "0 0 40px 0"
+          }
+      }
+  ],
+  'coverage-07': [
+      {
+          "id": "cov7-badge",
+          "type": "badge",
+          "props": {
+              "content": "SYS.GEO_DISTRIBUTION_v4",
+              "background": "#022c22",
+              "color": "#4ade80"
+          }
+      },
+      {
+          "id": "cov7-heading",
+          "type": "heading",
+          "props": {
+              "content": "Logistik Terbuka Berbasis Jaringan API",
+              "level": "h2",
+              "fontSize": "38px",
+              "fontWeight": "800",
+              "color": "#f0fdf4",
+              "align": "center",
+              "margin": "0 0 12px 0"
+          }
+      },
+      {
+          "id": "cov7-text",
+          "type": "text",
+          "props": {
+              "content": "Akses langsung ratusan titik distribusi regional melalui RESTful endpoint dengan SLA ketersediaan 99.99%.",
+              "fontSize": "15px",
+              "color": "#86efac",
+              "align": "center",
+              "margin": "0 0 40px 0"
+          }
+      }
+  ],
+  'coverage-08': [
+      {
+          "id": "cov8-badge",
+          "type": "badge",
+          "props": {
+              "content": "🌸 JANGKAUAN DISTRIBUSI LENGKAP",
+              "background": "#fdf2f8",
+              "color": "#db2777"
+          }
+      },
+      {
+          "id": "cov8-heading",
+          "type": "heading",
+          "props": {
+              "content": "Zona Pengiriman Seluruh Wilayah Indonesia",
+              "level": "h2",
+              "fontSize": "40px",
+              "fontWeight": "800",
+              "color": "#1e293b",
+              "align": "center",
+              "margin": "0 0 14px 0"
+          }
+      },
+      {
+          "id": "cov8-text",
+          "type": "text",
+          "props": {
+              "content": "Temukan kemudahan pengiriman paket dengan jangkauan merata dan tarif terstandardisasi di setiap pulau.",
+              "fontSize": "16px",
+              "color": "#64748b",
+              "align": "center",
+              "margin": "0 0 40px 0"
+          }
+      }
+  ],
+  'coverage-09': [
+      {
+          "id": "cov9-badge",
+          "type": "badge",
+          "props": {
+              "content": "ENTERPRISE DISTRIBUTION SLA",
+              "background": "#1e293b",
+              "color": "#38bdf8"
+          }
+      },
+      {
+          "id": "cov9-heading",
+          "type": "heading",
+          "props": {
+              "content": "Cakupan Distribusi Skala Korporasi Nasional",
+              "level": "h2",
+              "fontSize": "40px",
+              "fontWeight": "800",
+              "color": "#ffffff",
+              "align": "center",
+              "margin": "0 0 14px 0"
+          }
+      },
+      {
+          "id": "cov9-text",
+          "type": "text",
+          "props": {
+              "content": "Standar SLA tier 1 dengan jaminan fulfillment 99.8% untuk mendukung rantai pasok industri manufaktur dan FMCG.",
+              "fontSize": "16px",
+              "color": "#94a3b8",
+              "align": "center",
+              "margin": "0 0 40px 0"
+          }
+      }
+  ],
+  'coverage-10': [
+      {
+          "id": "cov10-badge",
+          "type": "badge",
+          "props": {
+              "content": "TAB PETA WILAYAH",
+              "background": "#eff6ff",
+              "color": "#2563eb"
+          }
+      },
+      {
+          "id": "cov10-heading",
+          "type": "heading",
+          "props": {
+              "content": "Eksplorasi Jangkauan Berdasarkan Wilayah",
+              "level": "h2",
+              "fontSize": "40px",
+              "fontWeight": "800",
+              "color": "#0f172a",
+              "align": "center",
+              "margin": "0 0 12px 0"
+          }
+      },
+      {
+          "id": "cov10-text",
+          "type": "text",
+          "props": {
+              "content": "Pilih pulau atau zona di bawah ini untuk memeriksa daftar kota jangkauan dan waktu tempuh pengiriman.",
+              "fontSize": "16px",
+              "color": "#64748b",
+              "align": "center",
+              "margin": "0 0 36px 0"
+          }
+      }
+  ],
+  'coverage-11': [
+      {
+          "id": "cov11-badge",
+          "type": "badge",
+          "props": {
+              "content": "🌱 ECO-FRIENDLY DISTRIBUTION",
+              "background": "#ecfdf5",
+              "color": "#059669"
+          }
+      },
+      {
+          "id": "cov11-heading",
+          "type": "heading",
+          "props": {
+              "content": "Distribusi Berkelanjutan Ramah Lingkungan",
+              "level": "h2",
+              "fontSize": "40px",
+              "fontWeight": "800",
+              "color": "#064e3b",
+              "align": "center",
+              "margin": "0 0 14px 0"
+          }
+      },
+      {
+          "id": "cov11-text",
+          "type": "text",
+          "props": {
+              "content": "Mengurangi jejak karbon logistik lewat rute optimal, armada listrik untuk last-mile delivery, dan green warehouse di 30 kota utama.",
+              "fontSize": "16px",
+              "color": "#047857",
+              "align": "center",
+              "margin": "0 0 40px 0"
+          }
+      }
+  ],
+  'coverage-12': [
+      {
+          "id": "cov12-badge",
+          "type": "badge",
+          "props": {
+              "content": "⚡ 24-HOUR SUNSET CORRIDOR",
+              "background": "#ffedd5",
+              "color": "#ea580c"
+          }
+      },
+      {
+          "id": "cov12-heading",
+          "type": "heading",
+          "props": {
+              "content": "Kecepatan Pengiriman Lintas Koridor Senja",
+              "level": "h2",
+              "fontSize": "42px",
+              "fontWeight": "900",
+              "color": "#0f172a",
+              "align": "center",
+              "margin": "0 0 14px 0"
+          }
+      },
+      {
+          "id": "cov12-text",
+          "type": "text",
+          "props": {
+              "content": "Jadwal keberangkatan malam hari memastikan paket Anda tiba di kota tujuan keesokan paginya tanpa penundaan.",
+              "fontSize": "16px",
+              "color": "#64748b",
+              "align": "center",
+              "margin": "0 0 40px 0"
+          }
+      }
+  ],
+  'coverage-13': [
+      {
+          "id": "cov13-badge",
+          "type": "badge",
+          "props": {
+              "content": "TABEL MATRIKS JANGKAUAN 2026",
+              "background": "#f1f5f9",
+              "color": "#334155"
+          }
+      },
+      {
+          "id": "cov13-heading",
+          "type": "heading",
+          "props": {
+              "content": "Matriks Jangkauan & Estimasi Waktu Transit",
+              "level": "h2",
+              "fontSize": "38px",
+              "fontWeight": "800",
+              "color": "#0f172a",
+              "align": "center",
+              "margin": "0 0 12px 0"
+          }
+      },
+      {
+          "id": "cov13-text",
+          "type": "text",
+          "props": {
+              "content": "Daftar resmi spesifikasi rute reguler dan ekspres yang berlaku di seluruh jaringan operasional.",
+              "fontSize": "16px",
+              "color": "#64748b",
+              "align": "center",
+              "margin": "0 0 40px 0"
+          }
+      }
+  ],
+  'coverage-14': [
+      {
+          "id": "cov14-badge",
+          "type": "badge",
+          "props": {
+              "content": "✦ AI DYNAMIC REROUTING",
+              "background": "#e0f2fe",
+              "color": "#0284c7"
+          }
+      },
+      {
+          "id": "cov14-heading",
+          "type": "heading",
+          "props": {
+              "content": "Optimasi Rute Jangkauan Berbasis Kecerdasan Buatan",
+              "level": "h2",
+              "fontSize": "40px",
+              "fontWeight": "800",
+              "color": "#0f172a",
+              "align": "center",
+              "margin": "0 0 14px 0"
+          }
+      },
+      {
+          "id": "cov14-text",
+          "type": "text",
+          "props": {
+              "content": "Algoritma cerdas yang memilih jalur tercepat secara otomatis berdasarkan data cuaca, lalu lintas, dan kapasitas hub.",
+              "fontSize": "16px",
+              "color": "#64748b",
+              "align": "center",
+              "margin": "0 0 40px 0"
+          }
+      }
+  ],
+  'coverage-15': [
+      {
+          "id": "cov15-badge",
+          "type": "badge",
+          "props": {
+              "content": "EST. 2010 — EKSPANSI JARINGAN",
+              "background": "#f8fafc",
+              "color": "#475569"
+          }
+      },
+      {
+          "id": "cov15-heading",
+          "type": "heading",
+          "props": {
+              "content": "15 Tahun Membangun Jaringan Logistik Nasional",
+              "level": "h2",
+              "fontSize": "40px",
+              "fontWeight": "800",
+              "color": "#0f172a",
+              "align": "center",
+              "margin": "0 0 14px 0"
+          }
+      },
+      {
+          "id": "cov15-text",
+          "type": "text",
+          "props": {
+              "content": "Perjalanan konsisten dalam memperluas jangkauan rute darat, laut, dan udara ke setiap sudut tanah air.",
+              "fontSize": "16px",
+              "color": "#64748b",
+              "align": "center",
+              "margin": "0 0 48px 0"
+          }
+      }
+  ],
+  'coverage-16': [
+      {
+          "id": "cov16-badge",
+          "type": "badge",
+          "props": {
+              "content": "INTERNATIONAL GATEWAY PORTS",
+              "background": "#faf5ff",
+              "color": "#9333ea"
+          }
+      },
+      {
+          "id": "cov16-heading",
+          "type": "heading",
+          "props": {
+              "content": "Gerbang Pelabuhan & Hub Internasional Terpadu",
+              "level": "h2",
+              "fontSize": "42px",
+              "fontWeight": "800",
+              "color": "#0f172a",
+              "align": "center",
+              "margin": "0 0 14px 0"
+          }
+      },
+      {
+          "id": "cov16-text",
+          "type": "text",
+          "props": {
+              "content": "Konektivitas langsung dari pelabuhan samudra Indonesia ke hub perdagangan internasional di Asia Tenggara dan dunia.",
+              "fontSize": "16px",
+              "color": "#64748b",
+              "align": "center",
+              "margin": "0 0 40px 0"
+          }
+      }
+  ],
+  'coverage-17': [
+      {
+          "id": "cov17-badge",
+          "type": "badge",
+          "props": {
+              "content": "TRANSGO HIGHWAY NETWORK",
+              "background": "#fef3c7",
+              "color": "#d97706"
+          }
+      },
+      {
+          "id": "cov17-heading",
+          "type": "heading",
+          "props": {
+              "content": "Rute Angkutan Beban Berat Trans-Tol Nusantara",
+              "level": "h2",
+              "fontSize": "42px",
+              "fontWeight": "900",
+              "color": "#0f172a",
+              "align": "center",
+              "margin": "0 0 14px 0"
+          }
+      },
+      {
+          "id": "cov17-text",
+          "type": "text",
+          "props": {
+              "content": "Jaringan jalur jalan tol dan jalan nasional terdedikasi untuk armada truk wingbox, container 40ft, dan muatan proyek s/d 50 ton.",
+              "fontSize": "16px",
+              "color": "#64748b",
+              "align": "center",
+              "margin": "0 0 40px 0"
+          }
+      }
+  ],
+  'coverage-18': [
+      {
+          "id": "cov18-badge",
+          "type": "badge",
+          "props": {
+              "content": "📍 INSTANT COVERAGE CHECKER",
+              "background": "#fff1f2",
+              "color": "#e11d48"
+          }
+      },
+      {
+          "id": "cov18-heading",
+          "type": "heading",
+          "props": {
+              "content": "Periksa Jangkauan & Estimasi Waktu Kirim",
+              "level": "h2",
+              "fontSize": "40px",
+              "fontWeight": "800",
+              "color": "#0f172a",
+              "align": "center",
+              "margin": "0 0 14px 0"
+          }
+      },
+      {
+          "id": "cov18-text",
+          "type": "text",
+          "props": {
+              "content": "Ketik nama kota atau kode pos tujuan Anda untuk memastikan ketersediaan layanan prioritas hari ini.",
+              "fontSize": "16px",
+              "color": "#64748b",
+              "align": "center",
+              "margin": "0 0 40px 0"
+          }
+      }
+  ],
+  'coverage-19': [
+      {
+          "id": "cov19-badge",
+          "type": "badge",
+          "props": {
+              "content": "FULFILLMENT & WAREHOUSE NETWORK",
+              "background": "#f0fdf4",
+              "color": "#16a34a"
+          }
+      },
+      {
+          "id": "cov19-heading",
+          "type": "heading",
+          "props": {
+              "content": "Jaringan Gudang & Pusat Sortir Otomatis",
+              "level": "h2",
+              "fontSize": "40px",
+              "fontWeight": "800",
+              "color": "#0f172a",
+              "margin": "0 0 16px 0"
+          }
+      },
+      {
+          "id": "cov19-text",
+          "type": "text",
+          "props": {
+              "content": "Fasilitas fulfillment center modern dengan kontrol suhu, sistem racking otomatis, dan integrasi API inventori.",
+              "fontSize": "16px",
+              "color": "#64748b",
+              "margin": "0 0 32px 0"
+          }
+      }
+  ],
+  'coverage-20': [
+      {
+          "id": "cov20-badge",
+          "type": "badge",
+          "props": {
+              "content": "✦ AETHER GLOBAL LOGISTICS ECOSYSTEM",
+              "background": "#1e1b4b",
+              "color": "#818cf8"
+          }
+      },
+      {
+          "id": "cov20-heading",
+          "type": "heading",
+          "props": {
+              "content": "Konektivitas Logistik Tanpa Batas Seluruh Wilayah",
+              "level": "h2",
+              "fontSize": "44px",
+              "fontWeight": "900",
+              "color": "#fafaf9",
+              "align": "center",
+              "margin": "0 0 16px 0"
+          }
+      },
+      {
+          "id": "cov20-text",
+          "type": "text",
+          "props": {
+              "content": "Menyatukan rute angkutan darat, laut, udara, dan pergudangan cerdas dalam satu platform terpadu dengan standar reliabilitas tertinggi.",
+              "fontSize": "17px",
+              "color": "#cbd5e1",
+              "align": "center",
+              "margin": "0 0 48px 0"
+          }
+      }
   ],
   // === VISION LAYOUTS ===
   'vision-01': [

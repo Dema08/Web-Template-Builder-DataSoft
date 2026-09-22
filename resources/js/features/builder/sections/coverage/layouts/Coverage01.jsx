@@ -1,61 +1,106 @@
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
+/**
+ * AURORA — Centered Region Card Grid
+ * Tampilan jangkauan modern dengan orb gradient glow, badge pill, kartu beranimasi hover lift dan metrik distribusi.
+ * Cocok untuk ekosistem logistik terpadu dan jaringan distribusi nasional.
+ */
 export default function Coverage01({ components = [], sectionId = null }) {
   const defaultComponents = [
     {
+      id: 'cov1-badge',
+      type: 'badge',
+      props: { content: '✦ Jaringan Distribusi Nasional 2026', background: '#eef2ff', color: '#4f46e5' },
+    },
+    {
       id: 'cov1-heading',
       type: 'heading',
-      props: { content: 'Jangkauan Layanan Kami', level: 'h2', fontSize: '36px', fontWeight: '800', color: '#0f172a', align: 'center', margin: '0 0 12px 0' },
+      props: { content: 'Jangkauan Pengiriman Seluruh Nusantara', level: 'h2', fontSize: '40px', fontWeight: '800', color: '#0f172a', align: 'center', margin: '0 0 12px 0' },
     },
     {
       id: 'cov1-subtext',
       type: 'text',
-      props: { content: 'Melayani pengiriman ke seluruh wilayah Indonesia dan berbagai kota di Asia Tenggara', fontSize: '16px', color: '#64748b', align: 'center', margin: '0 0 48px 0' },
+      props: { content: 'Melayani rute pengiriman ke 38 provinsi, 514 kota/kabupaten, dan pelabuhan utama di seluruh kepulauan Indonesia dengan jaminan kepastian waktu.', fontSize: '16px', color: '#64748b', align: 'center', margin: '0 0 48px 0' },
     },
     {
       id: 'cov1-card-1',
       type: 'card',
-      props: { variant: 'feature', background: '#ffffff', borderRadius: '16px', shadow: 'sm', borderWidth: '1px', borderColor: '#e2e8f0', hoverEffect: 'lift', padding: '24px' },
+      props: { variant: 'feature', background: '#ffffff', borderRadius: '20px', shadow: 'md', borderWidth: '1px', borderColor: '#e2e8f0', hoverEffect: 'lift', padding: '28px' },
       childrenComponents: [
-        { id: 'cov1-c1-icon', type: 'icon', props: { icon: 'FaMapMarkerAlt', size: '32px', color: '#4f46e5', align: 'center' } },
-        { id: 'cov1-c1-title', type: 'heading', props: { content: 'Jawa & Bali', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#0f172a', align: 'center', margin: '12px 0 6px 0' } },
-        { id: 'cov1-c1-desc', type: 'text', props: { content: 'Layanan ekspres ke 200+ kota dan kabupaten se-pulau Jawa dan Bali.', fontSize: '14px', color: '#64748b', align: 'center', margin: '0' } },
+        { id: 'cov1-c1-icon', type: 'icon', props: { icon: 'FaMapMarkerAlt', size: '36px', color: '#4f46e5', align: 'left' } },
+        { id: 'cov1-c1-title', type: 'heading', props: { content: 'Jawa, Bali & Nusa Tenggara', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#0f172a', margin: '16px 0 8px 0' } },
+        { id: 'cov1-c1-desc', type: 'text', props: { content: 'Layanan ekspres same-day dan next-day ke 200+ kota/kabupaten dengan dukungan 45 hub transit aktif.', fontSize: '14px', color: '#64748b', margin: '0' } },
       ],
     },
     {
       id: 'cov1-card-2',
       type: 'card',
-      props: { variant: 'feature', background: '#ffffff', borderRadius: '16px', shadow: 'sm', borderWidth: '1px', borderColor: '#e2e8f0', hoverEffect: 'lift', padding: '24px' },
+      props: { variant: 'feature', background: '#ffffff', borderRadius: '20px', shadow: 'md', borderWidth: '1px', borderColor: '#e2e8f0', hoverEffect: 'lift', padding: '28px' },
       childrenComponents: [
-        { id: 'cov1-c2-icon', type: 'icon', props: { icon: 'FaGlobe', size: '32px', color: '#4f46e5', align: 'center' } },
-        { id: 'cov1-c2-title', type: 'heading', props: { content: 'Sumatera & Kalimantan', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#0f172a', align: 'center', margin: '12px 0 6px 0' } },
-        { id: 'cov1-c2-desc', type: 'text', props: { content: 'Jaringan logistik menyeluruh ke seluruh penjuru Sumatera dan Kalimantan.', fontSize: '14px', color: '#64748b', align: 'center', margin: '0' } },
+        { id: 'cov1-c2-icon', type: 'icon', props: { icon: 'FaGlobe', size: '36px', color: '#06b6d4', align: 'left' } },
+        { id: 'cov1-c2-title', type: 'heading', props: { content: 'Sumatera & Kalimantan', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#0f172a', margin: '16px 0 8px 0' } },
+        { id: 'cov1-c2-desc', type: 'text', props: { content: 'Jaringan rute terpadu lintas trans-Sumatera dan koridor energi Kalimantan dengan koneksi harian.', fontSize: '14px', color: '#64748b', margin: '0' } },
       ],
     },
     {
       id: 'cov1-card-3',
       type: 'card',
-      props: { variant: 'feature', background: '#ffffff', borderRadius: '16px', shadow: 'sm', borderWidth: '1px', borderColor: '#e2e8f0', hoverEffect: 'lift', padding: '24px' },
+      props: { variant: 'feature', background: '#ffffff', borderRadius: '20px', shadow: 'md', borderWidth: '1px', borderColor: '#e2e8f0', hoverEffect: 'lift', padding: '28px' },
       childrenComponents: [
-        { id: 'cov1-c3-icon', type: 'icon', props: { icon: 'FaGlobeAsia', size: '32px', color: '#4f46e5', align: 'center' } },
-        { id: 'cov1-c3-title', type: 'heading', props: { content: 'Indonesia Timur', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#0f172a', align: 'center', margin: '12px 0 6px 0' } },
-        { id: 'cov1-c3-desc', type: 'text', props: { content: 'Pengiriman ke Sulawesi, Maluku, NTT, NTB, Papua dan sekitarnya.', fontSize: '14px', color: '#64748b', align: 'center', margin: '0' } },
+        { id: 'cov1-c3-icon', type: 'icon', props: { icon: 'FaGlobeAsia', size: '36px', color: '#a855f7', align: 'left' } },
+        { id: 'cov1-c3-title', type: 'heading', props: { content: 'Sulawesi, Maluku & Papua', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#0f172a', margin: '16px 0 8px 0' } },
+        { id: 'cov1-c3-desc', type: 'text', props: { content: 'Layanan Tol Laut dan kargo udara terjadwal untuk menjamin kelancaran rantai pasok Indonesia Timur.', fontSize: '14px', color: '#64748b', margin: '0' } },
       ],
     },
   ];
 
   const layoutComponents = components.length > 0 ? components : defaultComponents;
-  const headerComponents = layoutComponents.filter(c => c.type !== 'card');
+  const badge = layoutComponents.filter(c => c.type === 'badge');
+  const heading = layoutComponents.filter(c => c.type === 'heading' && c.id === 'cov1-heading');
+  const subtext = layoutComponents.filter(c => c.type === 'text' && c.id === 'cov1-subtext');
   const cardComponents = layoutComponents.filter(c => c.type === 'card');
+  const otherComponents = layoutComponents.filter(c => 
+    c.type !== 'badge' && 
+    c.id !== 'cov1-heading' && 
+    c.id !== 'cov1-subtext' && 
+    c.type !== 'card'
+  );
 
   return (
-    <section className="py-20 px-6 bg-slate-50">
-      <div className="max-w-7xl mx-auto space-y-12">
-        <div className="flex flex-col items-center justify-center text-center">
-          {renderLayoutComponents(headerComponents, sectionId)}
+    <section className="relative py-24 px-6 bg-slate-50/50 overflow-hidden" style={{ fontFamily: 'Inter, sans-serif' }}>
+      {/* Background Aurora Glow */}
+      <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[800px] h-[500px] rounded-full bg-gradient-to-br from-indigo-200/50 via-purple-200/40 to-cyan-200/50 blur-3xl opacity-70" />
+
+      <div className="relative max-w-7xl mx-auto space-y-12">
+        {/* Header Area */}
+        <div className="flex flex-col items-center justify-center text-center max-w-3xl mx-auto space-y-4">
+          {renderLayoutComponents(badge, sectionId)}
+          <div className="w-full">{renderLayoutComponents(heading.length > 0 ? heading : layoutComponents.filter(c => c.type === 'heading').slice(0, 1), sectionId)}</div>
+          <div className="w-full">{renderLayoutComponents(subtext.length > 0 ? subtext : layoutComponents.filter(c => c.type === 'text').slice(0, 1), sectionId)}</div>
+          {otherComponents.length > 0 && renderLayoutComponents(otherComponents, sectionId)}
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        {/* 3 Column Grid Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {renderLayoutComponents(cardComponents, sectionId)}
+        </div>
+
+        {/* Aurora Footer Stat Badges */}
+        <div className="pt-8 border-t border-slate-200/70 flex flex-wrap items-center justify-center gap-8 text-xs font-semibold text-slate-500">
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span>38 Provinsi & 514 Kota Terkoneksi</span>
+          </div>
+          <span className="text-slate-300">•</span>
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-indigo-500" />
+            <span>120+ Hub Logistik & Warehouse</span>
+          </div>
+          <span className="text-slate-300">•</span>
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
+            <span>99.8% On-Time SLA Fulfillment</span>
+          </div>
         </div>
       </div>
     </section>
