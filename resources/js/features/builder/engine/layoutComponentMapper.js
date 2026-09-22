@@ -296,6 +296,24 @@ import Mission19 from '@builder/sections/mission/layouts/Mission19';
 import Mission20 from '@builder/sections/mission/layouts/Mission20';
 import Timeline01 from '@builder/sections/timeline/layouts/Timeline01';
 import Timeline02 from '@builder/sections/timeline/layouts/Timeline02';
+import Timeline03 from '@builder/sections/timeline/layouts/Timeline03';
+import Timeline04 from '@builder/sections/timeline/layouts/Timeline04';
+import Timeline05 from '@builder/sections/timeline/layouts/Timeline05';
+import Timeline06 from '@builder/sections/timeline/layouts/Timeline06';
+import Timeline07 from '@builder/sections/timeline/layouts/Timeline07';
+import Timeline08 from '@builder/sections/timeline/layouts/Timeline08';
+import Timeline09 from '@builder/sections/timeline/layouts/Timeline09';
+import Timeline10 from '@builder/sections/timeline/layouts/Timeline10';
+import Timeline11 from '@builder/sections/timeline/layouts/Timeline11';
+import Timeline12 from '@builder/sections/timeline/layouts/Timeline12';
+import Timeline13 from '@builder/sections/timeline/layouts/Timeline13';
+import Timeline14 from '@builder/sections/timeline/layouts/Timeline14';
+import Timeline15 from '@builder/sections/timeline/layouts/Timeline15';
+import Timeline16 from '@builder/sections/timeline/layouts/Timeline16';
+import Timeline17 from '@builder/sections/timeline/layouts/Timeline17';
+import Timeline18 from '@builder/sections/timeline/layouts/Timeline18';
+import Timeline19 from '@builder/sections/timeline/layouts/Timeline19';
+import Timeline20 from '@builder/sections/timeline/layouts/Timeline20';
 import Team01 from '@builder/sections/team/layouts/Team01';
 import Team02 from '@builder/sections/team/layouts/Team02';
 import Team03 from '@builder/sections/team/layouts/Team03';
@@ -683,6 +701,24 @@ export const LAYOUT_COMPONENTS = {
   'Mission20': Mission20,
   'Timeline01': Timeline01,
   'Timeline02': Timeline02,
+  'Timeline03': Timeline03,
+  'Timeline04': Timeline04,
+  'Timeline05': Timeline05,
+  'Timeline06': Timeline06,
+  'Timeline07': Timeline07,
+  'Timeline08': Timeline08,
+  'Timeline09': Timeline09,
+  'Timeline10': Timeline10,
+  'Timeline11': Timeline11,
+  'Timeline12': Timeline12,
+  'Timeline13': Timeline13,
+  'Timeline14': Timeline14,
+  'Timeline15': Timeline15,
+  'Timeline16': Timeline16,
+  'Timeline17': Timeline17,
+  'Timeline18': Timeline18,
+  'Timeline19': Timeline19,
+  'Timeline20': Timeline20,
   'Team01': Team01,
   'Team02': Team02,
   'Team03': Team03,

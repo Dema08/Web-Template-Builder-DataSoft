@@ -4485,29 +4485,908 @@ export const LAYOUT_DEFAULTS = {
     { id: 'btn-trial', type: 'button', props: { label: 'Join Our Journey ✦', href: '#join', variant: 'primary', size: 'large', radius: 'full', background: '#6366f1', color: '#ffffff' } },
   ],
   'timeline-01': [
-    { id: 'tml1-badge', type: 'badge', props: { content: 'PERJALANAN KAMI', background: '#ede9fe', color: '#4f46e5', borderRadius: '999px', padding: '6px 16px', fontSize: '13px', fontWeight: '600', align: 'center', margin: '0 0 12px 0' } },
-    { id: 'tml1-heading', type: 'heading', props: { content: 'Jejak Langkah & Sejarah', level: 'h2', fontSize: '36px', fontWeight: '800', color: '#0f172a', align: 'center', margin: '0 0 12px 0' } },
-    { id: 'tml1-subtext', type: 'text', props: { content: 'Perjalanan panjang kami dalam membangun solusi terbaik dari masa ke masa', fontSize: '16px', color: '#64748b', align: 'center', margin: '0 0 48px 0' } },
-    { id: 'tml1-card-1', type: 'card', props: { variant: 'timeline', background: '#ffffff', borderRadius: '16px', shadow: 'md', borderWidth: '1px', borderColor: '#e2e8f0', hoverEffect: 'lift', padding: '24px' }, childrenComponents: [
-      { id: 'tml1-c1-year', type: 'badge', props: { content: '2015', background: '#e0e7ff', color: '#4f46e5', borderRadius: '8px', padding: '4px 12px', fontSize: '12px', fontWeight: '700', margin: '0 0 10px 0' } },
-      { id: 'tml1-c1-title', type: 'heading', props: { content: 'Perusahaan Didirikan', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#0f172a', margin: '0 0 6px 0' } },
-      { id: 'tml1-c1-desc', type: 'text', props: { content: 'Berawal dari 3 pendiri dengan visi besar menyediakan solusi teknologi tepercaya.', fontSize: '14px', color: '#64748b', margin: '0' } },
-    ]},
-    { id: 'tml1-card-2', type: 'card', props: { variant: 'timeline', background: '#ffffff', borderRadius: '16px', shadow: 'md', borderWidth: '1px', borderColor: '#e2e8f0', hoverEffect: 'lift', padding: '24px' }, childrenComponents: [
-      { id: 'tml1-c2-year', type: 'badge', props: { content: '2018', background: '#e0e7ff', color: '#4f46e5', borderRadius: '8px', padding: '4px 12px', fontSize: '12px', fontWeight: '700', margin: '0 0 10px 0' } },
-      { id: 'tml1-c2-title', type: 'heading', props: { content: 'Ekspansi Nasional', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#0f172a', margin: '0 0 6px 0' } },
-      { id: 'tml1-c2-desc', type: 'text', props: { content: 'Membuka cabang di 5 kota besar dan melayani lebih dari 100 perusahaan.', fontSize: '14px', color: '#64748b', margin: '0' } },
-    ]},
-    { id: 'tml1-card-3', type: 'card', props: { variant: 'timeline', background: '#ffffff', borderRadius: '16px', shadow: 'md', borderWidth: '1px', borderColor: '#e2e8f0', hoverEffect: 'lift', padding: '24px' }, childrenComponents: [
-      { id: 'tml1-c3-year', type: 'badge', props: { content: '2021', background: '#e0e7ff', color: '#4f46e5', borderRadius: '8px', padding: '4px 12px', fontSize: '12px', fontWeight: '700', margin: '0 0 10px 0' } },
-      { id: 'tml1-c3-title', type: 'heading', props: { content: 'Inovasi Cloud Enterprise', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#0f172a', margin: '0 0 6px 0' } },
-      { id: 'tml1-c3-desc', type: 'text', props: { content: 'Peluncuran platform cloud enterprise generasi baru berbasis otomasi AI.', fontSize: '14px', color: '#64748b', margin: '0' } },
-    ]},
-    { id: 'tml1-card-4', type: 'card', props: { variant: 'timeline', background: '#ffffff', borderRadius: '16px', shadow: 'md', borderWidth: '1px', borderColor: '#e2e8f0', hoverEffect: 'lift', padding: '24px' }, childrenComponents: [
-      { id: 'tml1-c4-year', type: 'badge', props: { content: '2024', background: '#e0e7ff', color: '#4f46e5', borderRadius: '8px', padding: '4px 12px', fontSize: '12px', fontWeight: '700', margin: '0 0 10px 0' } },
-      { id: 'tml1-c4-title', type: 'heading', props: { content: 'Pemimpin Pasar Industri', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#0f172a', margin: '0 0 6px 0' } },
-      { id: 'tml1-c4-desc', type: 'text', props: { content: 'Diakui sebagai penyedia solusi terdepan dengan kepuasan pelanggan 99%.', fontSize: '14px', color: '#64748b', margin: '0' } },
-    ]},
+      {
+          "id": "tml1-badge",
+          "type": "badge",
+          "props": {
+              "content": "✦ HISTORI & PERJALANAN KAMI",
+              "background": "#ede9fe",
+              "color": "#4f46e5"
+          }
+      },
+      {
+          "id": "tml1-heading",
+          "type": "heading",
+          "props": {
+              "content": "Jejak Langkah Menuju Keunggulan",
+              "level": "h2",
+              "fontSize": "40px",
+              "fontWeight": "800",
+              "color": "#0f172a",
+              "align": "center",
+              "margin": "0 0 12px 0"
+          }
+      },
+      {
+          "id": "tml1-subtext",
+          "type": "text",
+          "props": {
+              "content": "Perjalanan panjang kami dalam membangun standar industri terbaik melalui inovasi konsisten dan dedikasi tanpa henti.",
+              "fontSize": "16px",
+              "color": "#64748b",
+              "align": "center",
+              "margin": "0 0 48px 0"
+          }
+      },
+      {
+          "id": "tml1-card-1",
+          "type": "card",
+          "props": {
+              "variant": "timeline",
+              "background": "#ffffff",
+              "borderRadius": "20px",
+              "shadow": "md",
+              "borderWidth": "1px",
+              "borderColor": "#e2e8f0",
+              "hoverEffect": "lift",
+              "padding": "28px"
+          },
+          "childrenComponents": [
+              {
+                  "id": "tml1-c1-year",
+                  "type": "badge",
+                  "props": {
+                      "content": "2015 — Awal Mula",
+                      "background": "#e0e7ff",
+                      "color": "#4f46e5",
+                      "borderRadius": "8px",
+                      "padding": "4px 12px",
+                      "fontSize": "12px",
+                      "fontWeight": "700",
+                      "margin": "0 0 10px 0"
+                  }
+              },
+              {
+                  "id": "tml1-c1-title",
+                  "type": "heading",
+                  "props": {
+                      "content": "Pendirian & Fondasi Pertama",
+                      "level": "h3",
+                      "fontSize": "20px",
+                      "fontWeight": "700",
+                      "color": "#0f172a",
+                      "margin": "0 0 8px 0"
+                  }
+              },
+              {
+                  "id": "tml1-c1-desc",
+                  "type": "text",
+                  "props": {
+                      "content": "Dimulai oleh para founder dengan visi mentransformasi ekosistem layanan melalui teknologi modern.",
+                      "fontSize": "14px",
+                      "color": "#64748b",
+                      "margin": "0"
+                  }
+              }
+          ]
+      },
+      {
+          "id": "tml1-card-2",
+          "type": "card",
+          "props": {
+              "variant": "timeline",
+              "background": "#ffffff",
+              "borderRadius": "20px",
+              "shadow": "md",
+              "borderWidth": "1px",
+              "borderColor": "#e2e8f0",
+              "hoverEffect": "lift",
+              "padding": "28px"
+          },
+          "childrenComponents": [
+              {
+                  "id": "tml1-c2-year",
+                  "type": "badge",
+                  "props": {
+                      "content": "2018 — Ekspansi",
+                      "background": "#e0e7ff",
+                      "color": "#4f46e5",
+                      "borderRadius": "8px",
+                      "padding": "4px 12px",
+                      "fontSize": "12px",
+                      "fontWeight": "700",
+                      "margin": "0 0 10px 0"
+                  }
+              },
+              {
+                  "id": "tml1-c2-title",
+                  "type": "heading",
+                  "props": {
+                      "content": "Ekspansi Jaringan Nasional",
+                      "level": "h3",
+                      "fontSize": "20px",
+                      "fontWeight": "700",
+                      "color": "#0f172a",
+                      "margin": "0 0 8px 0"
+                  }
+              },
+              {
+                  "id": "tml1-c2-desc",
+                  "type": "text",
+                  "props": {
+                      "content": "Membuka cabang operasional di 15 kota strategis dan menjalin kemitraan dengan 200+ klien korporasi.",
+                      "fontSize": "14px",
+                      "color": "#64748b",
+                      "margin": "0"
+                  }
+              }
+          ]
+      },
+      {
+          "id": "tml1-card-3",
+          "type": "card",
+          "props": {
+              "variant": "timeline",
+              "background": "#ffffff",
+              "borderRadius": "20px",
+              "shadow": "md",
+              "borderWidth": "1px",
+              "borderColor": "#e2e8f0",
+              "hoverEffect": "lift",
+              "padding": "28px"
+          },
+          "childrenComponents": [
+              {
+                  "id": "tml1-c3-year",
+                  "type": "badge",
+                  "props": {
+                      "content": "2022 — Inovasi AI",
+                      "background": "#e0e7ff",
+                      "color": "#4f46e5",
+                      "borderRadius": "8px",
+                      "padding": "4px 12px",
+                      "fontSize": "12px",
+                      "fontWeight": "700",
+                      "margin": "0 0 10px 0"
+                  }
+              },
+              {
+                  "id": "tml1-c3-title",
+                  "type": "heading",
+                  "props": {
+                      "content": "Transformasi Digital Cerdas",
+                      "level": "h3",
+                      "fontSize": "20px",
+                      "fontWeight": "700",
+                      "color": "#0f172a",
+                      "margin": "0 0 8px 0"
+                  }
+              },
+              {
+                  "id": "tml1-c3-desc",
+                  "type": "text",
+                  "props": {
+                      "content": "Integrasi platform otomasi berbasis cloud dan AI untuk mempercepat efisiensi operasional harian.",
+                      "fontSize": "14px",
+                      "color": "#64748b",
+                      "margin": "0"
+                  }
+              }
+          ]
+      },
+      {
+          "id": "tml1-card-4",
+          "type": "card",
+          "props": {
+              "variant": "timeline",
+              "background": "#ffffff",
+              "borderRadius": "20px",
+              "shadow": "md",
+              "borderWidth": "1px",
+              "borderColor": "#e2e8f0",
+              "hoverEffect": "lift",
+              "padding": "28px"
+          },
+          "childrenComponents": [
+              {
+                  "id": "tml1-c4-year",
+                  "type": "badge",
+                  "props": {
+                      "content": "2026 — Masa Depan",
+                      "background": "#e0e7ff",
+                      "color": "#4f46e5",
+                      "borderRadius": "8px",
+                      "padding": "4px 12px",
+                      "fontSize": "12px",
+                      "fontWeight": "700",
+                      "margin": "0 0 10px 0"
+                  }
+              },
+              {
+                  "id": "tml1-c4-title",
+                  "type": "heading",
+                  "props": {
+                      "content": "Pemimpin Pasar Terdepan",
+                      "level": "h3",
+                      "fontSize": "20px",
+                      "fontWeight": "700",
+                      "color": "#0f172a",
+                      "margin": "0 0 8px 0"
+                  }
+              },
+              {
+                  "id": "tml1-c4-desc",
+                  "type": "text",
+                  "props": {
+                      "content": "Menjadi standar keunggulan industri dengan kepuasan pelanggan 99.8% di seluruh Indonesia.",
+                      "fontSize": "14px",
+                      "color": "#64748b",
+                      "margin": "0"
+                  }
+              }
+          ]
+      }
+  ],
+  'timeline-02': [
+      {
+          "id": "tm02-badge",
+          "type": "badge",
+          "props": {
+              "content": "✦ THE NOIR PROCESS ROADMAP",
+              "background": "#1c1917",
+              "color": "#e7c873"
+          }
+      },
+      {
+          "id": "tm02-heading",
+          "type": "heading",
+          "props": {
+              "content": "Alur Eksekusi & Tahapan Presisi Tinggi",
+              "level": "h2",
+              "fontSize": "42px",
+              "fontWeight": "800",
+              "color": "#fafaf9",
+              "align": "center",
+              "margin": "0 0 14px 0"
+          }
+      },
+      {
+          "id": "tm02-desc",
+          "type": "text",
+          "props": {
+              "content": "Setiap langkah dirancang dengan ketelitian maksimal untuk memastikan hasil akhir melampaui ekspektasi Anda.",
+              "fontSize": "16px",
+              "color": "#a8a29e",
+              "align": "center",
+              "margin": "0 0 48px 0"
+          }
+      }
+  ],
+  'timeline-03': [
+      {
+          "id": "tml3-badge",
+          "type": "badge",
+          "props": {
+              "content": "⚡ RAPID EXECUTION SPRINT",
+              "background": "#1c1917",
+              "color": "#f97316"
+          }
+      },
+      {
+          "id": "tml3-heading",
+          "type": "heading",
+          "props": {
+              "content": "Tahapan Akselerasi Dari Konsep Ke Pasar",
+              "level": "h2",
+              "fontSize": "42px",
+              "fontWeight": "900",
+              "color": "#fafaf9",
+              "margin": "0 0 16px 0"
+          }
+      },
+      {
+          "id": "tml3-text",
+          "type": "text",
+          "props": {
+              "content": "Kerangka kerja berkecepatan tinggi yang memangkas waktu peluncuran dari hitungan bulan menjadi minggu.",
+              "fontSize": "16px",
+              "color": "#a8a29e",
+              "margin": "0 0 32px 0"
+          }
+      }
+  ],
+  'timeline-04': [
+      {
+          "id": "tml4-badge",
+          "type": "badge",
+          "props": {
+              "content": "★ ROADMAP TAHAPAN KERJA",
+              "background": "#fef08a",
+              "color": "#000000"
+          }
+      },
+      {
+          "id": "tml4-heading",
+          "type": "heading",
+          "props": {
+              "content": "PROSES EKSEKUSI TANPA KOMPROMI",
+              "level": "h2",
+              "fontSize": "44px",
+              "fontWeight": "900",
+              "color": "#000000",
+              "align": "center",
+              "margin": "0 0 12px 0"
+          }
+      },
+      {
+          "id": "tml4-text",
+          "type": "text",
+          "props": {
+              "content": "Transparansi total di setiap fase proyek dari konsep awal hingga hasil akhir yang siap digunakan.",
+              "fontSize": "16px",
+              "color": "#1e293b",
+              "align": "center",
+              "margin": "0 0 40px 0"
+          }
+      }
+  ],
+  'timeline-05': [
+      {
+          "id": "tml5-badge",
+          "type": "badge",
+          "props": {
+              "content": "Tahapan Kerja",
+              "background": "#f1f5f9",
+              "color": "#475569"
+          }
+      },
+      {
+          "id": "tml5-heading",
+          "type": "heading",
+          "props": {
+              "content": "Kesederhanaan Dalam Setiap Langkah",
+              "level": "h2",
+              "fontSize": "38px",
+              "fontWeight": "700",
+              "color": "#0f172a",
+              "align": "center",
+              "margin": "0 0 12px 0"
+          }
+      },
+      {
+          "id": "tml5-text",
+          "type": "text",
+          "props": {
+              "content": "Pendekatan terstruktur yang mengutamakan kejelasan, ketelitian, dan kenyamanan kolaborasi.",
+              "fontSize": "16px",
+              "color": "#64748b",
+              "align": "center",
+              "margin": "0 0 48px 0"
+          }
+      }
+  ],
+  'timeline-06': [
+      {
+          "id": "tml6-badge",
+          "type": "badge",
+          "props": {
+              "content": "✦ CELESTIAL TECH ROADMAP",
+              "background": "#0e1726",
+              "color": "#38bdf8"
+          }
+      },
+      {
+          "id": "tml6-heading",
+          "type": "heading",
+          "props": {
+              "content": "Evolusi Teknologi & Roadmap Inovasi",
+              "level": "h2",
+              "fontSize": "40px",
+              "fontWeight": "800",
+              "color": "#f8fafc",
+              "align": "center",
+              "margin": "0 0 14px 0"
+          }
+      },
+      {
+          "id": "tml6-text",
+          "type": "text",
+          "props": {
+              "content": "Rencana strategis pengembangan kapabilitas komputasi dan arsitektur platform dari masa ke masa.",
+              "fontSize": "16px",
+              "color": "#94a3b8",
+              "align": "center",
+              "margin": "0 0 40px 0"
+          }
+      }
+  ],
+  'timeline-07': [
+      {
+          "id": "tml7-badge",
+          "type": "badge",
+          "props": {
+              "content": "GIT_LOG --ONELINE --GRAPH",
+              "background": "#022c22",
+              "color": "#4ade80"
+          }
+      },
+      {
+          "id": "tml7-heading",
+          "type": "heading",
+          "props": {
+              "content": "Histori Rilis & Catatan Perubahan Sistem",
+              "level": "h2",
+              "fontSize": "38px",
+              "fontWeight": "800",
+              "color": "#f0fdf4",
+              "align": "center",
+              "margin": "0 0 12px 0"
+          }
+      },
+      {
+          "id": "tml7-text",
+          "type": "text",
+          "props": {
+              "content": "Rekam jejak pembaruan fitur, optimasi performa, dan patch stabilitas dari setiap iterasi versi.",
+              "fontSize": "15px",
+              "color": "#86efac",
+              "align": "center",
+              "margin": "0 0 40px 0"
+          }
+      }
+  ],
+  'timeline-08': [
+      {
+          "id": "tml8-badge",
+          "type": "badge",
+          "props": {
+              "content": "🌸 KISAH & PERTUMBUHAN KAMI",
+              "background": "#fdf2f8",
+              "color": "#db2777"
+          }
+      },
+      {
+          "id": "tml8-heading",
+          "type": "heading",
+          "props": {
+              "content": "Tumbuh Bersama Komunitas Dari Waktu Ke Waktu",
+              "level": "h2",
+              "fontSize": "40px",
+              "fontWeight": "800",
+              "color": "#1e293b",
+              "align": "center",
+              "margin": "0 0 14px 0"
+          }
+      },
+      {
+          "id": "tml8-text",
+          "type": "text",
+          "props": {
+              "content": "Setiap fase perjalanan kami dipenuhi dedikasi untuk memberikan dampak positif yang nyata dan berkelanjutan.",
+              "fontSize": "16px",
+              "color": "#64748b",
+              "align": "center",
+              "margin": "0 0 40px 0"
+          }
+      }
+  ],
+  'timeline-09': [
+      {
+          "id": "tml9-badge",
+          "type": "badge",
+          "props": {
+              "content": "STRATEGIC CORPORATE ROADMAP",
+              "background": "#1e293b",
+              "color": "#38bdf8"
+          }
+      },
+      {
+          "id": "tml9-heading",
+          "type": "heading",
+          "props": {
+              "content": "Tahapan Transformasi Strategis Korporasi",
+              "level": "h2",
+              "fontSize": "40px",
+              "fontWeight": "800",
+              "color": "#ffffff",
+              "align": "center",
+              "margin": "0 0 14px 0"
+          }
+      },
+      {
+          "id": "tml9-text",
+          "type": "text",
+          "props": {
+              "content": "Peta jalan pertumbuhan multi-tahun untuk memperkuat posisi pasar dan menciptakan nilai tambah berkelanjutan.",
+              "fontSize": "16px",
+              "color": "#94a3b8",
+              "align": "center",
+              "margin": "0 0 40px 0"
+          }
+      }
+  ],
+  'timeline-10': [
+      {
+          "id": "tml10-badge",
+          "type": "badge",
+          "props": {
+              "content": "TAB TIMELINE INTERAKTIF",
+              "background": "#eff6ff",
+              "color": "#2563eb"
+          }
+      },
+      {
+          "id": "tml10-heading",
+          "type": "heading",
+          "props": {
+              "content": "Eksplorasi Jejak Langkah Sesuai Periode",
+              "level": "h2",
+              "fontSize": "40px",
+              "fontWeight": "800",
+              "color": "#0f172a",
+              "align": "center",
+              "margin": "0 0 12px 0"
+          }
+      },
+      {
+          "id": "tml10-text",
+          "type": "text",
+          "props": {
+              "content": "Pilih periode waktu di bawah untuk melihat rincian inisiatif dan pencapaian strategis pada tahun tersebut.",
+              "fontSize": "16px",
+              "color": "#64748b",
+              "align": "center",
+              "margin": "0 0 36px 0"
+          }
+      }
+  ],
+  'timeline-11': [
+      {
+          "id": "tml11-badge",
+          "type": "badge",
+          "props": {
+              "content": "🌱 ESG & SUSTAINABILITY ROADMAP",
+              "background": "#ecfdf5",
+              "color": "#059669"
+          }
+      },
+      {
+          "id": "tml11-heading",
+          "type": "heading",
+          "props": {
+              "content": "Perjalanan Menuju Emisi Nol Bersih",
+              "level": "h2",
+              "fontSize": "40px",
+              "fontWeight": "800",
+              "color": "#064e3b",
+              "align": "center",
+              "margin": "0 0 14px 0"
+          }
+      },
+      {
+          "id": "tml11-text",
+          "type": "text",
+          "props": {
+              "content": "Langkah nyata kami dalam mengintegrasikan praktik ramah lingkungan di setiap lini operasional bisnis.",
+              "fontSize": "16px",
+              "color": "#047857",
+              "align": "center",
+              "margin": "0 0 40px 0"
+          }
+      }
+  ],
+  'timeline-12': [
+      {
+          "id": "tml12-badge",
+          "type": "badge",
+          "props": {
+              "content": "⚡ GROWTH HORIZON TRACK",
+              "background": "#ffedd5",
+              "color": "#ea580c"
+          }
+      },
+      {
+          "id": "tml12-heading",
+          "type": "heading",
+          "props": {
+              "content": "Lintasan Akselerasi & Lompatan Nilai",
+              "level": "h2",
+              "fontSize": "42px",
+              "fontWeight": "900",
+              "color": "#0f172a",
+              "align": "center",
+              "margin": "0 0 14px 0"
+          }
+      },
+      {
+          "id": "tml12-text",
+          "type": "text",
+          "props": {
+              "content": "Kilas balik fase percepatan bisnis dari tahap inkubasi hingga ekspansi pasar yang agresif.",
+              "fontSize": "16px",
+              "color": "#64748b",
+              "align": "center",
+              "margin": "0 0 40px 0"
+          }
+      }
+  ],
+  'timeline-13': [
+      {
+          "id": "tml13-badge",
+          "type": "badge",
+          "props": {
+              "content": "JURNAL KRONOLOGI RESMI",
+              "background": "#f1f5f9",
+              "color": "#334155"
+          }
+      },
+      {
+          "id": "tml13-heading",
+          "type": "heading",
+          "props": {
+              "content": "Kronologi Sejarah & Dokumentasi Peristiwa",
+              "level": "h2",
+              "fontSize": "38px",
+              "fontWeight": "800",
+              "color": "#0f172a",
+              "align": "center",
+              "margin": "0 0 12px 0"
+          }
+      },
+      {
+          "id": "tml13-text",
+          "type": "text",
+          "props": {
+              "content": "Arsip resmi momen-momen penting yang membentuk identitas dan reputasi lembaga kami.",
+              "fontSize": "16px",
+              "color": "#64748b",
+              "align": "center",
+              "margin": "0 0 40px 0"
+          }
+      }
+  ],
+  'timeline-14': [
+      {
+          "id": "tml14-badge",
+          "type": "badge",
+          "props": {
+              "content": "✦ AI EVOLUTIONARY MILESTONES",
+              "background": "#e0f2fe",
+              "color": "#0284c7"
+          }
+      },
+      {
+          "id": "tml14-heading",
+          "type": "heading",
+          "props": {
+              "content": "Evolusi Model AI & Kecerdasan Mesin",
+              "level": "h2",
+              "fontSize": "40px",
+              "fontWeight": "800",
+              "color": "#0f172a",
+              "align": "center",
+              "margin": "0 0 14px 0"
+          }
+      },
+      {
+          "id": "tml14-text",
+          "type": "text",
+          "props": {
+              "content": "Tonggak sejarah pengembangan model kecerdasan buatan terapan kami dalam memecahkan masalah kompleks.",
+              "fontSize": "16px",
+              "color": "#64748b",
+              "align": "center",
+              "margin": "0 0 40px 0"
+          }
+      }
+  ],
+  'timeline-15': [
+      {
+          "id": "tml15-badge",
+          "type": "badge",
+          "props": {
+              "content": "EST. 2012 — PERJALANAN HISTORIS",
+              "background": "#f8fafc",
+              "color": "#475569"
+          }
+      },
+      {
+          "id": "tml15-heading",
+          "type": "heading",
+          "props": {
+              "content": "Kilas Balik Dedikasi Dari Masa Ke Masa",
+              "level": "h2",
+              "fontSize": "40px",
+              "fontWeight": "800",
+              "color": "#0f172a",
+              "align": "center",
+              "margin": "0 0 14px 0"
+          }
+      },
+      {
+          "id": "tml15-text",
+          "type": "text",
+          "props": {
+              "content": "Menelusuri setiap babak penting dalam perjalanan membangun reputasi yang kokoh dan tepercaya.",
+              "fontSize": "16px",
+              "color": "#64748b",
+              "align": "center",
+              "margin": "0 0 48px 0"
+          }
+      }
+  ],
+  'timeline-16': [
+      {
+          "id": "tml16-badge",
+          "type": "badge",
+          "props": {
+              "content": "AGENCY CREATIVE CHAPTERS",
+              "background": "#faf5ff",
+              "color": "#9333ea"
+          }
+      },
+      {
+          "id": "tml16-heading",
+          "type": "heading",
+          "props": {
+              "content": "Babak Kreatif & Mahakarya Desain",
+              "level": "h2",
+              "fontSize": "42px",
+              "fontWeight": "800",
+              "color": "#0f172a",
+              "align": "center",
+              "margin": "0 0 14px 0"
+          }
+      },
+      {
+          "id": "tml16-text",
+          "type": "text",
+          "props": {
+              "content": "Eksplorasi perjalanan estetika dan penciptaan identitas visual untuk brand-brand paling berpengaruh.",
+              "fontSize": "16px",
+              "color": "#64748b",
+              "align": "center",
+              "margin": "0 0 40px 0"
+          }
+      }
+  ],
+  'timeline-17': [
+      {
+          "id": "tml17-badge",
+          "type": "badge",
+          "props": {
+              "content": "TRANSGO OPERATIONAL MILESTONES",
+              "background": "#fef3c7",
+              "color": "#d97706"
+          }
+      },
+      {
+          "id": "tml17-heading",
+          "type": "heading",
+          "props": {
+              "content": "Tahapan Ekspansi Fasilitas & Kapasitas Industri",
+              "level": "h2",
+              "fontSize": "42px",
+              "fontWeight": "900",
+              "color": "#0f172a",
+              "align": "center",
+              "margin": "0 0 14px 0"
+          }
+      },
+      {
+          "id": "tml17-text",
+          "type": "text",
+          "props": {
+              "content": "Pertumbuhan kapasitas pabrik dan peremajaan mesin untuk menjawab permintaan pasar skala raksasa.",
+              "fontSize": "16px",
+              "color": "#64748b",
+              "align": "center",
+              "margin": "0 0 40px 0"
+          }
+      }
+  ],
+  'timeline-18': [
+      {
+          "id": "tml18-badge",
+          "type": "badge",
+          "props": {
+              "content": "📱 APP RELEASE SCHEDULE",
+              "background": "#fff1f2",
+              "color": "#e11d48"
+          }
+      },
+      {
+          "id": "tml18-heading",
+          "type": "heading",
+          "props": {
+              "content": "Jadwal Rilis Fitur & Pembaruan Aplikasi",
+              "level": "h2",
+              "fontSize": "40px",
+              "fontWeight": "800",
+              "color": "#0f172a",
+              "align": "center",
+              "margin": "0 0 14px 0"
+          }
+      },
+      {
+          "id": "tml18-text",
+          "type": "text",
+          "props": {
+              "content": "Ikuti roadmap peluncuran fitur baru yang dirancang untuk meningkatkan produktivitas harian Anda.",
+              "fontSize": "16px",
+              "color": "#64748b",
+              "align": "center",
+              "margin": "0 0 40px 0"
+          }
+      }
+  ],
+  'timeline-19': [
+      {
+          "id": "tml19-badge",
+          "type": "badge",
+          "props": {
+              "content": "STRATEGIC EXECUTION TRACK",
+              "background": "#f0fdf4",
+              "color": "#16a34a"
+          }
+      },
+      {
+          "id": "tml19-heading",
+          "type": "heading",
+          "props": {
+              "content": "Kerangka Kerja Eksekusi & Capaian Proyek",
+              "level": "h2",
+              "fontSize": "40px",
+              "fontWeight": "800",
+              "color": "#0f172a",
+              "margin": "0 0 16px 0"
+          }
+      },
+      {
+          "id": "tml19-text",
+          "type": "text",
+          "props": {
+              "content": "Pemantauan berkala setiap inisiatif strategis untuk menjamin kepatuhan anggaran dan ketepatan waktu.",
+              "fontSize": "16px",
+              "color": "#64748b",
+              "margin": "0 0 32px 0"
+          }
+      }
+  ],
+  'timeline-20': [
+      {
+          "id": "tml20-badge",
+          "type": "badge",
+          "props": {
+              "content": "✦ AETHER VISIONARY CENTURY ROADMAP",
+              "background": "#1e1b4b",
+              "color": "#818cf8"
+          }
+      },
+      {
+          "id": "tml20-heading",
+          "type": "heading",
+          "props": {
+              "content": "Jejak Masa Lalu Menuju Warisan Masa Depan",
+              "level": "h2",
+              "fontSize": "44px",
+              "fontWeight": "900",
+              "color": "#fafaf9",
+              "align": "center",
+              "margin": "0 0 16px 0"
+          }
+      },
+      {
+          "id": "tml20-text",
+          "type": "text",
+          "props": {
+              "content": "Merangkai fondasi sejarah yang kokoh dengan visi transformatif melintasi berbagai dekade ke depan.",
+              "fontSize": "17px",
+              "color": "#cbd5e1",
+              "align": "center",
+              "margin": "0 0 48px 0"
+          }
+      }
   ],
   'team-01': [
     { id: 'team1-badge', type: 'badge', props: { content: '✦ Tim 01', background: '#eef2ff', color: '#4f46e5' } },
