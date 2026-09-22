@@ -169,6 +169,24 @@ import Statistics19 from '@builder/sections/statistics/layouts/Statistics19';
 import Statistics20 from '@builder/sections/statistics/layouts/Statistics20';
 import Fleet01 from '@builder/sections/fleet/layouts/Fleet01';
 import Fleet02 from '@builder/sections/fleet/layouts/Fleet02';
+import Fleet03 from '@builder/sections/fleet/layouts/Fleet03';
+import Fleet04 from '@builder/sections/fleet/layouts/Fleet04';
+import Fleet05 from '@builder/sections/fleet/layouts/Fleet05';
+import Fleet06 from '@builder/sections/fleet/layouts/Fleet06';
+import Fleet07 from '@builder/sections/fleet/layouts/Fleet07';
+import Fleet08 from '@builder/sections/fleet/layouts/Fleet08';
+import Fleet09 from '@builder/sections/fleet/layouts/Fleet09';
+import Fleet10 from '@builder/sections/fleet/layouts/Fleet10';
+import Fleet11 from '@builder/sections/fleet/layouts/Fleet11';
+import Fleet12 from '@builder/sections/fleet/layouts/Fleet12';
+import Fleet13 from '@builder/sections/fleet/layouts/Fleet13';
+import Fleet14 from '@builder/sections/fleet/layouts/Fleet14';
+import Fleet15 from '@builder/sections/fleet/layouts/Fleet15';
+import Fleet16 from '@builder/sections/fleet/layouts/Fleet16';
+import Fleet17 from '@builder/sections/fleet/layouts/Fleet17';
+import Fleet18 from '@builder/sections/fleet/layouts/Fleet18';
+import Fleet19 from '@builder/sections/fleet/layouts/Fleet19';
+import Fleet20 from '@builder/sections/fleet/layouts/Fleet20';
 import Coverage01 from '@builder/sections/coverage/layouts/Coverage01';
 import Coverage02 from '@builder/sections/coverage/layouts/Coverage02';
 import Testimonials01 from '@builder/sections/testimonials/layouts/Testimonials01';
@@ -519,6 +537,24 @@ export const LAYOUT_COMPONENTS = {
   // Other section layouts
   'Fleet01': Fleet01,
   'Fleet02': Fleet02,
+  'Fleet03': Fleet03,
+  'Fleet04': Fleet04,
+  'Fleet05': Fleet05,
+  'Fleet06': Fleet06,
+  'Fleet07': Fleet07,
+  'Fleet08': Fleet08,
+  'Fleet09': Fleet09,
+  'Fleet10': Fleet10,
+  'Fleet11': Fleet11,
+  'Fleet12': Fleet12,
+  'Fleet13': Fleet13,
+  'Fleet14': Fleet14,
+  'Fleet15': Fleet15,
+  'Fleet16': Fleet16,
+  'Fleet17': Fleet17,
+  'Fleet18': Fleet18,
+  'Fleet19': Fleet19,
+  'Fleet20': Fleet20,
   'Coverage01': Coverage01,
   'Coverage02': Coverage02,
   'Testimonials01': Testimonials01,

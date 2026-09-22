@@ -6116,6 +6116,597 @@ export const LAYOUT_DEFAULTS = {
     { id: 'fleet02-desc', type: 'text', props: { content: 'Kami mengoperasikan armada modern untuk memastikan pengiriman tepat waktu.', fontSize: '16px', color: '#94a3b8' } },
     { id: 'fleet02-img', type: 'image', props: { src: 'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=800&auto=format&fit=crop&q=80', alt: 'Logistics Fleet', width: '100%', height: '400px', objectFit: 'cover' } }
   ],
+  'fleet-03': [
+      {
+          "id": "flt3-badge",
+          "type": "badge",
+          "props": {
+              "content": "🚛 500+ Armada Aktif",
+              "background": "#1c1917",
+              "color": "#f97316"
+          }
+      },
+      {
+          "id": "flt3-heading",
+          "type": "heading",
+          "props": {
+              "content": "Armada Berat Kelas Dunia",
+              "level": "h2",
+              "fontSize": "44px",
+              "fontWeight": "900",
+              "color": "#fafaf9"
+          }
+      },
+      {
+          "id": "flt3-text",
+          "type": "text",
+          "props": {
+              "content": "Truk tronton 40ft, kapal kargo samudra, dan air cargo beroperasi 24 jam nonstop untuk kelancaran logistik bisnis Anda.",
+              "fontSize": "16px",
+              "color": "#a8a29e"
+          }
+      },
+      {
+          "id": "flt3-img",
+          "type": "image",
+          "props": {
+              "src": "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=900&auto=format&fit=crop&q=80",
+              "alt": "Veloce Fleet",
+              "width": "100%",
+              "height": "100%",
+              "objectFit": "cover"
+          }
+      }
+  ],
+  'fleet-04': [
+      {
+          "id": "flt4-badge",
+          "type": "badge",
+          "props": {
+              "content": "★ FLEET STATS 2026",
+              "background": "#fef08a",
+              "color": "#000000"
+          }
+      },
+      {
+          "id": "flt4-heading",
+          "type": "heading",
+          "props": {
+              "content": "KAPASITAS ARMADA KAMI",
+              "level": "h2",
+              "fontSize": "44px",
+              "fontWeight": "900",
+              "color": "#000000"
+          }
+      },
+      {
+          "id": "flt4-text",
+          "type": "text",
+          "props": {
+              "content": "Angkutan darat, laut, dan udara berstandar industri siap melayani distribusi produk Anda ke seluruh Nusantara.",
+              "fontSize": "16px",
+              "color": "#334155"
+          }
+      }
+  ],
+  'fleet-05': [
+      {
+          "id": "flt5-badge",
+          "type": "badge",
+          "props": {
+              "content": "Armada & Distribusi",
+              "background": "#f1f5f9",
+              "color": "#475569"
+          }
+      },
+      {
+          "id": "flt5-heading",
+          "type": "heading",
+          "props": {
+              "content": "Efisiensi Tinggi di Setiap Rute",
+              "level": "h2",
+              "fontSize": "38px",
+              "fontWeight": "700",
+              "color": "#0f172a"
+          }
+      },
+      {
+          "id": "flt5-text",
+          "type": "text",
+          "props": {
+              "content": "Koleksi armada modern yang dirawat berkala untuk memastikan ketepatan jadwal dan keamanan kargo Anda.",
+              "fontSize": "16px",
+              "color": "#64748b"
+          }
+      }
+  ],
+  'fleet-06': [
+      {
+          "id": "flt6-badge",
+          "type": "badge",
+          "props": {
+              "content": "✦ REAL-TIME IOT TELEMETRY",
+              "background": "#0e1726",
+              "color": "#38bdf8"
+          }
+      },
+      {
+          "id": "flt6-heading",
+          "type": "heading",
+          "props": {
+              "content": "Kendali Armada Berbasis Sensor Pintar",
+              "level": "h2",
+              "fontSize": "40px",
+              "fontWeight": "800",
+              "color": "#f8fafc"
+          }
+      },
+      {
+          "id": "flt6-text",
+          "type": "text",
+          "props": {
+              "content": "Setiap armada dilengkapi sensor telemetri pintar, GPS multi-frekuensi, dan kamera dual-dashcam terhubung langsung ke command center.",
+              "fontSize": "16px",
+              "color": "#94a3b8"
+          }
+      }
+  ],
+  'fleet-07': [
+      {
+          "id": "flt7-badge",
+          "type": "badge",
+          "props": {
+              "content": "SYS.FLEET_MONITOR_v4",
+              "background": "#022c22",
+              "color": "#4ade80"
+          }
+      },
+      {
+          "id": "flt7-heading",
+          "type": "heading",
+          "props": {
+              "content": "Logistik Terintegrasi API Real-time",
+              "level": "h2",
+              "fontSize": "36px",
+              "fontWeight": "800",
+              "color": "#f0fdf4"
+          }
+      },
+      {
+          "id": "flt7-text",
+          "type": "text",
+          "props": {
+              "content": "Pantau posisi armada, konsumsi bahan bakar, suhu kargo, dan estimasi waktu tiba langsung melalui API endpoint pengiriman.",
+              "fontSize": "15px",
+              "color": "#86efac"
+          }
+      }
+  ],
+  'fleet-08': [
+      {
+          "id": "flt8-badge",
+          "type": "badge",
+          "props": {
+              "content": "✦ Pilihan Armada Lengkap",
+              "background": "#fdf2f8",
+              "color": "#db2777"
+          }
+      },
+      {
+          "id": "flt8-heading",
+          "type": "heading",
+          "props": {
+              "content": "Solusi Distribusi Sesuai Skala Bisnis",
+              "level": "h2",
+              "fontSize": "40px",
+              "fontWeight": "800",
+              "color": "#1e293b"
+          }
+      },
+      {
+          "id": "flt8-text",
+          "type": "text",
+          "props": {
+              "content": "Dari blind van pengiriman kilat perkotaan hingga truk tronton 40ft untuk distribusi pabrik antar provinsi.",
+              "fontSize": "16px",
+              "color": "#64748b"
+          }
+      }
+  ],
+  'fleet-09': [
+      {
+          "id": "flt9-badge",
+          "type": "badge",
+          "props": {
+              "content": "CORPORATE FLEET SOLUTION",
+              "background": "#1e293b",
+              "color": "#38bdf8"
+          }
+      },
+      {
+          "id": "flt9-heading",
+          "type": "heading",
+          "props": {
+              "content": "Keandalan Distribusi Skala Enterprise",
+              "level": "h2",
+              "fontSize": "40px",
+              "fontWeight": "800",
+              "color": "#ffffff"
+          }
+      },
+      {
+          "id": "flt9-text",
+          "type": "text",
+          "props": {
+              "content": "Dukungan armada khusus berkapasitas besar dengan SLA ketat untuk memenuhi kebutuhan rantai pasok industri skala nasional.",
+              "fontSize": "16px",
+              "color": "#94a3b8"
+          }
+      },
+      {
+          "id": "flt9-img",
+          "type": "image",
+          "props": {
+              "src": "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=900&auto=format&fit=crop&q=80",
+              "alt": "Corporate Fleet",
+              "width": "100%",
+              "height": "100%",
+              "objectFit": "cover"
+          }
+      }
+  ],
+  'fleet-10': [
+      {
+          "id": "flt10-badge",
+          "type": "badge",
+          "props": {
+              "content": "KATEGORI MODAL TRANSPORTASI",
+              "background": "#eff6ff",
+              "color": "#2563eb"
+          }
+      },
+      {
+          "id": "flt10-heading",
+          "type": "heading",
+          "props": {
+              "content": "Armada Darat, Laut, dan Udara Terpadu",
+              "level": "h2",
+              "fontSize": "40px",
+              "fontWeight": "800",
+              "color": "#0f172a"
+          }
+      },
+      {
+          "id": "flt10-text",
+          "type": "text",
+          "props": {
+              "content": "Eksplorasi spesifikasi teknis, kapasitas payload, dan jangkauan rute dari masing-masing tipe armada kami.",
+              "fontSize": "16px",
+              "color": "#64748b"
+          }
+      }
+  ],
+  'fleet-11': [
+      {
+          "id": "flt11-badge",
+          "type": "badge",
+          "props": {
+              "content": "🌱 ECO-FRIENDLY FLEET",
+              "background": "#ecfdf5",
+              "color": "#059669"
+          }
+      },
+      {
+          "id": "flt11-heading",
+          "type": "heading",
+          "props": {
+              "content": "Transportasi Berkelanjutan & Rendah Emisi",
+              "level": "h2",
+              "fontSize": "40px",
+              "fontWeight": "800",
+              "color": "#064e3b"
+          }
+      },
+      {
+          "id": "flt11-text",
+          "type": "text",
+          "props": {
+              "content": "Komitmen kami terhadap lingkungan melalui armada kendaraan listrik (EV) dan truk standar emisi Euro 5 yang ramah lingkungan.",
+              "fontSize": "16px",
+              "color": "#047857"
+          }
+      }
+  ],
+  'fleet-12': [
+      {
+          "id": "flt12-badge",
+          "type": "badge",
+          "props": {
+              "content": "⚡ FAST LOGISTICS CORRIDOR",
+              "background": "#ffedd5",
+              "color": "#ea580c"
+          }
+      },
+      {
+          "id": "flt12-heading",
+          "type": "heading",
+          "props": {
+              "content": "Kecepatan & Presisi Pengiriman Maksimal",
+              "level": "h2",
+              "fontSize": "42px",
+              "fontWeight": "900",
+              "color": "#0f172a"
+          }
+      },
+      {
+          "id": "flt12-text",
+          "type": "text",
+          "props": {
+              "content": "Armada ekspres beroperasi di sepanjang jalur koridor utama pulau Jawa, Sumatera, dan Bali dengan transit point terdedikasi.",
+              "fontSize": "16px",
+              "color": "#64748b"
+          }
+      }
+  ],
+  'fleet-13': [
+      {
+          "id": "flt13-badge",
+          "type": "badge",
+          "props": {
+              "content": "FLEET SPECIFICATIONS & PAYLOAD",
+              "background": "#f1f5f9",
+              "color": "#334155"
+          }
+      },
+      {
+          "id": "flt13-heading",
+          "type": "heading",
+          "props": {
+              "content": "Spesifikasi & Kapasitas Teknis Armada",
+              "level": "h2",
+              "fontSize": "38px",
+              "fontWeight": "800",
+              "color": "#0f172a"
+          }
+      },
+      {
+          "id": "flt13-text",
+          "type": "text",
+          "props": {
+              "content": "Panduan lengkap spesifikasi dimensi, tonase muatan, dan peruntukan kargo untuk setiap unit operasional kami.",
+              "fontSize": "16px",
+              "color": "#64748b"
+          }
+      }
+  ],
+  'fleet-14': [
+      {
+          "id": "flt14-badge",
+          "type": "badge",
+          "props": {
+              "content": "✦ AI-POWERED DISPATCH",
+              "background": "#e0f2fe",
+              "color": "#0284c7"
+          }
+      },
+      {
+          "id": "flt14-heading",
+          "type": "heading",
+          "props": {
+              "content": "Manajemen Armada Berbasis Kecerdasan Buatan",
+              "level": "h2",
+              "fontSize": "40px",
+              "fontWeight": "800",
+              "color": "#0f172a"
+          }
+      },
+      {
+          "id": "flt14-text",
+          "type": "text",
+          "props": {
+              "content": "Algoritma AI cerdas yang mengoptimalkan rute perjalanan secara dinamis guna memangkas waktu tempuh hingga 35%.",
+              "fontSize": "16px",
+              "color": "#64748b"
+          }
+      }
+  ],
+  'fleet-15': [
+      {
+          "id": "flt15-badge",
+          "type": "badge",
+          "props": {
+              "content": "EST. 2010 — MILESTONES",
+              "background": "#f8fafc",
+              "color": "#475569"
+          }
+      },
+      {
+          "id": "flt15-heading",
+          "type": "heading",
+          "props": {
+              "content": "Evolusi Armada & Transformasi Layanan",
+              "level": "h2",
+              "fontSize": "40px",
+              "fontWeight": "800",
+              "color": "#0f172a"
+          }
+      },
+      {
+          "id": "flt15-text",
+          "type": "text",
+          "props": {
+              "content": "Perjalanan 15 tahun dalam memperluas jangkauan armada dan mengadopsi standar teknologi transportasi mutakhir.",
+              "fontSize": "16px",
+              "color": "#64748b"
+          }
+      }
+  ],
+  'fleet-16': [
+      {
+          "id": "flt16-badge",
+          "type": "badge",
+          "props": {
+              "content": "PORTFOLIO SHOWCASE",
+              "background": "#faf5ff",
+              "color": "#9333ea"
+          }
+      },
+      {
+          "id": "flt16-heading",
+          "type": "heading",
+          "props": {
+              "content": "Armada Modern Berstandar Internasional",
+              "level": "h2",
+              "fontSize": "42px",
+              "fontWeight": "800",
+              "color": "#0f172a"
+          }
+      },
+      {
+          "id": "flt16-text",
+          "type": "text",
+          "props": {
+              "content": "Koleksi dokumentasi visual armada kami yang beroperasi di berbagai proyek distribusi nasional dan industri manufaktur.",
+              "fontSize": "16px",
+              "color": "#64748b"
+          }
+      }
+  ],
+  'fleet-17': [
+      {
+          "id": "flt17-badge",
+          "type": "badge",
+          "props": {
+              "content": "TRANSGO HEAVY HAULAGE",
+              "background": "#fef3c7",
+              "color": "#d97706"
+          }
+      },
+      {
+          "id": "flt17-heading",
+          "type": "heading",
+          "props": {
+              "content": "Siap Mengangkut Muatan Berat Hingga 50 Ton",
+              "level": "h2",
+              "fontSize": "42px",
+              "fontWeight": "900",
+              "color": "#0f172a"
+          }
+      },
+      {
+          "id": "flt17-text",
+          "type": "text",
+          "props": {
+              "content": "Armada multi-axle lowbed dan prime mover bertenaga tinggi untuk proyek infrastruktur, pertambangan, dan konstruksi skala besar.",
+              "fontSize": "16px",
+              "color": "#64748b"
+          }
+      },
+      {
+          "id": "flt17-img",
+          "type": "image",
+          "props": {
+              "src": "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=1200&auto=format&fit=crop&q=80",
+              "alt": "Transgo Heavy Fleet",
+              "width": "100%",
+              "height": "100%",
+              "objectFit": "cover"
+          }
+      }
+  ],
+  'fleet-18': [
+      {
+          "id": "flt18-badge",
+          "type": "badge",
+          "props": {
+              "content": "📱 MOBILE DISPATCH APP",
+              "background": "#fff1f2",
+              "color": "#e11d48"
+          }
+      },
+      {
+          "id": "flt18-heading",
+          "type": "heading",
+          "props": {
+              "content": "Pesan & Pantau Armada Langsung dari Gadget Anda",
+              "level": "h2",
+              "fontSize": "40px",
+              "fontWeight": "800",
+              "color": "#0f172a"
+          }
+      },
+      {
+          "id": "flt18-text",
+          "type": "text",
+          "props": {
+              "content": "Kemudahan reservasi armada truk, tracking lokasi muatan langsung secara live, dan digital proof-of-delivery dalam satu aplikasi.",
+              "fontSize": "16px",
+              "color": "#64748b"
+          }
+      }
+  ],
+  'fleet-19': [
+      {
+          "id": "flt19-badge",
+          "type": "badge",
+          "props": {
+              "content": "ORION SAFETY STANDARDS",
+              "background": "#f0fdf4",
+              "color": "#16a34a"
+          }
+      },
+      {
+          "id": "flt19-heading",
+          "type": "heading",
+          "props": {
+              "content": "Inspeksi & Standar Keselamatan Terketat",
+              "level": "h2",
+              "fontSize": "40px",
+              "fontWeight": "800",
+              "color": "#0f172a"
+          }
+      },
+      {
+          "id": "flt19-text",
+          "type": "text",
+          "props": {
+              "content": "Setiap unit kendaraan menjalani 40 titik pengecekan mekanis dan sanitasi sebelum diberangkatkan menuju lokasi pengiriman.",
+              "fontSize": "16px",
+              "color": "#64748b"
+          }
+      }
+  ],
+  'fleet-20': [
+      {
+          "id": "flt20-badge",
+          "type": "badge",
+          "props": {
+              "content": "✦ AETHER ULTIMATE FLEET ECOSYSTEM",
+              "background": "#1e1b4b",
+              "color": "#818cf8"
+          }
+      },
+      {
+          "id": "flt20-heading",
+          "type": "heading",
+          "props": {
+              "content": "Infrastruktur Logistik Modern Era Baru",
+              "level": "h2",
+              "fontSize": "44px",
+              "fontWeight": "900",
+              "color": "#fafaf9"
+          }
+      },
+      {
+          "id": "flt20-text",
+          "type": "text",
+          "props": {
+              "content": "Sinergi tanpa batas antara armada transportasi darat, laut, dan udara dengan dukungan teknologi terdepan dan reliabilitas tanpa kompromi.",
+              "fontSize": "17px",
+              "color": "#cbd5e1"
+          }
+      }
+  ],
   'coverage-02': [
     { id: 'cov02-heading', type: 'heading', props: { content: 'Jangkauan Distribusi Nasional', level: 'h2', fontSize: '36px', color: '#ffffff' } },
     { id: 'cov02-desc', type: 'text', props: { content: 'Menghubungkan bisnis Anda ke seluruh wilayah di Indonesia.', fontSize: '16px', color: '#94a3b8' } }

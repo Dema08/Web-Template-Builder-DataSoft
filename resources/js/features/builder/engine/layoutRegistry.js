@@ -179,8 +179,26 @@ export const LAYOUT_REGISTRY = {
     { id: 'statistics-20', name: 'Aether — Ultra Premium Finale', component: 'Statistics20', thumbnail: null },
   ],
   fleet: [
-    { id: 'fleet-01', name: 'Fleet 01', component: 'Fleet01', thumbnail: null },
-    { id: 'fleet-02', name: 'Fleet 02', component: 'Fleet02', thumbnail: null },
+    { id: 'fleet-01', name: 'Aurora - Centered Card Grid', component: 'Fleet01', thumbnail: null },
+    { id: 'fleet-02', name: 'Noir - Dark Split Image', component: 'Fleet02', thumbnail: null },
+    { id: 'fleet-03', name: 'Veloce - Cinematic Full Dark', component: 'Fleet03', thumbnail: null },
+    { id: 'fleet-04', name: 'Papercut - Neo-Brutalist Stats', component: 'Fleet04', thumbnail: null },
+    { id: 'fleet-05', name: 'Serenity - Minimal Clean Grid', component: 'Fleet05', thumbnail: null },
+    { id: 'fleet-06', name: 'Nebula - Dark Glass Dashboard', component: 'Fleet06', thumbnail: null },
+    { id: 'fleet-07', name: 'Terminal - Developer Monitor', component: 'Fleet07', thumbnail: null },
+    { id: 'fleet-08', name: 'Sakura - Warm Gradient Bento', component: 'Fleet08', thumbnail: null },
+    { id: 'fleet-09', name: 'Summit - Navy Corporate Split', component: 'Fleet09', thumbnail: null },
+    { id: 'fleet-10', name: 'Pulse - Interactive Filter Tabs', component: 'Fleet10', thumbnail: null },
+    { id: 'fleet-11', name: 'Verdant - Eco Green Fleet', component: 'Fleet11', thumbnail: null },
+    { id: 'fleet-12', name: 'Solstice - Orange Full-Bleed', component: 'Fleet12', thumbnail: null },
+    { id: 'fleet-13', name: 'Monocle - Editorial Spec Table', component: 'Fleet13', thumbnail: null },
+    { id: 'fleet-14', name: 'Zephyr - Glassmorphism AI Fleet', component: 'Fleet14', thumbnail: null },
+    { id: 'fleet-15', name: 'Meridian - Timeline Heritage', component: 'Fleet15', thumbnail: null },
+    { id: 'fleet-16', name: 'Lumiere - Agency Portfolio', component: 'Fleet16', thumbnail: null },
+    { id: 'fleet-17', name: 'Transgo - Full-Width Banner', component: 'Fleet17', thumbnail: null },
+    { id: 'fleet-18', name: 'Solaris - App Download CTA', component: 'Fleet18', thumbnail: null },
+    { id: 'fleet-19', name: 'Orion - Split Feature List', component: 'Fleet19', thumbnail: null },
+    { id: 'fleet-20', name: 'Aether - Ultra Premium Finale', component: 'Fleet20', thumbnail: null },
   ],
   coverage: [
     { id: 'coverage-01', name: 'Coverage 01', component: 'Coverage01', thumbnail: null },
@@ -405,3 +423,4 @@ export const getLayoutComponent = (sectionType, layoutId) => {
   const layout = layouts.find(l => l.id === layoutId);
   return layout ? layout.component : null;
 };
+
