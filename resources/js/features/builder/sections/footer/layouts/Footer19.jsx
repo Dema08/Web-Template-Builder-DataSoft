@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import FooterSupportBadge from '../FooterSupportBadge';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 /**
@@ -57,6 +58,7 @@ export default function Footer19({ components = [], sectionId = null }) {
       </div>
       <div className="mt-6 text-center font-bold">
         {copyComps.length > 0 ? renderLayoutComponents(copyComps, sectionId) : (<span className="text-xs cursor-default select-none">© 2026 Kioso.</span>)}
+        <FooterSupportBadge className="text-slate-500" />
       </div>
     </footer>
   );

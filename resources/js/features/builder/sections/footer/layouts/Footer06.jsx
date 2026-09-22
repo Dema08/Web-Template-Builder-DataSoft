@@ -1,3 +1,4 @@
+import FooterSupportBadge from '../FooterSupportBadge';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 /**
@@ -37,6 +38,7 @@ export default function Footer06({ components = [], sectionId = null }) {
         <div className="flex justify-center mt-4">{renderLayoutComponents(ctaComps, sectionId)}</div>
         <div className="mt-8 pt-6 border-t border-pink-100">
           {copyComps.length > 0 ? renderLayoutComponents(copyComps, sectionId) : (<span className="text-xs text-pink-300 cursor-default select-none">© 2026 Sakura.</span>)}
+          <FooterSupportBadge className="text-pink-400" />
         </div>
       </div>
     </footer>

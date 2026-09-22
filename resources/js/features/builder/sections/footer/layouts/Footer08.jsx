@@ -1,3 +1,4 @@
+import FooterSupportBadge from '../FooterSupportBadge';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 /**
@@ -51,6 +52,7 @@ export default function Footer08({ components = [], sectionId = null }) {
         </div>
         <div className="mt-6 text-center font-black">
           {copyComps.length > 0 ? renderLayoutComponents(copyComps, sectionId) : (<span className="text-xs cursor-default select-none">© 2026 Papercut.</span>)}
+          <FooterSupportBadge className="text-black" />
         </div>
       </div>
     </footer>

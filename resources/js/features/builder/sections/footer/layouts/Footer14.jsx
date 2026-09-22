@@ -1,3 +1,4 @@
+import FooterSupportBadge from '../FooterSupportBadge';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 /**
@@ -67,6 +68,7 @@ export default function Footer14({ components = [], sectionId = null }) {
         </div>
         <div className="max-w-6xl mx-auto mt-10 pt-6 border-t border-white/15 text-center">
           {copyComps.length > 0 ? renderLayoutComponents(copyComps, sectionId) : (<span className="text-xs text-blue-300 cursor-default select-none">© 2026 Maison.</span>)}
+          <FooterSupportBadge className="text-blue-200" />
         </div>
       </div>
     </footer>

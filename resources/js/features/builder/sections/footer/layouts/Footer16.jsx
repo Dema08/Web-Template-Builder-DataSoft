@@ -1,3 +1,4 @@
+import FooterSupportBadge from '../FooterSupportBadge';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 /**
@@ -55,6 +56,7 @@ export default function Footer16({ components = [], sectionId = null }) {
         </div>
         <div className="mt-10 pt-6 border-t border-amber-200 text-center">
           {copyComps.length > 0 ? renderLayoutComponents(copyComps, sectionId) : (<span className="text-xs text-amber-700 cursor-default select-none">© 2026 Goldleaf.</span>)}
+          <FooterSupportBadge className="text-amber-700" />
         </div>
       </div>
     </footer>

@@ -1,3 +1,4 @@
+import FooterSupportBadge from '../FooterSupportBadge';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 /**
@@ -62,6 +63,7 @@ export default function Footer10({ components = [], sectionId = null }) {
         </div>
         <div className="mt-10 pt-6 border-t border-white/10 text-center">
           {copyComps.length > 0 ? renderLayoutComponents(copyComps, sectionId) : (<span className="text-xs text-slate-500 cursor-default select-none">© 2026 Nebula.</span>)}
+          <FooterSupportBadge className="text-violet-300" />
         </div>
       </div>
     </footer>
