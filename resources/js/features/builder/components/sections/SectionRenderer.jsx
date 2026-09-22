@@ -3,6 +3,7 @@ import { useBuilderStore } from '../../stores/builderStore';
 import { getSectionConfig } from '../../utils/industryConfigs';
 import { getLayoutComponent } from '../../engine/layoutComponentMapper';
 import { getUIComponent } from '../../engine/componentMapper';
+import { renderLayoutComponents } from '../../engine/layoutRenderer.jsx';
 import EditableComponent from '../editing/EditableComponent';
 import SnapGrid from '../canvas/SnapGrid';
 import BuilderErrorBoundary from '../common/BuilderErrorBoundary';
@@ -136,6 +137,7 @@ export default function SectionRenderer({ section, isSelected, onClick }) {
         <div className="relative z-10 w-full">
           <BuilderErrorBoundary title={`Preview section ${section.type}`}>
             <LayoutComponent components={section.components || []} sectionId={section.id} />
+            {renderExtraSectionComponents()}
           </BuilderErrorBoundary>
         </div>
       </div>
@@ -151,6 +153,19 @@ export default function SectionRenderer({ section, isSelected, onClick }) {
     onClick();
     selectSection(section.id);
   };
+
+  // Helper to render standalone components added dynamically to section root
+  function renderExtraSectionComponents() {
+    const extraComps = (section.components || []).filter(
+      (c) => c.isStandalone || c.type === 'icon' || c.props?.isStandalone
+    );
+    if (extraComps.length === 0) return null;
+    return (
+      <div className="relative max-w-5xl mx-auto px-6 py-4 flex flex-wrap items-center justify-center gap-4 z-20 pointer-events-auto">
+        {renderLayoutComponents(extraComps, section.id)}
+      </div>
+    );
+  }
 
   // If no layout component found, render a fallback with the section type
   if (!LayoutComponent) {
@@ -212,6 +227,7 @@ export default function SectionRenderer({ section, isSelected, onClick }) {
       <div className="relative z-10 w-full">
         <BuilderErrorBoundary title={`Section layout (${section.type} / ${section.layout})`}>
           <LayoutComponent components={section.components || []} sectionId={section.id} />
+          {renderExtraSectionComponents()}
         </BuilderErrorBoundary>
       </div>
 
@@ -277,10 +293,7 @@ export default function SectionRenderer({ section, isSelected, onClick }) {
             onClick={(e) => {
               e.stopPropagation();
               const state = useBuilderStore.getState();
-              const duplicated = JSON.parse(JSON.stringify(section));
-              duplicated.id = `section-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-              const idx = state.sections.findIndex(s => s.id === section.id);
-              state.insertSectionAt(duplicated.type, duplicated.layout, idx + 1);
+              state.duplicateSection(section.id);
               toast.success('Section duplicated successfully', 'Duplicate');
             }}
             className="p-1 hover:bg-slate-800 rounded text-slate-300 hover:text-white transition"

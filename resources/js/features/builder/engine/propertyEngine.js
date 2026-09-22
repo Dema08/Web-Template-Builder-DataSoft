@@ -132,6 +132,11 @@ export const PROPERTY_ENGINE = {
     props: COMPONENT_REGISTRY.social.props,
   },
 
+  icon: {
+    groups: ['content', 'size', 'color', 'spacing', 'border', 'shadow', 'animation', 'transform', 'position'],
+    props: COMPONENT_REGISTRY.icon.props,
+  },
+
   card: {
     groups: ['content', 'size', 'color', 'spacing', 'border', 'shadow', 'animation', 'position'],
     props: COMPONENT_REGISTRY.card.props,
@@ -140,7 +145,16 @@ export const PROPERTY_ENGINE = {
 
 // Get full property config for a component type
 export const getPropertyConfig = (componentType) => {
-  return PROPERTY_ENGINE[componentType] || null;
+  if (PROPERTY_ENGINE[componentType]) {
+    return PROPERTY_ENGINE[componentType];
+  }
+  if (COMPONENT_REGISTRY[componentType]) {
+    return {
+      groups: ['content', 'size', 'color', 'spacing', 'border', 'shadow'],
+      props: COMPONENT_REGISTRY[componentType].props,
+    };
+  }
+  return null;
 };
 
 // Get all property keys for a component type

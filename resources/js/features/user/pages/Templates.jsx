@@ -16,6 +16,9 @@ import {
     Lock,
     Plus,
     LayoutTemplate,
+    Globe,
+    Trash2,
+    User,
 } from 'lucide-react';
 import { Card, Button } from '@shared/components/ui';
 import { ROUTES } from '@constants';
@@ -39,7 +42,6 @@ export default function Templates() {
     const templateLimit = useSubscriptionStore((s) => s.templateLimit);
     const isUnlimited = useSubscriptionStore((s) => s.isUnlimited);
     const isFree = useSubscriptionStore((s) => s.isFree);
-    const usedTemplateIds = useSubscriptionStore((s) => s.usedTemplateIds);
     const useTemplateAction = useSubscriptionStore((s) => s.useTemplate);
 
     useEffect(() => { fetchSubStatus(); }, []);
@@ -60,10 +62,11 @@ export default function Templates() {
 
     const categories = [
         { id: 'all', name: 'All Templates' },
+        { id: 'my-templates', name: '🎨 Template Saya' },
         ...categoriesData.map((cat) => ({ id: cat.id, name: cat.name })),
     ];
 
-    /* ─── Templates (dengan flag akses can_use/is_activated) ─────────── */
+    /* ─── System & Public User Templates ──────────────────────────── */
     const {
         data: templatesData,
         isLoading: templatesApiLoading,
@@ -73,13 +76,33 @@ export default function Templates() {
         queryFn: () =>
             templateApi
                 .listWithAccess({
-                    industry_category_id: selectedCategory !== 'all' ? selectedCategory : undefined,
+                    industry_category_id: (selectedCategory !== 'all' && selectedCategory !== 'my-templates') ? selectedCategory : undefined,
                     search: searchQuery || undefined,
                 })
                 .then((res) => res.data?.data ?? res.data),
+        enabled: selectedCategory !== 'my-templates',
     });
 
-    const accessList = templatesData?.data ?? templatesData ?? [];
+    /* ─── My Templates Query ───────────────────────────────────────── */
+    const {
+        data: rawMyTemplatesList = [],
+        isLoading: myTemplatesLoading,
+    } = useQuery({
+        queryKey: ['my-templates', { search: searchQuery }],
+        queryFn: () =>
+            templateApi
+                .getMyTemplates({ search: searchQuery || undefined })
+                .then((res) => {
+                    const raw = res.data?.data ?? res.data;
+                    if (Array.isArray(raw)) return raw;
+                    if (Array.isArray(raw?.data)) return raw.data;
+                    return [];
+                }),
+        enabled: selectedCategory === 'my-templates',
+    });
+
+    const myTemplatesList = Array.isArray(rawMyTemplatesList) ? rawMyTemplatesList : [];
+    const accessList = Array.isArray(templatesData?.data) ? templatesData.data : (Array.isArray(templatesData) ? templatesData : []);
     const quotaInfo = templatesData?.quota ?? null;
 
     const templates = (accessList || []).map((tpl) => {
@@ -101,6 +124,9 @@ export default function Templates() {
             can_use: tpl.can_use !== undefined ? Boolean(tpl.can_use) : !(!isBlank && Boolean(tpl.is_premium) && isFree),
             is_activated: Boolean(tpl.is_activated),
             reason: tpl.reason || null,
+            is_user_template: Boolean(tpl.is_user_template),
+            visibility: tpl.visibility || 'public',
+            is_mine: Boolean(tpl.is_mine),
         };
     });
 
@@ -122,7 +148,6 @@ export default function Templates() {
     /** Validasi akses via backend lalu muat template ke Builder */
     const handleUseTemplate = async (tpl) => {
         if (tpl.is_premium && !tpl.can_use) {
-            // Free tanpa akses / Starter over-quota → UpgradeModal (403 dari store)
             await useTemplateAction(tpl.id);
             queryClient.invalidateQueries(['user-templates']);
             return;
@@ -136,12 +161,53 @@ export default function Templates() {
             }
             try {
                 sessionStorage.setItem('pending_template_id', String(tpl.id));
-                sessionStorage.setItem('pending_template_name', tpl.title);
+                sessionStorage.setItem('pending_template_name', tpl.title || tpl.name);
             } catch (_) { /* ignore */ }
-            toast.success(`Memuat template "${tpl.title}" ke dalam Builder...`, 'Template Dipilih');
+            toast.success(`Memuat template "${tpl.title || tpl.name}" ke dalam Builder...`, 'Template Dipilih');
             navigate(ROUTES.BUILDER);
         } finally {
             setUsingId(null);
+        }
+    };
+
+    /** Edit user-generated template directly in builder */
+    const handleEditMyTemplate = (tpl) => {
+        try {
+            sessionStorage.setItem('pending_template_id', String(tpl.id));
+            sessionStorage.setItem('pending_template_name', tpl.name);
+        } catch (_) { /* ignore */ }
+        toast.success(`Membuka template "${tpl.name}" untuk diedit di Builder...`, 'Edit Template');
+        navigate(ROUTES.BUILDER);
+    };
+
+    /** Toggle private/public visibility for user's own template */
+    const handleToggleMyTemplateVisibility = async (tpl) => {
+        const isPublic = tpl.visibility === 'public';
+        try {
+            if (isPublic) {
+                await templateApi.unpublishMyTemplate(tpl.id);
+                toast.success(`Template "${tpl.name}" sekarang diset ke Private (Hanya Anda).`, 'Visibilitas Diubah');
+            } else {
+                await templateApi.publishMyTemplate(tpl.id);
+                toast.success(`Template "${tpl.name}" sekarang dipublikasikan ke Publik!`, 'Visibilitas Diubah');
+            }
+            queryClient.invalidateQueries(['my-templates']);
+            queryClient.invalidateQueries(['user-templates']);
+        } catch (err) {
+            toast.error(err.response?.data?.message || 'Gagal mengubah visibilitas template.', 'Error');
+        }
+    };
+
+    /** Delete user-generated template */
+    const handleDeleteMyTemplate = async (tpl) => {
+        if (!window.confirm(`Apakah Anda yakin ingin menghapus template "${tpl.name}"?`)) return;
+        try {
+            await templateApi.deleteMyTemplate(tpl.id);
+            toast.success(`Template "${tpl.name}" berhasil dihapus.`, 'Template Dihapus');
+            queryClient.invalidateQueries(['my-templates']);
+            queryClient.invalidateQueries(['user-templates']);
+        } catch (err) {
+            toast.error(err.response?.data?.message || 'Gagal menghapus template.', 'Error');
         }
     };
 
@@ -157,7 +223,9 @@ export default function Templates() {
     };
 
     /* ─── Loading / Error States ──────────────────────────────────── */
-    if (categoriesLoading || templatesApiLoading) {
+    const isPageLoading = categoriesLoading || (selectedCategory === 'my-templates' ? myTemplatesLoading : templatesApiLoading);
+
+    if (isPageLoading) {
         return (
             <div className="p-6 sm:p-8 max-w-7xl mx-auto">
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -200,7 +268,7 @@ export default function Templates() {
                         Template Gallery
                     </h1>
                     <p className="text-sm text-[rgb(var(--color-text-secondary))] mt-1">
-                        Pilih template profesional Microdata untuk membangun website perusahaan Anda.
+                        Pilih template profesional Microdata atau buat & kelola template karya Anda sendiri.
                     </p>
                     <p className="text-xs mt-2 font-bold text-[rgb(var(--color-text-secondary))]">
                         Paket: <span className="text-indigo-600">{planName}</span>
@@ -216,7 +284,7 @@ export default function Templates() {
                 <button
                     type="button"
                     onClick={handleCreateBlank}
-                    className="shrink-0 inline-flex items-center gap-2 px-5 py-3 rounded-2xl text-sm font-bold text-white shadow-lg shadow-indigo-600/25 hover:-translate-y-0.5 transition-all"
+                    className="shrink-0 inline-flex items-center gap-2 px-5 py-3 rounded-2xl text-sm font-bold text-white shadow-lg shadow-indigo-600/25 hover:-translate-y-0.5 transition-all cursor-pointer"
                     style={{ background: 'linear-gradient(135deg,#0ea5e9,#6366f1)' }}
                 >
                     <Plus className="h-4 w-4" /> Buat Template Web Kosong
@@ -244,7 +312,7 @@ export default function Templates() {
                         key={cat.id}
                         type="button"
                         onClick={() => setSelectedCategory(cat.id)}
-                        className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
+                        className={`px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
                             selectedCategory === cat.id
                                 ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20'
                                 : 'bg-[rgb(var(--color-surface))] text-[rgb(var(--color-text-secondary))] hover:bg-[rgb(var(--color-surface-alt))] hover:text-[rgb(var(--color-text-primary))] border border-[rgb(var(--color-border))]'
@@ -256,26 +324,62 @@ export default function Templates() {
             </div>
 
             {/* Template Grid */}
-            {filteredTemplates.length === 0 ? (
-                <div className="text-center py-20">
-                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-slate-100 mb-4">
-                        <Layout className="h-8 w-8 text-slate-400" />
+            {selectedCategory === 'my-templates' ? (
+                /* My Templates Tab */
+                myTemplatesList.length === 0 ? (
+                    <div className="text-center py-20 bg-slate-50/50 rounded-3xl border border-dashed border-slate-200">
+                        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-indigo-50 text-indigo-600 mb-4">
+                            <LayoutTemplate className="h-8 w-8" />
+                        </div>
+                        <h3 className="text-base font-extrabold text-slate-800">Belum Ada Template Buatan Anda</h3>
+                        <p className="text-slate-500 text-xs mt-1 max-w-md mx-auto leading-relaxed">
+                            Anda dapat membuat website dari Blank Template lalu mengklik tombol <span className="font-bold text-indigo-600">"Save as Template"</span> di Builder untuk menyimpannya sebagai template Private atau Publik.
+                        </p>
+                        <button
+                            type="button"
+                            onClick={handleCreateBlank}
+                            className="mt-5 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-extrabold text-white bg-indigo-600 hover:bg-indigo-700 shadow-md transition cursor-pointer"
+                        >
+                            <Plus className="h-4 w-4" /> Buat dari Blank Template
+                        </button>
                     </div>
-                    <p className="text-slate-500 font-medium">Tidak ada template yang ditemukan.</p>
-                    <p className="text-slate-400 text-sm mt-1">Coba ubah filter atau kata kunci pencarian.</p>
-                </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                        {myTemplatesList.map((tpl) => (
+                            <MyTemplateCard
+                                key={tpl.id}
+                                tpl={tpl}
+                                onEdit={handleEditMyTemplate}
+                                onToggleVisibility={handleToggleMyTemplateVisibility}
+                                onDelete={handleDeleteMyTemplate}
+                                onPreview={handlePreview}
+                            />
+                        ))}
+                    </div>
+                )
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                    {filteredTemplates.map((tpl) => (
-                        <TemplateCard
-                            key={tpl.id}
-                            tpl={tpl}
-                            onPreview={handlePreview}
-                            onUseTemplate={handleUseTemplate}
-                            usingId={usingId}
-                        />
-                    ))}
-                </div>
+                /* Main Gallery Grid */
+                filteredTemplates.length === 0 ? (
+                    <div className="text-center py-20">
+                        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-slate-100 mb-4">
+                            <Layout className="h-8 w-8 text-slate-400" />
+                        </div>
+                        <p className="text-slate-500 font-medium">Tidak ada template yang ditemukan.</p>
+                        <p className="text-slate-400 text-sm mt-1">Coba ubah filter atau kata kunci pencarian.</p>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                        {filteredTemplates.map((tpl) => (
+                            <TemplateCard
+                                key={tpl.id}
+                                tpl={tpl}
+                                onPreview={handlePreview}
+                                onUseTemplate={handleUseTemplate}
+                                usingId={usingId}
+                            />
+                        ))}
+                    </div>
+                )
             )}
 
             {/* Template Detail Modal (from card info click) */}
@@ -289,6 +393,106 @@ export default function Templates() {
             )}
             <UpgradeModal />
         </div>
+    );
+}
+
+/* ─── My Template Card ───────────────────────────────────────────────── */
+function MyTemplateCard({ tpl, onEdit, onToggleVisibility, onDelete, onPreview }) {
+    const isPublic = tpl.visibility === 'public';
+    return (
+        <Card className="border border-[rgb(var(--color-border))] hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col group rounded-3xl">
+            {/* Thumbnail / Preview Image */}
+            <div className="relative h-[220px] overflow-hidden rounded-t-[24px] bg-slate-100">
+                <img
+                    src={getTemplateImage(tpl)}
+                    alt={tpl.name}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    onError={(e) => handleImageError(e, tpl)}
+                />
+
+                {/* Badges — Private / Public */}
+                <div className="absolute top-3 left-3 flex items-center gap-2 z-10">
+                    {isPublic ? (
+                        <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider backdrop-blur-md bg-emerald-500 text-white shadow-md flex items-center gap-1">
+                            <Globe className="h-3 w-3" /> Publik
+                        </span>
+                    ) : (
+                        <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider backdrop-blur-md bg-slate-700 text-white shadow-md flex items-center gap-1">
+                            <Lock className="h-3 w-3" /> Private
+                        </span>
+                    )}
+                    <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider backdrop-blur-md bg-indigo-600 text-white shadow-md">
+                        Template Saya
+                    </span>
+                </div>
+
+                {/* Hover Overlay */}
+                <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-200 flex items-center justify-center gap-3 p-4 z-20">
+                    <button
+                        type="button"
+                        onClick={() => onPreview(tpl)}
+                        className="px-4 py-2.5 bg-white text-slate-900 font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-lg hover:bg-slate-50 transition active:scale-95 cursor-pointer"
+                    >
+                        <ExternalLink className="h-3.5 w-3.5" /> Preview
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => onEdit(tpl)}
+                        className="px-4 py-2.5 bg-indigo-600 text-white font-extrabold rounded-xl text-xs flex items-center gap-1.5 shadow-lg hover:bg-indigo-700 transition active:scale-95 cursor-pointer"
+                    >
+                        <Wand2 className="h-3.5 w-3.5" /> Edit di Builder
+                    </button>
+                </div>
+            </div>
+
+            {/* Content */}
+            <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
+                <div>
+                    <h3 className="text-base font-extrabold text-[rgb(var(--color-text-primary))] group-hover:text-indigo-600 transition line-clamp-1">
+                        {tpl.name}
+                    </h3>
+                    <p className="text-xs text-[rgb(var(--color-text-secondary))] mt-1.5 leading-relaxed line-clamp-2">
+                        {tpl.description || 'Template buatan Anda.'}
+                    </p>
+                </div>
+
+                {/* Actions Row */}
+                <div className="pt-3 border-t border-[rgb(var(--color-border))] flex items-center justify-between gap-2">
+                    <button
+                        type="button"
+                        onClick={() => onToggleVisibility(tpl)}
+                        title={isPublic ? 'Ubah ke Private (Hanya Anda)' : 'Publikasikan ke Galeri Semua User'}
+                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition border cursor-pointer ${
+                            isPublic
+                                ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
+                                : 'bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200'
+                        }`}
+                    >
+                        {isPublic ? <Globe className="h-3.5 w-3.5" /> : <Lock className="h-3.5 w-3.5" />}
+                        <span>{isPublic ? 'Publik' : 'Private'}</span>
+                    </button>
+
+                    <div className="flex items-center gap-1.5">
+                        <button
+                            type="button"
+                            onClick={() => onEdit(tpl)}
+                            className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-xl transition cursor-pointer"
+                            title="Edit Template di Builder"
+                        >
+                            <Wand2 className="h-4 w-4" />
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => onDelete(tpl)}
+                            className="p-2 text-rose-500 hover:bg-rose-50 rounded-xl transition cursor-pointer"
+                            title="Hapus Template"
+                        >
+                            <Trash2 className="h-4 w-4" />
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </Card>
     );
 }
 
@@ -307,12 +511,18 @@ function TemplateCard({ tpl, onPreview, onUseTemplate, usingId }) {
                     onError={(e) => handleImageError(e, tpl)}
                 />
 
-                {/* Badge — Featured + PRO / FREE */}
-                <div className="absolute top-3 left-3 flex items-center gap-2 z-10">
+                {/* Badge — Featured + User Template + PRO / FREE */}
+                <div className="absolute top-3 left-3 flex items-center gap-2 z-10 flex-wrap">
                     {tpl.badge === 'Featured' && (
                         <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider backdrop-blur-md bg-amber-500 text-white">
                             <Star className="inline h-2.5 w-2.5 mr-0.5 fill-current" />
                             Featured
+                        </span>
+                    )}
+                    {tpl.is_user_template && (
+                        <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider backdrop-blur-md bg-indigo-600 text-white shadow-md flex items-center gap-1">
+                            <User className="inline h-2.5 w-2.5" />
+                            {tpl.is_mine ? 'Template Saya' : 'Publik User'}
                         </span>
                     )}
                     {tpl.is_premium ? (
@@ -333,7 +543,7 @@ function TemplateCard({ tpl, onPreview, onUseTemplate, usingId }) {
                         type="button"
                         onClick={() => onPreview(tpl)}
                         title="Buka live preview di tab baru"
-                        className="px-4 py-2.5 bg-white text-slate-900 font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-lg hover:bg-slate-50 transition active:scale-95"
+                        className="px-4 py-2.5 bg-white text-slate-900 font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-lg hover:bg-slate-50 transition active:scale-95 cursor-pointer"
                     >
                         <ExternalLink className="h-3.5 w-3.5" />
                         Preview
@@ -343,7 +553,7 @@ function TemplateCard({ tpl, onPreview, onUseTemplate, usingId }) {
                         onClick={() => onUseTemplate(tpl)}
                         disabled={busy}
                         title={locked ? 'Template PRO — upgrade untuk mengakses' : 'Gunakan template ini di Builder'}
-                        className={`px-4 py-2.5 font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-lg transition active:scale-95 disabled:opacity-60 ${locked ? 'bg-amber-500 text-white hover:bg-amber-600' : 'bg-indigo-600 text-white hover:bg-indigo-700'}`}
+                        className={`px-4 py-2.5 font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-lg transition active:scale-95 disabled:opacity-60 cursor-pointer ${locked ? 'bg-amber-500 text-white hover:bg-amber-600' : 'bg-indigo-600 text-white hover:bg-indigo-700'}`}
                     >
                         {locked ? <Lock className="h-3.5 w-3.5" /> : <Wand2 className="h-3.5 w-3.5" />}
                         {locked ? 'Upgrade' : 'Gunakan'}
@@ -379,7 +589,7 @@ function TemplateCard({ tpl, onPreview, onUseTemplate, usingId }) {
                     <button
                         type="button"
                         onClick={() => onPreview(tpl)}
-                        className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition border border-[rgb(var(--color-border))]"
+                        className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition border border-[rgb(var(--color-border))] cursor-pointer"
                     >
                         <Eye className="h-3.5 w-3.5" />
                         Preview
@@ -387,7 +597,7 @@ function TemplateCard({ tpl, onPreview, onUseTemplate, usingId }) {
                     <Button
                         onClick={() => onUseTemplate(tpl)}
                         disabled={busy}
-                        className={`flex-1 py-2 px-4 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-md disabled:opacity-60 ${locked ? 'bg-amber-500 hover:bg-amber-600 text-white shadow-amber-500/20' : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-600/20'}`}
+                        className={`flex-1 py-2 px-4 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-md disabled:opacity-60 cursor-pointer ${locked ? 'bg-amber-500 hover:bg-amber-600 text-white shadow-amber-500/20' : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-600/20'}`}
                         variant="primary"
                     >
                         {locked ? <Lock className="h-3.5 w-3.5" /> : <Wand2 className="h-3.5 w-3.5" />}
@@ -428,7 +638,7 @@ function TemplateDetailModal({ tpl, onClose, onPreview, onUseTemplate }) {
                     <button
                         type="button"
                         onClick={onClose}
-                        className="text-[rgb(var(--color-text-tertiary))] hover:text-[rgb(var(--color-text-primary))] p-1 rounded-lg hover:bg-[rgb(var(--color-surface-alt))] transition"
+                        className="text-[rgb(var(--color-text-tertiary))] hover:text-[rgb(var(--color-text-primary))] p-1 rounded-lg hover:bg-[rgb(var(--color-surface-alt))] transition cursor-pointer"
                     >
                         <X className="h-5 w-5" />
                     </button>
@@ -465,7 +675,7 @@ function TemplateDetailModal({ tpl, onClose, onPreview, onUseTemplate }) {
                         <button
                             type="button"
                             onClick={() => { onClose(); onPreview(tpl); }}
-                            className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-100 border border-slate-200 transition"
+                            className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-100 border border-slate-200 transition cursor-pointer"
                         >
                             <ExternalLink className="h-3.5 w-3.5" />
                             Preview
@@ -474,7 +684,7 @@ function TemplateDetailModal({ tpl, onClose, onPreview, onUseTemplate }) {
                             onClick={() => { onClose(); onUseTemplate(tpl); }}
                             variant="primary"
                             size="sm"
-                            className={`text-xs flex items-center gap-1.5 ${locked ? '!bg-amber-500 hover:!bg-amber-600' : ''}`}
+                            className={`text-xs flex items-center gap-1.5 cursor-pointer ${locked ? '!bg-amber-500 hover:!bg-amber-600' : ''}`}
                         >
                             {locked ? <Lock className="h-3.5 w-3.5" /> : <Wand2 className="h-3.5 w-3.5" />}
                             <span>{locked ? 'Preview Only / Upgrade' : 'Gunakan Template Ini'}</span>

@@ -211,6 +211,38 @@ export default function SectionCanvas() {
           insertComponentAt(targetSecId, 'image', -1, null, { src: data.url, alt: data.title || 'Image' });
           toast.success('Image component added to canvas', 'Image Dropped');
         }
+      } else if (data.type === 'icon') {
+        const iconName = data.icon || data.payload?.key || data.payload?.id || data.payload?.name || data.id || 'FaGlobe';
+        const targetSecId = selectedSectionId || (sections.length > 0 ? sections[0].id : null);
+        if (targetSecId) {
+          insertComponentAt(targetSecId, 'icon', -1, null, {
+            icon: iconName,
+            name: iconName,
+            size: '40px',
+            color: '#4f46e5',
+            margin: '16px auto',
+            align: 'center',
+            isStandalone: true,
+          });
+          toast.success(`Ikon baru "${iconName}" ditambahkan ke canvas!`, 'Icon Dropped');
+        } else {
+          insertSectionAt('services', null, 0);
+          setTimeout(() => {
+            const firstSec = useBuilderStore.getState().sections[0];
+            if (firstSec) {
+              insertComponentAt(firstSec.id, 'icon', -1, null, {
+                icon: iconName,
+                name: iconName,
+                size: '40px',
+                color: '#4f46e5',
+                margin: '16px auto',
+                align: 'center',
+                isStandalone: true,
+              });
+            }
+          }, 20);
+          toast.success(`Ikon baru "${iconName}" ditambahkan!`, 'Icon Dropped');
+        }
       }
     } catch (_err) {
       // Ignored

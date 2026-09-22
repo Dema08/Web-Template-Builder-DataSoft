@@ -175,16 +175,60 @@ export function useBuilderDnd() {
 
       // D. Drop Icon
       if (sidebarType === 'icon') {
-        const iconName = payload.name || payload.id || 'Star';
+        const iconName = payload.name || payload.id || payload.key || payload.icon || 'FaGlobe';
         let targetSectionId = overData?.sectionId || (sections.length > 0 ? sections[0].id : null);
         let targetCompId = overData?.componentId || null;
 
-        if (targetCompId && targetSectionId) {
+        // Drop inside a Card container
+        if (overData?.isContainer || overData?.type === 'card') {
+          insertComponentAt(targetSectionId, 'icon', -1, targetCompId, {
+            icon: iconName,
+            name: iconName,
+            size: '32px',
+            color: '#4f46e5',
+            margin: '8px 0',
+          });
+          toast.success(`Ikon "${iconName}" ditambahkan ke dalam Card!`, 'Icon Inserted');
+          return;
+        }
+
+        // Drop directly on an existing Icon component to replace it
+        if (overData?.type === 'icon') {
           updateComponentProps(targetSectionId, targetCompId, { name: iconName, icon: iconName });
-          toast.success(`Updated icon to ${iconName}`, 'Icon Updated');
-        } else if (targetSectionId) {
-          insertComponentAt(targetSectionId, 'icon', -1, null, { name: iconName, icon: iconName });
-          toast.success(`Added ${iconName} icon to canvas`, 'Icon Added');
+          selectComponent(targetCompId, targetSectionId);
+          toast.success(`Ikon diubah menjadi "${iconName}"`, 'Icon Updated');
+          return;
+        }
+
+        // Drop onto a section or canvas area -> Insert new standalone Icon component!
+        if (targetSectionId) {
+          insertComponentAt(targetSectionId, 'icon', -1, null, {
+            icon: iconName,
+            name: iconName,
+            size: '40px',
+            color: '#4f46e5',
+            margin: '16px auto',
+            align: 'center',
+            isStandalone: true,
+          });
+          toast.success(`Ikon baru "${iconName}" ditambahkan ke canvas!`, 'Icon Inserted');
+        } else {
+          insertSectionAt('services', null, 0);
+          setTimeout(() => {
+            const firstSec = useBuilderStore.getState().sections[0];
+            if (firstSec) {
+              insertComponentAt(firstSec.id, 'icon', -1, null, {
+                icon: iconName,
+                name: iconName,
+                size: '40px',
+                color: '#4f46e5',
+                margin: '16px auto',
+                align: 'center',
+                isStandalone: true,
+              });
+            }
+          }, 20);
+          toast.success(`Ikon baru "${iconName}" ditambahkan!`, 'Icon Inserted');
         }
         return;
       }

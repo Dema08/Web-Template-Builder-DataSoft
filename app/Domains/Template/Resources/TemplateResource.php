@@ -9,11 +9,13 @@ class TemplateResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
+        $authUserId = $request->user()?->id;
+
         return [
             'id'                   => $this->id,
-            'category_id'         => $this->category_id,
+            'category_id'          => $this->category_id,
             'industry_category_id' => $this->industry_category_id,
-            'industry_category'   => $this->whenLoaded('industryCategory', fn () => [
+            'industry_category'    => $this->whenLoaded('industryCategory', fn () => [
                 'id'   => $this->industryCategory->id,
                 'name' => $this->industryCategory->name,
             ]),
@@ -35,6 +37,13 @@ class TemplateResource extends JsonResource
             'status_label' => $this->status?->label() ?? $this->status,
             'is_active'    => $this->is_active ?? ($this->status?->value === 'published'),
             'usage_count'  => $this->usage_count ?? 0,
+
+            // User-generated template fields
+            'visibility'       => $this->visibility,
+            'owner_id'         => $this->owner_id,
+            'is_user_template' => method_exists($this->resource, 'isUserTemplate') ? $this->resource->isUserTemplate() : ($this->owner_id !== null),
+            'is_mine'          => $authUserId && $this->owner_id && (int) $this->owner_id === (int) $authUserId,
+
             'created_at'   => $this->created_at?->toISOString(),
             'updated_at'   => $this->updated_at?->toISOString(),
         ];

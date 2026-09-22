@@ -19,6 +19,7 @@ import {
     Home,
     CreditCard,
     DollarSign,
+    LayoutTemplate,
 } from 'lucide-react';
 import { useAuth } from '@hooks';
 import { ROUTES } from '@constants';
@@ -58,6 +59,7 @@ export default function AppLayout() {
               { label: 'Dashboard', icon: LayoutGrid, to: ROUTES.DASHBOARD },
               { label: 'Websites', icon: Globe, to: ROUTES.WEBSITES },
               { label: 'Templates', icon: FileText, to: ROUTES.TEMPLATES },
+              { label: 'Template Saya', icon: LayoutTemplate, to: ROUTES.MY_TEMPLATES },
               { label: 'Billing & Langganan', icon: CreditCard, to: ROUTES.BILLING },
               { label: 'Profile', icon: UserCircle2, to: ROUTES.PROFILE },
               { label: 'Settings', icon: SettingsIcon, to: ROUTES.SETTINGS },

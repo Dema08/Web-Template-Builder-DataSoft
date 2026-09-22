@@ -56,6 +56,80 @@ class TemplateService extends BaseService
         return $this->templateRepository->create($attributes);
     }
 
+    /**
+     * Simpan konten builder sebagai template baru milik user.
+     * Template ini memiliki owner_id = user.id sehingga bisa bersifat private/public.
+     *
+     * @param  User   $owner   User yang menyimpan template
+     * @param  array  $data    { name, description?, draft_json, visibility, category_id? }
+     */
+    public function saveAsUserTemplate(User $owner, array $data): Template
+    {
+        // Slug auto-generate dari nama
+        $baseSlug = str($data['name'])->slug()->__toString();
+        $slug = $baseSlug;
+        while (Template::withTrashed()->where('slug', $slug)->exists()) {
+            $slug = $baseSlug . '-' . \Illuminate\Support\Str::random(4);
+        }
+
+        // Code unik
+        $code = 'USR-' . strtoupper(\Illuminate\Support\Str::random(6));
+        while (Template::withTrashed()->where('code', $code)->exists()) {
+            $code = 'USR-' . strtoupper(\Illuminate\Support\Str::random(6));
+        }
+
+        $visibility = in_array($data['visibility'] ?? 'private', ['private', 'public'])
+            ? ($data['visibility'] ?? 'private')
+            : 'private';
+
+        // Gunakan category_id default jika tidak dikirim
+        // (ambil category pertama yang aktif, atau biarkan nullable)
+        $categoryId = $data['category_id'] ?? null;
+        if (!$categoryId) {
+            $firstCategory = \App\Domains\Category\Models\Category::first();
+            $categoryId = $firstCategory?->id ?? 1;
+        }
+
+        return $this->templateRepository->create([
+            'category_id'  => $categoryId,
+            'code'         => $code,
+            'name'         => $data['name'],
+            'slug'         => $slug,
+            'description'  => $data['description'] ?? null,
+            'draft_json'   => $data['draft_json'] ?? null,
+            'published_json' => $data['draft_json'] ?? null, // snapshot saat disimpan
+            'version'      => '1.0.0',
+            'status'       => TemplateStatus::Published, // selalu published agar bisa digunakan
+            'visibility'   => $visibility,
+            'owner_id'     => $owner->id,
+            'created_by'   => $owner->id,
+            'updated_by'   => $owner->id,
+        ]);
+    }
+
+    /**
+     * Ubah visibilitas template buatan user.
+     *
+     * @param  Template  $template
+     * @param  string    $visibility  'private' | 'public'
+     */
+    public function changeVisibility(Template $template, string $visibility): Template
+    {
+        if (!in_array($visibility, ['private', 'public'])) {
+            throw new DomainException('Visibility harus berupa private atau public.', 422);
+        }
+
+        if (!$template->isUserTemplate()) {
+            throw new DomainException('Hanya template buatan user yang dapat diubah visibilitasnya.', 422);
+        }
+
+        $template->visibility  = $visibility;
+        $template->updated_by  = auth()->id();
+        $template->save();
+
+        return $template->fresh();
+    }
+
     public function updateTemplate(Template $template, array $attributes): Template
     {
         // API sends industry_category_id; DB column is category_id
