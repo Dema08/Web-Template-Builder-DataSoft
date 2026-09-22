@@ -53,6 +53,8 @@ class Template extends Model
         'is_featured',
         'is_premium',
         'status',
+        'visibility',
+        'owner_id',
         'created_by',
         'updated_by',
     ];
@@ -69,6 +71,7 @@ class Template extends Model
         'is_premium'     => 'boolean',
         'sort_order'     => 'integer',
         'status'         => TemplateStatus::class,
+        'owner_id'       => 'integer',
     ];
 
     /**
@@ -156,6 +159,15 @@ class Template extends Model
     }
 
     /**
+     * User who owns this template (user-generated templates only).
+     * NULL = admin/system template.
+     */
+    public function owner(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'owner_id');
+    }
+
+    /**
      * User who last updated this template.
      */
     public function updater(): BelongsTo
@@ -187,12 +199,39 @@ class Template extends Model
             'is_featured',
             'is_premium',
             'status',
+            'visibility',
+            'owner_id',
             'created_by',
             'updated_by',
             'created_at',
             'updated_at',
             'deleted_at',
         ]);
+    }
+
+    /**
+     * Scope: template milik user tertentu (user-generated).
+     */
+    public function scopeOwnedBy(Builder $query, int $userId): Builder
+    {
+        return $query->where('owner_id', $userId);
+    }
+
+    /**
+     * Scope: template user-generated yang dipublikasikan secara publik.
+     * Tidak termasuk template sistem/admin (owner_id = null).
+     */
+    public function scopePublicUserTemplates(Builder $query): Builder
+    {
+        return $query->whereNotNull('owner_id')->where('visibility', 'public');
+    }
+
+    /**
+     * Scope: template sistem/admin (bukan buatan user).
+     */
+    public function scopeSystemTemplates(Builder $query): Builder
+    {
+        return $query->whereNull('owner_id');
     }
 
     public function scopeByStatus(Builder $query, TemplateStatus $status): Builder
@@ -246,6 +285,43 @@ class Template extends Model
         return str_contains(strtolower($this->slug ?? ''), 'blank')
             || str_contains(strtolower($this->name ?? ''), 'blank')
             || str_contains(strtolower($this->code ?? ''), 'blank');
+    }
+
+    /**
+     * Apakah template ini dibuat oleh user (bukan admin/sistem).
+     */
+    public function isUserTemplate(): bool
+    {
+        return $this->owner_id !== null;
+    }
+
+    /**
+     * Apakah template ini private (hanya owner yang bisa lihat).
+     */
+    public function isPrivate(): bool
+    {
+        return $this->isUserTemplate() && $this->visibility === 'private';
+    }
+
+    /**
+     * Apakah template ini publik / bisa dilihat semua user.
+     * Template sistem (owner_id=null) selalu dianggap publik.
+     */
+    public function isPubliclyVisible(): bool
+    {
+        if (!$this->isUserTemplate()) {
+            return true; // template sistem selalu tampil
+        }
+
+        return $this->visibility === 'public';
+    }
+
+    /**
+     * Apakah template ini milik user dengan ID tertentu.
+     */
+    public function isOwnedBy(int $userId): bool
+    {
+        return (int) $this->owner_id === $userId;
     }
 
     /**

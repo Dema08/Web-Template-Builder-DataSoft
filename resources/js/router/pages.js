@@ -18,6 +18,7 @@ export const AdminTransactions = lazy(() => import('@features/admin/pages/AdminT
 export const UserDashboard = lazy(() => import('@features/user/pages/UserDashboard'));
 export const Websites = lazy(() => import('@features/user/pages/Websites'));
 export const Templates = lazy(() => import('@features/user/pages/Templates'));
+export const MyTemplates = lazy(() => import('@features/user/pages/MyTemplates'));
 export const Profile = lazy(() => import('@features/user/pages/Profile'));
 export const Settings = lazy(() => import('@features/user/pages/Settings'));
 export const Onboarding = lazy(() => import('@features/onboarding/pages/Onboarding'));

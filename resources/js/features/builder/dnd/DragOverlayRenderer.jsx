@@ -1,3 +1,4 @@
+import * as FaIcons from 'react-icons/fa';
 import { Layout, Layers, Component, Image as ImageIcon, Sparkles, GripVertical } from 'lucide-react';
 
 export default function DragOverlayRenderer({ activeDragItem }) {
@@ -70,15 +71,21 @@ export default function DragOverlayRenderer({ activeDragItem }) {
         );
 
       case 'sidebar-icon':
-      case 'icon':
+      case 'icon': {
+        const iconKey = data?.icon || data?.id || data?.key || 'FaGlobe';
+        const IconComponent = FaIcons[iconKey] || FaIcons.FaGlobe;
         return (
-          <div className="flex items-center gap-2 px-3 py-2 bg-white/95 backdrop-blur-md rounded-xl border-2 border-indigo-500 shadow-2xl transform scale-105">
-            <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">
-              ★
+          <div className="flex items-center gap-2.5 px-3.5 py-2 bg-white/95 backdrop-blur-md rounded-xl border-2 border-indigo-600 shadow-2xl shadow-indigo-600/30 transform scale-110">
+            <div className="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold shadow-sm">
+              <IconComponent className="h-4 w-4" />
             </div>
-            <span className="text-xs font-extrabold text-slate-900">{title || 'Icon'}</span>
+            <div className="pr-1">
+              <span className="text-xs font-extrabold text-slate-900 block">{iconKey.replace('Fa', '')}</span>
+              <span className="text-[9px] font-bold text-indigo-600 uppercase">Drop on canvas component</span>
+            </div>
           </div>
         );
+      }
 
       case 'canvas-section':
         return (

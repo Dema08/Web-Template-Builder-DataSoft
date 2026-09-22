@@ -3,6 +3,32 @@ import { createEmptySection, createEmptyComponent } from '../types';
 import { getDefaultLayout } from '../engine/layoutRegistry';
 import { getLayoutDefaults } from '../engine/layoutDefaults';
 
+// Helper: Find component recursively in tree by ID
+const findComponentInTree = (comps, targetId) => {
+  if (!Array.isArray(comps)) return null;
+  for (const c of comps) {
+    if (c.id === targetId) return c;
+    if (Array.isArray(c.childrenComponents) && c.childrenComponents.length > 0) {
+      const found = findComponentInTree(c.childrenComponents, targetId);
+      if (found) return found;
+    }
+  }
+  return null;
+};
+
+// Helper: Deep clone a component and assign fresh unique IDs to it & ALL nested childrenComponents
+const cloneComponentWithNewIds = (comp) => {
+  if (!comp) return null;
+  const cloned = JSON.parse(JSON.stringify(comp));
+  cloned.id = `component-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+  if (Array.isArray(cloned.childrenComponents) && cloned.childrenComponents.length > 0) {
+    cloned.childrenComponents = cloned.childrenComponents.map(child => cloneComponentWithNewIds(child));
+  }
+
+  return cloned;
+};
+
 export const useBuilderStore = create((set, get) => ({
   // Initial state
   status: 'draft',
@@ -726,33 +752,50 @@ export const useBuilderStore = create((set, get) => ({
   copyComponent: (sectionId, componentId) => {
     const { sections } = get();
     const section = sections.find(s => s.id === sectionId);
-    const component = section?.components?.find(c => c.id === componentId);
-    if (component) {
-      set({ clipboard: { ...component, id: null } });
+    if (!section) return;
+
+    const targetComp = findComponentInTree(section.components, componentId);
+    if (targetComp) {
+      set({ clipboard: JSON.parse(JSON.stringify(targetComp)) });
     }
   },
 
-  pasteComponent: (sectionId) => {
+  pasteComponent: (sectionId, targetParentComponentId = null) => {
     const { sections, clipboard, saveToHistory } = get();
     if (!clipboard) return;
     saveToHistory();
 
-    const newComponent = {
-      ...clipboard,
-      id: `component-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    const newComponent = cloneComponentWithNewIds(clipboard);
+
+    const insertIntoTree = (comps) => {
+      if (targetParentComponentId) {
+        return comps.map(c => {
+          if (c.id === targetParentComponentId) {
+            const currentChildren = Array.isArray(c.childrenComponents) ? [...c.childrenComponents] : [];
+            currentChildren.push(newComponent);
+            return { ...c, childrenComponents: currentChildren };
+          }
+          if (Array.isArray(c.childrenComponents) && c.childrenComponents.length > 0) {
+            return { ...c, childrenComponents: insertIntoTree(c.childrenComponents) };
+          }
+          return c;
+        });
+      } else {
+        return [...comps, newComponent];
+      }
     };
 
     const newSections = sections.map(s => {
       if (s.id === sectionId) {
         return {
           ...s,
-          components: [...s.components, newComponent],
+          components: insertIntoTree(s.components || []),
         };
       }
       return s;
     });
 
-    set({ sections: newSections, selectedComponentId: newComponent.id });
+    set({ sections: newSections, selectedComponentId: newComponent.id, selectedSectionId: sectionId });
   },
 
   duplicateComponent: (sectionId, componentId) => {
@@ -760,25 +803,39 @@ export const useBuilderStore = create((set, get) => ({
     saveToHistory();
 
     const section = sections.find(s => s.id === sectionId);
-    const component = section?.components?.find(c => c.id === componentId);
-    if (!component) return;
+    if (!section) return;
 
-    const newComponent = {
-      ...component,
-      id: `component-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    const targetComp = findComponentInTree(section.components, componentId);
+    if (!targetComp) return;
+
+    const newComponent = cloneComponentWithNewIds(targetComp);
+
+    const insertAfterInTree = (comps) => {
+      let result = [];
+      for (const c of comps) {
+        let updatedC = c;
+        if (Array.isArray(c.childrenComponents) && c.childrenComponents.length > 0) {
+          updatedC = { ...c, childrenComponents: insertAfterInTree(c.childrenComponents) };
+        }
+        result.push(updatedC);
+        if (c.id === componentId) {
+          result.push(newComponent);
+        }
+      }
+      return result;
     };
 
     const newSections = sections.map(s => {
       if (s.id === sectionId) {
         return {
           ...s,
-          components: [...s.components, newComponent],
+          components: insertAfterInTree(s.components || []),
         };
       }
       return s;
     });
 
-    set({ sections: newSections, selectedComponentId: newComponent.id });
+    set({ sections: newSections, selectedComponentId: newComponent.id, selectedSectionId: sectionId });
   },
 
   duplicateSection: (sectionId) => {
@@ -788,32 +845,42 @@ export const useBuilderStore = create((set, get) => ({
     const section = sections.find(s => s.id === sectionId);
     if (!section) return;
 
-    const newSection = {
-      ...section,
-      id: `section-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      order: sections.length,
-      background: section.background ? JSON.parse(JSON.stringify(section.background)) : null,
-      components: section.components.map(c => ({
-        ...c,
-        id: `component-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      })),
-    };
+    const clonedSection = JSON.parse(JSON.stringify(section));
+    clonedSection.id = `section-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    clonedSection.order = sections.length;
+    clonedSection.components = (clonedSection.components || []).map(c => cloneComponentWithNewIds(c));
 
-    set({ sections: [...sections, newSection], selectedSectionId: newSection.id });
+    const sectionIndex = sections.findIndex(s => s.id === sectionId);
+    const newSections = [...sections];
+    newSections.splice(sectionIndex + 1, 0, clonedSection);
+
+    const reordered = newSections.map((s, i) => ({ ...s, order: i }));
+
+    set({ sections: reordered, selectedSectionId: clonedSection.id });
   },
 
   bringForward: (sectionId, componentId) => {
     const { sections, saveToHistory } = get();
     saveToHistory();
 
+    const reorderInTree = (comps) => {
+      const idx = comps.findIndex(c => c.id === componentId);
+      if (idx !== -1 && idx < comps.length - 1) {
+        const copy = [...comps];
+        [copy[idx], copy[idx + 1]] = [copy[idx + 1], copy[idx]];
+        return copy;
+      }
+      return comps.map(c => {
+        if (Array.isArray(c.childrenComponents) && c.childrenComponents.length > 0) {
+          return { ...c, childrenComponents: reorderInTree(c.childrenComponents) };
+        }
+        return c;
+      });
+    };
+
     const newSections = sections.map(s => {
       if (s.id === sectionId) {
-        const index = s.components.findIndex(c => c.id === componentId);
-        if (index < s.components.length - 1) {
-          const newComponents = [...s.components];
-          [newComponents[index], newComponents[index + 1]] = [newComponents[index + 1], newComponents[index]];
-          return { ...s, components: newComponents };
-        }
+        return { ...s, components: reorderInTree(s.components || []) };
       }
       return s;
     });
@@ -825,14 +892,24 @@ export const useBuilderStore = create((set, get) => ({
     const { sections, saveToHistory } = get();
     saveToHistory();
 
+    const reorderInTree = (comps) => {
+      const idx = comps.findIndex(c => c.id === componentId);
+      if (idx > 0) {
+        const copy = [...comps];
+        [copy[idx], copy[idx - 1]] = [copy[idx - 1], copy[idx]];
+        return copy;
+      }
+      return comps.map(c => {
+        if (Array.isArray(c.childrenComponents) && c.childrenComponents.length > 0) {
+          return { ...c, childrenComponents: reorderInTree(c.childrenComponents) };
+        }
+        return c;
+      });
+    };
+
     const newSections = sections.map(s => {
       if (s.id === sectionId) {
-        const index = s.components.findIndex(c => c.id === componentId);
-        if (index > 0) {
-          const newComponents = [...s.components];
-          [newComponents[index], newComponents[index - 1]] = [newComponents[index - 1], newComponents[index]];
-          return { ...s, components: newComponents };
-        }
+        return { ...s, components: reorderInTree(s.components || []) };
       }
       return s;
     });
@@ -844,15 +921,25 @@ export const useBuilderStore = create((set, get) => ({
     const { sections, saveToHistory } = get();
     saveToHistory();
 
+    const reorderInTree = (comps) => {
+      const idx = comps.findIndex(c => c.id === componentId);
+      if (idx !== -1 && idx < comps.length - 1) {
+        const copy = [...comps];
+        const [target] = copy.splice(idx, 1);
+        copy.push(target);
+        return copy;
+      }
+      return comps.map(c => {
+        if (Array.isArray(c.childrenComponents) && c.childrenComponents.length > 0) {
+          return { ...c, childrenComponents: reorderInTree(c.childrenComponents) };
+        }
+        return c;
+      });
+    };
+
     const newSections = sections.map(s => {
       if (s.id === sectionId) {
-        const index = s.components.findIndex(c => c.id === componentId);
-        if (index < s.components.length - 1) {
-          const newComponents = [...s.components];
-          const [component] = newComponents.splice(index, 1);
-          newComponents.push(component);
-          return { ...s, components: newComponents };
-        }
+        return { ...s, components: reorderInTree(s.components || []) };
       }
       return s;
     });
@@ -864,15 +951,25 @@ export const useBuilderStore = create((set, get) => ({
     const { sections, saveToHistory } = get();
     saveToHistory();
 
+    const reorderInTree = (comps) => {
+      const idx = comps.findIndex(c => c.id === componentId);
+      if (idx > 0) {
+        const copy = [...comps];
+        const [target] = copy.splice(idx, 1);
+        copy.unshift(target);
+        return copy;
+      }
+      return comps.map(c => {
+        if (Array.isArray(c.childrenComponents) && c.childrenComponents.length > 0) {
+          return { ...c, childrenComponents: reorderInTree(c.childrenComponents) };
+        }
+        return c;
+      });
+    };
+
     const newSections = sections.map(s => {
       if (s.id === sectionId) {
-        const index = s.components.findIndex(c => c.id === componentId);
-        if (index > 0) {
-          const newComponents = [...s.components];
-          const [component] = newComponents.splice(index, 1);
-          newComponents.unshift(component);
-          return { ...s, components: newComponents };
-        }
+        return { ...s, components: reorderInTree(s.components || []) };
       }
       return s;
     });

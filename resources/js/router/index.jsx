@@ -13,6 +13,7 @@ import {
             Dashboard,
             Websites,
             Templates,
+            MyTemplates,
             Builder,
             Settings,
             Profile,
@@ -86,6 +87,7 @@ export default function AppRouter() {
                     <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
                     <Route path={ROUTES.WEBSITES} element={<Websites />} />
                     <Route path={ROUTES.TEMPLATES} element={<Templates />} />
+                    <Route path={ROUTES.MY_TEMPLATES} element={<MyTemplates />} />
                     <Route path={ROUTES.PROFILE} element={<Profile />} />
                     <Route path={ROUTES.SETTINGS} element={<Settings />} />
                     <Route path={ROUTES.BILLING} element={<BillingPage />} />

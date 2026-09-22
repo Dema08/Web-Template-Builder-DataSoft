@@ -16,6 +16,7 @@ import KeyboardShortcuts from '@builder/components/editing/KeyboardShortcuts';
 import { useBuilderStore } from '@builder/stores/builderStore';
 import BuilderErrorBoundary from '@builder/components/common/BuilderErrorBoundary';
 import { PublishDomainModal } from '@shared/components/ui';
+import SaveAsTemplateModal from '@builder/components/modals/SaveAsTemplateModal';
 import { ROUTES, QUERY_KEYS } from '@constants';
 import { Loader2 } from 'lucide-react';
 
@@ -26,6 +27,8 @@ export default function Builder() {
   const [isSaving, setIsSaving] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
   const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
+  const [isSaveAsTemplateOpen, setIsSaveAsTemplateOpen] = useState(false);
+  const [isSavingTemplate, setIsSavingTemplate] = useState(false);
   const [websiteInfo, setWebsiteInfo] = useState(null);
 
   const {
@@ -233,6 +236,32 @@ export default function Builder() {
     }
   };
 
+  const handleConfirmSaveAsTemplate = async (templateData) => {
+    try {
+      setIsSavingTemplate(true);
+      const draftJson = useBuilderStore.getState().serializeDraftJson();
+
+      const payload = {
+        name: templateData.name,
+        description: templateData.description,
+        visibility: templateData.visibility,
+        draft_json: draftJson,
+      };
+
+      await templateApi.saveAsUserTemplate(payload);
+      setIsSaveAsTemplateOpen(false);
+      queryClient.invalidateQueries(['my-templates']);
+      toast.success(
+        `Template "${templateData.name}" berhasil disimpan sebagai template ${templateData.visibility === 'public' ? 'Publik' : 'Private'}!`,
+        'Template Disimpan'
+      );
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Gagal menyimpan template.', 'Error');
+    } finally {
+      setIsSavingTemplate(false);
+    }
+  };
+
   const handleCanvasClick = (e) => {
     if (e.target === e.currentTarget) {
       selectSection(null);
@@ -261,6 +290,7 @@ export default function Builder() {
             onBack={handleBack}
             onSave={handleSave}
             onPublish={handleOpenPublishModal}
+            onSaveAsTemplate={() => setIsSaveAsTemplateOpen(true)}
             isSaving={isSaving}
             isPublishing={isPublishing}
           />
@@ -294,6 +324,13 @@ export default function Builder() {
         initialCustomDomain={websiteInfo?.settings?.custom_domain || ''}
         initialDomainType={websiteInfo?.settings?.domain_type || 'subdomain'}
         isPublishing={isPublishing}
+      />
+
+      <SaveAsTemplateModal
+        isOpen={isSaveAsTemplateOpen}
+        onClose={() => setIsSaveAsTemplateOpen(false)}
+        onSave={handleConfirmSaveAsTemplate}
+        isSaving={isSavingTemplate}
       />
     </>
   );

@@ -1283,13 +1283,87 @@ const renderInput = (key, config, value, onChange) => {
 
     default:
       return (
-        <input
-          type="text"
-          value={value}
-          onChange={(e) => onChange(key, e.target.value)}
-          className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm"
-          placeholder={config.label}
-        />
+        <div className="space-y-1.5">
+          <input
+            type="text"
+            value={value ?? ''}
+            onChange={(e) => onChange(key, e.target.value)}
+            className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-mono font-bold text-slate-800"
+            placeholder={config.label}
+          />
+          {key === 'icon' && (
+            <div className="pt-1">
+              <label className="block text-[10px] font-bold text-slate-500 mb-1">Quick Icon Presets</label>
+              <div className="grid grid-cols-4 gap-1">
+                {[
+                  { label: 'Globe', val: 'FaGlobe' },
+                  { label: 'Play', val: 'FaPlay' },
+                  { label: 'Truck', val: 'FaTruck' },
+                  { label: 'Check', val: 'FaCheck' },
+                  { label: 'Star', val: 'FaStar' },
+                  { label: 'Rocket', val: 'FaRocket' },
+                  { label: 'Shield', val: 'FaShieldAlt' },
+                  { label: 'User', val: 'FaUser' },
+                  { label: 'Phone', val: 'FaPhone' },
+                  { label: 'Mail', val: 'FaEnvelope' },
+                  { label: 'Store', val: 'FaStore' },
+                  { label: 'Grad', val: 'FaGraduationCap' },
+                ].map(ic => (
+                  <button
+                    key={ic.val}
+                    type="button"
+                    onClick={() => onChange(key, ic.val)}
+                    className={`py-1 text-[10px] font-bold rounded-lg border transition truncate ${
+                      value === ic.val
+                        ? 'bg-indigo-600 text-white border-indigo-600'
+                        : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
+                    }`}
+                  >
+                    {ic.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {key === 'size' && (
+            <div className="flex gap-1 pt-1">
+              {['16px', '24px', '32px', '40px', '48px', '64px'].map(sz => (
+                <button
+                  key={sz}
+                  type="button"
+                  onClick={() => onChange(key, sz)}
+                  className={`flex-1 py-1 text-[10px] font-bold rounded-lg border transition ${
+                    value === sz
+                      ? 'bg-indigo-600 text-white border-indigo-600'
+                      : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-100'
+                  }`}
+                >
+                  {sz}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {key === 'borderRadius' && (
+            <div className="flex gap-1 pt-1">
+              {['0px', '8px', '12px', '16px', '9999px'].map(r => (
+                <button
+                  key={r}
+                  type="button"
+                  onClick={() => onChange(key, r)}
+                  className={`flex-1 py-1 text-[10px] font-bold rounded-lg border transition ${
+                    value === r
+                      ? 'bg-indigo-600 text-white border-indigo-600'
+                      : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-100'
+                  }`}
+                >
+                  {r === '9999px' ? 'Pill' : r}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       );
   }
 };

@@ -21,6 +21,7 @@ export const ROUTES = {
     DASHBOARD: '/dashboard',
     WEBSITES: '/websites',
     TEMPLATES: '/templates',
+    MY_TEMPLATES: '/my-templates',
     BUILDER: '/builder',
     PROFILE: '/profile',
     SETTINGS: '/settings',

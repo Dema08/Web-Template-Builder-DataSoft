@@ -60,7 +60,7 @@ const FEATURED_ICONS = [
 
 export default function IconPanel() {
   const [searchQuery, setSearchQuery] = useState('');
-  const { sections, selectedSectionId, selectedComponentId, updateComponentProps, addComponent } = useBuilderStore();
+  const { sections, selectedSectionId, selectedComponentId, updateComponentProps } = useBuilderStore();
 
   const filteredIcons = FEATURED_ICONS.filter(
     (item) =>
@@ -80,14 +80,29 @@ export default function IconPanel() {
     return null;
   };
 
+  // Find ALL icon-type components anywhere in the tree (incl. inside cards)
+  const findAllIconComponents = (components) => {
+    let found = [];
+    if (!Array.isArray(components)) return found;
+    for (const c of components) {
+      if (c.type === 'icon') found.push(c);
+      if (Array.isArray(c.childrenComponents) && c.childrenComponents.length > 0) {
+        found = found.concat(findAllIconComponents(c.childrenComponents));
+      }
+    }
+    return found;
+  };
+
   const handleSelectIcon = (iconKey) => {
     let targetSectionId = selectedSectionId;
     let targetComponent = null;
 
+    // Always resolve targetSectionId
     if (!targetSectionId && sections.length > 0) {
       targetSectionId = sections[0].id;
     }
 
+    // Case 1: A component is already selected — update its icon prop
     if (selectedComponentId) {
       for (const sec of sections) {
         const found = findComponentInTree(sec.components, selectedComponentId);
@@ -100,30 +115,37 @@ export default function IconPanel() {
     }
 
     if (targetComponent && targetSectionId) {
-      // Replace icon on selected component
+      // Update icon prop on selected component (works for icon, card, button, etc.)
       updateComponentProps(targetSectionId, targetComponent.id, {
         icon: iconKey,
         iconName: iconKey,
       });
-      toast.success(`Icon updated to "${iconKey}" on selected component`, 'Icon Replaced');
-    } else if (targetSectionId) {
-      // Insert new Icon component
-      addComponent(targetSectionId, 'icon');
-      setTimeout(() => {
-        const updatedSections = useBuilderStore.getState().sections;
-        const currentSec = updatedSections.find((s) => s.id === targetSectionId);
-        const newComp = currentSec?.components[currentSec.components.length - 1];
-        if (newComp) {
-          updateComponentProps(targetSectionId, newComp.id, {
+      toast.success(`Ikon diubah ke "${iconKey}"`, 'Icon Updated');
+      return;
+    }
+
+    // Case 2: No component selected — find the first icon component in the active section
+    if (targetSectionId) {
+      const sec = sections.find(s => s.id === targetSectionId);
+      if (sec) {
+        const allIcons = findAllIconComponents(sec.components);
+        if (allIcons.length > 0) {
+          // Update the first icon found in the section
+          updateComponentProps(targetSectionId, allIcons[0].id, {
             icon: iconKey,
             iconName: iconKey,
           });
+          toast.success(`Ikon "${iconKey}" diterapkan ke ikon pertama di section`, 'Icon Applied');
+          return;
         }
-      }, 10);
-      toast.success(`Icon "${iconKey}" inserted into canvas`, 'Icon Added');
-    } else {
-      toast.info('Please add a section first', 'Notice');
+      }
     }
+
+    // Case 3: No icon component found anywhere — show helpful guide
+    toast.info(
+      'Klik salah satu komponen Icon (🎯) di canvas terlebih dahulu, lalu pilih ikon dari panel ini untuk menggantinya.',
+      'Pilih Komponen Dulu'
+    );
   };
 
   return (

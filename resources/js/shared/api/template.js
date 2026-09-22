@@ -66,6 +66,15 @@ const templateApi = {
   activate: (id) => http.post(`/templates/${id}/activate`),
   deactivate: (id) => http.delete(`/templates/${id}/deactivate`),
   useTemplate: (id) => http.post(`/templates/${id}/use`),
+
+  // ── User-Generated Templates (Save as template, private/public) ──
+  saveAsUserTemplate: (data) => http.post('/my-templates', data),
+  getMyTemplates: (params = {}) => http.get('/my-templates', { params }),
+  getMyTemplate: (id) => http.get(`/my-templates/${id}`),
+  updateMyTemplate: (id, data) => http.put(`/my-templates/${id}`, data),
+  deleteMyTemplate: (id) => http.delete(`/my-templates/${id}`),
+  publishMyTemplate: (id) => http.patch(`/my-templates/${id}/publish`),
+  unpublishMyTemplate: (id) => http.patch(`/my-templates/${id}/unpublish`),
 };
 
 export default templateApi;

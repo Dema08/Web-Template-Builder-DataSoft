@@ -168,6 +168,17 @@ Route::prefix('v1')->group(function (): void {
             Route::post('/{id}/use', [App\Domains\Template\Http\Controllers\TemplateAccessController::class, 'use']);
         });
 
+        // User-generated Template Management (Save as template, private/public)
+        Route::prefix('my-templates')->group(function (): void {
+            Route::get('/', [App\Domains\Template\Http\Controllers\UserTemplateController::class, 'index']);
+            Route::post('/', [App\Domains\Template\Http\Controllers\UserTemplateController::class, 'store']);
+            Route::get('/{id}', [App\Domains\Template\Http\Controllers\UserTemplateController::class, 'show']);
+            Route::put('/{id}', [App\Domains\Template\Http\Controllers\UserTemplateController::class, 'update']);
+            Route::delete('/{id}', [App\Domains\Template\Http\Controllers\UserTemplateController::class, 'destroy']);
+            Route::patch('/{id}/publish', [App\Domains\Template\Http\Controllers\UserTemplateController::class, 'publish']);
+            Route::patch('/{id}/unpublish', [App\Domains\Template\Http\Controllers\UserTemplateController::class, 'unpublish']);
+        });
+
         Route::prefix('subscription')->group(function (): void {
             Route::get('/template-quota', [App\Domains\Template\Http\Controllers\TemplateAccessController::class, 'quota']);
         });

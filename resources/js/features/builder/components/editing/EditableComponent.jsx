@@ -327,8 +327,34 @@ export default function EditableComponent({
     return 'pointer';
   };
 
+  const handleNativeDrop = (e) => {
+    try {
+      const rawData = e.dataTransfer.getData('application/json');
+      if (!rawData) return;
+      const data = JSON.parse(rawData);
+      if (data.type === 'icon') {
+        e.preventDefault();
+        e.stopPropagation();
+        const iconName = data.icon || data.payload?.key || data.payload?.id || data.id;
+        if (iconName) {
+          updateComponentProps(sectionId, component.id, { name: iconName, icon: iconName });
+          selectComponent(component.id, sectionId);
+          toast.success(`Ikon diubah menjadi "${iconName}"`, 'Icon Updated');
+        }
+      }
+    } catch (_err) {
+      // Ignored
+    }
+  };
+
+  const handleNativeDragOver = (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'copy';
+  };
+
   const activeDragType = dnd?.activeDragItem?.type;
   const isMediaDragging = activeDragType === 'sidebar-media' || dnd?.activeDragItem?.rawType === 'media';
+  const isIconDragging = activeDragType === 'sidebar-icon' || dnd?.activeDragItem?.rawType === 'icon';
   const isComponentDragging = activeDragType === 'sidebar-component' || activeDragType === 'canvas-component' || dnd?.activeDragItem?.rawType === 'component';
 
   const isInline = ['text', 'heading', 'button', 'icon', 'badge'].includes(component.type);
@@ -343,6 +369,7 @@ export default function EditableComponent({
     isDraggingLocal || isDndDragging ? 'opacity-40 scale-95 ring-2 ring-indigo-500 cursor-grabbing' : '',
     isOver && isContainer && isComponentDragging ? 'ring-2 ring-dashed ring-indigo-500 bg-indigo-500/10' : '',
     isOver && isImageComponent && isMediaDragging ? 'ring-2 ring-emerald-500 ring-offset-2' : '',
+    isOver && isIconDragging ? 'ring-2 ring-indigo-500 ring-offset-2' : '',
   ].filter(Boolean).join(' ');
 
   const wrapperStyle = {
@@ -380,6 +407,8 @@ export default function EditableComponent({
       onPointerDown={builderMode === 'drag' ? handleDragStart : undefined}
       onMouseEnter={() => setHoveredComponent(component.id)}
       onMouseLeave={() => setHoveredComponent(null)}
+      onDragOver={handleNativeDragOver}
+      onDrop={handleNativeDrop}
     >
       {/* Container Drop Indicator (e.g. Card receiving child components) */}
       {isOver && isContainer && isComponentDragging && (
@@ -397,6 +426,16 @@ export default function EditableComponent({
           <div className="bg-emerald-600 text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-lg flex items-center gap-1.5">
             <ImageIcon className="h-3.5 w-3.5" />
             <span>Drop to replace image</span>
+          </div>
+        </div>
+      )}
+
+      {/* Icon Replace Drop Indicator */}
+      {isOver && isIconDragging && (
+        <div className="absolute inset-0 z-30 bg-indigo-600/20 border-2 border-indigo-500 rounded-xl pointer-events-none flex items-center justify-center backdrop-blur-xs">
+          <div className="bg-indigo-600 text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-lg flex items-center gap-1.5 animate-pulse">
+            <Sparkles className="h-3.5 w-3.5 text-amber-300" />
+            <span>Drop to apply icon</span>
           </div>
         </div>
       )}

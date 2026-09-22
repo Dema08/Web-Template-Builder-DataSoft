@@ -22,9 +22,10 @@ import {
   Check,
   Grid,
   Plus,
+  BookmarkPlus,
 } from 'lucide-react';
 
-export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, isEditing }) {
+export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, isEditing, onSaveAsTemplate }) {
   const [showDeviceMenu, setShowDeviceMenu] = useState(false);
   const [showZoomMenu, setShowZoomMenu] = useState(false);
   const {
@@ -477,6 +478,18 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
           <Save className="h-3.5 w-3.5" />
           <span className="hidden sm:inline">Save Draft</span>
         </button>
+
+        {onSaveAsTemplate && (
+          <button
+            onClick={onSaveAsTemplate}
+            disabled={isSaving}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200/80 rounded-lg transition font-extrabold disabled:opacity-50 text-xs shadow-2xs hover:shadow-xs cursor-pointer"
+            title="Simpan sebagai template baru (Private/Publik)"
+          >
+            <BookmarkPlus className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">Save as Template</span>
+          </button>
+        )}
 
         {(isEditing !== undefined ? isEditing : !!templateId) ? (
           <button
