@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from '@store';
 import { templateApi, websiteApi } from '@api';
@@ -17,6 +17,7 @@ import { useBuilderStore } from '@builder/stores/builderStore';
 import BuilderErrorBoundary from '@builder/components/common/BuilderErrorBoundary';
 import { PublishDomainModal } from '@shared/components/ui';
 import SaveAsTemplateModal from '@builder/components/modals/SaveAsTemplateModal';
+import SaveDraftModal from '@builder/components/modals/SaveDraftModal';
 import { ROUTES, QUERY_KEYS } from '@constants';
 import { Loader2 } from 'lucide-react';
 
@@ -30,6 +31,14 @@ export default function Builder() {
   const [isSaveAsTemplateOpen, setIsSaveAsTemplateOpen] = useState(false);
   const [isSavingTemplate, setIsSavingTemplate] = useState(false);
   const [websiteInfo, setWebsiteInfo] = useState(null);
+
+  // Draft template to My Templates state
+  const [isSaveDraftModalOpen, setIsSaveDraftModalOpen] = useState(false);
+  const [isSavingDraft, setIsSavingDraft] = useState(false);
+  const [activeDraftTemplateId, setActiveDraftTemplateId] = useState(null); // ID template draft yang sedang diedit
+  const [activeDraftTemplateName, setActiveDraftTemplateName] = useState('');
+  const [lastAutoSaveTime, setLastAutoSaveTime] = useState(null);
+  const autoSaveIntervalRef = useRef(null);
 
   const {
     sections,
@@ -163,6 +172,122 @@ export default function Builder() {
     };
   }, [loadSections, setTemplateName]);
 
+  // ─── Draft Template Auto-Save to My Templates ───────────────────────────
+
+  /**
+   * Simpan konten builder saat ini ke template draft baru atau update yang ada.
+   * Dipanggil oleh tombol "Save Draft" dan juga auto-save interval.
+   * silent=true → tidak tampilkan toast (untuk auto-save).
+   */
+  const saveDraftTemplate = useCallback(async ({ name, silent = false } = {}) => {
+    const templateName = name || activeDraftTemplateName;
+    if (!templateName) return; // Butuh nama template
+
+    const draftJson = useBuilderStore.getState().serializeDraftJson();
+
+    try {
+      if (activeDraftTemplateId) {
+        // Update template draft yang sudah ada
+        await templateApi.updateMyTemplate(activeDraftTemplateId, {
+          draft_json: draftJson,
+          status: 'draft',
+        });
+      } else {
+        // Buat template draft baru
+        const res = await templateApi.saveAsUserTemplate({
+          name: templateName,
+          draft_json: draftJson,
+          visibility: 'private',
+          status: 'draft',
+        });
+        const newTemplate = res.data?.data ?? res.data;
+        if (newTemplate?.id) {
+          setActiveDraftTemplateId(newTemplate.id);
+          setActiveDraftTemplateName(templateName);
+          // Simpan juga di sessionStorage agar reload tidak kehilangan context
+          try {
+            sessionStorage.setItem('draft_template_id', String(newTemplate.id));
+            sessionStorage.setItem('draft_template_name', templateName);
+          } catch (_) {}
+        }
+      }
+
+      setLastAutoSaveTime(new Date());
+      queryClient.invalidateQueries(['my-templates']);
+
+      if (!silent) {
+        toast.success(
+          `Draft "${templateName}" tersimpan ke Template Saya!`,
+          'Draft Disimpan'
+        );
+      }
+    } catch (err) {
+      if (!silent) {
+        toast.error(
+          err.response?.data?.message || 'Gagal menyimpan draft template.',
+          'Error'
+        );
+      } else {
+        console.warn('[AutoSave] Failed to auto-save draft template:', err);
+      }
+    }
+  }, [activeDraftTemplateId, activeDraftTemplateName, queryClient]);
+
+  // Auto-save setiap 10 detik jika ada draft template aktif
+  useEffect(() => {
+    if (activeDraftTemplateId) {
+      autoSaveIntervalRef.current = setInterval(() => {
+        saveDraftTemplate({ silent: true });
+      }, 10000); // 10 detik
+    } else {
+      clearInterval(autoSaveIntervalRef.current);
+    }
+
+    return () => clearInterval(autoSaveIntervalRef.current);
+  }, [activeDraftTemplateId, saveDraftTemplate]);
+
+  // Cek sessionStorage: apakah user sebelumnya sudah punya draft template aktif
+  useEffect(() => {
+    const savedDraftId = sessionStorage.getItem('draft_template_id');
+    const savedDraftName = sessionStorage.getItem('draft_template_name');
+    if (savedDraftId && savedDraftName) {
+      setActiveDraftTemplateId(Number(savedDraftId));
+      setActiveDraftTemplateName(savedDraftName);
+    }
+  }, []);
+
+  /**
+   * Dipanggil saat user klik tombol "Save Draft" di Toolbar.
+   * Jika belum ada draft aktif → buka modal untuk isi nama.
+   * Jika sudah ada draft aktif → langsung simpan (update).
+   */
+  const handleSaveDraft = async () => {
+    if (activeDraftTemplateId) {
+      // Sudah ada draft aktif → langsung auto-save
+      setIsSavingDraft(true);
+      try {
+        await saveDraftTemplate({ silent: false });
+      } finally {
+        setIsSavingDraft(false);
+      }
+    } else {
+      // Belum ada draft → minta nama dulu
+      setIsSaveDraftModalOpen(true);
+    }
+  };
+
+  const handleConfirmSaveDraft = async ({ name }) => {
+    setIsSavingDraft(true);
+    try {
+      await saveDraftTemplate({ name, silent: false });
+      setIsSaveDraftModalOpen(false);
+    } finally {
+      setIsSavingDraft(false);
+    }
+  };
+
+  // ─────────────────────────────────────────────────────────────────────────
+
   const handleBack = () => {
     navigate(ROUTES.TEMPLATES);
   };
@@ -291,8 +416,12 @@ export default function Builder() {
             onSave={handleSave}
             onPublish={handleOpenPublishModal}
             onSaveAsTemplate={() => setIsSaveAsTemplateOpen(true)}
+            onSaveDraft={handleSaveDraft}
             isSaving={isSaving}
             isPublishing={isPublishing}
+            isSavingDraft={isSavingDraft}
+            activeDraftTemplateName={activeDraftTemplateName}
+            lastAutoSaveTime={lastAutoSaveTime}
           />
         }
         leftPanel={
@@ -331,6 +460,13 @@ export default function Builder() {
         onClose={() => setIsSaveAsTemplateOpen(false)}
         onSave={handleConfirmSaveAsTemplate}
         isSaving={isSavingTemplate}
+      />
+
+      <SaveDraftModal
+        isOpen={isSaveDraftModalOpen}
+        onClose={() => setIsSaveDraftModalOpen(false)}
+        onSave={handleConfirmSaveDraft}
+        isSaving={isSavingDraft}
       />
     </>
   );

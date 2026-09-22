@@ -76,13 +76,16 @@ class UserTemplateController extends BaseController
             'name'        => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:2000'],
             'draft_json'  => ['required', 'array'],
-            'visibility'  => ['required', 'string', 'in:private,public'],
+            'visibility'  => ['nullable', 'string', 'in:private,public'],
+            'status'      => ['nullable', 'string', 'in:draft,published'],
             'category_id' => ['nullable', 'integer', 'exists:kategori_industri,id'],
         ], [
             'name.required'       => 'Nama template wajib diisi.',
             'draft_json.required' => 'Konten template tidak boleh kosong.',
             'visibility.in'       => 'Visibilitas harus berupa private atau public.',
         ]);
+
+        $validated['visibility'] = $validated['visibility'] ?? 'private';
 
         $template = $this->templateService->saveAsUserTemplate($request->user(), $validated);
         $template->load('industryCategory');
@@ -130,6 +133,7 @@ class UserTemplateController extends BaseController
             'name'        => ['sometimes', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:2000'],
             'draft_json'  => ['sometimes', 'array'],
+            'status'      => ['nullable', 'string', 'in:draft,published'],
         ]);
 
         // Jika draft_json diupdate, sync juga ke published_json agar bisa langsung digunakan

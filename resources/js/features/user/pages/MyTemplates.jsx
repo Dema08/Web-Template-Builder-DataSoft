@@ -50,7 +50,8 @@ export default function MyTemplates() {
 
     /* ─── Summary Counts ─────────────────────────────────────────── */
     const totalCount = myTemplatesData.length;
-    const privateCount = myTemplatesData.filter((t) => t?.visibility === 'private').length;
+    const draftCount = myTemplatesData.filter((t) => t?.status === 'draft').length;
+    const privateCount = myTemplatesData.filter((t) => t?.visibility === 'private' && t?.status !== 'draft').length;
     const publicCount = myTemplatesData.filter((t) => t?.visibility === 'public').length;
 
     /* ─── Filtered List ──────────────────────────────────────────── */
@@ -60,7 +61,10 @@ export default function MyTemplates() {
             (tpl.name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
             (tpl.description || '').toLowerCase().includes(searchQuery.toLowerCase());
         const matchesVis =
-            visibilityFilter === 'all' || tpl.visibility === visibilityFilter;
+            visibilityFilter === 'all' ||
+            (visibilityFilter === 'draft' && tpl.status === 'draft') ||
+            (visibilityFilter === 'private' && tpl.visibility === 'private' && tpl.status !== 'draft') ||
+            (visibilityFilter === 'public' && tpl.visibility === 'public');
         return matchesSearch && matchesVis;
     });
 
@@ -186,14 +190,24 @@ export default function MyTemplates() {
             </div>
 
             {/* Summary Statistics Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
                 <div className="p-5 rounded-2xl bg-white border border-[rgb(var(--color-border))] shadow-xs flex items-center justify-between">
                     <div>
-                        <p className="text-xs font-bold text-[rgb(var(--color-text-secondary))] uppercase tracking-wider">Total Template Saya</p>
+                        <p className="text-xs font-bold text-[rgb(var(--color-text-secondary))] uppercase tracking-wider">Total Template</p>
                         <p className="text-2xl font-black text-slate-900 mt-1">{totalCount}</p>
                     </div>
                     <div className="p-3 rounded-xl bg-indigo-50 text-indigo-600">
                         <LayoutTemplate className="h-6 w-6" />
+                    </div>
+                </div>
+
+                <div className="p-5 rounded-2xl bg-white border border-[rgb(var(--color-border))] shadow-xs flex items-center justify-between">
+                    <div>
+                        <p className="text-xs font-bold text-[rgb(var(--color-text-secondary))] uppercase tracking-wider">Draft Auto-Save</p>
+                        <p className="text-2xl font-black text-amber-600 mt-1">{draftCount}</p>
+                    </div>
+                    <div className="p-3 rounded-xl bg-amber-50 text-amber-600">
+                        <Sparkles className="h-6 w-6" />
                     </div>
                 </div>
 
@@ -244,6 +258,17 @@ export default function MyTemplates() {
                         }`}
                     >
                         Semua ({totalCount})
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => setVisibilityFilter('draft')}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1 cursor-pointer ${
+                            visibilityFilter === 'draft'
+                                ? 'bg-amber-500 text-white shadow-xs'
+                                : 'text-[rgb(var(--color-text-secondary))] hover:bg-slate-100'
+                        }`}
+                    >
+                        <Sparkles className="h-3 w-3" /> Draft ({draftCount})
                     </button>
                     <button
                         type="button"
@@ -304,6 +329,7 @@ export default function MyTemplates() {
 
 /* ─── User Template Item Card Component ─────────────────────────────────── */
 function UserTemplateItemCard({ tpl, onPreview, onEdit, onUse, onToggleVisibility, onDelete }) {
+    const isDraft = tpl.status === 'draft';
     const isPublic = tpl.visibility === 'public';
 
     return (
@@ -317,9 +343,13 @@ function UserTemplateItemCard({ tpl, onPreview, onEdit, onUse, onToggleVisibilit
                     onError={(e) => handleImageError(e, tpl)}
                 />
 
-                {/* Badges — Private / Public */}
+                {/* Badges — Draft / Private / Public */}
                 <div className="absolute top-3 left-3 flex items-center gap-2 z-10">
-                    {isPublic ? (
+                    {isDraft ? (
+                        <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider backdrop-blur-md bg-amber-500 text-white shadow-md flex items-center gap-1 animate-pulse">
+                            <Sparkles className="h-3 w-3" /> Draft
+                        </span>
+                    ) : isPublic ? (
                         <span className="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider backdrop-blur-md bg-emerald-500 text-white shadow-md flex items-center gap-1">
                             <Globe className="h-3 w-3" /> Publik
                         </span>

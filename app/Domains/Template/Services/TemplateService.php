@@ -99,7 +99,7 @@ class TemplateService extends BaseService
             'draft_json'   => $data['draft_json'] ?? null,
             'published_json' => $data['draft_json'] ?? null, // snapshot saat disimpan
             'version'      => '1.0.0',
-            'status'       => TemplateStatus::Published, // selalu published agar bisa digunakan
+            'status'       => (isset($data['status']) && $data['status'] === 'draft') ? TemplateStatus::Draft : TemplateStatus::Published,
             'visibility'   => $visibility,
             'owner_id'     => $owner->id,
             'created_by'   => $owner->id,

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useBuilderStore, broadcastBuilderState } from '../../stores/builderStore';
 import { toast } from '@store';
 import {
@@ -25,7 +25,7 @@ import {
   BookmarkPlus,
 } from 'lucide-react';
 
-export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, isEditing, onSaveAsTemplate }) {
+export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, isEditing, onSaveAsTemplate, onSaveDraft, isSaving: propIsSaving, isPublishing, isSavingDraft, activeDraftTemplateName, lastAutoSaveTime }) {
   const [showDeviceMenu, setShowDeviceMenu] = useState(false);
   const [showZoomMenu, setShowZoomMenu] = useState(false);
   const {
@@ -40,7 +40,7 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
     isPreviewMode,
     status,
     setIsSaving,
-    isSaving,
+    isSaving: storeIsSaving,
     builderMode,
     setBuilderMode,
     snapEnabled,
@@ -60,9 +60,25 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
     toggleRightPanel,
   } = useBuilderStore();
 
+  const isSaving = Boolean(propIsSaving || storeIsSaving);
+
   const [showPageMenu, setShowPageMenu] = useState(false);
   const [showNewPageModal, setShowNewPageModal] = useState(false);
   const [newPageNameInput, setNewPageNameInput] = useState('');
+  const [autoSaveLabel, setAutoSaveLabel] = useState('');
+
+  // Perbarui label auto-save setiap saat
+  useEffect(() => {
+    if (!lastAutoSaveTime) return;
+    const update = () => {
+      const secs = Math.round((Date.now() - lastAutoSaveTime.getTime()) / 1000);
+      if (secs < 60) setAutoSaveLabel(`Tersimpan ${secs}d yang lalu`);
+      else setAutoSaveLabel(`Tersimpan ${Math.round(secs / 60)} mnt lalu`);
+    };
+    update();
+    const id = setInterval(update, 5000);
+    return () => clearInterval(id);
+  }, [lastAutoSaveTime]);
 
   const handleOpenPreview = () => {
     const currentState = useBuilderStore.getState();
@@ -469,15 +485,26 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
           <span className="hidden xl:inline text-[11px]">Inspector</span>
         </button>
 
+        {/* Save Draft button */}
         <button
-          onClick={handleSave}
-          disabled={isSaving}
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition font-bold disabled:opacity-50 text-xs"
-          title="Simpan sebagai draft"
+          onClick={onSaveDraft}
+          disabled={isSavingDraft || isSaving}
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200/80 rounded-lg transition font-bold disabled:opacity-50 text-xs"
+          title={activeDraftTemplateName ? `Update draft: ${activeDraftTemplateName}` : 'Simpan sebagai draft ke Template Saya'}
         >
           <Save className="h-3.5 w-3.5" />
-          <span className="hidden sm:inline">Save Draft</span>
+          <span className="hidden sm:inline">
+            {isSavingDraft ? 'Menyimpan...' : 'Save Draft'}
+          </span>
         </button>
+
+        {/* Auto-save indicator pill */}
+        {activeDraftTemplateName && (
+          <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 border border-emerald-200/60 rounded-lg text-[10px] font-semibold text-emerald-700 max-w-[180px] truncate" title={`Draft: ${activeDraftTemplateName} • ${autoSaveLabel}`}>
+            <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
+            <span className="truncate">{autoSaveLabel || `Draft: ${activeDraftTemplateName}`}</span>
+          </div>
+        )}
 
         {onSaveAsTemplate && (
           <button
