@@ -148,6 +148,25 @@ import Footer19 from '@builder/sections/footer/layouts/Footer19';
 import Footer20 from '@builder/sections/footer/layouts/Footer20';
 
 import Statistics01 from '@builder/sections/statistics/layouts/Statistics01';
+import Statistics02 from '@builder/sections/statistics/layouts/Statistics02';
+import Statistics03 from '@builder/sections/statistics/layouts/Statistics03';
+import Statistics04 from '@builder/sections/statistics/layouts/Statistics04';
+import Statistics05 from '@builder/sections/statistics/layouts/Statistics05';
+import Statistics06 from '@builder/sections/statistics/layouts/Statistics06';
+import Statistics07 from '@builder/sections/statistics/layouts/Statistics07';
+import Statistics08 from '@builder/sections/statistics/layouts/Statistics08';
+import Statistics09 from '@builder/sections/statistics/layouts/Statistics09';
+import Statistics10 from '@builder/sections/statistics/layouts/Statistics10';
+import Statistics11 from '@builder/sections/statistics/layouts/Statistics11';
+import Statistics12 from '@builder/sections/statistics/layouts/Statistics12';
+import Statistics13 from '@builder/sections/statistics/layouts/Statistics13';
+import Statistics14 from '@builder/sections/statistics/layouts/Statistics14';
+import Statistics15 from '@builder/sections/statistics/layouts/Statistics15';
+import Statistics16 from '@builder/sections/statistics/layouts/Statistics16';
+import Statistics17 from '@builder/sections/statistics/layouts/Statistics17';
+import Statistics18 from '@builder/sections/statistics/layouts/Statistics18';
+import Statistics19 from '@builder/sections/statistics/layouts/Statistics19';
+import Statistics20 from '@builder/sections/statistics/layouts/Statistics20';
 import Fleet01 from '@builder/sections/fleet/layouts/Fleet01';
 import Fleet02 from '@builder/sections/fleet/layouts/Fleet02';
 import Coverage01 from '@builder/sections/coverage/layouts/Coverage01';
@@ -475,8 +494,29 @@ export const LAYOUT_COMPONENTS = {
   'Footer19': Footer19,
   'Footer20': Footer20,
 
-  // Other section layouts
+  // Statistics layouts
   'Statistics01': Statistics01,
+  'Statistics02': Statistics02,
+  'Statistics03': Statistics03,
+  'Statistics04': Statistics04,
+  'Statistics05': Statistics05,
+  'Statistics06': Statistics06,
+  'Statistics07': Statistics07,
+  'Statistics08': Statistics08,
+  'Statistics09': Statistics09,
+  'Statistics10': Statistics10,
+  'Statistics11': Statistics11,
+  'Statistics12': Statistics12,
+  'Statistics13': Statistics13,
+  'Statistics14': Statistics14,
+  'Statistics15': Statistics15,
+  'Statistics16': Statistics16,
+  'Statistics17': Statistics17,
+  'Statistics18': Statistics18,
+  'Statistics19': Statistics19,
+  'Statistics20': Statistics20,
+
+  // Other section layouts
   'Fleet01': Fleet01,
   'Fleet02': Fleet02,
   'Coverage01': Coverage01,

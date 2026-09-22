@@ -2093,24 +2093,445 @@ export const LAYOUT_DEFAULTS = {
     { id: 'cta-trial', type: 'button', props: { label: 'Start Trial', href: '#trial', variant: 'primary', size: 'small', radius: 'full', background: '#6366f1', color: '#ffffff' } },
     { id: 'copy-20', type: 'text', props: { content: 'Copyright 2026 Aether OS v4.2.', fontSize: '12px', color: '#6d6fa8', align: 'center', margin: '0' } },
   ],
+  // === STATISTICS LAYOUTS (01-20) ===
   'statistics-01': [
-    { id: 'stat1-heading', type: 'heading', props: { content: 'Statistik & Pencapaian', level: 'h2', fontSize: '36px', fontWeight: '800', color: '#0f172a', align: 'center', margin: '0 0 12px 0' } },
-    { id: 'stat1-subtext', type: 'text', props: { content: 'Angka yang mencerminkan kepercayaan dan keunggulan layanan kami', fontSize: '16px', color: '#64748b', align: 'center', margin: '0 0 48px 0' } },
-    { id: 'stat1-card-1', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '20px', shadow: 'md', borderWidth: '1px', borderColor: '#e0e7ff', hoverEffect: 'lift', padding: '32px 24px' }, childrenComponents: [
-      { id: 'stat1-c1-value', type: 'heading', props: { content: '50+', level: 'h3', fontSize: '48px', fontWeight: '900', color: '#4f46e5', align: 'center', margin: '0 0 8px 0' } },
-      { id: 'stat1-c1-label', type: 'text', props: { content: 'Negara Jangkauan', fontSize: '15px', fontWeight: '600', color: '#475569', align: 'center', margin: '0' } },
+    { id: 'stat1-badge', type: 'badge', props: { content: '✦ Aurora 3.0 — Live Metrics', background: '#eef2ff', color: '#4f46e5' } },
+    { id: 'stat1-heading', type: 'heading', props: { content: 'Numbers that feel like magic', level: 'h2', fontSize: '48px', fontWeight: '800', color: '#0f172a', align: 'center', margin: '0 0 16px 0' } },
+    { id: 'stat1-text', type: 'text', props: { content: 'Setiap angka mewakili tim nyata yang membangun lebih cepat bersama Aurora — tanpa satu baris kode pun.', fontSize: '17px', color: '#64748b', align: 'center', margin: '0 0 28px 0' } },
+    { id: 'stat1-cta', type: 'button', props: { label: 'Lihat Laporan Publik →', href: '#laporan', variant: 'primary', size: 'medium', radius: 'full', background: '#4f46e5', color: '#ffffff' } },
+    { id: 'stat1-card-1', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '24px', shadow: 'md', borderWidth: '1px', borderColor: '#e0e7ff', hoverEffect: 'lift', padding: '32px 24px' }, childrenComponents: [
+      { id: 'stat1-c1-value', type: 'heading', props: { content: '12.000+', level: 'h3', fontSize: '44px', fontWeight: '900', color: '#4f46e5', align: 'center', margin: '0 0 8px 0' } },
+      { id: 'stat1-c1-label', type: 'text', props: { content: 'Makers Aktif', fontSize: '14px', fontWeight: '600', color: '#64748b', align: 'center', margin: '0' } },
     ]},
-    { id: 'stat1-card-2', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '20px', shadow: 'md', borderWidth: '1px', borderColor: '#e0e7ff', hoverEffect: 'lift', padding: '32px 24px' }, childrenComponents: [
-      { id: 'stat1-c2-value', type: 'heading', props: { content: '500+', level: 'h3', fontSize: '48px', fontWeight: '900', color: '#4f46e5', align: 'center', margin: '0 0 8px 0' } },
-      { id: 'stat1-c2-label', type: 'text', props: { content: 'Klien Terpercaya', fontSize: '15px', fontWeight: '600', color: '#475569', align: 'center', margin: '0' } },
+    { id: 'stat1-card-2', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '24px', shadow: 'md', borderWidth: '1px', borderColor: '#e0e7ff', hoverEffect: 'lift', padding: '32px 24px' }, childrenComponents: [
+      { id: 'stat1-c2-value', type: 'heading', props: { content: '480K', level: 'h3', fontSize: '44px', fontWeight: '900', color: '#4f46e5', align: 'center', margin: '0 0 8px 0' } },
+      { id: 'stat1-c2-label', type: 'text', props: { content: 'Situs Dipublikasikan', fontSize: '14px', fontWeight: '600', color: '#64748b', align: 'center', margin: '0' } },
     ]},
-    { id: 'stat1-card-3', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '20px', shadow: 'md', borderWidth: '1px', borderColor: '#e0e7ff', hoverEffect: 'lift', padding: '32px 24px' }, childrenComponents: [
-      { id: 'stat1-c3-value', type: 'heading', props: { content: '10K+', level: 'h3', fontSize: '48px', fontWeight: '900', color: '#4f46e5', align: 'center', margin: '0 0 8px 0' } },
-      { id: 'stat1-c3-label', type: 'text', props: { content: 'Pengiriman Selesai', fontSize: '15px', fontWeight: '600', color: '#475569', align: 'center', margin: '0' } },
+    { id: 'stat1-card-3', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '24px', shadow: 'md', borderWidth: '1px', borderColor: '#e0e7ff', hoverEffect: 'lift', padding: '32px 24px' }, childrenComponents: [
+      { id: 'stat1-c3-value', type: 'heading', props: { content: '99,9%', level: 'h3', fontSize: '44px', fontWeight: '900', color: '#4f46e5', align: 'center', margin: '0 0 8px 0' } },
+      { id: 'stat1-c3-label', type: 'text', props: { content: 'Uptime Edge', fontSize: '14px', fontWeight: '600', color: '#64748b', align: 'center', margin: '0' } },
     ]},
-    { id: 'stat1-card-4', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '20px', shadow: 'md', borderWidth: '1px', borderColor: '#e0e7ff', hoverEffect: 'lift', padding: '32px 24px' }, childrenComponents: [
-      { id: 'stat1-c4-value', type: 'heading', props: { content: '99%', level: 'h3', fontSize: '48px', fontWeight: '900', color: '#4f46e5', align: 'center', margin: '0 0 8px 0' } },
-      { id: 'stat1-c4-label', type: 'text', props: { content: 'Tingkat Kepuasan', fontSize: '15px', fontWeight: '600', color: '#475569', align: 'center', margin: '0' } },
+    { id: 'stat1-card-4', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '24px', shadow: 'md', borderWidth: '1px', borderColor: '#e0e7ff', hoverEffect: 'lift', padding: '32px 24px' }, childrenComponents: [
+      { id: 'stat1-c4-value', type: 'heading', props: { content: '4,9/5', level: 'h3', fontSize: '44px', fontWeight: '900', color: '#4f46e5', align: 'center', margin: '0 0 8px 0' } },
+      { id: 'stat1-c4-label', type: 'text', props: { content: 'Rating Pengguna', fontSize: '14px', fontWeight: '600', color: '#64748b', align: 'center', margin: '0' } },
+    ]},
+  ],
+  'statistics-02': [
+    { id: 'stat2-badge', type: 'badge', props: { content: 'EST. 1987 — JAKARTA • PARIS', background: '#1c1917', color: '#e7c873' } },
+    { id: 'stat2-heading', type: 'heading', props: { content: 'A legacy measured in gold', level: 'h2', fontSize: '52px', fontWeight: '700', color: '#fafaf9', align: 'center', margin: '0 0 18px 0' } },
+    { id: 'stat2-text', type: 'text', props: { content: 'Empat dekade kepercayaan — angka yang hanya bisa dibangun oleh konsistensi dan ketelitian.', fontSize: '17px', color: '#a8a29e', align: 'center', margin: '0 0 30px 0' } },
+    { id: 'stat2-cta', type: 'button', props: { label: 'Reserve Private View →', href: '#reserve', variant: 'primary', size: 'medium', radius: 'full', background: '#c9a227', color: '#0c0a09' } },
+    { id: 'stat2-card-1', type: 'card', props: { variant: 'stat-dark', background: 'rgba(255,255,255,0.03)', borderRadius: '4px', shadow: 'none', borderWidth: '1px', borderColor: 'rgba(201,162,39,0.35)', hoverEffect: 'border', padding: '36px 24px' }, childrenComponents: [
+      { id: 'stat2-c1-value', type: 'heading', props: { content: '38', level: 'h3', fontSize: '52px', fontWeight: '700', color: '#e7c873', align: 'center', margin: '0 0 10px 0' } },
+      { id: 'stat2-c1-label', type: 'text', props: { content: 'Years of Heritage', fontSize: '12px', color: '#a8a29e', align: 'center', letterSpacing: '0.25em', textTransform: 'uppercase', margin: '0' } },
+    ]},
+    { id: 'stat2-card-2', type: 'card', props: { variant: 'stat-dark', background: 'rgba(255,255,255,0.03)', borderRadius: '4px', shadow: 'none', borderWidth: '1px', borderColor: 'rgba(201,162,39,0.35)', hoverEffect: 'border', padding: '36px 24px' }, childrenComponents: [
+      { id: 'stat2-c2-value', type: 'heading', props: { content: '12', level: 'h3', fontSize: '52px', fontWeight: '700', color: '#e7c873', align: 'center', margin: '0 0 10px 0' } },
+      { id: 'stat2-c2-label', type: 'text', props: { content: 'Private Boutiques', fontSize: '12px', color: '#a8a29e', align: 'center', letterSpacing: '0.25em', textTransform: 'uppercase', margin: '0' } },
+    ]},
+    { id: 'stat2-card-3', type: 'card', props: { variant: 'stat-dark', background: 'rgba(255,255,255,0.03)', borderRadius: '4px', shadow: 'none', borderWidth: '1px', borderColor: 'rgba(201,162,39,0.35)', hoverEffect: 'border', padding: '36px 24px' }, childrenComponents: [
+      { id: 'stat2-c3-value', type: 'heading', props: { content: '40K', level: 'h3', fontSize: '52px', fontWeight: '700', color: '#e7c873', align: 'center', margin: '0 0 10px 0' } },
+      { id: 'stat2-c3-label', type: 'text', props: { content: 'Patrons Worldwide', fontSize: '12px', color: '#a8a29e', align: 'center', letterSpacing: '0.25em', textTransform: 'uppercase', margin: '0' } },
+    ]},
+    { id: 'stat2-card-4', type: 'card', props: { variant: 'stat-dark', background: 'rgba(255,255,255,0.03)', borderRadius: '4px', shadow: 'none', borderWidth: '1px', borderColor: 'rgba(201,162,39,0.35)', hoverEffect: 'border', padding: '36px 24px' }, childrenComponents: [
+      { id: 'stat2-c4-value', type: 'heading', props: { content: '3', level: 'h3', fontSize: '52px', fontWeight: '700', color: '#e7c873', align: 'center', margin: '0 0 10px 0' } },
+      { id: 'stat2-c4-label', type: 'text', props: { content: 'Generations of Craft', fontSize: '12px', color: '#a8a29e', align: 'center', letterSpacing: '0.25em', textTransform: 'uppercase', margin: '0' } },
+    ]},
+  ],
+  'statistics-03': [
+    { id: 'stat3-badge', type: 'badge', props: { content: '🚚 500+ Armada Aktif', background: '#fff7ed', color: '#ea580c' } },
+    { id: 'stat3-heading', type: 'heading', props: { content: 'Metrik yang menggerakkan bisnis Anda', level: 'h2', fontSize: '46px', fontWeight: '900', color: '#0f172a', align: 'left', margin: '0 0 16px 0' } },
+    { id: 'stat3-text', type: 'text', props: { content: 'Tracking real-time di darat, laut, dan udara. Setiap paket terukur, setiap rute teroptimasi.', fontSize: '17px', color: '#64748b', align: 'left', margin: '0 0 26px 0' } },
+    { id: 'stat3-cta', type: 'button', props: { label: 'Request a Quote →', href: '#contact', variant: 'primary', size: 'medium', radius: 'lg', background: '#f97316', color: '#ffffff' } },
+    { id: 'stat3-card-1', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '20px', shadow: 'md', borderWidth: '1px', borderColor: '#fed7aa', hoverEffect: 'lift', padding: '28px 24px' }, childrenComponents: [
+      { id: 'stat3-c1-value', type: 'heading', props: { content: '99,8%', level: 'h3', fontSize: '40px', fontWeight: '900', color: '#ea580c', align: 'left', margin: '0 0 6px 0' } },
+      { id: 'stat3-c1-label', type: 'text', props: { content: 'On-time Delivery', fontSize: '14px', fontWeight: '600', color: '#64748b', align: 'left', margin: '0' } },
+    ]},
+    { id: 'stat3-card-2', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '20px', shadow: 'md', borderWidth: '1px', borderColor: '#fed7aa', hoverEffect: 'lift', padding: '28px 24px' }, childrenComponents: [
+      { id: 'stat3-c2-value', type: 'heading', props: { content: '50+', level: 'h3', fontSize: '40px', fontWeight: '900', color: '#ea580c', align: 'left', margin: '0 0 6px 0' } },
+      { id: 'stat3-c2-label', type: 'text', props: { content: 'Kota Terjangkau', fontSize: '14px', fontWeight: '600', color: '#64748b', align: 'left', margin: '0' } },
+    ]},
+    { id: 'stat3-card-3', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '20px', shadow: 'md', borderWidth: '1px', borderColor: '#fed7aa', hoverEffect: 'lift', padding: '28px 24px' }, childrenComponents: [
+      { id: 'stat3-c3-value', type: 'heading', props: { content: '12.480', level: 'h3', fontSize: '40px', fontWeight: '900', color: '#ea580c', align: 'left', margin: '0 0 6px 0' } },
+      { id: 'stat3-c3-label', type: 'text', props: { content: 'Paket / Hari', fontSize: '14px', fontWeight: '600', color: '#64748b', align: 'left', margin: '0' } },
+    ]},
+    { id: 'stat3-card-4', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '20px', shadow: 'md', borderWidth: '1px', borderColor: '#fed7aa', hoverEffect: 'lift', padding: '28px 24px' }, childrenComponents: [
+      { id: 'stat3-c4-value', type: 'heading', props: { content: '24/7', level: 'h3', fontSize: '40px', fontWeight: '900', color: '#ea580c', align: 'left', margin: '0 0 6px 0' } },
+      { id: 'stat3-c4-label', type: 'text', props: { content: 'Support Operasional', fontSize: '14px', fontWeight: '600', color: '#64748b', align: 'left', margin: '0' } },
+    ]},
+  ],
+  'statistics-04': [
+    { id: 'stat4-badge', type: 'badge', props: { content: '★ SCORECARD 2026', background: '#000000', color: '#facc15' } },
+    { id: 'stat4-heading', type: 'heading', props: { content: 'THE NUMBERS ARE LOUD', level: 'h2', fontSize: '56px', fontWeight: '900', color: '#000000', align: 'left', margin: '0 0 14px 0' } },
+    { id: 'stat4-text', type: 'text', props: { content: 'Studio desain anti-template. Angka kami tempel di dinding supaya tidak bisa dibohongi.', fontSize: '17px', color: '#000000', align: 'left', margin: '0 0 26px 0' } },
+    { id: 'stat4-cta', type: 'button', props: { label: 'HIRE US ★', href: '#hire', variant: 'primary', size: 'medium', radius: 'none', background: '#000000', color: '#facc15' } },
+    { id: 'stat4-card-1', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '16px', shadow: 'none', borderWidth: '3px', borderColor: '#000000', hoverEffect: 'scale', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat4-c1-value', type: 'heading', props: { content: '120+', level: 'h3', fontSize: '44px', fontWeight: '900', color: '#000000', align: 'center', margin: '0 0 6px 0' } },
+      { id: 'stat4-c1-label', type: 'text', props: { content: 'Projects', fontSize: '12px', fontWeight: '700', color: '#000000', align: 'center', letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0' } },
+    ]},
+    { id: 'stat4-card-2', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '16px', shadow: 'none', borderWidth: '3px', borderColor: '#000000', hoverEffect: 'scale', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat4-c2-value', type: 'heading', props: { content: '14', level: 'h3', fontSize: '44px', fontWeight: '900', color: '#000000', align: 'center', margin: '0 0 6px 0' } },
+      { id: 'stat4-c2-label', type: 'text', props: { content: 'Awards', fontSize: '12px', fontWeight: '700', color: '#000000', align: 'center', letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0' } },
+    ]},
+    { id: 'stat4-card-3', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '16px', shadow: 'none', borderWidth: '3px', borderColor: '#000000', hoverEffect: 'scale', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat4-c3-value', type: 'heading', props: { content: '8yr', level: 'h3', fontSize: '44px', fontWeight: '900', color: '#000000', align: 'center', margin: '0 0 6px 0' } },
+      { id: 'stat4-c3-label', type: 'text', props: { content: 'Studio', fontSize: '12px', fontWeight: '700', color: '#000000', align: 'center', letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0' } },
+    ]},
+    { id: 'stat4-card-4', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '16px', shadow: 'none', borderWidth: '3px', borderColor: '#000000', hoverEffect: 'scale', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat4-c4-value', type: 'heading', props: { content: '∞', level: 'h3', fontSize: '44px', fontWeight: '900', color: '#000000', align: 'center', margin: '0 0 6px 0' } },
+      { id: 'stat4-c4-label', type: 'text', props: { content: 'Ideas', fontSize: '12px', fontWeight: '700', color: '#000000', align: 'center', letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0' } },
+    ]},
+  ],
+  'statistics-05': [
+    { id: 'stat5-badge', type: 'badge', props: { content: 'U B U D — B A L I', background: '#faf9f7', color: '#a8a29e' } },
+    { id: 'stat5-heading', type: 'heading', props: { content: 'Quietly, the numbers grew', level: 'h2', fontSize: '52px', fontWeight: '400', color: '#1c1917', align: 'center', margin: '0 0 16px 0' } },
+    { id: 'stat5-text', type: 'text', props: { content: 'Pertumbuhan yang tidak diburu-buru — dibangun perlahan lewat ritual dan kepercayaan.', fontSize: '17px', color: '#78716c', align: 'center', margin: '0 0 30px 0' } },
+    { id: 'stat5-cta', type: 'button', props: { label: 'Reserve Your Stay —', href: '#reserve', variant: 'ghost', size: 'medium', background: 'transparent', color: '#1c1917' } },
+    { id: 'stat5-card-1', type: 'card', props: { variant: 'stat', background: 'transparent', borderRadius: '0px', shadow: 'none', borderWidth: '0px', hoverEffect: 'none', padding: '28px 16px' }, childrenComponents: [
+      { id: 'stat5-c1-value', type: 'heading', props: { content: '24', level: 'h3', fontSize: '48px', fontWeight: '400', color: '#1c1917', align: 'center', margin: '0 0 10px 0' } },
+      { id: 'stat5-c1-label', type: 'text', props: { content: 'Private Suites', fontSize: '12px', color: '#a8a29e', align: 'center', letterSpacing: '0.3em', textTransform: 'uppercase', margin: '0' } },
+    ]},
+    { id: 'stat5-card-2', type: 'card', props: { variant: 'stat', background: 'transparent', borderRadius: '0px', shadow: 'none', borderWidth: '0px', hoverEffect: 'none', padding: '28px 16px' }, childrenComponents: [
+      { id: 'stat5-c2-value', type: 'heading', props: { content: '8.000+', level: 'h3', fontSize: '48px', fontWeight: '400', color: '#1c1917', align: 'center', margin: '0 0 10px 0' } },
+      { id: 'stat5-c2-label', type: 'text', props: { content: 'Tamu Menginap', fontSize: '12px', color: '#a8a29e', align: 'center', letterSpacing: '0.3em', textTransform: 'uppercase', margin: '0' } },
+    ]},
+    { id: 'stat5-card-3', type: 'card', props: { variant: 'stat', background: 'transparent', borderRadius: '0px', shadow: 'none', borderWidth: '0px', hoverEffect: 'none', padding: '28px 16px' }, childrenComponents: [
+      { id: 'stat5-c3-value', type: 'heading', props: { content: '4,9', level: 'h3', fontSize: '48px', fontWeight: '400', color: '#1c1917', align: 'center', margin: '0 0 10px 0' } },
+      { id: 'stat5-c3-label', type: 'text', props: { content: 'Guest Rating', fontSize: '12px', color: '#a8a29e', align: 'center', letterSpacing: '0.3em', textTransform: 'uppercase', margin: '0' } },
+    ]},
+    { id: 'stat5-card-4', type: 'card', props: { variant: 'stat', background: 'transparent', borderRadius: '0px', shadow: 'none', borderWidth: '0px', hoverEffect: 'none', padding: '28px 16px' }, childrenComponents: [
+      { id: 'stat5-c4-value', type: 'heading', props: { content: '12', level: 'h3', fontSize: '48px', fontWeight: '400', color: '#1c1917', align: 'center', margin: '0 0 10px 0' } },
+      { id: 'stat5-c4-label', type: 'text', props: { content: 'Tahun Mengabdi', fontSize: '12px', color: '#a8a29e', align: 'center', letterSpacing: '0.3em', textTransform: 'uppercase', margin: '0' } },
+    ]},
+  ],
+  'statistics-06': [
+    { id: 'stat6-badge', type: 'badge', props: { content: '● MAINNET LIVE', background: '#1e1b4b', color: '#a5b4fc' } },
+    { id: 'stat6-heading', type: 'heading', props: { content: 'The universe by the numbers', level: 'h2', fontSize: '52px', fontWeight: '900', color: '#ffffff', align: 'center', margin: '0 0 16px 0' } },
+    { id: 'stat6-text', type: 'text', props: { content: '128.400 explorer sudah di dalam. Misi, reward, dan semesta yang tidak pernah tidur.', fontSize: '17px', color: '#a5b4fc', align: 'center', margin: '0 0 28px 0' } },
+    { id: 'stat6-cta', type: 'button', props: { label: 'Launch App ✦', href: '#app', variant: 'primary', size: 'medium', radius: 'full', background: '#8b5cf6', color: '#ffffff' } },
+    { id: 'stat6-card-1', type: 'card', props: { variant: 'stat-dark', background: 'rgba(255,255,255,0.05)', borderRadius: '20px', shadow: 'none', borderWidth: '1px', borderColor: 'rgba(196,181,253,0.25)', hoverEffect: 'glow', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat6-c1-value', type: 'heading', props: { content: '128.400', level: 'h3', fontSize: '40px', fontWeight: '900', color: '#ffffff', align: 'center', margin: '0 0 8px 0' } },
+      { id: 'stat6-c1-label', type: 'text', props: { content: 'Explorers', fontSize: '12px', color: '#a5b4fc', align: 'center', letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0' } },
+    ]},
+    { id: 'stat6-card-2', type: 'card', props: { variant: 'stat-dark', background: 'rgba(255,255,255,0.05)', borderRadius: '20px', shadow: 'none', borderWidth: '1px', borderColor: 'rgba(196,181,253,0.25)', hoverEffect: 'glow', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat6-c2-value', type: 'heading', props: { content: '3.200+', level: 'h3', fontSize: '40px', fontWeight: '900', color: '#ffffff', align: 'center', margin: '0 0 8px 0' } },
+      { id: 'stat6-c2-label', type: 'text', props: { content: 'Missions', fontSize: '12px', color: '#a5b4fc', align: 'center', letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0' } },
+    ]},
+    { id: 'stat6-card-3', type: 'card', props: { variant: 'stat-dark', background: 'rgba(255,255,255,0.05)', borderRadius: '20px', shadow: 'none', borderWidth: '1px', borderColor: 'rgba(196,181,253,0.25)', hoverEffect: 'glow', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat6-c3-value', type: 'heading', props: { content: '$4.2M', level: 'h3', fontSize: '40px', fontWeight: '900', color: '#ffffff', align: 'center', margin: '0 0 8px 0' } },
+      { id: 'stat6-c3-label', type: 'text', props: { content: 'Rewards Paid', fontSize: '12px', color: '#a5b4fc', align: 'center', letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0' } },
+    ]},
+    { id: 'stat6-card-4', type: 'card', props: { variant: 'stat-dark', background: 'rgba(255,255,255,0.05)', borderRadius: '20px', shadow: 'none', borderWidth: '1px', borderColor: 'rgba(196,181,253,0.25)', hoverEffect: 'glow', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat6-c4-value', type: 'heading', props: { content: '40', level: 'h3', fontSize: '40px', fontWeight: '900', color: '#ffffff', align: 'center', margin: '0 0 8px 0' } },
+      { id: 'stat6-c4-label', type: 'text', props: { content: 'Regions Online', fontSize: '12px', color: '#a5b4fc', align: 'center', letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0' } },
+    ]},
+  ],
+  'statistics-07': [
+    { id: 'stat7-badge', type: 'badge', props: { content: '$ datasoft metrics --live', background: '#052e16', color: '#4ade80' } },
+    { id: 'stat7-heading', type: 'heading', props: { content: 'Observability you can trust', level: 'h2', fontSize: '46px', fontWeight: '800', color: '#e2e8f0', align: 'left', margin: '0 0 14px 0' } },
+    { id: 'stat7-text', type: 'text', props: { content: 'Edge deploys, instant rollbacks, dan metrik real-time. Developer ship 10x lebih cepat di Datasoft Cloud.', fontSize: '16px', color: '#94a3b8', align: 'left', margin: '0 0 24px 0' } },
+    { id: 'stat7-cta', type: 'button', props: { label: '▸ Read Docs', href: '#docs', variant: 'primary', size: 'medium', radius: 'md', background: '#22c55e', color: '#052e16' } },
+    { id: 'stat7-card-1', type: 'card', props: { variant: 'stat-dark', background: '#0f172a', borderRadius: '12px', shadow: 'none', borderWidth: '1px', borderColor: '#1e293b', hoverEffect: 'border', padding: '24px 20px' }, childrenComponents: [
+      { id: 'stat7-c1-value', type: 'heading', props: { content: '99,99%', level: 'h3', fontSize: '36px', fontWeight: '900', color: '#22c55e', align: 'left', margin: '0 0 6px 0' } },
+      { id: 'stat7-c1-label', type: 'text', props: { content: 'uptime // SLA', fontSize: '13px', color: '#94a3b8', align: 'left', margin: '0' } },
+    ]},
+    { id: 'stat7-card-2', type: 'card', props: { variant: 'stat-dark', background: '#0f172a', borderRadius: '12px', shadow: 'none', borderWidth: '1px', borderColor: '#1e293b', hoverEffect: 'border', padding: '24px 20px' }, childrenComponents: [
+      { id: 'stat7-c2-value', type: 'heading', props: { content: '8s', level: 'h3', fontSize: '36px', fontWeight: '900', color: '#22c55e', align: 'left', margin: '0 0 6px 0' } },
+      { id: 'stat7-c2-label', type: 'text', props: { content: 'deploy // build time', fontSize: '13px', color: '#94a3b8', align: 'left', margin: '0' } },
+    ]},
+    { id: 'stat7-card-3', type: 'card', props: { variant: 'stat-dark', background: '#0f172a', borderRadius: '12px', shadow: 'none', borderWidth: '1px', borderColor: '#1e293b', hoverEffect: 'border', padding: '24px 20px' }, childrenComponents: [
+      { id: 'stat7-c3-value', type: 'heading', props: { content: '40', level: 'h3', fontSize: '36px', fontWeight: '900', color: '#22c55e', align: 'left', margin: '0 0 6px 0' } },
+      { id: 'stat7-c3-label', type: 'text', props: { content: 'regions // edge nodes', fontSize: '13px', color: '#94a3b8', align: 'left', margin: '0' } },
+    ]},
+    { id: 'stat7-card-4', type: 'card', props: { variant: 'stat-dark', background: '#0f172a', borderRadius: '12px', shadow: 'none', borderWidth: '1px', borderColor: '#1e293b', hoverEffect: 'border', padding: '24px 20px' }, childrenComponents: [
+      { id: 'stat7-c4-value', type: 'heading', props: { content: '10x', level: 'h3', fontSize: '36px', fontWeight: '900', color: '#22c55e', align: 'left', margin: '0 0 6px 0' } },
+      { id: 'stat7-c4-label', type: 'text', props: { content: 'faster // ship velocity', fontSize: '13px', color: '#94a3b8', align: 'left', margin: '0' } },
+    ]},
+  ],
+  'statistics-08': [
+    { id: 'stat8-badge', type: 'badge', props: { content: '🌸 Spring Season 2026', background: '#fce7f3', color: '#be185d' } },
+    { id: 'stat8-heading', type: 'heading', props: { content: 'Every number tells a love story', level: 'h2', fontSize: '52px', fontWeight: '700', color: '#831843', align: 'center', margin: '0 0 16px 0' } },
+    { id: 'stat8-text', type: 'text', props: { content: 'Ribuan momen bahagia yang kami rangkai bersama keluarga dan pasangan di jantung kota.', fontSize: '17px', color: '#9d7b8c', align: 'center', margin: '0 0 28px 0' } },
+    { id: 'stat8-cta', type: 'button', props: { label: 'Book Consultation ♡', href: '#book', variant: 'primary', size: 'medium', radius: 'full', background: '#db2777', color: '#ffffff' } },
+    { id: 'stat8-card-1', type: 'card', props: { variant: 'stat', background: '#fff1f5', borderRadius: '200px 200px 24px 24px', shadow: 'sm', borderWidth: '1px', borderColor: '#fbcfe8', hoverEffect: 'lift', padding: '36px 20px 28px' }, childrenComponents: [
+      { id: 'stat8-c1-value', type: 'heading', props: { content: '1.200+', level: 'h3', fontSize: '40px', fontWeight: '700', color: '#be185d', align: 'center', margin: '0 0 8px 0' } },
+      { id: 'stat8-c1-label', type: 'text', props: { content: 'Wedding Terselenggara', fontSize: '13px', color: '#9d7b8c', align: 'center', margin: '0' } },
+    ]},
+    { id: 'stat8-card-2', type: 'card', props: { variant: 'stat', background: '#fff1f5', borderRadius: '200px 200px 24px 24px', shadow: 'sm', borderWidth: '1px', borderColor: '#fbcfe8', hoverEffect: 'lift', padding: '36px 20px 28px' }, childrenComponents: [
+      { id: 'stat8-c2-value', type: 'heading', props: { content: '320', level: 'h3', fontSize: '40px', fontWeight: '700', color: '#be185d', align: 'center', margin: '0 0 8px 0' } },
+      { id: 'stat8-c2-label', type: 'text', props: { content: 'Event Privat', fontSize: '13px', color: '#9d7b8c', align: 'center', margin: '0' } },
+    ]},
+    { id: 'stat8-card-3', type: 'card', props: { variant: 'stat', background: '#fff1f5', borderRadius: '200px 200px 24px 24px', shadow: 'sm', borderWidth: '1px', borderColor: '#fbcfe8', hoverEffect: 'lift', padding: '36px 20px 28px' }, childrenComponents: [
+      { id: 'stat8-c3-value', type: 'heading', props: { content: '4,9', level: 'h3', fontSize: '40px', fontWeight: '700', color: '#be185d', align: 'center', margin: '0 0 8px 0' } },
+      { id: 'stat8-c3-label', type: 'text', props: { content: 'Rating Pasangan', fontSize: '13px', color: '#9d7b8c', align: 'center', margin: '0' } },
+    ]},
+    { id: 'stat8-card-4', type: 'card', props: { variant: 'stat', background: '#fff1f5', borderRadius: '200px 200px 24px 24px', shadow: 'sm', borderWidth: '1px', borderColor: '#fbcfe8', hoverEffect: 'lift', padding: '36px 20px 28px' }, childrenComponents: [
+      { id: 'stat8-c4-value', type: 'heading', props: { content: '12', level: 'h3', fontSize: '40px', fontWeight: '700', color: '#be185d', align: 'center', margin: '0 0 8px 0' } },
+      { id: 'stat8-c4-label', type: 'text', props: { content: 'Tahun Berkarya', fontSize: '13px', color: '#9d7b8c', align: 'center', margin: '0' } },
+    ]},
+  ],
+  'statistics-09': [
+    { id: 'stat9-badge', type: 'badge', props: { content: '✦ SINCE 1987', background: '#fef3c7', color: '#92400e' } },
+    { id: 'stat9-heading', type: 'heading', props: { content: 'A legacy cast in gold', level: 'h2', fontSize: '56px', fontWeight: '700', color: '#451a03', align: 'center', margin: '0 0 16px 0' } },
+    { id: 'stat9-text', type: 'text', props: { content: 'Tiga generasi craftsmanship — angka yang tercatat rapi dari butik heritage hingga koleksi privat dunia.', fontSize: '17px', color: '#92600e', align: 'center', margin: '0 0 28px 0' } },
+    { id: 'stat9-cta', type: 'button', props: { label: '✦ Visit Boutique', href: '#visit', variant: 'primary', size: 'medium', radius: 'full', background: '#b45309', color: '#fffbeb' } },
+    { id: 'stat9-card-1', type: 'card', props: { variant: 'stat', background: '#fffbeb', borderRadius: '16px', shadow: 'sm', borderWidth: '1px', borderColor: '#e7c873', hoverEffect: 'lift', padding: '32px 20px' }, childrenComponents: [
+      { id: 'stat9-c1-value', type: 'heading', props: { content: '38', level: 'h3', fontSize: '44px', fontWeight: '700', color: '#92400e', align: 'center', margin: '0 0 8px 0' } },
+      { id: 'stat9-c1-label', type: 'text', props: { content: 'Years', fontSize: '12px', color: '#92600e', align: 'center', letterSpacing: '0.3em', textTransform: 'uppercase', margin: '0' } },
+    ]},
+    { id: 'stat9-card-2', type: 'card', props: { variant: 'stat', background: '#fffbeb', borderRadius: '16px', shadow: 'sm', borderWidth: '1px', borderColor: '#e7c873', hoverEffect: 'lift', padding: '32px 20px' }, childrenComponents: [
+      { id: 'stat9-c2-value', type: 'heading', props: { content: '12', level: 'h3', fontSize: '44px', fontWeight: '700', color: '#92400e', align: 'center', margin: '0 0 8px 0' } },
+      { id: 'stat9-c2-label', type: 'text', props: { content: 'Boutiques', fontSize: '12px', color: '#92600e', align: 'center', letterSpacing: '0.3em', textTransform: 'uppercase', margin: '0' } },
+    ]},
+    { id: 'stat9-card-3', type: 'card', props: { variant: 'stat', background: '#fffbeb', borderRadius: '16px', shadow: 'sm', borderWidth: '1px', borderColor: '#e7c873', hoverEffect: 'lift', padding: '32px 20px' }, childrenComponents: [
+      { id: 'stat9-c3-value', type: 'heading', props: { content: '40K', level: 'h3', fontSize: '44px', fontWeight: '700', color: '#92400e', align: 'center', margin: '0 0 8px 0' } },
+      { id: 'stat9-c3-label', type: 'text', props: { content: 'Patrons', fontSize: '12px', color: '#92600e', align: 'center', letterSpacing: '0.3em', textTransform: 'uppercase', margin: '0' } },
+    ]},
+    { id: 'stat9-card-4', type: 'card', props: { variant: 'stat', background: '#fffbeb', borderRadius: '16px', shadow: 'sm', borderWidth: '1px', borderColor: '#e7c873', hoverEffect: 'lift', padding: '32px 20px' }, childrenComponents: [
+      { id: 'stat9-c4-value', type: 'heading', props: { content: '3', level: 'h3', fontSize: '44px', fontWeight: '700', color: '#92400e', align: 'center', margin: '0 0 8px 0' } },
+      { id: 'stat9-c4-label', type: 'text', props: { content: 'Generations', fontSize: '12px', color: '#92600e', align: 'center', letterSpacing: '0.3em', textTransform: 'uppercase', margin: '0' } },
+    ]},
+  ],
+  'statistics-10': [
+    { id: 'stat10-badge', type: 'badge', props: { content: '🔥 12.480 produk terjual hari ini', background: '#fef2f2', color: '#dc2626' } },
+    { id: 'stat10-heading', type: 'heading', props: { content: 'Marketplace by the numbers', level: 'h2', fontSize: '48px', fontWeight: '900', color: '#0f172a', align: 'center', margin: '0 0 16px 0' } },
+    { id: 'stat10-text', type: 'text', props: { content: '2 juta produk, 40.000 seller terverifikasi, dan pertumbuhan yang bisa Anda lacak sendiri.', fontSize: '17px', color: '#64748b', align: 'center', margin: '0 0 26px 0' } },
+    { id: 'stat10-cta', type: 'button', props: { label: 'Start Selling', href: '#sell', variant: 'ghost', size: 'medium', background: 'transparent', color: '#4f46e5' } },
+    { id: 'stat10-card-1', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '20px', shadow: 'md', borderWidth: '1px', borderColor: '#e2e8f0', hoverEffect: 'lift', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat10-c1-value', type: 'heading', props: { content: '2M+', level: 'h3', fontSize: '40px', fontWeight: '900', color: '#dc2626', align: 'center', margin: '0 0 6px 0' } },
+      { id: 'stat10-c1-label', type: 'text', props: { content: 'Produk Aktif', fontSize: '13px', fontWeight: '600', color: '#64748b', align: 'center', margin: '0' } },
+    ]},
+    { id: 'stat10-card-2', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '20px', shadow: 'md', borderWidth: '1px', borderColor: '#e2e8f0', hoverEffect: 'lift', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat10-c2-value', type: 'heading', props: { content: '40.000', level: 'h3', fontSize: '40px', fontWeight: '900', color: '#dc2626', align: 'center', margin: '0 0 6px 0' } },
+      { id: 'stat10-c2-label', type: 'text', props: { content: 'Seller Terverifikasi', fontSize: '13px', fontWeight: '600', color: '#64748b', align: 'center', margin: '0' } },
+    ]},
+    { id: 'stat10-card-3', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '20px', shadow: 'md', borderWidth: '1px', borderColor: '#e2e8f0', hoverEffect: 'lift', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat10-c3-value', type: 'heading', props: { content: '12.480', level: 'h3', fontSize: '40px', fontWeight: '900', color: '#dc2626', align: 'center', margin: '0 0 6px 0' } },
+      { id: 'stat10-c3-label', type: 'text', props: { content: 'Terjual Hari Ini', fontSize: '13px', fontWeight: '600', color: '#64748b', align: 'center', margin: '0' } },
+    ]},
+    { id: 'stat10-card-4', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '20px', shadow: 'md', borderWidth: '1px', borderColor: '#e2e8f0', hoverEffect: 'lift', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat10-c4-value', type: 'heading', props: { content: '4,8', level: 'h3', fontSize: '40px', fontWeight: '900', color: '#dc2626', align: 'center', margin: '0 0 6px 0' } },
+      { id: 'stat10-c4-label', type: 'text', props: { content: 'Rating Pembeli', fontSize: '13px', fontWeight: '600', color: '#64748b', align: 'center', margin: '0' } },
+    ]},
+  ],
+  'statistics-11': [
+    { id: 'stat11-badge', type: 'badge', props: { content: '✦ Iris AI Canvas', background: '#ffffff', color: '#7c3aed' } },
+    { id: 'stat11-heading', type: 'heading', props: { content: 'Momentum at the speed of thought', level: 'h2', fontSize: '52px', fontWeight: '900', color: '#ffffff', align: 'center', margin: '0 0 16px 0' } },
+    { id: 'stat11-text', type: 'text', props: { content: 'Iris mengubah ide kasar menjadi antarmuka rapi — dan angkanya tumbuh secepat desainnya.', fontSize: '18px', color: '#ddd6fe', align: 'center', margin: '0 0 28px 0' } },
+    { id: 'stat11-cta', type: 'button', props: { label: 'Try Iris Free ✦', href: '#try', variant: 'primary', size: 'medium', radius: 'full', background: '#ffffff', color: '#6d28d9' } },
+    { id: 'stat11-card-1', type: 'card', props: { variant: 'stat-dark', background: 'rgba(255,255,255,0.08)', borderRadius: '24px', shadow: 'none', borderWidth: '1px', borderColor: 'rgba(255,255,255,0.2)', hoverEffect: 'glow', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat11-c1-value', type: 'heading', props: { content: '40.000', level: 'h3', fontSize: '40px', fontWeight: '900', color: '#ffffff', align: 'center', margin: '0 0 8px 0' } },
+      { id: 'stat11-c1-label', type: 'text', props: { content: 'Designers', fontSize: '12px', color: '#ddd6fe', align: 'center', letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0' } },
+    ]},
+    { id: 'stat11-card-2', type: 'card', props: { variant: 'stat-dark', background: 'rgba(255,255,255,0.08)', borderRadius: '24px', shadow: 'none', borderWidth: '1px', borderColor: 'rgba(255,255,255,0.2)', hoverEffect: 'glow', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat11-c2-value', type: 'heading', props: { content: '1,2M', level: 'h3', fontSize: '40px', fontWeight: '900', color: '#ffffff', align: 'center', margin: '0 0 8px 0' } },
+      { id: 'stat11-c2-label', type: 'text', props: { content: 'Canvas Dibuat', fontSize: '12px', color: '#ddd6fe', align: 'center', letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0' } },
+    ]},
+    { id: 'stat11-card-3', type: 'card', props: { variant: 'stat-dark', background: 'rgba(255,255,255,0.08)', borderRadius: '24px', shadow: 'none', borderWidth: '1px', borderColor: 'rgba(255,255,255,0.2)', hoverEffect: 'glow', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat11-c3-value', type: 'heading', props: { content: '320K', level: 'h3', fontSize: '40px', fontWeight: '900', color: '#ffffff', align: 'center', margin: '0 0 8px 0' } },
+      { id: 'stat11-c3-label', type: 'text', props: { content: 'Template', fontSize: '12px', color: '#ddd6fe', align: 'center', letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0' } },
+    ]},
+    { id: 'stat11-card-4', type: 'card', props: { variant: 'stat-dark', background: 'rgba(255,255,255,0.08)', borderRadius: '24px', shadow: 'none', borderWidth: '1px', borderColor: 'rgba(255,255,255,0.2)', hoverEffect: 'glow', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat11-c4-value', type: 'heading', props: { content: '4,9', level: 'h3', fontSize: '40px', fontWeight: '900', color: '#ffffff', align: 'center', margin: '0 0 8px 0' } },
+      { id: 'stat11-c4-label', type: 'text', props: { content: 'Rating Komunitas', fontSize: '12px', color: '#ddd6fe', align: 'center', letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0' } },
+    ]},
+  ],
+  'statistics-12': [
+    { id: 'stat12-badge', type: 'badge', props: { content: '◆ SOC2 • ISO 27001 • 99,99%', background: '#0f172a', color: '#67e8f9' } },
+    { id: 'stat12-heading', type: 'heading', props: { content: 'Infrastructure that never sleeps', level: 'h2', fontSize: '48px', fontWeight: '900', color: '#ffffff', align: 'left', margin: '0 0 16px 0' } },
+    { id: 'stat12-text', type: 'text', props: { content: 'Global edge network di 40 region. Deploy dalam detik, scale ke jutaan pengguna — tidur tetap tenang.', fontSize: '17px', color: '#94a3b8', align: 'left', margin: '0 0 26px 0' } },
+    { id: 'stat12-cta', type: 'button', props: { label: 'Start Free Trial →', href: '#trial', variant: 'primary', size: 'medium', radius: 'lg', background: '#ffffff', color: '#0f172a' } },
+    { id: 'stat12-card-1', type: 'card', props: { variant: 'stat-dark', background: 'rgba(255,255,255,0.03)', borderRadius: '16px', shadow: 'none', borderWidth: '1px', borderColor: 'rgba(255,255,255,0.1)', hoverEffect: 'glow', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat12-c1-value', type: 'heading', props: { content: '99,99%', level: 'h3', fontSize: '38px', fontWeight: '900', color: '#67e8f9', align: 'left', margin: '0 0 6px 0' } },
+      { id: 'stat12-c1-label', type: 'text', props: { content: 'Uptime SLA', fontSize: '13px', fontWeight: '600', color: '#94a3b8', align: 'left', margin: '0' } },
+    ]},
+    { id: 'stat12-card-2', type: 'card', props: { variant: 'stat-dark', background: 'rgba(255,255,255,0.03)', borderRadius: '16px', shadow: 'none', borderWidth: '1px', borderColor: 'rgba(255,255,255,0.1)', hoverEffect: 'glow', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat12-c2-value', type: 'heading', props: { content: '40', level: 'h3', fontSize: '38px', fontWeight: '900', color: '#67e8f9', align: 'left', margin: '0 0 6px 0' } },
+      { id: 'stat12-c2-label', type: 'text', props: { content: 'Edge Regions', fontSize: '13px', fontWeight: '600', color: '#94a3b8', align: 'left', margin: '0' } },
+    ]},
+    { id: 'stat12-card-3', type: 'card', props: { variant: 'stat-dark', background: 'rgba(255,255,255,0.03)', borderRadius: '16px', shadow: 'none', borderWidth: '1px', borderColor: 'rgba(255,255,255,0.1)', hoverEffect: 'glow', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat12-c3-value', type: 'heading', props: { content: '12ms', level: 'h3', fontSize: '38px', fontWeight: '900', color: '#67e8f9', align: 'left', margin: '0 0 6px 0' } },
+      { id: 'stat12-c3-label', type: 'text', props: { content: 'P95 Latency', fontSize: '13px', fontWeight: '600', color: '#94a3b8', align: 'left', margin: '0' } },
+    ]},
+    { id: 'stat12-card-4', type: 'card', props: { variant: 'stat-dark', background: 'rgba(255,255,255,0.03)', borderRadius: '16px', shadow: 'none', borderWidth: '1px', borderColor: 'rgba(255,255,255,0.1)', hoverEffect: 'glow', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat12-c4-value', type: 'heading', props: { content: '2.400+', level: 'h3', fontSize: '38px', fontWeight: '900', color: '#67e8f9', align: 'left', margin: '0 0 6px 0' } },
+      { id: 'stat12-c4-label', type: 'text', props: { content: 'Enterprise Teams', fontSize: '13px', fontWeight: '600', color: '#94a3b8', align: 'left', margin: '0' } },
+    ]},
+  ],
+  'statistics-13': [
+    { id: 'stat13-badge', type: 'badge', props: { content: '🎉 Promo: Buy 1 Get 1 Weekend!', background: '#fce7f3', color: '#db2777' } },
+    { id: 'stat13-heading', type: 'heading', props: { content: 'Angka yang bikin lapar!', level: 'h2', fontSize: '52px', fontWeight: '900', color: '#0f172a', align: 'left', margin: '0 0 14px 0' } },
+    { id: 'stat13-text', type: 'text', props: { content: 'Fresh burger, creamy shake & crispy fries — dikirim panas dalam 20 menit ke depan pintu.', fontSize: '17px', color: '#64748b', align: 'left', margin: '0 0 24px 0' } },
+    { id: 'stat13-cta', type: 'button', props: { label: 'Order Now 🍔', href: '#order', variant: 'primary', size: 'medium', radius: 'full', background: '#ec4899', color: '#ffffff' } },
+    { id: 'stat13-card-1', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '28px', shadow: 'none', borderWidth: '3px', borderColor: '#0f172a', hoverEffect: 'scale', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat13-c1-value', type: 'heading', props: { content: '12.000+', level: 'h3', fontSize: '38px', fontWeight: '900', color: '#ec4899', align: 'center', margin: '0 0 6px 0' } },
+      { id: 'stat13-c1-label', type: 'text', props: { content: 'Happy Kids', fontSize: '13px', fontWeight: '700', color: '#0f172a', align: 'center', margin: '0' } },
+    ]},
+    { id: 'stat13-card-2', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '28px', shadow: 'none', borderWidth: '3px', borderColor: '#0f172a', hoverEffect: 'scale', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat13-c2-value', type: 'heading', props: { content: '1,5M', level: 'h3', fontSize: '38px', fontWeight: '900', color: '#ec4899', align: 'center', margin: '0 0 6px 0' } },
+      { id: 'stat13-c2-label', type: 'text', props: { content: 'Burger Terjual', fontSize: '13px', fontWeight: '700', color: '#0f172a', align: 'center', margin: '0' } },
+    ]},
+    { id: 'stat13-card-3', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '28px', shadow: 'none', borderWidth: '3px', borderColor: '#0f172a', hoverEffect: 'scale', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat13-c3-value', type: 'heading', props: { content: '20', level: 'h3', fontSize: '38px', fontWeight: '900', color: '#ec4899', align: 'center', margin: '0 0 6px 0' } },
+      { id: 'stat13-c3-label', type: 'text', props: { content: 'Menit Delivery', fontSize: '13px', fontWeight: '700', color: '#0f172a', align: 'center', margin: '0' } },
+    ]},
+    { id: 'stat13-card-4', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '28px', shadow: 'none', borderWidth: '3px', borderColor: '#0f172a', hoverEffect: 'scale', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat13-c4-value', type: 'heading', props: { content: '4,9', level: 'h3', fontSize: '38px', fontWeight: '900', color: '#ec4899', align: 'center', margin: '0 0 6px 0' } },
+      { id: 'stat13-c4-label', type: 'text', props: { content: 'Rating ★★★★★', fontSize: '13px', fontWeight: '700', color: '#0f172a', align: 'center', margin: '0' } },
+    ]},
+  ],
+  'statistics-14': [
+    { id: 'stat14-badge', type: 'badge', props: { content: '✓ Terakreditasi A • Sejak 1998', background: '#dbeafe', color: '#1e40af' } },
+    { id: 'stat14-heading', type: 'heading', props: { content: 'Angka yang membangun generasi unggul', level: 'h2', fontSize: '48px', fontWeight: '900', color: '#1e3a8a', align: 'left', margin: '0 0 14px 0' } },
+    { id: 'stat14-text', type: 'text', props: { content: '28 program studi, 15.000+ alumni sukses, dan kampus berstandar internasional di jantung kota.', fontSize: '17px', color: '#475569', align: 'left', margin: '0 0 24px 0' } },
+    { id: 'stat14-cta', type: 'button', props: { label: 'Lihat Laporan Tahunan →', href: '#laporan', variant: 'primary', size: 'medium', radius: 'md', background: '#1e40af', color: '#ffffff' } },
+    { id: 'stat14-card-1', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '20px', shadow: 'sm', borderWidth: '1px', borderColor: '#dbeafe', hoverEffect: 'lift', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat14-c1-value', type: 'heading', props: { content: '28', level: 'h3', fontSize: '40px', fontWeight: '900', color: '#1e40af', align: 'center', margin: '0 0 6px 0' } },
+      { id: 'stat14-c1-label', type: 'text', props: { content: 'Program Studi', fontSize: '13px', fontWeight: '600', color: '#64748b', align: 'center', margin: '0' } },
+    ]},
+    { id: 'stat14-card-2', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '20px', shadow: 'sm', borderWidth: '1px', borderColor: '#dbeafe', hoverEffect: 'lift', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat14-c2-value', type: 'heading', props: { content: '15K+', level: 'h3', fontSize: '40px', fontWeight: '900', color: '#1e40af', align: 'center', margin: '0 0 6px 0' } },
+      { id: 'stat14-c2-label', type: 'text', props: { content: 'Alumni Sukses', fontSize: '13px', fontWeight: '600', color: '#64748b', align: 'center', margin: '0' } },
+    ]},
+    { id: 'stat14-card-3', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '20px', shadow: 'sm', borderWidth: '1px', borderColor: '#dbeafe', hoverEffect: 'lift', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat14-c3-value', type: 'heading', props: { content: 'A', level: 'h3', fontSize: '40px', fontWeight: '900', color: '#1e40af', align: 'center', margin: '0 0 6px 0' } },
+      { id: 'stat14-c3-label', type: 'text', props: { content: 'Akreditasi', fontSize: '13px', fontWeight: '600', color: '#64748b', align: 'center', margin: '0' } },
+    ]},
+    { id: 'stat14-card-4', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '20px', shadow: 'sm', borderWidth: '1px', borderColor: '#dbeafe', hoverEffect: 'lift', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat14-c4-value', type: 'heading', props: { content: '1998', level: 'h3', fontSize: '40px', fontWeight: '900', color: '#1e40af', align: 'center', margin: '0 0 6px 0' } },
+      { id: 'stat14-c4-label', type: 'text', props: { content: 'Tahun Berdiri', fontSize: '13px', fontWeight: '600', color: '#64748b', align: 'center', margin: '0' } },
+    ]},
+  ],
+  'statistics-15': [
+    { id: 'stat15-badge', type: 'badge', props: { content: 'DATA DESK — AUTUMN 2026', background: '#1c1917', color: '#fafaf9' } },
+    { id: 'stat15-heading', type: 'heading', props: { content: 'The year in numbers', level: 'h2', fontSize: '56px', fontWeight: '700', color: '#1c1917', align: 'left', margin: '0 0 16px 0' } },
+    { id: 'stat15-text', type: 'text', props: { content: 'Redaksi kami menelusuri satu tahun liputan — inilah angka yang paling banyak dibaca pembaca setia.', fontSize: '18px', color: '#57534e', align: 'left', margin: '0 0 24px 0' } },
+    { id: 'stat15-cta', type: 'button', props: { label: 'Read the Data Story →', href: '#story', variant: 'primary', size: 'medium', radius: 'none', background: '#1c1917', color: '#fafaf9' } },
+    { id: 'stat15-card-1', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '0px', shadow: 'none', borderWidth: '2px', borderColor: '#1c1917', hoverEffect: 'none', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat15-c1-value', type: 'heading', props: { content: '120', level: 'h3', fontSize: '44px', fontWeight: '700', color: '#1c1917', align: 'left', margin: '0 0 6px 0' } },
+      { id: 'stat15-c1-label', type: 'text', props: { content: 'Edisi Terbit', fontSize: '11px', color: '#57534e', align: 'left', letterSpacing: '0.25em', textTransform: 'uppercase', margin: '0' } },
+    ]},
+    { id: 'stat15-card-2', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '0px', shadow: 'none', borderWidth: '2px', borderColor: '#1c1917', hoverEffect: 'none', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat15-c2-value', type: 'heading', props: { content: '2,4M', level: 'h3', fontSize: '44px', fontWeight: '700', color: '#1c1917', align: 'left', margin: '0 0 6px 0' } },
+      { id: 'stat15-c2-label', type: 'text', props: { content: 'Pembaca Bulanan', fontSize: '11px', color: '#57534e', align: 'left', letterSpacing: '0.25em', textTransform: 'uppercase', margin: '0' } },
+    ]},
+    { id: 'stat15-card-3', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '0px', shadow: 'none', borderWidth: '2px', borderColor: '#1c1917', hoverEffect: 'none', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat15-c3-value', type: 'heading', props: { content: '18', level: 'h3', fontSize: '44px', fontWeight: '700', color: '#1c1917', align: 'left', margin: '0 0 6px 0' } },
+      { id: 'stat15-c3-label', type: 'text', props: { content: 'Penghargaan', fontSize: '11px', color: '#57534e', align: 'left', letterSpacing: '0.25em', textTransform: 'uppercase', margin: '0' } },
+    ]},
+    { id: 'stat15-card-4', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '0px', shadow: 'none', borderWidth: '2px', borderColor: '#1c1917', hoverEffect: 'none', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat15-c4-value', type: 'heading', props: { content: '12', level: 'h3', fontSize: '44px', fontWeight: '700', color: '#1c1917', align: 'left', margin: '0 0 6px 0' } },
+      { id: 'stat15-c4-label', type: 'text', props: { content: 'Menit Baca Rata-rata', fontSize: '11px', color: '#57534e', align: 'left', letterSpacing: '0.25em', textTransform: 'uppercase', margin: '0' } },
+    ]},
+  ],
+  'statistics-16': [
+    { id: 'stat16-badge', type: 'badge', props: { content: '🌿 100% Natural & Vegan', background: '#dcfce7', color: '#15803d' } },
+    { id: 'stat16-heading', type: 'heading', props: { content: 'Impact you can measure', level: 'h2', fontSize: '50px', fontWeight: '900', color: '#052e16', align: 'left', margin: '0 0 14px 0' } },
+    { id: 'stat16-text', type: 'text', props: { content: 'Setiap botol yang terjual tercatat dampaknya — dari kebun petani hingga ke depan pintu Anda.', fontSize: '17px', color: '#4d7c0f', align: 'left', margin: '0 0 24px 0' } },
+    { id: 'stat16-cta', type: 'button', props: { label: 'Shop Bestsellers →', href: '#shop', variant: 'primary', size: 'medium', radius: 'full', background: '#16a34a', color: '#ffffff' } },
+    { id: 'stat16-card-1', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '24px', shadow: 'sm', borderWidth: '1px', borderColor: '#bbf7d0', hoverEffect: 'lift', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat16-c1-value', type: 'heading', props: { content: '32.000+', level: 'h3', fontSize: '38px', fontWeight: '900', color: '#15803d', align: 'center', margin: '0 0 6px 0' } },
+      { id: 'stat16-c1-label', type: 'text', props: { content: 'Pohon Ditanam', fontSize: '13px', fontWeight: '600', color: '#4d7c0f', align: 'center', margin: '0' } },
+    ]},
+    { id: 'stat16-card-2', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '24px', shadow: 'sm', borderWidth: '1px', borderColor: '#bbf7d0', hoverEffect: 'lift', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat16-c2-value', type: 'heading', props: { content: '100%', level: 'h3', fontSize: '38px', fontWeight: '900', color: '#15803d', align: 'center', margin: '0 0 6px 0' } },
+      { id: 'stat16-c2-label', type: 'text', props: { content: 'Bahan Natural', fontSize: '13px', fontWeight: '600', color: '#4d7c0f', align: 'center', margin: '0' } },
+    ]},
+    { id: 'stat16-card-3', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '24px', shadow: 'sm', borderWidth: '1px', borderColor: '#bbf7d0', hoverEffect: 'lift', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat16-c3-value', type: 'heading', props: { content: '92%', level: 'h3', fontSize: '38px', fontWeight: '900', color: '#15803d', align: 'center', margin: '0 0 6px 0' } },
+      { id: 'stat16-c3-label', type: 'text', props: { content: 'Repeat Order', fontSize: '13px', fontWeight: '600', color: '#4d7c0f', align: 'center', margin: '0' } },
+    ]},
+    { id: 'stat16-card-4', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '24px', shadow: 'sm', borderWidth: '1px', borderColor: '#bbf7d0', hoverEffect: 'lift', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat16-c4-value', type: 'heading', props: { content: '0kg', level: 'h3', fontSize: '38px', fontWeight: '900', color: '#15803d', align: 'center', margin: '0 0 6px 0' } },
+      { id: 'stat16-c4-label', type: 'text', props: { content: 'Emisi Plastik', fontSize: '13px', fontWeight: '600', color: '#4d7c0f', align: 'center', margin: '0' } },
+    ]},
+  ],
+  'statistics-17': [
+    { id: 'stat17-badge', type: 'badge', props: { content: '🏁 GT SERIES 2026', background: '#fef2f2', color: '#dc2626' } },
+    { id: 'stat17-heading', type: 'heading', props: { content: 'Built to outrun the numbers', level: 'h2', fontSize: '60px', fontWeight: '900', color: '#ffffff', align: 'left', margin: '0 0 14px 0' } },
+    { id: 'stat17-text', type: 'text', props: { content: '0–100 dalam 2,8 detik. 680HP hybrid powertrain. Angka dari Veloce tercepat yang pernah dibangun.', fontSize: '18px', color: '#fecaca', align: 'left', margin: '0 0 26px 0' } },
+    { id: 'stat17-cta', type: 'button', props: { label: 'Book Test Drive →', href: '#test', variant: 'primary', size: 'medium', radius: 'md', background: '#ef4444', color: '#ffffff' } },
+    { id: 'stat17-card-1', type: 'card', props: { variant: 'stat-dark', background: 'rgba(255,255,255,0.04)', borderRadius: '16px', shadow: 'none', borderWidth: '1px', borderColor: 'rgba(239,68,68,0.35)', hoverEffect: 'glow', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat17-c1-value', type: 'heading', props: { content: '2,8s', level: 'h3', fontSize: '40px', fontWeight: '900', color: '#ffffff', align: 'left', margin: '0 0 6px 0' } },
+      { id: 'stat17-c1-label', type: 'text', props: { content: '0–100 KM/H', fontSize: '11px', color: '#f87171', align: 'left', letterSpacing: '0.25em', textTransform: 'uppercase', margin: '0' } },
+    ]},
+    { id: 'stat17-card-2', type: 'card', props: { variant: 'stat-dark', background: 'rgba(255,255,255,0.04)', borderRadius: '16px', shadow: 'none', borderWidth: '1px', borderColor: 'rgba(239,68,68,0.35)', hoverEffect: 'glow', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat17-c2-value', type: 'heading', props: { content: '680', level: 'h3', fontSize: '40px', fontWeight: '900', color: '#ffffff', align: 'left', margin: '0 0 6px 0' } },
+      { id: 'stat17-c2-label', type: 'text', props: { content: 'Horsepower', fontSize: '11px', color: '#f87171', align: 'left', letterSpacing: '0.25em', textTransform: 'uppercase', margin: '0' } },
+    ]},
+    { id: 'stat17-card-3', type: 'card', props: { variant: 'stat-dark', background: 'rgba(255,255,255,0.04)', borderRadius: '16px', shadow: 'none', borderWidth: '1px', borderColor: 'rgba(239,68,68,0.35)', hoverEffect: 'glow', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat17-c3-value', type: 'heading', props: { content: '340', level: 'h3', fontSize: '40px', fontWeight: '900', color: '#ffffff', align: 'left', margin: '0 0 6px 0' } },
+      { id: 'stat17-c3-label', type: 'text', props: { content: 'KM/H Top Speed', fontSize: '11px', color: '#f87171', align: 'left', letterSpacing: '0.25em', textTransform: 'uppercase', margin: '0' } },
+    ]},
+    { id: 'stat17-card-4', type: 'card', props: { variant: 'stat-dark', background: 'rgba(255,255,255,0.04)', borderRadius: '16px', shadow: 'none', borderWidth: '1px', borderColor: 'rgba(239,68,68,0.35)', hoverEffect: 'glow', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat17-c4-value', type: 'heading', props: { content: '99,8%', level: 'h3', fontSize: '40px', fontWeight: '900', color: '#ffffff', align: 'left', margin: '0 0 6px 0' } },
+      { id: 'stat17-c4-label', type: 'text', props: { content: 'Finish Rate', fontSize: '11px', color: '#f87171', align: 'left', letterSpacing: '0.25em', textTransform: 'uppercase', margin: '0' } },
+    ]},
+  ],
+  'statistics-18': [
+    { id: 'stat18-badge', type: 'badge', props: { content: '★★★★★ 4,9 — 2M+ downloads', background: '#fff7ed', color: '#ea580c' } },
+    { id: 'stat18-heading', type: 'heading', props: { content: 'Traction that fits in your pocket', level: 'h2', fontSize: '50px', fontWeight: '900', color: '#0f172a', align: 'left', margin: '0 0 14px 0' } },
+    { id: 'stat18-text', type: 'text', props: { content: 'Kirim uang, menabung lebih pintar, dan pantau setiap rupiah — semuanya dari satu aplikasi.', fontSize: '17px', color: '#64748b', align: 'left', margin: '0 0 24px 0' } },
+    { id: 'stat18-cta', type: 'button', props: { label: 'Unduh Sekarang →', href: '#download', variant: 'primary', size: 'medium', radius: 'lg', background: '#f97316', color: '#ffffff' } },
+    { id: 'stat18-card-1', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '20px', shadow: 'md', borderWidth: '1px', borderColor: '#fed7aa', hoverEffect: 'lift', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat18-c1-value', type: 'heading', props: { content: '2M+', level: 'h3', fontSize: '38px', fontWeight: '900', color: '#ea580c', align: 'center', margin: '0 0 6px 0' } },
+      { id: 'stat18-c1-label', type: 'text', props: { content: 'Total Downloads', fontSize: '13px', fontWeight: '600', color: '#64748b', align: 'center', margin: '0' } },
+    ]},
+    { id: 'stat18-card-2', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '20px', shadow: 'md', borderWidth: '1px', borderColor: '#fed7aa', hoverEffect: 'lift', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat18-c2-value', type: 'heading', props: { content: '4,9', level: 'h3', fontSize: '38px', fontWeight: '900', color: '#ea580c', align: 'center', margin: '0 0 6px 0' } },
+      { id: 'stat18-c2-label', type: 'text', props: { content: 'Rating Store', fontSize: '13px', fontWeight: '600', color: '#64748b', align: 'center', margin: '0' } },
+    ]},
+    { id: 'stat18-card-3', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '20px', shadow: 'md', borderWidth: '1px', borderColor: '#fed7aa', hoverEffect: 'lift', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat18-c3-value', type: 'heading', props: { content: '1,2M', level: 'h3', fontSize: '38px', fontWeight: '900', color: '#ea580c', align: 'center', margin: '0 0 6px 0' } },
+      { id: 'stat18-c3-label', type: 'text', props: { content: 'Pengguna Aktif', fontSize: '13px', fontWeight: '600', color: '#64748b', align: 'center', margin: '0' } },
+    ]},
+    { id: 'stat18-card-4', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '20px', shadow: 'md', borderWidth: '1px', borderColor: '#fed7aa', hoverEffect: 'lift', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat18-c4-value', type: 'heading', props: { content: '99,9%', level: 'h3', fontSize: '38px', fontWeight: '900', color: '#ea580c', align: 'center', margin: '0 0 6px 0' } },
+      { id: 'stat18-c4-label', type: 'text', props: { content: 'Uptime Transaksi', fontSize: '13px', fontWeight: '600', color: '#64748b', align: 'center', margin: '0' } },
+    ]},
+  ],
+  'statistics-19': [
+    { id: 'stat19-badge', type: 'badge', props: { content: '● Available for Q3 2026', background: '#ecfdf5', color: '#059669' } },
+    { id: 'stat19-heading', type: 'heading', props: { content: 'Results we can point at', level: 'h2', fontSize: '54px', fontWeight: '900', color: '#0f172a', align: 'left', margin: '0 0 14px 0' } },
+    { id: 'stat19-text', type: 'text', props: { content: 'Strategy, identity & web untuk tim ambisius. 120+ peluncuran, 14 penghargaan internasional.', fontSize: '17px', color: '#64748b', align: 'left', margin: '0 0 24px 0' } },
+    { id: 'stat19-cta', type: 'button', props: { label: 'See Our Work →', href: '#work', variant: 'primary', size: 'medium', radius: 'full', background: '#0f172a', color: '#ffffff' } },
+    { id: 'stat19-card-1', type: 'card', props: { variant: 'stat', background: '#f8fafc', borderRadius: '20px', shadow: 'sm', borderWidth: '1px', borderColor: '#e2e8f0', hoverEffect: 'lift', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat19-c1-value', type: 'heading', props: { content: '120+', level: 'h3', fontSize: '40px', fontWeight: '900', color: '#0f172a', align: 'left', margin: '0 0 6px 0' } },
+      { id: 'stat19-c1-label', type: 'text', props: { content: 'Peluncuran Brand', fontSize: '13px', fontWeight: '600', color: '#64748b', align: 'left', margin: '0' } },
+    ]},
+    { id: 'stat19-card-2', type: 'card', props: { variant: 'stat', background: '#f8fafc', borderRadius: '20px', shadow: 'sm', borderWidth: '1px', borderColor: '#e2e8f0', hoverEffect: 'lift', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat19-c2-value', type: 'heading', props: { content: '14', level: 'h3', fontSize: '40px', fontWeight: '900', color: '#0f172a', align: 'left', margin: '0 0 6px 0' } },
+      { id: 'stat19-c2-label', type: 'text', props: { content: 'Penghargaan', fontSize: '13px', fontWeight: '600', color: '#64748b', align: 'left', margin: '0' } },
+    ]},
+    { id: 'stat19-card-3', type: 'card', props: { variant: 'stat', background: '#f8fafc', borderRadius: '20px', shadow: 'sm', borderWidth: '1px', borderColor: '#e2e8f0', hoverEffect: 'lift', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat19-c3-value', type: 'heading', props: { content: '40', level: 'h3', fontSize: '40px', fontWeight: '900', color: '#0f172a', align: 'left', margin: '0 0 6px 0' } },
+      { id: 'stat19-c3-label', type: 'text', props: { content: 'Klien Global', fontSize: '13px', fontWeight: '600', color: '#64748b', align: 'left', margin: '0' } },
+    ]},
+    { id: 'stat19-card-4', type: 'card', props: { variant: 'stat', background: '#f8fafc', borderRadius: '20px', shadow: 'sm', borderWidth: '1px', borderColor: '#e2e8f0', hoverEffect: 'lift', padding: '28px 20px' }, childrenComponents: [
+      { id: 'stat19-c4-value', type: 'heading', props: { content: '8', level: 'h3', fontSize: '40px', fontWeight: '900', color: '#0f172a', align: 'left', margin: '0 0 6px 0' } },
+      { id: 'stat19-c4-label', type: 'text', props: { content: 'Tahun Berkarya', fontSize: '13px', fontWeight: '600', color: '#64748b', align: 'left', margin: '0' } },
+    ]},
+  ],
+  'statistics-20': [
+    { id: 'stat20-badge', type: 'badge', props: { content: '✦ AETHER 4.2 — NOW LIVE', background: '#1e1b4b', color: '#c4b5fd' } },
+    { id: 'stat20-heading', type: 'heading', props: { content: 'One platform. Infinite scale.', level: 'h2', fontSize: '60px', fontWeight: '900', color: '#ffffff', align: 'center', margin: '0 0 16px 0' } },
+    { id: 'stat20-text', type: 'text', props: { content: 'The operating system for ambitious teams — angka yang tumbuh bersama skala bisnis Anda.', fontSize: '18px', color: '#a5b4fc', align: 'center', margin: '0 0 28px 0' } },
+    { id: 'stat20-cta', type: 'button', props: { label: 'Start Trial ✦', href: '#trial', variant: 'primary', size: 'medium', radius: 'full', background: '#6366f1', color: '#ffffff' } },
+    { id: 'stat20-card-1', type: 'card', props: { variant: 'stat-dark', background: 'rgba(255,255,255,0.05)', borderRadius: '20px', shadow: 'none', borderWidth: '1px', borderColor: 'rgba(196,181,253,0.3)', hoverEffect: 'glow', padding: '32px 24px' }, childrenComponents: [
+      { id: 'stat20-c1-value', type: 'heading', props: { content: '40', level: 'h3', fontSize: '44px', fontWeight: '900', color: '#ffffff', align: 'center', margin: '0 0 8px 0' } },
+      { id: 'stat20-c1-label', type: 'text', props: { content: 'Edge Regions', fontSize: '12px', color: '#a5b4fc', align: 'center', letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0' } },
+    ]},
+    { id: 'stat20-card-2', type: 'card', props: { variant: 'stat-dark', background: 'rgba(255,255,255,0.05)', borderRadius: '20px', shadow: 'none', borderWidth: '1px', borderColor: 'rgba(196,181,253,0.3)', hoverEffect: 'glow', padding: '32px 24px' }, childrenComponents: [
+      { id: 'stat20-c2-value', type: 'heading', props: { content: '200+', level: 'h3', fontSize: '44px', fontWeight: '900', color: '#ffffff', align: 'center', margin: '0 0 8px 0' } },
+      { id: 'stat20-c2-label', type: 'text', props: { content: 'Integrations', fontSize: '12px', color: '#a5b4fc', align: 'center', letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0' } },
+    ]},
+    { id: 'stat20-card-3', type: 'card', props: { variant: 'stat-dark', background: 'rgba(255,255,255,0.05)', borderRadius: '20px', shadow: 'none', borderWidth: '1px', borderColor: 'rgba(196,181,253,0.3)', hoverEffect: 'glow', padding: '32px 24px' }, childrenComponents: [
+      { id: 'stat20-c3-value', type: 'heading', props: { content: '99,99%', level: 'h3', fontSize: '44px', fontWeight: '900', color: '#ffffff', align: 'center', margin: '0 0 8px 0' } },
+      { id: 'stat20-c3-label', type: 'text', props: { content: 'Uptime Platform', fontSize: '12px', color: '#a5b4fc', align: 'center', letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0' } },
+    ]},
+    { id: 'stat20-card-4', type: 'card', props: { variant: 'stat-dark', background: 'rgba(255,255,255,0.05)', borderRadius: '20px', shadow: 'none', borderWidth: '1px', borderColor: 'rgba(196,181,253,0.3)', hoverEffect: 'glow', padding: '32px 24px' }, childrenComponents: [
+      { id: 'stat20-c4-value', type: 'heading', props: { content: '12.000', level: 'h3', fontSize: '44px', fontWeight: '900', color: '#ffffff', align: 'center', margin: '0 0 8px 0' } },
+      { id: 'stat20-c4-label', type: 'text', props: { content: 'Tim Aktif', fontSize: '12px', color: '#a5b4fc', align: 'center', letterSpacing: '0.2em', textTransform: 'uppercase', margin: '0' } },
     ]},
   ],
   'fleet-01': [
@@ -5116,27 +5537,7 @@ export const LAYOUT_DEFAULTS = {
     ]},
   ],
 
-  // === STATISTICS EXTENDED ===
-  'statistics-02': [
-    { id: 'stat2-heading', type: 'heading', props: { content: 'Dampak \u0026 Pencapaian', level: 'h2', fontSize: '36px', fontWeight: '800', color: '#ffffff', align: 'center', margin: '0 0 12px 0' } },
-    { id: 'stat2-subtext', type: 'text', props: { content: 'Angka yang membuktikan komitmen kami terhadap kualitas dan kepuasan pelanggan', fontSize: '16px', color: '#e0e7ff', align: 'center', margin: '0 0 48px 0' } },
-    { id: 'stat2-card-1', type: 'card', props: { variant: 'stat-dark', background: 'rgba(255,255,255,0.1)', borderRadius: '20px', shadow: 'xl', borderWidth: '1px', borderColor: 'rgba(255,255,255,0.2)', hoverEffect: 'glow', padding: '32px 24px' }, childrenComponents: [
-      { id: 'stat2-c1-value', type: 'heading', props: { content: '10K+', level: 'h3', fontSize: '48px', fontWeight: '900', color: '#ffffff', align: 'center', margin: '0 0 8px 0' } },
-      { id: 'stat2-c1-label', type: 'text', props: { content: 'Pelanggan Aktif', fontSize: '15px', fontWeight: '600', color: '#e0e7ff', align: 'center', margin: '0' } },
-    ]},
-    { id: 'stat2-card-2', type: 'card', props: { variant: 'stat-dark', background: 'rgba(255,255,255,0.1)', borderRadius: '20px', shadow: 'xl', borderWidth: '1px', borderColor: 'rgba(255,255,255,0.2)', hoverEffect: 'glow', padding: '32px 24px' }, childrenComponents: [
-      { id: 'stat2-c2-value', type: 'heading', props: { content: '50+', level: 'h3', fontSize: '48px', fontWeight: '900', color: '#ffffff', align: 'center', margin: '0 0 8px 0' } },
-      { id: 'stat2-c2-label', type: 'text', props: { content: 'Kota Layanan', fontSize: '15px', fontWeight: '600', color: '#e0e7ff', align: 'center', margin: '0' } },
-    ]},
-    { id: 'stat2-card-3', type: 'card', props: { variant: 'stat-dark', background: 'rgba(255,255,255,0.1)', borderRadius: '20px', shadow: 'xl', borderWidth: '1px', borderColor: 'rgba(255,255,255,0.2)', hoverEffect: 'glow', padding: '32px 24px' }, childrenComponents: [
-      { id: 'stat2-c3-value', type: 'heading', props: { content: '98%', level: 'h3', fontSize: '48px', fontWeight: '900', color: '#ffffff', align: 'center', margin: '0 0 8px 0' } },
-      { id: 'stat2-c3-label', type: 'text', props: { content: 'Tingkat Kepuasan', fontSize: '15px', fontWeight: '600', color: '#e0e7ff', align: 'center', margin: '0' } },
-    ]},
-    { id: 'stat2-card-4', type: 'card', props: { variant: 'stat-dark', background: 'rgba(255,255,255,0.1)', borderRadius: '20px', shadow: 'xl', borderWidth: '1px', borderColor: 'rgba(255,255,255,0.2)', hoverEffect: 'glow', padding: '32px 24px' }, childrenComponents: [
-      { id: 'stat2-c4-value', type: 'heading', props: { content: '24/7', level: 'h3', fontSize: '48px', fontWeight: '900', color: '#ffffff', align: 'center', margin: '0 0 8px 0' } },
-      { id: 'stat2-c4-label', type: 'text', props: { content: 'Dukungan Teknis', fontSize: '15px', fontWeight: '600', color: '#e0e7ff', align: 'center', margin: '0' } },
-    ]},
-  ],
+  // === STATISTICS EXTENDED (dipindah ke blok utama di atas) ===
 
   // === CLIENTS EXTENDED ===
 
