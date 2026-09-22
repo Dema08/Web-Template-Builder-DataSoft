@@ -41,6 +41,8 @@ class TemplateResource extends JsonResource
             // User-generated template fields
             'visibility'       => $this->visibility,
             'owner_id'         => $this->owner_id,
+            'owner_name'       => $this->owner?->name ?? $this->creator?->name,
+            'creator_name'     => $this->creator?->name ?? $this->owner?->name,
             'is_user_template' => method_exists($this->resource, 'isUserTemplate') ? $this->resource->isUserTemplate() : ($this->owner_id !== null),
             'is_mine'          => $authUserId && $this->owner_id && (int) $this->owner_id === (int) $authUserId,
 

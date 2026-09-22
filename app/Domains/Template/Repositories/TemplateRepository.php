@@ -137,7 +137,12 @@ class TemplateRepository implements RepositoryContract
 
     public function getFiltered(array $filters = [], int $perPage = 15): LengthAwarePaginator
     {
-        $query = Template::forList()->with(['industryCategory', 'creator', 'updater']);
+        $query = Template::forList()
+            ->with(['industryCategory', 'creator', 'owner', 'updater'])
+            ->where(function ($q) {
+                $q->whereNull('owner_id')
+                  ->orWhere('visibility', 'public');
+            });
 
         if (!empty($filters['search'])) {
             $search = $filters['search'];

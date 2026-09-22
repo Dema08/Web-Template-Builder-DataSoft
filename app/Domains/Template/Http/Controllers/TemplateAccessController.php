@@ -30,7 +30,7 @@ class TemplateAccessController extends BaseController
         $user = $request->user();
 
         $query = Template::forList()
-            ->with('industryCategory')
+            ->with(['industryCategory', 'creator', 'owner'])
             ->where('status', 'published')
             ->where(function ($q) {
                 $q->whereNull('owner_id')

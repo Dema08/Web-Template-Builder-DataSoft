@@ -127,6 +127,7 @@ export default function Templates() {
             is_user_template: Boolean(tpl.is_user_template),
             visibility: tpl.visibility || 'public',
             is_mine: Boolean(tpl.is_mine),
+            owner_name: tpl.owner_name || tpl.creator_name || null,
         };
     });
 
@@ -567,6 +568,12 @@ function TemplateCard({ tpl, onPreview, onUseTemplate, usingId }) {
                     <h3 className="text-base font-extrabold text-[rgb(var(--color-text-primary))] group-hover:text-indigo-600 transition line-clamp-1">
                         {tpl.title}
                     </h3>
+                    {tpl.is_user_template && (
+                        <div className="mt-1 flex items-center gap-1.5 text-xs font-semibold text-slate-500">
+                            <User className="h-3.5 w-3.5 text-indigo-600 shrink-0" />
+                            <span>Oleh: <strong className="text-indigo-900 font-bold">{tpl.is_mine ? 'Anda' : (tpl.owner_name || 'User')}</strong></span>
+                        </div>
+                    )}
                     <p className="text-xs text-[rgb(var(--color-text-secondary))] mt-1.5 leading-relaxed line-clamp-2">
                         {tpl.description || 'Template profesional siap pakai.'}
                     </p>

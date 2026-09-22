@@ -35,7 +35,12 @@ class DashboardService extends BaseService
                 $totalWebsites = Website::count();
                 $totalUsers = User::count();
                 $totalViews = \Illuminate\Support\Facades\Schema::hasTable('website_view') ? \DB::table('website_view')->count() : 0;
-                $publishedTemplatesCount = \App\Domains\Template\Models\Template::where('status', 'published')->count();
+                $publishedTemplatesCount = \App\Domains\Template\Models\Template::where('status', 'published')
+                    ->where(function ($q) {
+                        $q->whereNull('owner_id')
+                          ->orWhere('visibility', 'public');
+                    })
+                    ->count();
                 $publishedWebsitesCount = Website::where('status', 'published')->count();
                 $draftWebsitesCount = Website::where('status', 'draft')->count();
 
