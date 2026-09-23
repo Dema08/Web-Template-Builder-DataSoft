@@ -432,8 +432,10 @@ export const useBuilderStore = create((set, get) => ({
     set({ selectedSectionId: sectionId, selectedComponentId: null, selectedProperty: null, selectedLayers: [sectionId] });
   },
 
-  addComponent: (sectionId, componentType) => {
-    get().insertComponentAt(sectionId, componentType, -1);
+  addComponent: (sectionId, componentType, initialProps = null) => {
+    // Mark as standalone so it always renders in the canvas overlay area
+    const props = { isStandalone: true, ...(initialProps || {}) };
+    get().insertComponentAt(sectionId, componentType, -1, null, props);
   },
 
   insertComponentAt: (sectionId, componentType, targetIndex = -1, parentComponentId = null, initialProps = null) => {

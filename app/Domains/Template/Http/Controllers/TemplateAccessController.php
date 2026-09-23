@@ -32,10 +32,7 @@ class TemplateAccessController extends BaseController
         $query = Template::forList()
             ->with(['industryCategory', 'creator', 'owner'])
             ->where('status', 'published')
-            ->where(function ($q) {
-                $q->whereNull('owner_id')
-                  ->orWhere('visibility', 'public');
-            });
+            ->publiclyVisible();
 
         if ($categoryId = $request->integer('industry_category_id') ?: $request->integer('category_id')) {
             $query->where('category_id', $categoryId);

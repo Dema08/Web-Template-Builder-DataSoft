@@ -234,6 +234,18 @@ class Template extends Model
         return $query->whereNull('owner_id');
     }
 
+    /**
+     * Scope: template yang dipublikasikan publik (template sistem ATAU template user dengan visibility = 'public').
+     * Tidak mencakup template private per user (owner_id != null && visibility = 'private').
+     */
+    public function scopePubliclyVisible(Builder $query): Builder
+    {
+        return $query->where(function ($q) {
+            $q->whereNull('owner_id')
+              ->orWhere('visibility', 'public');
+        });
+    }
+
     public function scopeByStatus(Builder $query, TemplateStatus $status): Builder
     {
         return $query->where('status', $status->value);

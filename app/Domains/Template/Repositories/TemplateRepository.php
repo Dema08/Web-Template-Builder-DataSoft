@@ -99,6 +99,7 @@ class TemplateRepository implements RepositoryContract
             ->with(['industryCategory'])
             ->byCategory($categoryId)
             ->byStatus(TemplateStatus::Published)
+            ->publiclyVisible()
             ->orderByDesc('is_featured')
             ->orderBy('sort_order')
             ->paginate($perPage);
@@ -110,6 +111,7 @@ class TemplateRepository implements RepositoryContract
             ->with(['industryCategory'])
             ->featured()
             ->byStatus(TemplateStatus::Published)
+            ->publiclyVisible()
             ->orderBy('sort_order')
             ->limit($limit)
             ->get();
@@ -119,6 +121,7 @@ class TemplateRepository implements RepositoryContract
     {
         return Template::forList()
             ->with(['industryCategory', 'creator'])
+            ->publiclyVisible()
             ->where('name', 'like', "%{$query}%")
             ->orWhere('code', 'like', "%{$query}%")
             ->orWhere('description', 'like', "%{$query}%")
@@ -131,6 +134,7 @@ class TemplateRepository implements RepositoryContract
         return Template::forList()
             ->with(['industryCategory', 'creator'])
             ->byStatus($status)
+            ->publiclyVisible()
             ->orderBy('sort_order')
             ->paginate($perPage);
     }
@@ -139,10 +143,7 @@ class TemplateRepository implements RepositoryContract
     {
         $query = Template::forList()
             ->with(['industryCategory', 'creator', 'owner', 'updater'])
-            ->where(function ($q) {
-                $q->whereNull('owner_id')
-                  ->orWhere('visibility', 'public');
-            });
+            ->publiclyVisible();
 
         if (!empty($filters['search'])) {
             $search = $filters['search'];

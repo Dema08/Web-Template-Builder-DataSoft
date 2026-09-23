@@ -79,6 +79,7 @@ class PublicSiteController extends BaseController
     {
         $query = \App\Domains\Template\Models\Template::forList()
             ->where('status', 'published')
+            ->publiclyVisible()
             ->with('industryCategory');
 
         if ($categoryId = request('industry_category_id')) {
@@ -110,6 +111,7 @@ class PublicSiteController extends BaseController
     public function showTemplate($id): JsonResponse
     {
         $template = \App\Domains\Template\Models\Template::where('status', 'published')
+            ->publiclyVisible()
             ->with('industryCategory')
             ->where('id', $id)
             ->first();

@@ -12,6 +12,7 @@ class TemplateRepository implements TemplateRepositoryInterface
     {
         return Template::where('category_id', $categoryId)
             ->where('status', 'published')
+            ->publiclyVisible()
             ->orderBy('sort_order')
             ->orderBy('name')
             ->skip($skip)

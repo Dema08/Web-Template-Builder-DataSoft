@@ -122,6 +122,8 @@ export function useBuilderDnd() {
         let targetSectionId = null;
         let targetIndex = -1;
         let targetParentCompId = null;
+        // Mark as standalone so it renders in the section's component overlay area
+        const standaloneProps = { isStandalone: true };
 
         if (overId.startsWith('component-drop-')) {
           // Dropped on a specific component position
@@ -135,7 +137,7 @@ export function useBuilderDnd() {
         }
 
         if (targetSectionId) {
-          insertComponentAt(targetSectionId, compType, targetIndex, targetParentCompId);
+          insertComponentAt(targetSectionId, compType, targetIndex, targetParentCompId, standaloneProps);
           toast.success(`Added ${compType} component`, 'Component Inserted');
         } else {
           // If no section exists, create a default section first then add component
@@ -143,13 +145,14 @@ export function useBuilderDnd() {
           setTimeout(() => {
             const firstSec = useBuilderStore.getState().sections[0];
             if (firstSec) {
-              insertComponentAt(firstSec.id, compType, 0);
+              insertComponentAt(firstSec.id, compType, 0, null, standaloneProps);
             }
           }, 20);
           toast.success(`Created section and added ${compType} component`, 'Component Inserted');
         }
         return;
       }
+
 
       // C. Drop Media (Image / Logo / Upload)
       if (sidebarType === 'media') {

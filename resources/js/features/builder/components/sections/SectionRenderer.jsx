@@ -157,12 +157,19 @@ export default function SectionRenderer({ section, isSelected, onClick }) {
   // Helper to render standalone components added dynamically to section root
   function renderExtraSectionComponents() {
     const extraComps = (section.components || []).filter(
-      (c) => c.isStandalone || c.type === 'icon' || c.props?.isStandalone
+      (c) => c.props?.isStandalone || c.isStandalone || c.type === 'icon'
     );
     if (extraComps.length === 0) return null;
     return (
-      <div className="relative max-w-5xl mx-auto px-6 py-4 flex flex-wrap items-center justify-center gap-4 z-20 pointer-events-auto">
-        {renderLayoutComponents(extraComps, section.id)}
+      <div className="relative w-full bg-slate-50/80 border-t border-slate-200 z-20 pointer-events-auto">
+        <div className="max-w-5xl mx-auto px-6 py-3">
+          <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+            <span>⚡</span> Added Components
+          </div>
+          <div className="flex flex-wrap items-start gap-3">
+            {renderLayoutComponents(extraComps, section.id)}
+          </div>
+        </div>
       </div>
     );
   }

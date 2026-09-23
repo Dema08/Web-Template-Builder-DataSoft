@@ -9,10 +9,13 @@ import IconPanel from './IconPanel';
 import UploadsPanel from './UploadsPanel';
 import LayerPanel from '../layers/LayerPanel';
 import DraggableSidebarItem from '../../dnd/DraggableSidebarItem';
+import { toast } from '@store';
 import { 
   Layout, Section, Component, Image, Upload, Type, 
   Plus, Star, Layers, ChevronDown, ChevronRight, GripVertical,
-  Eye, EyeOff, Lock, Unlock
+  Eye, EyeOff, Lock, Unlock, FileText, MousePointer, Video, CreditCard,
+  Minus, Tag, HelpCircle, Grid, MapPin, FormInput, Share2, Calculator,
+  BarChart2, MessageSquare, AlignLeft, AlertCircle, LayoutGrid
 } from 'lucide-react';
 
 const TABS = [
@@ -57,26 +60,28 @@ const SECTIONS = [
   { id: 'footer', label: 'Footer' },
 ];
 
-const COMPONENTS = [
-  { id: 'heading', label: 'Heading' },
-  { id: 'text', label: 'Text' },
-  { id: 'button', label: 'Button' },
-  { id: 'image', label: 'Image' },
-  { id: 'video', label: 'Video' },
-  { id: 'card', label: 'Card' },
-  { id: 'divider', label: 'Divider' },
-  { id: 'icon', label: 'Icon' },
-  { id: 'badge', label: 'Badge' },
-  { id: 'accordion', label: 'Accordion' },
-  { id: 'gallery', label: 'Gallery' },
-  { id: 'map', label: 'Map' },
-  { id: 'form', label: 'Form' },
-  { id: 'social', label: 'Social Media' },
-  { id: 'counter', label: 'Counter' },
-  { id: 'progress', label: 'Progress' },
-  { id: 'testimonial', label: 'Testimonial' },
-  { id: 'faq-item', label: 'FAQ Item' },
+const COMPONENT_ITEMS = [
+  { id: 'heading', label: 'Heading', icon: Type },
+  { id: 'text', label: 'Text', icon: AlignLeft },
+  { id: 'button', label: 'Button', icon: MousePointer },
+  { id: 'image', label: 'Image', icon: Image },
+  { id: 'video', label: 'Video', icon: Video },
+  { id: 'card', label: 'Card', icon: CreditCard },
+  { id: 'divider', label: 'Divider', icon: Minus },
+  { id: 'icon', label: 'Icon', icon: Star },
+  { id: 'badge', label: 'Badge', icon: Tag },
+  { id: 'gallery', label: 'Gallery', icon: Grid },
+  { id: 'accordion', label: 'Accordion', icon: HelpCircle },
+  { id: 'form', label: 'Form', icon: FormInput },
+  { id: 'counter', label: 'Counter', icon: Calculator },
+  { id: 'progress', label: 'Progress', icon: BarChart2 },
+  { id: 'testimonial', label: 'Testimonial', icon: MessageSquare },
+  { id: 'faq-item', label: 'FAQ Item', icon: HelpCircle },
+  { id: 'map', label: 'Map', icon: MapPin },
+  { id: 'social', label: 'Social Links', icon: Share2 },
 ];
+
+const COMPONENTS = COMPONENT_ITEMS;
 
 function ComponentLayerNode({
   component,
@@ -245,11 +250,17 @@ export default function LeftPanel() {
   };
 
   const handleAddComponent = (componentId) => {
+    const comp = COMPONENTS.find(c => c.id === componentId);
+    const label = comp?.label || componentId;
     // Add to selected section if available
     if (selectedSectionId) {
       addComponent(selectedSectionId, componentId);
+      toast.success(`${label} added to canvas`, 'Component Added');
     } else if (sections.length > 0) {
       addComponent(sections[0].id, componentId);
+      toast.success(`${label} added to first section`, 'Component Added');
+    } else {
+      toast.info('Please add a section to the canvas first, then add components.', 'No Section Found');
     }
   };
 
@@ -451,30 +462,42 @@ export default function LeftPanel() {
 
       case 'components':
         return (
-          <div className="p-3 space-y-1">
-            {COMPONENTS.map(component => (
-              <DraggableSidebarItem
-                key={component.id}
-                type="component"
-                id={component.id}
-                data={component}
-                title={component.label}
-              >
-                <button
-                  type="button"
-                  onClick={() => handleAddComponent(component.id)}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-50 transition text-left group cursor-grab active:cursor-grabbing"
+          <div className="p-3 space-y-1.5">
+            {/* Helper tip when no section exists */}
+            {sections.length === 0 && (
+              <div className="flex items-start gap-2 px-3 py-2.5 mb-2 rounded-xl bg-amber-50 border border-amber-200 text-amber-700">
+                <AlertCircle className="h-4 w-4 flex-shrink-0 mt-0.5" />
+                <span className="text-xs font-medium">Add a section to the canvas first, then click a component to insert it.</span>
+              </div>
+            )}
+
+            {COMPONENT_ITEMS.map((component) => {
+              return (
+                <DraggableSidebarItem
+                  key={component.id}
+                  type="component"
+                  id={component.id}
+                  data={component}
+                  title={component.label}
                 >
-                  <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:bg-indigo-100 transition">
-                    <Component className="h-4 w-4" />
-                  </div>
-                  <div className="flex-1">
-                    <div className="text-sm font-bold text-slate-900">{component.label}</div>
-                  </div>
-                  <Plus className="h-4 w-4 text-slate-400 opacity-0 group-hover:opacity-100 transition" />
-                </button>
-              </DraggableSidebarItem>
-            ))}
+                  <button
+                    type="button"
+                    onClick={() => handleAddComponent(component.id)}
+                    className="w-full flex items-center justify-between px-3 py-2 rounded-2xl transition-all duration-150 text-left group hover:bg-slate-50 active:bg-slate-100/80 cursor-grab active:cursor-grabbing border border-transparent hover:border-slate-100"
+                  >
+                    <div className="flex items-center gap-3.5 min-w-0">
+                      <div className="w-10 h-10 rounded-2xl bg-indigo-50/90 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-100 group-hover:scale-105 transition-all duration-150 shadow-sm">
+                        <LayoutGrid className="h-5 w-5" />
+                      </div>
+                      <span className="text-sm font-semibold text-slate-800 tracking-tight group-hover:text-slate-900 truncate">
+                        {component.label}
+                      </span>
+                    </div>
+                    <Plus className="h-4 w-4 text-slate-400 opacity-60 group-hover:opacity-100 group-hover:text-slate-600 transition-all shrink-0 ml-2" />
+                  </button>
+                </DraggableSidebarItem>
+              );
+            })}
           </div>
         );
 
