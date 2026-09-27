@@ -732,6 +732,27 @@ export const useBuilderStore = create((set, get) => ({
     set({ sections: newSections });
   },
 
+  updateSectionCustomText: (sectionId, textKey, newText) => {
+    const { sections, saveToHistory } = get();
+    saveToHistory();
+
+    const newSections = sections.map(s => {
+      if (s.id === sectionId) {
+        const currentCustomTexts = s.customTexts || {};
+        return {
+          ...s,
+          customTexts: {
+            ...currentCustomTexts,
+            [textKey]: newText,
+          },
+        };
+      }
+      return s;
+    });
+
+    set({ sections: newSections });
+  },
+
   // Select a component within a section. Sets both selectedSectionId and
   // selectedComponentId so that Property Panel / inspector components can
   // correctly locate the selected component via the section → component tree.
@@ -740,6 +761,7 @@ export const useBuilderStore = create((set, get) => ({
       selectedComponentId: componentId,
       selectedSectionId: sectionId !== undefined ? sectionId : state.selectedSectionId,
       selectedProperty: null,
+      isRightPanelOpen: true,
     }));
   },
 

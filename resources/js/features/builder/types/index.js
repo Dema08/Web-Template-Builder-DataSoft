@@ -32,13 +32,14 @@ export const createEmptyComponent = (componentType, index = 0) => ({
   props: {},
   // Position properties for visual builder
   position: {
-    x: 0,
-    y: index * 10,
+    x: 30,
+    y: 30 + index * 15,
+    isAbsolute: true,
     width: null,
     height: null,
     rotation: 0,
     scale: 1,
-    zIndex: index,
+    zIndex: 10 + index,
     locked: false,
     hidden: false,
     groupId: null,

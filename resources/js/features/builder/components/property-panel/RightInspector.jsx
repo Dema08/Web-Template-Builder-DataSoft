@@ -1191,6 +1191,8 @@ export default function RightInspector() {
 
           {selectedComponent?.type === 'card' ? (
             renderCardInspector(activeTab, formValues, handleChange, setActiveTab)
+          ) : selectedComponent?.type === 'social' ? (
+            renderSocialInspector(activeTab, formValues, handleChange, setActiveTab)
           ) : (
             (() => {
               const allProps = Object.entries(propertyConfig?.props || {});
@@ -1987,3 +1989,276 @@ const renderCardInspector = (activeTab, formValues, handleChange, setActiveTab) 
     </div>
   );
 };
+
+const renderSocialInspector = (activeTab, formValues, handleChange, setActiveTab) => {
+  const ALL_PLATFORMS = [
+    { id: 'facebook', label: 'Facebook', defaultUrl: 'https://facebook.com', color: '#1877F2' },
+    { id: 'twitter', label: 'Twitter / X', defaultUrl: 'https://x.com', color: '#000000' },
+    { id: 'instagram', label: 'Instagram', defaultUrl: 'https://instagram.com', color: '#E4405F' },
+    { id: 'linkedin', label: 'LinkedIn', defaultUrl: 'https://linkedin.com', color: '#0A66C2' },
+    { id: 'youtube', label: 'YouTube', defaultUrl: 'https://youtube.com', color: '#FF0000' },
+    { id: 'github', label: 'GitHub', defaultUrl: 'https://github.com', color: '#24292e' },
+    { id: 'tiktok', label: 'TikTok', defaultUrl: 'https://tiktok.com', color: '#000000' },
+    { id: 'whatsapp', label: 'WhatsApp', defaultUrl: 'https://wa.me', color: '#25D366' },
+    { id: 'discord', label: 'Discord', defaultUrl: 'https://discord.gg', color: '#5865F2' },
+    { id: 'telegram', label: 'Telegram', defaultUrl: 'https://t.me', color: '#24A1DE' },
+    { id: 'website', label: 'Website / Link', defaultUrl: 'https://example.com', color: '#4f46e5' },
+  ];
+
+  const rawPlatforms = formValues.platforms;
+  const currentPlatforms = Array.isArray(rawPlatforms)
+    ? rawPlatforms
+    : typeof rawPlatforms === 'string'
+      ? rawPlatforms.split(',').map(s => s.trim()).filter(Boolean)
+      : ['facebook', 'twitter', 'linkedin'];
+
+  const currentLinks = typeof formValues.socialLinks === 'object' && formValues.socialLinks !== null
+    ? formValues.socialLinks
+    : {};
+
+  const togglePlatform = (platformId) => {
+    let updated;
+    if (currentPlatforms.includes(platformId)) {
+      updated = currentPlatforms.filter(p => p !== platformId);
+    } else {
+      updated = [...currentPlatforms, platformId];
+    }
+    handleChange('platforms', updated);
+  };
+
+  const handleUrlChange = (platformId, urlValue) => {
+    const updatedLinks = { ...currentLinks, [platformId]: urlValue };
+    handleChange('socialLinks', updatedLinks);
+  };
+
+  const selectPreset = (presetList) => {
+    handleChange('platforms', presetList);
+  };
+
+  return (
+    <div className="space-y-4">
+      {/* 1. CONTENT TAB */}
+      {(activeTab === 'content' || activeTab === 'all') && (
+        <div className="space-y-4">
+          {/* Quick Presets */}
+          <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-2.5">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider">Quick Presets</span>
+              <span className="text-[10px] text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full font-bold">
+                {currentPlatforms.length} Active
+              </span>
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              <button
+                type="button"
+                onClick={() => selectPreset(['facebook', 'instagram', 'twitter', 'linkedin'])}
+                className="px-2.5 py-1 bg-white hover:bg-indigo-50 hover:text-indigo-600 text-slate-700 text-[10px] font-bold rounded-lg border border-slate-200 transition shadow-2xs cursor-pointer"
+              >
+                Popular 4
+              </button>
+              <button
+                type="button"
+                onClick={() => selectPreset(['facebook', 'instagram', 'twitter', 'youtube', 'tiktok'])}
+                className="px-2.5 py-1 bg-white hover:bg-indigo-50 hover:text-indigo-600 text-slate-700 text-[10px] font-bold rounded-lg border border-slate-200 transition shadow-2xs cursor-pointer"
+              >
+                Social Media
+              </button>
+              <button
+                type="button"
+                onClick={() => selectPreset(['whatsapp', 'telegram', 'discord'])}
+                className="px-2.5 py-1 bg-white hover:bg-indigo-50 hover:text-indigo-600 text-slate-700 text-[10px] font-bold rounded-lg border border-slate-200 transition shadow-2xs cursor-pointer"
+              >
+                Messaging
+              </button>
+              <button
+                type="button"
+                onClick={() => selectPreset(ALL_PLATFORMS.map(p => p.id))}
+                className="px-2.5 py-1 bg-white hover:bg-indigo-50 hover:text-indigo-600 text-slate-700 text-[10px] font-bold rounded-lg border border-slate-200 transition shadow-2xs cursor-pointer"
+              >
+                Select All
+              </button>
+              <button
+                type="button"
+                onClick={() => selectPreset([])}
+                className="px-2.5 py-1 bg-white hover:bg-red-50 hover:text-red-600 text-slate-500 text-[10px] font-bold rounded-lg border border-slate-200 transition shadow-2xs cursor-pointer"
+              >
+                Clear All
+              </button>
+            </div>
+          </div>
+
+          {/* Social Platforms & Links List */}
+          <div className="space-y-2.5">
+            <div className="flex items-center justify-between">
+              <label className="block text-xs font-extrabold text-slate-800 uppercase tracking-wider">
+                Platforms & Target Links
+              </label>
+            </div>
+            <p className="text-[11px] text-slate-500 leading-relaxed">
+              Pilih sosial media yang ingin ditampilkan dan masukkan URL untuk mengarahkan pengunjung saat icon diklik.
+            </p>
+
+            <div className="space-y-2 max-h-[380px] overflow-y-auto pr-1 ds-scrollbar-thin">
+              {ALL_PLATFORMS.map((item) => {
+                const isEnabled = currentPlatforms.includes(item.id);
+                const currentUrl = currentLinks[item.id] !== undefined ? currentLinks[item.id] : item.defaultUrl;
+
+                return (
+                  <div
+                    key={item.id}
+                    className={`p-3 rounded-2xl border transition-all ${
+                      isEnabled
+                        ? 'bg-white border-indigo-200 shadow-xs ring-1 ring-indigo-100'
+                        : 'bg-slate-50/70 border-slate-200/80 opacity-70 hover:opacity-100'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label className="flex items-center gap-2 cursor-pointer select-none">
+                        <input
+                          type="checkbox"
+                          checked={isEnabled}
+                          onChange={() => togglePlatform(item.id)}
+                          className="rounded text-indigo-600 focus:ring-indigo-500 h-4 w-4 cursor-pointer"
+                        />
+                        <span className="w-2.5 h-2.5 rounded-full inline-block shrink-0" style={{ backgroundColor: item.color }} />
+                        <span className="text-xs font-bold text-slate-800">{item.label}</span>
+                      </label>
+                      <span
+                        className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
+                          isEnabled ? 'bg-indigo-50 text-indigo-700' : 'bg-slate-200 text-slate-500'
+                        }`}
+                      >
+                        {isEnabled ? 'Active' : 'Disabled'}
+                      </span>
+                    </div>
+
+                    {isEnabled && (
+                      <div className="mt-2 space-y-1">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-[10px] font-bold text-slate-500 shrink-0">Link URL:</span>
+                          <input
+                            type="text"
+                            value={currentUrl}
+                            onChange={(e) => handleUrlChange(item.id, e.target.value)}
+                            placeholder={item.defaultUrl}
+                            className="flex-1 px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono text-slate-800 focus:bg-white focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Style & Layout Controls Card */}
+          <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3 pt-4">
+            <h4 className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">
+              Icon Display Settings
+            </h4>
+
+            <div className="grid grid-cols-2 gap-2.5">
+              <div>
+                <label className="block text-[11px] font-bold text-slate-700 mb-1">Icon Size</label>
+                <select
+                  value={formValues.size || 'medium'}
+                  onChange={(e) => handleChange('size', e.target.value)}
+                  className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-800"
+                >
+                  <option value="small">Small (16px)</option>
+                  <option value="medium">Medium (20px)</option>
+                  <option value="large">Large (24px)</option>
+                  <option value="xlarge">Extra Large (32px)</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-slate-700 mb-1">Alignment</label>
+                <select
+                  value={formValues.align || 'left'}
+                  onChange={(e) => handleChange('align', e.target.value)}
+                  className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-800"
+                >
+                  <option value="left">Left Align</option>
+                  <option value="center">Center Align</option>
+                  <option value="right">Right Align</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-bold text-slate-700 mb-1">Icon Style Variant</label>
+              <div className="grid grid-cols-2 gap-2">
+                {[
+                  { id: 'default', label: 'Default (Minimal)' },
+                  { id: 'circle', label: 'Circle Badge' },
+                  { id: 'square', label: 'Square Badge' },
+                  { id: 'brand', label: 'Official Brand' },
+                ].map(v => (
+                  <button
+                    key={v.id}
+                    type="button"
+                    onClick={() => handleChange('styleVariant', v.id)}
+                    className={`py-2 px-2 text-xs font-bold rounded-xl border transition cursor-pointer ${
+                      (formValues.styleVariant || 'default') === v.id
+                        ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs'
+                        : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
+                    }`}
+                  >
+                    {v.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-bold text-slate-700 mb-1">Custom Icon Color (Optional)</label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="color"
+                  value={formValues.color || '#4f46e5'}
+                  onChange={(e) => handleChange('color', e.target.value)}
+                  className="w-9 h-8 rounded-xl border border-slate-200 cursor-pointer p-0.5 bg-white shadow-xs"
+                />
+                <input
+                  type="text"
+                  value={formValues.color || ''}
+                  onChange={(e) => handleChange('color', e.target.value)}
+                  placeholder="Default / Monochromatic"
+                  className="flex-1 px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs font-mono font-bold text-slate-800"
+                />
+                {formValues.color && (
+                  <button
+                    type="button"
+                    onClick={() => handleChange('color', '')}
+                    className="text-[10px] text-red-500 font-bold hover:underline cursor-pointer"
+                  >
+                    Clear
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* COLORS TAB */}
+      {activeTab === 'color' && (
+        <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
+          <label className="block text-xs font-extrabold text-slate-800">Custom Colors</label>
+          <div>
+            <label className="block text-[11px] font-bold text-slate-700 mb-1">Icon Custom Color</label>
+            <input
+              type="color"
+              value={formValues.color || '#4f46e5'}
+              onChange={(e) => handleChange('color', e.target.value)}
+              className="w-10 h-9 rounded-xl border border-slate-200 cursor-pointer p-0.5 bg-white shadow-xs"
+            />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+

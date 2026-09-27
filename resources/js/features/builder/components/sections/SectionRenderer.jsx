@@ -61,6 +61,116 @@ export default function SectionRenderer({ section, isSelected, onClick }) {
     }
   }, [section.background, section.layout, section.id]);
 
+  // Hydrate section customTexts overrides onto matching template elements
+  useEffect(() => {
+    if (sectionRef.current && section.customTexts) {
+      Object.entries(section.customTexts).forEach(([key, val]) => {
+        const el = sectionRef.current.querySelector(`[data-text-key="${key}"]`);
+        if (el && val !== undefined && el.innerText !== val) {
+          el.innerText = val;
+        }
+      });
+    }
+  }, [section.customTexts, section.layout, section.id]);
+
+  // Universal double-click handler enabling inline editing for ALL section template texts EXCEPT "Support by Microdata"
+  const handleSectionDoubleClick = (e) => {
+    if (isPreviewMode) return;
+    const target = e.target;
+    if (!target) return;
+
+    // 🔒 Guard: "Support by Microdata" is non-editable
+    if (
+      target.closest('[data-non-editable="true"]') ||
+      target.closest('[data-microdata-support="true"]') ||
+      (target.innerText && target.innerText.toLowerCase().includes('support by microdata'))
+    ) {
+      e.stopPropagation();
+      e.preventDefault();
+      toast.info('Teks "Support by Microdata" bersifat tetap dan tidak dapat diedit.', 'Non-Editable Text');
+      return;
+    }
+
+    // Skip if already in an active contentEditable element
+    if (target.isContentEditable || target.closest('[contenteditable="true"]')) {
+      return;
+    }
+
+    // Find the text element (p, span, h1-h6, b, strong, small, label, td, th, a, button)
+    const textEl = target.closest('p, span, h1, h2, h3, h4, h5, h6, b, strong, small, label, td, th, a, button') || target;
+    if (!textEl || textEl.closest('[data-non-editable="true"]') || textEl.closest('[data-microdata-support="true"]')) return;
+
+    const currentText = textEl.innerText || textEl.textContent;
+    if (!currentText || currentText.trim().length === 0) return;
+
+    e.stopPropagation();
+    e.preventDefault();
+
+    // 📐 Open Right Inspector and select section so user sees properties panel
+    selectSection(section.id);
+    setRightPanelOpen(true);
+
+    textEl.contentEditable = 'true';
+    textEl.suppressContentEditableWarning = true;
+    textEl.classList.remove('select-none');
+    textEl.classList.add('outline-none', 'ring-2', 'ring-indigo-500', 'ring-dashed', 'rounded', 'px-1', 'bg-indigo-500/10');
+    textEl.focus();
+
+    try {
+      const range = document.createRange();
+      range.selectNodeContents(textEl);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    } catch (_err) {}
+
+    const initialText = textEl.innerText;
+
+    const handleBlur = () => {
+      textEl.contentEditable = 'false';
+      textEl.classList.remove('ring-2', 'ring-indigo-500', 'ring-dashed', 'bg-indigo-500/10');
+      const newText = textEl.innerText.trim();
+
+      if (newText !== initialText.trim()) {
+        const compEl = textEl.closest('[data-component-id]');
+        if (compEl) {
+          const compId = compEl.getAttribute('data-component-id');
+          const secId = compEl.getAttribute('data-section-id') || section.id;
+          useBuilderStore.getState().updateComponentProps(secId, compId, { content: newText, label: newText, text: newText });
+          // Also select the component so inspector updates
+          useBuilderStore.getState().selectComponent(compId, secId);
+        } else {
+          let textKey = textEl.getAttribute('data-text-key');
+          if (!textKey) {
+            const allElements = Array.from(sectionRef.current.querySelectorAll('*'));
+            const idx = allElements.indexOf(textEl);
+            textKey = `t_${idx}_${initialText.substring(0, 10).replace(/[^a-zA-Z0-9]/g, '')}`;
+            textEl.setAttribute('data-text-key', textKey);
+          }
+          useBuilderStore.getState().updateSectionCustomText(section.id, textKey, newText);
+        }
+        toast.success('Teks berhasil diperbarui!', 'Text Updated');
+      }
+
+      textEl.removeEventListener('blur', handleBlur);
+      textEl.removeEventListener('keydown', handleKeyDown);
+    };
+
+    const handleKeyDown = (keyEvent) => {
+      if (keyEvent.key === 'Enter' && !keyEvent.shiftKey) {
+        keyEvent.preventDefault();
+        textEl.blur();
+      }
+      if (keyEvent.key === 'Escape') {
+        textEl.innerText = initialText;
+        textEl.blur();
+      }
+    };
+
+    textEl.addEventListener('blur', handleBlur);
+    textEl.addEventListener('keydown', handleKeyDown);
+  };
+
   // Compute background style
   const getSectionStyle = () => {
     const bg = section.background;
@@ -161,15 +271,8 @@ export default function SectionRenderer({ section, isSelected, onClick }) {
     );
     if (extraComps.length === 0) return null;
     return (
-      <div className="relative w-full bg-slate-50/80 border-t border-slate-200 z-20 pointer-events-auto">
-        <div className="max-w-5xl mx-auto px-6 py-3">
-          <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-1.5">
-            <span>⚡</span> Added Components
-          </div>
-          <div className="flex flex-wrap items-start gap-3">
-            {renderLayoutComponents(extraComps, section.id)}
-          </div>
-        </div>
+      <div className="absolute inset-0 z-20 pointer-events-none">
+        {renderLayoutComponents(extraComps, section.id)}
       </div>
     );
   }
@@ -202,8 +305,10 @@ export default function SectionRenderer({ section, isSelected, onClick }) {
   return (
     <div
       ref={sectionRef}
+      id={section.id}
       onClick={handleSectionClick}
-      className={`relative cursor-pointer transition-all overflow-hidden ${
+      onDoubleClick={handleSectionDoubleClick}
+      className={`relative cursor-pointer transition-all [&_.select-none:not([data-microdata-support]):not([data-non-editable])]:select-text ${
         isSelected || isSectionSelected ? 'ring-2 ring-indigo-600 ring-offset-2' : 'hover:ring-2 hover:ring-indigo-300'
       }`}
       style={getSectionStyle()}

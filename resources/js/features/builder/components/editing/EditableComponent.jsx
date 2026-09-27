@@ -79,14 +79,16 @@ export default function EditableComponent({
   if (isHidden && isPreviewMode) return null;
   if (isPreviewMode) {
     const isInline = ['text', 'heading', 'button', 'icon', 'badge'].includes(component.type);
+    const hasPosition = component.position?.isAbsolute || component.props?.isStandalone || (component.position?.x !== undefined && component.position?.x !== 0) || (component.position?.y !== undefined && component.position?.y !== 0);
     const wrapperStyle = {
       display: isInline ? 'inline-block' : 'block',
       maxWidth: '100%',
       width: component.props?.width ? component.props.width : (isInline ? 'fit-content' : undefined),
-      position: (component.position?.x !== 0 || component.position?.y !== 0) ? 'absolute' : 'relative',
-      left: component.position?.x ? `${component.position.x}px` : undefined,
-      top: component.position?.y ? `${component.position.y}px` : undefined,
+      position: hasPosition ? 'absolute' : 'relative',
+      left: hasPosition ? `${component.position?.x || 0}px` : undefined,
+      top: hasPosition ? `${component.position?.y || 0}px` : undefined,
       zIndex: component.position?.zIndex || 1,
+      pointerEvents: 'auto',
     };
     return (
       <div
@@ -222,49 +224,52 @@ export default function EditableComponent({
 
   // --- INTERACTIVE POINTER DRAG POSITION HANDLER ---
   const handleDragStart = (e) => {
-    // If clicking on a child element (e.g. text/button inside Card) and not the move handle or empty container area, stop propagation or return
+    // Do not initiate component drag if target is an input/textarea/select field
+    if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT' || e.target.isContentEditable)) {
+      return;
+    }
+
+    // If clicking on a child element (e.g. text/button inside Card) and not the move handle, return
     if (e.target !== e.currentTarget && !e.target.closest('[data-drag-handle]')) {
-      // Check if it's a child component being dragged directly
       if (e.target.closest('[data-component-id]') && e.target.closest('[data-component-id]') !== e.currentTarget) {
         return;
       }
     }
 
-    if (builderMode === 'drag') {
-      e.stopPropagation();
-      e.preventDefault();
-    }
-    if (isLocked || builderMode !== 'drag') return;
+    if (isLocked || builderMode === 'resize') return;
 
     const el = e.currentTarget;
-    el.setPointerCapture(e.pointerId);
+    try {
+      el.setPointerCapture(e.pointerId);
+    } catch (_e) {}
 
     const startX = e.clientX;
     const startY = e.clientY;
 
-    const currentPos = component.position || { x: 0, y: 0 };
-    const startPosX = currentPos.x || 0;
-    const startPosY = currentPos.y || 0;
+    const currentPos = component.position || {};
+    const sectionEl = document.getElementById(sectionId) || el.closest('[data-section-id]') || el.offsetParent || document.body;
+    const offsetParent = el.offsetParent || sectionEl;
+    const parentRect = offsetParent.getBoundingClientRect();
+    const sectionRect = sectionEl.getBoundingClientRect();
+    const elRect = el.getBoundingClientRect();
+
+    const hasExplicitPos = currentPos.isAbsolute || component.props?.isStandalone || (currentPos.x !== undefined && currentPos.x !== 0) || (currentPos.y !== undefined && currentPos.y !== 0);
+
+    const startPosX = hasExplicitPos ? (currentPos.x || 0) : Math.round(elRect.left - parentRect.left);
+    const startPosY = hasExplicitPos ? (currentPos.y || 0) : Math.round(elRect.top - parentRect.top);
 
     setIsDraggingLocal(true);
 
     const storeState = useBuilderStore.getState();
     const section = storeState.sections.find(s => s.id === sectionId);
     const allComps = section ? section.components : [];
-    const sectionEl = document.getElementById(sectionId);
-    const sectionRect = sectionEl ? {
-      x: sectionEl.offsetLeft || 0,
-      y: sectionEl.offsetTop || 0,
-      width: sectionEl.offsetWidth || 800,
-      height: sectionEl.offsetHeight || 600,
-    } : { x: 0, y: 0, width: 800, height: 600 };
 
     const onPointerMove = (moveEvent) => {
       const deltaX = moveEvent.clientX - startX;
       const deltaY = moveEvent.clientY - startY;
 
-      const rawX = startPosX + deltaX;
-      const rawY = startPosY + deltaY;
+      const rawX = Math.round(startPosX + deltaX);
+      const rawY = Math.round(startPosY + deltaY);
 
       const activeRect = {
         x: rawX,
@@ -284,8 +289,8 @@ export default function EditableComponent({
       setIsDraggingLocal(false);
 
       // Apply snap on drop if close enough to an alignment guide (<= 3px) or snap to grid
-      const finalRawX = startPosX + (upEvent.clientX - startX);
-      const finalRawY = startPosY + (upEvent.clientY - startY);
+      const finalRawX = Math.round(startPosX + (upEvent.clientX - startX));
+      const finalRawY = Math.round(startPosY + (upEvent.clientY - startY));
 
       const activeRect = {
         x: finalRawX,
@@ -311,13 +316,16 @@ export default function EditableComponent({
       updateComponentPosition(sectionId, component.id, finalX, finalY);
       clearGuides();
 
-      el.releasePointerCapture(upEvent.pointerId);
-      el.removeEventListener('pointermove', onPointerMove);
-      el.removeEventListener('pointerup', onPointerUp);
+      try {
+        el.releasePointerCapture(upEvent.pointerId);
+      } catch (_e) {}
+
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointerup', onPointerUp);
     };
 
-    el.addEventListener('pointermove', onPointerMove);
-    el.addEventListener('pointerup', onPointerUp);
+    window.addEventListener('pointermove', onPointerMove);
+    window.addEventListener('pointerup', onPointerUp);
   };
 
   const getCursor = () => {
@@ -372,15 +380,18 @@ export default function EditableComponent({
     isOver && isIconDragging ? 'ring-2 ring-indigo-500 ring-offset-2' : '',
   ].filter(Boolean).join(' ');
 
+  const hasPosition = component.position?.isAbsolute || component.props?.isStandalone || (component.position?.x !== undefined && component.position?.x !== 0) || (component.position?.y !== undefined && component.position?.y !== 0);
+
   const wrapperStyle = {
     cursor: getCursor(),
     display: isInline ? 'inline-block' : 'block',
     maxWidth: '100%',
     width: component.props?.width ? component.props.width : (isInline ? 'fit-content' : undefined),
-    position: (component.position?.x !== 0 || component.position?.y !== 0) ? 'absolute' : 'relative',
-    left: component.position?.x ? `${component.position.x}px` : undefined,
-    top: component.position?.y ? `${component.position.y}px` : undefined,
+    position: hasPosition ? 'absolute' : 'relative',
+    left: hasPosition ? `${component.position?.x || 0}px` : undefined,
+    top: hasPosition ? `${component.position?.y || 0}px` : undefined,
     zIndex: component.position?.zIndex || 1,
+    pointerEvents: 'auto',
     ...(isSelected
       ? {
           outline: '2px solid #4f46e5',
@@ -404,7 +415,7 @@ export default function EditableComponent({
       style={wrapperStyle}
       onClick={handleClick}
       onDoubleClick={handleDoubleClick}
-      onPointerDown={builderMode === 'drag' ? handleDragStart : undefined}
+      onPointerDown={handleDragStart}
       onMouseEnter={() => setHoveredComponent(component.id)}
       onMouseLeave={() => setHoveredComponent(null)}
       onDragOver={handleNativeDragOver}
@@ -463,6 +474,7 @@ export default function EditableComponent({
         <div
           {...dndAttributes}
           {...dndListeners}
+          data-drag-handle="true"
           className="absolute -top-3 left-2 z-30 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white px-2 py-0.5 rounded-md text-[10px] font-extrabold shadow-md cursor-grab active:cursor-grabbing flex items-center gap-1 transition-transform hover:scale-105"
           title="Click & drag to reorder or move component"
         >
