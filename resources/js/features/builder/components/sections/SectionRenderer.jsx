@@ -4,6 +4,7 @@ import { getSectionConfig } from '../../utils/industryConfigs';
 import { getLayoutComponent } from '../../engine/layoutComponentMapper';
 import { getUIComponent } from '../../engine/componentMapper';
 import { renderLayoutComponents } from '../../engine/layoutRenderer.jsx';
+import { getLayoutDefaults } from '../../engine/layoutDefaults';
 import EditableComponent from '../editing/EditableComponent';
 import SnapGrid from '../canvas/SnapGrid';
 import BuilderErrorBoundary from '../common/BuilderErrorBoundary';
@@ -42,6 +43,35 @@ export default function SectionRenderer({ section, isSelected, onClick }) {
   if (!section) return null;
 
   const isSectionSelected = !isPreviewMode && (selectedSectionId === section.id || isSelected);
+
+  // Auto-hydrate components from layout defaults if section components are empty
+  useEffect(() => {
+    if (!isPreviewMode && (!section.components || section.components.length === 0) && section.layout) {
+      const defaultComps = getLayoutDefaults(section.layout);
+      if (defaultComps && defaultComps.length > 0) {
+        const normalizeComponent = (c, idx = 0) => {
+          const normalized = {
+            id: c.id || `comp-${Date.now()}-${idx}-${Math.random().toString(36).substr(2, 9)}`,
+            type: c.type,
+            props: c.props || {},
+            position: c.position || { x: 0, y: 0, width: null, height: null, rotation: 0, scale: 1, zIndex: 1 },
+            isLocked: false,
+            isHidden: false,
+          };
+          if (Array.isArray(c.childrenComponents) && c.childrenComponents.length > 0) {
+            normalized.childrenComponents = c.childrenComponents.map((child, ci) =>
+              normalizeComponent(child, ci)
+            );
+          }
+          return normalized;
+        };
+        const populated = defaultComps.map((c, ci) => normalizeComponent(c, ci));
+        useBuilderStore.setState((state) => ({
+          sections: state.sections.map((s) => (s.id === section.id ? { ...s, components: populated } : s)),
+        }));
+      }
+    }
+  }, [section.id, section.layout, section.components, isPreviewMode]);
 
   // Apply transparent background to inner `<section>` or `<nav>` elements so custom background is completely visible
   useEffect(() => {
@@ -308,7 +338,7 @@ export default function SectionRenderer({ section, isSelected, onClick }) {
       id={section.id}
       onClick={handleSectionClick}
       onDoubleClick={handleSectionDoubleClick}
-      className={`relative cursor-pointer transition-all [&_.select-none:not([data-microdata-support]):not([data-non-editable])]:select-text ${
+      className={`relative cursor-pointer transition-all [&_.select-none:not([data-microdata-support]):not([data-non-editable])]:select-text [&_.pointer-events-none:not(video):not([data-bg-overlay])]:pointer-events-auto ${
         isSelected || isSectionSelected ? 'ring-2 ring-indigo-600 ring-offset-2' : 'hover:ring-2 hover:ring-indigo-300'
       }`}
       style={getSectionStyle()}

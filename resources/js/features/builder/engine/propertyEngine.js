@@ -2,7 +2,7 @@
 // Registry-based property system for all components
 // Each component type reads its own property registry
 
-import { COMPONENT_REGISTRY } from './componentRegistry';
+import { COMPONENT_REGISTRY } from './componentRegistry.js';
 
 // Common property groups
 export const PROPERTY_GROUPS = {

@@ -16,6 +16,9 @@ export default function Heading({
   textTransform = 'none',
   textDecoration = 'none',
   fontStyle = 'normal',
+  width = null,
+  height = null,
+  maxWidth = null,
   componentId = null,
   sectionId = null,
 }) {
@@ -34,6 +37,9 @@ export default function Heading({
     textTransform,
     textDecoration,
     fontStyle,
+    ...(width ? { width } : {}),
+    ...(height ? { height } : {}),
+    ...(maxWidth ? { maxWidth } : {}),
   };
 
   const handleUpdate = (newContent) => {

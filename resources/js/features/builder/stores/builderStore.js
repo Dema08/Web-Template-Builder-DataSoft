@@ -415,11 +415,38 @@ export const useBuilderStore = create((set, get) => ({
     const { sections, saveToHistory } = get();
     saveToHistory();
 
-    const newSections = sections.map(s =>
-      s.id === sectionId ? { ...s, layout: newLayout } : s
-    );
+    const normalizeComponent = (c, idx = 0) => {
+      const normalized = {
+        id: c.id || `comp-${Date.now()}-${idx}-${Math.random().toString(36).substr(2, 9)}`,
+        type: c.type,
+        props: c.props || {},
+        position: c.position || { x: 0, y: 0, width: null, height: null, rotation: 0, scale: 1, zIndex: 1 },
+        isLocked: false,
+        isHidden: false,
+      };
+      if (Array.isArray(c.childrenComponents) && c.childrenComponents.length > 0) {
+        normalized.childrenComponents = c.childrenComponents.map((child, ci) =>
+          normalizeComponent(child, ci)
+        );
+      }
+      return normalized;
+    };
 
-    set({ sections: newSections });
+    const newSections = sections.map(s => {
+      if (s.id === sectionId) {
+        const defaultComponents = getLayoutDefaults(newLayout);
+        return {
+          ...s,
+          layout: newLayout,
+          components: defaultComponents.length > 0
+            ? defaultComponents.map((c, ci) => normalizeComponent(c, ci))
+            : s.components,
+        };
+      }
+      return s;
+    });
+
+    set({ sections: newSections, selectedComponentId: null });
   },
 
   reorderSections: (newSections) => {
@@ -604,9 +631,28 @@ export const useBuilderStore = create((set, get) => ({
     });
   },
 
-  updateComponentPosition: (sectionId, componentId, x, y, zIndex) => {
+  updateComponentPosition: (sectionId, componentId, x, y, zIndex, shouldSaveHistory = true) => {
     const { sections, saveToHistory } = get();
-    saveToHistory();
+    if (shouldSaveHistory) {
+      saveToHistory();
+    }
+
+    const normalizeComponent = (c, idx = 0) => {
+      const normalized = {
+        id: c.id || `comp-${Date.now()}-${idx}-${Math.random().toString(36).substr(2, 9)}`,
+        type: c.type,
+        props: c.props || {},
+        position: c.position || { x: 0, y: 0, width: null, height: null, rotation: 0, scale: 1, zIndex: 1 },
+        isLocked: false,
+        isHidden: false,
+      };
+      if (Array.isArray(c.childrenComponents) && c.childrenComponents.length > 0) {
+        normalized.childrenComponents = c.childrenComponents.map((child, ci) =>
+          normalizeComponent(child, ci)
+        );
+      }
+      return normalized;
+    };
 
     const updateInTree = (comps) => comps.map(c => {
       if (c.id === componentId) {
@@ -614,6 +660,7 @@ export const useBuilderStore = create((set, get) => ({
           ...c,
           position: {
             ...c.position,
+            isAbsolute: true,
             ...(x !== undefined ? { x } : {}),
             ...(y !== undefined ? { y } : {}),
             ...(zIndex !== undefined ? { zIndex } : {}),
@@ -626,9 +673,25 @@ export const useBuilderStore = create((set, get) => ({
       return c;
     });
 
+    const hasInTree = (comps, targetId) => {
+      if (!Array.isArray(comps)) return false;
+      for (const c of comps) {
+        if (c.id === targetId) return true;
+        if (Array.isArray(c.childrenComponents) && hasInTree(c.childrenComponents, targetId)) return true;
+      }
+      return false;
+    };
+
     const newSections = sections.map(s => {
       if (s.id === sectionId) {
-        return { ...s, components: updateInTree(s.components) };
+        let currentComponents = Array.isArray(s.components) && s.components.length > 0 ? s.components : [];
+        if ((currentComponents.length === 0 || !hasInTree(currentComponents, componentId)) && s.layout) {
+          const defaultComps = getLayoutDefaults(s.layout);
+          if (defaultComps && defaultComps.length > 0) {
+            currentComponents = defaultComps.map((c, ci) => normalizeComponent(c, ci));
+          }
+        }
+        return { ...s, components: updateInTree(currentComponents) };
       }
       return s;
     });
@@ -640,12 +703,43 @@ export const useBuilderStore = create((set, get) => ({
     const { sections, saveToHistory } = get();
     saveToHistory();
 
+    const normalizeComponent = (c, idx = 0) => {
+      const normalized = {
+        id: c.id || `comp-${Date.now()}-${idx}-${Math.random().toString(36).substr(2, 9)}`,
+        type: c.type,
+        props: c.props || {},
+        position: c.position || { x: 0, y: 0, width: null, height: null, rotation: 0, scale: 1, zIndex: 1 },
+        isLocked: false,
+        isHidden: false,
+      };
+      if (Array.isArray(c.childrenComponents) && c.childrenComponents.length > 0) {
+        normalized.childrenComponents = c.childrenComponents.map((child, ci) =>
+          normalizeComponent(child, ci)
+        );
+      }
+      return normalized;
+    };
+
+    const hasInTree = (comps, targetId) => {
+      if (!Array.isArray(comps)) return false;
+      for (const c of comps) {
+        if (c.id === targetId) return true;
+        if (Array.isArray(c.childrenComponents) && hasInTree(c.childrenComponents, targetId)) return true;
+      }
+      return false;
+    };
+
     const updateInTree = (comps) => comps.map(c => {
       if (c.id === componentId) {
         return {
           ...c,
           position: {
             ...c.position,
+            ...(width !== undefined ? { width } : {}),
+            ...(height !== undefined ? { height } : {}),
+          },
+          props: {
+            ...c.props,
             ...(width !== undefined ? { width } : {}),
             ...(height !== undefined ? { height } : {}),
           }
@@ -659,7 +753,14 @@ export const useBuilderStore = create((set, get) => ({
 
     const newSections = sections.map(s => {
       if (s.id === sectionId) {
-        return { ...s, components: updateInTree(s.components) };
+        let currentComponents = Array.isArray(s.components) && s.components.length > 0 ? s.components : [];
+        if ((currentComponents.length === 0 || !hasInTree(currentComponents, componentId)) && s.layout) {
+          const defaultComps = getLayoutDefaults(s.layout);
+          if (defaultComps && defaultComps.length > 0) {
+            currentComponents = defaultComps.map((c, ci) => normalizeComponent(c, ci));
+          }
+        }
+        return { ...s, components: updateInTree(currentComponents) };
       }
       return s;
     });
@@ -669,6 +770,32 @@ export const useBuilderStore = create((set, get) => ({
 
   updateComponentProps: (sectionId, componentId, props, deviceView = null) => {
     const { sections } = get();
+
+    const normalizeComponent = (c, idx = 0) => {
+      const normalized = {
+        id: c.id || `comp-${Date.now()}-${idx}-${Math.random().toString(36).substr(2, 9)}`,
+        type: c.type,
+        props: c.props || {},
+        position: c.position || { x: 0, y: 0, width: null, height: null, rotation: 0, scale: 1, zIndex: 1 },
+        isLocked: false,
+        isHidden: false,
+      };
+      if (Array.isArray(c.childrenComponents) && c.childrenComponents.length > 0) {
+        normalized.childrenComponents = c.childrenComponents.map((child, ci) =>
+          normalizeComponent(child, ci)
+        );
+      }
+      return normalized;
+    };
+
+    const hasInTree = (comps, targetId) => {
+      if (!Array.isArray(comps)) return false;
+      for (const c of comps) {
+        if (c.id === targetId) return true;
+        if (Array.isArray(c.childrenComponents) && hasInTree(c.childrenComponents, targetId)) return true;
+      }
+      return false;
+    };
 
     const updateInTree = (comps) => comps.map(c => {
       if (c.id === componentId) {
@@ -682,7 +809,14 @@ export const useBuilderStore = create((set, get) => ({
 
     const newSections = sections.map(s => {
       if (s.id === sectionId) {
-        return { ...s, components: updateInTree(s.components) };
+        let currentComponents = Array.isArray(s.components) && s.components.length > 0 ? s.components : [];
+        if ((currentComponents.length === 0 || !hasInTree(currentComponents, componentId)) && s.layout) {
+          const defaultComps = getLayoutDefaults(s.layout);
+          if (defaultComps && defaultComps.length > 0) {
+            currentComponents = defaultComps.map((c, ci) => normalizeComponent(c, ci));
+          }
+        }
+        return { ...s, components: updateInTree(currentComponents) };
       }
       return s;
     });

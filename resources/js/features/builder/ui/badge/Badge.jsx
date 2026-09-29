@@ -14,6 +14,8 @@ export default function Badge({
   padding = '',
   margin = '',
   shadow = 'none',
+  width = '',
+  height = '',
   componentId = null,
   sectionId = null,
 }) {
@@ -72,6 +74,8 @@ export default function Badge({
     ...(textTransform ? { textTransform } : {}),
     ...(padding ? { padding } : {}),
     ...(margin ? { margin } : {}),
+    ...(width ? { width } : {}),
+    ...(height ? { height } : {}),
   };
 
   const isSelected = !isPreviewMode && selectedComponentId === componentId;

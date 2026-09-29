@@ -15,6 +15,9 @@ export default function Text({
   fontStyle = 'normal',
   textDecoration = 'none',
   textTransform = 'none',
+  width = null,
+  height = null,
+  maxWidth = null,
   componentId = null,
   sectionId = null,
 }) {
@@ -33,6 +36,9 @@ export default function Text({
     fontStyle,
     textDecoration,
     textTransform,
+    ...(width ? { width } : {}),
+    ...(height ? { height } : {}),
+    ...(maxWidth ? { maxWidth } : {}),
   };
 
   const handleUpdate = (newContent) => {

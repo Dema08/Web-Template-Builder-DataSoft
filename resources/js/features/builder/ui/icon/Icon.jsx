@@ -11,6 +11,8 @@ export default function Icon({
   align = 'center',
   margin = '0',
   padding = '0',
+  width = null,
+  height = null,
   componentId = null,
   sectionId = null,
 }) {
@@ -25,20 +27,29 @@ export default function Icon({
     IconComponent = FaIcons[faKey] || LucideIcons[iconName] || FaIcons.FaGlobe;
   }
 
+  let effectiveSize = size;
+  if (width && width !== 'fit-content' && width !== 'auto') {
+    effectiveSize = width;
+  } else if (height && height !== 'fit-content' && height !== 'auto') {
+    effectiveSize = height;
+  }
+
+  const parsedSize = typeof effectiveSize === 'number' ? `${effectiveSize}px` : effectiveSize;
+
   const containerStyle = {
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: align === 'center' ? 'center' : align === 'right' ? 'flex-end' : 'flex-start',
+    width: width || undefined,
+    height: height || undefined,
     margin,
     padding,
     ...(background ? { backgroundColor: background } : {}),
     ...(borderRadius ? { borderRadius } : {}),
   };
 
-  const parsedSize = typeof size === 'number' ? `${size}px` : size;
-
   return (
-    <div style={containerStyle} className="inline-flex items-center">
+    <div style={containerStyle} className="inline-flex items-center justify-center">
       {IconComponent ? (
         <IconComponent style={{ fontSize: parsedSize, color, width: parsedSize, height: parsedSize }} />
       ) : (
@@ -47,3 +58,4 @@ export default function Icon({
     </div>
   );
 }
+

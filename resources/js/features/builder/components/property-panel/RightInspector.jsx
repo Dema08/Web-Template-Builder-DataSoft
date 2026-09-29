@@ -8,6 +8,7 @@ import {
 } from '../../data/backgroundPresets';
 import { getComponentConfig } from '../../engine/componentRegistry';
 import { getPropertyConfig } from '../../engine/propertyEngine';
+import { getLayoutDefaults } from '../../engine/layoutDefaults';
 import {
   Type,
   AlignLeft,
@@ -34,7 +35,8 @@ import {
   X,
   ExternalLink,
   FileText,
-  Plus
+  Plus,
+  ArrowLeft
 } from 'lucide-react';
 import { toast } from '@store';
 import NavbarEditor from '../sections/NavbarEditor';
@@ -117,7 +119,7 @@ export default function RightInspector() {
   const selectedSection = sections.find(s => s.id === selectedSectionId);
 
   const findComponentInTree = (components, targetId) => {
-    if (!Array.isArray(components)) return null;
+    if (!Array.isArray(components) || !targetId) return null;
     for (const c of components) {
       if (c.id === targetId) return c;
       if (Array.isArray(c.childrenComponents) && c.childrenComponents.length > 0) {
@@ -128,7 +130,31 @@ export default function RightInspector() {
     return null;
   };
 
-  const selectedComponent = selectedSection ? findComponentInTree(selectedSection.components, selectedComponentId) : null;
+  // 1. Search in selectedSection.components
+  let selectedComponent = selectedSection ? findComponentInTree(selectedSection.components, selectedComponentId) : null;
+  let activeSectionId = selectedSectionId;
+
+  // 2. Fallback: Search in selectedSection layout defaults
+  if (!selectedComponent && selectedSection?.layout) {
+    const defaults = getLayoutDefaults(selectedSection.layout);
+    selectedComponent = findComponentInTree(defaults, selectedComponentId);
+  }
+
+  // 3. Fallback: Search across all sections and layout defaults
+  if (!selectedComponent && selectedComponentId) {
+    for (const sec of sections) {
+      let found = findComponentInTree(sec.components, selectedComponentId);
+      if (!found && sec.layout) {
+        found = findComponentInTree(getLayoutDefaults(sec.layout), selectedComponentId);
+      }
+      if (found) {
+        selectedComponent = found;
+        activeSectionId = sec.id;
+        break;
+      }
+    }
+  }
+
   const componentConfig = selectedComponent ? getComponentConfig(selectedComponent.type) : null;
   const propertyConfig = selectedComponent ? getPropertyConfig(selectedComponent.type) : null;
 
@@ -172,13 +198,13 @@ export default function RightInspector() {
     if (selectedComponent) {
       const defaults = {};
       Object.entries(propertyConfig?.props || {}).forEach(([key, config]) => {
-        defaults[key] = selectedComponent.props[key] ?? config.default;
+        defaults[key] = selectedComponent.props?.[key] ?? config.default;
       });
       const position = selectedComponent.position || {};
       defaults.x = position.x || 0;
       defaults.y = position.y || 0;
-      defaults.width = position.width || '';
-      defaults.height = position.height || '';
+      defaults.width = position.width || selectedComponent.props?.width || '';
+      defaults.height = position.height || selectedComponent.props?.height || '';
       defaults.rotation = position.rotation || 0;
       defaults.scale = position.scale || 1;
       defaults.zIndex = position.zIndex || 1;
@@ -205,15 +231,17 @@ export default function RightInspector() {
     const newValues = { ...formValues, [key]: value };
     setFormValues(newValues);
 
-    if (selectedSectionId && selectedComponentId) {
-      updateComponentProps(selectedSectionId, selectedComponentId, { [key]: value });
+    const secIdToUpdate = activeSectionId || selectedSectionId;
+    if (secIdToUpdate && selectedComponentId) {
+      updateComponentProps(secIdToUpdate, selectedComponentId, { [key]: value });
     }
   };
 
   const handleDelete = () => {
-    if (selectedSectionId && selectedComponentId) {
+    const secIdToUpdate = activeSectionId || selectedSectionId;
+    if (secIdToUpdate && selectedComponentId) {
       if (selectedComponent?.isLocked) return;
-      removeComponent(selectedSectionId, selectedComponentId);
+      removeComponent(secIdToUpdate, selectedComponentId);
     }
   };
 
@@ -1245,17 +1273,101 @@ const renderInput = (key, config, value, onChange) => {
   switch (config.type) {
     case 'select':
       return (
-        <select
-          value={value}
-          onChange={(e) => onChange(key, e.target.value)}
-          className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm"
-        >
-          {(config.options || []).map(option => (
-            <option key={option} value={option}>
-              {typeof option === 'string' ? option.charAt(0).toUpperCase() + option.slice(1) : option}
-            </option>
-          ))}
-        </select>
+        <div className="space-y-1.5">
+          {key === 'align' ? (
+            <div className="flex gap-1">
+              {[
+                { val: 'left', label: 'Left' },
+                { val: 'center', label: 'Center' },
+                { val: 'right', label: 'Right' },
+                { val: 'justify', label: 'Justify' },
+              ].map(al => (
+                <button
+                  key={al.val}
+                  type="button"
+                  onClick={() => onChange(key, al.val)}
+                  className={`flex-1 py-1.5 text-xs font-bold rounded-xl border transition ${
+                    value === al.val
+                      ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs'
+                      : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
+                  }`}
+                >
+                  {al.label}
+                </button>
+              ))}
+            </div>
+          ) : key === 'level' ? (
+            <div className="grid grid-cols-6 gap-1">
+              {['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].map(lvl => (
+                <button
+                  key={lvl}
+                  type="button"
+                  onClick={() => onChange(key, lvl)}
+                  className={`py-1.5 text-xs font-mono font-bold rounded-xl border transition uppercase ${
+                    value === lvl
+                      ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs'
+                      : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
+                  }`}
+                >
+                  {lvl}
+                </button>
+              ))}
+            </div>
+          ) : key === 'fontWeight' ? (
+            <div className="grid grid-cols-4 gap-1">
+              {[
+                { val: '400', label: 'Regular' },
+                { val: '500', label: 'Medium' },
+                { val: '600', label: 'Semibold' },
+                { val: '700', label: 'Bold' },
+                { val: '800', label: 'Extra' },
+                { val: '900', label: 'Black' },
+              ].map(fw => (
+                <button
+                  key={fw.val}
+                  type="button"
+                  onClick={() => onChange(key, fw.val)}
+                  className={`py-1 text-[10px] font-bold rounded-lg border transition ${
+                    String(value) === fw.val
+                      ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs'
+                      : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
+                  }`}
+                >
+                  {fw.label}
+                </button>
+              ))}
+            </div>
+          ) : key === 'variant' && config.options?.length <= 5 ? (
+            <div className="flex flex-wrap gap-1">
+              {config.options.map(opt => (
+                <button
+                  key={opt}
+                  type="button"
+                  onClick={() => onChange(key, opt)}
+                  className={`px-2.5 py-1 text-xs font-bold rounded-lg border transition capitalize ${
+                    value === opt
+                      ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs'
+                      : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
+                  }`}
+                >
+                  {opt}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <select
+              value={value ?? ''}
+              onChange={(e) => onChange(key, e.target.value)}
+              className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-800"
+            >
+              {(config.options || []).map(option => (
+                <option key={option} value={option}>
+                  {typeof option === 'string' ? option.charAt(0).toUpperCase() + option.slice(1) : option}
+                </option>
+              ))}
+            </select>
+          )}
+        </div>
       );
 
     case 'color':
@@ -1277,7 +1389,11 @@ const renderInput = (key, config, value, onChange) => {
             />
           </div>
           <div className="flex flex-wrap gap-1">
-            {['#4f46e5', '#2563eb', '#06b6d4', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#0f172a', '#64748b', '#ffffff', 'transparent'].map(cHex => (
+            {[
+              '#4f46e5', '#2563eb', '#06b6d4', '#10b981', '#f59e0b',
+              '#ef4444', '#ec4899', '#8b5cf6', '#0f172a', '#64748b',
+              '#f8fafc', '#ffffff', 'transparent'
+            ].map(cHex => (
               <button
                 key={cHex}
                 type="button"
@@ -1295,43 +1411,80 @@ const renderInput = (key, config, value, onChange) => {
 
     case 'range':
       return (
-        <div>
+        <div className="space-y-1">
+          <div className="flex justify-between text-xs font-bold text-slate-700">
+            <span>{config.label}</span>
+            <span className="text-indigo-600 font-mono">{value ?? config.default}{config.unit || '%'}</span>
+          </div>
           <input
             type="range"
-            min={config.min}
-            max={config.max}
-            value={value}
+            min={config.min || 0}
+            max={config.max || 100}
+            value={value ?? config.default ?? 100}
             onChange={(e) => onChange(key, parseInt(e.target.value))}
-            className="w-full"
+            className="w-full accent-indigo-600"
           />
-          <div className="flex justify-between text-xs text-slate-500 mt-1">
-            <span>{config.min}</span>
-            <span>{value}{config.unit || ''}</span>
-            <span>{config.max}</span>
-          </div>
         </div>
       );
 
     case 'textarea':
       return (
         <textarea
-          value={value}
+          value={value ?? ''}
           onChange={(e) => onChange(key, e.target.value)}
-          className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm"
+          className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs text-slate-800 leading-relaxed font-medium"
           rows={config.rows || 3}
+          placeholder={config.label}
         />
       );
 
     default:
       return (
         <div className="space-y-1.5">
-          <input
-            type="text"
-            value={value ?? ''}
-            onChange={(e) => onChange(key, e.target.value)}
-            className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-mono font-bold text-slate-800"
-            placeholder={config.label}
-          />
+          {key === 'content' || key === 'label' ? (
+            <textarea
+              value={value ?? ''}
+              onChange={(e) => onChange(key, e.target.value)}
+              className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs text-slate-800 font-medium leading-relaxed resize-y min-h-[60px]"
+              placeholder={config.label}
+            />
+          ) : (
+            <input
+              type="text"
+              value={value ?? ''}
+              onChange={(e) => onChange(key, e.target.value)}
+              className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-mono font-bold text-slate-800"
+              placeholder={config.label}
+            />
+          )}
+
+          {/* Quick Presets for Image URL */}
+          {key === 'src' && (
+            <div className="space-y-2 pt-1">
+              <label className="block text-[10px] font-bold text-slate-500">Image Presets / Unsplash</label>
+              <div className="grid grid-cols-3 gap-1">
+                {[
+                  { label: 'Tech / Office', url: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&auto=format&fit=crop&q=80' },
+                  { label: 'Creative', url: 'https://images.unsplash.com/photo-1551434678-e076c223a692?w=800&auto=format&fit=crop&q=80' },
+                  { label: 'Business', url: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&auto=format&fit=crop&q=80' },
+                  { label: 'Modern Team', url: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&auto=format&fit=crop&q=80' },
+                  { label: 'App / UI', url: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&auto=format&fit=crop&q=80' },
+                  { label: 'Minimal', url: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?w=800&auto=format&fit=crop&q=80' },
+                ].map(p => (
+                  <button
+                    key={p.label}
+                    type="button"
+                    onClick={() => onChange(key, p.url)}
+                    className="py-1 px-1.5 text-[9px] font-bold rounded-lg border border-slate-200 bg-white hover:border-indigo-500 hover:text-indigo-600 truncate transition"
+                  >
+                    {p.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Quick Presets for Icon Name */}
           {key === 'icon' && (
             <div className="pt-1">
               <label className="block text-[10px] font-bold text-slate-500 mb-1">Quick Icon Presets</label>
@@ -1349,6 +1502,10 @@ const renderInput = (key, config, value, onChange) => {
                   { label: 'Mail', val: 'FaEnvelope' },
                   { label: 'Store', val: 'FaStore' },
                   { label: 'Grad', val: 'FaGraduationCap' },
+                  { label: 'Heart', val: 'FaHeart' },
+                  { label: 'Chart', val: 'FaChartLine' },
+                  { label: 'Bolt', val: 'FaBolt' },
+                  { label: 'Award', val: 'FaAward' },
                 ].map(ic => (
                   <button
                     key={ic.val}
@@ -1367,6 +1524,27 @@ const renderInput = (key, config, value, onChange) => {
             </div>
           )}
 
+          {/* Quick Presets for Font Size */}
+          {key === 'fontSize' && (
+            <div className="flex flex-wrap gap-1 pt-1">
+              {['12px', '14px', '16px', '18px', '20px', '24px', '32px', '40px', '48px', '64px'].map(sz => (
+                <button
+                  key={sz}
+                  type="button"
+                  onClick={() => onChange(key, sz)}
+                  className={`px-1.5 py-0.5 text-[9px] font-mono font-bold rounded border transition ${
+                    value === sz
+                      ? 'bg-indigo-600 text-white border-indigo-600'
+                      : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-100'
+                  }`}
+                >
+                  {sz}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Quick Presets for Size */}
           {key === 'size' && (
             <div className="flex gap-1 pt-1">
               {['16px', '24px', '32px', '40px', '48px', '64px'].map(sz => (
@@ -1386,9 +1564,10 @@ const renderInput = (key, config, value, onChange) => {
             </div>
           )}
 
-          {key === 'borderRadius' && (
+          {/* Quick Presets for Border Radius */}
+          {(key === 'borderRadius' || key === 'radius') && (
             <div className="flex gap-1 pt-1">
-              {['0px', '8px', '12px', '16px', '9999px'].map(r => (
+              {['0px', '8px', '12px', '16px', '24px', '9999px'].map(r => (
                 <button
                   key={r}
                   type="button"

@@ -3,6 +3,7 @@ import InlineEditableText from '../../components/editing/InlineEditableText';
 
 export default function Button({
   label = 'Button',
+  content,
   href = '#',
   linkType = 'section',
   linkTarget = '',
@@ -18,10 +19,13 @@ export default function Button({
   letterSpacing = 'normal',
   textTransform = 'none',
   padding = null,
+  width = null,
+  height = null,
   componentId = null,
   sectionId = null,
 }) {
   const { updateComponentProps, isPreviewMode, switchPreviewPage, selectComponent } = useBuilderStore();
+  const displayLabel = content !== undefined ? content : label;
 
   const baseStyles = [
     'group',
@@ -91,14 +95,14 @@ export default function Button({
    * Detect arrow at the end of the label.
    */
   const hasArrow =
-    typeof label === 'string' &&
-    (label.endsWith('→') ||
-      label.endsWith('->') ||
-      label.endsWith('&rarr;'));
+    typeof displayLabel === 'string' &&
+    (displayLabel.endsWith('→') ||
+      displayLabel.endsWith('->') ||
+      displayLabel.endsWith('&rarr;'));
 
   const cleanLabel = hasArrow
-    ? label.replace(/(→|->|&rarr;)$/, '').trim()
-    : label;
+    ? displayLabel.replace(/(→|->|&rarr;)$/, '').trim()
+    : displayLabel;
 
   /**
    * Update editable label while preserving arrow.
@@ -114,6 +118,7 @@ export default function Button({
         componentId,
         {
           label: finalLabel,
+          content: finalLabel,
         }
       );
     }
@@ -142,6 +147,8 @@ export default function Button({
     fontWeight,
     letterSpacing,
     textTransform,
+    ...(width ? { width } : {}),
+    ...(height ? { height } : {}),
 
     /**
      * Only apply custom background to solid variants.

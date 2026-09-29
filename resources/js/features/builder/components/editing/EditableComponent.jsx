@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { useDraggable, useDroppable } from '@dnd-kit/core';
 import { useBuilderStore } from '../../stores/builderStore';
 import { useBuilderDndContext } from '../../dnd/DndBuilderProvider';
@@ -8,7 +8,7 @@ import { useResize } from '../../hooks/useResize';
 import SmartGuides from '../canvas/SmartGuides';
 import ResizeHandles from '../canvas/ResizeHandles';
 import { Lock, Move, Sparkles, Image as ImageIcon, CornerDownRight } from 'lucide-react';
-import DropIndicator from '../../dnd/DropIndicator';
+import { toast } from '@store';
 
 export default function EditableComponent({
   component,
@@ -31,9 +31,24 @@ export default function EditableComponent({
   const { snapPosition } = useSnapGrid();
   const { guides, calculateGuidesAndSnap, clearGuides } = useSmartGuides();
   const { startResize } = useResize(sectionId, component.id, component.position);
+  
   const elementRef = useRef(null);
+  const dragRef = useRef({
+    isDragging: false,
+    startX: 0,
+    startY: 0,
+    startPosX: 0,
+    startPosY: 0,
+    width: 0,
+    height: 0,
+    currentX: 0,
+    currentY: 0,
+    rafId: null,
+  });
+
   const [isDraggingLocal, setIsDraggingLocal] = useState(false);
-  const [isResizingLocal, setIsResizingLocal] = useState(false);
+  const [lockedSize, setLockedSize] = useState(null);
+  const [dragPosition, setDragPosition] = useState(null);
 
   const isSelected = selectedComponentId === component.id;
   const isHovered = hoveredComponent === component.id;
@@ -42,7 +57,7 @@ export default function EditableComponent({
   const isContainer = component.type === 'card';
   const isImageComponent = component.type === 'image' || 'src' in (component.props || {});
 
-  // DnD Droppable registration for this component
+  // DnD Droppable registration for nested drops
   const { setNodeRef: setDroppableRef, isOver } = useDroppable({
     id: `comp-drop-${component.id}`,
     data: {
@@ -56,7 +71,7 @@ export default function EditableComponent({
     disabled: isPreviewMode || isLocked,
   });
 
-  // DnD Draggable registration for moving this component
+  // DnD Draggable registration for sidebar or structural drag
   const {
     attributes: dndAttributes,
     listeners: dndListeners,
@@ -75,15 +90,16 @@ export default function EditableComponent({
     disabled: isPreviewMode || isLocked || builderMode === 'resize',
   });
 
-  // In Preview Mode or if hidden, handle visibility
+  // Preview Mode
   if (isHidden && isPreviewMode) return null;
   if (isPreviewMode) {
     const isInline = ['text', 'heading', 'button', 'icon', 'badge'].includes(component.type);
-    const hasPosition = component.position?.isAbsolute || component.props?.isStandalone || (component.position?.x !== undefined && component.position?.x !== 0) || (component.position?.y !== undefined && component.position?.y !== 0);
+    const hasPosition = component.position?.isAbsolute || (component.position?.x !== undefined && component.position?.x !== 0) || (component.position?.y !== undefined && component.position?.y !== 0);
     const wrapperStyle = {
       display: isInline ? 'inline-block' : 'block',
       maxWidth: '100%',
-      width: component.props?.width ? component.props.width : (isInline ? 'fit-content' : undefined),
+      width: component.position?.width || component.props?.width || (isInline ? 'fit-content' : undefined),
+      height: component.position?.height || component.props?.height || undefined,
       position: hasPosition ? 'absolute' : 'relative',
       left: hasPosition ? `${component.position?.x || 0}px` : undefined,
       top: hasPosition ? `${component.position?.y || 0}px` : undefined,
@@ -91,15 +107,13 @@ export default function EditableComponent({
       pointerEvents: 'auto',
     };
     return (
-      <div
-        id={component.id}
-        style={wrapperStyle}
-        className={isInline ? 'inline-block' : 'block'}
-      >
+      <div id={component.id} style={wrapperStyle} className={isInline ? 'inline-block' : 'block'}>
         {children}
       </div>
     );
   }
+
+  // Hidden in Editor
   if (isHidden) {
     return (
       <div
@@ -118,7 +132,10 @@ export default function EditableComponent({
           top: component.position?.y ? `${component.position.y}px` : undefined,
           zIndex: component.position?.zIndex || 1,
         }}
-        onClick={handleClick}
+        onClick={(e) => {
+          e.stopPropagation();
+          selectComponent(component.id, sectionId);
+        }}
       >
         <span>[Hidden: {component.type}]</span>
         <span className="text-[10px] bg-slate-200 px-1.5 py-0.5 rounded font-mono">Hidden</span>
@@ -126,10 +143,7 @@ export default function EditableComponent({
     );
   }
 
-  // Snap value to 8px grid
-  const snapToGrid = (val) => Math.round(val / 8) * 8;
-
-  // --- SELECT HANDLER ---
+  // --- SELECTION HANDLER ---
   const handleClick = (e) => {
     e.stopPropagation();
     if (e.shiftKey) {
@@ -143,182 +157,152 @@ export default function EditableComponent({
     e.stopPropagation();
   };
 
-  // --- INTERACTIVE MOUSE RESIZE HANDLER ---
-  const handleResizeStart = (e, direction) => {
-    if (isLocked || builderMode !== 'resize') return;
-    e.stopPropagation();
-    e.preventDefault();
-
-    const element = elementRef.current;
-    if (!element) return;
-
-    const startX = e.clientX;
-    const startY = e.clientY;
-    const rect = element.getBoundingClientRect();
-    const startWidth = rect.width;
-    const startHeight = rect.height;
-
-    setIsResizingLocal(true);
-
-    const storeState = useBuilderStore.getState();
-    const section = storeState.sections.find(s => s.id === sectionId);
-    const allComps = section ? section.components : [];
-
-    const onMouseMove = (moveEvent) => {
-      const deltaX = moveEvent.clientX - startX;
-      const deltaY = moveEvent.clientY - startY;
-
-      let newWidth = startWidth;
-      let newHeight = startHeight;
-
-      if (direction.includes('e') || direction.includes('se')) {
-        newWidth = Math.max(32, snapToGrid(startWidth + deltaX));
-      }
-      if (direction.includes('s') || direction.includes('se')) {
-        newHeight = Math.max(24, snapToGrid(startHeight + deltaY));
-      }
-
-      const activeRect = {
-        x: component.position?.x || 0,
-        y: component.position?.y || 0,
-        width: newWidth,
-        height: newHeight,
-      };
-
-      const guideResult = calculateGuidesAndSnap(component.id, activeRect, allComps, 5);
-
-      if (guideResult.hasSnapped) {
-        // If right/bottom edge snapped or similar, adjust width/height accordingly based on alignment guides
-        for (const g of guideResult.guides) {
-          if (g.label === 'right') {
-            const otherCompX = g.position; // approximation or reference
-            newWidth = Math.max(32, otherCompX - (component.position?.x || 0));
-          } else if (g.label === 'bottom') {
-            const otherCompY = g.position;
-            newHeight = Math.max(24, otherCompY - (component.position?.y || 0));
-          }
-        }
-      }
-
-      const updatedProps = {};
-      if (direction.includes('e') || direction.includes('se')) {
-        updatedProps.width = `${newWidth}px`;
-      }
-      if (direction.includes('s') || direction.includes('se')) {
-        updatedProps.height = `${newHeight}px`;
-      }
-
-      updateComponentProps(sectionId, component.id, updatedProps);
-    };
-
-    const onMouseUp = () => {
-      setIsResizingLocal(false);
-      clearGuides();
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseup', onMouseUp);
-    };
-
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseup', onMouseUp);
-  };
-
-  // --- INTERACTIVE POINTER DRAG POSITION HANDLER ---
+  // --- CANVA-STYLE BUTTERY SMOOTH DRAG HANDLER (PRESERVES 100% SIZE) ---
   const handleDragStart = (e) => {
-    // Do not initiate component drag if target is an input/textarea/select field
-    if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT' || e.target.isContentEditable)) {
+    // 1. Prevent drag when clicking inside inputs, textareas, selects, or contenteditable
+    if (e.target && (
+      e.target.tagName === 'INPUT' ||
+      e.target.tagName === 'TEXTAREA' ||
+      e.target.tagName === 'SELECT' ||
+      e.target.isContentEditable ||
+      e.target.closest('[contenteditable="true"]')
+    )) {
       return;
     }
 
-    // If clicking on a child element (e.g. text/button inside Card) and not the move handle, return
+    // 2. Disambiguate child components inside cards / containers
     if (e.target !== e.currentTarget && !e.target.closest('[data-drag-handle]')) {
-      if (e.target.closest('[data-component-id]') && e.target.closest('[data-component-id]') !== e.currentTarget) {
+      const childCompEl = e.target.closest('[data-component-id]');
+      if (childCompEl && childCompEl !== e.currentTarget) {
         return;
       }
     }
 
     if (isLocked || builderMode === 'resize') return;
+    e.stopPropagation();
 
-    const el = e.currentTarget;
+    // Select this component immediately
+    selectComponent(component.id, sectionId);
+
+    const el = elementRef.current;
+    if (!el) return;
+
+    // Capture pointer
     try {
       el.setPointerCapture(e.pointerId);
-    } catch (_e) {}
+    } catch (_err) {}
 
-    const startX = e.clientX;
-    const startY = e.clientY;
+    // Measure exact bounding rect and parent offsets
+    const rect = el.getBoundingClientRect();
+    const elWidth = Math.round(rect.width);
+    const elHeight = Math.round(rect.height);
 
-    const currentPos = component.position || {};
     const sectionEl = document.getElementById(sectionId) || el.closest('[data-section-id]') || el.offsetParent || document.body;
     const offsetParent = el.offsetParent || sectionEl;
     const parentRect = offsetParent.getBoundingClientRect();
     const sectionRect = sectionEl.getBoundingClientRect();
-    const elRect = el.getBoundingClientRect();
 
-    const hasExplicitPos = currentPos.isAbsolute || component.props?.isStandalone || (currentPos.x !== undefined && currentPos.x !== 0) || (currentPos.y !== undefined && currentPos.y !== 0);
+    const currentPos = component.position || {};
+    const hasExplicitPos = currentPos.isAbsolute || (currentPos.x !== undefined && currentPos.x !== 0) || (currentPos.y !== undefined && currentPos.y !== 0);
 
-    const startPosX = hasExplicitPos ? (currentPos.x || 0) : Math.round(elRect.left - parentRect.left);
-    const startPosY = hasExplicitPos ? (currentPos.y || 0) : Math.round(elRect.top - parentRect.top);
+    const startPosX = hasExplicitPos ? (currentPos.x || 0) : Math.round(rect.left - parentRect.left);
+    const startPosY = hasExplicitPos ? (currentPos.y || 0) : Math.round(rect.top - parentRect.top);
+
+    dragRef.current = {
+      isDragging: true,
+      startX: e.clientX,
+      startY: e.clientY,
+      startPosX,
+      startPosY,
+      width: elWidth,
+      height: elHeight,
+      currentX: startPosX,
+      currentY: startPosY,
+      rafId: null,
+    };
 
     setIsDraggingLocal(true);
+    setLockedSize({ width: elWidth, height: elHeight });
+    setDragPosition({ x: startPosX, y: startPosY });
 
     const storeState = useBuilderStore.getState();
     const section = storeState.sections.find(s => s.id === sectionId);
     const allComps = section ? section.components : [];
 
+    // Pointer Move handler running at 60-120fps with direct transform/positioning
     const onPointerMove = (moveEvent) => {
-      const deltaX = moveEvent.clientX - startX;
-      const deltaY = moveEvent.clientY - startY;
+      if (!dragRef.current.isDragging) return;
 
-      const rawX = Math.round(startPosX + deltaX);
-      const rawY = Math.round(startPosY + deltaY);
+      const dx = moveEvent.clientX - dragRef.current.startX;
+      const dy = moveEvent.clientY - dragRef.current.startY;
+
+      const rawX = Math.round(dragRef.current.startPosX + dx);
+      const rawY = Math.round(dragRef.current.startPosY + dy);
 
       const activeRect = {
         x: rawX,
         y: rawY,
-        width: el.offsetWidth || 120,
-        height: el.offsetHeight || 40,
+        width: elWidth,
+        height: elHeight,
       };
 
-      // Calculate guides for visual rendering only without forcing position jump during drag
-      calculateGuidesAndSnap(component.id, activeRect, allComps, sectionRect, 8, 3);
+      // Calculate alignment guides
+      const guideResult = calculateGuidesAndSnap(component.id, activeRect, allComps, sectionRect, 8, 4);
 
-      // Follow cursor precisely without forcing snap during drag movement
-      updateComponentPosition(sectionId, component.id, rawX, rawY);
-    };
+      let targetX = rawX;
+      let targetY = rawY;
 
-    const onPointerUp = (upEvent) => {
-      setIsDraggingLocal(false);
-
-      // Apply snap on drop if close enough to an alignment guide (<= 3px) or snap to grid
-      const finalRawX = Math.round(startPosX + (upEvent.clientX - startX));
-      const finalRawY = Math.round(startPosY + (upEvent.clientY - startY));
-
-      const activeRect = {
-        x: finalRawX,
-        y: finalRawY,
-        width: el.offsetWidth || 120,
-        height: el.offsetHeight || 40,
-      };
-
-      const finalCheck = calculateGuidesAndSnap(component.id, activeRect, allComps, sectionRect, 8, 3);
-
-      let finalX = finalRawX;
-      let finalY = finalRawY;
-
-      if (finalCheck.hasSnapped) {
-        finalX = finalCheck.snappedPosition.x;
-        finalY = finalCheck.snappedPosition.y;
-      } else {
-        const snapped = snapPosition(finalRawX, finalRawY);
-        finalX = snapped.x;
-        finalY = snapped.y;
+      if (guideResult.hasSnapped) {
+        targetX = guideResult.snappedPosition.x;
+        targetY = guideResult.snappedPosition.y;
       }
 
-      updateComponentPosition(sectionId, component.id, finalX, finalY);
+      dragRef.current.currentX = targetX;
+      dragRef.current.currentY = targetY;
+
+      // Update position smoothly using requestAnimationFrame
+      if (dragRef.current.rafId) {
+        cancelAnimationFrame(dragRef.current.rafId);
+      }
+
+      dragRef.current.rafId = requestAnimationFrame(() => {
+        if (el) {
+          el.style.left = `${targetX}px`;
+          el.style.top = `${targetY}px`;
+          el.style.position = 'absolute';
+          el.style.width = `${elWidth}px`;
+          el.style.height = `${elHeight}px`;
+        }
+        setDragPosition({ x: targetX, y: targetY });
+      });
+    };
+
+    // Pointer Up (Drop Commit)
+    const onPointerUp = (upEvent) => {
+      dragRef.current.isDragging = false;
+      if (dragRef.current.rafId) {
+        cancelAnimationFrame(dragRef.current.rafId);
+      }
+
+      const finalX = dragRef.current.currentX;
+      const finalY = dragRef.current.currentY;
+
+      // Apply snap to grid if not aligned to smart guides
+      const snapped = snapPosition(finalX, finalY);
+      const commitX = Math.abs(finalX - snapped.x) <= 4 ? snapped.x : finalX;
+      const commitY = Math.abs(finalY - snapped.y) <= 4 ? snapped.y : finalY;
+
+      // Commit once to store and record history
+      updateComponentPosition(sectionId, component.id, commitX, commitY, undefined, true);
+
       clearGuides();
+      setIsDraggingLocal(false);
+      setLockedSize(null);
+      setDragPosition(null);
 
       try {
         el.releasePointerCapture(upEvent.pointerId);
-      } catch (_e) {}
+      } catch (_err) {}
 
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerup', onPointerUp);
@@ -330,11 +314,13 @@ export default function EditableComponent({
 
   const getCursor = () => {
     if (isLocked) return 'default';
+    if (isDraggingLocal) return 'grabbing';
     if (builderMode === 'drag') return 'grab';
     if (builderMode === 'resize') return 'default';
     return 'pointer';
   };
 
+  // Drag & drop icon replacement from sidebar
   const handleNativeDrop = (e) => {
     try {
       const rawData = e.dataTransfer.getData('application/json');
@@ -350,9 +336,7 @@ export default function EditableComponent({
           toast.success(`Ikon diubah menjadi "${iconName}"`, 'Icon Updated');
         }
       }
-    } catch (_err) {
-      // Ignored
-    }
+    } catch (_err) {}
   };
 
   const handleNativeDragOver = (e) => {
@@ -366,39 +350,46 @@ export default function EditableComponent({
   const isComponentDragging = activeDragType === 'sidebar-component' || activeDragType === 'canvas-component' || dnd?.activeDragItem?.rawType === 'component';
 
   const isInline = ['text', 'heading', 'button', 'icon', 'badge'].includes(component.type);
+  const hasPosition = component.position?.isAbsolute || isDraggingLocal || (component.position?.x !== undefined && component.position?.x !== 0) || (component.position?.y !== undefined && component.position?.y !== 0);
+
+  // Exact width and height preserved at 100% scale without shrinking
+  const activeWidth = lockedSize 
+    ? `${lockedSize.width}px` 
+    : (component.position?.width || component.props?.width || (isInline ? 'fit-content' : '100%'));
+  const activeHeight = lockedSize 
+    ? `${lockedSize.height}px` 
+    : (component.position?.height || component.props?.height || undefined);
+
+  const activePosX = isDraggingLocal && dragPosition ? dragPosition.x : (component.position?.x || 0);
+  const activePosY = isDraggingLocal && dragPosition ? dragPosition.y : (component.position?.y || 0);
 
   const wrapperClass = [
     'relative',
-    'transition-all duration-150',
     'rounded-sm',
-    isSelected ? 'z-20' : '',
-    !isSelected && isHovered && builderMode !== 'select' ? 'ring-1 ring-indigo-300 ring-offset-1' : '',
-    isHidden ? 'opacity-30 pointer-events-none' : '',
-    isDraggingLocal || isDndDragging ? 'opacity-40 scale-95 ring-2 ring-indigo-500 cursor-grabbing' : '',
+    isDraggingLocal
+      ? 'z-50 shadow-2xl ring-2 ring-indigo-500 cursor-grabbing bg-white/95 backdrop-blur-xs'
+      : isSelected
+        ? 'z-20 ring-2 ring-indigo-600 ring-offset-2 shadow-xs'
+        : isHovered && builderMode !== 'select'
+          ? 'ring-1 ring-indigo-300 ring-offset-1'
+          : '',
     isOver && isContainer && isComponentDragging ? 'ring-2 ring-dashed ring-indigo-500 bg-indigo-500/10' : '',
     isOver && isImageComponent && isMediaDragging ? 'ring-2 ring-emerald-500 ring-offset-2' : '',
     isOver && isIconDragging ? 'ring-2 ring-indigo-500 ring-offset-2' : '',
   ].filter(Boolean).join(' ');
 
-  const hasPosition = component.position?.isAbsolute || component.props?.isStandalone || (component.position?.x !== undefined && component.position?.x !== 0) || (component.position?.y !== undefined && component.position?.y !== 0);
-
   const wrapperStyle = {
     cursor: getCursor(),
     display: isInline ? 'inline-block' : 'block',
     maxWidth: '100%',
-    width: component.props?.width ? component.props.width : (isInline ? 'fit-content' : undefined),
+    width: activeWidth,
+    height: activeHeight,
     position: hasPosition ? 'absolute' : 'relative',
-    left: hasPosition ? `${component.position?.x || 0}px` : undefined,
-    top: hasPosition ? `${component.position?.y || 0}px` : undefined,
-    zIndex: component.position?.zIndex || 1,
+    left: hasPosition ? `${activePosX}px` : undefined,
+    top: hasPosition ? `${activePosY}px` : undefined,
+    zIndex: isDraggingLocal ? 999 : (component.position?.zIndex || (isSelected ? 20 : 1)),
     pointerEvents: 'auto',
-    ...(isSelected
-      ? {
-          outline: '2px solid #4f46e5',
-          outlineOffset: '2px',
-          boxShadow: '0 0 0 4px rgba(79, 70, 229, 0.15)',
-        }
-      : {}),
+    transform: 'none', // Ensure 100% scale at all times
   };
 
   return (
@@ -416,8 +407,8 @@ export default function EditableComponent({
       onClick={handleClick}
       onDoubleClick={handleDoubleClick}
       onPointerDown={handleDragStart}
-      onMouseEnter={() => setHoveredComponent(component.id)}
-      onMouseLeave={() => setHoveredComponent(null)}
+      onMouseEnter={() => !isDraggingLocal && setHoveredComponent(component.id)}
+      onMouseLeave={() => !isDraggingLocal && setHoveredComponent(null)}
       onDragOver={handleNativeDragOver}
       onDrop={handleNativeDrop}
     >
@@ -454,12 +445,12 @@ export default function EditableComponent({
       {/* Smart Guides Rendering when dragging */}
       <SmartGuides guides={guides} />
 
-      {/* STEP D: Resize Handles */}
-      {isSelected && !isLocked && (
+      {/* Resize Handles */}
+      {isSelected && !isLocked && !isDraggingLocal && (
         <ResizeHandles onResizeStart={startResize} />
       )}
 
-      {/* Locked Badge (amber) */}
+      {/* Locked Badge */}
       {isSelected && isLocked && (
         <div
           className="absolute -top-3 -right-3 z-30 bg-amber-500 text-white p-1 rounded-full shadow-md text-xs flex items-center gap-1 font-bold"
@@ -469,39 +460,17 @@ export default function EditableComponent({
         </div>
       )}
 
-      {/* Canva-style Drag Handle (shown when component is selected & not locked) */}
+      {/* Canva-style Drag Move Handle */}
       {isSelected && !isLocked && (
         <div
-          {...dndAttributes}
-          {...dndListeners}
           data-drag-handle="true"
-          className="absolute -top-3 left-2 z-30 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white px-2 py-0.5 rounded-md text-[10px] font-extrabold shadow-md cursor-grab active:cursor-grabbing flex items-center gap-1 transition-transform hover:scale-105"
-          title="Click & drag to reorder or move component"
+          onPointerDown={handleDragStart}
+          className="absolute -top-3.5 left-2 z-30 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white px-2 py-0.5 rounded-md text-[10px] font-extrabold shadow-md cursor-grab active:cursor-grabbing flex items-center gap-1 transition-transform select-none"
+          title="Drag to reposition anywhere on the canvas"
         >
           <Move className="h-3 w-3" />
           <span>Move</span>
         </div>
-      )}
-
-      {/* Interactive Resize Handles (shown in Resize Mode when selected & not locked) */}
-      {isSelected && builderMode === 'resize' && !isLocked && (
-        <>
-          <div
-            onMouseDown={(e) => handleResizeStart(e, 'se')}
-            className="absolute -bottom-1.5 -right-1.5 w-3.5 h-3.5 bg-indigo-600 border-2 border-white rounded-sm z-40 cursor-se-resize shadow-md hover:scale-125 transition-transform"
-            title="Drag to resize width & height (Snap 8px)"
-          />
-          <div
-            onMouseDown={(e) => handleResizeStart(e, 'e')}
-            className="absolute top-1/2 -right-1.5 -translate-y-1/2 w-3 h-5 bg-indigo-600 border-2 border-white rounded-sm z-40 cursor-e-resize shadow-md hover:scale-125 transition-transform"
-            title="Drag to resize width (Snap 8px)"
-          />
-          <div
-            onMouseDown={(e) => handleResizeStart(e, 's')}
-            className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-5 h-3 bg-indigo-600 border-2 border-white rounded-sm z-40 cursor-s-resize shadow-md hover:scale-125 transition-transform"
-            title="Drag to resize height (Snap 8px)"
-          />
-        </>
       )}
 
       {children}
