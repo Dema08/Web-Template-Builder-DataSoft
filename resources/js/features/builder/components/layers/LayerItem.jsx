@@ -46,32 +46,39 @@ const getComponentSnippet = (component) => {
   if (!component) return 'Component';
   const props = component.props || {};
 
+  const extractText = (val) => {
+    if (typeof val === 'string') return val;
+    if (typeof val === 'object' && val !== null && typeof val.text === 'string') return val.text;
+    return null;
+  };
+
   switch (component.type) {
     case 'card': {
       if (Array.isArray(component.childrenComponents)) {
         const titleChild = component.childrenComponents.find((c) => c.type === 'heading' || c.type === 'text');
         if (titleChild && titleChild.props?.content) {
-          return titleChild.props.content;
+          const text = extractText(titleChild.props.content);
+          if (text) return text;
         }
       }
       return props.title || props.name || 'Card Container';
     }
     case 'heading':
-      return props.content || 'Heading';
+      return extractText(props.content) || 'Heading';
     case 'text':
-      return props.content || 'Paragraph Text';
+      return extractText(props.content) || 'Paragraph Text';
     case 'badge':
-      return props.content || 'Badge';
+      return extractText(props.content) || 'Badge';
     case 'button':
-      return props.content || props.text || 'Button';
+      return extractText(props.content) || extractText(props.text) || (typeof props.label === 'string' ? props.label : 'Button');
     case 'icon':
-      return props.name || props.icon || 'Icon';
+      return typeof props.name === 'string' ? props.name : (typeof props.icon === 'string' ? props.icon : 'Icon');
     case 'image':
-      return props.alt || props.title || 'Image';
+      return typeof props.alt === 'string' ? props.alt : (typeof props.title === 'string' ? props.title : 'Image');
     case 'statistic':
       return `${props.value || '100+'} ${props.label || ''}`.trim();
     default:
-      return props.content || props.label || props.name || component.type;
+      return extractText(props.content) || (typeof props.label === 'string' ? props.label : null) || (typeof props.name === 'string' ? props.name : null) || (typeof component.type === 'string' ? component.type : 'Component');
   }
 };
 

@@ -129,7 +129,7 @@ export default function AdminTemplatePreview() {
         channel = new BroadcastChannel('Microdata_builder_sync');
         channel.onmessage = (event) => {
           if (event.data && event.data.sections) {
-            loadSections(event.data.sections);
+            loadSections(event.data.sections, event.data.pages || {});
             if (event.data.templateName) setTemplateName(event.data.templateName);
             setLastUpdated(Date.now());
           }
@@ -144,7 +144,7 @@ export default function AdminTemplatePreview() {
         try {
           const parsed = JSON.parse(e.newValue);
           if (parsed.sections) {
-            loadSections(parsed.sections);
+            loadSections(parsed.sections, parsed.pages || {});
             if (parsed.templateName) setTemplateName(parsed.templateName);
             setLastUpdated(Date.now());
           }

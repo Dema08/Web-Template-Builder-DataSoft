@@ -143,16 +143,31 @@ function ComponentLayerNode({
 
         <span className="text-xs">{getIcon(component.type)}</span>
 
-        <button
-          type="button"
-          onClick={() => {
-            selectSection(sectionId);
-            selectComponent(component.id, sectionId);
-          }}
-          className="text-xs flex-1 text-left truncate text-slate-700 font-medium"
-        >
-          {component.props?.content || component.props?.title || componentConfig?.label || component.type}
-        </button>
+        {(() => {
+          const props = component.props || {};
+          let labelText = '';
+          if (typeof props.content === 'string' && props.content) labelText = props.content;
+          else if (typeof props.content === 'object' && props.content?.text) labelText = props.content.text;
+          else if (typeof props.text === 'string' && props.text) labelText = props.text;
+          else if (typeof props.label === 'string' && props.label) labelText = props.label;
+          else if (typeof props.title === 'string' && props.title) labelText = props.title;
+          else if (typeof props.name === 'string' && props.name) labelText = props.name;
+          else if (componentConfig?.label) labelText = componentConfig.label;
+          else labelText = component.type || 'Component';
+
+          return (
+            <button
+              type="button"
+              onClick={() => {
+                selectSection(sectionId);
+                selectComponent(component.id, sectionId);
+              }}
+              className="text-xs flex-1 text-left truncate text-slate-700 font-medium"
+            >
+              {labelText}
+            </button>
+          );
+        })()}
 
         {/* Visibility and Lock Controls for Component */}
         <div className="flex items-center gap-1 opacity-70 group-hover:opacity-100 transition">

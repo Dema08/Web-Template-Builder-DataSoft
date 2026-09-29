@@ -1,15 +1,51 @@
 import { useBuilderStore } from '../../stores/builderStore';
 import InlineEditableText from '../../components/editing/InlineEditableText';
+import { parseButtonHref } from './CanvasButton';
+import {
+  MessageCircle,
+  ArrowRight,
+  Send,
+  Phone,
+  Mail,
+  Download,
+  ShoppingCart,
+  Calendar,
+  Sparkles,
+  CheckCircle,
+  Play,
+  ExternalLink,
+} from 'lucide-react';
+
+const ICON_MAP = {
+  MessageCircle,
+  ArrowRight,
+  Send,
+  Phone,
+  Mail,
+  Download,
+  ShoppingCart,
+  Calendar,
+  Sparkles,
+  CheckCircle,
+  Play,
+  ExternalLink,
+};
 
 export default function Button({
   label = 'Button',
   content,
+  action,
+  styles: propStyles,
   href = '#',
   linkType = 'section',
   linkTarget = '',
+  target = '_self',
+  iconLeft = null,
+  iconRight = null,
   variant = 'primary',
   size = 'medium',
   radius = 'md',
+  borderRadius = null,
   background = '#4f46e5',
   color = '#ffffff',
   shadow = 'md',
@@ -25,7 +61,32 @@ export default function Button({
   sectionId = null,
 }) {
   const { updateComponentProps, isPreviewMode, switchPreviewPage, selectComponent } = useBuilderStore();
-  const displayLabel = content !== undefined ? content : label;
+
+  // Extract structured content or legacy label
+  const rawText = typeof content === 'object' && content?.text !== undefined 
+    ? content.text 
+    : (content !== undefined && typeof content === 'string' ? content : label);
+
+  const rawIconLeft = typeof content === 'object' && content?.iconLeft !== undefined 
+    ? content.iconLeft 
+    : iconLeft;
+
+  const rawIconRight = typeof content === 'object' && content?.iconRight !== undefined 
+    ? content.iconRight 
+    : iconRight;
+
+  const resolvedAction = action || {
+    type: linkType || 'web_url',
+    value: linkTarget || href || '#',
+    message: '',
+    target: target || '_self',
+  };
+
+  const resolvedVariant = propStyles?.variant || variant || 'primary';
+  const resolvedSize = propStyles?.size || size || 'medium';
+  const resolvedRadius = propStyles?.borderRadius || borderRadius || radius || 'md';
+  const resolvedBg = propStyles?.customBgColor || background;
+  const resolvedColor = propStyles?.customTextColor || color;
 
   const baseStyles = [
     'group',
@@ -46,41 +107,45 @@ export default function Button({
 
   const variantStyles = {
     primary:
-      'bg-indigo-600 text-white hover:bg-indigo-700 hover:-translate-y-0.5',
-
+      'bg-indigo-600 text-white hover:bg-indigo-700 hover:-translate-y-0.5 shadow-md',
     secondary:
-      'bg-slate-600 text-white hover:bg-slate-700 hover:-translate-y-0.5',
-
+      'bg-slate-700 text-white hover:bg-slate-800 hover:-translate-y-0.5 shadow-xs',
     outline:
-      'border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-50 hover:-translate-y-0.5',
-
+      'border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-50 hover:-translate-y-0.5 bg-transparent',
     ghost:
-      'text-indigo-600 hover:bg-indigo-50',
-
+      'text-indigo-600 hover:bg-indigo-50/80 bg-transparent',
+    danger:
+      'bg-rose-600 text-white hover:bg-rose-700 hover:-translate-y-0.5 shadow-md',
     gradient:
       'bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700 hover:-translate-y-0.5',
-
     pill:
-      'bg-indigo-600 text-white hover:bg-indigo-700 hover:-translate-y-0.5',
-
+      'bg-indigo-600 text-white hover:bg-indigo-700 hover:-translate-y-0.5 rounded-full',
     square:
-      'bg-indigo-600 text-white hover:bg-indigo-700 hover:-translate-y-0.5',
-
+      'bg-indigo-600 text-white hover:bg-indigo-700 hover:-translate-y-0.5 rounded-none',
     glass:
       'bg-white/20 backdrop-blur-sm text-white border border-white/30 hover:bg-white/30',
   };
 
   const sizeStyles = {
-    small: 'px-3 py-1.5 text-xs min-h-[32px]',
-    medium: 'px-4 py-2 text-sm min-h-[40px]',
-    large: 'px-6 py-3 text-base min-h-[48px]',
+    sm: 'px-3.5 py-1.5 text-xs min-h-[32px]',
+    small: 'px-3.5 py-1.5 text-xs min-h-[32px]',
+    md: 'px-5 py-2.5 text-sm min-h-[40px]',
+    medium: 'px-5 py-2.5 text-sm min-h-[40px]',
+    lg: 'px-6.5 py-3.5 text-base min-h-[48px]',
+    large: 'px-6.5 py-3.5 text-base min-h-[48px]',
+    full: 'w-full px-6 py-3.5 text-base min-h-[48px] justify-center',
   };
 
   const radiusStyles = {
     none: 'rounded-none',
-    sm: 'rounded-sm',
+    '0': 'rounded-none',
+    '0px': 'rounded-none',
+    sm: 'rounded-md',
     md: 'rounded-lg',
     lg: 'rounded-xl',
+    '8px': 'rounded-lg',
+    '12px': 'rounded-xl',
+    '16px': 'rounded-2xl',
     full: 'rounded-full',
   };
 
@@ -91,54 +156,39 @@ export default function Button({
     lg: 'shadow-lg hover:shadow-xl',
   };
 
-  /**
-   * Detect arrow at the end of the label.
-   */
   const hasArrow =
-    typeof displayLabel === 'string' &&
-    (displayLabel.endsWith('→') ||
-      displayLabel.endsWith('->') ||
-      displayLabel.endsWith('&rarr;'));
+    typeof rawText === 'string' &&
+    (rawText.endsWith('→') ||
+      rawText.endsWith('->') ||
+      rawText.endsWith('&rarr;'));
 
   const cleanLabel = hasArrow
-    ? displayLabel.replace(/(→|->|&rarr;)$/, '').trim()
-    : displayLabel;
+    ? rawText.replace(/(→|->|&rarr;)$/, '').trim()
+    : rawText;
 
-  /**
-   * Update editable label while preserving arrow.
-   */
   const handleUpdate = (newLabel) => {
     if (sectionId && componentId) {
-      const finalLabel = hasArrow
-        ? `${newLabel.trim()} →`
-        : newLabel;
-
-      updateComponentProps(
-        sectionId,
-        componentId,
-        {
-          label: finalLabel,
-          content: finalLabel,
-        }
-      );
+      const finalLabel = hasArrow ? `${newLabel.trim()} →` : newLabel;
+      updateComponentProps(sectionId, componentId, {
+        label: finalLabel,
+        content: typeof content === 'object' ? { ...content, text: finalLabel } : finalLabel,
+        text: finalLabel,
+      });
     }
   };
 
-  const isSolidVariant = [
-    'primary',
-    'secondary',
-    'pill',
-    'square',
-  ].includes(variant);
+  const isSolidVariant = ['primary', 'secondary', 'pill', 'square', 'danger'].includes(resolvedVariant);
 
-  const isGradientVariant = variant === 'gradient';
+  const resolvedRadiusClass = radiusStyles[resolvedRadius] || 'rounded-lg';
+  const customRadius = !radiusStyles[resolvedRadius] && resolvedRadius ? resolvedRadius : undefined;
 
   const className = [
     baseStyles,
-    variantStyles[variant] || variantStyles.primary,
-    sizeStyles[size] || sizeStyles.medium,
-    radiusStyles[radius] || radiusStyles.md,
+    variantStyles[resolvedVariant] || variantStyles.primary,
+    sizeStyles[resolvedSize] || sizeStyles.medium,
+    resolvedRadiusClass,
     shadowStyles[shadow] || '',
+    resolvedSize === 'full' ? 'w-full' : '',
   ].join(' ');
 
   const style = {
@@ -149,83 +199,93 @@ export default function Button({
     textTransform,
     ...(width ? { width } : {}),
     ...(height ? { height } : {}),
-
-    /**
-     * Only apply custom background to solid variants.
-     * Gradient variant keeps its Tailwind gradient.
-     */
-    ...(isSolidVariant
-      ? {
-          backgroundColor: background,
-          color,
-        }
+    ...(customRadius ? { borderRadius: customRadius } : {}),
+    ...(isSolidVariant && resolvedBg ? { backgroundColor: resolvedBg, color: resolvedColor } : {}),
+    ...(resolvedVariant === 'outline' || resolvedVariant === 'ghost'
+      ? { color: resolvedBg && resolvedBg !== 'transparent' ? resolvedBg : resolvedColor }
       : {}),
-
-    /**
-     * Outline / ghost / glass use the configured color.
-     * Ghost menus in navbar pass `background: 'transparent'` + `color: <text>`,
-     * so prefer `color` when background is transparent.
-     */
-    ...(variant === 'outline' || variant === 'ghost'
-      ? {
-          color: background && background !== 'transparent' && background !== '' ? background : color,
-        }
-      : {}),
-
-    ...(variant === 'glass'
-      ? {
-          color,
-        }
-      : {}),
-
-    /**
-     * Custom padding is optional.
-     * Don't let default "0" destroy Tailwind sizing.
-     */
-    ...(padding &&
-    padding !== '0' &&
-    padding !== 0
-      ? {
-          padding,
-        }
-      : {}),
+    ...(padding && padding !== '0' && padding !== 0 ? { padding } : {}),
   };
 
-  const finalHref = linkType === 'section' ? (linkTarget || href) : '#';
+  // Parse Dynamic Href (WhatsApp, Email, Tel, Page, Section, URL)
+  const finalHref = parseButtonHref(resolvedAction);
+
+  // Icons
+  const IconLeftComp = rawIconLeft ? ICON_MAP[rawIconLeft] : null;
+  const IconRightComp = rawIconRight ? ICON_MAP[rawIconRight] : null;
 
   return (
     <a
       href={finalHref}
+      target={resolvedAction.target === '_blank' ? '_blank' : undefined}
+      rel={resolvedAction.target === '_blank' ? 'noopener noreferrer' : undefined}
       onClick={(e) => {
         if (!isPreviewMode) {
           e.preventDefault();
           e.stopPropagation();
-          // Penting: pilih component button ini supaya Right Inspector
-          // menampilkan panel Button, bukan Section Background.
           if (componentId) {
             selectComponent(componentId, sectionId);
           }
           return;
         }
 
-        e.preventDefault();
-        e.stopPropagation();
-        if (linkType === 'page' && linkTarget) {
-          switchPreviewPage(linkTarget);
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        } else {
-          const target = linkTarget || href;
-          const targetId = target.replace('#', '');
-          const el = document.getElementById(targetId) || document.querySelector(target);
-          if (el) {
-            el.scrollIntoView({ behavior: 'smooth' });
+        // --- PREVIEW MODE ACTIONS ---
+        const actType = resolvedAction?.type || linkType || 'web_url';
+        const actVal = resolvedAction?.value || linkTarget || href || '';
+
+        if (actType === 'section') {
+          e.preventDefault();
+          if (actVal) {
+            const targetId = String(actVal).replace(/^#/, '');
+            const el =
+              document.getElementById(targetId) ||
+              document.querySelector(`[data-section-id="${targetId}"]`) ||
+              (actVal.startsWith('#') ? document.querySelector(actVal) : null);
+
+            if (el) {
+              el.scrollIntoView({ behavior: 'smooth' });
+            }
+          }
+        } else if (actType === 'page') {
+          e.preventDefault();
+          if (actVal && switchPreviewPage) {
+            switchPreviewPage(actVal);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        } else if (actType === 'whatsapp') {
+          e.preventDefault();
+          if (finalHref && finalHref !== '#') {
+            window.open(finalHref, '_blank', 'noopener,noreferrer');
+          }
+        } else if (actType === 'email') {
+          e.preventDefault();
+          if (finalHref && finalHref !== '#') {
+            window.location.href = finalHref;
+          }
+        } else if (actType === 'phone') {
+          e.preventDefault();
+          if (finalHref && finalHref !== '#') {
+            window.location.href = finalHref;
+          }
+        } else if (actType === 'web_url') {
+          if (resolvedAction.target === '_blank' || target === '_blank') {
+            e.preventDefault();
+            if (finalHref && finalHref !== '#') {
+              window.open(finalHref, '_blank', 'noopener,noreferrer');
+            }
+          } else {
+            if (finalHref && finalHref !== '#') {
+              window.location.href = finalHref;
+            }
           }
         }
       }}
       className={className}
       style={style}
     >
-      <span className="inline-flex items-center gap-2 whitespace-nowrap shrink-0">
+      {IconLeftComp && <IconLeftComp className="w-4 h-4 shrink-0 transition-transform group-hover:-translate-x-0.5" />}
+
+      <span className="inline-flex items-center gap-1.5 whitespace-nowrap shrink-0">
         <InlineEditableText
           value={cleanLabel}
           onUpdate={handleUpdate}
@@ -241,24 +301,18 @@ export default function Button({
           tag="span"
         />
 
-        {hasArrow && (
+        {hasArrow && !IconRightComp && (
           <span
-            className="
-              inline-flex
-              items-center
-              justify-center
-              shrink-0
-              whitespace-nowrap
-              transition-transform
-              duration-300
-              group-hover:translate-x-1
-            "
+            className="inline-flex items-center justify-center shrink-0 whitespace-nowrap transition-transform duration-300 group-hover:translate-x-1"
             aria-hidden="true"
           >
             →
           </span>
         )}
       </span>
+
+      {IconRightComp && <IconRightComp className="w-4 h-4 shrink-0 transition-transform group-hover:translate-x-0.5" />}
     </a>
   );
 }
+

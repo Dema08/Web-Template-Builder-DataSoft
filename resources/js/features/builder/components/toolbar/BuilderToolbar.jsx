@@ -82,17 +82,23 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
 
   const handleOpenPreview = () => {
     const currentState = useBuilderStore.getState();
-    const { sections, pages, templateName, industryName, industrySlug, status, templateId } = currentState;
+    const { sections, landingSections, pages, currentPageId, templateName, industryName, industrySlug, status, templateId } = currentState;
 
-    if (!sections || sections.length === 0) {
+    const activeLanding = currentPageId === 'landing' ? sections : (landingSections || sections);
+    const activePages = { ...pages };
+    if (currentPageId !== 'landing' && activePages[currentPageId]) {
+      activePages[currentPageId] = { ...activePages[currentPageId], sections };
+    }
+
+    if (!activeLanding || activeLanding.length === 0) {
       toast.error('Canvas is empty. Please add sections or load a template before previewing.', 'Preview Error');
       return;
     }
 
     // Save snapshot to localStorage for instant new tab preview
     const payload = {
-      sections,
-      pages,
+      sections: activeLanding,
+      pages: activePages,
       templateName: templateName || 'Untitled Template',
       industryName,
       industrySlug,
@@ -107,7 +113,7 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
       console.warn('Failed to write preview payload to localStorage', e);
     }
 
-    broadcastBuilderState(currentState);
+    broadcastBuilderState({ ...currentState, sections: activeLanding, pages: activePages });
 
     // Open clean, full live website preview in a new tab
     const previewUrl = templateId

@@ -40,6 +40,7 @@ import {
 } from 'lucide-react';
 import { toast } from '@store';
 import NavbarEditor from '../sections/NavbarEditor';
+import ButtonInspector from './ButtonInspector';
 
 const FONT_FAMILIES = [
   { value: 'Inter', label: 'Inter' },
@@ -193,12 +194,16 @@ export default function RightInspector() {
     updateSectionBackground(selectedSectionId, newConfig);
   };
 
-  // Sync component form values
+  // Sync component form values only when selected component ID changes
   useEffect(() => {
     if (selectedComponent) {
-      const defaults = {};
+      const defaults = {
+        ...(selectedComponent.props || {}),
+      };
       Object.entries(propertyConfig?.props || {}).forEach(([key, config]) => {
-        defaults[key] = selectedComponent.props?.[key] ?? config.default;
+        if (defaults[key] === undefined) {
+          defaults[key] = config.default;
+        }
       });
       const position = selectedComponent.position || {};
       defaults.x = position.x || 0;
@@ -208,6 +213,35 @@ export default function RightInspector() {
       defaults.rotation = position.rotation || 0;
       defaults.scale = position.scale || 1;
       defaults.zIndex = position.zIndex || 1;
+
+      // Extract button fields with safe fallbacks
+      if (selectedComponent.type === 'button') {
+        const actionObj = selectedComponent.props?.action || {};
+        const contentObj = selectedComponent.props?.content || {};
+        defaults.actionType = defaults.actionType || defaults.linkType || actionObj.type || 'web_url';
+        defaults.actionValue = defaults.actionValue !== undefined ? defaults.actionValue : (defaults.linkTarget || defaults.href || actionObj.value || '');
+        defaults.actionMessage = defaults.actionMessage !== undefined ? defaults.actionMessage : (actionObj.message || '');
+        defaults.target = defaults.target || actionObj.target || (defaults.linkOpenNewTab ? '_blank' : '_self');
+        defaults.linkType = defaults.actionType;
+        defaults.linkTarget = defaults.actionValue;
+        defaults.href = defaults.actionValue;
+        defaults.label = defaults.label || defaults.text || (typeof contentObj === 'object' ? contentObj.text : null) || (typeof defaults.content === 'string' ? defaults.content : 'Button');
+        defaults.text = defaults.label;
+        defaults.iconLeft = defaults.iconLeft || (typeof contentObj === 'object' ? contentObj.iconLeft : null) || null;
+        defaults.iconRight = defaults.iconRight || (typeof contentObj === 'object' ? contentObj.iconRight : null) || null;
+        defaults.action = {
+          type: defaults.actionType,
+          value: defaults.actionValue,
+          message: defaults.actionMessage,
+          target: defaults.target,
+        };
+        defaults.content = {
+          text: defaults.label,
+          iconLeft: defaults.iconLeft,
+          iconRight: defaults.iconRight,
+        };
+      }
+
       setFormValues(defaults);
 
       if (selectedComponent.position) {
@@ -225,16 +259,94 @@ export default function RightInspector() {
       setFormValues({});
       setPositionValues({ x: 0, y: 0, width: '', height: '', rotation: 0, scale: 1, zIndex: 1 });
     }
-  }, [selectedComponent?.id, selectedComponentId]);
+  }, [selectedComponentId]);
+
+  const handleButtonActionTypeChange = (newType) => {
+    setFormValues((prev) => {
+      let currentVal = prev.actionValue !== undefined ? prev.actionValue : (prev.linkTarget || prev.href || '');
+      // Format / adapt value for specific action type if transitioning from an incompatible format
+      if (newType === 'whatsapp' || newType === 'phone') {
+        if (currentVal.startsWith('#') || currentVal.startsWith('http') || currentVal.includes('@')) {
+          currentVal = '';
+        }
+      } else if (newType === 'email') {
+        if (currentVal.startsWith('#') || currentVal.startsWith('http') || (!currentVal.includes('@') && currentVal.length > 0)) {
+          currentVal = '';
+        }
+      } else if (newType === 'section') {
+        if (!currentVal.startsWith('#')) {
+          const firstSec = (landingSections.length > 0 ? landingSections : sections)[0];
+          currentVal = firstSec ? `#${firstSec.id}` : '#';
+        }
+      } else if (newType === 'page') {
+        if (currentVal.startsWith('#') || currentVal.startsWith('http') || currentVal.includes('@')) {
+          const firstPage = Object.values(pages)[0];
+          currentVal = firstPage ? firstPage.id : '';
+        }
+      }
+
+      const newValues = {
+        ...prev,
+        actionType: newType,
+        linkType: newType,
+        actionValue: currentVal,
+        linkTarget: currentVal,
+        href: currentVal,
+        action: {
+          type: newType,
+          value: currentVal,
+          message: prev.actionMessage || '',
+          target: prev.target || '_self',
+        },
+      };
+
+      const secIdToUpdate = activeSectionId || selectedSectionId;
+      if (secIdToUpdate && selectedComponentId) {
+        updateComponentProps(secIdToUpdate, selectedComponentId, newValues);
+      }
+
+      return newValues;
+    });
+  };
 
   const handleChange = (key, value) => {
-    const newValues = { ...formValues, [key]: value };
-    setFormValues(newValues);
+    setFormValues((prev) => {
+      const newValues = { ...prev, [key]: value };
 
-    const secIdToUpdate = activeSectionId || selectedSectionId;
-    if (secIdToUpdate && selectedComponentId) {
-      updateComponentProps(secIdToUpdate, selectedComponentId, { [key]: value });
-    }
+      if (selectedComponent?.type === 'button') {
+        const type = key === 'actionType' || key === 'linkType' ? value : (newValues.actionType || newValues.linkType || 'web_url');
+        const val = key === 'actionValue' || key === 'linkTarget' || key === 'href' ? value : (newValues.actionValue !== undefined ? newValues.actionValue : (newValues.linkTarget || newValues.href || ''));
+        const msg = key === 'actionMessage' ? value : (newValues.actionMessage || '');
+        const target = key === 'target' ? value : (key === 'linkOpenNewTab' ? (value ? '_blank' : '_self') : (newValues.target || '_self'));
+
+        newValues.actionType = type;
+        newValues.linkType = type;
+        newValues.actionValue = val;
+        newValues.linkTarget = val;
+        newValues.href = val;
+        newValues.actionMessage = msg;
+        newValues.target = target;
+        newValues.linkOpenNewTab = target === '_blank';
+        newValues.action = { type, value: val, message: msg, target };
+
+        const text = key === 'label' || key === 'text' ? value : (newValues.label || newValues.text || 'Button');
+        const iconLeft = key === 'iconLeft' ? value : (newValues.iconLeft || null);
+        const iconRight = key === 'iconRight' ? value : (newValues.iconRight || null);
+
+        newValues.label = text;
+        newValues.text = text;
+        newValues.iconLeft = iconLeft;
+        newValues.iconRight = iconRight;
+        newValues.content = { text, iconLeft, iconRight };
+      }
+
+      const secIdToUpdate = activeSectionId || selectedSectionId;
+      if (secIdToUpdate && selectedComponentId) {
+        updateComponentProps(secIdToUpdate, selectedComponentId, newValues);
+      }
+
+      return newValues;
+    });
   };
 
   const handleDelete = () => {
@@ -1095,125 +1207,286 @@ export default function RightInspector() {
             </span>
           </div>
 
-          {/* Button Link & Page Routing Card */}
-          {selectedComponent?.type === 'button' && (
-            <div className="p-4 bg-indigo-50/70 border border-indigo-100 rounded-2xl space-y-3 mb-4">
-              <h4 className="text-xs font-extrabold text-indigo-900 uppercase tracking-wide flex items-center gap-1.5">
-                <ExternalLink className="h-3.5 w-3.5 text-indigo-600" />
-                <span>Button Page Link & Routing</span>
-              </h4>
+          {/* 1. BUTTON SMART CTA CARD (Rendered on Content tab for buttons) */}
+          {selectedComponent?.type === 'button' && activeTab === 'content' && (
+            <div className="p-4 bg-indigo-50/70 border border-indigo-100 rounded-2xl space-y-4 mb-4">
+              <div className="flex items-center justify-between">
+                <h4 className="text-xs font-extrabold text-indigo-900 uppercase tracking-wide flex items-center gap-1.5">
+                  <Sparkles className="h-3.5 w-3.5 text-indigo-600" />
+                  <span>Smart CTA & Action Settings</span>
+                </h4>
+                <span className="text-[10px] text-indigo-600 font-bold bg-indigo-100/70 px-2 py-0.5 rounded-full uppercase">
+                  {formValues.action?.type || formValues.actionType || formValues.linkType || 'web_url'}
+                </span>
+              </div>
 
-              {/* Link Type Selector */}
+              {/* Button Text */}
               <div>
-                <label className="block text-[11px] font-bold text-slate-700 mb-1">Link Destination Type</label>
-                <div className="grid grid-cols-2 gap-2">
+                <label className="block text-[11px] font-bold text-slate-700 mb-1">Button Label / Text</label>
+                <input
+                  type="text"
+                  value={formValues.content?.text || formValues.text || formValues.label || (typeof formValues.content === 'string' ? formValues.content : '')}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    handleChange('label', val);
+                    handleChange('text', val);
+                    if (typeof formValues.content === 'object') {
+                      handleChange('content', { ...formValues.content, text: val });
+                    }
+                  }}
+                  placeholder="e.g. Hubungi Kami Sekarang"
+                  className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-800"
+                />
+              </div>
+
+              {/* Action Type Selector */}
+              <div>
+                <label className="block text-[11px] font-bold text-slate-700 mb-1">Action Destination Type</label>
+                <div className="grid grid-cols-3 gap-1.5">
                   {[
-                    { id: 'section', label: 'Landing Section' },
-                    { id: 'page', label: 'New Subpage' },
-                  ].map(t => (
-                    <button
-                      key={t.id}
-                      type="button"
-                      onClick={() => handleChange('linkType', t.id)}
-                      className={`py-2 px-3 text-xs font-bold rounded-xl border transition ${
-                        (formValues.linkType || 'section') === t.id
-                          ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs'
-                          : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
-                      }`}
-                    >
-                      {t.label}
-                    </button>
-                  ))}
+                    { id: 'web_url', label: '🌐 Web URL' },
+                    { id: 'whatsapp', label: '💬 WhatsApp' },
+                    { id: 'page', label: '📄 Subpage' },
+                    { id: 'section', label: '⚓ Section ID' },
+                    { id: 'email', label: '✉️ Email' },
+                    { id: 'phone', label: '📞 Phone' },
+                  ].map(t => {
+                    const currentType = formValues.action?.type || formValues.actionType || formValues.linkType || 'web_url';
+                    const isSelected = currentType === t.id;
+                    return (
+                      <button
+                        key={t.id}
+                        type="button"
+                        onClick={() => handleButtonActionTypeChange(t.id)}
+                        className={`py-2 px-1.5 text-[11px] font-bold rounded-xl border transition text-center truncate cursor-pointer ${
+                          isSelected
+                            ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs ring-2 ring-indigo-500/20'
+                            : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
+                        }`}
+                        title={t.label}
+                      >
+                        {t.label}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
-              {/* If Link Type === 'section' */}
-              {(!formValues.linkType || formValues.linkType === 'section') && (
-                <div>
-                  <label className="block text-[11px] font-bold text-slate-700 mb-1">Target Landing Section</label>
-                  <select
-                    value={formValues.linkTarget || ''}
-                    onChange={(e) => handleChange('linkTarget', e.target.value)}
-                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-800"
-                  >
-                    <option value="">-- Select Section --</option>
-                    {(landingSections.length > 0 ? landingSections : sections).map(sec => (
-                      <option key={sec.id} value={`#${sec.id}`}>
-                        {sec.type.toUpperCase()} ({sec.layout})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
+              {/* Dynamic Action Details Box */}
+              <div className="p-3 bg-white border border-slate-200 rounded-xl space-y-3">
+                {/* 1. WEB URL */}
+                {((formValues.actionType || formValues.linkType || formValues.action?.type || 'web_url') === 'web_url') && (
+                  <>
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-600 mb-1">Web URL Destination</label>
+                      <input
+                        type="url"
+                        value={formValues.actionValue !== undefined ? formValues.actionValue : (formValues.href || formValues.linkTarget || '')}
+                        onChange={(e) => handleChange('actionValue', e.target.value)}
+                        placeholder="https://example.com/promo"
+                        className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-mono focus:bg-white focus:border-indigo-500 focus:outline-hidden"
+                      />
+                    </div>
+                    <label className="flex items-center gap-2 cursor-pointer pt-1">
+                      <input
+                        type="checkbox"
+                        checked={formValues.target === '_blank' || formValues.linkOpenNewTab === true || formValues.action?.target === '_blank'}
+                        onChange={(e) => handleChange('target', e.target.checked ? '_blank' : '_self')}
+                        className="w-3.5 h-3.5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                      />
+                      <span className="text-[11px] text-slate-600 font-medium">Buka di Tab Baru (`_blank`)</span>
+                    </label>
+                  </>
+                )}
 
-              {/* If Link Type === 'page' */}
-              {formValues.linkType === 'page' && (
-                <div className="space-y-3">
+                {/* 2. WHATSAPP */}
+                {(formValues.actionType || formValues.linkType || formValues.action?.type) === 'whatsapp' && (
+                  <>
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-600 mb-1 flex items-center gap-1">
+                        <span className="text-emerald-600 font-bold">●</span> Nomor WhatsApp (Format: 08... atau 628...)
+                      </label>
+                      <input
+                        type="text"
+                        value={formValues.actionValue !== undefined ? formValues.actionValue : (formValues.linkTarget || '')}
+                        onChange={(e) => handleChange('actionValue', e.target.value)}
+                        placeholder="Contoh: 081234567890 atau 6281234567890"
+                        className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-mono focus:bg-white focus:border-emerald-500 focus:outline-hidden"
+                      />
+                      <span className="text-[9px] text-slate-400 mt-0.5 block">Otomatis diformat internasional ke https://wa.me/62...</span>
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-600 mb-1">Pesan Otomatis Default</label>
+                      <textarea
+                        rows={2}
+                        value={formValues.actionMessage !== undefined ? formValues.actionMessage : ''}
+                        onChange={(e) => handleChange('actionMessage', e.target.value)}
+                        placeholder="Halo Admin, saya ingin konsultasi..."
+                        className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs resize-none focus:bg-white focus:border-emerald-500 focus:outline-hidden"
+                      />
+                    </div>
+                  </>
+                )}
+
+                {/* 3. SUBPAGE */}
+                {(formValues.actionType || formValues.linkType || formValues.action?.type) === 'page' && (
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-600 mb-1">Select Existing Subpage</label>
+                      <select
+                        value={formValues.actionValue !== undefined ? formValues.actionValue : (formValues.linkTarget || '')}
+                        onChange={(e) => {
+                          handleChange('actionValue', e.target.value);
+                          handleChange('linkTarget', e.target.value);
+                        }}
+                        className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 focus:bg-white focus:border-indigo-500 focus:outline-hidden cursor-pointer"
+                      >
+                        <option value="">-- Select Subpage --</option>
+                        {Object.values(pages).map(p => (
+                          <option key={p.id} value={p.id}>
+                            📄 {p.name} (/{p.slug})
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Create New Subpage directly */}
+                    <div className="pt-2 border-t border-slate-100 space-y-2">
+                      <label className="block text-[11px] font-extrabold text-indigo-900">Create New Subpage for This Button</label>
+                      <div className="flex flex-col gap-2">
+                        <input
+                          type="text"
+                          placeholder="Subpage name (e.g. Pricing Table)"
+                          value={newSubpageName}
+                          onChange={(e) => setNewSubpageName(e.target.value)}
+                          className="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-800 font-medium focus:bg-white focus:border-indigo-500 focus:outline-hidden"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (!newSubpageName.trim()) {
+                              toast.error('Please enter a subpage name', 'Name Required');
+                              return;
+                            }
+                            const newPid = addSubPage(newSubpageName.trim());
+                            handleChange('actionValue', newPid);
+                            handleChange('linkTarget', newPid);
+                            setNewSubpageName('');
+                            toast.success('New subpage created & linked to button!', 'Subpage');
+                          }}
+                          className="w-full py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-1 shadow-xs cursor-pointer"
+                        >
+                          <Plus className="h-3.5 w-3.5" />
+                          <span>Create & Link Subpage</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* 4. SECTION ANCHOR */}
+                {(formValues.actionType || formValues.linkType || formValues.action?.type) === 'section' && (
                   <div>
-                    <label className="block text-[11px] font-bold text-slate-700 mb-1">Select Existing Subpage</label>
+                    <label className="block text-[10px] font-bold text-slate-600 mb-1">Target Landing Section</label>
                     <select
-                      value={formValues.linkTarget || ''}
-                      onChange={(e) => handleChange('linkTarget', e.target.value)}
-                      className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-800"
+                      value={formValues.actionValue !== undefined ? formValues.actionValue : (formValues.linkTarget || formValues.href || '')}
+                      onChange={(e) => {
+                        handleChange('actionValue', e.target.value);
+                        handleChange('linkTarget', e.target.value);
+                      }}
+                      className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 focus:bg-white focus:border-indigo-500 focus:outline-hidden cursor-pointer"
                     >
-                      <option value="">-- Select Subpage --</option>
-                      {Object.values(pages).map(p => (
-                        <option key={p.id} value={p.id}>
-                          📄 {p.name} (/{p.slug})
+                      <option value="">-- Select Section --</option>
+                      {(landingSections.length > 0 ? landingSections : sections).map(sec => (
+                        <option key={sec.id} value={`#${sec.id}`}>
+                          {sec.type.toUpperCase()} ({sec.layout})
                         </option>
                       ))}
                     </select>
                   </div>
+                )}
 
-                  {/* Create New Subpage directly */}
-                  <div className="pt-2 border-t border-indigo-100/70 space-y-2">
-                    <label className="block text-[11px] font-extrabold text-indigo-900">Create New Subpage for This Button</label>
-                    <div className="flex flex-col gap-2">
+                {/* 5. EMAIL */}
+                {(formValues.actionType || formValues.linkType || formValues.action?.type) === 'email' && (
+                  <>
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-600 mb-1">Alamat Email Tujuan</label>
+                      <input
+                        type="email"
+                        value={formValues.actionValue !== undefined ? formValues.actionValue : ''}
+                        onChange={(e) => handleChange('actionValue', e.target.value)}
+                        placeholder="sales@company.com"
+                        className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:border-indigo-500 focus:outline-hidden"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-600 mb-1">Subjek Email Default</label>
                       <input
                         type="text"
-                        placeholder="Subpage name (e.g. Product Catalog)"
-                        value={newSubpageName}
-                        onChange={(e) => setNewSubpageName(e.target.value)}
-                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs text-slate-800 font-medium"
+                        value={formValues.actionMessage !== undefined ? formValues.actionMessage : ''}
+                        onChange={(e) => handleChange('actionMessage', e.target.value)}
+                        placeholder="Tanya Penawaran Produk"
+                        className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:border-indigo-500 focus:outline-hidden"
                       />
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (!newSubpageName.trim()) {
-                            toast.error('Please enter a subpage name', 'Name Required');
-                            return;
-                          }
-                          const newPid = addSubPage(newSubpageName.trim());
-                          handleChange('linkTarget', newPid);
-                          setNewSubpageName('');
-                          toast.success('New subpage created & canvas switched for editing!', 'Subpage');
-                        }}
-                        className="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1 shadow-xs"
-                      >
-                        <Plus className="h-3.5 w-3.5" />
-                        <span>Create & Edit Page</span>
-                      </button>
                     </div>
-                  </div>
+                  </>
+                )}
 
-                  {/* Quick Switch to Edit Selected Page */}
-                  {formValues.linkTarget && pages[formValues.linkTarget] && (
-                    <div className="pt-2">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          switchPage(formValues.linkTarget);
-                          toast.success(`Switched canvas to edit "${pages[formValues.linkTarget].name}" page!`, 'Canvas Switch');
-                        }}
-                        className="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-extrabold shadow-sm flex items-center justify-center gap-1.5 transition"
-                      >
-                        <FileText className="h-3.5 w-3.5" />
-                        <span>Switch Canvas to Edit "{pages[formValues.linkTarget].name}"</span>
-                      </button>
-                    </div>
-                  )}
+                {/* 6. PHONE */}
+                {(formValues.actionType || formValues.linkType || formValues.action?.type) === 'phone' && (
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-600 mb-1">Nomor Telepon</label>
+                    <input
+                      type="tel"
+                      value={formValues.actionValue !== undefined ? formValues.actionValue : ''}
+                      onChange={(e) => handleChange('actionValue', e.target.value)}
+                      placeholder="081234567890 / +6281234567890"
+                      className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-mono focus:bg-white focus:border-indigo-500 focus:outline-hidden"
+                    />
+                  </div>
+                )}
+              </div>
+
+              {/* Left / Right Icons */}
+              <div className="grid grid-cols-2 gap-2 pt-1 border-t border-indigo-100/80">
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-600 mb-1">Ikon Kiri (Left)</label>
+                  <select
+                    value={formValues.content?.iconLeft || formValues.iconLeft || 'None'}
+                    onChange={(e) => {
+                      const val = e.target.value === 'None' ? null : e.target.value;
+                      handleChange('iconLeft', val);
+                      if (typeof formValues.content === 'object') {
+                        handleChange('content', { ...formValues.content, iconLeft: val });
+                      }
+                    }}
+                    className="w-full px-2 py-1.5 bg-white border border-slate-200 rounded-lg text-xs cursor-pointer"
+                  >
+                    {['None', 'MessageCircle', 'ArrowRight', 'Send', 'Phone', 'Mail', 'Download', 'ShoppingCart', 'Calendar', 'Sparkles', 'CheckCircle', 'Play'].map(ik => (
+                      <option key={`left-${ik}`} value={ik}>{ik}</option>
+                    ))}
+                  </select>
                 </div>
-              )}
+
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-600 mb-1">Ikon Kanan (Right)</label>
+                  <select
+                    value={formValues.content?.iconRight || formValues.iconRight || 'None'}
+                    onChange={(e) => {
+                      const val = e.target.value === 'None' ? null : e.target.value;
+                      handleChange('iconRight', val);
+                      if (typeof formValues.content === 'object') {
+                        handleChange('content', { ...formValues.content, iconRight: val });
+                      }
+                    }}
+                    className="w-full px-2 py-1.5 bg-white border border-slate-200 rounded-lg text-xs cursor-pointer"
+                  >
+                    {['None', 'ArrowRight', 'MessageCircle', 'Send', 'Phone', 'Mail', 'Download', 'ShoppingCart', 'Calendar', 'Sparkles', 'CheckCircle', 'Play'].map(ik => (
+                      <option key={`right-${ik}`} value={ik}>{ik}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
             </div>
           )}
 
@@ -1226,10 +1499,19 @@ export default function RightInspector() {
               const allProps = Object.entries(propertyConfig?.props || {});
               const tabProps = allProps.filter(([key]) => {
                 const mappedTab = PROP_TAB_MAPPING[key] || 'content';
-                if (activeTab === 'content') return true; // Show all properties on default Content tab
+                if (selectedComponent?.type === 'button') {
+                  // For button, hide redundant content properties already shown in Smart CTA Card
+                  if (activeTab === 'content' && ['label', 'href', 'linkType', 'linkTarget', 'icon', 'content'].includes(key)) {
+                    return false;
+                  }
+                }
                 return mappedTab === activeTab;
               });
-              const propsToDisplay = tabProps.length > 0 ? tabProps : allProps;
+              const propsToDisplay = tabProps;
+
+              if (propsToDisplay.length === 0 && selectedComponent?.type === 'button' && activeTab === 'content') {
+                return null;
+              }
 
               return (
                 <div className="space-y-4">
