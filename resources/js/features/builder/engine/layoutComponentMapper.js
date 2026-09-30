@@ -436,6 +436,41 @@ import LogisticsFaqTech from '@builder/sections/logistics-custom/tech/LogisticsF
 import LogisticsContactTech from '@builder/sections/logistics-custom/tech/LogisticsContactTech';
 import LogisticsFooterTech from '@builder/sections/logistics-custom/tech/LogisticsFooterTech';
 
+// Custom Holding Layouts — Conglomerate Variation
+import HoldingNavConglomerate from '@builder/sections/holding-custom/conglomerate/HoldingNavConglomerate';
+import HoldingHeroConglomerate from '@builder/sections/holding-custom/conglomerate/HoldingHeroConglomerate';
+import HoldingPortfolioConglomerate from '@builder/sections/holding-custom/conglomerate/HoldingPortfolioConglomerate';
+import HoldingStatsConglomerate from '@builder/sections/holding-custom/conglomerate/HoldingStatsConglomerate';
+import HoldingEsgConglomerate from '@builder/sections/holding-custom/conglomerate/HoldingEsgConglomerate';
+import HoldingLeadershipConglomerate from '@builder/sections/holding-custom/conglomerate/HoldingLeadershipConglomerate';
+import HoldingFinancialsConglomerate from '@builder/sections/holding-custom/conglomerate/HoldingFinancialsConglomerate';
+import HoldingTimelineConglomerate from '@builder/sections/holding-custom/conglomerate/HoldingTimelineConglomerate';
+import HoldingInvestorConglomerate from '@builder/sections/holding-custom/conglomerate/HoldingInvestorConglomerate';
+import HoldingFooterConglomerate from '@builder/sections/holding-custom/conglomerate/HoldingFooterConglomerate';
+
+// Custom Holding Layouts — Capital Variation
+import HoldingNavCapital from '@builder/sections/holding-custom/capital/HoldingNavCapital';
+import HoldingHeroCapital from '@builder/sections/holding-custom/capital/HoldingHeroCapital';
+import HoldingPortfolioCapital from '@builder/sections/holding-custom/capital/HoldingPortfolioCapital';
+import HoldingThesisCapital from '@builder/sections/holding-custom/capital/HoldingThesisCapital';
+import HoldingMetricsCapital from '@builder/sections/holding-custom/capital/HoldingMetricsCapital';
+import HoldingPartnersCapital from '@builder/sections/holding-custom/capital/HoldingPartnersCapital';
+import HoldingSyndicateCapital from '@builder/sections/holding-custom/capital/HoldingSyndicateCapital';
+import HoldingNewsCapital from '@builder/sections/holding-custom/capital/HoldingNewsCapital';
+import HoldingInquiryCapital from '@builder/sections/holding-custom/capital/HoldingInquiryCapital';
+import HoldingFooterCapital from '@builder/sections/holding-custom/capital/HoldingFooterCapital';
+
+// Custom Holding Layouts — Industrial Variation
+import HoldingNavIndustrial from '@builder/sections/holding-custom/industrial/HoldingNavIndustrial';
+import HoldingHeroIndustrial from '@builder/sections/holding-custom/industrial/HoldingHeroIndustrial';
+import HoldingDivisionsIndustrial from '@builder/sections/holding-custom/industrial/HoldingDivisionsIndustrial';
+import HoldingScaleIndustrial from '@builder/sections/holding-custom/industrial/HoldingScaleIndustrial';
+import HoldingSafetyIndustrial from '@builder/sections/holding-custom/industrial/HoldingSafetyIndustrial';
+import HoldingGlobalFootprintIndustrial from '@builder/sections/holding-custom/industrial/HoldingGlobalFootprintIndustrial';
+import HoldingGovernanceIndustrial from '@builder/sections/holding-custom/industrial/HoldingGovernanceIndustrial';
+import HoldingProcurementIndustrial from '@builder/sections/holding-custom/industrial/HoldingProcurementIndustrial';
+import HoldingFooterIndustrial from '@builder/sections/holding-custom/industrial/HoldingFooterIndustrial';
+
 
 export const LAYOUT_COMPONENTS = {
   // Custom Logistics — Corporate
@@ -478,6 +513,41 @@ export const LAYOUT_COMPONENTS = {
   'LogisticsFaqTech': LogisticsFaqTech,
   'LogisticsContactTech': LogisticsContactTech,
   'LogisticsFooterTech': LogisticsFooterTech,
+
+  // Custom Holding — Conglomerate
+  'HoldingNavConglomerate': HoldingNavConglomerate,
+  'HoldingHeroConglomerate': HoldingHeroConglomerate,
+  'HoldingPortfolioConglomerate': HoldingPortfolioConglomerate,
+  'HoldingStatsConglomerate': HoldingStatsConglomerate,
+  'HoldingEsgConglomerate': HoldingEsgConglomerate,
+  'HoldingLeadershipConglomerate': HoldingLeadershipConglomerate,
+  'HoldingFinancialsConglomerate': HoldingFinancialsConglomerate,
+  'HoldingTimelineConglomerate': HoldingTimelineConglomerate,
+  'HoldingInvestorConglomerate': HoldingInvestorConglomerate,
+  'HoldingFooterConglomerate': HoldingFooterConglomerate,
+
+  // Custom Holding — Capital
+  'HoldingNavCapital': HoldingNavCapital,
+  'HoldingHeroCapital': HoldingHeroCapital,
+  'HoldingPortfolioCapital': HoldingPortfolioCapital,
+  'HoldingThesisCapital': HoldingThesisCapital,
+  'HoldingMetricsCapital': HoldingMetricsCapital,
+  'HoldingPartnersCapital': HoldingPartnersCapital,
+  'HoldingSyndicateCapital': HoldingSyndicateCapital,
+  'HoldingNewsCapital': HoldingNewsCapital,
+  'HoldingInquiryCapital': HoldingInquiryCapital,
+  'HoldingFooterCapital': HoldingFooterCapital,
+
+  // Custom Holding — Industrial
+  'HoldingNavIndustrial': HoldingNavIndustrial,
+  'HoldingHeroIndustrial': HoldingHeroIndustrial,
+  'HoldingDivisionsIndustrial': HoldingDivisionsIndustrial,
+  'HoldingScaleIndustrial': HoldingScaleIndustrial,
+  'HoldingSafetyIndustrial': HoldingSafetyIndustrial,
+  'HoldingGlobalFootprintIndustrial': HoldingGlobalFootprintIndustrial,
+  'HoldingGovernanceIndustrial': HoldingGovernanceIndustrial,
+  'HoldingProcurementIndustrial': HoldingProcurementIndustrial,
+  'HoldingFooterIndustrial': HoldingFooterIndustrial,
   // Hero layouts
   'Hero01': Hero01,
   'Hero02': Hero02,
