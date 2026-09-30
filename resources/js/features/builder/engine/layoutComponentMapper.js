@@ -395,7 +395,89 @@ import Map18 from '@builder/sections/map/layouts/Map18';
 import Map19 from '@builder/sections/map/layouts/Map19';
 import Map20 from '@builder/sections/map/layouts/Map20';
 
+// Custom Logistics Layouts — Corporate Variation
+import LogisticsNavCorporate from '@builder/sections/logistics-custom/corporate/LogisticsNavCorporate';
+import LogisticsHeroCorporate from '@builder/sections/logistics-custom/corporate/LogisticsHeroCorporate';
+import LogisticsClientsCorporate from '@builder/sections/logistics-custom/corporate/LogisticsClientsCorporate';
+import LogisticsStatsCorporate from '@builder/sections/logistics-custom/corporate/LogisticsStatsCorporate';
+import LogisticsServicesCorporate from '@builder/sections/logistics-custom/corporate/LogisticsServicesCorporate';
+import LogisticsFleetCorporate from '@builder/sections/logistics-custom/corporate/LogisticsFleetCorporate';
+import LogisticsCoverageCorporate from '@builder/sections/logistics-custom/corporate/LogisticsCoverageCorporate';
+import LogisticsTimelineCorporate from '@builder/sections/logistics-custom/corporate/LogisticsTimelineCorporate';
+import LogisticsCalculatorCorporate from '@builder/sections/logistics-custom/corporate/LogisticsCalculatorCorporate';
+import LogisticsFaqCorporate from '@builder/sections/logistics-custom/corporate/LogisticsFaqCorporate';
+import LogisticsContactCorporate from '@builder/sections/logistics-custom/corporate/LogisticsContactCorporate';
+import LogisticsFooterCorporate from '@builder/sections/logistics-custom/corporate/LogisticsFooterCorporate';
+
+// Custom Logistics Layouts — Global Air & Ocean Variation
+import LogisticsNavGlobal from '@builder/sections/logistics-custom/global/LogisticsNavGlobal';
+import LogisticsHeroGlobal from '@builder/sections/logistics-custom/global/LogisticsHeroGlobal';
+import LogisticsStatsGlobal from '@builder/sections/logistics-custom/global/LogisticsStatsGlobal';
+import LogisticsServicesGlobal from '@builder/sections/logistics-custom/global/LogisticsServicesGlobal';
+import LogisticsFleetGlobal from '@builder/sections/logistics-custom/global/LogisticsFleetGlobal';
+import LogisticsFacilitiesGlobal from '@builder/sections/logistics-custom/global/LogisticsFacilitiesGlobal';
+import LogisticsCorridorsGlobal from '@builder/sections/logistics-custom/global/LogisticsCorridorsGlobal';
+import LogisticsCertificationsGlobal from '@builder/sections/logistics-custom/global/LogisticsCertificationsGlobal';
+import LogisticsAboutGlobal from '@builder/sections/logistics-custom/global/LogisticsAboutGlobal';
+import LogisticsTestimonialsGlobal from '@builder/sections/logistics-custom/global/LogisticsTestimonialsGlobal';
+import LogisticsInquiryGlobal from '@builder/sections/logistics-custom/global/LogisticsInquiryGlobal';
+import LogisticsFooterGlobal from '@builder/sections/logistics-custom/global/LogisticsFooterGlobal';
+
+// Custom Logistics Layouts — Tech IoT & Urban Express Variation
+import LogisticsNavTech from '@builder/sections/logistics-custom/tech/LogisticsNavTech';
+import LogisticsHeroTech from '@builder/sections/logistics-custom/tech/LogisticsHeroTech';
+import LogisticsStatsTech from '@builder/sections/logistics-custom/tech/LogisticsStatsTech';
+import LogisticsServicesTech from '@builder/sections/logistics-custom/tech/LogisticsServicesTech';
+import LogisticsFleetTech from '@builder/sections/logistics-custom/tech/LogisticsFleetTech';
+import LogisticsCoverageTech from '@builder/sections/logistics-custom/tech/LogisticsCoverageTech';
+import LogisticsEngineTech from '@builder/sections/logistics-custom/tech/LogisticsEngineTech';
+import LogisticsPricingTech from '@builder/sections/logistics-custom/tech/LogisticsPricingTech';
+import LogisticsFaqTech from '@builder/sections/logistics-custom/tech/LogisticsFaqTech';
+import LogisticsContactTech from '@builder/sections/logistics-custom/tech/LogisticsContactTech';
+import LogisticsFooterTech from '@builder/sections/logistics-custom/tech/LogisticsFooterTech';
+
+
 export const LAYOUT_COMPONENTS = {
+  // Custom Logistics — Corporate
+  'LogisticsNavCorporate': LogisticsNavCorporate,
+  'LogisticsHeroCorporate': LogisticsHeroCorporate,
+  'LogisticsClientsCorporate': LogisticsClientsCorporate,
+  'LogisticsStatsCorporate': LogisticsStatsCorporate,
+  'LogisticsServicesCorporate': LogisticsServicesCorporate,
+  'LogisticsFleetCorporate': LogisticsFleetCorporate,
+  'LogisticsCoverageCorporate': LogisticsCoverageCorporate,
+  'LogisticsTimelineCorporate': LogisticsTimelineCorporate,
+  'LogisticsCalculatorCorporate': LogisticsCalculatorCorporate,
+  'LogisticsFaqCorporate': LogisticsFaqCorporate,
+  'LogisticsContactCorporate': LogisticsContactCorporate,
+  'LogisticsFooterCorporate': LogisticsFooterCorporate,
+
+  // Custom Logistics — Global
+  'LogisticsNavGlobal': LogisticsNavGlobal,
+  'LogisticsHeroGlobal': LogisticsHeroGlobal,
+  'LogisticsStatsGlobal': LogisticsStatsGlobal,
+  'LogisticsServicesGlobal': LogisticsServicesGlobal,
+  'LogisticsFleetGlobal': LogisticsFleetGlobal,
+  'LogisticsFacilitiesGlobal': LogisticsFacilitiesGlobal,
+  'LogisticsCorridorsGlobal': LogisticsCorridorsGlobal,
+  'LogisticsCertificationsGlobal': LogisticsCertificationsGlobal,
+  'LogisticsAboutGlobal': LogisticsAboutGlobal,
+  'LogisticsTestimonialsGlobal': LogisticsTestimonialsGlobal,
+  'LogisticsInquiryGlobal': LogisticsInquiryGlobal,
+  'LogisticsFooterGlobal': LogisticsFooterGlobal,
+
+  // Custom Logistics — Tech
+  'LogisticsNavTech': LogisticsNavTech,
+  'LogisticsHeroTech': LogisticsHeroTech,
+  'LogisticsStatsTech': LogisticsStatsTech,
+  'LogisticsServicesTech': LogisticsServicesTech,
+  'LogisticsFleetTech': LogisticsFleetTech,
+  'LogisticsCoverageTech': LogisticsCoverageTech,
+  'LogisticsEngineTech': LogisticsEngineTech,
+  'LogisticsPricingTech': LogisticsPricingTech,
+  'LogisticsFaqTech': LogisticsFaqTech,
+  'LogisticsContactTech': LogisticsContactTech,
+  'LogisticsFooterTech': LogisticsFooterTech,
   // Hero layouts
   'Hero01': Hero01,
   'Hero02': Hero02,
