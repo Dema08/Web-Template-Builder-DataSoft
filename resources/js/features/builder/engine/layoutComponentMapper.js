@@ -500,6 +500,33 @@ import ServiceStatsTech from '@builder/sections/service-custom/tech/ServiceStats
 import ServiceCtaTech from '@builder/sections/service-custom/tech/ServiceCtaTech';
 import ServiceFooterTech from '@builder/sections/service-custom/tech/ServiceFooterTech';
 
+// Custom UMKM Layouts — Culinary (Coffee Roastery & Cafe)
+import UmkmNavCulinary from '@builder/sections/umkm-custom/culinary/UmkmNavCulinary';
+import UmkmHeroCulinary from '@builder/sections/umkm-custom/culinary/UmkmHeroCulinary';
+import UmkmMenuCulinary from '@builder/sections/umkm-custom/culinary/UmkmMenuCulinary';
+import UmkmStoryCulinary from '@builder/sections/umkm-custom/culinary/UmkmStoryCulinary';
+import UmkmTestimonialsCulinary from '@builder/sections/umkm-custom/culinary/UmkmTestimonialsCulinary';
+import UmkmLocationCulinary from '@builder/sections/umkm-custom/culinary/UmkmLocationCulinary';
+import UmkmFooterCulinary from '@builder/sections/umkm-custom/culinary/UmkmFooterCulinary';
+
+// Custom UMKM Layouts — Craft (Handcrafted Batik & Tenun Heritage)
+import UmkmNavCraft from '@builder/sections/umkm-custom/craft/UmkmNavCraft';
+import UmkmHeroCraft from '@builder/sections/umkm-custom/craft/UmkmHeroCraft';
+import UmkmProductsCraft from '@builder/sections/umkm-custom/craft/UmkmProductsCraft';
+import UmkmHeritageCraft from '@builder/sections/umkm-custom/craft/UmkmHeritageCraft';
+import UmkmArtisanCraft from '@builder/sections/umkm-custom/craft/UmkmArtisanCraft';
+import UmkmCtaCraft from '@builder/sections/umkm-custom/craft/UmkmCtaCraft';
+import UmkmFooterCraft from '@builder/sections/umkm-custom/craft/UmkmFooterCraft';
+
+// Custom UMKM Layouts — Wellness (Botanical & Organic Herbal Skincare)
+import UmkmNavWellness from '@builder/sections/umkm-custom/wellness/UmkmNavWellness';
+import UmkmHeroWellness from '@builder/sections/umkm-custom/wellness/UmkmHeroWellness';
+import UmkmProductsWellness from '@builder/sections/umkm-custom/wellness/UmkmProductsWellness';
+import UmkmBenefitsWellness from '@builder/sections/umkm-custom/wellness/UmkmBenefitsWellness';
+import UmkmReviewsWellness from '@builder/sections/umkm-custom/wellness/UmkmReviewsWellness';
+import UmkmCtaWellness from '@builder/sections/umkm-custom/wellness/UmkmCtaWellness';
+import UmkmFooterWellness from '@builder/sections/umkm-custom/wellness/UmkmFooterWellness';
+
 
 export const LAYOUT_COMPONENTS = {
   // Custom Logistics — Corporate
@@ -606,6 +633,33 @@ export const LAYOUT_COMPONENTS = {
   'ServiceStatsTech': ServiceStatsTech,
   'ServiceCtaTech': ServiceCtaTech,
   'ServiceFooterTech': ServiceFooterTech,
+
+  // Custom UMKM — Culinary
+  'UmkmNavCulinary': UmkmNavCulinary,
+  'UmkmHeroCulinary': UmkmHeroCulinary,
+  'UmkmMenuCulinary': UmkmMenuCulinary,
+  'UmkmStoryCulinary': UmkmStoryCulinary,
+  'UmkmTestimonialsCulinary': UmkmTestimonialsCulinary,
+  'UmkmLocationCulinary': UmkmLocationCulinary,
+  'UmkmFooterCulinary': UmkmFooterCulinary,
+
+  // Custom UMKM — Craft
+  'UmkmNavCraft': UmkmNavCraft,
+  'UmkmHeroCraft': UmkmHeroCraft,
+  'UmkmProductsCraft': UmkmProductsCraft,
+  'UmkmHeritageCraft': UmkmHeritageCraft,
+  'UmkmArtisanCraft': UmkmArtisanCraft,
+  'UmkmCtaCraft': UmkmCtaCraft,
+  'UmkmFooterCraft': UmkmFooterCraft,
+
+  // Custom UMKM — Wellness
+  'UmkmNavWellness': UmkmNavWellness,
+  'UmkmHeroWellness': UmkmHeroWellness,
+  'UmkmProductsWellness': UmkmProductsWellness,
+  'UmkmBenefitsWellness': UmkmBenefitsWellness,
+  'UmkmReviewsWellness': UmkmReviewsWellness,
+  'UmkmCtaWellness': UmkmCtaWellness,
+  'UmkmFooterWellness': UmkmFooterWellness,
   // Hero layouts
   'Hero01': Hero01,
   'Hero02': Hero02,

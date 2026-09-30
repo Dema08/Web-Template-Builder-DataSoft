@@ -1,22 +1,20 @@
 /**
  * UMKM Starter Templates — Category Index
  *
- * Aggregates all UMKM starter template definitions into a single
- * category object that conforms to the INDUSTRY_STARTER_TEMPLATES interface.
+ * Aggregates only the 3 exclusive premium UMKM starter template definitions:
+ * 1. Kopi Karsa Roastery & Cafe (Culinary / F&B)
+ * 2. Pusaka Heritage Studio (Craft & Wastra Nusantara)
+ * 3. Sekar Arum Botanicals (Organic Skincare & Herbal Wellness)
  */
-import umkmModern from './umkmModern.js';
-import umkmEcommerce from './umkmEcommerce.js';
-import umkmPremium from './umkmPremium.js';
-import umkmMinimalist from './umkmMinimalist.js';
-import umkmCreative from './umkmCreative.js';
+import umkmArtisanCulinary from './umkmArtisanCulinary.js';
+import umkmHeritageCraft from './umkmHeritageCraft.js';
+import umkmOrganicWellness from './umkmOrganicWellness.js';
 
 export const category = {
   categoryName: 'UMKM',
   templates: [
-    umkmModern,
-    umkmEcommerce,
-    umkmPremium,
-    umkmMinimalist,
-    umkmCreative,
+    umkmArtisanCulinary,
+    umkmHeritageCraft,
+    umkmOrganicWellness,
   ],
 };
