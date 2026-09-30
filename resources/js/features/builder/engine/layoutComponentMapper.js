@@ -471,6 +471,35 @@ import HoldingGovernanceIndustrial from '@builder/sections/holding-custom/indust
 import HoldingProcurementIndustrial from '@builder/sections/holding-custom/industrial/HoldingProcurementIndustrial';
 import HoldingFooterIndustrial from '@builder/sections/holding-custom/industrial/HoldingFooterIndustrial';
 
+// Custom Service Layouts — Consulting Variation
+import ServiceNavConsulting from '@builder/sections/service-custom/consulting/ServiceNavConsulting';
+import ServiceHeroConsulting from '@builder/sections/service-custom/consulting/ServiceHeroConsulting';
+import ServiceServicesConsulting from '@builder/sections/service-custom/consulting/ServiceServicesConsulting';
+import ServiceAboutConsulting from '@builder/sections/service-custom/consulting/ServiceAboutConsulting';
+import ServiceTeamConsulting from '@builder/sections/service-custom/consulting/ServiceTeamConsulting';
+import ServiceTestimonialsConsulting from '@builder/sections/service-custom/consulting/ServiceTestimonialsConsulting';
+import ServiceCtaConsulting from '@builder/sections/service-custom/consulting/ServiceCtaConsulting';
+import ServiceFooterConsulting from '@builder/sections/service-custom/consulting/ServiceFooterConsulting';
+
+// Custom Service Layouts — Agency Variation
+import ServiceNavAgency from '@builder/sections/service-custom/agency/ServiceNavAgency';
+import ServiceHeroAgency from '@builder/sections/service-custom/agency/ServiceHeroAgency';
+import ServiceServicesAgency from '@builder/sections/service-custom/agency/ServiceServicesAgency';
+import ServicePortfolioAgency from '@builder/sections/service-custom/agency/ServicePortfolioAgency';
+import ServiceProcessAgency from '@builder/sections/service-custom/agency/ServiceProcessAgency';
+import ServicePricingAgency from '@builder/sections/service-custom/agency/ServicePricingAgency';
+import ServiceCtaAgency from '@builder/sections/service-custom/agency/ServiceCtaAgency';
+import ServiceFooterAgency from '@builder/sections/service-custom/agency/ServiceFooterAgency';
+
+// Custom Service Layouts — Tech Solutions Variation
+import ServiceNavTech from '@builder/sections/service-custom/tech/ServiceNavTech';
+import ServiceHeroTech from '@builder/sections/service-custom/tech/ServiceHeroTech';
+import ServiceServicesTech from '@builder/sections/service-custom/tech/ServiceServicesTech';
+import ServiceSolutionsTech from '@builder/sections/service-custom/tech/ServiceSolutionsTech';
+import ServiceStatsTech from '@builder/sections/service-custom/tech/ServiceStatsTech';
+import ServiceCtaTech from '@builder/sections/service-custom/tech/ServiceCtaTech';
+import ServiceFooterTech from '@builder/sections/service-custom/tech/ServiceFooterTech';
+
 
 export const LAYOUT_COMPONENTS = {
   // Custom Logistics — Corporate
@@ -548,6 +577,35 @@ export const LAYOUT_COMPONENTS = {
   'HoldingGovernanceIndustrial': HoldingGovernanceIndustrial,
   'HoldingProcurementIndustrial': HoldingProcurementIndustrial,
   'HoldingFooterIndustrial': HoldingFooterIndustrial,
+
+  // Custom Service — Consulting
+  'ServiceNavConsulting': ServiceNavConsulting,
+  'ServiceHeroConsulting': ServiceHeroConsulting,
+  'ServiceServicesConsulting': ServiceServicesConsulting,
+  'ServiceAboutConsulting': ServiceAboutConsulting,
+  'ServiceTeamConsulting': ServiceTeamConsulting,
+  'ServiceTestimonialsConsulting': ServiceTestimonialsConsulting,
+  'ServiceCtaConsulting': ServiceCtaConsulting,
+  'ServiceFooterConsulting': ServiceFooterConsulting,
+
+  // Custom Service — Agency
+  'ServiceNavAgency': ServiceNavAgency,
+  'ServiceHeroAgency': ServiceHeroAgency,
+  'ServiceServicesAgency': ServiceServicesAgency,
+  'ServicePortfolioAgency': ServicePortfolioAgency,
+  'ServiceProcessAgency': ServiceProcessAgency,
+  'ServicePricingAgency': ServicePricingAgency,
+  'ServiceCtaAgency': ServiceCtaAgency,
+  'ServiceFooterAgency': ServiceFooterAgency,
+
+  // Custom Service — Tech Solutions
+  'ServiceNavTech': ServiceNavTech,
+  'ServiceHeroTech': ServiceHeroTech,
+  'ServiceServicesTech': ServiceServicesTech,
+  'ServiceSolutionsTech': ServiceSolutionsTech,
+  'ServiceStatsTech': ServiceStatsTech,
+  'ServiceCtaTech': ServiceCtaTech,
+  'ServiceFooterTech': ServiceFooterTech,
   // Hero layouts
   'Hero01': Hero01,
   'Hero02': Hero02,

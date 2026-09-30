@@ -1,18 +1,20 @@
 /**
  * Perusahaan Jasa Starter Templates — Category Index
  *
- * Aggregates all Perusahaan Jasa starter template definitions
- * into a single category object for the INDUSTRY_STARTER_TEMPLATES registry.
+ * Aggregates only the 3 exclusive premium Perusahaan Jasa starter template definitions:
+ * 1. Aurelius Strategic Advisory (Consulting)
+ * 2. Nexus Creative & Digital Studio (Creative Agency)
+ * 3. Synapse Enterprise Tech Solutions (Tech Solutions)
  */
-import serviceAgencyModern from './serviceAgencyModern.js';
-import serviceConsultingPremium from './serviceConsultingPremium.js';
-import serviceProfessional from './serviceProfessional.js';
+import serviceEliteConsulting from './serviceEliteConsulting.js';
+import serviceCreativeAgency from './serviceCreativeAgency.js';
+import serviceTechSolutions from './serviceTechSolutions.js';
 
 export const category = {
   categoryName: 'Perusahaan Jasa',
   templates: [
-    serviceAgencyModern,
-    serviceConsultingPremium,
-    serviceProfessional,
+    serviceEliteConsulting,
+    serviceCreativeAgency,
+    serviceTechSolutions,
   ],
 };
