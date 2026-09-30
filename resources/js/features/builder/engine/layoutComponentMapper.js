@@ -527,6 +527,33 @@ import UmkmReviewsWellness from '@builder/sections/umkm-custom/wellness/UmkmRevi
 import UmkmCtaWellness from '@builder/sections/umkm-custom/wellness/UmkmCtaWellness';
 import UmkmFooterWellness from '@builder/sections/umkm-custom/wellness/UmkmFooterWellness';
 
+// Custom Education Layouts — University & Higher Ed
+import EduNavUniversity from '@builder/sections/education-custom/university/EduNavUniversity';
+import EduHeroUniversity from '@builder/sections/education-custom/university/EduHeroUniversity';
+import EduProgramsUniversity from '@builder/sections/education-custom/university/EduProgramsUniversity';
+import EduResearchUniversity from '@builder/sections/education-custom/university/EduResearchUniversity';
+import EduCampusUniversity from '@builder/sections/education-custom/university/EduCampusUniversity';
+import EduAdmissionUniversity from '@builder/sections/education-custom/university/EduAdmissionUniversity';
+import EduFooterUniversity from '@builder/sections/education-custom/university/EduFooterUniversity';
+
+// Custom Education Layouts — Tech Bootcamp & Career Accelerator
+import EduNavBootcamp from '@builder/sections/education-custom/bootcamp/EduNavBootcamp';
+import EduHeroBootcamp from '@builder/sections/education-custom/bootcamp/EduHeroBootcamp';
+import EduTracksBootcamp from '@builder/sections/education-custom/bootcamp/EduTracksBootcamp';
+import EduCurriculumBootcamp from '@builder/sections/education-custom/bootcamp/EduCurriculumBootcamp';
+import EduHiringBootcamp from '@builder/sections/education-custom/bootcamp/EduHiringBootcamp';
+import EduPricingBootcamp from '@builder/sections/education-custom/bootcamp/EduPricingBootcamp';
+import EduFooterBootcamp from '@builder/sections/education-custom/bootcamp/EduFooterBootcamp';
+
+// Custom Education Layouts — Executive Corporate Training
+import EduNavExecutive from '@builder/sections/education-custom/executive/EduNavExecutive';
+import EduHeroExecutive from '@builder/sections/education-custom/executive/EduHeroExecutive';
+import EduProgramsExecutive from '@builder/sections/education-custom/executive/EduProgramsExecutive';
+import EduMethodologyExecutive from '@builder/sections/education-custom/executive/EduMethodologyExecutive';
+import EduTrainersExecutive from '@builder/sections/education-custom/executive/EduTrainersExecutive';
+import EduCtaExecutive from '@builder/sections/education-custom/executive/EduCtaExecutive';
+import EduFooterExecutive from '@builder/sections/education-custom/executive/EduFooterExecutive';
+
 
 export const LAYOUT_COMPONENTS = {
   // Custom Logistics — Corporate
@@ -660,6 +687,33 @@ export const LAYOUT_COMPONENTS = {
   'UmkmReviewsWellness': UmkmReviewsWellness,
   'UmkmCtaWellness': UmkmCtaWellness,
   'UmkmFooterWellness': UmkmFooterWellness,
+
+  // Custom Education — University
+  'EduNavUniversity': EduNavUniversity,
+  'EduHeroUniversity': EduHeroUniversity,
+  'EduProgramsUniversity': EduProgramsUniversity,
+  'EduResearchUniversity': EduResearchUniversity,
+  'EduCampusUniversity': EduCampusUniversity,
+  'EduAdmissionUniversity': EduAdmissionUniversity,
+  'EduFooterUniversity': EduFooterUniversity,
+
+  // Custom Education — Bootcamp
+  'EduNavBootcamp': EduNavBootcamp,
+  'EduHeroBootcamp': EduHeroBootcamp,
+  'EduTracksBootcamp': EduTracksBootcamp,
+  'EduCurriculumBootcamp': EduCurriculumBootcamp,
+  'EduHiringBootcamp': EduHiringBootcamp,
+  'EduPricingBootcamp': EduPricingBootcamp,
+  'EduFooterBootcamp': EduFooterBootcamp,
+
+  // Custom Education — Executive
+  'EduNavExecutive': EduNavExecutive,
+  'EduHeroExecutive': EduHeroExecutive,
+  'EduProgramsExecutive': EduProgramsExecutive,
+  'EduMethodologyExecutive': EduMethodologyExecutive,
+  'EduTrainersExecutive': EduTrainersExecutive,
+  'EduCtaExecutive': EduCtaExecutive,
+  'EduFooterExecutive': EduFooterExecutive,
   // Hero layouts
   'Hero01': Hero01,
   'Hero02': Hero02,
