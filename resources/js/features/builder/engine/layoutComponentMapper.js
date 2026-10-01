@@ -602,6 +602,30 @@ import IndEsgEco from '@builder/sections/industry-custom/eco/IndEsgEco';
 import IndCtaEco from '@builder/sections/industry-custom/eco/IndCtaEco';
 import IndFooterEco from '@builder/sections/industry-custom/eco/IndFooterEco';
 
+// Custom Koperasi Layouts — Simpan Pinjam Syariah & BMT
+import KopNavSyariah from '@builder/sections/koperasi-custom/syariah/KopNavSyariah';
+import KopHeroSyariah from '@builder/sections/koperasi-custom/syariah/KopHeroSyariah';
+import KopProductsSyariah from '@builder/sections/koperasi-custom/syariah/KopProductsSyariah';
+import KopShuSyariah from '@builder/sections/koperasi-custom/syariah/KopShuSyariah';
+import KopCtaSyariah from '@builder/sections/koperasi-custom/syariah/KopCtaSyariah';
+import KopFooterSyariah from '@builder/sections/koperasi-custom/syariah/KopFooterSyariah';
+
+// Custom Koperasi Layouts — Digital FinTech SuperApp
+import KopNavDigital from '@builder/sections/koperasi-custom/digital/KopNavDigital';
+import KopHeroDigital from '@builder/sections/koperasi-custom/digital/KopHeroDigital';
+import KopFeaturesDigital from '@builder/sections/koperasi-custom/digital/KopFeaturesDigital';
+import KopSecurityDigital from '@builder/sections/koperasi-custom/digital/KopSecurityDigital';
+import KopCtaDigital from '@builder/sections/koperasi-custom/digital/KopCtaDigital';
+import KopFooterDigital from '@builder/sections/koperasi-custom/digital/KopFooterDigital';
+
+// Custom Koperasi Layouts — Produsen Pertanian & Agribisnis Terpadu
+import KopNavAgri from '@builder/sections/koperasi-custom/agri/KopNavAgri';
+import KopHeroAgri from '@builder/sections/koperasi-custom/agri/KopHeroAgri';
+import KopProgramsAgri from '@builder/sections/koperasi-custom/agri/KopProgramsAgri';
+import KopImpactAgri from '@builder/sections/koperasi-custom/agri/KopImpactAgri';
+import KopCtaAgri from '@builder/sections/koperasi-custom/agri/KopCtaAgri';
+import KopFooterAgri from '@builder/sections/koperasi-custom/agri/KopFooterAgri';
+
 
 
 export const LAYOUT_COMPONENTS = {
@@ -811,6 +835,30 @@ export const LAYOUT_COMPONENTS = {
   'IndEsgEco': IndEsgEco,
   'IndCtaEco': IndCtaEco,
   'IndFooterEco': IndFooterEco,
+
+  // Custom Koperasi — Simpan Pinjam Syariah & BMT
+  'KopNavSyariah': KopNavSyariah,
+  'KopHeroSyariah': KopHeroSyariah,
+  'KopProductsSyariah': KopProductsSyariah,
+  'KopShuSyariah': KopShuSyariah,
+  'KopCtaSyariah': KopCtaSyariah,
+  'KopFooterSyariah': KopFooterSyariah,
+
+  // Custom Koperasi — Digital FinTech SuperApp
+  'KopNavDigital': KopNavDigital,
+  'KopHeroDigital': KopHeroDigital,
+  'KopFeaturesDigital': KopFeaturesDigital,
+  'KopSecurityDigital': KopSecurityDigital,
+  'KopCtaDigital': KopCtaDigital,
+  'KopFooterDigital': KopFooterDigital,
+
+  // Custom Koperasi — Produsen Pertanian & Agribisnis Terpadu
+  'KopNavAgri': KopNavAgri,
+  'KopHeroAgri': KopHeroAgri,
+  'KopProgramsAgri': KopProgramsAgri,
+  'KopImpactAgri': KopImpactAgri,
+  'KopCtaAgri': KopCtaAgri,
+  'KopFooterAgri': KopFooterAgri,
 
   // Hero layouts
   'Hero01': Hero01,
