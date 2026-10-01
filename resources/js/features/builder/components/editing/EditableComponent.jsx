@@ -210,6 +210,7 @@ export default function EditableComponent({
 
     dragRef.current = {
       isDragging: true,
+      hasMoved: false,
       startX: e.clientX,
       startY: e.clientY,
       startPosX,
@@ -221,10 +222,6 @@ export default function EditableComponent({
       rafId: null,
     };
 
-    setIsDraggingLocal(true);
-    setLockedSize({ width: elWidth, height: elHeight });
-    setDragPosition({ x: startPosX, y: startPosY });
-
     const storeState = useBuilderStore.getState();
     const section = storeState.sections.find(s => s.id === sectionId);
     const allComps = section ? section.components : [];
@@ -235,6 +232,18 @@ export default function EditableComponent({
 
       const dx = moveEvent.clientX - dragRef.current.startX;
       const dy = moveEvent.clientY - dragRef.current.startY;
+
+      // Distance threshold check: don't enter drag mode for minor jitters < 3px
+      if (!dragRef.current.hasMoved && Math.hypot(dx, dy) < 3) {
+        return;
+      }
+
+      if (!dragRef.current.hasMoved) {
+        dragRef.current.hasMoved = true;
+        setIsDraggingLocal(true);
+        setLockedSize({ width: elWidth, height: elHeight });
+        setDragPosition({ x: startPosX, y: startPosY });
+      }
 
       const rawX = Math.round(dragRef.current.startPosX + dx);
       const rawY = Math.round(dragRef.current.startPosY + dy);
@@ -279,21 +288,30 @@ export default function EditableComponent({
 
     // Pointer Up (Drop Commit)
     const onPointerUp = (upEvent) => {
+      const wasMoved = dragRef.current.hasMoved;
       dragRef.current.isDragging = false;
       if (dragRef.current.rafId) {
         cancelAnimationFrame(dragRef.current.rafId);
       }
 
-      const finalX = dragRef.current.currentX;
-      const finalY = dragRef.current.currentY;
+      if (wasMoved) {
+        const finalX = dragRef.current.currentX;
+        const finalY = dragRef.current.currentY;
 
-      // Apply snap to grid if not aligned to smart guides
-      const snapped = snapPosition(finalX, finalY);
-      const commitX = Math.abs(finalX - snapped.x) <= 4 ? snapped.x : finalX;
-      const commitY = Math.abs(finalY - snapped.y) <= 4 ? snapped.y : finalY;
+        // Apply snap to grid if not aligned to smart guides
+        const snapped = snapPosition(finalX, finalY);
+        const commitX = Math.abs(finalX - snapped.x) <= 4 ? snapped.x : finalX;
+        const commitY = Math.abs(finalY - snapped.y) <= 4 ? snapped.y : finalY;
 
-      // Commit once to store and record history
-      updateComponentPosition(sectionId, component.id, commitX, commitY, undefined, true);
+        const store = useBuilderStore.getState();
+        // Preserve exact measured width & height so transitioning to absolute position doesn't collapse layout
+        if (dragRef.current.width > 0 && !component.position?.width) {
+          store.updateComponentSize(sectionId, component.id, `${dragRef.current.width}px`, `${dragRef.current.height}px`);
+        }
+
+        // Commit position to store and record history
+        updateComponentPosition(sectionId, component.id, commitX, commitY, undefined, true);
+      }
 
       clearGuides();
       setIsDraggingLocal(false);
