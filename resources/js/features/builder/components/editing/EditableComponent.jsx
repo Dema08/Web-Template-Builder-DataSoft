@@ -94,15 +94,24 @@ export default function EditableComponent({
   if (isHidden && isPreviewMode) return null;
   if (isPreviewMode) {
     const isInline = ['text', 'heading', 'button', 'icon', 'badge'].includes(component.type);
-    const hasPosition = component.position?.isAbsolute || (component.position?.x !== undefined && component.position?.x !== 0) || (component.position?.y !== undefined && component.position?.y !== 0);
+    const isAbsolute = !!(component.props?.isStandalone || component.position?.isAbsolute);
+    const posX = component.position?.x || 0;
+    const posY = component.position?.y || 0;
+    const rotation = component.position?.rotation || 0;
+    const scale = component.position?.scale ?? 1;
+    const hasTransform = !isAbsolute && (posX !== 0 || posY !== 0 || rotation !== 0 || scale !== 1);
+
     const wrapperStyle = {
       display: isInline ? 'inline-block' : 'block',
       maxWidth: '100%',
       width: component.position?.width || component.props?.width || (isInline ? 'fit-content' : undefined),
       height: component.position?.height || component.props?.height || undefined,
-      position: hasPosition ? 'absolute' : 'relative',
-      left: hasPosition ? `${component.position?.x || 0}px` : undefined,
-      top: hasPosition ? `${component.position?.y || 0}px` : undefined,
+      position: isAbsolute ? 'absolute' : 'relative',
+      left: isAbsolute ? `${posX}px` : undefined,
+      top: isAbsolute ? `${posY}px` : undefined,
+      transform: isAbsolute
+        ? (rotation !== 0 || scale !== 1 ? `rotate(${rotation}deg) scale(${scale})` : undefined)
+        : (hasTransform ? `translate3d(${posX}px, ${posY}px, 0px) rotate(${rotation}deg) scale(${scale})` : undefined),
       zIndex: component.position?.zIndex || 1,
       pointerEvents: 'auto',
     };
@@ -115,6 +124,7 @@ export default function EditableComponent({
 
   // Hidden in Editor
   if (isHidden) {
+    const isAbsolute = !!(component.props?.isStandalone || component.position?.isAbsolute);
     return (
       <div
         ref={(node) => {
@@ -127,9 +137,10 @@ export default function EditableComponent({
         data-section-id={sectionId}
         className="relative opacity-30 border border-dashed border-slate-400 p-2 my-1 rounded text-xs text-slate-500 flex items-center justify-between"
         style={{
-          position: (component.position?.x !== 0 || component.position?.y !== 0) ? 'absolute' : 'relative',
-          left: component.position?.x ? `${component.position.x}px` : undefined,
-          top: component.position?.y ? `${component.position.y}px` : undefined,
+          position: isAbsolute ? 'absolute' : 'relative',
+          left: isAbsolute && component.position?.x ? `${component.position.x}px` : undefined,
+          top: isAbsolute && component.position?.y ? `${component.position.y}px` : undefined,
+          transform: !isAbsolute && (component.position?.x || component.position?.y) ? `translate3d(${component.position?.x || 0}px, ${component.position?.y || 0}px, 0px)` : undefined,
           zIndex: component.position?.zIndex || 1,
         }}
         onClick={(e) => {
@@ -157,7 +168,7 @@ export default function EditableComponent({
     e.stopPropagation();
   };
 
-  // --- CANVA-STYLE BUTTERY SMOOTH DRAG HANDLER (PRESERVES 100% SIZE) ---
+  // --- CANVA-STYLE BUTTERY SMOOTH DRAG HANDLER (PRESERVES FLOW & 100% SIBLING STABILITY) ---
   const handleDragStart = (e) => {
     // 1. Prevent drag when clicking inside inputs, textareas, selects, or contenteditable
     if (e.target && (
@@ -192,21 +203,20 @@ export default function EditableComponent({
       el.setPointerCapture(e.pointerId);
     } catch (_err) {}
 
-    // Measure exact bounding rect and parent offsets
+    // Measure exact bounding rect and offsets
     const rect = el.getBoundingClientRect();
     const elWidth = Math.round(rect.width);
     const elHeight = Math.round(rect.height);
 
     const sectionEl = document.getElementById(sectionId) || el.closest('[data-section-id]') || el.offsetParent || document.body;
-    const offsetParent = el.offsetParent || sectionEl;
-    const parentRect = offsetParent.getBoundingClientRect();
     const sectionRect = sectionEl.getBoundingClientRect();
 
+    const isStandalone = !!(component.props?.isStandalone || component.position?.isAbsolute);
     const currentPos = component.position || {};
-    const hasExplicitPos = currentPos.isAbsolute || (currentPos.x !== undefined && currentPos.x !== 0) || (currentPos.y !== undefined && currentPos.y !== 0);
 
-    const startPosX = hasExplicitPos ? (currentPos.x || 0) : Math.round(rect.left - parentRect.left);
-    const startPosY = hasExplicitPos ? (currentPos.y || 0) : Math.round(rect.top - parentRect.top);
+    // For flow components, startPosX/startPosY is the translate offset (relative to natural position in flow)
+    const startPosX = currentPos.x || 0;
+    const startPosY = currentPos.y || 0;
 
     dragRef.current = {
       isDragging: true,
@@ -226,7 +236,7 @@ export default function EditableComponent({
     const section = storeState.sections.find(s => s.id === sectionId);
     const allComps = section ? section.components : [];
 
-    // Pointer Move handler running at 60-120fps with direct transform/positioning
+    // Pointer Move handler running at 60-120fps with direct transform
     const onPointerMove = (moveEvent) => {
       if (!dragRef.current.isDragging) return;
 
@@ -276,11 +286,14 @@ export default function EditableComponent({
 
       dragRef.current.rafId = requestAnimationFrame(() => {
         if (el) {
-          el.style.left = `${targetX}px`;
-          el.style.top = `${targetY}px`;
-          el.style.position = 'absolute';
-          el.style.width = `${elWidth}px`;
-          el.style.height = `${elHeight}px`;
+          if (isStandalone) {
+            el.style.left = `${targetX}px`;
+            el.style.top = `${targetY}px`;
+            el.style.position = 'absolute';
+          } else {
+            el.style.transform = `translate3d(${targetX}px, ${targetY}px, 0px)`;
+            el.style.position = 'relative';
+          }
         }
         setDragPosition({ x: targetX, y: targetY });
       });
@@ -302,12 +315,6 @@ export default function EditableComponent({
         const snapped = snapPosition(finalX, finalY);
         const commitX = Math.abs(finalX - snapped.x) <= 4 ? snapped.x : finalX;
         const commitY = Math.abs(finalY - snapped.y) <= 4 ? snapped.y : finalY;
-
-        const store = useBuilderStore.getState();
-        // Preserve exact measured width & height so transitioning to absolute position doesn't collapse layout
-        if (dragRef.current.width > 0 && !component.position?.width) {
-          store.updateComponentSize(sectionId, component.id, `${dragRef.current.width}px`, `${dragRef.current.height}px`);
-        }
 
         // Commit position to store and record history
         updateComponentPosition(sectionId, component.id, commitX, commitY, undefined, true);
@@ -368,7 +375,7 @@ export default function EditableComponent({
   const isComponentDragging = activeDragType === 'sidebar-component' || activeDragType === 'canvas-component' || dnd?.activeDragItem?.rawType === 'component';
 
   const isInline = ['text', 'heading', 'button', 'icon', 'badge'].includes(component.type);
-  const hasPosition = component.position?.isAbsolute || isDraggingLocal || (component.position?.x !== undefined && component.position?.x !== 0) || (component.position?.y !== undefined && component.position?.y !== 0);
+  const isStandalone = !!(component.props?.isStandalone || component.position?.isAbsolute);
 
   // Exact width and height preserved at 100% scale without shrinking
   const activeWidth = lockedSize 
@@ -380,6 +387,14 @@ export default function EditableComponent({
 
   const activePosX = isDraggingLocal && dragPosition ? dragPosition.x : (component.position?.x || 0);
   const activePosY = isDraggingLocal && dragPosition ? dragPosition.y : (component.position?.y || 0);
+  const rotation = component.position?.rotation || 0;
+  const scale = component.position?.scale ?? 1;
+
+  const transformStyle = isStandalone
+    ? (rotation !== 0 || scale !== 1 ? `rotate(${rotation}deg) scale(${scale})` : 'none')
+    : (activePosX !== 0 || activePosY !== 0 || rotation !== 0 || scale !== 1
+        ? `translate3d(${activePosX}px, ${activePosY}px, 0px) rotate(${rotation}deg) scale(${scale})`
+        : 'none');
 
   const wrapperClass = [
     'relative',
@@ -391,7 +406,7 @@ export default function EditableComponent({
         : isHovered && builderMode !== 'select'
           ? 'ring-1 ring-indigo-300 ring-offset-1'
           : '',
-    isOver && isContainer && isComponentDragging ? 'ring-2 ring-dashed ring-indigo-500 bg-indigo-500/10' : '',
+    isOver && isContainer && isComponentDragging ? 'ring-2 ring-dashed ring-indigo-500 bg-indigo-50/10' : '',
     isOver && isImageComponent && isMediaDragging ? 'ring-2 ring-emerald-500 ring-offset-2' : '',
     isOver && isIconDragging ? 'ring-2 ring-indigo-500 ring-offset-2' : '',
   ].filter(Boolean).join(' ');
@@ -402,12 +417,12 @@ export default function EditableComponent({
     maxWidth: '100%',
     width: activeWidth,
     height: activeHeight,
-    position: hasPosition ? 'absolute' : 'relative',
-    left: hasPosition ? `${activePosX}px` : undefined,
-    top: hasPosition ? `${activePosY}px` : undefined,
+    position: isStandalone ? 'absolute' : 'relative',
+    left: isStandalone ? `${activePosX}px` : undefined,
+    top: isStandalone ? `${activePosY}px` : undefined,
+    transform: transformStyle,
     zIndex: isDraggingLocal ? 999 : (component.position?.zIndex || (isSelected ? 20 : 1)),
     pointerEvents: 'auto',
-    transform: 'none', // Ensure 100% scale at all times
   };
 
   return (
