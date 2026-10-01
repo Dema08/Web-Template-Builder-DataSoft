@@ -656,11 +656,12 @@ export const useBuilderStore = create((set, get) => ({
 
     const updateInTree = (comps) => comps.map(c => {
       if (c.id === componentId) {
+        const isStandalone = !!(c.props?.isStandalone || c.position?.isAbsolute);
         return {
           ...c,
           position: {
             ...c.position,
-            isAbsolute: true,
+            isAbsolute: isStandalone,
             ...(x !== undefined ? { x } : {}),
             ...(y !== undefined ? { y } : {}),
             ...(zIndex !== undefined ? { zIndex } : {}),

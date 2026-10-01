@@ -32,9 +32,9 @@ export function useResize(sectionId, componentId, initialPosition = {}) {
     const offsetParent = el?.offsetParent || sectionEl;
     const parentRect = offsetParent ? offsetParent.getBoundingClientRect() : { left: 0, top: 0 };
 
-    const hasExplicitPos = initialPosition?.isAbsolute || (initialPosition?.x !== undefined && initialPosition?.x !== 0) || (initialPosition?.y !== undefined && initialPosition?.y !== 0);
-    const startPosX = hasExplicitPos ? (initialPosition?.x || 0) : (rect ? Math.round(rect.left - parentRect.left) : 0);
-    const startPosY = hasExplicitPos ? (initialPosition?.y || 0) : (rect ? Math.round(rect.top - parentRect.top) : 0);
+    const isStandalone = !!(initialPosition?.isAbsolute);
+    const startPosX = initialPosition?.x || 0;
+    const startPosY = initialPosition?.y || 0;
 
     const targetEl = e.currentTarget || e.target;
     try {
@@ -119,11 +119,17 @@ export function useResize(sectionId, componentId, initialPosition = {}) {
         if (el) {
           el.style.width = `${newWidth}px`;
           el.style.height = `${newHeight}px`;
-          if (newX !== startPosX || hasExplicitPos) {
-            el.style.left = `${newX}px`;
-          }
-          if (newY !== startPosY || hasExplicitPos) {
-            el.style.top = `${newY}px`;
+          if (isStandalone) {
+            if (newX !== startPosX) {
+              el.style.left = `${newX}px`;
+            }
+            if (newY !== startPosY) {
+              el.style.top = `${newY}px`;
+            }
+          } else {
+            if (newX !== startPosX || newY !== startPosY) {
+              el.style.transform = `translate3d(${newX}px, ${newY}px, 0px)`;
+            }
           }
         }
       });
