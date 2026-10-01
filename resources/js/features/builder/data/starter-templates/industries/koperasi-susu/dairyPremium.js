@@ -1,157 +1,291 @@
 /**
- * Dairy Premium Brand — Elegant emerald & gold, luxury organic dairy
- * Starter template for ultra-premium organic dairy brands with certifications.
- * Distinct design system: deep teal + amber accents, refined typography, and premium storytelling flow.
+ * Dairy Premium Brand — Single-Estate Grass-Fed Organic Farmstead
+ * Starter template for luxury organic dairy brands, A2 milk, and artisan farmsteads.
+ * Full Right-Inspector support for all cards, images, badges, headings, and buttons.
  */
 export default {
   id: 'dairy-premium',
   name: 'Dairy Premium Brand',
-  description: 'Template premium untuk brand susu organik mewah — split hero dengan trust indicator, profil peternakan eksklusif, lini produk premium, statistik kapasitas, sertifikasi resmi, dan FAQ langganan.',
-  thumbnail: 'https://images.unsplash.com/photo-1559598467-f8b76c8155d0?w=800&auto=format&fit=crop&q=80',
-  tags: ['Premium', 'Organic', 'Luxury', 'Halal', 'BPOM'],
+  description: 'Template brand susu organik mewah & artisan farmstead dengan status sertifikasi grass-fed, 4 metrik kemurnian A2, koleksi keju & ghee emas artisan, standar pertanian regeneratif, dan reservasi farm tour private.',
+  thumbnail: 'https://images.unsplash.com/photo-1500595046743-cd271d694d30?w=800&auto=format&fit=crop&q=80',
+  tags: ['Premium', 'Organic', 'Grass-Fed', 'A2 Milk', 'Artisan Cheese', 'Ghee', 'Boutique'],
   theme: {
-    primaryColor: '#0f766e',
-    secondaryColor: '#f0fdfa',
-    accentColor: '#d97706',
-    dark: false,
-    surface: '#ffffff',
-    text: '#1e293b',
-    muted: '#64748b',
-    border: '#ccfbf1',
-    radius: 'md',
+    primaryColor: '#d97706',
+    secondaryColor: '#fef3c7',
+    accentColor: '#f59e0b',
+    dark: true,
+    surface: '#04140e',
+    text: '#fefce8',
+    muted: '#cbd5e1',
+    border: 'rgba(245,158,11,0.4)',
+    radius: 'lg',
     font: 'system-ui, -apple-system, sans-serif',
   },
   animations: ['fade-up', 'scale-in', 'hover-lift', 'counter-up'],
   sections: [
-    { id: 'nav', type: 'navbar', layout: 'navbar-05', components: [
-      { id: 'logo', type: 'heading', props: { content: 'SUSU PREMIUM ALAMI', level: 'h2', fontSize: '20px', fontWeight: '900', color: '#0f766e', letterSpacing: '0.08em', margin: '0' } },
-      { id: 'cta', type: 'button', props: { label: 'Order Langganan', href: '#contact', variant: 'premium', size: 'medium', radius: 'full', background: '#0f766e', color: '#ffffff', shadow: 'md', fontSize: '14px', fontWeight: '700' } },
-    ]},
-    { id: 'hero', type: 'hero', layout: 'hero-05', components: [
-      { id: 'badge', type: 'badge', props: { content: '🥛 Organik • Halal MUI • BPOM Certified', variant: 'success', size: 'medium' } },
-      { id: 'title', type: 'heading', props: { content: 'Susu Organik Premium Tanpa Bahan Pengawet', level: 'h1', fontSize: '52px', fontWeight: '900', color: '#0f172a', align: 'left', lineHeight: '1.1', letterSpacing: '-0.02em', margin: '8px 0 20px 0' } },
-      { id: 'desc', type: 'text', props: { content: 'Dari 120 hektar padang rumput organik di kaki Gunung Kawi, langsung ke pintu rumah Anda dalam 24 jam. Fresh, bergizi, dan bebas hormon sintetis.', fontSize: '18px', color: '#64748b', align: 'left', lineHeight: '1.8', margin: '0 0 28px 0' } },
-      { id: 'btn', type: 'button', props: { label: 'Mulai Berlangganan', href: '#contact', variant: 'premium', size: 'large', radius: 'full', background: '#0f766e', color: '#ffffff', shadow: 'lg', fontSize: '16px', fontWeight: '700' } },
-      { id: 'btn2', type: 'button', props: { label: 'Lihat Produk', href: '#services', variant: 'outline', size: 'large', radius: 'full', background: '#0f766e', color: '#0f766e', shadow: 'md', fontSize: '16px', fontWeight: '700' } },
-      { id: 'trust', type: 'text', props: { content: '⭐ 4.9/5 — Dipercaya 12.000+ keluarga Indonesia', fontSize: '15px', fontWeight: '600', color: '#0f766e', align: 'left', letterSpacing: '0.02em', margin: '12px 0 0 0' } },
-      { id: 'img', type: 'image', props: { src: 'https://images.unsplash.com/photo-1559598467-f8b76c8155d0?w=800&auto=format&fit=crop', alt: 'Premium Organic Dairy Products', width: '100%', height: '460px', objectFit: 'cover', borderRadius: '24px', shadow: 'xl' } },
-    ]},
-    { id: 'about', type: 'about', layout: 'about-02', components: [
-      { id: 'badge', type: 'badge', props: { content: '🌿 Peternakan Kami', variant: 'success', size: 'medium' } },
-      { id: 'title', type: 'heading', props: { content: 'Dari Padang Rumput Organik, Untuk Kesehatan Keluarga Anda', level: 'h2', fontSize: '40px', fontWeight: '900', color: '#0f172a', align: 'left', lineHeight: '1.2', letterSpacing: '-0.02em', margin: '0 0 20px 0' } },
-      { id: 'desc', type: 'text', props: { content: 'Berawal dari 120 hektar padang rumput organik yang dirawat dengan cinta, kami memelihara 2.500+ sapi Frisian Holstein dan Jersey berstandar kesejahteraan hewan tertinggi. Setiap botol susu adalah hasil proses teliti — dari pakan organik, pemerahan higienis, hingga rantai dingin modern.', fontSize: '16px', color: '#64748b', align: 'left', lineHeight: '1.8', margin: '0 0 24px 0' } },
-      { id: 'f1', type: 'text', props: { content: '✓ Pakan organik 100% tanpa GMO dan bebas hormon', fontSize: '15px', fontWeight: '600', color: '#0f766e', align: 'left', margin: '0 0 12px 0' } },
-      { id: 'f2', type: 'text', props: { content: '✓ Sapi Frisian Holstein & Jersey pilihan terbaik', fontSize: '15px', fontWeight: '600', color: '#0f766e', align: 'left', margin: '0 0 12px 0' } },
-      { id: 'f3', type: 'text', props: { content: '✓ Diperah pagi hari, dikirim segar dalam 24 jam', fontSize: '15px', fontWeight: '600', color: '#0f766e', align: 'left', margin: '0 0 28px 0' } },
-      { id: 'btn', type: 'button', props: { label: 'Lihat Sertifikasi Resmi', href: '#certifications', variant: 'premium', size: 'medium', radius: 'full', background: '#0f766e', color: '#ffffff', shadow: 'md', fontSize: '14px', fontWeight: '700' } },
-      { id: 'img', type: 'image', props: { src: 'https://images.unsplash.com/photo-1527153857715-33282435658a?w=800&auto=format&fit=crop', alt: 'Organic Premium Dairy Farm', width: '100%', height: '460px', objectFit: 'cover', borderRadius: '24px', shadow: 'xl' } },
-    ]},
-    { id: 'services', type: 'services', layout: 'services-02', components: [
-      { id: 'badge', type: 'badge', props: { content: '🥛 Lini Produk Premium', variant: 'success', size: 'medium' } },
-      { id: 't', type: 'heading', props: { content: 'Koleksi Susu Premium Pilihan', level: 'h2', fontSize: '40px', fontWeight: '900', color: '#0f172a', align: 'center', lineHeight: '1.2', letterSpacing: '-0.02em', margin: '0 0 12px 0' } },
-      { id: 'sub', type: 'text', props: { content: 'Setiap produk dibuat dari susu organik murni dengan proses yang menjaga keaslian nutrisi', fontSize: '16px', color: '#64748b', align: 'center', lineHeight: '1.7', margin: '0 0 48px 0' } },
-      { id: 'card-1', type: 'card', props: { variant: 'service', background: '#ffffff', borderRadius: '20px', shadow: 'md', borderWidth: '1px', borderColor: '#ccfbf1', hoverEffect: 'lift', padding: '32px' },
-        childrenComponents: [
-          { id: 'c1-icon', type: 'icon', props: { icon: 'FaTint', size: '40px', color: '#0f766e', align: 'left', margin: '0 0 16px 0' } },
-          { id: 'c1-title', type: 'heading', props: { content: 'Susu Fresh Harian', level: 'h3', fontSize: '20px', fontWeight: '800', color: '#0f172a', margin: '0 0 10px 0' } },
-          { id: 'c1-desc', type: 'text', props: { content: 'Susu murni 100% dari perahan pagi. Pasteurisasi lembut menjaga nutrisi alami — tanpa pengawet, tanpa gula tambahan.', fontSize: '14px', color: '#64748b', lineHeight: '1.7', margin: '0' } },
-        ]},
-      { id: 'card-2', type: 'card', props: { variant: 'service', background: '#ffffff', borderRadius: '20px', shadow: 'md', borderWidth: '1px', borderColor: '#ccfbf1', hoverEffect: 'lift', padding: '32px' },
-        childrenComponents: [
-          { id: 'c2-icon', type: 'icon', props: { icon: 'FaGlassWhiskey', size: '40px', color: '#d97706', align: 'left', margin: '0 0 16px 0' } },
-          { id: 'c2-title', type: 'heading', props: { content: 'Yogurt Greek Premium', level: 'h3', fontSize: '20px', fontWeight: '800', color: '#0f172a', margin: '0 0 10px 0' } },
-          { id: 'c2-desc', type: 'text', props: { content: 'Fermentasi 8 jam dengan kultur probiotik premium. Tekstur kental, creamy alami, kaya protein dan bakteri baik.', fontSize: '14px', color: '#64748b', lineHeight: '1.7', margin: '0' } },
-        ]},
-      { id: 'card-3', type: 'card', props: { variant: 'service', background: '#ffffff', borderRadius: '20px', shadow: 'md', borderWidth: '1px', borderColor: '#ccfbf1', hoverEffect: 'lift', padding: '32px' },
-        childrenComponents: [
-          { id: 'c3-icon', type: 'icon', props: { icon: 'FaLeaf', size: '40px', color: '#10b981', align: 'left', margin: '0 0 16px 0' } },
-          { id: 'c3-title', type: 'heading', props: { content: 'Keju Artisan Organik', level: 'h3', fontSize: '20px', fontWeight: '800', color: '#0f172a', margin: '0 0 10px 0' } },
-          { id: 'c3-desc', type: 'text', props: { content: 'Dibuat dengan metode tradisional dan dimatangkan 6 bulan. Cita rasa kompleks dari susu organik murni pilihan.', fontSize: '14px', color: '#64748b', lineHeight: '1.7', margin: '0' } },
-        ]},
-    ]},
-    { id: 'stats', type: 'statistics', layout: 'statistics-01', components: [
-      { id: 'badge', type: 'badge', props: { content: '📊 Kapasitas & Jangkauan', variant: 'success', size: 'medium' } },
-      { id: 't', type: 'heading', props: { content: 'Kualitas Terukur, Dipercaya Ribuan Keluarga', level: 'h2', fontSize: '40px', fontWeight: '900', color: '#0f172a', align: 'center', lineHeight: '1.2', letterSpacing: '-0.02em', margin: '0 0 12px 0' } },
-      { id: 'sub', type: 'text', props: { content: 'Angka yang mencerminkan komitmen kami terhadap mutu dan keterjangkauan', fontSize: '16px', color: '#64748b', align: 'center', lineHeight: '1.7', margin: '0 0 48px 0' } },
-      { id: 'card-1', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '20px', shadow: 'md', borderWidth: '1px', borderColor: '#ccfbf1', hoverEffect: 'lift', padding: '32px 24px' },
-        childrenComponents: [
-          { id: 's1-value', type: 'heading', props: { content: '2.500+', level: 'h3', fontSize: '48px', fontWeight: '900', color: '#0f766e', align: 'center', margin: '0 0 8px 0' } },
-          { id: 's1-label', type: 'text', props: { content: 'Sapi Perah Organik', fontSize: '15px', fontWeight: '600', color: '#475569', align: 'center', margin: '0' } },
-        ]},
-      { id: 'card-2', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '20px', shadow: 'md', borderWidth: '1px', borderColor: '#ccfbf1', hoverEffect: 'lift', padding: '32px 24px' },
-        childrenComponents: [
-          { id: 's2-value', type: 'heading', props: { content: '12.000+', level: 'h3', fontSize: '48px', fontWeight: '900', color: '#d97706', align: 'center', margin: '0 0 8px 0' } },
-          { id: 's2-label', type: 'text', props: { content: 'Keluarga Pelanggan', fontSize: '15px', fontWeight: '600', color: '#475569', align: 'center', margin: '0' } },
-        ]},
-      { id: 'card-3', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '20px', shadow: 'md', borderWidth: '1px', borderColor: '#ccfbf1', hoverEffect: 'lift', padding: '32px 24px' },
-        childrenComponents: [
-          { id: 's3-value', type: 'heading', props: { content: '34', level: 'h3', fontSize: '48px', fontWeight: '900', color: '#10b981', align: 'center', margin: '0 0 8px 0' } },
-          { id: 's3-label', type: 'text', props: { content: 'Kota Terjangkau', fontSize: '15px', fontWeight: '600', color: '#475569', align: 'center', margin: '0' } },
-        ]},
-      { id: 'card-4', type: 'card', props: { variant: 'stat', background: '#ffffff', borderRadius: '20px', shadow: 'md', borderWidth: '1px', borderColor: '#ccfbf1', hoverEffect: 'lift', padding: '32px 24px' },
-        childrenComponents: [
-          { id: 's4-value', type: 'heading', props: { content: '100%', level: 'h3', fontSize: '48px', fontWeight: '900', color: '#0f766e', align: 'center', margin: '0 0 8px 0' } },
-          { id: 's4-label', type: 'text', props: { content: 'Bebas Bahan Pengawet', fontSize: '15px', fontWeight: '600', color: '#475569', align: 'center', margin: '0' } },
-        ]},
-    ]},
-    { id: 'certifications', type: 'certifications', layout: 'certifications-01', components: [
-      { id: 'badge', type: 'badge', props: { content: '🏅 Sertifikasi Resmi', variant: 'success', size: 'medium' } },
-      { id: 't', type: 'heading', props: { content: 'Mutu Terjamin, Diakui Secara Resmi', level: 'h2', fontSize: '40px', fontWeight: '900', color: '#0f172a', align: 'center', lineHeight: '1.2', letterSpacing: '-0.02em', margin: '0 0 12px 0' } },
-      { id: 'sub', type: 'text', props: { content: 'Seluruh rangkaian produksi kami diawasi dan disertifikasi oleh lembaga berwenang', fontSize: '16px', color: '#64748b', align: 'center', lineHeight: '1.7', margin: '0 0 48px 0' } },
-      { id: 'card-1', type: 'card', props: { variant: 'feature', background: '#ffffff', borderRadius: '20px', shadow: 'md', borderWidth: '1px', borderColor: '#ccfbf1', hoverEffect: 'lift', padding: '32px 24px' },
-        childrenComponents: [
-          { id: 'cert1-icon', type: 'icon', props: { icon: 'FaShieldAlt', size: '44px', color: '#0f766e', align: 'center', margin: '0 0 16px 0' } },
-          { id: 'cert1-title', type: 'heading', props: { content: 'Halal MUI', level: 'h3', fontSize: '20px', fontWeight: '800', color: '#0f172a', align: 'center', margin: '0 0 8px 0' } },
-          { id: 'cert1-desc', type: 'text', props: { content: 'Sertifikasi halal resmi dari Majelis Ulama Indonesia untuk seluruh lini produk dan rantai produksi.', fontSize: '14px', color: '#64748b', align: 'center', lineHeight: '1.7', margin: '0' } },
-        ]},
-      { id: 'card-2', type: 'card', props: { variant: 'feature', background: '#ffffff', borderRadius: '20px', shadow: 'md', borderWidth: '1px', borderColor: '#ccfbf1', hoverEffect: 'lift', padding: '32px 24px' },
-        childrenComponents: [
-          { id: 'cert2-icon', type: 'icon', props: { icon: 'FaMedal', size: '44px', color: '#d97706', align: 'center', margin: '0 0 16px 0' } },
-          { id: 'cert2-title', type: 'heading', props: { content: 'BPOM RI', level: 'h3', fontSize: '20px', fontWeight: '800', color: '#0f172a', align: 'center', margin: '0 0 8px 0' } },
-          { id: 'cert2-desc', type: 'text', props: { content: 'Terdaftar dan diawasi Badan Pengawas Obat dan Makanan RI — menjamin keamanan dan mutu produk.', fontSize: '14px', color: '#64748b', align: 'center', lineHeight: '1.7', margin: '0' } },
-        ]},
-      { id: 'card-3', type: 'card', props: { variant: 'feature', background: '#ffffff', borderRadius: '20px', shadow: 'md', borderWidth: '1px', borderColor: '#ccfbf1', hoverEffect: 'lift', padding: '32px 24px' },
-        childrenComponents: [
-          { id: 'cert3-icon', type: 'icon', props: { icon: 'FaAward', size: '44px', color: '#10b981', align: 'center', margin: '0 0 16px 0' } },
-          { id: 'cert3-title', type: 'heading', props: { content: 'ISO 22000', level: 'h3', fontSize: '20px', fontWeight: '800', color: '#0f172a', align: 'center', margin: '0 0 8px 0' } },
-          { id: 'cert3-desc', type: 'text', props: { content: 'Sistem Manajemen Keamanan Pangan berstandar internasional — dari peternakan hingga ke meja Anda.', fontSize: '14px', color: '#64748b', align: 'center', lineHeight: '1.7', margin: '0' } },
-        ]},
-    ]},
-    { id: 'faq', type: 'faq', layout: 'faq-01', components: [
-      { id: 'badge', type: 'badge', props: { content: '💬 Pertanyaan Umum', variant: 'success', size: 'medium' } },
-      { id: 't', type: 'heading', props: { content: 'Seputar Langganan Susu Premium', level: 'h2', fontSize: '40px', fontWeight: '900', color: '#0f172a', align: 'center', lineHeight: '1.2', letterSpacing: '-0.02em', margin: '0 0 12px 0' } },
-      { id: 'sub', type: 'text', props: { content: 'Jawaban atas pertanyaan paling sering ditanyakan pelanggan kami', fontSize: '16px', color: '#64748b', align: 'center', lineHeight: '1.7', margin: '0 0 48px 0' } },
-      { id: 'item-1', type: 'card', props: { variant: 'faq', background: '#f0fdfa', borderRadius: '16px', shadow: 'none', borderWidth: '1px', borderColor: '#ccfbf1', hoverEffect: 'none', padding: '24px' },
-        childrenComponents: [
-          { id: 'f1-q', type: 'heading', props: { content: 'Bagaimana cara berlangganan susu premium?', level: 'h4', fontSize: '16px', fontWeight: '700', color: '#0f172a', margin: '0 0 10px 0' } },
-          { id: 'f1-a', type: 'text', props: { content: 'Cukup pilih paket langganan, tentukan jadwal pengiriman, dan susu segar akan tiba di pintu rumah Anda setiap pagi sebelum jam 06.00.', fontSize: '14px', color: '#64748b', lineHeight: '1.7', margin: '0' } },
-        ]},
-      { id: 'item-2', type: 'card', props: { variant: 'faq', background: '#f0fdfa', borderRadius: '16px', shadow: 'none', borderWidth: '1px', borderColor: '#ccfbf1', hoverEffect: 'none', padding: '24px' },
-        childrenComponents: [
-          { id: 'f2-q', type: 'heading', props: { content: 'Bagaimana susu dikirim agar tetap segar?', level: 'h4', fontSize: '16px', fontWeight: '700', color: '#0f172a', margin: '0 0 10px 0' } },
-          { id: 'f2-a', type: 'text', props: { content: 'Semua pengiriman menggunakan kendaraan berpendingin (cold chain) dengan suhu 4°C. Botol susu dikemas kedap udara untuk menjaga kesegaran optimal.', fontSize: '14px', color: '#64748b', lineHeight: '1.7', margin: '0' } },
-        ]},
-      { id: 'item-3', type: 'card', props: { variant: 'faq', background: '#f0fdfa', borderRadius: '16px', shadow: 'none', borderWidth: '1px', borderColor: '#ccfbf1', hoverEffect: 'none', padding: '24px' },
-        childrenComponents: [
-          { id: 'f3-q', type: 'heading', props: { content: 'Apakah ada paket langganan fleksibel?', level: 'h4', fontSize: '16px', fontWeight: '700', color: '#0f172a', margin: '0 0 10px 0' } },
-          { id: 'f3-a', type: 'text', props: { content: 'Ya, kami menyediakan paket mingguan, 2 minggu, dan bulanan. Anda dapat pause atau berhenti berlangganan kapan saja tanpa penalti.', fontSize: '14px', color: '#64748b', lineHeight: '1.7', margin: '0' } },
-        ]},
-      { id: 'item-4', type: 'card', props: { variant: 'faq', background: '#f0fdfa', borderRadius: '16px', shadow: 'none', borderWidth: '1px', borderColor: '#ccfbf1', hoverEffect: 'none', padding: '24px' },
-        childrenComponents: [
-          { id: 'f4-q', type: 'heading', props: { content: 'Apa perbedaan dengan susu biasa?', level: 'h4', fontSize: '16px', fontWeight: '700', color: '#0f172a', margin: '0 0 10px 0' } },
-          { id: 'f4-a', type: 'text', props: { content: 'Kami menggunakan susu organik bersertifikat dari sapi pakan alami tanpa GMO, bebas hormon, dan dipasteurisasi lembut agar nutrisi tetap terjaga.', fontSize: '14px', color: '#64748b', lineHeight: '1.7', margin: '0' } },
-        ]},
-    ]},
-    { id: 'contact', type: 'contact', layout: 'contact-03', components: [
-      { id: 'badge', type: 'badge', props: { content: '🌅 Mulai Langganan Hari Ini', variant: 'success', size: 'medium' } },
-      { id: 't', type: 'heading', props: { content: 'Rasakan Susu Premium Setiap Pagi', level: 'h2', fontSize: '44px', fontWeight: '900', color: '#ffffff', align: 'center', lineHeight: '1.2', letterSpacing: '-0.02em', margin: '0 0 12px 0' } },
-      { id: 'sub', type: 'text', props: { content: 'Gabung bersama 12.000+ keluarga yang telah menikmati kemurnian susu organik dari peternakan kami', fontSize: '17px', color: '#94a3b8', align: 'center', lineHeight: '1.8', margin: '0 0 32px 0' } },
-      { id: 'btn', type: 'button', props: { label: 'Hubungi Tim Kami', href: '#', variant: 'primary', size: 'large', radius: 'full', background: '#0f766e', color: '#ffffff', shadow: 'lg', fontSize: '16px', fontWeight: '700' } },
-    ]},
-    { id: 'footer', type: 'footer', layout: 'footer-04', components: [
-      { id: 'logo', type: 'heading', props: { content: 'SUSU PREMIUM ALAMI', level: 'h3', fontSize: '18px', fontWeight: '900', color: '#ffffff', letterSpacing: '0.08em', margin: '0 0 12px 0' } },
-      { id: 'c', type: 'text', props: { content: '© 2026 Susu Premium Alami Indonesia. Pure. Natural. Nourishing.', fontSize: '14px', color: '#94a3b8', margin: '0' } },
-      { id: 'social', type: 'social', props: { platforms: ['instagram', 'facebook', 'twitter'], size: 'medium' } },
-    ]},
+    {
+      id: 'art-nav-sec',
+      type: 'navbar',
+      layout: 'dairy-nav-artisan',
+      components: [
+        { id: 'art-brand', type: 'heading', props: { content: 'VALLEY PASTURES DAIRY', level: 'h3', fontSize: '20px', fontWeight: '900', color: '#fef3c7', letterSpacing: '0.08em' } },
+        { id: 'art-status-badge', type: 'badge', props: { text: '🌾 100% GRASS-FED ORGANIC CERTIFIED • A2 PROTEIN', variant: 'outline', background: 'rgba(245,158,11,0.15)', color: '#fde68a', borderColor: 'rgba(245,158,11,0.4)' } },
+        { id: 'art-tour-btn', type: 'button', props: { label: 'Book Farm Visit 🌿', href: '#pasture', variant: 'outline', size: 'small', radius: 'full', background: 'rgba(20,40,25,0.8)', color: '#fde68a', borderColor: 'rgba(245,158,11,0.5)', fontSize: '12px' } },
+        { id: 'art-club-btn', type: 'button', props: { label: 'Gabung Member Langganan', href: '#collection', variant: 'primary', size: 'small', radius: 'full', background: 'linear-gradient(135deg, #d97706, #b45309)', color: '#ffffff', fontWeight: '700', fontSize: '13px' } },
+      ]
+    },
+    {
+      id: 'art-hero-sec',
+      type: 'hero',
+      layout: 'dairy-hero-artisan',
+      components: [
+        { id: 'art-badge', type: 'badge', props: { text: '🌾 SINGLE-ESTATE HIGHLAND ORGANIC PASTURE', variant: 'outline', background: 'rgba(245,158,11,0.15)', color: '#fde68a', borderColor: 'rgba(245,158,11,0.45)' } },
+        { id: 'art-title', type: 'heading', props: { content: 'Kemurnian Susu Organik Grass-Fed Dari Padang Rumput Kaki Gunung', level: 'h1', fontSize: '46px', fontWeight: '900', color: '#fefce8', letterSpacing: '-0.025em' } },
+        { id: 'art-desc', type: 'paragraph', props: { content: 'Susu organik murni dari sapi Frisian Holstein & Jersey yang merumput bebas di 150 hektar padang rumput alami. Mengandung protein A2 alami yang lebih mudah dicerna dan kaya Omega-3.', fontSize: '17px', color: '#fef3c7' } },
+        { id: 'art-btn1', type: 'button', props: { label: 'Langganan Susu Botol Kaca ✨', href: '#collection', variant: 'primary', size: 'large', radius: 'full', background: 'linear-gradient(135deg, #d97706, #b45309)', color: '#ffffff', fontWeight: '700' } },
+        { id: 'art-btn2', type: 'button', props: { label: 'Eksplor Padang Rumput', href: '#pasture', variant: 'outline', size: 'large', radius: 'full', background: 'rgba(10,38,26,0.7)', color: '#fde68a', borderColor: 'rgba(245,158,11,0.4)' } },
+
+        // 4 Purity Metrics Cards
+        {
+          id: 'art-stat1-card',
+          type: 'card',
+          props: { background: '#092d1f', borderColor: 'rgba(245,158,11,0.3)', borderWidth: '1px', borderRadius: '14px', padding: '16px', shadow: 'lg', hoverEffect: 'lift' },
+          childrenComponents: [
+            { id: 'art-stat1-num', type: 'heading', props: { content: '100% Grass-Fed', level: 'h3', fontSize: '24px', fontWeight: '900', color: '#fde68a' } },
+            { id: 'art-stat1-lbl', type: 'paragraph', props: { content: 'Pakan Rumput Organik', fontSize: '12px', color: '#cbd5e1' } },
+          ]
+        },
+        {
+          id: 'art-stat2-card',
+          type: 'card',
+          props: { background: '#092d1f', borderColor: 'rgba(245,158,11,0.3)', borderWidth: '1px', borderRadius: '14px', padding: '16px', shadow: 'lg', hoverEffect: 'lift' },
+          childrenComponents: [
+            { id: 'art-stat2-num', type: 'heading', props: { content: 'A2 Protein', level: 'h3', fontSize: '24px', fontWeight: '900', color: '#a7f3d0' } },
+            { id: 'art-stat2-lbl', type: 'paragraph', props: { content: 'Ramah Pencernaan Perut', fontSize: '12px', color: '#cbd5e1' } },
+          ]
+        },
+        {
+          id: 'art-stat3-card',
+          type: 'card',
+          props: { background: '#092d1f', borderColor: 'rgba(245,158,11,0.3)', borderWidth: '1px', borderRadius: '14px', padding: '16px', shadow: 'lg', hoverEffect: 'lift' },
+          childrenComponents: [
+            { id: 'art-stat3-num', type: 'heading', props: { content: '0% Hormon', level: 'h3', fontSize: '24px', fontWeight: '900', color: '#a7f3d0' } },
+            { id: 'art-stat3-lbl', type: 'paragraph', props: { content: 'Bebas rBST & Non-GMO', fontSize: '12px', color: '#cbd5e1' } },
+          ]
+        },
+        {
+          id: 'art-stat4-card',
+          type: 'card',
+          props: { background: '#092d1f', borderColor: 'rgba(245,158,11,0.3)', borderWidth: '1px', borderRadius: '14px', padding: '16px', shadow: 'lg', hoverEffect: 'lift' },
+          childrenComponents: [
+            { id: 'art-stat4-num', type: 'heading', props: { content: '150 Hektar', level: 'h3', fontSize: '24px', fontWeight: '900', color: '#fde68a' } },
+            { id: 'art-stat4-lbl', type: 'paragraph', props: { content: 'Padang Rumput Dataran Tinggi', fontSize: '12px', color: '#cbd5e1' } },
+          ]
+        },
+
+        // Highland Pasture Showcase Card
+        {
+          id: 'artisan-hero-card',
+          type: 'card',
+          props: { background: 'linear-gradient(135deg, #0e3d2b 0%, #041a12 100%)', borderColor: 'rgba(245,158,11,0.4)', borderWidth: '2px', borderRadius: '24px', padding: '16px', shadow: '2xl' },
+          childrenComponents: [
+            {
+              id: 'artisan-hero-img',
+              type: 'image',
+              props: {
+                src: 'https://images.unsplash.com/photo-1500595046743-cd271d694d30?w=1000&auto=format&fit=crop&q=80',
+                alt: 'Highland Organic Grass Fed Dairy Cow Pasture Valley',
+                borderRadius: '16px',
+                width: '100%',
+                height: '380px',
+                objectFit: 'cover',
+              }
+            },
+            { id: 'art-card-badge', type: 'badge', props: { text: '🌿 KESEJAHTERAAN HEWAN (ANIMAL WELFARE CERTIFIED)', variant: 'solid', background: 'rgba(245,158,11,0.25)', color: '#fef3c7' } },
+            { id: 'art-card-title', type: 'heading', props: { content: 'Sapi Bahagia Menghasilkan Susu Paling Gurih & Sehat', level: 'h4', fontSize: '17px', fontWeight: '800', color: '#fefce8' } },
+            { id: 'art-card-desc', type: 'paragraph', props: { content: 'Sapi kami bebas berjalan di alam terbuka dengan udara sejuk pegunungan 1.400 mdpl dan meminum air mata air alami pegunungan.', fontSize: '13px', color: '#cbd5e1' } },
+          ]
+        }
+      ]
+    },
+    {
+      id: 'art-collection-sec',
+      type: 'products',
+      layout: 'dairy-collection-artisan',
+      components: [
+        { id: 'art-col-badge', type: 'badge', props: { text: '✨ FARMSTEAD ARTISAN SELECTION', variant: 'outline', background: 'rgba(217,119,6,0.1)', color: '#d97706', borderColor: 'rgba(217,119,6,0.3)' } },
+        { id: 'art-col-title', type: 'heading', props: { content: 'Koleksi Olahan Susu Organik Pilihan Untuk Gaya Hidup Sehat Alami', level: 'h2', fontSize: '36px', fontWeight: '900', color: '#0f172a', letterSpacing: '-0.02em' } },
+        { id: 'art-col-desc', type: 'paragraph', props: { content: 'Diproduksi dalam jumlah terbatas setiap minggu dengan metode artisan tradisional Eropa dan dikemas dalam botol kaca ramah lingkungan.', fontSize: '16px', color: '#64748b' } },
+
+        // Card 1: Milk
+        {
+          id: 'card-art-col1',
+          type: 'card',
+          props: { background: '#ffffff', borderColor: '#fef3c7', borderWidth: '1px', borderRadius: '18px', padding: '24px', shadow: 'md', hoverEffect: 'lift' },
+          childrenComponents: [
+            {
+              id: 'art-col1-img',
+              type: 'image',
+              props: {
+                src: 'https://images.unsplash.com/photo-1563636619-e9143da7973b?w=800&auto=format&fit=crop&q=80',
+                alt: 'Susu Organik A2 Botol Kaca Mewah Gold Cap',
+                borderRadius: '12px',
+                width: '100%',
+                height: '220px',
+                objectFit: 'cover',
+              }
+            },
+            { id: 'art-col1-badge', type: 'badge', props: { text: '🥛 A2 ORGANIC • GOLD CAP', variant: 'solid', background: '#fef3c7', color: '#b45309' } },
+            { id: 'art-col1-title', type: 'heading', props: { content: 'A2 Grass-Fed Pure Gold Milk 1L', level: 'h3', fontSize: '19px', fontWeight: '800', color: '#0f172a' } },
+            { id: 'art-col1-desc', type: 'paragraph', props: { content: 'Susu organik segar dengan lapisan creamline alami di atasnya. Mengandung beta-kasein A2 murni yang sangat lembut bagi lambung sensitif.', fontSize: '14px', color: '#64748b' } },
+            { id: 'art-col1-btn', type: 'button', props: { label: 'Langganan Mingguan 🥛', href: '#contact', variant: 'primary', size: 'small', radius: 'full', background: '#d97706', color: '#ffffff', fontWeight: '600' } },
+          ]
+        },
+
+        // Card 2: Cheese
+        {
+          id: 'card-art-col2',
+          type: 'card',
+          props: { background: '#ffffff', borderColor: '#fef3c7', borderWidth: '1px', borderRadius: '18px', padding: '24px', shadow: 'md', hoverEffect: 'lift' },
+          childrenComponents: [
+            {
+              id: 'art-col2-img',
+              type: 'image',
+              props: {
+                src: 'https://images.unsplash.com/photo-1486297678162-eb2a19b0a32d?w=800&auto=format&fit=crop&q=80',
+                alt: 'Keju Artisan Aged Gouda Cheese Wheel Natural Wax',
+                borderRadius: '12px',
+                width: '100%',
+                height: '220px',
+                objectFit: 'cover',
+              }
+            },
+            { id: 'art-col2-badge', type: 'badge', props: { text: '🧀 AGED 12 BULAN • NATURAL WAX', variant: 'solid', background: '#fef3c7', color: '#b45309' } },
+            { id: 'art-col2-title', type: 'heading', props: { content: 'Artisan Farmhouse Gouda Wheel', level: 'h3', fontSize: '19px', fontWeight: '800', color: '#0f172a' } },
+            { id: 'art-col2-desc', type: 'paragraph', props: { content: 'Keju keras matang dengan kristal kalsium renyah dan aroma nutty yang kaya. Dibuat tanpa pewarna buatan dari 100% susu mentah perahan sendiri.', fontSize: '14px', color: '#64748b' } },
+            { id: 'art-col2-btn', type: 'button', props: { label: 'Beli Cheese Wheel 🧀', href: '#contact', variant: 'primary', size: 'small', radius: 'full', background: '#d97706', color: '#ffffff', fontWeight: '600' } },
+          ]
+        },
+
+        // Card 3: Ghee
+        {
+          id: 'card-art-col3',
+          type: 'card',
+          props: { background: '#ffffff', borderColor: '#fef3c7', borderWidth: '1px', borderRadius: '18px', padding: '24px', shadow: 'md', hoverEffect: 'lift' },
+          childrenComponents: [
+            {
+              id: 'art-col3-img',
+              type: 'image',
+              props: {
+                src: 'https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=800&auto=format&fit=crop&q=80',
+                alt: 'Organic Grass Fed Golden Ghee Clarified Butter',
+                borderRadius: '12px',
+                width: '100%',
+                height: '220px',
+                objectFit: 'cover',
+              }
+            },
+            { id: 'art-col3-badge', type: 'badge', props: { text: '🧈 KETO & KETO-FRIENDLY • 0% LAKTOSA', variant: 'solid', background: '#fef3c7', color: '#b45309' } },
+            { id: 'art-col3-title', type: 'heading', props: { content: 'Traditional Golden Grass-Fed Ghee', level: 'h3', fontSize: '19px', fontWeight: '800', color: '#0f172a' } },
+            { id: 'art-col3-desc', type: 'paragraph', props: { content: 'Minyak samin organik murni yang dimasak perlahan dari krim susu segar. Memiliki smoke point tinggi 250°C, kaya vitamin A, D, E, dan K2.', fontSize: '14px', color: '#64748b' } },
+            { id: 'art-col3-btn', type: 'button', props: { label: 'Order Golden Ghee 🧈', href: '#contact', variant: 'primary', size: 'small', radius: 'full', background: '#d97706', color: '#ffffff', fontWeight: '600' } },
+          ]
+        }
+      ]
+    },
+    {
+      id: 'art-pasture-sec',
+      type: 'about',
+      layout: 'dairy-pasture-artisan',
+      components: [
+        { id: 'pas-badge', type: 'badge', props: { text: '🌿 FILOSOFI PETERNAKAN BERKELANJUTAN', variant: 'outline', background: 'rgba(245,158,11,0.15)', color: '#fde68a', borderColor: 'rgba(245,158,11,0.4)' } },
+        { id: 'pas-title', type: 'heading', props: { content: 'Harmoni Alam, Kesejahteraan Ternak & Pertanian Regeneratif', level: 'h2', fontSize: '36px', fontWeight: '900', color: '#fefce8', letterSpacing: '-0.02em' } },
+        { id: 'pas-desc', type: 'paragraph', props: { content: 'Kami percaya kualitas susu terbaik lahir dari tanah yang subur tanpa pupuk kimia, pakan rumput liar alami, dan cinta pada setiap hewan ternak.', fontSize: '16px', color: '#cbd5e1' } },
+
+        // 4 Farmstead Cards
+        {
+          id: 'card-pas1',
+          type: 'card',
+          props: { background: '#092d1f', borderColor: 'rgba(245,158,11,0.3)', borderWidth: '1px', borderRadius: '16px', padding: '24px', shadow: 'lg', hoverEffect: 'lift' },
+          childrenComponents: [
+            { id: 'pas1-badge', type: 'badge', props: { text: '🌱 ZERO PESTICIDE', variant: 'solid', background: 'rgba(245,158,11,0.25)', color: '#fde68a' } },
+            { id: 'pas1-title', type: 'heading', props: { content: 'Padang Rumput Bebas Kimia Sintetis', level: 'h3', fontSize: '18px', fontWeight: '800', color: '#fefce8' } },
+            { id: 'pas1-desc', type: 'paragraph', props: { content: 'Tanah disuburkan dengan kompos alami peternakan sendiri tanpa herbisida, menghasilkan rumput clover dan alfalfa berkualitas tinggi.', fontSize: '14px', color: '#a7f3d0' } },
+          ]
+        },
+        {
+          id: 'card-pas2',
+          type: 'card',
+          props: { background: '#092d1f', borderColor: 'rgba(245,158,11,0.3)', borderWidth: '1px', borderRadius: '16px', padding: '24px', shadow: 'lg', hoverEffect: 'lift' },
+          childrenComponents: [
+            { id: 'pas2-badge', type: 'badge', props: { text: '🎵 VOLUNTARY MILKING', variant: 'solid', background: 'rgba(245,158,11,0.25)', color: '#fde68a' } },
+            { id: 'pas2-title', type: 'heading', props: { content: 'Pemerahan Sukarela Bebas Stres', level: 'h3', fontSize: '18px', fontWeight: '800', color: '#fefce8' } },
+            { id: 'pas2-desc', type: 'paragraph', props: { content: 'Sapi masuk ke stasiun perahan dengan kemauannya sendiri diiringi musik klasik yang terbukti menjaga kadar hormon kortisol tetap nol.', fontSize: '14px', color: '#a7f3d0' } },
+          ]
+        },
+        {
+          id: 'card-pas3',
+          type: 'card',
+          props: { background: '#092d1f', borderColor: 'rgba(245,158,11,0.3)', borderWidth: '1px', borderRadius: '16px', padding: '24px', shadow: 'lg', hoverEffect: 'lift' },
+          childrenComponents: [
+            { id: 'pas3-badge', type: 'badge', props: { text: '♻️ ZERO SINGLE-USE PLASTIC', variant: 'solid', background: 'rgba(245,158,11,0.25)', color: '#fde68a' } },
+            { id: 'pas3-title', type: 'heading', props: { content: 'Botol Kaca Sirkular Daur Ulang', level: 'h3', fontSize: '18px', fontWeight: '800', color: '#fefce8' } },
+            { id: 'pas3-desc', type: 'paragraph', props: { content: 'Kemasan kaca tebal kedap udara yang dapat ditukar saat pengiriman berikutnya, disterilisasi dengan uap panas bersuhu 120°C.', fontSize: '14px', color: '#a7f3d0' } },
+          ]
+        },
+        {
+          id: 'card-pas4',
+          type: 'card',
+          props: { background: '#092d1f', borderColor: 'rgba(245,158,11,0.3)', borderWidth: '1px', borderRadius: '16px', padding: '24px', shadow: 'lg', hoverEffect: 'lift' },
+          childrenComponents: [
+            { id: 'pas4-badge', type: 'badge', props: { text: '🌅 PENGANTARAN SUBUH', variant: 'solid', background: 'rgba(245,158,11,0.25)', color: '#fde68a' } },
+            { id: 'pas4-title', type: 'heading', props: { content: 'Tiba di Depan Pintu Pukul 06.00', level: 'h3', fontSize: '18px', fontWeight: '800', color: '#fefce8' } },
+            { id: 'pas4-desc', type: 'paragraph', props: { content: 'Kurir khusus meletakkan botol dingin di cooler box depan pintu Anda sebelum keluarga bangun untuk sarapan pagi sehat.', fontSize: '14px', color: '#a7f3d0' } },
+          ]
+        },
+
+        // Tour Banner
+        {
+          id: 'tour-banner-card',
+          type: 'card',
+          props: { background: 'linear-gradient(135deg, #1c4a35 0%, #061c13 100%)', borderColor: 'rgba(245,158,11,0.5)', borderWidth: '2px', borderRadius: '20px', padding: '28px', shadow: '2xl' },
+          childrenComponents: [
+            { id: 'tour-banner-badge', type: 'badge', props: { text: '🐄 PRIVATE FARM TOUR & CHEESE TASTING', variant: 'solid', background: 'rgba(245,158,11,0.3)', color: '#fef3c7' } },
+            { id: 'tour-banner-title', type: 'heading', props: { content: 'Ajak Keluarga Menikmati Suasana Peternakan Pegunungan & Tasting Keju', level: 'h3', fontSize: '22px', fontWeight: '900', color: '#ffffff' } },
+            { id: 'tour-banner-desc', type: 'paragraph', props: { content: 'Nikmati tur edukasi memberi makan anak sapi, melihat proses pembuatan keju gouda, dan piknik santai di hamparan rumput hijau kaki bukit.', fontSize: '14px', color: '#cbd5e1' } },
+            { id: 'tour-banner-btn', type: 'button', props: { label: 'Reservasi Kunjungan Private 🌿', href: '#contact', variant: 'primary', size: 'medium', radius: 'full', background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: '#ffffff', fontWeight: '700' } },
+          ]
+        }
+      ]
+    },
+    {
+      id: 'art-cta-sec',
+      type: 'contact',
+      layout: 'dairy-cta-artisan',
+      components: [
+        {
+          id: 'cta-artisan-card',
+          type: 'card',
+          props: { background: 'linear-gradient(135deg, #1e4533 0%, #051a11 100%)', borderColor: 'rgba(245,158,11,0.5)', borderWidth: '2px', borderRadius: '24px', padding: '48px 32px', shadow: '2xl' },
+          childrenComponents: [
+            { id: 'cta-art-badge', type: 'badge', props: { text: '🌾 VALLEY PASTURES FARMSTEAD CLUB', variant: 'solid', background: 'rgba(245,158,11,0.3)', color: '#fde68a' } },
+            { id: 'cta-art-title', type: 'heading', props: { content: 'Berikan Nutrisi Alami Terbaik Untuk Buah Hati & Keluarga Tercinta', level: 'h2', fontSize: '36px', fontWeight: '900', color: '#ffffff' } },
+            { id: 'cta-art-desc', type: 'paragraph', props: { content: 'Daftar paket pengantaran susu botol mingguan sekarang dan dapatkan bonus complimentary artisan salted butter dan cooler bag eksklusif di pengantaran pertama.', fontSize: '16px', color: '#fef3c7' } },
+            { id: 'cta-art-btn1', type: 'button', props: { label: 'Mulai Langganan Mingguan 🥛', href: '#contact', variant: 'primary', size: 'large', radius: 'full', background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: '#ffffff', fontWeight: '800' } },
+            { id: 'cta-art-btn2', type: 'button', props: { label: 'Tanya Tim Farmstead Concierge', href: '#contact', variant: 'outline', size: 'large', radius: 'full', background: 'rgba(5,26,17,0.8)', color: '#fde68a', borderColor: 'rgba(245,158,11,0.4)' } },
+          ]
+        }
+      ]
+    },
+    {
+      id: 'art-footer-sec',
+      type: 'footer',
+      layout: 'dairy-footer-artisan',
+      components: [
+        { id: 'art-ft-title', type: 'heading', props: { content: 'VALLEY PASTURES ORGANIC FARMSTEAD', level: 'h3', fontSize: '18px', fontWeight: '900', color: '#ffffff', letterSpacing: '0.08em' } },
+        { id: 'art-ft-desc', type: 'paragraph', props: { content: 'Peternakan Susu Organik Single-Estate & Pabrik Keju Artisan. Sertifikasi Organik Indonesia (INOFICE) & Standar Kesejahteraan Ternak Internasional.', fontSize: '13px', color: '#cbd5e1' } },
+        { id: 'art-ft-copy', type: 'paragraph', props: { content: '© 2026 Valley Pastures Dairy Estate. Pure Nature, Pure Nutrition.', fontSize: '12px', color: '#a7f3d0' } },
+      ]
+    }
   ],
 };

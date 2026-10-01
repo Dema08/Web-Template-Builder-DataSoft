@@ -650,6 +650,31 @@ import RetailOmnichannelOmni from '@builder/sections/retail-custom/omni/RetailOm
 import RetailCtaOmni from '@builder/sections/retail-custom/omni/RetailCtaOmni';
 import RetailFooterOmni from '@builder/sections/retail-custom/omni/RetailFooterOmni';
 
+// Custom Koperasi Susu Layouts — Susu Segar Pasteurisasi & Penampungan Rakyat
+import DairyNavFresh from '@builder/sections/dairy-custom/fresh/DairyNavFresh';
+import DairyHeroFresh from '@builder/sections/dairy-custom/fresh/DairyHeroFresh';
+import DairyProductsFresh from '@builder/sections/dairy-custom/fresh/DairyProductsFresh';
+import DairyProcessFresh from '@builder/sections/dairy-custom/fresh/DairyProcessFresh';
+import DairyCtaFresh from '@builder/sections/dairy-custom/fresh/DairyCtaFresh';
+import DairyFooterFresh from '@builder/sections/dairy-custom/fresh/DairyFooterFresh';
+
+// Custom Koperasi Susu Layouts — Jaringan Industri & Rantai Pasok B2B
+import DairyNavIndustrial from '@builder/sections/dairy-custom/industrial/DairyNavIndustrial';
+import DairyHeroIndustrial from '@builder/sections/dairy-custom/industrial/DairyHeroIndustrial';
+import DairyProgramsIndustrial from '@builder/sections/dairy-custom/industrial/DairyProgramsIndustrial';
+import DairySupplyIndustrial from '@builder/sections/dairy-custom/industrial/DairySupplyIndustrial';
+import DairyCtaIndustrial from '@builder/sections/dairy-custom/industrial/DairyCtaIndustrial';
+import DairyFooterIndustrial from '@builder/sections/dairy-custom/industrial/DairyFooterIndustrial';
+
+// Custom Koperasi Susu Layouts — Artisan Organic Farmstead & Grass-Fed
+import DairyNavArtisan from '@builder/sections/dairy-custom/artisan/DairyNavArtisan';
+import DairyHeroArtisan from '@builder/sections/dairy-custom/artisan/DairyHeroArtisan';
+import DairyCollectionArtisan from '@builder/sections/dairy-custom/artisan/DairyCollectionArtisan';
+import DairyPastureArtisan from '@builder/sections/dairy-custom/artisan/DairyPastureArtisan';
+import DairyCtaArtisan from '@builder/sections/dairy-custom/artisan/DairyCtaArtisan';
+import DairyFooterArtisan from '@builder/sections/dairy-custom/artisan/DairyFooterArtisan';
+
+
 
 
 
@@ -926,6 +951,49 @@ export const LAYOUT_COMPONENTS = {
   'retail-omnichannel-omni': RetailOmnichannelOmni,
   'retail-cta-omni': RetailCtaOmni,
   'retail-footer-omni': RetailFooterOmni,
+
+  // Custom Koperasi Susu — Susu Segar Pasteurisasi & Penampungan Rakyat
+  'DairyNavFresh': DairyNavFresh,
+  'DairyHeroFresh': DairyHeroFresh,
+  'DairyProductsFresh': DairyProductsFresh,
+  'DairyProcessFresh': DairyProcessFresh,
+  'DairyCtaFresh': DairyCtaFresh,
+  'DairyFooterFresh': DairyFooterFresh,
+  'dairy-nav-fresh': DairyNavFresh,
+  'dairy-hero-fresh': DairyHeroFresh,
+  'dairy-products-fresh': DairyProductsFresh,
+  'dairy-process-fresh': DairyProcessFresh,
+  'dairy-cta-fresh': DairyCtaFresh,
+  'dairy-footer-fresh': DairyFooterFresh,
+
+  // Custom Koperasi Susu — Jaringan Industri & Rantai Pasok B2B
+  'DairyNavIndustrial': DairyNavIndustrial,
+  'DairyHeroIndustrial': DairyHeroIndustrial,
+  'DairyProgramsIndustrial': DairyProgramsIndustrial,
+  'DairySupplyIndustrial': DairySupplyIndustrial,
+  'DairyCtaIndustrial': DairyCtaIndustrial,
+  'DairyFooterIndustrial': DairyFooterIndustrial,
+  'dairy-nav-industrial': DairyNavIndustrial,
+  'dairy-hero-industrial': DairyHeroIndustrial,
+  'dairy-programs-industrial': DairyProgramsIndustrial,
+  'dairy-supply-industrial': DairySupplyIndustrial,
+  'dairy-cta-industrial': DairyCtaIndustrial,
+  'dairy-footer-industrial': DairyFooterIndustrial,
+
+  // Custom Koperasi Susu — Artisan Organic Farmstead & Grass-Fed
+  'DairyNavArtisan': DairyNavArtisan,
+  'DairyHeroArtisan': DairyHeroArtisan,
+  'DairyCollectionArtisan': DairyCollectionArtisan,
+  'DairyPastureArtisan': DairyPastureArtisan,
+  'DairyCtaArtisan': DairyCtaArtisan,
+  'DairyFooterArtisan': DairyFooterArtisan,
+  'dairy-nav-artisan': DairyNavArtisan,
+  'dairy-hero-artisan': DairyHeroArtisan,
+  'dairy-collection-artisan': DairyCollectionArtisan,
+  'dairy-pasture-artisan': DairyPastureArtisan,
+  'dairy-cta-artisan': DairyCtaArtisan,
+  'dairy-footer-artisan': DairyFooterArtisan,
+
 
 
   // Hero layouts
