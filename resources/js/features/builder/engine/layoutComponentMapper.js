@@ -578,6 +578,30 @@ import OrgCommunityDigital from '@builder/sections/org-custom/digital/OrgCommuni
 import OrgCtaDigital from '@builder/sections/org-custom/digital/OrgCtaDigital';
 import OrgFooterDigital from '@builder/sections/org-custom/digital/OrgFooterDigital';
 
+// Custom Industri & Manufaktur Layouts — Heavy Industry & Precision Engineering
+import IndNavHeavy from '@builder/sections/industry-custom/heavy/IndNavHeavy';
+import IndHeroHeavy from '@builder/sections/industry-custom/heavy/IndHeroHeavy';
+import IndCapabilitiesHeavy from '@builder/sections/industry-custom/heavy/IndCapabilitiesHeavy';
+import IndStandardsHeavy from '@builder/sections/industry-custom/heavy/IndStandardsHeavy';
+import IndRfqHeavy from '@builder/sections/industry-custom/heavy/IndRfqHeavy';
+import IndFooterHeavy from '@builder/sections/industry-custom/heavy/IndFooterHeavy';
+
+// Custom Industri & Manufaktur Layouts — Smart Factory & Automation 4.0
+import IndNavSmart from '@builder/sections/industry-custom/smart/IndNavSmart';
+import IndHeroSmart from '@builder/sections/industry-custom/smart/IndHeroSmart';
+import IndSolutionsSmart from '@builder/sections/industry-custom/smart/IndSolutionsSmart';
+import IndTelemetrySmart from '@builder/sections/industry-custom/smart/IndTelemetrySmart';
+import IndCtaSmart from '@builder/sections/industry-custom/smart/IndCtaSmart';
+import IndFooterSmart from '@builder/sections/industry-custom/smart/IndFooterSmart';
+
+// Custom Industri & Manufaktur Layouts — Green FMCG & Sustainable Eco-Plant
+import IndNavEco from '@builder/sections/industry-custom/eco/IndNavEco';
+import IndHeroEco from '@builder/sections/industry-custom/eco/IndHeroEco';
+import IndProductsEco from '@builder/sections/industry-custom/eco/IndProductsEco';
+import IndEsgEco from '@builder/sections/industry-custom/eco/IndEsgEco';
+import IndCtaEco from '@builder/sections/industry-custom/eco/IndCtaEco';
+import IndFooterEco from '@builder/sections/industry-custom/eco/IndFooterEco';
+
 
 
 export const LAYOUT_COMPONENTS = {
@@ -763,6 +787,30 @@ export const LAYOUT_COMPONENTS = {
   'OrgCommunityDigital': OrgCommunityDigital,
   'OrgCtaDigital': OrgCtaDigital,
   'OrgFooterDigital': OrgFooterDigital,
+
+  // Custom Industri & Manufaktur — Heavy Industry
+  'IndNavHeavy': IndNavHeavy,
+  'IndHeroHeavy': IndHeroHeavy,
+  'IndCapabilitiesHeavy': IndCapabilitiesHeavy,
+  'IndStandardsHeavy': IndStandardsHeavy,
+  'IndRfqHeavy': IndRfqHeavy,
+  'IndFooterHeavy': IndFooterHeavy,
+
+  // Custom Industri & Manufaktur — Smart Factory 4.0
+  'IndNavSmart': IndNavSmart,
+  'IndHeroSmart': IndHeroSmart,
+  'IndSolutionsSmart': IndSolutionsSmart,
+  'IndTelemetrySmart': IndTelemetrySmart,
+  'IndCtaSmart': IndCtaSmart,
+  'IndFooterSmart': IndFooterSmart,
+
+  // Custom Industri & Manufaktur — Green FMCG Eco-Plant
+  'IndNavEco': IndNavEco,
+  'IndHeroEco': IndHeroEco,
+  'IndProductsEco': IndProductsEco,
+  'IndEsgEco': IndEsgEco,
+  'IndCtaEco': IndCtaEco,
+  'IndFooterEco': IndFooterEco,
 
   // Hero layouts
   'Hero01': Hero01,
