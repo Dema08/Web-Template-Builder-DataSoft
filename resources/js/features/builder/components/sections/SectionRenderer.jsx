@@ -103,6 +103,23 @@ export default function SectionRenderer({ section, isSelected, onClick }) {
     }
   }, [section.customTexts, section.layout, section.id]);
 
+  // Hydrate section customImages overrides onto matching template image elements
+  useEffect(() => {
+    if (sectionRef.current && section.customImages) {
+      Object.entries(section.customImages).forEach(([key, val]) => {
+        const el = sectionRef.current.querySelector(`[data-image-key="${key}"]`);
+        const src = typeof val === 'object' && val !== null ? val.src : val;
+        const alt = typeof val === 'object' && val !== null ? val.alt : null;
+        if (el && src && el.src !== src) {
+          el.src = src;
+        }
+        if (el && alt && el.alt !== alt) {
+          el.alt = alt;
+        }
+      });
+    }
+  }, [section.customImages, section.layout, section.id]);
+
   // Universal double-click handler enabling inline editing for ALL section template texts EXCEPT "Support by Microdata"
   const handleSectionDoubleClick = (e) => {
     if (isPreviewMode) return;
