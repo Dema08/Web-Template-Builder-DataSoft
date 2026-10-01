@@ -21,11 +21,18 @@ export default function Text({
   componentId = null,
   sectionId = null,
 }) {
-  const { updateComponentProps } = useBuilderStore();
+  // Ensure responsive font scaling and prevent overflow on mobile devices
+  let computedFontSize = fontSize;
+  if (typeof fontSize === 'string' && fontSize.endsWith('px')) {
+    const numSize = parseFloat(fontSize);
+    if (numSize >= 20) {
+      computedFontSize = `clamp(15px, 4vw, ${fontSize})`;
+    }
+  }
 
   const style = {
     fontFamily,
-    fontSize,
+    fontSize: computedFontSize,
     fontWeight,
     color,
     lineHeight,
@@ -36,9 +43,11 @@ export default function Text({
     fontStyle,
     textDecoration,
     textTransform,
+    wordBreak: 'break-word',
+    overflowWrap: 'break-word',
+    maxWidth: maxWidth || '100%',
     ...(width ? { width } : {}),
     ...(height ? { height } : {}),
-    ...(maxWidth ? { maxWidth } : {}),
   };
 
   const handleUpdate = (newContent) => {

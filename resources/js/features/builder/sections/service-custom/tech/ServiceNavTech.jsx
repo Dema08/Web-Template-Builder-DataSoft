@@ -52,7 +52,7 @@ export default function ServiceNavTech({ components = [], sectionId = null }) {
 
           {/* CTA & Hamburger */}
           <div className="flex items-center gap-3 shrink-0">
-            {renderLayoutComponents(ctaComps, sectionId)}
+            <div className="hidden sm:block">{renderLayoutComponents(ctaComps, sectionId)}</div>
             <button
               type="button"
               onClick={() => setMobileOpen(v => !v)}
@@ -65,8 +65,15 @@ export default function ServiceNavTech({ components = [], sectionId = null }) {
         </div>
 
         {mobileOpen && (
-          <div className="lg:hidden mt-3 p-4 rounded-xl bg-[#0b1120] border border-cyan-900/60 flex flex-col gap-2">
-            {renderLayoutComponents(menuComps, sectionId)}
+          <div className="lg:hidden mt-3 p-4 rounded-xl bg-[#0b1120] border border-cyan-900/60 flex flex-col gap-2.5">
+            <div className="flex flex-col gap-2 [&_a]:w-full [&_button]:w-full [&_a]:justify-start [&_button]:justify-start">
+              {renderLayoutComponents(menuComps, sectionId)}
+            </div>
+            {ctaComps.length > 0 && (
+              <div className="pt-2 border-t border-cyan-900/60 sm:hidden [&_a]:w-full [&_button]:w-full [&_a]:justify-center [&_button]:justify-center">
+                {renderLayoutComponents(ctaComps, sectionId)}
+              </div>
+            )}
           </div>
         )}
       </nav>

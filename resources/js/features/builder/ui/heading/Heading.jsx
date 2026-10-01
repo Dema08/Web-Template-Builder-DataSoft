@@ -24,9 +24,20 @@ export default function Heading({
 }) {
   const { updateComponentProps } = useBuilderStore();
 
+  // Ensure responsive font scaling for large headings on mobile and prevent overflow
+  let computedFontSize = fontSize;
+  if (typeof fontSize === 'string' && fontSize.endsWith('px')) {
+    const numSize = parseFloat(fontSize);
+    if (numSize >= 40) {
+      computedFontSize = `clamp(24px, 5.5vw, ${fontSize})`;
+    } else if (numSize >= 30) {
+      computedFontSize = `clamp(20px, 4.5vw, ${fontSize})`;
+    }
+  }
+
   const style = {
     fontFamily,
-    fontSize,
+    fontSize: computedFontSize,
     fontWeight,
     color,
     textAlign: align,
@@ -37,9 +48,11 @@ export default function Heading({
     textTransform,
     textDecoration,
     fontStyle,
+    wordBreak: 'break-word',
+    overflowWrap: 'break-word',
+    maxWidth: maxWidth || '100%',
     ...(width ? { width } : {}),
     ...(height ? { height } : {}),
-    ...(maxWidth ? { maxWidth } : {}),
   };
 
   const handleUpdate = (newContent) => {

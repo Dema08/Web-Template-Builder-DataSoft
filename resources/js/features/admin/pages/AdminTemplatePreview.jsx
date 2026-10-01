@@ -47,40 +47,51 @@ export default function AdminTemplatePreview() {
     }
   };
 
-  // 1. Force isPreviewMode = true on mount and clear selections
+  const lastDataHashRef = useRef('');
+
+  // Apply template sections only when data has genuinely changed to prevent infinite re-render loops
+  const applyDataIfChanged = (sectionsData, pagesData = {}, name = null, industry = null) => {
+    if (!sectionsData || !Array.isArray(sectionsData) || sectionsData.length === 0) return;
+    const hash = JSON.stringify({
+      s: sectionsData.map(s => `${s.id}-${s.layout}-${s.components?.length || 0}`),
+      l: sectionsData.length,
+      n: name,
+    });
+    if (hash === lastDataHashRef.current) return;
+    lastDataHashRef.current = hash;
+
+    loadSections(sectionsData, pagesData);
+    if (name) setTemplateName(name);
+    if (industry && setIndustry) setIndustry(null, industry, '', false);
+    setLastUpdated(Date.now());
+  };
+
+  // 1. Force isPreviewMode = true on mount, clear selections, and immediately load cached preview
   useEffect(() => {
     setIsPreviewMode(true);
     if (selectComponent) selectComponent(null);
     if (selectSection) selectSection(null);
-    return () => {
-      setIsPreviewMode(false);
-    };
-  }, [setIsPreviewMode, selectComponent, selectSection]);
 
-  // 2. Load template data from localStorage or API
-  const loadDraftFromStorage = () => {
+    // Synchronously / immediately load cached preview state so user never sees empty flash
     try {
       const rawData = localStorage.getItem('template_builder_preview_data');
       if (rawData) {
         const parsed = JSON.parse(rawData);
-        if (parsed.templateName) {
-          setTemplateName(parsed.templateName);
-        }
-        if (parsed.industrySlug) {
-          setIndustry(null, parsed.industrySlug, parsed.industryName || '', false);
-        }
         if (parsed.sections && Array.isArray(parsed.sections) && parsed.sections.length > 0) {
-          loadSections(parsed.sections, parsed.pages || {});
+          applyDataIfChanged(parsed.sections, parsed.pages || {}, parsed.templateName, parsed.industrySlug);
         }
-        setLastUpdated(Date.now());
       }
     } catch (err) {
       console.error('Failed to parse preview storage data:', err);
     }
-  };
 
+    return () => {
+      setIsPreviewMode(false);
+    };
+  }, []);
+
+  // 2. If template ID parameter exists in URL, fetch from API in background
   useEffect(() => {
-    // If template ID parameter exists in URL, fetch from API
     if (id) {
       const applyTemplateData = (res) => {
         const data = res.data?.data ?? res.data;
@@ -95,28 +106,20 @@ export default function AdminTemplatePreview() {
           const pagesData = pubPages || draftPages || {};
 
           if (sectionsData.length > 0) {
-            loadSections(sectionsData, pagesData);
+            applyDataIfChanged(sectionsData, pagesData, data.name);
           }
-          if (data.name) setTemplateName(data.name);
         }
       };
 
-      // Try public endpoint first so guest users can preview published templates
       templateApi.getPublicById(id)
         .then(applyTemplateData)
         .catch(() => {
-          // Fallback to admin endpoint for previewing unpublished draft templates if authenticated
           templateApi.getById(id)
             .then(applyTemplateData)
-            .catch(err => {
-              console.warn('Could not load template API preview:', err);
-              // Fallback to local storage if API fails
-              loadDraftFromStorage();
+            .catch(() => {
+              // already loaded from storage
             });
         });
-    } else {
-      // No ID in URL — previewing live unsaved builder state from localStorage
-      loadDraftFromStorage();
     }
   }, [id]);
 
@@ -126,12 +129,10 @@ export default function AdminTemplatePreview() {
 
     if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
       try {
-        channel = new BroadcastChannel('Microdata_builder_sync');
+        channel = new BroadcastChannel('datasoft_builder_sync');
         channel.onmessage = (event) => {
-          if (event.data && event.data.sections) {
-            loadSections(event.data.sections, event.data.pages || {});
-            if (event.data.templateName) setTemplateName(event.data.templateName);
-            setLastUpdated(Date.now());
+          if (event.data && event.data.sections && event.data.sections.length > 0) {
+            applyDataIfChanged(event.data.sections, event.data.pages || {}, event.data.templateName, event.data.industrySlug);
           }
         };
       } catch (e) {
@@ -143,10 +144,8 @@ export default function AdminTemplatePreview() {
       if (e.key === 'template_builder_preview_data' && e.newValue) {
         try {
           const parsed = JSON.parse(e.newValue);
-          if (parsed.sections) {
-            loadSections(parsed.sections, parsed.pages || {});
-            if (parsed.templateName) setTemplateName(parsed.templateName);
-            setLastUpdated(Date.now());
+          if (parsed.sections && parsed.sections.length > 0) {
+            applyDataIfChanged(parsed.sections, parsed.pages || {}, parsed.templateName, parsed.industrySlug);
           }
         } catch (err) {
           // ignore
@@ -160,7 +159,21 @@ export default function AdminTemplatePreview() {
       if (channel) channel.close();
       window.removeEventListener('storage', handleStorageChange);
     };
-  }, [loadSections, setTemplateName]);
+  }, []);
+
+  const loadDraftFromStorage = () => {
+    try {
+      const rawData = localStorage.getItem('template_builder_preview_data');
+      if (rawData) {
+        const parsed = JSON.parse(rawData);
+        if (parsed.sections && Array.isArray(parsed.sections) && parsed.sections.length > 0) {
+          applyDataIfChanged(parsed.sections, parsed.pages || {}, parsed.templateName, parsed.industrySlug);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to parse preview storage data:', err);
+    }
+  };
 
   const handleClose = () => {
     if (typeof window !== 'undefined' && window.opener) {
@@ -399,7 +412,7 @@ export default function AdminTemplatePreview() {
               </div>
 
               {/* Scrollable Screen Content */}
-              <div className="w-full bg-white min-h-[667px] max-h-[820px] overflow-y-auto ds-scrollbar-thin rounded-[22px]">
+              <div className="builder-canvas-mobile w-full bg-white min-h-[667px] max-h-[820px] overflow-y-auto overflow-x-hidden ds-scrollbar-thin rounded-[22px]">
                 {renderActiveSections()}
               </div>
 
@@ -419,7 +432,7 @@ export default function AdminTemplatePreview() {
               </div>
 
               {/* Scrollable Screen Content */}
-              <div className="w-full bg-white min-h-[720px] max-h-[860px] overflow-y-auto ds-scrollbar-thin rounded-[12px]">
+              <div className="builder-canvas-tablet w-full bg-white min-h-[720px] max-h-[860px] overflow-y-auto overflow-x-hidden ds-scrollbar-thin rounded-[12px]">
                 {renderActiveSections()}
               </div>
 
@@ -454,7 +467,7 @@ export default function AdminTemplatePreview() {
               </div>
 
               {/* Desktop Website Canvas */}
-              <div className="w-full bg-white min-h-[calc(100vh-8rem)]">
+              <div className="builder-canvas-desktop w-full bg-white min-h-[calc(100vh-8rem)]">
                 {renderActiveSections()}
               </div>
             </div>

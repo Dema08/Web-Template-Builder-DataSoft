@@ -1324,8 +1324,11 @@ export const broadcastBuilderState = (state) => {
   }
 };
 
-// Automatically broadcast on store changes
+// Automatically broadcast on store changes (only if NOT in preview mode)
 useBuilderStore.subscribe((state, previousState) => {
+  if (state.isPreviewMode) {
+    return;
+  }
   if (
     state.sections !== previousState.sections ||
     state.pages !== previousState.pages ||

@@ -65,11 +65,12 @@ export default function LogisticsNavTech({ components = [], sectionId = null }) 
           </div>
 
           <div className="flex items-center gap-3 shrink-0">
-            {renderLayoutComponents(ctaComps, sectionId)}
+            <div className="hidden sm:block">{renderLayoutComponents(ctaComps, sectionId)}</div>
             <button
               type="button"
               onClick={() => setMenuOpen(v => !v)}
-              className="lg:hidden p-2 text-slate-700"
+              className="lg:hidden p-2 rounded-lg bg-slate-100 border border-slate-300 text-slate-700"
+              aria-label="Toggle Navigation"
             >
               {menuOpen ? '✕' : '☰'}
             </button>
@@ -77,8 +78,15 @@ export default function LogisticsNavTech({ components = [], sectionId = null }) 
         </div>
 
         {menuOpen && (
-          <div className="lg:hidden mt-3 p-4 bg-slate-50 border border-slate-200 rounded-2xl flex flex-col gap-2">
-            {renderLayoutComponents(menuComps, sectionId)}
+          <div className="lg:hidden mt-3 p-4 bg-slate-50 border border-slate-200 rounded-2xl flex flex-col gap-2.5">
+            <div className="flex flex-col gap-2 [&_a]:w-full [&_button]:w-full [&_a]:justify-start [&_button]:justify-start">
+              {renderLayoutComponents(menuComps, sectionId)}
+            </div>
+            {ctaComps.length > 0 && (
+              <div className="pt-2 border-t border-slate-200 sm:hidden [&_a]:w-full [&_button]:w-full [&_a]:justify-center [&_button]:justify-center">
+                {renderLayoutComponents(ctaComps, sectionId)}
+              </div>
+            )}
           </div>
         )}
       </nav>

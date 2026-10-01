@@ -69,7 +69,7 @@ export default function HoldingNavConglomerate({ components = [], sectionId = nu
 
           {/* Action CTA */}
           <div className="flex items-center gap-3 shrink-0">
-            {renderLayoutComponents(ctaComps, sectionId)}
+            <div className="hidden sm:block">{renderLayoutComponents(ctaComps, sectionId)}</div>
             <button
               type="button"
               onClick={() => setMobileOpen(v => !v)}
@@ -83,8 +83,15 @@ export default function HoldingNavConglomerate({ components = [], sectionId = nu
 
         {/* Mobile Dropdown */}
         {mobileOpen && (
-          <div className="lg:hidden mt-3 p-4 rounded-xl bg-slate-900 border border-slate-700 flex flex-col gap-2 animate-fadeIn">
-            {renderLayoutComponents(menuComps, sectionId)}
+          <div className="lg:hidden mt-3 p-4 rounded-xl bg-slate-900 border border-slate-700 flex flex-col gap-2.5 animate-fadeIn">
+            <div className="flex flex-col gap-2 [&_a]:w-full [&_button]:w-full [&_a]:justify-start [&_button]:justify-start">
+              {renderLayoutComponents(menuComps, sectionId)}
+            </div>
+            {ctaComps.length > 0 && (
+              <div className="pt-2 border-t border-slate-700 sm:hidden [&_a]:w-full [&_button]:w-full [&_a]:justify-center [&_button]:justify-center">
+                {renderLayoutComponents(ctaComps, sectionId)}
+              </div>
+            )}
           </div>
         )}
       </nav>

@@ -1200,7 +1200,9 @@ export default function AdminLandingEditor() {
                         {/* Interactive Responsive Device Frame */}
                         <div className="bg-slate-900/5 p-4 sm:p-8 rounded-3xl border border-slate-200 flex justify-center overflow-x-auto">
                             <div
-                                className="bg-white rounded-3xl shadow-2xl border border-slate-300 overflow-hidden transition-all duration-300 relative"
+                                className={`bg-white rounded-3xl shadow-2xl border border-slate-300 overflow-hidden transition-all duration-300 relative ${
+                                    viewportMode === 'mobile' ? 'builder-canvas-mobile' : viewportMode === 'tablet' ? 'builder-canvas-tablet' : 'builder-canvas-desktop'
+                                }`}
                                 style={{
                                     width: viewportMode === 'mobile' ? '380px' : viewportMode === 'tablet' ? '768px' : '100%',
                                     height: '750px',
