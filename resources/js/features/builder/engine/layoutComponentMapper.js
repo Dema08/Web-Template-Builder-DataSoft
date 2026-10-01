@@ -554,6 +554,31 @@ import EduTrainersExecutive from '@builder/sections/education-custom/executive/E
 import EduCtaExecutive from '@builder/sections/education-custom/executive/EduCtaExecutive';
 import EduFooterExecutive from '@builder/sections/education-custom/executive/EduFooterExecutive';
 
+// Custom Organisasi & Asosiasi Layouts — Professional Forum
+import OrgNavProfessional from '@builder/sections/org-custom/professional/OrgNavProfessional';
+import OrgHeroProfessional from '@builder/sections/org-custom/professional/OrgHeroProfessional';
+import OrgMembershipProfessional from '@builder/sections/org-custom/professional/OrgMembershipProfessional';
+import OrgEventsProfessional from '@builder/sections/org-custom/professional/OrgEventsProfessional';
+import OrgCtaProfessional from '@builder/sections/org-custom/professional/OrgCtaProfessional';
+import OrgFooterProfessional from '@builder/sections/org-custom/professional/OrgFooterProfessional';
+
+// Custom Organisasi & Asosiasi Layouts — Social NGO Movement
+import OrgNavSocial from '@builder/sections/org-custom/social/OrgNavSocial';
+import OrgHeroSocial from '@builder/sections/org-custom/social/OrgHeroSocial';
+import OrgProgramsSocial from '@builder/sections/org-custom/social/OrgProgramsSocial';
+import OrgImpactSocial from '@builder/sections/org-custom/social/OrgImpactSocial';
+import OrgCtaSocial from '@builder/sections/org-custom/social/OrgCtaSocial';
+import OrgFooterSocial from '@builder/sections/org-custom/social/OrgFooterSocial';
+
+// Custom Organisasi & Asosiasi Layouts — Digital Tech Community
+import OrgNavDigital from '@builder/sections/org-custom/digital/OrgNavDigital';
+import OrgHeroDigital from '@builder/sections/org-custom/digital/OrgHeroDigital';
+import OrgProjectsDigital from '@builder/sections/org-custom/digital/OrgProjectsDigital';
+import OrgCommunityDigital from '@builder/sections/org-custom/digital/OrgCommunityDigital';
+import OrgCtaDigital from '@builder/sections/org-custom/digital/OrgCtaDigital';
+import OrgFooterDigital from '@builder/sections/org-custom/digital/OrgFooterDigital';
+
+
 
 export const LAYOUT_COMPONENTS = {
   // Custom Logistics — Corporate
@@ -714,6 +739,31 @@ export const LAYOUT_COMPONENTS = {
   'EduTrainersExecutive': EduTrainersExecutive,
   'EduCtaExecutive': EduCtaExecutive,
   'EduFooterExecutive': EduFooterExecutive,
+
+  // Custom Organisasi & Asosiasi — Professional Forum
+  'OrgNavProfessional': OrgNavProfessional,
+  'OrgHeroProfessional': OrgHeroProfessional,
+  'OrgMembershipProfessional': OrgMembershipProfessional,
+  'OrgEventsProfessional': OrgEventsProfessional,
+  'OrgCtaProfessional': OrgCtaProfessional,
+  'OrgFooterProfessional': OrgFooterProfessional,
+
+  // Custom Organisasi & Asosiasi — Social NGO Movement
+  'OrgNavSocial': OrgNavSocial,
+  'OrgHeroSocial': OrgHeroSocial,
+  'OrgProgramsSocial': OrgProgramsSocial,
+  'OrgImpactSocial': OrgImpactSocial,
+  'OrgCtaSocial': OrgCtaSocial,
+  'OrgFooterSocial': OrgFooterSocial,
+
+  // Custom Organisasi & Asosiasi — Digital Tech Community
+  'OrgNavDigital': OrgNavDigital,
+  'OrgHeroDigital': OrgHeroDigital,
+  'OrgProjectsDigital': OrgProjectsDigital,
+  'OrgCommunityDigital': OrgCommunityDigital,
+  'OrgCtaDigital': OrgCtaDigital,
+  'OrgFooterDigital': OrgFooterDigital,
+
   // Hero layouts
   'Hero01': Hero01,
   'Hero02': Hero02,

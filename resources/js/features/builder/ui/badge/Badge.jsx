@@ -1,11 +1,15 @@
 import { useBuilderStore } from '../../stores/builderStore';
 
 export default function Badge({
-  content = 'Badge',
+  content = '',
+  text = '',
+  label = '',
   variant = 'primary',
   size = 'medium',
   background = '',
   color = '',
+  borderColor = '',
+  border = '',
   radius = 'full',
   fontSize = '',
   fontWeight = '',
@@ -21,6 +25,8 @@ export default function Badge({
 }) {
   const { selectedComponentId, hoveredComponent, setHoveredComponent, selectComponent, isPreviewMode } = useBuilderStore();
 
+  const rawText = text || content || label || 'Badge';
+
   // Variant acts as fallback when no explicit colors are provided
   const variantBg = {
     primary: 'bg-indigo-600',
@@ -28,6 +34,7 @@ export default function Badge({
     success: 'bg-green-600',
     warning: 'bg-yellow-600',
     danger: 'bg-red-600',
+    outline: 'bg-transparent border border-indigo-500 text-indigo-400',
   };
 
   const variantText = {
@@ -36,12 +43,13 @@ export default function Badge({
     success: 'text-white',
     warning: 'text-white',
     danger: 'text-white',
+    outline: 'text-indigo-400',
   };
 
   const sizeStyles = {
-    small: 'px-2 py-0.5 text-xs',
-    medium: 'px-3 py-1 text-sm',
-    large: 'px-4 py-1.5 text-base',
+    small: 'px-2.5 py-1 text-xs',
+    medium: 'px-3.5 py-1.5 text-sm',
+    large: 'px-5 py-2 text-base',
   };
 
   const radiusStyles = {
@@ -64,10 +72,13 @@ export default function Badge({
   // Only use inline colors when the author explicitly set them (layout presets / inspector)
   const hasCustomBg = typeof background === 'string' && background.trim() !== '';
   const hasCustomColor = typeof color === 'string' && color.trim() !== '';
+  const isGradientBg = hasCustomBg && (background.includes('gradient') || background.includes('linear-') || background.includes('radial-'));
 
   const inlineStyle = {
-    ...(hasCustomBg ? { backgroundColor: background, backgroundImage: 'none' } : {}),
+    ...(hasCustomBg ? (isGradientBg ? { background } : { backgroundColor: background }) : {}),
     ...(hasCustomColor ? { color } : {}),
+    ...(borderColor ? { borderColor, borderStyle: 'solid', borderWidth: '1px' } : {}),
+    ...(border ? { border } : {}),
     ...(fontSize ? { fontSize } : {}),
     ...(fontWeight ? { fontWeight } : {}),
     ...(letterSpacing ? { letterSpacing } : {}),
@@ -85,7 +96,7 @@ export default function Badge({
     hasCustomColor ? '' : variantText[variant] || variantText.primary
   } ${sizeStyles[size] || sizeStyles.medium} ${radiusStyles[radius] || radiusStyles.full} ${
     shadowStyles[shadow] || ''
-  } font-medium inline-block whitespace-nowrap cursor-pointer transition-all ${
+  } font-semibold inline-flex items-center justify-center gap-1.5 whitespace-nowrap cursor-pointer transition-all ${
     isSelected
       ? 'ring-2 ring-indigo-600 ring-offset-2'
       : isHovered
@@ -108,7 +119,8 @@ export default function Badge({
       onMouseLeave={() => !isPreviewMode && setHoveredComponent(null)}
       className={className}
     >
-      {content}
+      {rawText}
     </span>
   );
 }
+
