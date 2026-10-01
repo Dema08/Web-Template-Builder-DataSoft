@@ -626,6 +626,31 @@ import KopImpactAgri from '@builder/sections/koperasi-custom/agri/KopImpactAgri'
 import KopCtaAgri from '@builder/sections/koperasi-custom/agri/KopCtaAgri';
 import KopFooterAgri from '@builder/sections/koperasi-custom/agri/KopFooterAgri';
 
+// Custom Perdagangan & Retail Layouts — B2B Wholesale & Supply Chain FMCG
+import RetailNavWholesale from '@builder/sections/retail-custom/wholesale/RetailNavWholesale';
+import RetailHeroWholesale from '@builder/sections/retail-custom/wholesale/RetailHeroWholesale';
+import RetailCatalogWholesale from '@builder/sections/retail-custom/wholesale/RetailCatalogWholesale';
+import RetailNetworkWholesale from '@builder/sections/retail-custom/wholesale/RetailNetworkWholesale';
+import RetailCtaWholesale from '@builder/sections/retail-custom/wholesale/RetailCtaWholesale';
+import RetailFooterWholesale from '@builder/sections/retail-custom/wholesale/RetailFooterWholesale';
+
+// Custom Perdagangan & Retail Layouts — Curated Luxury Boutique & Haute Maison
+import RetailNavLuxury from '@builder/sections/retail-custom/luxury/RetailNavLuxury';
+import RetailHeroLuxury from '@builder/sections/retail-custom/luxury/RetailHeroLuxury';
+import RetailCollectionLuxury from '@builder/sections/retail-custom/luxury/RetailCollectionLuxury';
+import RetailExperienceLuxury from '@builder/sections/retail-custom/luxury/RetailExperienceLuxury';
+import RetailCtaLuxury from '@builder/sections/retail-custom/luxury/RetailCtaLuxury';
+import RetailFooterLuxury from '@builder/sections/retail-custom/luxury/RetailFooterLuxury';
+
+// Custom Perdagangan & Retail Layouts — Omnichannel Supermart & Flash Commerce
+import RetailNavOmni from '@builder/sections/retail-custom/omni/RetailNavOmni';
+import RetailHeroOmni from '@builder/sections/retail-custom/omni/RetailHeroOmni';
+import RetailDealsOmni from '@builder/sections/retail-custom/omni/RetailDealsOmni';
+import RetailOmnichannelOmni from '@builder/sections/retail-custom/omni/RetailOmnichannelOmni';
+import RetailCtaOmni from '@builder/sections/retail-custom/omni/RetailCtaOmni';
+import RetailFooterOmni from '@builder/sections/retail-custom/omni/RetailFooterOmni';
+
+
 
 
 export const LAYOUT_COMPONENTS = {
@@ -859,6 +884,49 @@ export const LAYOUT_COMPONENTS = {
   'KopImpactAgri': KopImpactAgri,
   'KopCtaAgri': KopCtaAgri,
   'KopFooterAgri': KopFooterAgri,
+
+  // Custom Perdagangan & Retail — B2B Wholesale & Supply Chain FMCG
+  'RetailNavWholesale': RetailNavWholesale,
+  'RetailHeroWholesale': RetailHeroWholesale,
+  'RetailCatalogWholesale': RetailCatalogWholesale,
+  'RetailNetworkWholesale': RetailNetworkWholesale,
+  'RetailCtaWholesale': RetailCtaWholesale,
+  'RetailFooterWholesale': RetailFooterWholesale,
+  'retail-nav-wholesale': RetailNavWholesale,
+  'retail-hero-wholesale': RetailHeroWholesale,
+  'retail-catalog-wholesale': RetailCatalogWholesale,
+  'retail-network-wholesale': RetailNetworkWholesale,
+  'retail-cta-wholesale': RetailCtaWholesale,
+  'retail-footer-wholesale': RetailFooterWholesale,
+
+  // Custom Perdagangan & Retail — Curated Luxury Boutique & Haute Maison
+  'RetailNavLuxury': RetailNavLuxury,
+  'RetailHeroLuxury': RetailHeroLuxury,
+  'RetailCollectionLuxury': RetailCollectionLuxury,
+  'RetailExperienceLuxury': RetailExperienceLuxury,
+  'RetailCtaLuxury': RetailCtaLuxury,
+  'RetailFooterLuxury': RetailFooterLuxury,
+  'retail-nav-luxury': RetailNavLuxury,
+  'retail-hero-luxury': RetailHeroLuxury,
+  'retail-collection-luxury': RetailCollectionLuxury,
+  'retail-experience-luxury': RetailExperienceLuxury,
+  'retail-cta-luxury': RetailCtaLuxury,
+  'retail-footer-luxury': RetailFooterLuxury,
+
+  // Custom Perdagangan & Retail — Omnichannel Supermart & Flash Commerce
+  'RetailNavOmni': RetailNavOmni,
+  'RetailHeroOmni': RetailHeroOmni,
+  'RetailDealsOmni': RetailDealsOmni,
+  'RetailOmnichannelOmni': RetailOmnichannelOmni,
+  'RetailCtaOmni': RetailCtaOmni,
+  'RetailFooterOmni': RetailFooterOmni,
+  'retail-nav-omni': RetailNavOmni,
+  'retail-hero-omni': RetailHeroOmni,
+  'retail-deals-omni': RetailDealsOmni,
+  'retail-omnichannel-omni': RetailOmnichannelOmni,
+  'retail-cta-omni': RetailCtaOmni,
+  'retail-footer-omni': RetailFooterOmni,
+
 
   // Hero layouts
   'Hero01': Hero01,
