@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 /**
@@ -6,6 +7,8 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
  * CTA outline emas. Nuansa brand mewah / fashion / properti premium.
  */
 export default function Navbar02({ components = [], sectionId = null }) {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
   const defaultComponents = [
     { id: 'logo-2', type: 'heading', props: { content: 'NOIR', level: 'h2', fontSize: '22px', fontWeight: '900', color: '#f8fafc', letterSpacing: '0.3em' } },
     { id: 'nav-maison', type: 'button', props: { label: 'Maison', href: '#maison', variant: 'ghost', size: 'small', background: 'transparent', color: '#cbd5e1' } },
@@ -23,13 +26,13 @@ export default function Navbar02({ components = [], sectionId = null }) {
   const hasImageLogo = logoComps.some(c => c.type === 'image');
 
   return (
-    <nav className="bg-[#0a0a0b] border-b border-white/10 px-6 py-4 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto flex items-center justify-between gap-6">
-        <div className="flex flex-col leading-none shrink-0">
+    <nav className="bg-[#0a0a0b] border-b border-white/10 px-4 sm:px-6 py-4 sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+        <div className="flex flex-col leading-none shrink-0 min-w-0">
           {renderLayoutComponents(logoComps, sectionId)}
-          {!hasImageLogo && <span className="text-[9px] tracking-[0.45em] text-amber-200/70 font-semibold mt-1 select-none">PARIS — JAKARTA</span>}
+          {!hasImageLogo && <span className="text-[8px] sm:text-[9px] tracking-[0.35em] text-amber-200/70 font-semibold mt-1 select-none block truncate">PARIS — JAKARTA</span>}
         </div>
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden lg:flex items-center gap-8">
           {menuComps.length > 0 ? renderLayoutComponents(menuComps, sectionId) : (
             <>
               <span className="text-[13px] tracking-[0.2em] uppercase text-slate-300 cursor-default select-none">Maison</span>
@@ -41,9 +44,27 @@ export default function Navbar02({ components = [], sectionId = null }) {
         <div className="flex items-center gap-3 shrink-0">
           <span className="hidden sm:block text-[11px] tracking-[0.25em] text-amber-200/80 font-semibold select-none">EST. 2026</span>
           <div className="w-px h-6 bg-white/15 hidden sm:block" />
-          {renderLayoutComponents(ctaComps, sectionId)}
+          <div className="hidden sm:block">
+            {renderLayoutComponents(ctaComps, sectionId)}
+          </div>
+          <button
+            type="button"
+            onClick={() => setMobileOpen(v => !v)}
+            className="lg:hidden p-2 text-slate-300 hover:bg-slate-800 rounded-lg transition text-base font-bold"
+            aria-label="Toggle Navigation"
+          >
+            {mobileOpen ? '✕' : '☰'}
+          </button>
         </div>
       </div>
+      {mobileOpen && (
+        <div className="lg:hidden mt-4 pt-4 border-t border-white/10 flex flex-col gap-2">
+          {renderLayoutComponents(menuComps, sectionId)}
+          <div className="pt-2 sm:hidden border-t border-white/10">
+            {renderLayoutComponents(ctaComps, sectionId)}
+          </div>
+        </div>
+      )}
       <div className="h-px mt-4 bg-gradient-to-r from-transparent via-amber-200/50 to-transparent" />
     </nav>
   );

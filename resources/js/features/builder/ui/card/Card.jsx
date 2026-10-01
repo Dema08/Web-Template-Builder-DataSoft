@@ -56,9 +56,7 @@ export default function Card({
     margin: margin || '0px',
     width: width || '100%',
     height: height || 'auto',
-    minHeight: minHeight || 'auto',
-    maxWidth: maxWidth && maxWidth !== 'none' ? maxWidth : '100%',
-    boxSizing: 'border-box',
+    maxWidth: '100%',
     opacity: typeof opacity === 'number' ? opacity / 100 : (parseInt(opacity) / 100 || 1),
     alignItems: alignItems || 'stretch',
     justifyContent: justifyContent || 'flex-start',
@@ -68,7 +66,7 @@ export default function Card({
 
   return (
     <div
-      className={`relative flex flex-col ${shadowClasses[shadow] || ''} ${hoverClasses[hoverEffect] || ''}`}
+      className={`relative flex flex-col max-w-full box-border ${shadowClasses[shadow] || ''} ${hoverClasses[hoverEffect] || ''}`}
       style={style}
     >
       {/* If sub-components are provided, render them as editable components */}

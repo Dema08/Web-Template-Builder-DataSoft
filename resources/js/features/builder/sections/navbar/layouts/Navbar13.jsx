@@ -8,6 +8,7 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
  */
 export default function Navbar13({ components = [], sectionId = null }) {
   const [active, setActive] = useState('nav-home');
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const defaultComponents = [
     { id: 'logo-13', type: 'heading', props: { content: 'Solstice', level: 'h2', fontSize: '18px', fontWeight: '800', color: '#0f172a' } },
@@ -27,7 +28,7 @@ export default function Navbar13({ components = [], sectionId = null }) {
 
   return (
     <div className="px-4 pt-4">
-      <nav className="max-w-6xl mx-auto flex items-center justify-between gap-4 px-5 py-3 rounded-2xl bg-white/85 backdrop-blur-xl border border-slate-200/80 shadow-[0_16px_50px_-16px_rgba(15,23,42,0.3)]">
+      <nav className="max-w-6xl mx-auto flex items-center justify-between gap-4 px-4 sm:px-5 py-3 rounded-2xl bg-white/85 backdrop-blur-xl border border-slate-200/80 shadow-[0_16px_50px_-16px_rgba(15,23,42,0.3)]">
         <div className="flex items-center gap-2 shrink-0">
           {!hasImageLogo && <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-orange-400 to-rose-500 flex items-center justify-center text-white font-black shadow select-none shrink-0">S</div>}
           {renderLayoutComponents(logoComps, sectionId)}
@@ -54,8 +55,23 @@ export default function Navbar13({ components = [], sectionId = null }) {
         </div>
         <div className="flex items-center gap-2 shrink-0">
           {renderLayoutComponents(ctaComps, sectionId)}
+          <button
+            type="button"
+            onClick={() => setMobileOpen(v => !v)}
+            className="sm:hidden p-2 text-slate-700 hover:bg-slate-100 rounded-xl transition text-base font-bold select-none"
+            aria-label="Toggle Navigation"
+          >
+            {mobileOpen ? '✕' : '☰'}
+          </button>
         </div>
       </nav>
+
+      {mobileOpen && (
+        <div className="sm:hidden max-w-6xl mx-auto mt-2 p-3 rounded-2xl bg-white border border-slate-200 flex flex-wrap justify-center gap-2 shadow-lg">
+          {renderLayoutComponents(dockComps, sectionId)}
+        </div>
+      )}
+
       <p className="text-center text-[10px] text-slate-400 mt-2 select-none">Klik ikon dock untuk preview state aktif — komponen tetap terseleksi via panel</p>
     </div>
   );

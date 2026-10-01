@@ -8,6 +8,7 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
  */
 export default function Navbar10({ components = [], sectionId = null }) {
   const [notif, setNotif] = useState(3);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const defaultComponents = [
     { id: 'logo-10', type: 'heading', props: { content: 'NEBULA', level: 'h2', fontSize: '20px', fontWeight: '900', color: '#ffffff', letterSpacing: '0.2em' } },
@@ -26,7 +27,7 @@ export default function Navbar10({ components = [], sectionId = null }) {
 
   return (
     <div className="px-4 sm:px-6 pt-4">
-      <nav className="relative max-w-6xl mx-auto overflow-hidden rounded-2xl border border-violet-400/30 bg-slate-950/60 backdrop-blur-2xl px-5 py-3 shadow-[0_0_60px_-15px_rgba(139,92,246,0.5)]">
+      <nav className="relative max-w-6xl mx-auto overflow-hidden rounded-2xl border border-violet-400/30 bg-slate-950/60 backdrop-blur-2xl px-4 sm:px-5 py-3 shadow-[0_0_60px_-15px_rgba(139,92,246,0.5)]">
         <div className="pointer-events-none absolute -top-20 -left-20 w-64 h-64 rounded-full bg-violet-600/40 blur-3xl animate-pulse" />
         <div className="pointer-events-none absolute -bottom-24 -right-16 w-72 h-72 rounded-full bg-cyan-500/30 blur-3xl animate-pulse" />
         <div className="relative flex items-center justify-between gap-4">
@@ -48,8 +49,22 @@ export default function Navbar10({ components = [], sectionId = null }) {
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" /> MAINNET LIVE
             </span>
             {renderLayoutComponents(ctaComps, sectionId)}
+            <button
+              type="button"
+              onClick={() => setMobileOpen(v => !v)}
+              className="lg:hidden p-2 text-violet-200 hover:bg-white/10 rounded-xl transition text-base font-bold select-none"
+              aria-label="Toggle Navigation"
+            >
+              {mobileOpen ? '✕' : '☰'}
+            </button>
           </div>
         </div>
+
+        {mobileOpen && (
+          <div className="relative lg:hidden mt-3 pt-3 border-t border-white/10 flex flex-col gap-2 z-10">
+            {renderLayoutComponents(menuComps, sectionId)}
+          </div>
+        )}
       </nav>
     </div>
   );

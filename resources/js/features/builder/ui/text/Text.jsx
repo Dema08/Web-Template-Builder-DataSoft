@@ -1,5 +1,6 @@
 import InlineEditableText from '../../components/editing/InlineEditableText';
 import { useBuilderStore } from '../../stores/builderStore';
+import { getResponsiveFontSize } from '../heading/Heading';
 
 export default function Text({
   content = '',
@@ -7,7 +8,7 @@ export default function Text({
   fontSize = '16px',
   fontWeight = '400',
   color = '#000000',
-  lineHeight = '1.5',
+  lineHeight = '1.6',
   letterSpacing = 'normal',
   align = 'left',
   margin = '0',
@@ -30,9 +31,11 @@ export default function Text({
     }
   }
 
+  const responsiveFontSize = getResponsiveFontSize(fontSize);
+
   const style = {
     fontFamily,
-    fontSize: computedFontSize,
+    fontSize: responsiveFontSize,
     fontWeight,
     color,
     lineHeight,
@@ -43,9 +46,9 @@ export default function Text({
     fontStyle,
     textDecoration,
     textTransform,
-    wordBreak: 'break-word',
-    overflowWrap: 'break-word',
     maxWidth: maxWidth || '100%',
+    overflowWrap: 'break-word',
+    wordBreak: 'normal',
     ...(width ? { width } : {}),
     ...(height ? { height } : {}),
   };

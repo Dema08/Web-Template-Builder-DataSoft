@@ -8,6 +8,7 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
  */
 export default function Navbar12({ components = [], sectionId = null }) {
   const [copied, setCopied] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const defaultComponents = [
     { id: 'logo-12', type: 'heading', props: { content: '~/datasoft', level: 'h2', fontSize: '16px', fontWeight: '700', color: '#4ade80' } },
@@ -50,8 +51,22 @@ export default function Navbar12({ components = [], sectionId = null }) {
             {copied ? '✓ copied!' : '$ npm i datasoft'}
           </button>
           {renderLayoutComponents(ctaComps, sectionId)}
+          <button
+            type="button"
+            onClick={() => setMobileOpen(v => !v)}
+            className="md:hidden p-2 text-green-400 hover:bg-white/5 rounded-lg transition text-base font-bold select-none"
+            aria-label="Toggle Navigation"
+          >
+            {mobileOpen ? '✕' : '☰'}
+          </button>
         </div>
       </div>
+
+      {mobileOpen && (
+        <div className="md:hidden mt-3 pt-3 border-t border-green-500/20 flex flex-col gap-2">
+          {renderLayoutComponents(menuComps, sectionId)}
+        </div>
+      )}
     </nav>
   );
 }

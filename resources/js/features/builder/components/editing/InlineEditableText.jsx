@@ -20,9 +20,17 @@ export default function InlineEditableText({
 
   const Tag = tag;
 
+  const mergedStyle = {
+    maxWidth: '100%',
+    overflowWrap: 'break-word',
+    wordBreak: 'normal',
+    boxSizing: 'border-box',
+    ...(style || {}),
+  };
+
   if (isPreviewMode) {
     return (
-      <Tag style={style} className={className}>
+      <Tag style={mergedStyle} className={`max-w-full break-normal ${className}`}>
         {value}
       </Tag>
     );
@@ -90,8 +98,8 @@ export default function InlineEditableText({
       onClick={handleClick}
       onDoubleClick={handleDoubleClick}
       onKeyDown={handleKeyDown}
-      style={style}
-      className={`outline-none focus:outline-2 focus:outline-indigo-500 focus:outline-dashed cursor-text ${className}`}
+      style={mergedStyle}
+      className={`outline-none focus:outline-2 focus:outline-indigo-500 focus:outline-dashed cursor-text max-w-full break-words ${className}`}
     >
       {value}
     </Tag>

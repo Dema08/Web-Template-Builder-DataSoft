@@ -8,6 +8,7 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
  */
 export default function Navbar17({ components = [], sectionId = null }) {
   const [query, setQuery] = useState('');
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const defaultComponents = [
     { id: 'logo-17', type: 'heading', props: { content: 'pulse', level: 'h2', fontSize: '22px', fontWeight: '900', color: '#0f172a' } },
@@ -49,8 +50,8 @@ export default function Navbar17({ components = [], sectionId = null }) {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onClick={(e) => e.stopPropagation()}
-            placeholder="Search products, brands, categories…"
-            className="flex-1 bg-transparent outline-none text-sm text-slate-700 placeholder:text-slate-400"
+            placeholder="Search products…"
+            className="flex-1 bg-transparent outline-none text-xs sm:text-sm text-slate-700 placeholder:text-slate-400 min-w-0"
           />
           {query && (
             <button
@@ -61,12 +62,26 @@ export default function Navbar17({ components = [], sectionId = null }) {
               ✕
             </button>
           )}
-          <span className="text-[10px] font-bold text-slate-400 bg-white border border-slate-200 rounded-md px-1.5 py-0.5 select-none">/</span>
+          <span className="hidden sm:inline-block text-[10px] font-bold text-slate-400 bg-white border border-slate-200 rounded-md px-1.5 py-0.5 select-none">/</span>
         </div>
         <div className="flex items-center gap-2 shrink-0">
           {renderLayoutComponents(ctaComps, sectionId)}
+          <button
+            type="button"
+            onClick={() => setMobileOpen(v => !v)}
+            className="md:hidden p-2 text-slate-700 hover:bg-slate-100 rounded-xl transition text-base font-bold select-none"
+            aria-label="Toggle Navigation"
+          >
+            {mobileOpen ? '✕' : '☰'}
+          </button>
         </div>
       </div>
+
+      {mobileOpen && (
+        <div className="md:hidden mt-3 pt-3 border-t border-slate-100 flex flex-col gap-2">
+          {renderLayoutComponents(menuComps, sectionId)}
+        </div>
+      )}
     </nav>
   );
 }

@@ -8,6 +8,7 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
  */
 export default function Navbar07({ components = [], sectionId = null }) {
   const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = (e) => {
@@ -34,7 +35,7 @@ export default function Navbar07({ components = [], sectionId = null }) {
   const hasImageLogo = logoComps.some(c => c.type === 'image');
 
   return (
-    <nav className={`sticky top-0 z-50 px-6 transition-all duration-500 ${scrolled ? 'py-2.5 bg-slate-950/85 backdrop-blur-xl border-b border-white/10 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.6)]' : 'py-5 bg-gradient-to-b from-slate-950/80 to-transparent border-b border-transparent'}`}>
+    <nav className={`sticky top-0 z-50 px-4 sm:px-6 transition-all duration-500 ${scrolled ? 'py-2.5 bg-slate-950/85 backdrop-blur-xl border-b border-white/10 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.6)]' : 'py-5 bg-gradient-to-b from-slate-950/80 to-transparent border-b border-transparent'}`}>
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
         <div className="flex items-center gap-2.5 shrink-0">
           {!hasImageLogo && <div className={`rounded-lg bg-gradient-to-br from-indigo-400 to-cyan-300 transition-all duration-500 flex items-center justify-center text-slate-950 font-black select-none shrink-0 ${scrolled ? 'w-8 h-8 text-sm' : 'w-10 h-10 text-base'}`}>◈</div>}
@@ -55,8 +56,21 @@ export default function Navbar07({ components = [], sectionId = null }) {
             {scrolled ? '● SOLID' : '○ CLEAR'}
           </button>
           {renderLayoutComponents(ctaComps, sectionId)}
+          <button
+            type="button"
+            onClick={() => setMobileOpen(v => !v)}
+            className="lg:hidden p-2 text-white hover:bg-white/10 rounded-xl transition text-base font-bold select-none"
+            aria-label="Toggle Navigation"
+          >
+            {mobileOpen ? '✕' : '☰'}
+          </button>
         </div>
       </div>
+      {mobileOpen && (
+        <div className="lg:hidden mt-3 pt-3 border-t border-white/10 flex flex-col gap-2">
+          {renderLayoutComponents(menuComps, sectionId)}
+        </div>
+      )}
     </nav>
   );
 }

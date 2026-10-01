@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 /**
@@ -6,6 +7,8 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
  * Nuansa wellness / arsitek / skincare premium.
  */
 export default function Navbar09({ components = [], sectionId = null }) {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
   const defaultComponents = [
     { id: 'logo-9', type: 'heading', props: { content: 'serenity', level: 'h2', fontSize: '24px', fontWeight: '400', color: '#1c1917' } },
     { id: 'nav-retreats', type: 'button', props: { label: 'Retreats', href: '#retreats', variant: 'ghost', size: 'small', background: 'transparent', color: '#78716c' } },
@@ -20,7 +23,7 @@ export default function Navbar09({ components = [], sectionId = null }) {
   const ctaComps = layoutComponents.filter(c => c.type === 'button' && String(c.id || '').startsWith('cta'));
 
   return (
-    <nav className="sticky top-0 z-50 bg-[#faf9f7]/90 backdrop-blur px-6 pt-6 pb-4">
+    <nav className="sticky top-0 z-50 bg-[#faf9f7]/90 backdrop-blur px-4 sm:px-6 pt-6 pb-4">
       <div className="max-w-5xl mx-auto">
         <div className="flex items-center justify-between gap-6">
           <div className="hidden md:flex items-center gap-8 flex-1">
@@ -40,8 +43,23 @@ export default function Navbar09({ components = [], sectionId = null }) {
           </div>
           <div className="md:hidden flex items-center gap-2">
             {renderLayoutComponents(ctaComps, sectionId)}
+            <button
+              type="button"
+              onClick={() => setMobileOpen(v => !v)}
+              className="p-2 text-stone-700 hover:bg-stone-100 rounded-xl transition text-base font-bold select-none"
+              aria-label="Toggle Navigation"
+            >
+              {mobileOpen ? '✕' : '☰'}
+            </button>
           </div>
         </div>
+
+        {mobileOpen && (
+          <div className="md:hidden mt-4 pt-3 border-t border-stone-200 flex flex-col gap-2">
+            {renderLayoutComponents(menuComps, sectionId)}
+          </div>
+        )}
+
         <div className="mt-4 h-px bg-gradient-to-r from-transparent via-stone-300 to-transparent" />
       </div>
     </nav>

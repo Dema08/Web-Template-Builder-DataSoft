@@ -94,20 +94,33 @@ export default function EditableComponent({
   if (isHidden && isPreviewMode) return null;
   if (isPreviewMode) {
     const isInline = ['text', 'heading', 'button', 'icon', 'badge'].includes(component.type);
-    const hasPosition = component.position?.isAbsolute || (component.position?.x !== undefined && component.position?.x !== 0) || (component.position?.y !== undefined && component.position?.y !== 0);
+    const isContainer = component.type === 'card' || component.type === 'accordion' || component.type === 'gallery';
+    const isStandalone = component.props?.isStandalone || component.isStandalone;
+    const currentDeviceView = useBuilderStore.getState().deviceView || 'desktop';
+    const isMobileOrTabletView = currentDeviceView === 'mobile' || currentDeviceView === 'tablet';
+
+    const hasPosition = !isMobileOrTabletView && !isContainer && !isInline && (component.position?.isAbsolute || (component.position?.x !== undefined && component.position?.x !== 0) || (component.position?.y !== undefined && component.position?.y !== 0));
+
+    const effectiveWidth = isMobileOrTabletView
+      ? (isInline ? 'fit-content' : '100%')
+      : (component.position?.width || component.props?.width || (isInline ? 'fit-content' : '100%'));
+
     const wrapperStyle = {
       display: isInline ? 'inline-block' : 'block',
       maxWidth: '100%',
-      width: component.position?.width || component.props?.width || (isInline ? 'fit-content' : undefined),
-      height: component.position?.height || component.props?.height || undefined,
+      width: effectiveWidth,
+      height: isMobileOrTabletView ? 'auto' : (component.position?.height || component.props?.height || undefined),
       position: hasPosition ? 'absolute' : 'relative',
       left: hasPosition ? `${component.position?.x || 0}px` : undefined,
       top: hasPosition ? `${component.position?.y || 0}px` : undefined,
       zIndex: component.position?.zIndex || 1,
       pointerEvents: 'auto',
+      boxSizing: 'border-box',
+      overflowWrap: 'break-word',
+      wordBreak: 'normal',
     };
     return (
-      <div id={component.id} style={wrapperStyle} className={isInline ? 'inline-block' : 'block'}>
+      <div id={component.id} style={wrapperStyle} className={isInline ? 'inline-block max-w-full' : 'block w-full max-w-full'}>
         {children}
       </div>
     );
@@ -368,15 +381,24 @@ export default function EditableComponent({
   const isComponentDragging = activeDragType === 'sidebar-component' || activeDragType === 'canvas-component' || dnd?.activeDragItem?.rawType === 'component';
 
   const isInline = ['text', 'heading', 'button', 'icon', 'badge'].includes(component.type);
-  const hasPosition = component.position?.isAbsolute || isDraggingLocal || (component.position?.x !== undefined && component.position?.x !== 0) || (component.position?.y !== undefined && component.position?.y !== 0);
+  const currentDeviceView = useBuilderStore.getState().deviceView || 'desktop';
+  const isMobileOrTablet = builderMode === 'select' && (currentDeviceView === 'mobile' || currentDeviceView === 'tablet');
+  const hasExplicitPosition = component.position?.isAbsolute || isDraggingLocal;
+  const hasPosition = (isContainer || isMobileOrTablet)
+    ? isDraggingLocal
+    : hasExplicitPosition || (component.position?.x !== undefined && component.position?.x !== 0) || (component.position?.y !== undefined && component.position?.y !== 0);
 
   // Exact width and height preserved at 100% scale without shrinking
-  const activeWidth = lockedSize 
-    ? `${lockedSize.width}px` 
-    : (component.position?.width || component.props?.width || (isInline ? 'fit-content' : '100%'));
-  const activeHeight = lockedSize 
-    ? `${lockedSize.height}px` 
-    : (component.position?.height || component.props?.height || undefined);
+  const activeWidth = (isMobileOrTablet && !isDraggingLocal)
+    ? (isInline ? 'fit-content' : '100%')
+    : (lockedSize 
+        ? `${lockedSize.width}px` 
+        : (component.position?.width || component.props?.width || (isInline ? 'fit-content' : '100%')));
+  const activeHeight = (isMobileOrTablet && !isDraggingLocal)
+    ? 'auto'
+    : (lockedSize 
+        ? `${lockedSize.height}px` 
+        : (component.position?.height || component.props?.height || undefined));
 
   const activePosX = isDraggingLocal && dragPosition ? dragPosition.x : (component.position?.x || 0);
   const activePosY = isDraggingLocal && dragPosition ? dragPosition.y : (component.position?.y || 0);
@@ -384,6 +406,7 @@ export default function EditableComponent({
   const wrapperClass = [
     'relative',
     'rounded-sm',
+    'max-w-full',
     isDraggingLocal
       ? 'z-50 shadow-2xl ring-2 ring-indigo-500 cursor-grabbing bg-white/95 backdrop-blur-xs'
       : isSelected
@@ -408,6 +431,9 @@ export default function EditableComponent({
     zIndex: isDraggingLocal ? 999 : (component.position?.zIndex || (isSelected ? 20 : 1)),
     pointerEvents: 'auto',
     transform: 'none', // Ensure 100% scale at all times
+    boxSizing: 'border-box',
+    overflowWrap: 'break-word',
+    wordBreak: 'normal',
   };
 
   return (

@@ -8,6 +8,7 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
  */
 export default function Navbar11({ components = [], sectionId = null }) {
   const [issue] = useState('Vol. 42 — Autumn');
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const defaultComponents = [
     { id: 'logo-11', type: 'heading', props: { content: 'The Monocle Post', level: 'h2', fontSize: '28px', fontWeight: '700', color: '#1c1917' } },
@@ -24,7 +25,7 @@ export default function Navbar11({ components = [], sectionId = null }) {
   const ctaComps = layoutComponents.filter(c => c.type === 'button' && String(c.id || '').startsWith('cta'));
 
   return (
-    <nav className="sticky top-0 z-50 bg-[#faf9f6] px-6 pt-3 pb-0 border-b border-stone-900">
+    <nav className="sticky top-0 z-50 bg-[#faf9f6] px-4 sm:px-6 pt-3 pb-2 border-b border-stone-900">
       <div className="max-w-7xl mx-auto flex items-center justify-between text-[11px] font-semibold tracking-widest uppercase text-stone-500 pb-2">
         <span className="select-none">{issue}</span>
         <span className="hidden sm:block select-none">Jakarta — London — Tokyo</span>
@@ -47,8 +48,22 @@ export default function Navbar11({ components = [], sectionId = null }) {
         </div>
         <div className="lg:hidden flex items-center gap-2">
           {renderLayoutComponents(ctaComps, sectionId)}
+          <button
+            type="button"
+            onClick={() => setMobileOpen(v => !v)}
+            className="p-2 text-stone-900 hover:bg-stone-200 transition text-base font-bold select-none"
+            aria-label="Toggle Navigation"
+          >
+            {mobileOpen ? '✕' : '☰'}
+          </button>
         </div>
       </div>
+
+      {mobileOpen && (
+        <div className="lg:hidden mt-2 pt-3 border-t border-stone-300 flex flex-col gap-2 pb-2">
+          {renderLayoutComponents(menuComps, sectionId)}
+        </div>
+      )}
     </nav>
   );
 }

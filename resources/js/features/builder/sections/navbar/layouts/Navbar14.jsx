@@ -8,6 +8,7 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
  */
 export default function Navbar14({ components = [], sectionId = null }) {
   const [lang, setLang] = useState('ID');
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const defaultComponents = [
     { id: 'logo-14', type: 'heading', props: { content: 'MAISON DOUBLE', level: 'h2', fontSize: '20px', fontWeight: '900', color: '#1e3a8a', letterSpacing: '0.08em' } },
@@ -27,7 +28,7 @@ export default function Navbar14({ components = [], sectionId = null }) {
 
   return (
     <header className="sticky top-0 z-50">
-      <div className="bg-[#1e3a8a] text-white/90 px-6 py-1.5">
+      <div className="bg-[#1e3a8a] text-white/90 px-4 sm:px-6 py-1.5">
         <div className="max-w-7xl mx-auto flex items-center justify-between text-[11px] font-medium">
           <div className="flex items-center gap-4">
             <span className="select-none">☎ (021) 800-1234</span>
@@ -47,7 +48,7 @@ export default function Navbar14({ components = [], sectionId = null }) {
           </div>
         </div>
       </div>
-      <nav className="bg-white border-b-2 border-blue-900/10 px-6 py-3.5 shadow-sm">
+      <nav className="bg-white border-b-2 border-blue-900/10 px-4 sm:px-6 py-3.5 shadow-sm">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 shrink-0">
             {!hasImageLogo && <div className="w-11 h-11 rounded-lg bg-blue-900 flex items-center justify-center text-white font-black text-lg select-none shrink-0">M</div>}
@@ -63,8 +64,22 @@ export default function Navbar14({ components = [], sectionId = null }) {
           </div>
           <div className="flex items-center gap-2 shrink-0">
             {renderLayoutComponents(ctaComps, sectionId)}
+            <button
+              type="button"
+              onClick={() => setMobileOpen(v => !v)}
+              className="lg:hidden p-2 text-blue-900 hover:bg-slate-100 rounded-xl transition text-base font-bold select-none"
+              aria-label="Toggle Navigation"
+            >
+              {mobileOpen ? '✕' : '☰'}
+            </button>
           </div>
         </div>
+
+        {mobileOpen && (
+          <div className="lg:hidden mt-3 pt-3 border-t border-slate-100 flex flex-col gap-2">
+            {renderLayoutComponents(menuComps, sectionId)}
+          </div>
+        )}
       </nav>
     </header>
   );

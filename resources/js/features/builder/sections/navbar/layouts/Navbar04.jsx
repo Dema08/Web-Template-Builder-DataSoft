@@ -8,6 +8,7 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
  */
 export default function Navbar04({ components = [], sectionId = null }) {
   const [expanded, setExpanded] = useState(true);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const defaultComponents = [
     { id: 'logo-4', type: 'heading', props: { content: '🌿 Emerald', level: 'h2', fontSize: '20px', fontWeight: '800', color: '#064e3b' } },
@@ -24,19 +25,19 @@ export default function Navbar04({ components = [], sectionId = null }) {
 
   return (
     <div className="sticky top-0 z-50">
-      <div className={`overflow-hidden transition-all duration-500 ${expanded ? 'max-h-12 opacity-100' : 'max-h-0 opacity-0'}`}>
-        <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 px-6 py-2 flex items-center justify-center gap-3">
-          <span className="text-[11px] font-bold tracking-wide text-white select-none">✨ FREE CARBON-NEUTRAL SHIPPING OVER $75 — THIS WEEK ONLY</span>
+      <div className={`overflow-hidden transition-all duration-500 ${expanded ? 'max-h-16 opacity-100' : 'max-h-0 opacity-0'}`}>
+        <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 px-4 sm:px-6 py-2 flex items-center justify-between sm:justify-center gap-2">
+          <span className="text-[10px] sm:text-[11px] font-bold tracking-wide text-white select-none text-center flex-1">✨ FREE CARBON-NEUTRAL SHIPPING OVER $75 — THIS WEEK ONLY</span>
           <button
             type="button"
             onClick={(e) => { e.preventDefault(); e.stopPropagation(); setExpanded(false); }}
-            className="text-white/80 hover:text-white text-xs font-bold px-1 select-none"
+            className="text-white/80 hover:text-white text-xs font-bold px-1 select-none shrink-0"
           >
             ✕
           </button>
         </div>
       </div>
-      <nav className="bg-white/95 backdrop-blur border-b border-emerald-100 px-6 py-3.5 shadow-[0_8px_30px_-12px_rgba(5,150,105,0.25)]">
+      <nav className="bg-white/95 backdrop-blur border-b border-emerald-100 px-4 sm:px-6 py-3.5 shadow-[0_8px_30px_-12px_rgba(5,150,105,0.25)]">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
           <div className="flex items-center gap-4 shrink-0">
             {!expanded && (
@@ -60,8 +61,22 @@ export default function Navbar04({ components = [], sectionId = null }) {
           </div>
           <div className="flex items-center gap-2 shrink-0">
             {renderLayoutComponents(ctaComps, sectionId)}
+            <button
+              type="button"
+              onClick={() => setMobileOpen(v => !v)}
+              className="md:hidden p-2 text-emerald-800 hover:bg-emerald-50 rounded-xl transition text-base font-bold select-none"
+              aria-label="Toggle Navigation"
+            >
+              {mobileOpen ? '✕' : '☰'}
+            </button>
           </div>
         </div>
+
+        {mobileOpen && (
+          <div className="md:hidden mt-3 pt-3 border-t border-emerald-100 flex flex-col gap-2">
+            {renderLayoutComponents(menuComps, sectionId)}
+          </div>
+        )}
       </nav>
     </div>
   );

@@ -1,6 +1,26 @@
 import InlineEditableText from '../../components/editing/InlineEditableText';
 import { useBuilderStore } from '../../stores/builderStore';
 
+export function getResponsiveFontSize(fontSize) {
+  if (!fontSize) return fontSize;
+  if (typeof fontSize === 'string' && fontSize.includes('clamp')) {
+    return fontSize;
+  }
+  let numericSize = null;
+  if (typeof fontSize === 'number') {
+    numericSize = fontSize;
+  } else if (typeof fontSize === 'string' && fontSize.endsWith('px')) {
+    numericSize = parseFloat(fontSize);
+  }
+  
+  if (numericSize !== null && !isNaN(numericSize) && numericSize >= 20) {
+    const minSize = Math.max(16, Math.round(numericSize * 0.55));
+    const preferredVw = (numericSize / 16).toFixed(2);
+    return `clamp(${minSize}px, ${preferredVw}vw + 6px, ${numericSize}px)`;
+  }
+  return fontSize;
+}
+
 export default function Heading({
   content = 'Heading',
   level = 'h1',
@@ -11,7 +31,7 @@ export default function Heading({
   align = 'left',
   margin = '0',
   padding = '0',
-  lineHeight = '1.5',
+  lineHeight = '1.3',
   letterSpacing = 'normal',
   textTransform = 'none',
   textDecoration = 'none',
@@ -22,35 +42,24 @@ export default function Heading({
   componentId = null,
   sectionId = null,
 }) {
-  const { updateComponentProps } = useBuilderStore();
-
-  // Ensure responsive font scaling for large headings on mobile and prevent overflow
-  let computedFontSize = fontSize;
-  if (typeof fontSize === 'string' && fontSize.endsWith('px')) {
-    const numSize = parseFloat(fontSize);
-    if (numSize >= 40) {
-      computedFontSize = `clamp(24px, 5.5vw, ${fontSize})`;
-    } else if (numSize >= 30) {
-      computedFontSize = `clamp(20px, 4.5vw, ${fontSize})`;
-    }
-  }
+  const responsiveFontSize = getResponsiveFontSize(fontSize);
 
   const style = {
     fontFamily,
-    fontSize: computedFontSize,
+    fontSize: responsiveFontSize,
     fontWeight,
     color,
     textAlign: align,
     margin,
     padding,
-    lineHeight,
+    lineHeight: lineHeight || '1.3',
     letterSpacing,
     textTransform,
     textDecoration,
     fontStyle,
-    wordBreak: 'break-word',
-    overflowWrap: 'break-word',
     maxWidth: maxWidth || '100%',
+    overflowWrap: 'break-word',
+    wordBreak: 'normal',
     ...(width ? { width } : {}),
     ...(height ? { height } : {}),
   };

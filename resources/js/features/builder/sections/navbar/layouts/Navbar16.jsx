@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 /**
@@ -6,6 +7,8 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
  * perhiasan, hotel bintang 5, brand heritage.
  */
 export default function Navbar16({ components = [], sectionId = null }) {
+  const [mobileOpen, setMobileOpen] = useState(false);
+
   const defaultComponents = [
     { id: 'logo-16', type: 'heading', props: { content: 'GOLDLEAF', level: 'h2', fontSize: '20px', fontWeight: '900', color: '#78350f', letterSpacing: '0.25em' } },
     { id: 'nav-heritage', type: 'button', props: { label: 'Heritage', href: '#heritage', variant: 'ghost', size: 'small', background: 'transparent', color: '#92400e' } },
@@ -22,7 +25,7 @@ export default function Navbar16({ components = [], sectionId = null }) {
   const hasImageLogo = logoComps.some(c => c.type === 'image');
 
   return (
-    <nav className="sticky top-0 z-50 bg-gradient-to-b from-[#fffbeb] to-[#fef3c7] px-6 pt-5 pb-3 border-b border-amber-200">
+    <nav className="sticky top-0 z-50 bg-gradient-to-b from-[#fffbeb] to-[#fef3c7] px-4 sm:px-6 pt-5 pb-3 border-b border-amber-200">
       <div className="max-w-6xl mx-auto">
         {!hasImageLogo && (
           <div className="flex items-center justify-center gap-3 mb-3">
@@ -48,8 +51,22 @@ export default function Navbar16({ components = [], sectionId = null }) {
           </div>
           <div className="lg:hidden flex items-center gap-2">
             {renderLayoutComponents(ctaComps, sectionId)}
+            <button
+              type="button"
+              onClick={() => setMobileOpen(v => !v)}
+              className="p-2 text-amber-900 hover:bg-amber-200/50 rounded-xl transition text-base font-bold select-none"
+              aria-label="Toggle Navigation"
+            >
+              {mobileOpen ? '✕' : '☰'}
+            </button>
           </div>
         </div>
+
+        {mobileOpen && (
+          <div className="lg:hidden mt-3 pt-3 border-t border-amber-300/60 flex flex-col gap-2">
+            {renderLayoutComponents(menuComps, sectionId)}
+          </div>
+        )}
       </div>
     </nav>
   );

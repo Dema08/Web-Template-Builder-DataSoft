@@ -9,6 +9,7 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 export default function Navbar20({ components = [], sectionId = null }) {
   const [mega, setMega] = useState(false);
   const [progress] = useState(32);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const defaultComponents = [
     { id: 'logo-20', type: 'heading', props: { content: 'AETHER', level: 'h2', fontSize: '20px', fontWeight: '900', color: '#ffffff', letterSpacing: '0.25em' } },
@@ -35,7 +36,7 @@ export default function Navbar20({ components = [], sectionId = null }) {
         className="sticky top-0 z-50 px-4 sm:px-6 pt-4"
         onMouseLeave={() => setMega(false)}
       >
-        <div className="max-w-6xl mx-auto rounded-2xl border border-white/15 bg-slate-950/70 backdrop-blur-2xl px-5 py-3 shadow-[0_24px_70px_-20px_rgba(99,102,241,0.55)]">
+        <div className="max-w-6xl mx-auto rounded-2xl border border-white/15 bg-slate-950/70 backdrop-blur-2xl px-4 sm:px-5 py-3 shadow-[0_24px_70px_-20px_rgba(99,102,241,0.55)]">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-2.5 shrink-0">
               {!hasImageLogo && (
@@ -55,8 +56,23 @@ export default function Navbar20({ components = [], sectionId = null }) {
             <div className="flex items-center gap-2 shrink-0">
               <span className="hidden md:block text-[11px] font-semibold text-slate-400 select-none">v4.2</span>
               {renderLayoutComponents(ctaComps, sectionId)}
+              <button
+                type="button"
+                onClick={() => setMobileOpen(v => !v)}
+                className="lg:hidden p-2 text-white hover:bg-white/10 rounded-xl transition text-base font-bold select-none"
+                aria-label="Toggle Navigation"
+              >
+                {mobileOpen ? '✕' : '☰'}
+              </button>
             </div>
           </div>
+
+          {mobileOpen && (
+            <div className="lg:hidden mt-3 pt-3 border-t border-white/10 flex flex-col gap-2">
+              {renderLayoutComponents(menuComps, sectionId)}
+            </div>
+          )}
+
           <div className={`overflow-hidden transition-all duration-500 ${mega ? 'max-h-48 opacity-100 mt-3' : 'max-h-0 opacity-0'}`}>
             <div className="grid grid-cols-3 gap-2 pb-1" onClick={(e) => e.stopPropagation()}>
               {[

@@ -8,6 +8,7 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
  */
 export default function Navbar05({ components = [], sectionId = null }) {
   const [openMenu, setOpenMenu] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const defaultComponents = [
     { id: 'logo-5', type: 'heading', props: { content: 'VELOCE', level: 'h2', fontSize: '22px', fontWeight: '900', color: '#ffffff', letterSpacing: '0.12em' } },
@@ -25,7 +26,7 @@ export default function Navbar05({ components = [], sectionId = null }) {
   const hasImageLogo = logoComps.some(c => c.type === 'image');
 
   return (
-    <nav className="sticky top-0 z-50 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border-b border-red-500/30 px-6 py-3.5">
+    <nav className="sticky top-0 z-50 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 border-b border-red-500/30 px-4 sm:px-6 py-3.5">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
         <div className="flex items-center gap-3 shrink-0">
           {!hasImageLogo && <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center text-white font-black italic shadow-lg shadow-red-500/40 select-none shrink-0">V</div>}
@@ -53,8 +54,21 @@ export default function Navbar05({ components = [], sectionId = null }) {
             <span className="text-[10px] font-bold bg-white/15 text-white rounded-full px-2 py-0.5 select-none">⌘K</span>
           </div>
           {renderLayoutComponents(ctaComps, sectionId)}
+          <button
+            type="button"
+            onClick={() => setMobileOpen(v => !v)}
+            className="lg:hidden p-2 text-white hover:bg-white/10 rounded-xl transition text-base font-bold select-none"
+            aria-label="Toggle Navigation"
+          >
+            {mobileOpen ? '✕' : '☰'}
+          </button>
         </div>
       </div>
+      {mobileOpen && (
+        <div className="lg:hidden mt-3 pt-3 border-t border-white/10 flex flex-col gap-2">
+          {renderLayoutComponents(menuComps, sectionId)}
+        </div>
+      )}
       <div className={`overflow-hidden transition-all duration-500 ${openMenu ? 'max-h-40 opacity-100 mt-3' : 'max-h-0 opacity-0'}`}>
         <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-2 pb-2">
           {['GT Series', 'Electric', 'Accessories', 'Support'].map(label => (
