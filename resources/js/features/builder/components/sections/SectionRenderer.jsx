@@ -372,8 +372,10 @@ export default function SectionRenderer({ section, isSelected, onClick }) {
     );
     if (extraComps.length === 0) return null;
     return (
-      <div className="absolute inset-0 z-20 pointer-events-none">
-        {renderLayoutComponents(extraComps, section.id)}
+      // data-extra-components-overlay prevents the parent section selector from overriding pointer events
+      <div data-extra-components-overlay="true" className="absolute inset-0 z-20" style={{ pointerEvents: 'none' }}>
+        {/* includeStandalone=true so overlay renders all standalone components */}
+        {renderLayoutComponents(extraComps, section.id, null, true)}
       </div>
     );
   }
@@ -409,7 +411,7 @@ export default function SectionRenderer({ section, isSelected, onClick }) {
       id={section.id}
       onClick={handleSectionClick}
       onDoubleClick={handleSectionDoubleClick}
-      className={`relative cursor-pointer transition-all [&_.select-none:not([data-microdata-support]):not([data-non-editable])]:select-text [&_.pointer-events-none:not(video):not([data-bg-overlay])]:pointer-events-auto ${
+      className={`relative cursor-pointer transition-all [&_.select-none:not([data-microdata-support]):not([data-non-editable])]:select-text [&_.pointer-events-none:not(video):not([data-bg-overlay]):not([data-extra-components-overlay])]:pointer-events-auto ${
         isSelected || isSectionSelected ? 'ring-2 ring-indigo-600 ring-offset-2' : 'hover:ring-2 hover:ring-indigo-300'
       }`}
       style={getSectionStyle()}
