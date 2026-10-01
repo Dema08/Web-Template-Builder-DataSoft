@@ -185,6 +185,8 @@ export const useBuilderStore = create((set, get) => ({
         layout: s.layout,
         styles: s.styles || {},
         background: s.background || null,
+        customTexts: s.customTexts || {},
+        customImages: s.customImages || {},
         isLocked: s.isLocked || false,
         isHidden: s.isHidden || false,
         components: s.components,
@@ -225,6 +227,8 @@ export const useBuilderStore = create((set, get) => ({
         order: index,
         styles: section.styles || {},
         background: section.background || null,
+        customTexts: section.customTexts || {},
+        customImages: section.customImages || {},
         isLocked: section.isLocked || false,
         isHidden: section.isHidden || false,
       };
@@ -879,6 +883,32 @@ export const useBuilderStore = create((set, get) => ({
           customTexts: {
             ...currentCustomTexts,
             [textKey]: newText,
+          },
+        };
+      }
+      return s;
+    });
+
+    set({ sections: newSections });
+  },
+
+  updateSectionCustomImage: (sectionId, imageKey, newImageUrl, newAlt = null) => {
+    const { sections, saveToHistory } = get();
+    saveToHistory();
+
+    const newSections = sections.map(s => {
+      if (s.id === sectionId) {
+        const currentCustomImages = s.customImages || {};
+        const currentVal = currentCustomImages[imageKey];
+        const updatedVal = typeof currentVal === 'object' && currentVal !== null
+          ? { ...currentVal, src: newImageUrl, ...(newAlt !== null ? { alt: newAlt } : {}) }
+          : (newAlt ? { src: newImageUrl, alt: newAlt } : newImageUrl);
+
+        return {
+          ...s,
+          customImages: {
+            ...currentCustomImages,
+            [imageKey]: updatedVal,
           },
         };
       }

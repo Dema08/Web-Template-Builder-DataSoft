@@ -289,6 +289,60 @@ export default function SectionRenderer({ section, isSelected, onClick }) {
   const LayoutComponent = getLayoutComponent(componentName);
 
   const handleSectionClick = (e) => {
+    if (isPreviewMode) return;
+    const target = e.target;
+    const imgEl = target?.closest('img');
+
+    if (imgEl) {
+      e.stopPropagation();
+      const compEl = imgEl.closest('[data-component-id]');
+      if (compEl) {
+        const compId = compEl.getAttribute('data-component-id');
+        const secId = compEl.getAttribute('data-section-id') || section.id;
+        selectComponent(compId, secId);
+        setRightPanelOpen(true);
+        return;
+      }
+
+      let imageKey = imgEl.getAttribute('data-image-key');
+      if (!imageKey) {
+        const allImgs = Array.from(sectionRef.current.querySelectorAll('img'));
+        const idx = allImgs.indexOf(imgEl);
+        imageKey = `img_${idx}_${(imgEl.alt || 'img').substring(0, 8).replace(/[^a-zA-Z0-9]/g, '')}`;
+        imgEl.setAttribute('data-image-key', imageKey);
+      }
+
+      const compId = `sec-img-${section.id}-${imageKey}`;
+      const storeState = useBuilderStore.getState();
+      const currentSec = storeState.sections.find(s => s.id === section.id);
+      const existingComp = (currentSec?.components || []).find(c => c.id === compId || c.props?.imageKey === imageKey);
+
+      if (existingComp) {
+        selectComponent(existingComp.id, section.id);
+      } else {
+        const newImgProps = {
+          src: imgEl.src || '',
+          alt: imgEl.alt || 'Image',
+          imageKey: imageKey,
+          width: '100%',
+          height: 'auto',
+          objectFit: 'cover',
+          borderRadius: '12px',
+          opacity: 100,
+        };
+        storeState.insertComponentAt(section.id, 'image', -1, null, newImgProps);
+        setTimeout(() => {
+          const updatedSec = useBuilderStore.getState().sections.find(s => s.id === section.id);
+          const lastImg = updatedSec?.components?.find(c => c.props?.imageKey === imageKey) || updatedSec?.components?.slice(-1)[0];
+          if (lastImg) {
+            useBuilderStore.getState().selectComponent(lastImg.id, section.id);
+          }
+        }, 30);
+      }
+      setRightPanelOpen(true);
+      return;
+    }
+
     e.stopPropagation();
     onClick();
     selectSection(section.id);

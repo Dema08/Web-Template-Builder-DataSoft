@@ -343,6 +343,14 @@ export default function RightInspector() {
       const secIdToUpdate = activeSectionId || selectedSectionId;
       if (secIdToUpdate && selectedComponentId) {
         updateComponentProps(secIdToUpdate, selectedComponentId, newValues);
+        if (newValues.imageKey && (key === 'src' || key === 'alt')) {
+          useBuilderStore.getState().updateSectionCustomImage(
+            secIdToUpdate,
+            newValues.imageKey,
+            newValues.src,
+            newValues.alt
+          );
+        }
       }
 
       return newValues;
@@ -1494,6 +1502,8 @@ export default function RightInspector() {
             renderCardInspector(activeTab, formValues, handleChange, setActiveTab)
           ) : selectedComponent?.type === 'social' ? (
             renderSocialInspector(activeTab, formValues, handleChange, setActiveTab)
+          ) : selectedComponent?.type === 'image' || 'src' in (selectedComponent?.props || {}) ? (
+            renderImageInspector(activeTab, formValues, handleChange, setActiveTab, addUpload)
           ) : (
             (() => {
               const allProps = Object.entries(propertyConfig?.props || {});
@@ -2716,6 +2726,529 @@ const renderSocialInspector = (activeTab, formValues, handleChange, setActiveTab
               onChange={(e) => handleChange('color', e.target.value)}
               className="w-10 h-9 rounded-xl border border-slate-200 cursor-pointer p-0.5 bg-white shadow-xs"
             />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const renderImageInspector = (activeTab, formValues, handleChange, setActiveTab, addUpload) => {
+  const fileInputRef = useRef(null);
+  const [selectedPresetCategory, setSelectedPresetCategory] = useState('all');
+
+  const PRESET_CATEGORIES = [
+    { id: 'all', label: 'All Presets' },
+    { id: 'industry', label: 'Industry & Factory' },
+    { id: 'retail', label: 'Retail & Store' },
+    { id: 'dairy', label: 'Dairy & Farm' },
+    { id: 'logistics', label: 'Logistics & Fleet' },
+    { id: 'education', label: 'Campus & Education' },
+    { id: 'umkm', label: 'UMKM & Culinary' },
+    { id: 'tech', label: 'Tech & Digital' },
+  ];
+
+  const IMAGE_PRESETS = [
+    // Industry
+    { cat: 'industry', title: 'Smart Factory Line', url: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&auto=format&fit=crop&q=80' },
+    { cat: 'industry', title: 'Industrial Robotics', url: 'https://images.unsplash.com/photo-1563770660941-20978e870e26?w=800&auto=format&fit=crop&q=80' },
+    { cat: 'industry', title: 'Heavy Machinery & Metal', url: 'https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?w=800&auto=format&fit=crop&q=80' },
+    { cat: 'industry', title: 'High-Tech Engineering', url: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&auto=format&fit=crop&q=80' },
+    // Retail
+    { cat: 'retail', title: 'Modern Supermarket', url: 'https://images.unsplash.com/photo-1578916171728-46686eac8d58?w=800&auto=format&fit=crop&q=80' },
+    { cat: 'retail', title: 'Fashion Boutique', url: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&auto=format&fit=crop&q=80' },
+    { cat: 'retail', title: 'Fresh Grocery Display', url: 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&auto=format&fit=crop&q=80' },
+    { cat: 'retail', title: 'Gadgets & Electronics', url: 'https://images.unsplash.com/photo-1526738549149-8e07eca6c147?w=800&auto=format&fit=crop&q=80' },
+    // Dairy
+    { cat: 'dairy', title: 'Dairy Cattle Pasture', url: 'https://images.unsplash.com/photo-1527153857715-3908f2ae5e81?w=800&auto=format&fit=crop&q=80' },
+    { cat: 'dairy', title: 'Fresh Milk Processing', url: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=800&auto=format&fit=crop&q=80' },
+    { cat: 'dairy', title: 'Alpine Green Farm', url: 'https://images.unsplash.com/photo-1500595046743-cd271d694d30?w=800&auto=format&fit=crop&q=80' },
+    { cat: 'dairy', title: 'Artisan Dairy Products', url: 'https://images.unsplash.com/photo-1486297678162-eb2a19b0a32d?w=800&auto=format&fit=crop&q=80' },
+    // Logistics
+    { cat: 'logistics', title: 'Freight Trucks Highway', url: 'https://images.unsplash.com/photo-1519003722824-194d4455a60c?w=800&auto=format&fit=crop&q=80' },
+    { cat: 'logistics', title: 'Port Container Cranes', url: 'https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=800&auto=format&fit=crop&q=80' },
+    { cat: 'logistics', title: 'Automated Warehouse', url: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800&auto=format&fit=crop&q=80' },
+    { cat: 'logistics', title: 'Global Air Cargo', url: 'https://images.unsplash.com/photo-1580674684081-7617fbf3d745?w=800&auto=format&fit=crop&q=80' },
+    // Education
+    { cat: 'education', title: 'Smart Campus Library', url: 'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=800&auto=format&fit=crop&q=80' },
+    { cat: 'education', title: 'Modern Research Lab', url: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=800&auto=format&fit=crop&q=80' },
+    { cat: 'education', title: 'University Students', url: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&auto=format&fit=crop&q=80' },
+    { cat: 'education', title: 'Campus Hall Architecture', url: 'https://images.unsplash.com/photo-1562774053-701939374585?w=800&auto=format&fit=crop&q=80' },
+    // UMKM
+    { cat: 'umkm', title: 'Artisan Cafe & Coffee', url: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=800&auto=format&fit=crop&q=80' },
+    { cat: 'umkm', title: 'Handcrafted Bakery', url: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&auto=format&fit=crop&q=80' },
+    { cat: 'umkm', title: 'Traditional Pottery Craft', url: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=800&auto=format&fit=crop&q=80' },
+    { cat: 'umkm', title: 'Herbal Wellness Spa', url: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&auto=format&fit=crop&q=80' },
+    // Tech
+    { cat: 'tech', title: 'AI & Developer Workspace', url: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&auto=format&fit=crop&q=80' },
+    { cat: 'tech', title: 'Modern Tech Office', url: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&auto=format&fit=crop&q=80' },
+    { cat: 'tech', title: 'Creative Studio Design', url: 'https://images.unsplash.com/photo-1551434678-e076c223a692?w=800&auto=format&fit=crop&q=80' },
+    { cat: 'tech', title: 'Cyber Network Server', url: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&auto=format&fit=crop&q=80' },
+  ];
+
+  const handleFileUpload = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please upload an image file (PNG, JPG, WEBP, SVG)', 'Invalid File');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const dataUrl = event.target.result;
+      handleChange('src', dataUrl);
+      if (typeof addUpload === 'function') {
+        addUpload({
+          name: file.name,
+          url: dataUrl,
+          size: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
+          type: 'image'
+        });
+      }
+      toast.success(`Image "${file.name}" uploaded successfully!`, 'Image Updated');
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const filteredPresets = selectedPresetCategory === 'all'
+    ? IMAGE_PRESETS
+    : IMAGE_PRESETS.filter(p => p.cat === selectedPresetCategory);
+
+  const currentSrc = formValues.src || '';
+
+  return (
+    <div className="space-y-4">
+      {/* 1. CONTENT TAB */}
+      {(activeTab === 'content' || activeTab === 'all') && (
+        <div className="space-y-4">
+          {/* Live Preview Card */}
+          <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">Image Preview</span>
+              <span className="text-[10px] text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full font-bold">
+                {formValues.objectFit || 'cover'}
+              </span>
+            </div>
+
+            <div className="relative w-full h-40 bg-slate-900/10 rounded-xl overflow-hidden border border-slate-200 flex items-center justify-center group">
+              {currentSrc ? (
+                <img
+                  src={currentSrc}
+                  alt={formValues.alt || 'Preview'}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="text-center p-4 text-slate-400">
+                  <ImageIcon className="h-8 w-8 mx-auto mb-1 opacity-50" />
+                  <span className="text-xs">No image URL specified</span>
+                </div>
+              )}
+              <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="px-3 py-1.5 bg-white text-slate-800 text-xs font-bold rounded-lg shadow-md hover:bg-slate-50 flex items-center gap-1.5 cursor-pointer"
+                >
+                  <Upload className="h-3.5 w-3.5 text-indigo-600" />
+                  <span>Upload Local</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Image Source & File Upload */}
+          <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
+            <div>
+              <label className="block text-xs font-extrabold text-slate-800 mb-1">Image URL</label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={currentSrc}
+                  onChange={(e) => handleChange('src', e.target.value)}
+                  placeholder="https://images.unsplash.com/..."
+                  className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-mono text-slate-800"
+                />
+                {currentSrc && (
+                  <button
+                    type="button"
+                    onClick={() => handleChange('src', '')}
+                    className="p-2 text-slate-400 hover:text-red-500 rounded-lg hover:bg-red-50 transition cursor-pointer"
+                    title="Clear Image"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-extrabold text-slate-800 mb-1">Image Alt Text (SEO)</label>
+              <input
+                type="text"
+                value={formValues.alt || ''}
+                onChange={(e) => handleChange('alt', e.target.value)}
+                placeholder="Deskripsi gambar untuk SEO..."
+                className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs text-slate-800"
+              />
+            </div>
+
+            <div>
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileUpload}
+                accept="image/*"
+                className="hidden"
+              />
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="w-full py-2.5 px-3 bg-white hover:bg-indigo-50 border-2 border-dashed border-indigo-200 hover:border-indigo-400 rounded-xl text-xs font-bold text-indigo-700 flex items-center justify-center gap-2 transition cursor-pointer"
+              >
+                <Upload className="h-4 w-4 text-indigo-600" />
+                <span>Upload Image dari Komputer / HP</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Curated Presets Library */}
+          <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-extrabold text-slate-800">Pilih Preset Gambar Siap Pakai</label>
+            </div>
+
+            <div className="flex gap-1 overflow-x-auto pb-1 ds-scrollbar-thin">
+              {PRESET_CATEGORIES.map(cat => (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => setSelectedPresetCategory(cat.id)}
+                  className={`px-2 py-1 text-[10px] font-bold rounded-lg whitespace-nowrap transition cursor-pointer ${
+                    selectedPresetCategory === cat.id
+                      ? 'bg-indigo-600 text-white shadow-xs'
+                      : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100'
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-2 gap-2 max-h-56 overflow-y-auto pr-1 ds-scrollbar-thin">
+              {filteredPresets.map((preset, pIdx) => (
+                <button
+                  key={pIdx}
+                  type="button"
+                  onClick={() => {
+                    handleChange('src', preset.url);
+                    handleChange('alt', preset.title);
+                    toast.success(`Gambar "${preset.title}" diterapkan!`, 'Preset Dipilih');
+                  }}
+                  className={`group relative rounded-xl overflow-hidden border text-left transition cursor-pointer ${
+                    currentSrc === preset.url
+                      ? 'ring-2 ring-indigo-600 border-indigo-600'
+                      : 'border-slate-200 hover:border-indigo-300'
+                  }`}
+                >
+                  <img
+                    src={preset.url}
+                    alt={preset.title}
+                    className="w-full h-20 object-cover group-hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
+                  />
+                  <div className="p-1.5 bg-white/95 backdrop-blur-xs">
+                    <span className="block text-[10px] font-bold text-slate-800 truncate">{preset.title}</span>
+                  </div>
+                  {currentSrc === preset.url && (
+                    <div className="absolute top-1 right-1 bg-indigo-600 text-white p-0.5 rounded-full shadow-xs">
+                      <Check className="h-3 w-3" />
+                    </div>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 2. SPACING & DIMENSIONS TAB */}
+      {activeTab === 'spacing' && (
+        <div className="space-y-4">
+          <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
+            <h4 className="text-xs font-extrabold text-slate-800">Dimensions (Width & Height)</h4>
+
+            <div className="grid grid-cols-2 gap-2.5">
+              <div>
+                <label className="block text-[10px] font-bold text-slate-600 mb-1">Width</label>
+                <input
+                  type="text"
+                  value={formValues.width || '100%'}
+                  onChange={(e) => handleChange('width', e.target.value)}
+                  className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-mono"
+                  placeholder="100% or 400px"
+                />
+                <div className="flex gap-1 mt-1">
+                  {['100%', '300px', '450px', 'auto'].map(w => (
+                    <button
+                      key={w}
+                      type="button"
+                      onClick={() => handleChange('width', w)}
+                      className="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-[9px] font-bold text-slate-600 hover:bg-slate-100"
+                    >
+                      {w}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-bold text-slate-600 mb-1">Height</label>
+                <input
+                  type="text"
+                  value={formValues.height || 'auto'}
+                  onChange={(e) => handleChange('height', e.target.value)}
+                  className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-mono"
+                  placeholder="auto or 300px"
+                />
+                <div className="flex gap-1 mt-1">
+                  {['auto', '240px', '320px', '400px'].map(h => (
+                    <button
+                      key={h}
+                      type="button"
+                      onClick={() => handleChange('height', h)}
+                      className="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-[9px] font-bold text-slate-600 hover:bg-slate-100"
+                    >
+                      {h}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
+            <h4 className="text-xs font-extrabold text-slate-800">Object Fit (Scaling Behavior)</h4>
+            <div className="grid grid-cols-2 gap-1.5">
+              {[
+                { id: 'cover', label: 'Cover (Fill & Crop)' },
+                { id: 'contain', label: 'Contain (Fit Whole)' },
+                { id: 'fill', label: 'Fill (Stretch)' },
+                { id: 'none', label: 'Original Size' },
+              ].map(f => (
+                <button
+                  key={f.id}
+                  type="button"
+                  onClick={() => handleChange('objectFit', f.id)}
+                  className={`py-2 px-2 text-xs font-bold rounded-xl border transition ${
+                    (formValues.objectFit || 'cover') === f.id
+                      ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs'
+                      : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
+                  }`}
+                >
+                  {f.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
+            <h4 className="text-xs font-extrabold text-slate-800">Outer Margin</h4>
+            <input
+              type="text"
+              value={formValues.margin || '0px'}
+              onChange={(e) => handleChange('margin', e.target.value)}
+              className="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs font-mono"
+              placeholder="0px or 16px auto"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* 3. BORDER & CORNERS TAB */}
+      {activeTab === 'border' && (
+        <div className="space-y-4">
+          <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
+            <div className="flex justify-between items-center">
+              <label className="text-xs font-extrabold text-slate-800">Corner Radius</label>
+              <span className="text-xs font-mono font-bold text-indigo-600">{formValues.borderRadius || '12px'}</span>
+            </div>
+            <div className="grid grid-cols-3 gap-1.5">
+              {[
+                { label: 'Square (0px)', val: '0px' },
+                { label: 'Small (8px)', val: '8px' },
+                { label: 'Medium (12px)', val: '12px' },
+                { label: 'Large (16px)', val: '16px' },
+                { label: 'Extra (24px)', val: '24px' },
+                { label: 'Full / Circle', val: '9999px' },
+              ].map(r => (
+                <button
+                  key={r.val}
+                  type="button"
+                  onClick={() => handleChange('borderRadius', r.val)}
+                  className={`py-1.5 px-1 text-[10px] font-bold rounded-lg border transition truncate ${
+                    (formValues.borderRadius || '12px') === r.val
+                      ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs'
+                      : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
+                  }`}
+                >
+                  {r.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
+            <h4 className="text-xs font-extrabold text-slate-800">Border Outline</h4>
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="block text-[10px] font-bold text-slate-600 mb-1">Border Width</label>
+                <select
+                  value={formValues.borderWidth || '0px'}
+                  onChange={(e) => handleChange('borderWidth', e.target.value)}
+                  className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-bold"
+                >
+                  <option value="0px">None (0px)</option>
+                  <option value="1px">1px</option>
+                  <option value="2px">2px</option>
+                  <option value="4px">4px</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-[10px] font-bold text-slate-600 mb-1">Border Style</label>
+                <select
+                  value={formValues.borderStyle || 'solid'}
+                  onChange={(e) => handleChange('borderStyle', e.target.value)}
+                  className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-bold"
+                >
+                  <option value="solid">Solid</option>
+                  <option value="dashed">Dashed</option>
+                  <option value="dotted">Dotted</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-[10px] font-bold text-slate-600 mb-1">Border Color</label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="color"
+                  value={formValues.borderColor || '#e2e8f0'}
+                  onChange={(e) => handleChange('borderColor', e.target.value)}
+                  className="w-10 h-8 rounded-lg border border-slate-200 cursor-pointer p-0.5 bg-white"
+                />
+                <input
+                  type="text"
+                  value={formValues.borderColor || '#e2e8f0'}
+                  onChange={(e) => handleChange('borderColor', e.target.value)}
+                  className="flex-1 px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-mono"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 4. SHADOW TAB */}
+      {activeTab === 'shadow' && (
+        <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
+          <label className="block text-xs font-extrabold text-slate-800">Shadow Effects</label>
+          <div className="grid grid-cols-2 gap-2">
+            {[
+              { id: 'none', label: 'None' },
+              { id: 'sm', label: 'Small Shadow' },
+              { id: 'md', label: 'Medium Shadow' },
+              { id: 'lg', label: 'Large Shadow' },
+              { id: 'xl', label: 'Extra Large' },
+              { id: '2xl', label: '2XL Shadow' },
+            ].map(s => (
+              <button
+                key={s.id}
+                type="button"
+                onClick={() => handleChange('shadow', s.id)}
+                className={`py-2 px-2 text-xs font-bold rounded-xl border transition ${
+                  (formValues.shadow || 'none') === s.id
+                    ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs'
+                    : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
+                }`}
+              >
+                {s.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* 5. COLOR & FILTERS TAB */}
+      {(activeTab === 'color' || activeTab === 'animation') && (
+        <div className="space-y-4">
+          <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
+            <h4 className="text-xs font-extrabold text-slate-800">Opacity & Image Transparency</h4>
+            <div>
+              <div className="flex justify-between items-center mb-1">
+                <label className="text-[10px] font-bold text-slate-600">Opacity</label>
+                <span className="text-[10px] font-mono font-bold text-indigo-600">{formValues.opacity ?? 100}%</span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value={formValues.opacity ?? 100}
+                onChange={(e) => handleChange('opacity', parseInt(e.target.value))}
+                className="w-full accent-indigo-600"
+              />
+            </div>
+          </div>
+
+          <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
+            <h4 className="text-xs font-extrabold text-slate-800">Hover Animation Effect</h4>
+            <div className="grid grid-cols-2 gap-2">
+              {[
+                { id: 'none', label: 'Static (None)' },
+                { id: 'scale', label: 'Zoom In (Scale)' },
+                { id: 'lift', label: 'Lift Up (Elevate)' },
+                { id: 'glow', label: 'Glow Ring' },
+              ].map(h => (
+                <button
+                  key={h.id}
+                  type="button"
+                  onClick={() => handleChange('hoverEffect', h.id)}
+                  className={`py-2 px-2 text-xs font-bold rounded-xl border transition ${
+                    (formValues.hoverEffect || 'none') === h.id
+                      ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs'
+                      : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
+                  }`}
+                >
+                  {h.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 6. POSITION TAB */}
+      {activeTab === 'position' && (
+        <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
+          <h4 className="text-xs font-extrabold text-slate-800">Position & Transform Offset</h4>
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <label className="block text-[10px] font-bold text-slate-600 mb-1">X Offset (px)</label>
+              <input
+                type="number"
+                value={formValues.x || 0}
+                onChange={(e) => handleChange('x', parseInt(e.target.value) || 0)}
+                className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-mono"
+              />
+            </div>
+            <div>
+              <label className="block text-[10px] font-bold text-slate-600 mb-1">Y Offset (px)</label>
+              <input
+                type="number"
+                value={formValues.y || 0}
+                onChange={(e) => handleChange('y', parseInt(e.target.value) || 0)}
+                className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-mono"
+              />
+            </div>
           </div>
         </div>
       )}
