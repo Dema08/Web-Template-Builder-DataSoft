@@ -1,18 +1,21 @@
 /**
  * Organisasi & Asosiasi Starter Templates — Category Index
  *
- * Aggregates all Organisasi & Asosiasi starter template definitions
- * into a single category object for the INDUSTRY_STARTER_TEMPLATES registry.
+ * Aggregates only the 3 exclusive premium Organisasi & Asosiasi starter template definitions:
+ * 1. Forum Profesi Nusantara (Professional Association & National Forum)
+ * 2. Gerakan Berdaya Indonesia (NGO, Social Movement & Philanthropy)
+ * 3. Komunitas Inovasi Digital (Tech, Developer & Innovation Community)
  */
-import orgCommunity from './orgCommunity.js';
-import orgAssociation from './orgAssociation.js';
-import orgEvent from './orgEvent.js';
+import orgProfessionalForum from './orgProfessionalForum.js';
+import orgSocialMovement from './orgSocialMovement.js';
+import orgDigitalCommunity from './orgDigitalCommunity.js';
 
 export const category = {
   categoryName: 'Organisasi & Asosiasi',
   templates: [
-    orgCommunity,
-    orgAssociation,
-    orgEvent,
+    orgProfessionalForum,
+    orgSocialMovement,
+    orgDigitalCommunity,
   ],
 };
+

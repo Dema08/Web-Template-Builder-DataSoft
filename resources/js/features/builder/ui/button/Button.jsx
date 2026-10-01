@@ -48,6 +48,7 @@ export default function Button({
   borderRadius = null,
   background = '#4f46e5',
   color = '#ffffff',
+  borderColor = null,
   shadow = 'md',
   fontFamily = 'sans-serif',
   fontSize = '14px',
@@ -60,6 +61,7 @@ export default function Button({
   componentId = null,
   sectionId = null,
 }) {
+
   const { updateComponentProps, isPreviewMode, switchPreviewPage, selectComponent } = useBuilderStore();
 
   // Extract structured content or legacy label
@@ -191,6 +193,9 @@ export default function Button({
     resolvedSize === 'full' ? 'w-full' : '',
   ].join(' ');
 
+  const resolvedBorderColor = propStyles?.borderColor || borderColor;
+  const isGradientBg = typeof resolvedBg === 'string' && (resolvedBg.includes('gradient') || resolvedBg.includes('linear-') || resolvedBg.includes('radial-'));
+
   const style = {
     fontFamily,
     fontSize,
@@ -200,12 +205,22 @@ export default function Button({
     ...(width ? { width } : {}),
     ...(height ? { height } : {}),
     ...(customRadius ? { borderRadius: customRadius } : {}),
-    ...(isSolidVariant && resolvedBg ? { backgroundColor: resolvedBg, color: resolvedColor } : {}),
-    ...(resolvedVariant === 'outline' || resolvedVariant === 'ghost'
-      ? { color: resolvedBg && resolvedBg !== 'transparent' ? resolvedBg : resolvedColor }
-      : {}),
+    ...(isSolidVariant && resolvedBg ? {
+      ...(isGradientBg ? { background: resolvedBg } : { backgroundColor: resolvedBg }),
+      color: resolvedColor || '#ffffff',
+    } : {}),
+    ...(resolvedVariant === 'outline' ? {
+      color: resolvedColor || '#ffffff',
+      borderColor: resolvedBorderColor || (resolvedBg && resolvedBg !== 'transparent' && !isGradientBg ? resolvedBg : resolvedColor) || 'currentColor',
+      ...(resolvedBg && resolvedBg !== 'transparent' ? (isGradientBg ? { background: resolvedBg } : { backgroundColor: resolvedBg }) : { backgroundColor: 'transparent' }),
+    } : {}),
+    ...(resolvedVariant === 'ghost' ? {
+      color: resolvedColor || (resolvedBg && resolvedBg !== 'transparent' ? resolvedBg : '#ffffff'),
+      backgroundColor: 'transparent',
+    } : {}),
     ...(padding && padding !== '0' && padding !== 0 ? { padding } : {}),
   };
+
 
   // Parse Dynamic Href (WhatsApp, Email, Tel, Page, Section, URL)
   const finalHref = parseButtonHref(resolvedAction);
