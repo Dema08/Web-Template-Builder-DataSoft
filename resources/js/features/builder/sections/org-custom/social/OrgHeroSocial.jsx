@@ -38,7 +38,7 @@ export default function OrgHeroSocial({ components = [], sectionId = null }) {
   return (
     <section className="relative min-h-[90vh] flex items-center bg-[#01140e] text-white overflow-hidden py-20 lg:py-28">
       {/* Background Hero Image with Vivid Emerald Overlay — editable via Right Inspector (image component) */}
-      <div className="absolute inset-0 z-0 [&>div]:h-full [&img]:!h-full [&img]:min-h-[90vh]">
+      <div className="absolute inset-0 z-0 [&>div]:h-full [&_img]:!h-full [&_img]:min-h-[90vh]">
         {bgImg.length > 0 ? (
           renderLayoutComponents(bgImg, sectionId)
         ) : (

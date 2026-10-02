@@ -282,14 +282,16 @@ export default function Templates() {
                         )}
                     </p>
                 </div>
-                <button
+                <Button
                     type="button"
                     onClick={handleCreateBlank}
-                    className="shrink-0 inline-flex items-center gap-2 px-5 py-3 rounded-2xl text-sm font-bold text-white shadow-lg shadow-indigo-600/25 hover:-translate-y-0.5 transition-all cursor-pointer"
-                    style={{ background: 'linear-gradient(135deg,#0ea5e9,#6366f1)' }}
+                    variant="primary"
+                    size="md"
+                    icon={Plus}
+                    className="shrink-0"
                 >
-                    <Plus className="h-4 w-4" /> Buat Template Web Kosong
-                </button>
+                    Buat Template Web Kosong
+                </Button>
             </div>
 
             {/* Search Bar */}
