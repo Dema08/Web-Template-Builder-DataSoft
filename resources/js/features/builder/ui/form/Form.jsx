@@ -1,9 +1,6 @@
-<<<<<<< Updated upstream
-import { handleCardFormSubmit } from '../../utils/formSubmissionHelper.js';
-=======
 import { useState } from 'react';
 import { toast } from '@store';
->>>>>>> Stashed changes
+import { handleCardFormSubmit } from '../../utils/formSubmissionHelper.js';
 
 export default function Form({
   title = '',
@@ -13,12 +10,6 @@ export default function Form({
   submitLabel = 'KIRIM PESAN',
   submitBackground = '#2563eb',
   submitColor = '#ffffff',
-<<<<<<< Updated upstream
-  borderRadius = '8px',
-  margin = '0',
-  gap = '14px',
-  action = null,
-=======
   submitRadius = '12px',
   submitAlign = 'full', // 'left' | 'center' | 'right' | 'full'
   background = '#0d1627',
@@ -38,22 +29,12 @@ export default function Form({
   inputBorderColor = '#1e293b',
   inputRadius = '14px',
   labelColor = '#94a3b8',
->>>>>>> Stashed changes
+  action = null,
 }) {
   const defaultFields = Array.isArray(fields) && fields.length > 0 ? fields : [
     { id: 'f1', type: 'text', label: '', placeholder: 'Ketik teks di sini...', required: false, width: 'full' },
   ];
 
-<<<<<<< Updated upstream
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (action && action.type === 'card_form') {
-      handleCardFormSubmit(e.currentTarget, action);
-    }
-  };
-
-  const inputStyle = {
-=======
   // Local state for user inputs so guests can type & select dropdowns seamlessly
   const [formData, setFormData] = useState({});
   const [submitted, setSubmitted] = useState(false);
@@ -64,6 +45,10 @@ export default function Form({
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (action && action.type === 'card_form') {
+      handleCardFormSubmit(e.currentTarget, action);
+      return;
+    }
     setSubmitted(true);
     toast.success('Pesan Anda berhasil terkirim!', 'Form Submitted');
     setTimeout(() => setSubmitted(false), 4000);
@@ -81,26 +66,25 @@ export default function Form({
   const hasBorder = borderWidth && borderWidth !== '0px' && borderWidth !== '0';
 
   const cardStyle = {
-    backgroundColor: background || '#0f172a',
+    backgroundColor: background || '#0d1627',
     ...(backgroundGradient ? { background: backgroundGradient } : {}),
     borderRadius: borderRadius || '20px',
     borderWidth: hasBorder ? borderWidth : '0px',
     borderColor: hasBorder ? (borderColor || '#1e293b') : 'transparent',
     borderStyle: hasBorder ? 'solid' : 'none',
-    padding: padding || '32px',
+    padding: padding || '24px',
     margin: margin || '0px',
     boxSizing: 'border-box',
->>>>>>> Stashed changes
     width: '100%',
   };
 
   const fieldInputStyle = {
     width: '100%',
     padding: '11px 14px',
-    backgroundColor: inputBackground || '#1e293b',
+    backgroundColor: inputBackground || '#091322',
     color: inputColor || '#ffffff',
-    border: `1.5px solid ${inputBorderColor || '#334155'}`,
-    borderRadius: inputRadius || '10px',
+    border: `1.5px solid ${inputBorderColor || '#1e293b'}`,
+    borderRadius: inputRadius || '14px',
     fontSize: '13px',
     fontWeight: '500',
     outline: 'none',
@@ -116,39 +100,6 @@ export default function Form({
   };
 
   return (
-<<<<<<< Updated upstream
-    <div style={{ margin }}>
-      <form
-        onSubmit={handleSubmit}
-        style={{ display: 'flex', flexDirection: 'column', gap }}
-      >
-        {defaultFields.map((field) => (
-          <div key={field.id || field.label}>
-            <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#374151', marginBottom: '5px' }}>
-              {field.label}
-              {field.required && <span style={{ color: '#ef4444', marginLeft: '3px' }}>*</span>}
-            </label>
-            {field.type === 'textarea' ? (
-              <textarea
-                placeholder={field.placeholder}
-                rows={4}
-                style={{ ...inputStyle, resize: 'vertical' }}
-              />
-            ) : field.type === 'select' ? (
-              <select style={inputStyle}>
-                <option value="">{field.placeholder || 'Select an option'}</option>
-                {(field.options || []).map((opt) => (
-                  <option key={opt} value={opt}>{opt}</option>
-                ))}
-              </select>
-            ) : (
-              <input
-                type={field.type || 'text'}
-                placeholder={field.placeholder}
-                style={inputStyle}
-              />
-            )}
-=======
     <div className={`relative max-w-full box-border ${shadowClasses[shadow] || 'shadow-xl'}`} style={cardStyle}>
       {/* Optional Card Header / Badge */}
       {(badge || title || subtitle) && (
@@ -175,7 +126,6 @@ export default function Form({
         <div className="py-8 px-4 text-center space-y-3 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl animate-in fade-in duration-300">
           <div className="w-12 h-12 rounded-full bg-emerald-500 text-white flex items-center justify-center mx-auto text-xl shadow-lg">
             ✓
->>>>>>> Stashed changes
           </div>
           <h4 className="text-base font-extrabold text-emerald-400">Terima Kasih!</h4>
           <p className="text-xs text-emerald-200/80">Pesan / formulir Anda berhasil terkirim. Tim kami akan segera menghubungi Anda.</p>
@@ -188,11 +138,13 @@ export default function Form({
               const fieldKey = field.id || `field-${idx}`;
               const isFullWidth = field.width === 'full' || field.type === 'textarea' || gridCols === '1';
               const rawOptions = field.options;
-              const optionsArray = Array.isArray(rawOptions)
+              const optionsArray = (Array.isArray(rawOptions)
                 ? rawOptions
                 : typeof rawOptions === 'string'
-                  ? rawOptions.split(',').map(o => o.trim()).filter(Boolean)
-                  : [];
+                  ? rawOptions.split(/[,\n]/)
+                  : [])
+                .map(o => (typeof o === 'string' ? o.trim() : ''))
+                .filter(Boolean);
 
               return (
                 <div
@@ -208,6 +160,7 @@ export default function Form({
 
                   {field.type === 'textarea' ? (
                     <textarea
+                      name={field.label || fieldKey}
                       value={formData[fieldKey] || ''}
                       onChange={(e) => handleInputChange(fieldKey, e.target.value)}
                       placeholder={field.placeholder || 'Tuliskan pesan Anda...'}
@@ -217,6 +170,7 @@ export default function Form({
                     />
                   ) : field.type === 'select' ? (
                     <select
+                      name={field.label || fieldKey}
                       value={formData[fieldKey] || ''}
                       onChange={(e) => handleInputChange(fieldKey, e.target.value)}
                       required={field.required}
@@ -233,6 +187,7 @@ export default function Form({
                     </select>
                   ) : (
                     <input
+                      name={field.label || fieldKey}
                       type={field.type || 'text'}
                       value={formData[fieldKey] || ''}
                       onChange={(e) => handleInputChange(fieldKey, e.target.value)}
