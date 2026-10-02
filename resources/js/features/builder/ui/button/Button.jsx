@@ -228,9 +228,13 @@ export default function Button({
   const IconLeftComp = rawIconLeft ? ICON_MAP[rawIconLeft] : null;
   const IconRightComp = rawIconRight ? ICON_MAP[rawIconRight] : null;
 
+  const isFileDownload = resolvedAction?.type === 'file_download' || resolvedAction?.type === 'file';
+  const downloadAttr = isFileDownload ? (resolvedAction?.fileName || true) : undefined;
+
   return (
     <a
       href={finalHref}
+      download={downloadAttr}
       target={resolvedAction.target === '_blank' ? '_blank' : undefined}
       rel={resolvedAction.target === '_blank' ? 'noopener noreferrer' : undefined}
       onClick={(e) => {
@@ -247,7 +251,17 @@ export default function Button({
         const actType = resolvedAction?.type || linkType || 'web_url';
         const actVal = resolvedAction?.value || linkTarget || href || '';
 
-        if (actType === 'section') {
+        if (actType === 'file_download' || actType === 'file') {
+          e.preventDefault();
+          if (finalHref && finalHref !== '#') {
+            const link = document.createElement('a');
+            link.href = finalHref;
+            link.download = resolvedAction?.fileName || 'download';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          }
+        } else if (actType === 'section') {
           e.preventDefault();
           if (actVal) {
             const targetId = String(actVal).replace(/^#/, '');

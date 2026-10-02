@@ -26,6 +26,7 @@ import {
   Image as ImageIcon,
   Video,
   Upload,
+  Download,
   Layers,
   Sparkles,
   Search,
@@ -110,6 +111,7 @@ export default function RightInspector() {
 
   const inspectorImgInputRef = useRef(null);
   const inspectorVidInputRef = useRef(null);
+  const buttonFileInputRef = useRef(null);
 
   // Inspector Section Background state
   const [selectedImgCategory, setSelectedImgCategory] = useState('all');
@@ -221,6 +223,8 @@ export default function RightInspector() {
         defaults.actionType = defaults.actionType || defaults.linkType || actionObj.type || 'web_url';
         defaults.actionValue = defaults.actionValue !== undefined ? defaults.actionValue : (defaults.linkTarget || defaults.href || actionObj.value || '');
         defaults.actionMessage = defaults.actionMessage !== undefined ? defaults.actionMessage : (actionObj.message || '');
+        defaults.fileName = defaults.fileName !== undefined ? defaults.fileName : (actionObj.fileName || '');
+        defaults.fileSize = defaults.fileSize !== undefined ? defaults.fileSize : (actionObj.fileSize || '');
         defaults.target = defaults.target || actionObj.target || (defaults.linkOpenNewTab ? '_blank' : '_self');
         defaults.linkType = defaults.actionType;
         defaults.linkTarget = defaults.actionValue;
@@ -233,6 +237,8 @@ export default function RightInspector() {
           type: defaults.actionType,
           value: defaults.actionValue,
           message: defaults.actionMessage,
+          fileName: defaults.fileName,
+          fileSize: defaults.fileSize,
           target: defaults.target,
         };
         defaults.content = {
@@ -260,6 +266,24 @@ export default function RightInspector() {
       setPositionValues({ x: 0, y: 0, width: '', height: '', rotation: 0, scale: 1, zIndex: 1 });
     }
   }, [selectedComponentId]);
+
+  const handleButtonFileUpload = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+    const formattedSize = file.size >= 1024 * 1024 ? `${sizeMB} MB` : `${Math.round(file.size / 1024)} KB`;
+
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      const dataUrl = evt.target.result;
+      handleChange('actionValue', dataUrl);
+      handleChange('fileName', file.name);
+      handleChange('fileSize', formattedSize);
+      toast.success(`File "${file.name}" berhasil diunggah untuk diunduh!`, 'File Diunggah');
+    };
+    reader.readAsDataURL(file);
+  };
 
   const handleButtonActionTypeChange = (newType) => {
     setFormValues((prev) => {
@@ -296,6 +320,8 @@ export default function RightInspector() {
           type: newType,
           value: currentVal,
           message: prev.actionMessage || '',
+          fileName: prev.fileName || '',
+          fileSize: prev.fileSize || '',
           target: prev.target || '_self',
         },
       };
@@ -317,6 +343,8 @@ export default function RightInspector() {
         const type = key === 'actionType' || key === 'linkType' ? value : (newValues.actionType || newValues.linkType || 'web_url');
         const val = key === 'actionValue' || key === 'linkTarget' || key === 'href' ? value : (newValues.actionValue !== undefined ? newValues.actionValue : (newValues.linkTarget || newValues.href || ''));
         const msg = key === 'actionMessage' ? value : (newValues.actionMessage || '');
+        const fName = key === 'fileName' ? value : (newValues.fileName || '');
+        const fSize = key === 'fileSize' ? value : (newValues.fileSize || '');
         const target = key === 'target' ? value : (key === 'linkOpenNewTab' ? (value ? '_blank' : '_self') : (newValues.target || '_self'));
 
         newValues.actionType = type;
@@ -325,9 +353,11 @@ export default function RightInspector() {
         newValues.linkTarget = val;
         newValues.href = val;
         newValues.actionMessage = msg;
+        newValues.fileName = fName;
+        newValues.fileSize = fSize;
         newValues.target = target;
         newValues.linkOpenNewTab = target === '_blank';
-        newValues.action = { type, value: val, message: msg, target };
+        newValues.action = { type, value: val, message: msg, fileName: fName, fileSize: fSize, target };
 
         const text = key === 'label' || key === 'text' ? value : (newValues.label || newValues.text || 'Button');
         const iconLeft = key === 'iconLeft' ? value : (newValues.iconLeft || null);
@@ -1253,6 +1283,7 @@ export default function RightInspector() {
                 <div className="grid grid-cols-3 gap-1.5">
                   {[
                     { id: 'web_url', label: '🌐 Web URL' },
+                    { id: 'file_download', label: '📁 Download File' },
                     { id: 'whatsapp', label: '💬 WhatsApp' },
                     { id: 'page', label: '📄 Subpage' },
                     { id: 'section', label: '⚓ Section ID' },
@@ -1282,6 +1313,14 @@ export default function RightInspector() {
 
               {/* Dynamic Action Details Box */}
               <div className="p-3 bg-white border border-slate-200 rounded-xl space-y-3">
+                {/* Hidden File Input */}
+                <input
+                  type="file"
+                  ref={buttonFileInputRef}
+                  onChange={handleButtonFileUpload}
+                  className="hidden"
+                />
+
                 {/* 1. WEB URL */}
                 {((formValues.actionType || formValues.linkType || formValues.action?.type || 'web_url') === 'web_url') && (
                   <>
@@ -1305,6 +1344,109 @@ export default function RightInspector() {
                       <span className="text-[11px] text-slate-600 font-medium">Buka di Tab Baru (`_blank`)</span>
                     </label>
                   </>
+                )}
+
+                {/* 1.5 FILE DOWNLOAD / UPLOAD */}
+                {((formValues.actionType || formValues.linkType || formValues.action?.type) === 'file_download' || (formValues.actionType || formValues.linkType || formValues.action?.type) === 'file') && (
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-700 mb-1 flex items-center gap-1">
+                        <Download className="w-3.5 h-3.5 text-indigo-600" />
+                        <span>Upload File yang Dapat Diunduh Pengunjung</span>
+                      </label>
+
+                      {/* Dropzone Upload Button */}
+                      <div
+                        onClick={() => buttonFileInputRef.current?.click()}
+                        className="border-2 border-dashed border-indigo-200 hover:border-indigo-500 bg-indigo-50/50 hover:bg-indigo-50 p-3.5 rounded-xl text-center cursor-pointer transition-all space-y-1.5"
+                      >
+                        <div className="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto">
+                          <Upload className="w-4 h-4" />
+                        </div>
+                        <div className="text-xs font-bold text-slate-700">
+                          Klik untuk Upload File dari Perangkat (PC / HP)
+                        </div>
+                        <div className="text-[10px] text-slate-500">
+                          Format: PDF, DOCX, XLSX, ZIP, PNG, JPG, MP3, DLL
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Attached File Preview Card */}
+                    {(formValues.actionValue || formValues.action?.value) && (
+                      <div className="p-3 bg-indigo-50/60 border border-indigo-200 rounded-xl space-y-2">
+                        <div className="flex items-start justify-between gap-2">
+                          <div className="flex items-center gap-2 overflow-hidden">
+                            <div className="p-2 bg-indigo-600 text-white rounded-lg shrink-0">
+                              <FileText className="w-4 h-4" />
+                            </div>
+                            <div className="overflow-hidden">
+                              <p className="text-xs font-bold text-slate-800 truncate" title={formValues.fileName || formValues.action?.fileName || 'File Terlampir'}>
+                                {formValues.fileName || formValues.action?.fileName || 'File Terlampir'}
+                              </p>
+                              <p className="text-[10px] text-slate-500 font-mono font-bold">
+                                {formValues.fileSize || formValues.action?.fileSize || 'Local File Data'}
+                              </p>
+                            </div>
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={() => {
+                              handleChange('actionValue', '');
+                              handleChange('fileName', '');
+                              handleChange('fileSize', '');
+                            }}
+                            className="p-1 text-slate-400 hover:text-rose-600 rounded-md hover:bg-rose-50 transition cursor-pointer"
+                            title="Hapus File"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+
+                        {/* Set Download Icon Shortcut */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const val = 'Download';
+                            handleChange('iconLeft', val);
+                            if (typeof formValues.content === 'object') {
+                              handleChange('content', { ...formValues.content, iconLeft: val });
+                            }
+                            toast.success('Ikon tombol diubah ke Download!', 'Ikon Diperbarui');
+                          }}
+                          className="w-full py-1.5 px-2 bg-white hover:bg-indigo-50 text-indigo-700 text-[10px] font-bold rounded-lg border border-indigo-200 transition flex items-center justify-center gap-1 cursor-pointer"
+                        >
+                          <Download className="w-3 h-3 text-indigo-600" />
+                          <span>Pasang Ikon Download pada Tombol</span>
+                        </button>
+                      </div>
+                    )}
+
+                    {/* Direct File URL Input */}
+                    <div className="pt-2 border-t border-slate-100 space-y-2">
+                      <label className="block text-[10px] font-bold text-slate-600">
+                        Atau Masukkan Direct Link File Online (URL / CDN)
+                      </label>
+                      <input
+                        type="text"
+                        value={formValues.actionValue !== undefined ? formValues.actionValue : (formValues.href || formValues.linkTarget || '')}
+                        onChange={(e) => handleChange('actionValue', e.target.value)}
+                        placeholder="https://example.com/files/dokumen.pdf"
+                        className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-mono focus:bg-white focus:border-indigo-500 focus:outline-hidden"
+                      />
+                      <div>
+                        <label className="block text-[9px] font-bold text-slate-500 mb-0.5">Nama File Unduhan (Custom File Name)</label>
+                        <input
+                          type="text"
+                          value={formValues.fileName || ''}
+                          onChange={(e) => handleChange('fileName', e.target.value)}
+                          placeholder="e.g. Brosur-Perusahaan-2026.pdf"
+                          className="w-full px-2 py-1 bg-slate-50 border border-slate-200 rounded-md text-[11px] font-mono"
+                        />
+                      </div>
+                    </div>
+                  </div>
                 )}
 
                 {/* 2. WHATSAPP */}

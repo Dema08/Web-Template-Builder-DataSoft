@@ -41,6 +41,11 @@ export function parseButtonHref(action = {}) {
   if (!value && type !== 'section') return '#';
 
   switch (type) {
+    case 'file_download':
+    case 'file': {
+      return value || '#';
+    }
+
     case 'whatsapp': {
       // Clean phone number: remove non-digits
       let cleanPhone = String(value).replace(/\D+/g, '');
@@ -199,6 +204,9 @@ export default function CanvasButton({
     extraClassName,
   ].filter(Boolean).join(' ');
 
+  const isFileDownload = action.type === 'file_download' || action.type === 'file';
+  const downloadAttr = isFileDownload ? (action.fileName || true) : undefined;
+
   const handleClick = (e) => {
     // If in builder editing mode, intercept link navigation to allow selection
     if (isInEditor) {
@@ -212,7 +220,7 @@ export default function CanvasButton({
       return;
     }
 
-    // In Preview Mode: handle smooth scroll for section anchors or page switches
+    // In Preview Mode: handle smooth scroll for section anchors or page switches or file download
     if (action.type === 'section' && action.value) {
       e.preventDefault();
       const targetId = action.value.replace('#', '');
@@ -224,6 +232,16 @@ export default function CanvasButton({
       e.preventDefault();
       switchPreviewPage(action.value);
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (isFileDownload && finalHref && finalHref !== '#') {
+      if (isPreviewMode) {
+        e.preventDefault();
+        const link = document.createElement('a');
+        link.href = finalHref;
+        link.download = action.fileName || 'download';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
     }
   };
 
@@ -231,6 +249,7 @@ export default function CanvasButton({
     <a
       id={node?.id || id}
       href={finalHref}
+      download={downloadAttr}
       target={targetAttr}
       rel={relAttr}
       onClick={handleClick}
