@@ -72,7 +72,7 @@ const COMPONENT_ITEMS = [
   { id: 'badge', label: 'Badge', icon: Tag },
   { id: 'gallery', label: 'Gallery', icon: Grid },
   { id: 'accordion', label: 'Accordion', icon: HelpCircle },
-  { id: 'form', label: 'Form', icon: FormInput },
+  { id: 'form', label: 'Form Card', icon: FormInput },
   { id: 'counter', label: 'Counter', icon: Calculator },
   { id: 'progress', label: 'Progress', icon: BarChart2 },
   { id: 'testimonial', label: 'Testimonial', icon: MessageSquare },

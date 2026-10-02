@@ -1789,6 +1789,13 @@ export default function RightInspector() {
             renderCardInspector(activeTab, formValues, handleChange, setActiveTab)
           ) : selectedComponent?.type === 'social' ? (
             renderSocialInspector(activeTab, formValues, handleChange, setActiveTab)
+          ) : selectedComponent?.type === 'form' ? (
+            <FormCardInspector
+              activeTab={activeTab}
+              formValues={formValues}
+              handleChange={handleChange}
+              setActiveTab={setActiveTab}
+            />
           ) : selectedComponent?.type === 'image' || 'src' in (selectedComponent?.props || {}) ? (
             <ImageInspector
               activeTab={activeTab}
@@ -3025,6 +3032,665 @@ const renderSocialInspector = (activeTab, formValues, handleChange, setActiveTab
     </div>
   );
 };
+
+function FormCardInspector({ activeTab, formValues, handleChange, setActiveTab }) {
+  // Fields state for the field editor
+  const [editingFieldIdx, setEditingFieldIdx] = useState(0);
+
+  const defaultFields = Array.isArray(formValues.fields) && formValues.fields.length > 0
+    ? formValues.fields
+    : [
+        { id: 'f1', type: 'text', label: '', placeholder: 'Ketik teks di sini...', required: false, width: 'full' },
+      ];
+
+  const fields = Array.isArray(formValues.fields) && formValues.fields.length > 0 ? formValues.fields : defaultFields;
+
+  const updateFields = (updatedFields) => handleChange('fields', updatedFields);
+
+  const addField = (type = 'text') => {
+    const newId = `f${Date.now()}`;
+    const newField = {
+      id: newId,
+      type,
+      label: type === 'select' ? 'Pilih Opsi Dropdown:' : '',
+      placeholder: type === 'select' ? '-- Pilih Opsi --' : 'Ketik teks di sini...',
+      required: false,
+      width: 'full',
+      ...(type === 'select' ? { options: ['Pilihan 1', 'Pilihan 2', 'Pilihan 3'] } : {}),
+    };
+    updateFields([...fields, newField]);
+    setEditingFieldIdx(fields.length);
+  };
+
+  const removeField = (idx) => {
+    const updated = fields.filter((_, i) => i !== idx);
+    updateFields(updated);
+    if (editingFieldIdx === idx) setEditingFieldIdx(null);
+  };
+
+  const updateFieldProp = (idx, key, val) => {
+    const updated = fields.map((f, i) => i === idx ? { ...f, [key]: val } : f);
+    updateFields(updated);
+  };
+
+  const updateFieldOptions = (idx, rawStr) => {
+    const opts = rawStr.split('\n').map(o => o.trim()).filter(Boolean);
+    const updated = fields.map((f, i) => i === idx ? { ...f, options: opts } : f);
+    updateFields(updated);
+  };
+
+  const colorSwatches = [
+    '#0d1627', '#0f172a', '#1e293b', '#060b18', '#1a1a2e', '#111827', '#18181b',
+    '#ffffff', '#f8fafc', '#4f46e5', '#2563eb', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'
+  ];
+
+  return (
+    <div className="space-y-4">
+      {/* ── CONTENT TAB ── */}
+      {(activeTab === 'content' || activeTab === 'all') && (
+        <div className="space-y-4">
+          {/* 1. Fields Manager (+ Tambah Field Input / Dropdown) */}
+          <div className="p-3.5 bg-indigo-50/70 rounded-2xl border border-indigo-200/80 space-y-3 shadow-2xs">
+            <div className="flex items-center justify-between">
+              <div>
+                <h4 className="text-xs font-extrabold text-indigo-950">Kelola Field Form Card</h4>
+                <p className="text-[10px] text-indigo-700/80">Atur input ketik atau pilihan dropdown</p>
+              </div>
+              <span className="text-[10px] font-extrabold text-indigo-700 bg-white px-2 py-0.5 rounded-full border border-indigo-200">
+                {fields.length} Input Field
+              </span>
+            </div>
+
+            {/* Quick Add Buttons */}
+            <div className="grid grid-cols-2 gap-1.5 pt-1">
+              {[
+                { type: 'text', label: '+ Input Teks' },
+                { type: 'select', label: '+ Dropdown' },
+                { type: 'textarea', label: '+ Textarea' },
+                { type: 'email', label: '+ Email' },
+                { type: 'tel', label: '+ Telepon' },
+                { type: 'number', label: '+ Angka' },
+              ].map(ft => (
+                <button
+                  key={ft.type}
+                  type="button"
+                  onClick={() => addField(ft.type)}
+                  className="py-1.5 px-2 text-[11px] font-bold rounded-xl border border-indigo-300 bg-white text-indigo-800 hover:bg-indigo-600 hover:text-white hover:border-indigo-600 transition shadow-2xs flex items-center justify-center gap-1"
+                >
+                  {ft.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Fields List */}
+            <div className="space-y-2 max-h-72 overflow-y-auto pr-1 pt-1">
+              {fields.map((field, idx) => (
+                <div key={field.id || idx} className="bg-white rounded-xl border border-indigo-200/80 overflow-hidden shadow-2xs">
+                  {/* Field Row Header */}
+                  <div
+                    className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-indigo-50/50 transition"
+                    onClick={() => setEditingFieldIdx(editingFieldIdx === idx ? null : idx)}
+                  >
+                    <span className="text-[9px] font-black px-2 py-0.5 rounded-md bg-indigo-100 text-indigo-800 uppercase shrink-0">
+                      {field.type}
+                    </span>
+                    <span className="flex-1 text-[11px] font-bold text-slate-800 truncate">
+                      {field.placeholder || field.label || `Input #${idx + 1}`}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={(e) => { e.stopPropagation(); removeField(idx); }}
+                      className="text-slate-400 hover:text-red-600 transition shrink-0 p-1"
+                      title="Hapus Field"
+                    >
+                      <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                    </button>
+                  </div>
+
+                  {/* Field Detail Editor */}
+                  {editingFieldIdx === idx && (
+                    <div className="px-3 pb-3 space-y-2 border-t border-indigo-100 bg-slate-50/80">
+                      <div className="pt-2">
+                        <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-1">Tipe Input Field</label>
+                        <select
+                          value={field.type || 'text'}
+                          onChange={(e) => updateFieldProp(idx, 'type', e.target.value)}
+                          className="w-full px-2.5 py-1 bg-white border border-slate-200 rounded-lg text-[11px] font-bold text-slate-800"
+                        >
+                          <option value="text">Teks (Biasa)</option>
+                          <option value="select">Dropdown (Pilihan)</option>
+                          <option value="textarea">Textarea (Multi-baris)</option>
+                          <option value="email">Email</option>
+                          <option value="tel">Nomor HP / WA</option>
+                          <option value="number">Angka</option>
+                        </select>
+                      </div>
+
+                      <div>
+                        <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-1">Placeholder (Teks di dalam input)</label>
+                        <input
+                          type="text"
+                          value={field.placeholder || ''}
+                          onChange={(e) => updateFieldProp(idx, 'placeholder', e.target.value)}
+                          className="w-full px-2.5 py-1 bg-white border border-slate-200 rounded-lg text-[11px] font-medium text-slate-800"
+                          placeholder="Ketik teks di sini..."
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-1">Label (Judul di atas input - Opsional)</label>
+                        <input
+                          type="text"
+                          value={field.label || ''}
+                          onChange={(e) => updateFieldProp(idx, 'label', e.target.value)}
+                          className="w-full px-2.5 py-1 bg-white border border-slate-200 rounded-lg text-[11px] text-slate-800"
+                          placeholder="Nama Lengkap:"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-1">Lebar Input</label>
+                          <select
+                            value={field.width || 'full'}
+                            onChange={(e) => updateFieldProp(idx, 'width', e.target.value)}
+                            className="w-full px-2 py-1 bg-white border border-slate-200 rounded-lg text-[11px] font-medium"
+                          >
+                            <option value="full">Full (100%)</option>
+                            <option value="half">Half (50%)</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-1">Wajib Diisi?</label>
+                          <select
+                            value={field.required ? 'yes' : 'no'}
+                            onChange={(e) => updateFieldProp(idx, 'required', e.target.value === 'yes')}
+                            className="w-full px-2 py-1 bg-white border border-slate-200 rounded-lg text-[11px] font-medium"
+                          >
+                            <option value="no">Opsional</option>
+                            <option value="yes">Wajib (Required)</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      {/* Dropdown Options Editor */}
+                      {field.type === 'select' && (
+                        <div className="p-2 bg-indigo-50/80 rounded-lg border border-indigo-200 space-y-1">
+                          <label className="block text-[9px] font-black text-indigo-900 uppercase tracking-wider">
+                            Pilihan Dropdown (Tulis 1 Pilihan Per Baris)
+                          </label>
+                          <textarea
+                            value={Array.isArray(field.options) ? field.options.join('\n') : ''}
+                            onChange={(e) => updateFieldOptions(idx, e.target.value)}
+                            className="w-full px-2.5 py-1.5 bg-white border border-indigo-200 rounded-lg text-[11px] font-medium text-slate-800 resize-none"
+                            rows={4}
+                            placeholder="Pilihan 1&#10;Pilihan 2&#10;Pilihan 3"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Card Header (Title / Subtitle / Badge) */}
+          <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
+            <h4 className="text-xs font-extrabold text-slate-800">Card Header (Opsional)</h4>
+            <div>
+              <label className="block text-[10px] font-bold text-slate-600 mb-1">Form Title</label>
+              <input
+                type="text"
+                value={formValues.title || ''}
+                onChange={(e) => handleChange('title', e.target.value)}
+                className="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs text-slate-800"
+                placeholder="Judul Form (Kosongkan jika hanya input)..."
+              />
+            </div>
+            <div>
+              <label className="block text-[10px] font-bold text-slate-600 mb-1">Subtitle</label>
+              <textarea
+                value={formValues.subtitle || ''}
+                onChange={(e) => handleChange('subtitle', e.target.value)}
+                className="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs text-slate-800 resize-none"
+                placeholder="Deskripsi singkat form..."
+                rows={2}
+              />
+            </div>
+          </div>
+
+          {/* Submit Button */}
+          <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
+            <h4 className="text-xs font-extrabold text-slate-800">Tombol Submit</h4>
+            <div>
+              <label className="block text-[10px] font-bold text-slate-600 mb-1">Label Tombol</label>
+              <input
+                type="text"
+                value={formValues.submitLabel || 'KIRIM PESAN'}
+                onChange={(e) => handleChange('submitLabel', e.target.value)}
+                className="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-800"
+              />
+            </div>
+            <div>
+              <label className="block text-[10px] font-bold text-slate-600 mb-1">Posisi Tombol</label>
+              <div className="grid grid-cols-4 gap-1">
+                {['full', 'left', 'center', 'right'].map(al => (
+                  <button
+                    key={al}
+                    type="button"
+                    onClick={() => handleChange('submitAlign', al)}
+                    className={`py-1.5 text-[10px] font-bold rounded-lg border transition capitalize ${
+                      (formValues.submitAlign || 'full') === al
+                        ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs'
+                        : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
+                    }`}
+                  >
+                    {al === 'full' ? 'Full Width' : al}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Layout: Grid Columns */}
+          <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-2">
+            <h4 className="text-xs font-extrabold text-slate-800">Layout Kolom Fields</h4>
+            <div className="grid grid-cols-2 gap-2">
+              {[{ val: '1', label: '1 Kolom' }, { val: '2', label: '2 Kolom' }].map(opt => (
+                <button
+                  key={opt.val}
+                  type="button"
+                  onClick={() => handleChange('gridCols', opt.val)}
+                  className={`py-2 text-xs font-bold rounded-xl border transition ${
+                    (formValues.gridCols || '2') === opt.val
+                      ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs'
+                      : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Fields Manager */}
+          <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
+            <div className="flex items-center justify-between">
+              <h4 className="text-xs font-extrabold text-slate-800">Kelola Fields Form</h4>
+              <span className="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">{fields.length} field</span>
+            </div>
+
+            {/* Add Field Buttons */}
+            <div className="grid grid-cols-2 gap-1.5">
+              {[
+                { type: 'text', label: '+ Teks' },
+                { type: 'email', label: '+ Email' },
+                { type: 'tel', label: '+ Telepon' },
+                { type: 'textarea', label: '+ Textarea' },
+                { type: 'select', label: '+ Dropdown' },
+                { type: 'number', label: '+ Angka' },
+              ].map(ft => (
+                <button
+                  key={ft.type}
+                  type="button"
+                  onClick={() => addField(ft.type)}
+                  className="py-1.5 px-2 text-[10px] font-bold rounded-lg border border-dashed border-indigo-300 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition"
+                >
+                  {ft.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Fields List */}
+            <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
+              {fields.map((field, idx) => (
+                <div key={field.id || idx} className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+                  {/* Field Row Header */}
+                  <div
+                    className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-slate-50 transition"
+                    onClick={() => setEditingFieldIdx(editingFieldIdx === idx ? null : idx)}
+                  >
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-700 uppercase shrink-0">
+                      {field.type}
+                    </span>
+                    <span className="flex-1 text-[11px] font-bold text-slate-700 truncate">{field.label || '(no label)'}</span>
+                    <button
+                      type="button"
+                      onClick={(e) => { e.stopPropagation(); removeField(idx); }}
+                      className="text-red-400 hover:text-red-600 transition shrink-0 p-0.5"
+                      title="Hapus Field"
+                    >
+                      <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                    </button>
+                  </div>
+
+                  {/* Field Detail Editor */}
+                  {editingFieldIdx === idx && (
+                    <div className="px-3 pb-3 space-y-2 border-t border-slate-100 bg-slate-50/60">
+                      <div className="pt-2">
+                        <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-1">Label</label>
+                        <input
+                          type="text"
+                          value={field.label || ''}
+                          onChange={(e) => updateFieldProp(idx, 'label', e.target.value)}
+                          className="w-full px-2.5 py-1 bg-white border border-slate-200 rounded-lg text-[11px] text-slate-800"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-1">Placeholder</label>
+                        <input
+                          type="text"
+                          value={field.placeholder || ''}
+                          onChange={(e) => updateFieldProp(idx, 'placeholder', e.target.value)}
+                          className="w-full px-2.5 py-1 bg-white border border-slate-200 rounded-lg text-[11px] text-slate-800"
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-1">Lebar</label>
+                          <select
+                            value={field.width || 'full'}
+                            onChange={(e) => updateFieldProp(idx, 'width', e.target.value)}
+                            className="w-full px-2 py-1 bg-white border border-slate-200 rounded-lg text-[11px] font-medium"
+                          >
+                            <option value="full">Full Width</option>
+                            <option value="half">Half (1/2)</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-1">Required?</label>
+                          <select
+                            value={field.required ? 'yes' : 'no'}
+                            onChange={(e) => updateFieldProp(idx, 'required', e.target.value === 'yes')}
+                            className="w-full px-2 py-1 bg-white border border-slate-200 rounded-lg text-[11px] font-medium"
+                          >
+                            <option value="yes">Wajib Diisi</option>
+                            <option value="no">Opsional</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      {/* Dropdown options editor */}
+                      {field.type === 'select' && (
+                        <div>
+                          <label className="block text-[9px] font-bold text-slate-500 uppercase tracking-wider mb-1">Pilihan Dropdown (1 per baris)</label>
+                          <textarea
+                            value={Array.isArray(field.options) ? field.options.join('\n') : ''}
+                            onChange={(e) => updateFieldOptions(idx, e.target.value)}
+                            className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-[11px] text-slate-800 resize-none"
+                            rows={4}
+                            placeholder="Pilihan 1&#10;Pilihan 2&#10;Pilihan 3"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Quick Links */}
+          <div className="p-3 bg-indigo-50/60 rounded-2xl border border-indigo-100 space-y-2">
+            <p className="text-[11px] font-bold text-indigo-900">Quick Design Links</p>
+            <div className="grid grid-cols-3 gap-1.5">
+              {[
+                { label: 'Card Style', tab: 'color' },
+                { label: 'Input Style', tab: 'typography' },
+                { label: 'Spacing', tab: 'spacing' },
+              ].map(ql => (
+                <button
+                  key={ql.tab}
+                  type="button"
+                  onClick={() => setActiveTab(ql.tab)}
+                  className="px-2 py-1.5 bg-white text-indigo-700 text-[10px] font-bold rounded-lg border border-indigo-200 hover:bg-indigo-600 hover:text-white transition"
+                >
+                  {ql.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── COLOR TAB ── Card & Input Colors */}
+      {activeTab === 'color' && (
+        <div className="space-y-4">
+          {/* Card Background */}
+          <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
+            <h4 className="text-xs font-extrabold text-slate-800">Card Background</h4>
+            <div className="flex items-center gap-2">
+              <input
+                type="color"
+                value={formValues.background === 'transparent' ? '#0f172a' : (formValues.background || '#0f172a')}
+                onChange={(e) => handleChange('background', e.target.value)}
+                className="w-10 h-9 rounded-xl border border-slate-200 cursor-pointer p-0.5 bg-white shadow-xs"
+              />
+              <input
+                type="text"
+                value={formValues.background || '#0f172a'}
+                onChange={(e) => handleChange('background', e.target.value)}
+                className="flex-1 px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-mono font-bold text-slate-800"
+                placeholder="#0f172a"
+              />
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              {colorSwatches.map(c => (
+                <button key={c} type="button" onClick={() => handleChange('background', c)}
+                  className={`w-6 h-6 rounded-lg border shadow-2xs transition hover:scale-110 ${(formValues.background || '#0f172a') === c ? 'ring-2 ring-indigo-500 scale-110 border-indigo-600' : 'border-slate-300'}`}
+                  style={{ backgroundColor: c }}
+                  title={c}
+                />
+              ))}
+            </div>
+            <div>
+              <label className="block text-[10px] font-bold text-slate-600 mb-1">Gradient CSS (Opsional)</label>
+              <input
+                type="text"
+                value={formValues.backgroundGradient || ''}
+                onChange={(e) => handleChange('backgroundGradient', e.target.value)}
+                className="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs font-mono text-slate-800"
+                placeholder="linear-gradient(135deg, #0f172a, #1e1b4b)"
+              />
+            </div>
+          </div>
+
+          {/* Title & Text Colors */}
+          <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
+            <h4 className="text-xs font-extrabold text-slate-800">Warna Teks</h4>
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="block text-[10px] font-bold text-slate-600 mb-1">Warna Title</label>
+                <div className="flex items-center gap-1.5">
+                  <input type="color" value={formValues.color || '#ffffff'} onChange={(e) => handleChange('color', e.target.value)}
+                    className="w-8 h-7 rounded-lg border border-slate-200 cursor-pointer p-0.5 bg-white" />
+                  <input type="text" value={formValues.color || '#ffffff'} onChange={(e) => handleChange('color', e.target.value)}
+                    className="flex-1 px-2 py-1 bg-white border border-slate-200 rounded-lg text-[10px] font-mono" />
+                </div>
+              </div>
+              <div>
+                <label className="block text-[10px] font-bold text-slate-600 mb-1">Warna Subtitle</label>
+                <div className="flex items-center gap-1.5">
+                  <input type="color" value={formValues.subtitleColor || '#94a3b8'} onChange={(e) => handleChange('subtitleColor', e.target.value)}
+                    className="w-8 h-7 rounded-lg border border-slate-200 cursor-pointer p-0.5 bg-white" />
+                  <input type="text" value={formValues.subtitleColor || '#94a3b8'} onChange={(e) => handleChange('subtitleColor', e.target.value)}
+                    className="flex-1 px-2 py-1 bg-white border border-slate-200 rounded-lg text-[10px] font-mono" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Submit Button Colors */}
+          <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
+            <h4 className="text-xs font-extrabold text-slate-800">Warna Tombol Submit</h4>
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="block text-[10px] font-bold text-slate-600 mb-1">Bg Tombol</label>
+                <div className="flex items-center gap-1.5">
+                  <input type="color" value={formValues.submitBackground || '#2563eb'} onChange={(e) => handleChange('submitBackground', e.target.value)}
+                    className="w-8 h-7 rounded-lg border border-slate-200 cursor-pointer p-0.5 bg-white" />
+                  <input type="text" value={formValues.submitBackground || '#2563eb'} onChange={(e) => handleChange('submitBackground', e.target.value)}
+                    className="flex-1 px-2 py-1 bg-white border border-slate-200 rounded-lg text-[10px] font-mono" />
+                </div>
+              </div>
+              <div>
+                <label className="block text-[10px] font-bold text-slate-600 mb-1">Warna Teks</label>
+                <div className="flex items-center gap-1.5">
+                  <input type="color" value={formValues.submitColor || '#ffffff'} onChange={(e) => handleChange('submitColor', e.target.value)}
+                    className="w-8 h-7 rounded-lg border border-slate-200 cursor-pointer p-0.5 bg-white" />
+                  <input type="text" value={formValues.submitColor || '#ffffff'} onChange={(e) => handleChange('submitColor', e.target.value)}
+                    className="flex-1 px-2 py-1 bg-white border border-slate-200 rounded-lg text-[10px] font-mono" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── TYPOGRAPHY TAB ── Input Style */}
+      {activeTab === 'typography' && (
+        <div className="space-y-4">
+          <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
+            <h4 className="text-xs font-extrabold text-slate-800">Style Input Field</h4>
+            <div>
+              <label className="block text-[10px] font-bold text-slate-600 mb-1">Background Input</label>
+              <div className="flex items-center gap-2">
+                <input type="color" value={formValues.inputBackground || '#1e293b'} onChange={(e) => handleChange('inputBackground', e.target.value)}
+                  className="w-9 h-8 rounded-xl border border-slate-200 cursor-pointer p-0.5 bg-white shadow-xs" />
+                <input type="text" value={formValues.inputBackground || '#1e293b'} onChange={(e) => handleChange('inputBackground', e.target.value)}
+                  className="flex-1 px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs font-mono font-bold text-slate-800" />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="block text-[10px] font-bold text-slate-600 mb-1">Warna Teks Input</label>
+                <div className="flex items-center gap-1.5">
+                  <input type="color" value={formValues.inputColor || '#ffffff'} onChange={(e) => handleChange('inputColor', e.target.value)}
+                    className="w-8 h-7 rounded-lg border border-slate-200 cursor-pointer p-0.5 bg-white" />
+                  <input type="text" value={formValues.inputColor || '#ffffff'} onChange={(e) => handleChange('inputColor', e.target.value)}
+                    className="flex-1 px-2 py-1 bg-white border border-slate-200 rounded-lg text-[10px] font-mono" />
+                </div>
+              </div>
+              <div>
+                <label className="block text-[10px] font-bold text-slate-600 mb-1">Warna Label</label>
+                <div className="flex items-center gap-1.5">
+                  <input type="color" value={formValues.labelColor || '#94a3b8'} onChange={(e) => handleChange('labelColor', e.target.value)}
+                    className="w-8 h-7 rounded-lg border border-slate-200 cursor-pointer p-0.5 bg-white" />
+                  <input type="text" value={formValues.labelColor || '#94a3b8'} onChange={(e) => handleChange('labelColor', e.target.value)}
+                    className="flex-1 px-2 py-1 bg-white border border-slate-200 rounded-lg text-[10px] font-mono" />
+                </div>
+              </div>
+            </div>
+            <div>
+              <label className="block text-[10px] font-bold text-slate-600 mb-1">Border Input</label>
+              <div className="flex items-center gap-2">
+                <input type="color" value={formValues.inputBorderColor || '#334155'} onChange={(e) => handleChange('inputBorderColor', e.target.value)}
+                  className="w-9 h-8 rounded-xl border border-slate-200 cursor-pointer p-0.5 bg-white shadow-xs" />
+                <input type="text" value={formValues.inputBorderColor || '#334155'} onChange={(e) => handleChange('inputBorderColor', e.target.value)}
+                  className="flex-1 px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs font-mono font-bold text-slate-800" />
+              </div>
+            </div>
+            <div>
+              <label className="block text-[10px] font-bold text-slate-600 mb-1">Border Radius Input</label>
+              <div className="flex gap-1">
+                {['6px', '8px', '10px', '12px', '16px', '9999px'].map(r => (
+                  <button key={r} type="button" onClick={() => handleChange('inputRadius', r)}
+                    className={`flex-1 py-1 text-[10px] font-bold rounded-lg border transition ${(formValues.inputRadius || '10px') === r ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'}`}>
+                    {r === '9999px' ? 'Pill' : r}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── SPACING TAB ── */}
+      {activeTab === 'spacing' && (
+        <div className="space-y-4">
+          <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
+            <h4 className="text-xs font-extrabold text-slate-800">Padding & Gap</h4>
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="block text-[10px] font-bold text-slate-600 mb-1">Card Padding</label>
+                <input type="text" value={formValues.padding || '32px'} onChange={(e) => handleChange('padding', e.target.value)}
+                  className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-xl text-xs font-mono" placeholder="32px" />
+              </div>
+              <div>
+                <label className="block text-[10px] font-bold text-slate-600 mb-1">Field Gap</label>
+                <input type="text" value={formValues.gap || '16px'} onChange={(e) => handleChange('gap', e.target.value)}
+                  className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-xl text-xs font-mono" placeholder="16px" />
+              </div>
+            </div>
+            <div>
+              <label className="block text-[10px] font-bold text-slate-600 mb-1">Margin (Outer)</label>
+              <input type="text" value={formValues.margin || '0px'} onChange={(e) => handleChange('margin', e.target.value)}
+                className="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs font-mono" placeholder="0px or 16px auto" />
+            </div>
+          </div>
+          <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
+            <h4 className="text-xs font-extrabold text-slate-800">Border & Radius</h4>
+            <div className="grid grid-cols-3 gap-1.5">
+              {['0px', '12px', '16px', '20px', '24px', '32px'].map(r => (
+                <button key={r} type="button" onClick={() => handleChange('borderRadius', r)}
+                  className={`py-1.5 px-1 text-[10px] font-bold rounded-lg border transition truncate ${(formValues.borderRadius || '20px') === r ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'}`}>
+                  {r}
+                </button>
+              ))}
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="block text-[10px] font-bold text-slate-600 mb-1">Border Width</label>
+                <select value={formValues.borderWidth || '1px'} onChange={(e) => handleChange('borderWidth', e.target.value)}
+                  className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-bold">
+                  <option value="0px">None</option>
+                  <option value="1px">1px</option>
+                  <option value="2px">2px</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-[10px] font-bold text-slate-600 mb-1">Border Color</label>
+                <div className="flex items-center gap-1.5">
+                  <input type="color" value={formValues.borderColor || '#1e293b'} onChange={(e) => handleChange('borderColor', e.target.value)}
+                    className="w-8 h-7 rounded-lg border border-slate-200 cursor-pointer p-0.5 bg-white" />
+                  <input type="text" value={formValues.borderColor || '#1e293b'} onChange={(e) => handleChange('borderColor', e.target.value)}
+                    className="flex-1 px-2 py-1 bg-white border border-slate-200 rounded-lg text-[10px] font-mono" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-2">
+            <h4 className="text-xs font-extrabold text-slate-800">Card Shadow</h4>
+            <div className="grid grid-cols-3 gap-1.5">
+              {['none', 'sm', 'md', 'lg', 'xl', '2xl'].map(s => (
+                <button key={s} type="button" onClick={() => handleChange('shadow', s)}
+                  className={`py-1.5 text-[10px] font-bold rounded-lg border transition ${(formValues.shadow || 'xl') === s ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'}`}>
+                  {s === 'none' ? 'None' : s.toUpperCase()}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── BORDER TAB ── Submit Radius */}
+      {activeTab === 'border' && (
+        <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
+          <h4 className="text-xs font-extrabold text-slate-800">Radius Tombol Submit</h4>
+          <div className="flex gap-1">
+            {['6px', '8px', '12px', '16px', '24px', '9999px'].map(r => (
+              <button key={r} type="button" onClick={() => handleChange('submitRadius', r)}
+                className={`flex-1 py-1.5 text-[10px] font-bold rounded-lg border transition ${(formValues.submitRadius || '12px') === r ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'}`}>
+                {r === '9999px' ? 'Pill' : r}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 function ImageInspector({ activeTab, formValues, handleChange, setActiveTab, addUpload }) {
   const fileInputRef = useRef(null);
