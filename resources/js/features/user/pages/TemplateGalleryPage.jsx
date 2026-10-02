@@ -93,7 +93,7 @@ function GalleryNavbar() {
                         <div className="w-px h-5 bg-slate-200" />
                         <div className="flex items-center gap-2">
                             <img
-                                src="/storage/settings/microdata-emblem.png"
+                                src="/images/microdata-emblem.png"
                                 alt="Microdata"
                                 className="h-8 w-auto object-contain"
                                 onError={(e) => { e.target.src = '/images/microdata-emblem.png'; }}

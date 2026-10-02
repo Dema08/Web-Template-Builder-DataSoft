@@ -9,7 +9,7 @@ export default function PageLoader({ fullScreen = false }) {
             <div className="relative">
                 {logo_path || true ? (
                     <img
-                        src={logo_path || '/storage/settings/microdata-emblem.png'}
+                        src={logo_path || '/images/microdata-emblem.png'}
                         alt={brand_name || 'Microdata'}
                         className="h-16 w-auto rounded-2xl object-contain"
                         onError={(e) => {

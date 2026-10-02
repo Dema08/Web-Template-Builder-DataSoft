@@ -10,7 +10,7 @@ export default function Logo({ className = '' }) {
     return (
         <div className={`flex items-center justify-center gap-3 ${className}`}>
             <img
-                src={logo_path || '/storage/settings/microdata-emblem.png'}
+                src={logo_path || '/images/microdata-emblem.png'}
                 alt={brand_name || 'Microdata'}
                 className="inline-flex h-11 w-auto items-center justify-center object-contain"
                 onError={(e) => {
