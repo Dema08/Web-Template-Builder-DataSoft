@@ -56,6 +56,7 @@ export default function Navbar16({ components = [], sectionId = null }) {
               onClick={() => setMobileOpen(v => !v)}
               className="p-2 text-amber-900 hover:bg-amber-200/50 rounded-xl transition text-base font-bold select-none"
               aria-label="Toggle Navigation"
+              aria-expanded={mobileOpen}
             >
               {mobileOpen ? '✕' : '☰'}
             </button>
@@ -65,6 +66,7 @@ export default function Navbar16({ components = [], sectionId = null }) {
         {mobileOpen && (
           <div className="lg:hidden mt-3 pt-3 border-t border-amber-300/60 flex flex-col gap-2">
             {renderLayoutComponents(menuComps, sectionId)}
+            {renderLayoutComponents(ctaComps, sectionId)}
           </div>
         )}
       </div>

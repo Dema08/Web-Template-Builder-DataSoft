@@ -44,12 +44,18 @@ export default function Navbar08({ components = [], sectionId = null }) {
             type="button"
             onClick={(e) => { e.preventDefault(); e.stopPropagation(); setOpen(v => !v); }}
             className="md:hidden w-11 h-11 bg-white border-[3px] border-black rounded-xl shadow-[3px_3px_0_#000] font-black select-none"
+            aria-label={open ? 'Close navigation menu' : 'Open navigation menu'}
+            aria-expanded={open}
           >
             {open ? '✕' : '☰'}
           </button>
         </div>
       </div>
-      <div className={`md:hidden overflow-hidden transition-all duration-300 ${open ? 'max-h-72 opacity-100 mt-3' : 'max-h-0 opacity-0'}`}>
+      <div
+        className={`md:hidden overflow-hidden transition-all duration-300 ${open ? 'max-h-72 opacity-100 mt-3' : 'max-h-0 opacity-0'}`}
+        aria-hidden={!open}
+        inert={!open}
+      >
         <div className="bg-white border-[3px] border-black rounded-2xl shadow-[4px_4px_0_#000] p-2 flex flex-col gap-1">
           {renderLayoutComponents(menuComps, sectionId)}
           {renderLayoutComponents(ctaComps, sectionId)}

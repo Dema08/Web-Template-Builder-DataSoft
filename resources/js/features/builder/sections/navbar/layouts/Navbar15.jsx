@@ -7,7 +7,7 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
  * Modern dashboard / portfolio / agency kreatif.
  */
 export default function Navbar15({ components = [], sectionId = null }) {
-  const [drawer, setDrawer] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const defaultComponents = [
     { id: 'logo-15', type: 'heading', props: { content: 'iris*', level: 'h2', fontSize: '24px', fontWeight: '900', color: '#0f172a' } },
@@ -38,42 +38,33 @@ export default function Navbar15({ components = [], sectionId = null }) {
           )}
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <div className="hidden sm:block">{renderLayoutComponents(ctaComps, sectionId)}</div>
+          <div className="hidden md:block">{renderLayoutComponents(ctaComps, sectionId)}</div>
           <button
             type="button"
-            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setDrawer(true); }}
-            className="w-11 h-11 rounded-full bg-slate-900 text-white flex flex-col items-center justify-center gap-1 hover:scale-105 transition-transform select-none"
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); setMobileOpen(v => !v); }}
+            className="md:hidden w-11 h-11 rounded-full bg-slate-900 text-white flex flex-col items-center justify-center gap-1 hover:scale-105 transition-transform select-none"
+            aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            aria-expanded={mobileOpen}
           >
-            <span className="w-5 h-0.5 bg-white rounded" />
-            <span className="w-5 h-0.5 bg-white rounded" />
-            <span className="w-3 h-0.5 bg-white rounded self-start ml-3" />
+            {mobileOpen ? (
+              <span aria-hidden="true">✕</span>
+            ) : (
+              <>
+                <span className="w-5 h-0.5 bg-white rounded" />
+                <span className="w-5 h-0.5 bg-white rounded" />
+                <span className="w-3 h-0.5 bg-white rounded self-start ml-3" />
+              </>
+            )}
           </button>
         </div>
       </div>
-      <div
-        className={`fixed inset-0 z-[60] transition-all duration-500 ${drawer ? 'visible opacity-100' : 'invisible opacity-0'}`}
-        onClick={(e) => { e.stopPropagation(); setDrawer(false); }}
-      >
-        <div className="absolute inset-0 bg-slate-950/50 backdrop-blur-sm" />
-        <aside
-          className={`absolute top-0 right-0 h-full w-80 max-w-[85vw] bg-white shadow-2xl p-6 flex flex-col gap-2 transition-transform duration-500 ${drawer ? 'translate-x-0' : 'translate-x-full'}`}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className="flex items-center justify-between mb-4">
-            <span className="font-black text-lg select-none">Menu</span>
-            <button
-              type="button"
-              onClick={(e) => { e.preventDefault(); e.stopPropagation(); setDrawer(false); }}
-              className="w-9 h-9 rounded-full bg-slate-100 font-bold select-none"
-            >
-              ✕
-            </button>
-          </div>
+      {mobileOpen && (
+        <div className="md:hidden mt-3 rounded-2xl border border-slate-200 bg-white p-3 shadow-lg flex flex-col gap-2">
           {renderLayoutComponents(menuComps, sectionId)}
-          <div className="mt-4">{renderLayoutComponents(ctaComps, sectionId)}</div>
-          <p className="mt-auto text-xs text-slate-400 select-none">hello@iris-studio.id</p>
-        </aside>
-      </div>
+          {renderLayoutComponents(ctaComps, sectionId)}
+          <p className="text-xs text-slate-400 select-none">hello@iris-studio.id</p>
+        </div>
+      )}
     </nav>
   );
 }

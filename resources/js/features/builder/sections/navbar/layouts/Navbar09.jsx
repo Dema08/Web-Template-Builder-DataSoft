@@ -48,6 +48,7 @@ export default function Navbar09({ components = [], sectionId = null }) {
               onClick={() => setMobileOpen(v => !v)}
               className="p-2 text-stone-700 hover:bg-stone-100 rounded-xl transition text-base font-bold select-none"
               aria-label="Toggle Navigation"
+              aria-expanded={mobileOpen}
             >
               {mobileOpen ? '✕' : '☰'}
             </button>
@@ -57,6 +58,7 @@ export default function Navbar09({ components = [], sectionId = null }) {
         {mobileOpen && (
           <div className="md:hidden mt-4 pt-3 border-t border-stone-200 flex flex-col gap-2">
             {renderLayoutComponents(menuComps, sectionId)}
+            {renderLayoutComponents(ctaComps, sectionId)}
           </div>
         )}
 

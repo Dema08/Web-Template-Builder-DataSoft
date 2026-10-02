@@ -53,6 +53,7 @@ export default function Navbar01({ components = [], sectionId = null }) {
               onClick={() => setMobileOpen(v => !v)}
               className="lg:hidden p-2 text-slate-700 hover:bg-slate-100 rounded-xl transition text-base font-bold"
               aria-label="Toggle Navigation"
+              aria-expanded={mobileOpen}
             >
               {mobileOpen ? '✕' : '☰'}
             </button>

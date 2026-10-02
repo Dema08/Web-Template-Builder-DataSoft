@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { toast } from '@store';
 import { handleCardFormSubmit } from '../../utils/formSubmissionHelper.js';
+import { parseButtonHref } from '../button/CanvasButton';
+import { useBuilderStore } from '../../stores/builderStore';
 
 export default function Form({
   title = '',
@@ -29,7 +31,7 @@ export default function Form({
   inputBorderColor = '#1e293b',
   inputRadius = '14px',
   labelColor = '#94a3b8',
-  action = null,
+  action = { type: 'card_form', formChannel: 'whatsapp' },
 }) {
   const defaultFields = Array.isArray(fields) && fields.length > 0 ? fields : [
     { id: 'f1', type: 'text', label: '', placeholder: 'Ketik teks di sini...', required: false, width: 'full' },
@@ -38,6 +40,7 @@ export default function Form({
   // Local state for user inputs so guests can type & select dropdowns seamlessly
   const [formData, setFormData] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const { switchPreviewPage } = useBuilderStore();
 
   const handleInputChange = (fieldId, val) => {
     setFormData(prev => ({ ...prev, [fieldId]: val }));
@@ -45,13 +48,66 @@ export default function Form({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (action && action.type === 'card_form') {
-      handleCardFormSubmit(e.currentTarget, action);
+
+    const destinationType = action?.type || 'card_form';
+    if (destinationType === 'card_form' || destinationType === 'whatsapp' || destinationType === 'email') {
+      const channel = destinationType === 'card_form'
+        ? (action.formChannel || 'whatsapp')
+        : destinationType;
+
+      if (!action.value) {
+        toast.error(
+          channel === 'email' ? 'Masukkan alamat email tujuan di pengaturan Form Card.' : 'Masukkan nomor WhatsApp tujuan di pengaturan Form Card.',
+          'Tujuan Belum Diatur'
+        );
+        return;
+      }
+
+      handleCardFormSubmit(e.currentTarget, {
+        ...action,
+        type: 'card_form',
+        formChannel: channel,
+      }, {
+        onSuccess: () => {
+          setSubmitted(true);
+          setTimeout(() => setSubmitted(false), 4000);
+        },
+      });
       return;
     }
-    setSubmitted(true);
-    toast.success('Pesan Anda berhasil terkirim!', 'Form Submitted');
-    setTimeout(() => setSubmitted(false), 4000);
+
+    const href = parseButtonHref(action);
+    if (!action.value && destinationType !== 'section') {
+      toast.error('Lengkapi tujuan pada pengaturan Form Card terlebih dahulu.', 'Tujuan Belum Diatur');
+      return;
+    }
+
+    if (destinationType === 'file_download') {
+      const link = document.createElement('a');
+      link.href = href;
+      link.download = action.fileName || '';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else if (destinationType === 'section') {
+      const targetId = String(action.value || '').replace(/^#/, '');
+      const target = targetId && (
+        document.getElementById(targetId) ||
+        document.querySelector(`[data-section-id="${targetId}"]`)
+      );
+      if (!target) {
+        toast.error('Section tujuan tidak ditemukan.', 'Tujuan Tidak Ditemukan');
+        return;
+      }
+      target.scrollIntoView({ behavior: 'smooth' });
+    } else if (destinationType === 'page' && switchPreviewPage) {
+      switchPreviewPage(action.value);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (destinationType === 'web_url' && action.target === '_blank') {
+      window.open(href, '_blank', 'noopener,noreferrer');
+    } else {
+      window.location.href = href;
+    }
   };
 
   const shadowClasses = {

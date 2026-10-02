@@ -730,54 +730,6 @@ html, body, * {
  * Template Builder — Responsive Device Viewport Canvas Styles
  * ========================================================= */
 
-/* Builder Canvas Mobile Override Mode (Width: 375px) */
-.builder-canvas-mobile .grid {
-    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
-    gap: 1.25rem !important;
-}
-
-.builder-canvas-mobile section {
-    padding-left: 1rem !important;
-    padding-right: 1rem !important;
-    padding-top: 2.5rem !important;
-    padding-bottom: 2.5rem !important;
-}
-
-.builder-canvas-mobile .max-w-7xl,
-.builder-canvas-mobile .max-w-6xl,
-.builder-canvas-mobile .max-w-5xl,
-.builder-canvas-mobile .max-w-4xl,
-.builder-canvas-mobile .max-w-3xl {
-    max-width: 100% !important;
-}
-
-.builder-canvas-mobile [class*="lg:flex-row"],
-.builder-canvas-mobile [class*="md:flex-row"],
-.builder-canvas-mobile [class*="sm:flex-row"] {
-    flex-direction: column !important;
-}
-
-.builder-canvas-mobile [class*="items-start"] {
-    align-items: flex-start !important;
-}
-
-.builder-canvas-mobile [class*="text-4xl"],
-.builder-canvas-mobile [class*="text-5xl"],
-.builder-canvas-mobile [class*="text-6xl"] {
-    font-size: 1.65rem !important;
-    line-height: 2.15rem !important;
-}
-
-.builder-canvas-mobile [class*="text-3xl"] {
-    font-size: 1.4rem !important;
-    line-height: 1.85rem !important;
-}
-
-.builder-canvas-mobile img {
-    max-width: 100% !important;
-    height: auto !important;
-}
-
 /* Builder Canvas Tablet Override Mode (Width: 768px) */
 .builder-canvas-tablet .grid {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
@@ -1221,250 +1173,116 @@ html, body, * {
     pointer-events: none;
 }
 
-/* ============================================================
- * Universal Mobile & Responsive Starter Template System
- * Guarantees 100% pixel-perfect mobile layouts for all starter templates,
- * both inside builder canvas mobile preview mode and on real mobile devices.
- * ========================================================= */
-
-/* 1. Mobile Canvas Container Overrides (Active when selecting Mobile in Builder Toolbar) */
-.builder-canvas-mobile {
-    width: 100% !important;
-    max-width: 375px !important;
+/* Responsive rules are scoped to rendered site content, not builder/admin chrome. */
+.section-renderer-content {
+    container-type: inline-size;
+    container-name: section-content;
+    min-width: 0;
+    width: 100%;
 }
 
-.builder-canvas-mobile section {
-    padding-top: 2.25rem !important;
-    padding-bottom: 2.25rem !important;
-    padding-left: 1rem !important;
-    padding-right: 1rem !important;
-    min-height: auto !important;
-}
-
-.builder-canvas-mobile header {
-    height: auto !important;
-    padding-top: 0.75rem !important;
-    padding-bottom: 0.75rem !important;
-}
-
-.builder-canvas-mobile header > div > div {
-    height: auto !important;
-    flex-wrap: wrap !important;
-    gap: 0.5rem !important;
-    justify-content: space-between !important;
-}
-
-.builder-canvas-mobile header .hidden.lg\:flex,
-.builder-canvas-mobile header .hidden.md\:flex,
-.builder-canvas-mobile header .hidden.sm\:block,
-.builder-canvas-mobile header .hidden.sm\:flex,
-.builder-canvas-mobile nav .hidden.lg\:flex,
-.builder-canvas-mobile nav .hidden.md\:flex {
-    display: none !important;
-}
-
-.builder-canvas-mobile header .flex.md\:hidden,
-.builder-canvas-mobile header .flex.lg\:hidden,
-.builder-canvas-mobile header .md\:hidden,
-.builder-canvas-mobile header .lg\:hidden,
-.builder-canvas-mobile nav .lg\:hidden,
-.builder-canvas-mobile nav .md\:hidden {
-    display: flex !important;
-}
-
-.builder-canvas-mobile h1,
-.builder-canvas-mobile [data-component-type="heading"] h1 {
-    font-size: clamp(22px, 6vw, 28px) !important;
-    line-height: 1.2 !important;
-    letter-spacing: -0.02em !important;
-    word-break: break-word !important;
-    overflow-wrap: break-word !important;
-}
-
-.builder-canvas-mobile h2,
-.builder-canvas-mobile [data-component-type="heading"] h2 {
-    font-size: clamp(19px, 5vw, 24px) !important;
-    line-height: 1.25 !important;
-    letter-spacing: -0.015em !important;
-    word-break: break-word !important;
-    overflow-wrap: break-word !important;
-}
-
-.builder-canvas-mobile h3,
-.builder-canvas-mobile [data-component-type="heading"] h3 {
-    font-size: clamp(16px, 4.2vw, 18px) !important;
-    line-height: 1.3 !important;
-    word-break: break-word !important;
-}
-
-.builder-canvas-mobile h4,
-.builder-canvas-mobile [data-component-type="heading"] h4 {
-    font-size: clamp(14px, 3.8vw, 16px) !important;
-    line-height: 1.35 !important;
-    word-break: break-word !important;
-}
-
-.builder-canvas-mobile p,
-.builder-canvas-mobile [data-component-type="text"] {
-    font-size: clamp(13px, 3.5vw, 14.5px) !important;
-    line-height: 1.6 !important;
-    word-break: break-word !important;
-}
-
-.builder-canvas-mobile [data-component-type="card"] {
-    max-width: 100% !important;
-    word-break: break-word !important;
-    overflow-wrap: break-word !important;
-}
-
-.builder-canvas-mobile [data-component-type="button"] {
-    max-width: 100% !important;
-}
-
-.builder-canvas-mobile .grid-cols-12,
-.builder-canvas-mobile [class*="grid-cols-12"] {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 1.75rem !important;
-}
-
-.builder-canvas-mobile [class*="lg:col-span-"],
-.builder-canvas-mobile [class*="col-span-"] {
-    width: 100% !important;
-}
-
-.builder-canvas-mobile [class*="grid-cols-4"],
-.builder-canvas-mobile [class*="sm:grid-cols-4"] {
-    display: grid !important;
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 0.5rem !important;
-}
-
-.builder-canvas-mobile [class*="grid-cols-3"],
-.builder-canvas-mobile [class*="md:grid-cols-3"],
-.builder-canvas-mobile [class*="grid-cols-2"],
-.builder-canvas-mobile [class*="md:grid-cols-2"] {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 1.25rem !important;
-}
-
-.builder-canvas-mobile [class*="stat"] [data-component-type="card"],
-.builder-canvas-mobile [data-component-id*="stat-card"],
-.builder-canvas-mobile [data-component-id*="-stat"] {
-    padding: 10px 8px !important;
-}
-
-.builder-canvas-mobile [data-component-type="image"] img,
-.builder-canvas-mobile img {
-    max-height: 220px !important;
-    width: 100% !important;
-    object-fit: cover !important;
-}
-
-.builder-canvas-mobile .flex.flex-wrap.items-center.gap-4,
-.builder-canvas-mobile .flex.gap-4 {
-    display: flex !important;
-    flex-direction: column !important;
-    width: 100% !important;
-    gap: 0.625rem !important;
-}
-
-.builder-canvas-mobile .flex.flex-wrap.items-center.gap-4 > *,
-.builder-canvas-mobile .flex.gap-4 > a,
-.builder-canvas-mobile .flex.gap-4 > [data-component-type="button"] {
-    width: 100% !important;
-}
-
-.builder-canvas-mobile [data-component-type="button"] a {
-    justify-content: center !important;
-    width: 100% !important;
-}
-
-.builder-canvas-mobile [data-component-id*="cta-"] > div,
-.builder-canvas-mobile [data-component-id*="-card"][style*="padding: 48px"] {
-    padding: 1.5rem 1rem !important;
-    border-radius: 1.25rem !important;
-}
-
-.builder-canvas-mobile footer .grid {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 1.5rem !important;
-}
-
-/* 2. Real Mobile Viewport Overrides (@media max-width: 640px) */
-@media (max-width: 640px) {
-    section {
-        padding-top: 2.5rem !important;
-        padding-bottom: 2.5rem !important;
-        padding-left: 1rem !important;
-        padding-right: 1rem !important;
-        min-height: auto !important;
+@container section-content (max-width: 640px) {
+    .section-renderer-content :is(.max-w-7xl, .max-w-6xl, .max-w-5xl, .max-w-4xl, .max-w-3xl, .max-w-2xl, .max-w-xl),
+    .section-renderer-content [style*="width"] {
+        max-width: 100% !important;
     }
 
-    header {
-        height: auto !important;
-        padding-top: 0.75rem !important;
-        padding-bottom: 0.75rem !important;
+    .section-renderer-content [class*=" w-"],
+    .section-renderer-content [class^="w-"] {
+        max-width: 100% !important;
     }
 
-    header > div > div {
-        height: auto !important;
-        flex-wrap: wrap !important;
-        gap: 0.5rem !important;
-        justify-content: space-between !important;
+    .section-renderer-content :where(*) {
+        min-width: 0;
     }
 
-    h1,
-    [data-component-type="heading"] h1 {
-        font-size: clamp(24px, 6.5vw, 32px) !important;
-        line-height: 1.2 !important;
-        letter-spacing: -0.02em !important;
-        word-break: break-word !important;
-        overflow-wrap: break-word !important;
+    .section-renderer-content :is(.grid, [class*="grid-cols-"]) {
+        grid-template-columns: minmax(0, 1fr) !important;
+        min-width: 0 !important;
     }
 
-    h2,
-    [data-component-type="heading"] h2 {
-        font-size: clamp(20px, 5.5vw, 26px) !important;
-        line-height: 1.25 !important;
-        letter-spacing: -0.015em !important;
-        word-break: break-word !important;
-        overflow-wrap: break-word !important;
-    }
-
-    h3,
-    [data-component-type="heading"] h3 {
-        font-size: clamp(16px, 4.5vw, 19px) !important;
-        line-height: 1.3 !important;
-        word-break: break-word !important;
-    }
-
-    h4,
-    [data-component-type="heading"] h4 {
-        font-size: clamp(14px, 4vw, 17px) !important;
-        line-height: 1.35 !important;
-        word-break: break-word !important;
-    }
-
-    p,
-    [data-component-type="text"] {
-        font-size: clamp(13px, 3.8vw, 15px) !important;
-        line-height: 1.6 !important;
-        word-break: break-word !important;
-    }
-
-    [data-component-type="image"] img {
-        max-height: 240px !important;
-        width: 100% !important;
-        object-fit: cover !important;
-    }
-
-    footer .grid {
-        display: flex !important;
+    .section-renderer-content :is([class~="flex-row"], [class~="flex-row-reverse"], [class*="md:flex-row"], [class*="lg:flex-row"], [class*="xl:flex-row"]):not(nav *):not(header *) {
         flex-direction: column !important;
-        gap: 1.5rem !important;
+        align-items: stretch !important;
+    }
+
+    .section-renderer-content :is([class*="md:col-span-"], [class*="lg:col-span-"], [class*="xl:col-span-"], [class*="col-span-"]) {
+        grid-column: 1 / -1 !important;
+        width: 100% !important;
+    }
+
+    .section-renderer-content :is(h1, [data-component-type="heading"] h1) {
+        font-size: clamp(1.75rem, 8cqi, 2.5rem) !important;
+        line-height: 1.15 !important;
+    }
+
+    .section-renderer-content :is(h2, [data-component-type="heading"] h2) {
+        font-size: clamp(1.375rem, 6cqi, 2rem) !important;
+        line-height: 1.2 !important;
+    }
+
+    .section-renderer-content :is(h3, [data-component-type="heading"] h3) {
+        font-size: clamp(1.125rem, 4.8cqi, 1.5rem) !important;
+        line-height: 1.25 !important;
+    }
+
+    .section-renderer-content :is(p, [data-component-type="text"]) {
+        font-size: clamp(0.875rem, 3.8cqi, 1rem) !important;
+        line-height: 1.55 !important;
+        overflow-wrap: anywhere;
+    }
+
+    .section-renderer-content :is(img, video, iframe, canvas) {
+        max-width: 100% !important;
+    }
+
+    .section-renderer-content img {
+        height: auto !important;
+    }
+
+    .section-renderer-content :is(input, select, textarea) {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .section-renderer-content :is([data-component-type="card"], [data-component-type="button"], button, a) {
+        min-width: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .section-renderer-content :is([class*="p-8"], [class*="p-10"], [class*="p-12"], [class*="px-8"], [class*="px-10"], [class*="px-12"]) {
+        padding: clamp(0.875rem, 4cqi, 1.5rem) !important;
+    }
+
+    .section-renderer-content nav :is([class*="hidden md:flex"], [class*="hidden lg:flex"], [class*="hidden xl:flex"], [class*="hidden sm:flex"]) {
+        display: none !important;
+    }
+
+    .section-renderer-content nav [class*="hidden sm:block"] {
+        display: none !important;
+    }
+
+    .section-renderer-content nav button:is([class*="sm:hidden"], [class*="md:hidden"], [class*="lg:hidden"], [class*="xl:hidden"]) {
+        display: inline-flex !important;
+    }
+
+    .section-renderer-content nav :is([class*="sm:hidden"], [class*="md:hidden"], [class*="lg:hidden"], [class*="xl:hidden"]):not(button) {
+        display: flex !important;
+    }
+}
+
+@media (max-width: 640px) {
+    .section-renderer-content > :is(section, header, footer) {
+        min-height: auto !important;
+        padding-inline: clamp(1rem, 5vw, 1.5rem) !important;
+    }
+
+    .section-renderer-content nav button:is([class*="sm:hidden"], [class*="md:hidden"], [class*="lg:hidden"], [class*="xl:hidden"]) {
+        display: inline-flex !important;
+    }
+
+    .section-renderer-content nav :is([class*="hidden md:flex"], [class*="hidden lg:flex"], [class*="hidden xl:flex"], [class*="hidden sm:flex"]) {
+        display: none !important;
     }
 }
 
@@ -1485,6 +1303,3 @@ html, body, * {
 .builder-canvas-tablet [class*="grid-cols-4"] {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
 }
-
-
-

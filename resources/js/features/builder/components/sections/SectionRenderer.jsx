@@ -320,7 +320,7 @@ export default function SectionRenderer({ section, isSelected, onClick }) {
             }}
           />
         )}
-        <div className="relative z-10 w-full">
+        <div className="relative z-10 w-full section-renderer-content">
           <BuilderErrorBoundary title={`Preview section ${section.type}`}>
             <LayoutComponent components={section.components || []} sectionId={section.id} />
             {renderExtraSectionComponents()}
@@ -468,7 +468,7 @@ export default function SectionRenderer({ section, isSelected, onClick }) {
         />
       )}
       <SnapGrid />
-      <div className="relative z-10 w-full">
+      <div className="relative z-10 w-full section-renderer-content">
         <BuilderErrorBoundary title={`Section layout (${section.type} / ${section.layout})`}>
           <LayoutComponent components={section.components || []} sectionId={section.id} />
           {renderExtraSectionComponents()}

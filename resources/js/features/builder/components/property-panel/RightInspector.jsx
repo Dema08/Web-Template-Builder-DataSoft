@@ -259,6 +259,20 @@ export default function RightInspector() {
         };
       }
 
+      if (selectedComponent.type === 'form') {
+        const actionObj = selectedComponent.props?.action || {};
+        defaults.action = {
+          ...actionObj,
+          type: actionObj.type || defaults.actionType || 'card_form',
+          value: actionObj.value ?? defaults.formTarget ?? '',
+          formChannel: actionObj.formChannel || (actionObj.type === 'email' ? 'email' : 'whatsapp'),
+          message: actionObj.message || defaults.actionMessage || '',
+          formSubject: actionObj.formSubject || actionObj.subject || defaults.formSubject || '',
+          target: actionObj.target || defaults.target || '_self',
+          fileName: actionObj.fileName || defaults.fileName || '',
+        };
+      }
+
       setFormValues(defaults);
 
       if (selectedComponent.position) {
@@ -3036,6 +3050,9 @@ const renderSocialInspector = (activeTab, formValues, handleChange, setActiveTab
 function FormCardInspector({ activeTab, formValues, handleChange, setActiveTab }) {
   // Fields state for the field editor
   const [editingFieldIdx, setEditingFieldIdx] = useState(0);
+  const action = formValues.action || {};
+  const actionType = action.type || 'card_form';
+  const updateAction = (updates) => handleChange('action', { ...action, ...updates });
 
   const defaultFields = Array.isArray(formValues.fields) && formValues.fields.length > 0
     ? formValues.fields
@@ -3095,6 +3112,153 @@ function FormCardInspector({ activeTab, formValues, handleChange, setActiveTab }
       {/* ── CONTENT TAB ── */}
       {(activeTab === 'content' || activeTab === 'all') && (
         <div className="space-y-4">
+          <div className="p-3.5 bg-indigo-50/70 rounded-2xl border border-indigo-200/80 space-y-3">
+            <div className="flex items-center justify-between">
+              <h4 className="text-xs font-extrabold text-indigo-950">Action Destination Type</h4>
+              <span className="text-[10px] font-bold text-indigo-700 bg-white px-2 py-0.5 rounded-full border border-indigo-200">
+                {actionType}
+              </span>
+            </div>
+            <div className="grid grid-cols-2 gap-1.5">
+              {[
+                { id: 'card_form', label: '📋 Card Form' },
+                { id: 'web_url', label: '🌐 Web URL' },
+                { id: 'file_download', label: '📁 Download File' },
+                { id: 'whatsapp', label: '💬 WhatsApp' },
+                { id: 'page', label: '📄 Subpage' },
+                { id: 'section', label: '⚓ Section ID' },
+                { id: 'email', label: '✉️ Email' },
+                { id: 'phone', label: '📞 Phone' },
+              ].map((destination) => (
+                <button
+                  key={destination.id}
+                  type="button"
+                  onClick={() => updateAction({ type: destination.id })}
+                  className={`py-2 px-1.5 text-[11px] font-bold rounded-xl border transition text-center truncate ${
+                    actionType === destination.id
+                      ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs ring-2 ring-indigo-500/20'
+                      : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
+                  }`}
+                >
+                  {destination.label}
+                </button>
+              ))}
+            </div>
+
+            <div className="p-3 bg-white border border-slate-200 rounded-xl space-y-3">
+              {actionType === 'card_form' && (
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-semibold text-slate-700">Saluran Pengiriman Tujuan:</label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {[
+                      { id: 'whatsapp', label: 'WhatsApp' },
+                      { id: 'email', label: 'Email' },
+                    ].map((channel) => (
+                      <button
+                        key={channel.id}
+                        type="button"
+                        onClick={() => updateAction({ formChannel: channel.id })}
+                        className={`py-2 px-3 rounded-lg border text-xs font-bold transition ${
+                          (action.formChannel || 'whatsapp') === channel.id
+                            ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs'
+                            : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
+                        }`}
+                      >
+                        {channel.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {(actionType === 'card_form' || actionType === 'whatsapp' || actionType === 'email') ? (
+                <>
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                      {(actionType === 'email' || (actionType === 'card_form' && action.formChannel === 'email'))
+                        ? 'Alamat Email Tujuan'
+                        : 'Nomor WhatsApp Penerima'}
+                    </label>
+                    <input
+                      type={actionType === 'email' || (actionType === 'card_form' && action.formChannel === 'email') ? 'email' : 'text'}
+                      required
+                      value={action.value || ''}
+                      onChange={(e) => updateAction({ value: e.target.value })}
+                      placeholder={actionType === 'email' || (actionType === 'card_form' && action.formChannel === 'email')
+                        ? 'admin@example.com'
+                        : 'Contoh: 081199887766'}
+                      className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-mono focus:bg-white focus:border-indigo-500 focus:outline-hidden"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                      {(actionType === 'email' || (actionType === 'card_form' && action.formChannel === 'email'))
+                        ? 'Subjek Email'
+                        : 'Header / Salam Pembuka WhatsApp'}
+                    </label>
+                    <input
+                      type="text"
+                      value={(actionType === 'email' || (actionType === 'card_form' && action.formChannel === 'email'))
+                        ? (action.formSubject || '')
+                        : (action.message || '')}
+                      onChange={(e) => updateAction(
+                        (actionType === 'email' || (actionType === 'card_form' && action.formChannel === 'email'))
+                          ? { formSubject: e.target.value }
+                          : { message: e.target.value }
+                      )}
+                      placeholder={(actionType === 'email' || (actionType === 'card_form' && action.formChannel === 'email'))
+                        ? '[Form Website] Permohonan Baru'
+                        : 'Halo Admin, ada permohonan baru dari formulir website:'}
+                      className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:border-indigo-500 focus:outline-hidden"
+                    />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div>
+                    <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                      {actionType === 'web_url' ? 'Web URL Destination' :
+                        actionType === 'file_download' ? 'File URL Destination' :
+                          actionType === 'page' ? 'Subpage Destination' :
+                            actionType === 'section' ? 'Section ID Destination' :
+                              'Phone Number Destination'}
+                    </label>
+                    <input
+                      type="text"
+                      required={actionType !== 'section'}
+                      value={action.value || ''}
+                      onChange={(e) => updateAction({ value: e.target.value })}
+                      placeholder={actionType === 'section' ? '#contact' : 'Masukkan tujuan'}
+                      className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-mono focus:bg-white focus:border-indigo-500 focus:outline-hidden"
+                    />
+                  </div>
+                  {actionType === 'web_url' && (
+                    <label className="flex items-center gap-2 text-[11px] text-slate-700">
+                      <input
+                        type="checkbox"
+                        checked={action.target === '_blank'}
+                        onChange={(e) => updateAction({ target: e.target.checked ? '_blank' : '_self' })}
+                      />
+                      Buka di tab baru
+                    </label>
+                  )}
+                  {actionType === 'file_download' && (
+                    <div>
+                      <label className="block text-[11px] font-semibold text-slate-700 mb-1">Nama File Unduhan</label>
+                      <input
+                        type="text"
+                        value={action.fileName || ''}
+                        onChange={(e) => updateAction({ fileName: e.target.value })}
+                        placeholder="dokumen.pdf"
+                        className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs"
+                      />
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          </div>
+
           {/* 1. Fields Manager (+ Tambah Field Input / Dropdown) */}
           <div className="p-3.5 bg-indigo-50/70 rounded-2xl border border-indigo-200/80 space-y-3 shadow-2xs">
             <div className="flex items-center justify-between">
@@ -4283,4 +4447,3 @@ function ImageInspector({ activeTab, formValues, handleChange, setActiveTab, add
     </div>
   );
 };
-

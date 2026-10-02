@@ -53,6 +53,8 @@ export default function Navbar06({ components = [], sectionId = null }) {
           type="button"
           onClick={(e) => { e.preventDefault(); e.stopPropagation(); setOpen(v => !v); }}
           className="md:hidden justify-self-end w-10 h-10 rounded-full bg-pink-100 text-pink-700 font-bold select-none"
+          aria-label={open ? 'Close navigation menu' : 'Open navigation menu'}
+          aria-expanded={open}
         >
           {open ? '✕' : '☰'}
         </button>
