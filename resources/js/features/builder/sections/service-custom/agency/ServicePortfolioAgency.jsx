@@ -11,18 +11,22 @@ export default function ServicePortfolioAgency({ components = [], sectionId = nu
     { id: 'port-title', type: 'heading', props: { content: 'Karya Terbaik yang Menghasilkan Dampak Nyata', level: 'h2', fontSize: '38px', fontWeight: '800', color: '#ffffff', textAlign: 'center' } },
     { id: 'port-desc', type: 'paragraph', props: { content: 'Kami merancang identitas visual, kampanye digital, dan produk teknologi terobosan untuk brand terkemuka.', fontSize: '16px', color: '#cbd5e1', textAlign: 'center' } },
     // Portfolio item 1
+    { id: 'port-item-img1', type: 'image', props: { src: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80', alt: 'FinVortex Global Rebranding', width: '100%', height: '280px', objectFit: 'cover' } },
     { id: 'port-item-title1', type: 'heading', props: { content: 'FinVortex Global Rebranding', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#ffffff' } },
     { id: 'port-item-desc1', type: 'paragraph', props: { content: 'Transformasi brand fintech skala regional dengan peningkatan konversi 340%.', fontSize: '14px', color: '#cbd5e1' } },
     { id: 'port-item-tag1', type: 'badge', props: { text: 'Branding & UI/UX', variant: 'solid', background: '#7c3aed', color: '#ffffff' } },
     // Portfolio item 2
+    { id: 'port-item-img2', type: 'image', props: { src: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=800&q=80', alt: 'Aura Lifestyle Mobile App', width: '100%', height: '280px', objectFit: 'cover' } },
     { id: 'port-item-title2', type: 'heading', props: { content: 'Aura Lifestyle Mobile App', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#ffffff' } },
     { id: 'port-item-desc2', type: 'paragraph', props: { content: 'Aplikasi e-commerce gaya hidup dengan 1M+ active users dalam 6 bulan.', fontSize: '14px', color: '#cbd5e1' } },
     { id: 'port-item-tag2', type: 'badge', props: { text: 'App Development', variant: 'solid', background: '#ec4899', color: '#ffffff' } },
     // Portfolio item 3
+    { id: 'port-item-img3', type: 'image', props: { src: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80', alt: 'CyberShield 3D Experience', width: '100%', height: '280px', objectFit: 'cover' } },
     { id: 'port-item-title3', type: 'heading', props: { content: 'CyberShield 3D Experience', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#ffffff' } },
     { id: 'port-item-desc3', type: 'paragraph', props: { content: 'Website interaktif WebGL 3D pemenang penghargaan Awwwards Site of the Day.', fontSize: '14px', color: '#cbd5e1' } },
     { id: 'port-item-tag3', type: 'badge', props: { text: '3D Web Experience', variant: 'solid', background: '#06b6d4', color: '#042f2e' } },
     // Portfolio item 4
+    { id: 'port-item-img4', type: 'image', props: { src: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80', alt: 'Zenith Viral Social Campaign', width: '100%', height: '280px', objectFit: 'cover' } },
     { id: 'port-item-title4', type: 'heading', props: { content: 'Zenith Viral Social Campaign', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#ffffff' } },
     { id: 'port-item-desc4', type: 'paragraph', props: { content: 'Kampanye digital lintas platform menjangkau 25 juta audiens muda di SEA.', fontSize: '14px', color: '#cbd5e1' } },
     { id: 'port-item-tag4', type: 'badge', props: { text: 'Digital Marketing', variant: 'solid', background: '#f59e0b', color: '#451a03' } },
@@ -38,7 +42,8 @@ export default function ServicePortfolioAgency({ components = [], sectionId = nu
 
   const portfolioItems = [
     {
-      img: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80',
+      img: layoutComponents.filter(c => c.id === 'port-item-img1'),
+      fallbackImg: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80',
       badge: layoutComponents.filter(c => c.id === 'port-item-tag1'),
       title: layoutComponents.filter(c => c.id === 'port-item-title1'),
       desc: layoutComponents.filter(c => c.id === 'port-item-desc1'),
@@ -47,7 +52,8 @@ export default function ServicePortfolioAgency({ components = [], sectionId = nu
       metric: '+340% Conversion'
     },
     {
-      img: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=800&q=80',
+      img: layoutComponents.filter(c => c.id === 'port-item-img2'),
+      fallbackImg: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=800&q=80',
       badge: layoutComponents.filter(c => c.id === 'port-item-tag2'),
       title: layoutComponents.filter(c => c.id === 'port-item-title2'),
       desc: layoutComponents.filter(c => c.id === 'port-item-desc2'),
@@ -56,7 +62,8 @@ export default function ServicePortfolioAgency({ components = [], sectionId = nu
       metric: '1M+ Downloads'
     },
     {
-      img: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80',
+      img: layoutComponents.filter(c => c.id === 'port-item-img3'),
+      fallbackImg: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80',
       badge: layoutComponents.filter(c => c.id === 'port-item-tag3'),
       title: layoutComponents.filter(c => c.id === 'port-item-title3'),
       desc: layoutComponents.filter(c => c.id === 'port-item-desc3'),
@@ -65,7 +72,8 @@ export default function ServicePortfolioAgency({ components = [], sectionId = nu
       metric: 'Awwwards SOTD'
     },
     {
-      img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80',
+      img: layoutComponents.filter(c => c.id === 'port-item-img4'),
+      fallbackImg: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80',
       badge: layoutComponents.filter(c => c.id === 'port-item-tag4'),
       title: layoutComponents.filter(c => c.id === 'port-item-title4'),
       desc: layoutComponents.filter(c => c.id === 'port-item-desc4'),
@@ -99,14 +107,18 @@ export default function ServicePortfolioAgency({ components = [], sectionId = nu
               className={`group relative rounded-3xl overflow-hidden bg-gradient-to-br ${item.gradient} border ${item.border} backdrop-blur-xl transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-purple-500/20`}
             >
               <div className="relative h-64 sm:h-72 w-full overflow-hidden bg-black/40">
-                <img
-                  src={item.img}
-                  alt="Portfolio preview"
-                  className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0d071b] via-[#0d071b]/40 to-transparent" />
-                <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-xs font-semibold text-white">
+                {item.img && item.img.length > 0 ? (
+                  renderLayoutComponents(item.img, sectionId)
+                ) : (
+                  <img
+                    src={item.fallbackImg}
+                    alt="Portfolio preview"
+                    className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100"
+                    loading="lazy"
+                  />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0d071b] via-[#0d071b]/40 to-transparent pointer-events-none" />
+                <div className="absolute top-4 right-4 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/10 text-xs font-semibold text-white pointer-events-none">
                   {item.metric}
                 </div>
               </div>

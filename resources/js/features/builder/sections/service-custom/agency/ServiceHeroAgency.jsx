@@ -12,6 +12,7 @@ export default function ServiceHeroAgency({ components = [], sectionId = null })
     { id: 'ag-desc', type: 'text', props: { content: 'Nexus.Studio adalah agensi kreatif full-service yang menggabungkan strategi brand, visual design yang memukau, dan teknologi terkini untuk menciptakan pengalaman digital yang mengubah pengunjung menjadi pelanggan setia.', fontSize: '18px', color: '#a78bfa', lineHeight: '1.7' } },
     { id: 'ag-btn1', type: 'button', props: { label: 'Mulai Proyekmu Sekarang ✦', href: '#contact', variant: 'primary', size: 'large', radius: 'full', background: 'linear-gradient(135deg, #7c3aed, #ec4899)', color: '#ffffff', fontWeight: '800', shadow: '0 0 30px rgba(124,58,237,0.5)' } },
     { id: 'ag-btn2', type: 'button', props: { label: 'Lihat Portofolio Kami', href: '#portfolio', variant: 'outline', size: 'large', radius: 'full', borderColor: 'rgba(255,255,255,0.2)', color: '#e2e8f0', fontWeight: '600' } },
+    { id: 'ag-hero-img', type: 'image', props: { src: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=1200&auto=format&fit=crop&q=80', alt: 'Nexus Studio Creative Work', width: '100%', height: '380px', objectFit: 'cover', borderRadius: '0' } },
     {
       id: 'ag-stat-1',
       type: 'card',
@@ -71,20 +72,18 @@ export default function ServiceHeroAgency({ components = [], sectionId = null })
           <div className="flex flex-wrap justify-center gap-4 mt-8">{renderLayoutComponents(buttonComps, sectionId)}</div>
         </div>
 
-        {/* Hero Image */}
+        {/* Hero Image — editable via Right Inspector (image component) */}
         <div className="mt-14 relative rounded-3xl overflow-hidden border border-violet-500/20 shadow-2xl shadow-violet-900/50 max-w-5xl mx-auto">
           {imageComps.length > 0 ? renderLayoutComponents(imageComps, sectionId) : (
-            <img
-              src="https://images.unsplash.com/photo-1561070791-2526d30994b5?w=1200&auto=format&fit=crop&q=80"
-              alt="Nexus Studio Creative Work"
-              className="w-full h-[380px] object-cover"
-            />
+            renderLayoutComponents(layoutComponents.filter(c => c.id === 'ag-hero-img'), sectionId)
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0612]/80 via-transparent to-transparent" />
+          <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-[#0a0612]/80 via-transparent to-transparent" />
           {/* Floating stat cards */}
           {cardComps.length > 0 && (
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-4 flex-wrap justify-center px-4">
-              {renderLayoutComponents(cardComps, sectionId)}
+            <div className="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex gap-4 flex-wrap justify-center px-4">
+              <div className="pointer-events-auto flex gap-4 flex-wrap justify-center">
+                {renderLayoutComponents(cardComps, sectionId)}
+              </div>
             </div>
           )}
         </div>

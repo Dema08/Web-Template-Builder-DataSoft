@@ -103,18 +103,47 @@ export default function SectionRenderer({ section, isSelected, onClick }) {
     }
   }, [section.customTexts, section.layout, section.id]);
 
+  // Auto-tag all img elements with data-image-key for instant Right-Inspector connectivity
+  useEffect(() => {
+    if (sectionRef.current) {
+      const allImgs = Array.from(sectionRef.current.querySelectorAll('img'));
+      allImgs.forEach((img, idx) => {
+        if (!img.getAttribute('data-image-key')) {
+          const key = `img_${idx}_${(img.alt || 'img').substring(0, 10).replace(/[^a-zA-Z0-9]/g, '')}`;
+          img.setAttribute('data-image-key', key);
+        }
+        // Enhance cursor & interaction state
+        if (!isPreviewMode) {
+          img.classList.add('cursor-pointer');
+          img.title = 'Klik untuk mengedit gambar di Right Inspector';
+        }
+      });
+    }
+  }, [section.layout, section.id, isPreviewMode]);
+
   // Hydrate section customImages overrides onto matching template image elements
   useEffect(() => {
     if (sectionRef.current && section.customImages) {
       Object.entries(section.customImages).forEach(([key, val]) => {
         const el = sectionRef.current.querySelector(`[data-image-key="${key}"]`);
+        if (!el) return;
         const src = typeof val === 'object' && val !== null ? val.src : val;
         const alt = typeof val === 'object' && val !== null ? val.alt : null;
-        if (el && src && el.src !== src) {
+        if (src && el.src !== src) {
           el.src = src;
         }
-        if (el && alt && el.alt !== alt) {
+        if (alt && el.alt !== alt) {
           el.alt = alt;
+        }
+        if (typeof val === 'object' && val !== null) {
+          if (val.borderRadius) el.style.borderRadius = val.borderRadius;
+          if (val.objectFit) el.style.objectFit = val.objectFit;
+          if (val.opacity !== undefined) el.style.opacity = typeof val.opacity === 'number' ? val.opacity / 100 : (parseInt(val.opacity) / 100 || 1);
+          if (val.borderWidth && val.borderWidth !== '0') {
+            el.style.borderWidth = val.borderWidth;
+            el.style.borderColor = val.borderColor || '#e5e7eb';
+            el.style.borderStyle = val.borderStyle || 'solid';
+          }
         }
       });
     }

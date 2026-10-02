@@ -112,11 +112,13 @@ export default function OrgHeroProfessional({ components = [], sectionId = null 
           <div className="lg:col-span-5">
             <div className="relative rounded-2xl overflow-hidden border-2 border-amber-500/30 shadow-2xl shadow-black/80">
               {renderLayoutComponents(heroImg, sectionId)}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#040812] via-transparent to-transparent pointer-events-none" />
+              <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-[#040812] via-transparent to-transparent" />
 
               {/* Floating Card */}
-              <div className="absolute bottom-6 left-6 right-6">
-                {renderLayoutComponents(floatCard, sectionId)}
+              <div className="pointer-events-none absolute bottom-6 left-6 right-6 z-10">
+                <div className="pointer-events-auto">
+                  {renderLayoutComponents(floatCard, sectionId)}
+                </div>
               </div>
             </div>
           </div>

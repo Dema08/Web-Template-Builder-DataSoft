@@ -18,6 +18,7 @@ export default function OrgHeroSocial({ components = [], sectionId = null }) {
     { id: 'soc-stat2-lbl', type: 'paragraph', props: { content: 'Relawan Aktif di 34 Provinsi', fontSize: '12px', color: '#34d399' } },
     { id: 'soc-stat3-num', type: 'heading', props: { content: '320', level: 'h3', fontSize: '30px', fontWeight: '900', color: '#6ee7b7' } },
     { id: 'soc-stat3-lbl', type: 'paragraph', props: { content: 'Desa Binaan Berkelanjutan', fontSize: '12px', color: '#34d399' } },
+    { id: 'soc-hero-bg', type: 'image', props: { src: 'https://images.unsplash.com/photo-1559027615-cd4628902d4a?auto=format&fit=crop&w=1600&q=80', alt: 'Komunitas Relawan Gerakan Berdaya', width: '100%', height: '100%', objectFit: 'cover', borderRadius: '0' } },
   ];
 
   const lc = components.length > 0 ? components : defaultComponents;
@@ -32,18 +33,19 @@ export default function OrgHeroSocial({ components = [], sectionId = null }) {
   const s2l = lc.filter(c => c.id === 'soc-stat2-lbl');
   const s3n = lc.filter(c => c.id === 'soc-stat3-num');
   const s3l = lc.filter(c => c.id === 'soc-stat3-lbl');
+  const bgImg = lc.filter(c => c.id === 'soc-hero-bg');
 
   return (
     <section className="relative min-h-[90vh] flex items-center bg-[#01140e] text-white overflow-hidden py-20 lg:py-28">
-      {/* Background Hero Image with Vivid Emerald Overlay */}
-      <div className="absolute inset-0 z-0">
-        <img
-          src="https://images.unsplash.com/photo-1559027615-cd4628902d4a?auto=format&fit=crop&w=1600&q=80"
-          alt="Komunitas Relawan Gerakan Berdaya"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#011a12]/95 via-[#012217]/90 to-[#022c22]/75" />
-        <div className="absolute inset-0 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:40px_40px] opacity-[0.08]" />
+      {/* Background Hero Image with Vivid Emerald Overlay — editable via Right Inspector (image component) */}
+      <div className="absolute inset-0 z-0 [&>div]:h-full [&img]:!h-full [&img]:min-h-[90vh]">
+        {bgImg.length > 0 ? (
+          renderLayoutComponents(bgImg, sectionId)
+        ) : (
+          renderLayoutComponents(lc.filter(c => c.type === 'image'), sectionId)
+        )}
+        <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-r from-[#011a12]/95 via-[#012217]/90 to-[#022c22]/75" />
+        <div className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:40px_40px] opacity-[0.08]" />
       </div>
 
       {/* Decorative Warm Ambient Glow */}

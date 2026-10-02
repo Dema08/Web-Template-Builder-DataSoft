@@ -11,18 +11,22 @@ export default function UmkmProductsWellness({ components = [], sectionId = null
     { id: 'prd-wl-title', type: 'heading', props: { content: 'Rangkaian Perawatan Alami untuk Segala Jenis Kulit', level: 'h2', fontSize: '38px', fontWeight: '800', color: '#ecfdf5', textAlign: 'center' } },
     { id: 'prd-wl-desc', type: 'paragraph', props: { content: 'Dirancang aman untuk kulit sensitif, ibu hamil & menyusui, dengan aroma relaksasi alami tanaman nusantara.', fontSize: '16px', color: '#a7f3d0', textAlign: 'center' } },
     // Product 1
+    { id: 'wl1-img', type: 'image', props: { src: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=600&q=80', alt: 'Merapi Radiance Bakuchiol Face Oil', width: '100%', height: '240px', objectFit: 'cover' } },
     { id: 'wl1-title', type: 'heading', props: { content: 'Merapi Radiance Bakuchiol Face Oil', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#ffffff' } },
     { id: 'wl1-desc', type: 'paragraph', props: { content: 'Alternatif retinol alami nabati untuk menyamarkan garis halus, mencerahkan, dan mengunci kelembapan kulit.', fontSize: '13px', color: '#a7f3d0' } },
     { id: 'wl1-price', type: 'badge', props: { text: 'Rp 139.000', variant: 'solid', background: '#10b981', color: '#ffffff' } },
     // Product 2
+    { id: 'wl2-img', type: 'image', props: { src: 'https://images.unsplash.com/photo-1607006314644-8d48721c5f30?auto=format&fit=crop&w=600&q=80', alt: 'Sabun Castille Calendula & Madu Hutan', width: '100%', height: '240px', objectFit: 'cover' } },
     { id: 'wl2-title', type: 'heading', props: { content: 'Sabun Castille Calendula & Madu Hutan', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#ffffff' } },
     { id: 'wl2-desc', type: 'paragraph', props: { content: 'Sabun cair murni minyak zaitun & VCO, lembut membersihkan tanpa membuat kulit kering atau iritasi.', fontSize: '13px', color: '#a7f3d0' } },
     { id: 'wl2-price', type: 'badge', props: { text: 'Rp 79.000', variant: 'solid', background: '#10b981', color: '#ffffff' } },
     // Product 3
+    { id: 'wl3-img', type: 'image', props: { src: 'https://images.unsplash.com/photo-1617897903246-719242758050?auto=format&fit=crop&w=600&q=80', alt: 'Minyak Aromaterapi Ketenangan Kenanga', width: '100%', height: '240px', objectFit: 'cover' } },
     { id: 'wl3-title', type: 'heading', props: { content: 'Minyak Aromaterapi Ketenangan Kenanga', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#ffffff' } },
     { id: 'wl3-desc', type: 'paragraph', props: { content: 'Essential oil roll-on murni bunga kenanga Jawa & lavender untuk meredakan stres dan tidur lebih lelap.', fontSize: '13px', color: '#a7f3d0' } },
     { id: 'wl3-price', type: 'badge', props: { text: 'Rp 59.000', variant: 'solid', background: '#10b981', color: '#ffffff' } },
     // Product 4
+    { id: 'wl4-img', type: 'image', props: { src: 'https://images.unsplash.com/photo-1567928815104-b7980ee5032e?auto=format&fit=crop&w=600&q=80', alt: 'Masker Detoks Temulawak & Kaolin Clay', width: '100%', height: '240px', objectFit: 'cover' } },
     { id: 'wl4-title', type: 'heading', props: { content: 'Masker Detoks Temulawak & Kaolin Clay', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#ffffff' } },
     { id: 'wl4-desc', type: 'paragraph', props: { content: 'Masker bilas pembersih pori mendalam untuk meredakan jerawat meradang dan memudarkan bekas noda.', fontSize: '13px', color: '#a7f3d0' } },
     { id: 'wl4-price', type: 'badge', props: { text: 'Rp 65.000', variant: 'solid', background: '#10b981', color: '#ffffff' } },
@@ -38,28 +42,32 @@ export default function UmkmProductsWellness({ components = [], sectionId = null
 
   const products = [
     {
-      img: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=600&q=80',
+      img: layoutComponents.filter(c => c.id === 'wl1-img'),
+      fallbackImg: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=600&q=80',
       title: layoutComponents.filter(c => c.id === 'wl1-title'),
       desc: layoutComponents.filter(c => c.id === 'wl1-desc'),
       price: layoutComponents.filter(c => c.id === 'wl1-price'),
       tag: 'Best Seller'
     },
     {
-      img: 'https://images.unsplash.com/photo-1607006314644-8d48721c5f30?auto=format&fit=crop&w=600&q=80',
+      img: layoutComponents.filter(c => c.id === 'wl2-img'),
+      fallbackImg: 'https://images.unsplash.com/photo-1607006314644-8d48721c5f30?auto=format&fit=crop&w=600&q=80',
       title: layoutComponents.filter(c => c.id === 'wl2-title'),
       desc: layoutComponents.filter(c => c.id === 'wl2-desc'),
       price: layoutComponents.filter(c => c.id === 'wl2-price'),
       tag: 'Gentle Soap'
     },
     {
-      img: 'https://images.unsplash.com/photo-1617897903246-719242758050?auto=format&fit=crop&w=600&q=80',
+      img: layoutComponents.filter(c => c.id === 'wl3-img'),
+      fallbackImg: 'https://images.unsplash.com/photo-1617897903246-719242758050?auto=format&fit=crop&w=600&q=80',
       title: layoutComponents.filter(c => c.id === 'wl3-title'),
       desc: layoutComponents.filter(c => c.id === 'wl3-desc'),
       price: layoutComponents.filter(c => c.id === 'wl3-price'),
       tag: 'Aromatherapy'
     },
     {
-      img: 'https://images.unsplash.com/photo-1567928815104-b7980ee5032e?auto=format&fit=crop&w=600&q=80',
+      img: layoutComponents.filter(c => c.id === 'wl4-img'),
+      fallbackImg: 'https://images.unsplash.com/photo-1567928815104-b7980ee5032e?auto=format&fit=crop&w=600&q=80',
       title: layoutComponents.filter(c => c.id === 'wl4-title'),
       desc: layoutComponents.filter(c => c.id === 'wl4-desc'),
       price: layoutComponents.filter(c => c.id === 'wl4-price'),
@@ -87,13 +95,17 @@ export default function UmkmProductsWellness({ components = [], sectionId = null
               className="group rounded-3xl overflow-hidden bg-[#092218] border border-emerald-950 hover:border-emerald-500/50 shadow-xl transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between"
             >
               <div className="relative h-60 w-full overflow-hidden bg-black/40">
-                <img
-                  src={p.img}
-                  alt="Product preview"
-                  className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110"
-                  loading="lazy"
-                />
-                <div className="absolute top-3.5 left-3.5 px-3 py-0.5 rounded-full bg-black/70 backdrop-blur-md border border-emerald-500/30 text-emerald-300 text-xs font-semibold">
+                {p.img && p.img.length > 0 ? (
+                  renderLayoutComponents(p.img, sectionId)
+                ) : (
+                  <img
+                    src={p.fallbackImg}
+                    alt="Product preview"
+                    className="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110"
+                    loading="lazy"
+                  />
+                )}
+                <div className="absolute top-3.5 left-3.5 px-3 py-0.5 rounded-full bg-black/70 backdrop-blur-md border border-emerald-500/30 text-emerald-300 text-xs font-semibold pointer-events-none">
                   {p.tag}
                 </div>
               </div>

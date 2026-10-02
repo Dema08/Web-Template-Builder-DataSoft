@@ -168,6 +168,58 @@ export default {
             { id: 'hc2-txt', type: 'text', props: { content: '38,500+ Karyawan', fontSize: '28px', fontWeight: '800', color: '#ffffff' } },
           ],
         },
+        {
+          id: 'conglom-hero-card',
+          type: 'card',
+          props: {
+            background: '#091b33',
+            borderColor: '#334155',
+            borderWidth: '1px',
+            borderRadius: '24px',
+            padding: '0px',
+            shadow: '2xl',
+          },
+          childrenComponents: [
+            {
+              id: 'conglom-hero-img',
+              type: 'image',
+              props: {
+                src: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1000&auto=format&fit=crop&q=80',
+                alt: 'Nusantara Strategic Holdings Tower',
+                width: '100%',
+                height: '440px',
+                objectFit: 'cover',
+                borderRadius: '24px 24px 0 0',
+              },
+            },
+            {
+              id: 'conglom-gov-card',
+              type: 'card',
+              props: {
+                background: 'rgba(15, 23, 42, 0.95)',
+                borderColor: 'rgba(51, 65, 85, 0.8)',
+                borderWidth: '1px',
+                borderRadius: '16px',
+                padding: '16px',
+                margin: '-70px 16px 16px 16px',
+                shadow: 'xl',
+              },
+              childrenComponents: [
+                {
+                  id: 'conglom-gov-header',
+                  type: 'card',
+                  props: { background: 'transparent', borderWidth: '0px', padding: '0px', margin: '0 0 8px 0' },
+                  childrenComponents: [
+                    { id: 'cg-title', type: 'heading', props: { content: 'CORPORATE GOVERNANCE SUMMARY', level: 'h4', fontSize: '13px', fontWeight: '900', color: '#fbbf24', margin: '0' } },
+                    { id: 'cg-badge', type: 'badge', props: { text: 'GCG Score 96.8 / 100', variant: 'solid', background: 'rgba(16,185,129,0.2)', color: '#34d399' } },
+                  ],
+                },
+                { id: 'cg-auditor', type: 'text', props: { content: 'Auditor Independen: PricewaterhouseCoopers (PwC)', fontSize: '12px', color: '#cbd5e1', fontWeight: '600' } },
+                { id: 'cg-rating', type: 'text', props: { content: 'Peringkat Kredit: idAAA (Pefindo) / Baa2 (Moody\'s)', fontSize: '12px', color: '#fbbf24', fontWeight: '600' } },
+              ],
+            },
+          ],
+        },
       ],
     },
     {

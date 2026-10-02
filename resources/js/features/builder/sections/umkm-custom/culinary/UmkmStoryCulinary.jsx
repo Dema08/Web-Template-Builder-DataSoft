@@ -21,6 +21,11 @@ export default function UmkmStoryCulinary({ components = [], sectionId = null })
     { id: 'v3-desc', type: 'paragraph', props: { content: 'Semua sirup, saus karamel, dan adonan bakery dibuat secara manual (from scratch) setiap pagi.', fontSize: '13px', color: '#fed7aa' } },
     // CTA Button
     { id: 'sty-cta-btn', type: 'button', props: { label: 'Kunjungi Kedai Roastery Kami ➔', href: '#location', variant: 'outline', size: 'medium', radius: 'full', background: 'rgba(217,119,6,0.1)', color: '#f59e0b', borderColor: '#d97706' } },
+    // 4 Collage Images
+    { id: 'sty-img-1', type: 'image', props: { src: 'https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=600&q=80', alt: 'Coffee beans sorting', width: '100%', height: '256px', objectFit: 'cover', borderRadius: '24px' } },
+    { id: 'sty-img-2', type: 'image', props: { src: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80', alt: 'Pour over brew', width: '100%', height: '176px', objectFit: 'cover', borderRadius: '24px' } },
+    { id: 'sty-img-3', type: 'image', props: { src: 'https://images.unsplash.com/photo-1509785307050-d4066910ec1e?auto=format&fit=crop&w=600&q=80', alt: 'Coffee roasting drum', width: '100%', height: '176px', objectFit: 'cover', borderRadius: '24px' } },
+    { id: 'sty-img-4', type: 'image', props: { src: 'https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=600&q=80', alt: 'Cafe barista smiling', width: '100%', height: '256px', objectFit: 'cover', borderRadius: '24px' } },
   ];
 
   const layoutComponents = components.length > 0 ? components : defaultComponents;
@@ -28,6 +33,10 @@ export default function UmkmStoryCulinary({ components = [], sectionId = null })
   const titleComps = layoutComponents.filter(c => c.id === 'sty-title');
   const descComps = layoutComponents.filter(c => c.id === 'sty-desc');
   const ctaComps = layoutComponents.filter(c => c.id === 'sty-cta-btn');
+  const img1 = layoutComponents.filter(c => c.id === 'sty-img-1');
+  const img2 = layoutComponents.filter(c => c.id === 'sty-img-2');
+  const img3 = layoutComponents.filter(c => c.id === 'sty-img-3');
+  const img4 = layoutComponents.filter(c => c.id === 'sty-img-4');
 
   const values = [
     {
@@ -54,39 +63,19 @@ export default function UmkmStoryCulinary({ components = [], sectionId = null })
           {/* Left Column: Image Collage */}
           <div className="lg:col-span-6 grid grid-cols-2 gap-4">
             <div className="space-y-4">
-              <div className="rounded-3xl overflow-hidden border border-amber-900/40 h-64 shadow-xl">
-                <img
-                  src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=600&q=80"
-                  alt="Coffee beans sorting"
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
+              <div className="rounded-3xl overflow-hidden border border-amber-900/40 shadow-xl">
+                {renderLayoutComponents(img1, sectionId)}
               </div>
-              <div className="rounded-3xl overflow-hidden border border-amber-900/40 h-44 shadow-xl">
-                <img
-                  src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80"
-                  alt="Pour over brew"
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
+              <div className="rounded-3xl overflow-hidden border border-amber-900/40 shadow-xl">
+                {renderLayoutComponents(img2, sectionId)}
               </div>
             </div>
             <div className="space-y-4 pt-8">
-              <div className="rounded-3xl overflow-hidden border border-amber-900/40 h-44 shadow-xl">
-                <img
-                  src="https://images.unsplash.com/photo-1509785307050-d4066910ec1e?auto=format&fit=crop&w=600&q=80"
-                  alt="Coffee roasting drum"
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
+              <div className="rounded-3xl overflow-hidden border border-amber-900/40 shadow-xl">
+                {renderLayoutComponents(img3, sectionId)}
               </div>
-              <div className="rounded-3xl overflow-hidden border border-amber-900/40 h-64 shadow-xl">
-                <img
-                  src="https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=600&q=80"
-                  alt="Cafe barista smiling"
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
+              <div className="rounded-3xl overflow-hidden border border-amber-900/40 shadow-xl">
+                {renderLayoutComponents(img4, sectionId)}
               </div>
             </div>
           </div>

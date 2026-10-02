@@ -29,12 +29,24 @@ export default function LogisticsAboutGlobal({ components = [], sectionId = null
         { id: 'abc2-d', type: 'text', props: { content: 'Pusat komando telematika global memantau pergerakan kargo bernilai tinggi secara nonstop.', fontSize: '12px', color: '#a8a29e', margin: '0' } },
       ],
     },
+    {
+      id: 'ab-img',
+      type: 'image',
+      props: {
+        src: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=1000&auto=format&fit=crop&q=80',
+        alt: 'Nexus Global Aviation & Freight',
+        width: '100%',
+        height: '460px',
+        objectFit: 'cover',
+        borderRadius: '24px'
+      }
+    }
   ];
 
   const layoutComponents = components.length > 0 ? components : defaultComponents;
   const leftComps = layoutComponents.filter(c => c.type !== 'card' && c.type !== 'image');
   const cardComps = layoutComponents.filter(c => c.type === 'card');
-  const imgComps = layoutComponents.filter(c => c.type === 'image');
+  const imgComps = layoutComponents.filter(c => c.id === 'ab-img' || c.type === 'image');
 
   return (
     <section id="about" className="py-24 px-4 sm:px-6 bg-[#0c0a09] text-white relative">
@@ -64,8 +76,8 @@ export default function LogisticsAboutGlobal({ components = [], sectionId = null
                 className="w-full h-[460px] object-cover"
               />
             )}
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
-            <div className="absolute bottom-6 left-6 right-6 p-4 rounded-2xl bg-[#141210]/90 border border-[#292524] backdrop-blur-md">
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80 pointer-events-none" />
+            <div className="absolute bottom-6 left-6 right-6 p-4 rounded-2xl bg-[#141210]/90 border border-[#292524] backdrop-blur-md pointer-events-none">
               <p className="text-xs font-bold text-[#e7c873]">NEXUS AVIATION FREIGHT OPERATIONS</p>
               <p className="text-xs text-[#a8a29e] mt-0.5">Boeing 777F Charter Loading at CGK Air Cargo Terminal</p>
             </div>

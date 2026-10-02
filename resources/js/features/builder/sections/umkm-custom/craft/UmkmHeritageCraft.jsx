@@ -19,12 +19,15 @@ export default function UmkmHeritageCraft({ components = [], sectionId = null })
     // Motif 3
     { id: 'm3-name', type: 'heading', props: { content: 'Tenun Ikat Kuda Flores', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#ffffff' } },
     { id: 'm3-desc', type: 'paragraph', props: { content: 'Simbol status kehormatan, kekuatan fisik, serta persaudaraan erat antarsuku di Nusa Tenggara Timur.', fontSize: '13px', color: '#fed7aa' } },
+    // Image
+    { id: 'hrt-img', type: 'image', props: { src: 'https://images.unsplash.com/photo-1607344645866-009c320c5ab8?auto=format&fit=crop&w=800&q=80', alt: 'Artisan drawing batik with canting', width: '100%', height: '460px', objectFit: 'cover' } },
   ];
 
   const layoutComponents = components.length > 0 ? components : defaultComponents;
   const badgeComps = layoutComponents.filter(c => c.id === 'hrt-badge');
   const titleComps = layoutComponents.filter(c => c.id === 'hrt-title');
   const descComps = layoutComponents.filter(c => c.id === 'hrt-desc');
+  const imgComps = layoutComponents.filter(c => c.id === 'hrt-img' || c.type === 'image');
 
   const motifs = [
     {
@@ -74,12 +77,16 @@ export default function UmkmHeritageCraft({ components = [], sectionId = null })
           {/* Right Cultural Art Photo */}
           <div className="lg:col-span-6">
             <div className="relative border-2 border-orange-900/60 p-3 bg-[#1e120a] shadow-2xl">
-              <img
-                src="https://images.unsplash.com/photo-1607344645866-009c320c5ab8?auto=format&fit=crop&w=800&q=80"
-                alt="Artisan drawing batik with canting"
-                className="w-full h-[460px] object-cover"
-                loading="lazy"
-              />
+              {imgComps.length > 0 ? (
+                renderLayoutComponents(imgComps, sectionId)
+              ) : (
+                <img
+                  src="https://images.unsplash.com/photo-1607344645866-009c320c5ab8?auto=format&fit=crop&w=800&q=80"
+                  alt="Artisan drawing batik with canting"
+                  className="w-full h-[460px] object-cover"
+                  loading="lazy"
+                />
+              )}
               <div className="p-4 text-center bg-[#150c07] border-t border-orange-950">
                 <div className="text-xs font-serif italic text-orange-300">
                   "Kain bukanlah sekadar sandang, ia adalah pusaka yang membawa jiwa peradaban nusantara."

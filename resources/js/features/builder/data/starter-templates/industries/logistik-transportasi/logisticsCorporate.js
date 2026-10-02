@@ -179,6 +179,64 @@ export default {
             { id: 'h-s3-lbl', type: 'text', props: { content: 'Pergudangan Terintegrasi', fontSize: '12px', color: '#94a3b8', margin: '4px 0 0 0' } },
           ],
         },
+        // Right Showcase Card with Warehouse Image and Dispatch Metrics
+        {
+          id: 'corp-hero-card',
+          type: 'card',
+          props: {
+            background: '#0d1f38',
+            borderColor: '#334155',
+            borderWidth: '1px',
+            borderRadius: '24px',
+            padding: '0px',
+            shadow: '2xl',
+          },
+          childrenComponents: [
+            {
+              id: 'corp-hero-img',
+              type: 'image',
+              props: {
+                src: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1000&auto=format&fit=crop&q=80',
+                alt: 'TransGo National Logistics Automated Warehouse Facility',
+                width: '100%',
+                height: '420px',
+                objectFit: 'cover',
+                borderRadius: '24px 24px 0 0',
+              },
+            },
+            {
+              id: 'corp-status-card',
+              type: 'card',
+              props: {
+                background: 'rgba(15, 23, 42, 0.95)',
+                borderColor: 'rgba(51, 65, 85, 0.8)',
+                borderWidth: '1px',
+                borderRadius: '16px',
+                padding: '16px',
+                margin: '-60px 16px 16px 16px',
+                shadow: 'xl',
+              },
+              childrenComponents: [
+                {
+                  id: 'corp-dispatch-header',
+                  type: 'card',
+                  props: {
+                    background: 'transparent',
+                    borderWidth: '0px',
+                    padding: '0px',
+                    margin: '0 0 8px 0',
+                  },
+                  childrenComponents: [
+                    { id: 'corp-dispatch-title', type: 'heading', props: { content: 'STATUS FLEET DISPATCH', level: 'h4', fontSize: '13px', fontWeight: '900', color: '#fb923c', margin: '0' } },
+                    { id: 'corp-dispatch-badge', type: 'badge', props: { text: '99.8% On-Schedule', variant: 'solid', background: 'rgba(16,185,129,0.2)', color: '#34d399' } },
+                  ],
+                },
+                { id: 'corp-fleet-units', type: 'text', props: { content: 'Active Wingbox Units: 1,240 En-Route', fontSize: '12px', color: '#cbd5e1', fontWeight: '600' } },
+                { id: 'corp-fleet-vessels', type: 'text', props: { content: 'Intermodal Vessel: 18 Cargo Ships Active', fontSize: '12px', color: '#cbd5e1', fontWeight: '600' } },
+              ],
+            },
+          ],
+        },
       ],
     },
     {

@@ -18,6 +18,8 @@ export default function UmkmLocationCulinary({ components = [], sectionId = null
     // Buttons
     { id: 'loc-btn-wa', type: 'button', props: { label: 'Reservasi Meja / WhatsApp 💬', href: '#order', variant: 'primary', size: 'large', radius: 'full', background: 'linear-gradient(135deg, #10b981, #059669)', color: '#ffffff', fontWeight: '700' } },
     { id: 'loc-btn-map', type: 'button', props: { label: 'Buka di Google Maps 📍', href: '#location', variant: 'outline', size: 'large', radius: 'full', background: 'rgba(217,119,6,0.1)', color: '#fef3c7', borderColor: '#d97706' } },
+    // Image
+    { id: 'loc-img', type: 'image', props: { src: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80', alt: 'Cozy coffee shop atmosphere', width: '100%', height: '460px', objectFit: 'cover', borderRadius: '24px' } },
   ];
 
   const layoutComponents = components.length > 0 ? components : defaultComponents;
@@ -30,6 +32,7 @@ export default function UmkmLocationCulinary({ components = [], sectionId = null
   const hrsDesc = layoutComponents.filter(c => c.id === 'loc-hrs-desc');
   const btnWa = layoutComponents.filter(c => c.id === 'loc-btn-wa');
   const btnMap = layoutComponents.filter(c => c.id === 'loc-btn-map');
+  const imgComps = layoutComponents.filter(c => c.id === 'loc-img' || c.type === 'image');
 
   return (
     <section id="location" className="relative py-24 sm:py-32 bg-[#180e08] overflow-hidden">
@@ -79,15 +82,19 @@ export default function UmkmLocationCulinary({ components = [], sectionId = null
           {/* Right: Ambient Cafe Atmosphere Photo Card */}
           <div className="lg:col-span-6">
             <div className="relative rounded-3xl overflow-hidden border-2 border-amber-700/40 shadow-2xl shadow-amber-950/80">
-              <img
-                src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80"
-                alt="Cozy coffee shop atmosphere"
-                className="w-full h-[460px] object-cover"
-                loading="lazy"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#180e08] via-transparent to-transparent" />
+              {imgComps.length > 0 ? (
+                renderLayoutComponents(imgComps, sectionId)
+              ) : (
+                <img
+                  src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80"
+                  alt="Cozy coffee shop atmosphere"
+                  className="w-full h-[460px] object-cover"
+                  loading="lazy"
+                />
+              )}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#180e08] via-transparent to-transparent pointer-events-none" />
               
-              <div className="absolute bottom-6 left-6 right-6 p-5 rounded-2xl bg-[#1d120a]/90 backdrop-blur-md border border-amber-600/30 flex items-center justify-between">
+              <div className="absolute bottom-6 left-6 right-6 p-5 rounded-2xl bg-[#1d120a]/90 backdrop-blur-md border border-amber-600/30 flex items-center justify-between pointer-events-none">
                 <div>
                   <div className="text-xs font-bold text-amber-400 uppercase tracking-wider">Status Meja Saat Ini</div>
                   <div className="text-sm font-bold text-white flex items-center gap-2 mt-0.5">

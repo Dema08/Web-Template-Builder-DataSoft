@@ -15,7 +15,7 @@ export default function Mission11({ components = [], sectionId = null }) {
 
   return (
     <section className="relative py-28 px-6 bg-gradient-to-br from-purple-900 via-indigo-900 to-slate-950 overflow-hidden">
-      <div className="absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_30%_30%,#ec4899,transparent_50%),radial-gradient(circle_at_70%_70%,#3b82f6,transparent_50%)]" />
+      <div className="pointer-events-none absolute inset-0 opacity-30 bg-[radial-gradient(circle_at_30%_30%,#ec4899,transparent_50%),radial-gradient(circle_at_70%_70%,#3b82f6,transparent_50%)]" />
       <div className="relative max-w-4xl mx-auto flex flex-col items-center text-center">
         {renderLayoutComponents(layoutComponents.filter(c => c.type === 'badge'), sectionId)}
         <div className="mt-6 w-full">{renderLayoutComponents(layoutComponents.filter(c => c.type === 'heading'), sectionId)}</div>

@@ -88,7 +88,7 @@ export default function Fleet02({ components = [], sectionId = null }) {
                 <div className="absolute inset-0 flex items-center justify-center text-5xl bg-[#141210]">🚛</div>
               )}
               {/* Bottom Noir Gradient Bar */}
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#0c0a09] via-[#0c0a09]/80 to-transparent p-6">
+              <div className="pointer-events-none absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[#0c0a09] via-[#0c0a09]/80 to-transparent p-6">
                 <p className="text-[#fafaf9] font-bold text-base tracking-wide">Heavy Duty Prime Fleet Series</p>
                 <p className="text-[#a8a29e] text-xs mt-1 font-sans">Cold-Chain Enabled · Telemetry GPS · High-Security Seals</p>
               </div>

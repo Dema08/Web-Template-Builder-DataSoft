@@ -168,6 +168,58 @@ export default {
             { id: 'ihc2-txt', type: 'text', props: { content: '42.6 Juta Man-Hours', fontSize: '28px', fontWeight: '800', color: '#4ade80' } },
           ],
         },
+        {
+          id: 'ind-hero-card',
+          type: 'card',
+          props: {
+            background: '#091322',
+            borderColor: '#1e293b',
+            borderWidth: '1px',
+            borderRadius: '24px',
+            padding: '0px',
+            shadow: '2xl',
+          },
+          childrenComponents: [
+            {
+              id: 'ind-hero-img',
+              type: 'image',
+              props: {
+                src: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1000&auto=format&fit=crop&q=80',
+                alt: 'Sovereign Industrial Smart Plant',
+                width: '100%',
+                height: '440px',
+                objectFit: 'cover',
+                borderRadius: '24px 24px 0 0',
+              },
+            },
+            {
+              id: 'ind-smart-card',
+              type: 'card',
+              props: {
+                background: 'rgba(15, 23, 42, 0.95)',
+                borderColor: 'rgba(245, 158, 11, 0.4)',
+                borderWidth: '1px',
+                borderRadius: '16px',
+                padding: '16px',
+                margin: '-70px 16px 16px 16px',
+                shadow: 'xl',
+              },
+              childrenComponents: [
+                {
+                  id: 'ind-smart-header',
+                  type: 'card',
+                  props: { background: 'transparent', borderWidth: '0px', padding: '0px', margin: '0 0 8px 0' },
+                  childrenComponents: [
+                    { id: 'ind-smart-title', type: 'heading', props: { content: 'SMART FACTORY AUTOMATION 4.0', level: 'h4', fontSize: '13px', fontWeight: '900', color: '#fbbf24', margin: '0' } },
+                    { id: 'ind-smart-badge', type: 'badge', props: { text: '99.8% OEE Efficiency', variant: 'solid', background: 'rgba(16,185,129,0.2)', color: '#34d399' } },
+                  ],
+                },
+                { id: 'ind-cap-txt', type: 'text', props: { content: 'Kapasitas Smelter Nikel: 120.000 MT/Tahun', fontSize: '12px', color: '#ffffff', fontWeight: '600' } },
+                { id: 'ind-cert-txt', type: 'text', props: { content: 'Sertifikasi Manajemen Aset: ISO 55001:2014', fontSize: '12px', color: '#fbbf24', fontWeight: '600' } },
+              ],
+            },
+          ],
+        },
       ],
     },
     {

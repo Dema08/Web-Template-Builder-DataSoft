@@ -12,6 +12,7 @@ export default function UmkmHeroCulinary({ components = [], sectionId = null }) 
     { id: 'cul-desc', type: 'paragraph', props: { content: 'Biji kopi single-origin pilihan langsung dari petani lokal, disangrai dengan presisi tinggi dan disajikan bersama pastry hangat buatan dapur sendiri.', fontSize: '17px', color: '#fed7aa' } },
     { id: 'cul-btn-pri', type: 'button', props: { label: 'Lihat Daftar Menu ☕', href: '#menu', variant: 'primary', size: 'large', radius: 'full', background: 'linear-gradient(135deg, #d97706, #92400e)', color: '#ffffff', fontWeight: '800' } },
     { id: 'cul-btn-sec', type: 'button', props: { label: 'Pesan Biji Kopi (Beans)', href: '#order', variant: 'outline', size: 'large', radius: 'full', background: 'rgba(255,255,255,0.05)', color: '#fef3c7', borderColor: '#d97706' } },
+    { id: 'cul-hero-img', type: 'image', props: { src: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=800&q=80', alt: 'Artisan coffee bar interior', width: '100%', height: '450px', objectFit: 'cover', borderRadius: '0' } },
     // Stats / Highlight pills
     { id: 'cul-stat1-num', type: 'heading', props: { content: '100%', level: 'h3', fontSize: '26px', fontWeight: '800', color: '#f59e0b' } },
     { id: 'cul-stat1-lbl', type: 'paragraph', props: { content: 'Single Origin Lokal', fontSize: '12px', color: '#d6d3d1' } },
@@ -25,6 +26,7 @@ export default function UmkmHeroCulinary({ components = [], sectionId = null }) 
   const descComps = layoutComponents.filter(c => c.id === 'cul-desc');
   const btnPriComps = layoutComponents.filter(c => c.id === 'cul-btn-pri');
   const btnSecComps = layoutComponents.filter(c => c.id === 'cul-btn-sec');
+  const heroImgComps = layoutComponents.filter(c => c.id === 'cul-hero-img' || c.type === 'image');
   const stat1Num = layoutComponents.filter(c => c.id === 'cul-stat1-num');
   const stat1Lbl = layoutComponents.filter(c => c.id === 'cul-stat1-lbl');
   const stat2Num = layoutComponents.filter(c => c.id === 'cul-stat2-num');
@@ -67,25 +69,22 @@ export default function UmkmHeroCulinary({ components = [], sectionId = null }) 
             </div>
           </div>
 
-          {/* Right Image Showcase */}
+          {/* Right Image Showcase — editable via Right Inspector (image component) */}
           <div className="lg:col-span-5">
             <div className="relative rounded-3xl overflow-hidden border-2 border-amber-700/40 shadow-2xl shadow-amber-950/80 group">
-              <img
-                src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=800&q=80"
-                alt="Artisan coffee bar interior"
-                className="w-full h-[450px] object-cover transform transition-transform duration-700 group-hover:scale-105"
-                loading="eager"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#150d08] via-transparent to-transparent" />
+              {renderLayoutComponents(heroImgComps, sectionId)}
+              <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-[#150d08] via-transparent to-transparent" />
               
               {/* Floating Coffee Roast Tag Card */}
-              <div className="absolute bottom-6 left-6 right-6 p-4 rounded-2xl bg-[#1c110a]/90 backdrop-blur-md border border-amber-500/30 flex items-center justify-between">
-                <div>
-                  <div className="text-xs uppercase tracking-wider text-amber-400 font-bold">House Blend Karsa</div>
-                  <div className="text-sm font-semibold text-white">Full Arabica • Dark Chocolate & Brown Sugar Notes</div>
-                </div>
-                <div className="px-3 py-1 rounded-full bg-amber-500 text-stone-950 text-xs font-extrabold shrink-0">
-                  Rp 85k / 250g
+              <div className="pointer-events-none absolute bottom-6 left-6 right-6 z-10">
+                <div className="pointer-events-auto p-4 rounded-2xl bg-[#1c110a]/90 backdrop-blur-md border border-amber-500/30 flex items-center justify-between">
+                  <div>
+                    <div className="text-xs uppercase tracking-wider text-amber-400 font-bold">House Blend Karsa</div>
+                    <div className="text-sm font-semibold text-white">Full Arabica • Dark Chocolate & Brown Sugar Notes</div>
+                  </div>
+                  <div className="px-3 py-1 rounded-full bg-amber-500 text-stone-950 text-xs font-extrabold shrink-0">
+                    Rp 85k / 250g
+                  </div>
                 </div>
               </div>
             </div>

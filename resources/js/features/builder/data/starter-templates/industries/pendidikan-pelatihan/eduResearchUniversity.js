@@ -111,6 +111,11 @@ export default {
           type: 'paragraph',
           props: { content: 'Dana Riset & Beasiswa Tahunan', fontSize: '12px', color: '#94a3b8' },
         },
+        {
+          id: 'uni-hero-img',
+          type: 'image',
+          props: { src: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=800&q=80', alt: 'University students on campus library', width: '100%', height: '460px', objectFit: 'cover', borderRadius: '0' },
+        },
       ],
     },
     {
@@ -278,6 +283,11 @@ export default {
           props: { content: 'Lingkungan kampus hijau berteknologi tinggi yang dirancang untuk mendukung kreativitas, kolaborasi, dan kesejahteraan mahasiswa.', fontSize: '16px', color: '#cbd5e1', textAlign: 'center' },
         },
         {
+          id: 'f1-img',
+          type: 'image',
+          props: { src: 'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=800&q=80', alt: 'Digital Smart Library 24/7', width: '100%', height: '240px', objectFit: 'cover' },
+        },
+        {
           id: 'f1-title',
           type: 'heading',
           props: { content: 'Digital Smart Library 24/7', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#ffffff' },
@@ -288,6 +298,11 @@ export default {
           props: { content: 'Akses ke 500.000+ e-journal internasional, pod studi hening, dan ruang kolaborasi multimedia.', fontSize: '13px', color: '#cbd5e1' },
         },
         {
+          id: 'f2-img',
+          type: 'image',
+          props: { src: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80', alt: 'Innovation & Startup Incubator', width: '100%', height: '240px', objectFit: 'cover' },
+        },
+        {
           id: 'f2-title',
           type: 'heading',
           props: { content: 'Innovation & Startup Incubator', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#ffffff' },
@@ -296,6 +311,11 @@ export default {
           id: 'f2-desc',
           type: 'paragraph',
           props: { content: 'Co-working space, makerspace 3D printing, dan pendanaan awal (seed fund) untuk proyek rintisan mahasiswa.', fontSize: '13px', color: '#cbd5e1' },
+        },
+        {
+          id: 'f3-img',
+          type: 'image',
+          props: { src: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=800&q=80', alt: 'Green Dormitory & Sports Arena', width: '100%', height: '240px', objectFit: 'cover' },
         },
         {
           id: 'f3-title',

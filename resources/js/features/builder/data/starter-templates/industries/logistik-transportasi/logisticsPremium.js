@@ -690,6 +690,18 @@ export default {
             { id: 'abc2-d', type: 'text', props: { content: 'Pusat komando telematika global memantau pergerakan kargo bernilai tinggi secara nonstop.', fontSize: '12px', color: '#a8a29e', margin: '0' } },
           ],
         },
+        {
+          id: 'ab-img',
+          type: 'image',
+          props: {
+            src: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=1000&auto=format&fit=crop&q=80',
+            alt: 'Nexus Global Aviation & Freight',
+            width: '100%',
+            height: '460px',
+            objectFit: 'cover',
+            borderRadius: '24px'
+          },
+        },
       ],
     },
     {

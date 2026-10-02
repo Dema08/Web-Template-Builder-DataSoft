@@ -85,7 +85,7 @@ export default function RetailHeroLuxury({ components = [], sectionId = null }) 
   const stat2 = lc.filter(c => c.id === 'lux-stat2-card');
   const stat3 = lc.filter(c => c.id === 'lux-stat3-card');
   const stat4 = lc.filter(c => c.id === 'lux-stat4-card');
-  const heroCard = lc.filter(c => c.id === 'luxury-hero-card');
+  const heroCard = lc.filter(c => c.id === 'luxury-hero-card' || c.id === 'lux-hero-card');
 
   return (
     <section className="relative min-h-[88vh] flex items-center bg-[#0a0414] text-purple-100 overflow-hidden py-20 lg:py-24">

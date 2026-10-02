@@ -12,6 +12,7 @@ export default function UmkmHeroCraft({ components = [], sectionId = null }) {
     { id: 'crf-desc', type: 'paragraph', props: { content: 'Setiap lembar kain tenun ikat dan batik tulis kami dikerjakan secara manual oleh perempuan perajin di pelosok desa, melestarikan motif sakral dengan sentuhan busana modern siap pakai.', fontSize: '17px', color: '#fed7aa' } },
     { id: 'crf-btn-pri', type: 'button', props: { label: 'Lihat Koleksi Terbaru ✦', href: '#products', variant: 'primary', size: 'large', radius: 'none', background: '#c2410c', color: '#ffffff', fontWeight: '700' } },
     { id: 'crf-btn-sec', type: 'button', props: { label: 'Filosofi Motif Tradisi', href: '#heritage', variant: 'outline', size: 'large', radius: 'none', background: 'transparent', color: '#ffedd5', borderColor: '#fb923c' } },
+    { id: 'crf-hero-img', type: 'image', props: { src: 'https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&w=800&q=80', alt: 'Indonesian handcrafted textile batik model', width: '100%', height: '480px', objectFit: 'cover', borderRadius: '0' } },
     // Metric badges
     { id: 'crf-stat1-num', type: 'heading', props: { content: '120+', level: 'h3', fontSize: '28px', fontWeight: '800', color: '#fb923c' } },
     { id: 'crf-stat1-lbl', type: 'paragraph', props: { content: 'Ibu Pengrajin Desa Binaan', fontSize: '12px', color: '#cbd5e1' } },
@@ -29,6 +30,7 @@ export default function UmkmHeroCraft({ components = [], sectionId = null }) {
   const stat1Lbl = layoutComponents.filter(c => c.id === 'crf-stat1-lbl');
   const stat2Num = layoutComponents.filter(c => c.id === 'crf-stat2-num');
   const stat2Lbl = layoutComponents.filter(c => c.id === 'crf-stat2-lbl');
+  const heroImgComps = layoutComponents.filter(c => c.id === 'crf-hero-img' || c.type === 'image');
 
   return (
     <section className="relative min-h-[85vh] flex items-center bg-[#150d09] overflow-hidden py-20 lg:py-28">
@@ -66,21 +68,18 @@ export default function UmkmHeroCraft({ components = [], sectionId = null }) {
             </div>
           </div>
 
-          {/* Right Showcase Photo */}
+          {/* Right Showcase Photo — editable via Right Inspector (image component) */}
           <div className="lg:col-span-5">
             <div className="relative overflow-hidden border border-orange-700/40 shadow-2xl group">
-              <img
-                src="https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&w=800&q=80"
-                alt="Indonesian handcrafted textile batik model"
-                className="w-full h-[480px] object-cover transform transition-transform duration-700 group-hover:scale-105"
-                loading="eager"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#150d09] via-transparent to-transparent" />
+              {renderLayoutComponents(heroImgComps, sectionId)}
+              <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-[#150d09] via-transparent to-transparent" />
               
-              <div className="absolute bottom-6 left-6 right-6 p-4 bg-[#1c1109]/90 backdrop-blur-md border border-orange-500/30 flex items-center justify-between">
-                <div>
-                  <div className="text-xs uppercase tracking-widest text-orange-400 font-bold">Koleksi Swarna Dwipa</div>
-                  <div className="text-sm font-serif font-bold text-white">Tenun Ikat Pewarna Indigofera & Kulit Kayu Tingi</div>
+              <div className="pointer-events-none absolute bottom-6 left-6 right-6 z-10">
+                <div className="pointer-events-auto p-4 bg-[#1c1109]/90 backdrop-blur-md border border-orange-500/30 flex items-center justify-between">
+                  <div>
+                    <div className="text-xs uppercase tracking-widest text-orange-400 font-bold">Koleksi Swarna Dwipa</div>
+                    <div className="text-sm font-serif font-bold text-white">Tenun Ikat Pewarna Indigofera & Kulit Kayu Tingi</div>
+                  </div>
                 </div>
               </div>
             </div>

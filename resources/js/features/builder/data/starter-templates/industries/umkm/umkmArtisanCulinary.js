@@ -110,6 +110,11 @@ export default {
           type: 'paragraph',
           props: { content: '1,500+ Ulasan Google', fontSize: '12px', color: '#d6d3d1' },
         },
+        {
+          id: 'cul-hero-img',
+          type: 'image',
+          props: { src: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=800&q=80', alt: 'Artisan coffee bar interior', width: '100%', height: '450px', objectFit: 'cover', borderRadius: '0' },
+        },
       ],
     },
     {
@@ -133,6 +138,11 @@ export default {
           props: { content: 'Setiap cangkir kopi dan hidangan disiapkan segar dengan bahan baku alami berkualitas tinggi tanpa pengawet.', fontSize: '16px', color: '#fed7aa', textAlign: 'center' },
         },
         {
+          id: 'm1-img',
+          type: 'image',
+          props: { src: 'https://images.unsplash.com/photo-1541167760496-1628856ab772?auto=format&fit=crop&w=600&q=80', alt: 'Karsa Aren Cremoso', width: '100%', height: '208px', objectFit: 'cover' },
+        },
+        {
           id: 'm1-title',
           type: 'heading',
           props: { content: 'Karsa Aren Cremoso', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#ffffff' },
@@ -146,6 +156,11 @@ export default {
           id: 'm1-price',
           type: 'badge',
           props: { text: 'Rp 28.000', variant: 'solid', background: '#d97706', color: '#ffffff' },
+        },
+        {
+          id: 'm2-img',
+          type: 'image',
+          props: { src: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=600&q=80', alt: 'Manual Brew V60 Specialty', width: '100%', height: '208px', objectFit: 'cover' },
         },
         {
           id: 'm2-title',
@@ -163,6 +178,11 @@ export default {
           props: { text: 'Rp 35.000', variant: 'solid', background: '#d97706', color: '#ffffff' },
         },
         {
+          id: 'm3-img',
+          type: 'image',
+          props: { src: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=600&q=80', alt: 'Croissant Butter Almond', width: '100%', height: '208px', objectFit: 'cover' },
+        },
+        {
           id: 'm3-title',
           type: 'heading',
           props: { content: 'Croissant Butter Almond', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#ffffff' },
@@ -176,6 +196,11 @@ export default {
           id: 'm3-price',
           type: 'badge',
           props: { text: 'Rp 32.000', variant: 'solid', background: '#d97706', color: '#ffffff' },
+        },
+        {
+          id: 'm4-img',
+          type: 'image',
+          props: { src: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?auto=format&fit=crop&w=600&q=80', alt: 'Nasi Goreng Kecombrang Iga', width: '100%', height: '208px', objectFit: 'cover' },
         },
         {
           id: 'm4-title',
@@ -193,6 +218,11 @@ export default {
           props: { text: 'Rp 55.000', variant: 'solid', background: '#d97706', color: '#ffffff' },
         },
         {
+          id: 'm5-img',
+          type: 'image',
+          props: { src: 'https://images.unsplash.com/photo-1536256263959-770b48d82b0a?auto=format&fit=crop&w=600&q=80', alt: 'Matcha Oat Latte Kyoto', width: '100%', height: '208px', objectFit: 'cover' },
+        },
+        {
           id: 'm5-title',
           type: 'heading',
           props: { content: 'Matcha Oat Latte Kyoto', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#ffffff' },
@@ -206,6 +236,11 @@ export default {
           id: 'm5-price',
           type: 'badge',
           props: { text: 'Rp 36.000', variant: 'solid', background: '#d97706', color: '#ffffff' },
+        },
+        {
+          id: 'm6-img',
+          type: 'image',
+          props: { src: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=600&q=80', alt: 'Spaghetti Tuna Sambal Matah', width: '100%', height: '208px', objectFit: 'cover' },
         },
         {
           id: 'm6-title',
@@ -402,6 +437,11 @@ export default {
           id: 'loc-btn-map',
           type: 'button',
           props: { label: 'Buka di Google Maps 📍', href: '#location', variant: 'outline', size: 'large', radius: 'full', background: 'rgba(217,119,6,0.1)', color: '#fef3c7', borderColor: '#d97706' },
+        },
+        {
+          id: 'loc-img',
+          type: 'image',
+          props: { src: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80', alt: 'Cozy coffee shop atmosphere', width: '100%', height: '460px', objectFit: 'cover', borderRadius: '24px' },
         },
       ],
     },

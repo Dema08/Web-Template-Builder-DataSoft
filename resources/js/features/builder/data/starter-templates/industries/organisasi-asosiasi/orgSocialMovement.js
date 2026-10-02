@@ -52,6 +52,7 @@ export default {
         { id: 'soc-stat2-lbl', type: 'paragraph', props: { content: 'Relawan Aktif di 34 Provinsi', fontSize: '12px', color: '#34d399' } },
         { id: 'soc-stat3-num', type: 'heading', props: { content: '320', level: 'h3', fontSize: '30px', fontWeight: '900', color: '#6ee7b7' } },
         { id: 'soc-stat3-lbl', type: 'paragraph', props: { content: 'Desa Binaan Berkelanjutan', fontSize: '12px', color: '#34d399' } },
+        { id: 'soc-hero-bg', type: 'image', props: { src: 'https://images.unsplash.com/photo-1559027615-cd4628902d4a?auto=format&fit=crop&w=1600&q=80', alt: 'Komunitas Relawan Gerakan Berdaya', width: '100%', height: '100%', objectFit: 'cover', borderRadius: '0' } },
       ],
     },
     {

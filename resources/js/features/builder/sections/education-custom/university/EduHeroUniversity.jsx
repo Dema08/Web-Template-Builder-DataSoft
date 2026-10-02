@@ -17,6 +17,7 @@ export default function EduHeroUniversity({ components = [], sectionId = null })
     { id: 'uni-stat1-lbl', type: 'paragraph', props: { content: 'Serapan Kerja Lulusan < 3 Bulan', fontSize: '12px', color: '#94a3b8' } },
     { id: 'uni-stat2-num', type: 'heading', props: { content: 'Rp 45 M+', level: 'h3', fontSize: '28px', fontWeight: '800', color: '#fbbf24' } },
     { id: 'uni-stat2-lbl', type: 'paragraph', props: { content: 'Dana Riset & Beasiswa Tahunan', fontSize: '12px', color: '#94a3b8' } },
+    { id: 'uni-hero-img', type: 'image', props: { src: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=800&q=80', alt: 'University students on campus library', width: '100%', height: '460px', objectFit: 'cover', borderRadius: '0' } },
   ];
 
   const layoutComponents = components.length > 0 ? components : defaultComponents;
@@ -29,6 +30,7 @@ export default function EduHeroUniversity({ components = [], sectionId = null })
   const stat1Lbl = layoutComponents.filter(c => c.id === 'uni-stat1-lbl');
   const stat2Num = layoutComponents.filter(c => c.id === 'uni-stat2-num');
   const stat2Lbl = layoutComponents.filter(c => c.id === 'uni-stat2-lbl');
+  const heroImgComps = layoutComponents.filter(c => c.id === 'uni-hero-img' || c.type === 'image');
 
   return (
     <section className="relative min-h-[85vh] flex items-center bg-[#070e1c] overflow-hidden py-20 lg:py-28">
@@ -67,24 +69,21 @@ export default function EduHeroUniversity({ components = [], sectionId = null })
             </div>
           </div>
 
-          {/* Right Campus Building Showcase */}
+          {/* Right Campus Building Showcase — editable via Right Inspector (image component) */}
           <div className="lg:col-span-5">
             <div className="relative rounded-3xl overflow-hidden border-2 border-blue-700/40 shadow-2xl shadow-blue-950/80 group">
-              <img
-                src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=800&q=80"
-                alt="University students on campus library"
-                className="w-full h-[460px] object-cover transform transition-transform duration-700 group-hover:scale-105"
-                loading="eager"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#070e1c] via-transparent to-transparent" />
+              {renderLayoutComponents(heroImgComps, sectionId)}
+              <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-[#070e1c] via-transparent to-transparent" />
               
-              <div className="absolute bottom-6 left-6 right-6 p-4 rounded-2xl bg-[#0d1a33]/90 backdrop-blur-md border border-blue-500/30 flex items-center justify-between">
-                <div>
-                  <div className="text-xs uppercase tracking-wider text-amber-400 font-bold">Beasiswa Unggulan Nusantara</div>
-                  <div className="text-sm font-bold text-white">Bebas Biaya Kuliah 100% + Uang Saku Riset</div>
-                </div>
-                <div className="px-3 py-1 rounded-full bg-amber-500 text-stone-950 text-xs font-extrabold shrink-0">
-                  Full Grant
+              <div className="pointer-events-none absolute bottom-6 left-6 right-6 z-10">
+                <div className="pointer-events-auto p-4 rounded-2xl bg-[#0d1a33]/90 backdrop-blur-md border border-blue-500/30 flex items-center justify-between">
+                  <div>
+                    <div className="text-xs uppercase tracking-wider text-amber-400 font-bold">Beasiswa Unggulan Nusantara</div>
+                    <div className="text-sm font-bold text-white">Bebas Biaya Kuliah 100% + Uang Saku Riset</div>
+                  </div>
+                  <div className="px-3 py-1 rounded-full bg-amber-500 text-stone-950 text-xs font-extrabold shrink-0">
+                    Full Grant
+                  </div>
                 </div>
               </div>
             </div>

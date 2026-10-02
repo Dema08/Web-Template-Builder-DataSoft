@@ -110,6 +110,11 @@ export default {
           type: 'paragraph',
           props: { content: 'Skor Kepuasan Peserta Eksekutif', fontSize: '12px', color: '#94a3b8' },
         },
+        {
+          id: 'ex-hero-img',
+          type: 'image',
+          props: { src: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=80', alt: 'Executive board leadership workshop', width: '100%', height: '460px', objectFit: 'cover', borderRadius: '0' },
+        },
       ],
     },
     {
@@ -287,6 +292,11 @@ export default {
           props: { content: 'Bukan sekadar akademisi, fasilitator kami adalah mantan CEO, Direktur SDM, dan konsultan strategis berkaliber internasional.', fontSize: '16px', color: '#cbd5e1', textAlign: 'center' },
         },
         {
+          id: 'tr1-img',
+          type: 'image',
+          props: { src: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=600&q=80', alt: 'Dr. Ir. Aryo Soebroto, MBA', width: '100%', height: '256px', objectFit: 'cover' },
+        },
+        {
           id: 'tr1-name',
           type: 'heading',
           props: { content: 'Dr. Ir. Aryo Soebroto, MBA', level: 'h3', fontSize: '19px', fontWeight: '700', color: '#ffffff' },
@@ -302,6 +312,11 @@ export default {
           props: { content: 'Pengalaman 28 tahun memimpin restrukturisasi korporasi dan transformasi digital skala masif di kawasan Asia.', fontSize: '13px', color: '#94a3b8' },
         },
         {
+          id: 'tr2-img',
+          type: 'image',
+          props: { src: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80', alt: 'Elena Hartanto, M.Sc., PMP®', width: '100%', height: '256px', objectFit: 'cover' },
+        },
+        {
           id: 'tr2-name',
           type: 'heading',
           props: { content: 'Elena Hartanto, M.Sc., PMP®', level: 'h3', fontSize: '19px', fontWeight: '700', color: '#ffffff' },
@@ -315,6 +330,11 @@ export default {
           id: 'tr2-bio',
           type: 'paragraph',
           props: { content: 'Telah membimbing lebih dari 3.000 project manager lulus ujian PMP® dan mengelola PMO bernilai miliaran dolar.', fontSize: '13px', color: '#94a3b8' },
+        },
+        {
+          id: 'tr3-img',
+          type: 'image',
+          props: { src: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=600&q=80', alt: 'Bambang Kusuma, Ph.D.', width: '100%', height: '256px', objectFit: 'cover' },
         },
         {
           id: 'tr3-name',

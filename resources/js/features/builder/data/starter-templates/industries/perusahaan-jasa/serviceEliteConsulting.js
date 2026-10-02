@@ -121,6 +121,11 @@ export default {
           type: 'paragraph',
           props: { content: 'Proyek Transformasi', fontSize: '12px', color: '#94a3b8' },
         },
+        {
+          id: 'con-hero-img',
+          type: 'image',
+          props: { src: 'https://images.unsplash.com/photo-1556761175-4b46a572b786?w=900&auto=format&fit=crop&q=80', alt: 'Advanta Partners Executive Team', width: '100%', height: '340px', objectFit: 'cover', borderRadius: '0' },
+        },
       ],
     },
     {

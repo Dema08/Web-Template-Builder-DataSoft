@@ -19,12 +19,19 @@ export default function UmkmBenefitsWellness({ components = [], sectionId = null
     // Feat 3
     { id: 'b3-title', type: 'heading', props: { content: 'Kemasan Kaca Daur Ulang & Eco-Refill', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#ffffff' } },
     { id: 'b3-desc', type: 'paragraph', props: { content: 'Botol kaca amber pelindung UV yang dapat diisi ulang (refillable) untuk mengurangi limbah plastik.', fontSize: '13px', color: '#a7f3d0' } },
+    // Right Photo
+    { id: 'ben-photo', type: 'image', props: { src: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=800&q=80', alt: 'Botanical herbal laboratory formulation', width: '100%', height: '460px', objectFit: 'cover', borderRadius: '24px' } },
+    { id: 'ben-badge-tag', type: 'heading', props: { content: '100% Kebun Lokal', level: 'h4', fontSize: '12px', fontWeight: '800', color: '#34d399' } },
+    { id: 'ben-badge-text', type: 'paragraph', props: { content: 'Bermitra dengan Kelompok Tani Herbal Lereng Merapi', fontSize: '14px', color: '#ffffff', fontWeight: '700' } },
   ];
 
   const layoutComponents = components.length > 0 ? components : defaultComponents;
   const badgeComps = layoutComponents.filter(c => c.id === 'ben-badge');
   const titleComps = layoutComponents.filter(c => c.id === 'ben-title');
   const descComps = layoutComponents.filter(c => c.id === 'ben-desc');
+  const photoComps = layoutComponents.filter(c => c.id === 'ben-photo' || c.type === 'image');
+  const tagComps = layoutComponents.filter(c => c.id === 'ben-badge-tag');
+  const tagTextComps = layoutComponents.filter(c => c.id === 'ben-badge-text');
 
   const benefits = [
     {
@@ -74,18 +81,15 @@ export default function UmkmBenefitsWellness({ components = [], sectionId = null
           {/* Right Botanical Lab & Herb Photo */}
           <div className="lg:col-span-6">
             <div className="relative rounded-3xl overflow-hidden border-2 border-emerald-700/40 shadow-2xl shadow-emerald-950">
-              <img
-                src="https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=800&q=80"
-                alt="Botanical herbal laboratory formulation"
-                className="w-full h-[460px] object-cover"
-                loading="lazy"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#061810] via-transparent to-transparent" />
+              {renderLayoutComponents(photoComps, sectionId)}
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#061810] via-transparent to-transparent" />
               
-              <div className="absolute bottom-6 left-6 right-6 p-4 rounded-2xl bg-[#092218]/90 backdrop-blur-md border border-emerald-500/30 flex items-center justify-between">
-                <div>
-                  <div className="text-xs uppercase tracking-wider text-emerald-400 font-bold">100% Kebun Lokal</div>
-                  <div className="text-sm font-bold text-white">Bermitra dengan Kelompok Tani Herbal Lereng Merapi</div>
+              <div className="pointer-events-none absolute bottom-6 left-6 right-6">
+                <div className="pointer-events-auto p-4 rounded-2xl bg-[#092218]/90 backdrop-blur-md border border-emerald-500/30 flex items-center justify-between">
+                  <div>
+                    <div className="uppercase tracking-wider">{renderLayoutComponents(tagComps, sectionId)}</div>
+                    <div className="mt-0.5">{renderLayoutComponents(tagTextComps, sectionId)}</div>
+                  </div>
                 </div>
               </div>
             </div>

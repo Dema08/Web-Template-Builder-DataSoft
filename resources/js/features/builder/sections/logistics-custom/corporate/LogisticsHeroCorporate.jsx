@@ -16,6 +16,8 @@ export default function LogisticsHeroCorporate({ components = [], sectionId = nu
     { id: 'hero-desc', type: 'text', props: { content: 'Menghubungkan pusat industri, pelabuhan, dan jaringan distribusi dengan 1.400+ armada FTL/LTL modern, kapal kargo nusantara, dan fasilitas cold chain terintegrasi telematika satelit.', fontSize: '17px', color: '#cbd5e1', align: 'left', lineHeight: '1.8', margin: '0 0 28px 0' } },
     { id: 'btn-rfq', type: 'button', props: { label: 'Minta Penawaran Kontrak B2B →', href: '#contact', variant: 'primary', size: 'large', radius: 'lg', background: '#f97316', color: '#ffffff', shadow: 'lg', fontWeight: '700' } },
     { id: 'btn-calc', type: 'button', props: { label: 'Hitung Estimasi Kargo', href: '#calculator', variant: 'outline', size: 'large', radius: 'lg', background: 'transparent', color: '#f97316', borderColor: '#f97316', fontWeight: '700' } },
+
+    // 3 Metric Stat Cards
     {
       id: 'hero-stat-1',
       type: 'card',
@@ -43,6 +45,65 @@ export default function LogisticsHeroCorporate({ components = [], sectionId = nu
         { id: 'h-s3-lbl', type: 'text', props: { content: 'Pergudangan Terintegrasi', fontSize: '12px', color: '#94a3b8', margin: '4px 0 0 0' } },
       ],
     },
+
+    // Right Showcase Card with Warehouse Image and Dispatch Metrics
+    {
+      id: 'corp-hero-card',
+      type: 'card',
+      props: {
+        background: '#0d1f38',
+        borderColor: '#334155',
+        borderWidth: '1px',
+        borderRadius: '24px',
+        padding: '0px',
+        shadow: '2xl',
+      },
+      childrenComponents: [
+        {
+          id: 'corp-hero-img',
+          type: 'image',
+          props: {
+            src: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1000&auto=format&fit=crop&q=80',
+            alt: 'TransGo National Logistics Automated Warehouse Facility',
+            width: '100%',
+            height: '420px',
+            objectFit: 'cover',
+            borderRadius: '24px 24px 0 0',
+          },
+        },
+        {
+          id: 'corp-status-card',
+          type: 'card',
+          props: {
+            background: 'rgba(15, 23, 42, 0.95)',
+            borderColor: 'rgba(51, 65, 85, 0.8)',
+            borderWidth: '1px',
+            borderRadius: '16px',
+            padding: '16px',
+            margin: '-60px 16px 16px 16px',
+            shadow: 'xl',
+          },
+          childrenComponents: [
+            {
+              id: 'corp-dispatch-header',
+              type: 'card',
+              props: {
+                background: 'transparent',
+                borderWidth: '0px',
+                padding: '0px',
+                margin: '0 0 8px 0',
+              },
+              childrenComponents: [
+                { id: 'corp-dispatch-title', type: 'heading', props: { content: 'STATUS FLEET DISPATCH', level: 'h4', fontSize: '13px', fontWeight: '900', color: '#fb923c', margin: '0' } },
+                { id: 'corp-dispatch-badge', type: 'badge', props: { text: '99.8% On-Schedule', variant: 'solid', background: 'rgba(16,185,129,0.2)', color: '#34d399' } },
+              ],
+            },
+            { id: 'corp-fleet-units', type: 'text', props: { content: 'Active Wingbox Units: 1,240 En-Route', fontSize: '12px', color: '#cbd5e1', fontWeight: '600' } },
+            { id: 'corp-fleet-vessels', type: 'text', props: { content: 'Intermodal Vessel: 18 Cargo Ships Active', fontSize: '12px', color: '#cbd5e1', fontWeight: '600' } },
+          ],
+        },
+      ],
+    },
   ];
 
   const layoutComponents = components.length > 0 ? components : defaultComponents;
@@ -50,8 +111,9 @@ export default function LogisticsHeroCorporate({ components = [], sectionId = nu
   const headingComps = layoutComponents.filter(c => c.type === 'heading');
   const textComps = layoutComponents.filter(c => c.type === 'text');
   const buttonComps = layoutComponents.filter(c => c.type === 'button');
-  const cardComps = layoutComponents.filter(c => c.type === 'card');
-  const imageComps = layoutComponents.filter(c => c.type === 'image');
+  const statComps = layoutComponents.filter(c => c.id === 'hero-stat-1' || c.id === 'hero-stat-2' || c.id === 'hero-stat-3' || c.props?.variant === 'stat');
+  const heroCard = layoutComponents.filter(c => c.id === 'corp-hero-card');
+  const fallbackImageComps = layoutComponents.filter(c => c.type === 'image' || c.id === 'corp-hero-img');
 
   const handleSimulateTrack = (e) => {
     e.preventDefault();
@@ -110,46 +172,22 @@ export default function LogisticsHeroCorporate({ components = [], sectionId = nu
           <div className="flex flex-wrap gap-4">{renderLayoutComponents(buttonComps, sectionId)}</div>
 
           {/* Trust Metrics Cards */}
-          {cardComps.length > 0 && (
+          {statComps.length > 0 && (
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8 pt-6 border-t border-slate-800 w-full">
-              {renderLayoutComponents(cardComps, sectionId)}
+              {renderLayoutComponents(statComps, sectionId)}
             </div>
           )}
         </div>
 
         {/* Right Visual Card */}
         <div className="lg:col-span-5 relative">
-          <div className="relative rounded-3xl overflow-hidden border border-slate-700 bg-slate-900 shadow-[0_30px_90px_-20px_rgba(249,115,22,0.3)]">
-            {imageComps.length > 0 ? (
-              renderLayoutComponents(imageComps, sectionId)
-            ) : (
-              <img
-                src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1000&auto=format&fit=crop&q=80"
-                alt="TransGo National Logistics"
-                className="w-full h-[420px] object-cover"
-              />
-            )}
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent flex flex-col justify-end p-6">
-              <div className="bg-slate-900/90 backdrop-blur-md border border-slate-700/80 rounded-2xl p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-bold text-orange-400">STATUS FLEET DISPATCH</span>
-                  <span className="text-[10px] bg-emerald-500/20 text-emerald-400 font-bold px-2 py-0.5 rounded-full">
-                    99.8% On-Schedule
-                  </span>
-                </div>
-                <div className="space-y-1 text-xs text-slate-300 font-mono">
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">Active Wingbox Units:</span>
-                    <span className="text-white font-bold">1,240 En-Route</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-400">Intermodal Vessel:</span>
-                    <span className="text-white font-bold">18 Cargo Ships Active</span>
-                  </div>
-                </div>
-              </div>
+          {heroCard.length > 0 ? (
+            renderLayoutComponents(heroCard, sectionId)
+          ) : fallbackImageComps.length > 0 ? (
+            <div className="relative rounded-3xl overflow-hidden border border-slate-700 bg-slate-900 shadow-[0_30px_90px_-20px_rgba(249,115,22,0.3)]">
+              {renderLayoutComponents(fallbackImageComps, sectionId)}
             </div>
-          </div>
+          ) : null}
         </div>
       </div>
     </section>

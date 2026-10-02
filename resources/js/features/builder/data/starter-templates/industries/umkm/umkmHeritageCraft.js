@@ -109,6 +109,11 @@ export default {
           type: 'paragraph',
           props: { content: 'Pewarna Alami Ekologis', fontSize: '12px', color: '#cbd5e1' },
         },
+        {
+          id: 'crf-hero-img',
+          type: 'image',
+          props: { src: 'https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&w=800&q=80', alt: 'Indonesian handcrafted textile batik model', width: '100%', height: '480px', objectFit: 'cover', borderRadius: '0' },
+        },
       ],
     },
     {
@@ -132,6 +137,11 @@ export default {
           props: { content: 'Setiap helai kain dibuat dalam jumlah sangat terbatas (limited edition) dengan sertifikat keaslian dan nomor seri pengrajin.', fontSize: '16px', color: '#fed7aa', textAlign: 'center' },
         },
         {
+          id: 'p1-img',
+          type: 'image',
+          props: { src: 'https://images.unsplash.com/photo-1596704017254-9b121068fb31?auto=format&fit=crop&w=600&q=80', alt: 'Outer Tenun Ikat Sikka Indigo', width: '100%', height: '256px', objectFit: 'cover' },
+        },
+        {
           id: 'p1-title',
           type: 'heading',
           props: { content: 'Outer Tenun Ikat Sikka Indigo', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#ffffff' },
@@ -145,6 +155,11 @@ export default {
           id: 'p1-price',
           type: 'badge',
           props: { text: 'Rp 650.000', variant: 'solid', background: '#c2410c', color: '#ffffff' },
+        },
+        {
+          id: 'p2-img',
+          type: 'image',
+          props: { src: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=600&q=80', alt: 'Kemeja Batik Tulis Sutra Parang Kusumo', width: '100%', height: '256px', objectFit: 'cover' },
         },
         {
           id: 'p2-title',
@@ -162,6 +177,11 @@ export default {
           props: { text: 'Rp 1.250.000', variant: 'solid', background: '#c2410c', color: '#ffffff' },
         },
         {
+          id: 'p3-img',
+          type: 'image',
+          props: { src: 'https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?auto=format&fit=crop&w=600&q=80', alt: 'Selendang Sutra Pewarna Tingi & Secang', width: '100%', height: '256px', objectFit: 'cover' },
+        },
+        {
           id: 'p3-title',
           type: 'heading',
           props: { content: 'Selendang Sutra Pewarna Tingi & Secang', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#ffffff' },
@@ -175,6 +195,11 @@ export default {
           id: 'p3-price',
           type: 'badge',
           props: { text: 'Rp 380.000', variant: 'solid', background: '#c2410c', color: '#ffffff' },
+        },
+        {
+          id: 'p4-img',
+          type: 'image',
+          props: { src: 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=600&q=80', alt: 'Tas Anyaman Rotan & Kulit Nabati', width: '100%', height: '256px', objectFit: 'cover' },
         },
         {
           id: 'p4-title',
@@ -248,6 +273,11 @@ export default {
           type: 'paragraph',
           props: { content: 'Simbol status kehormatan, kekuatan fisik, serta persaudaraan erat antarsuku di Nusa Tenggara Timur.', fontSize: '13px', color: '#fed7aa' },
         },
+        {
+          id: 'hrt-img',
+          type: 'image',
+          props: { src: 'https://images.unsplash.com/photo-1607344645866-009c320c5ab8?auto=format&fit=crop&w=800&q=80', alt: 'Artisan drawing batik with canting', width: '100%', height: '460px', objectFit: 'cover' },
+        },
       ],
     },
     {
@@ -271,6 +301,11 @@ export default {
           props: { content: 'Kami bekerja langsung bersama 120+ perempuan penenun dan pembatik di 4 sentra desa binaan Jawa dan NTT untuk kemandirian ekonomi keluarga.', fontSize: '16px', color: '#fed7aa', textAlign: 'center' },
         },
         {
+          id: 'a1-img',
+          type: 'image',
+          props: { src: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=600&q=80', alt: 'Ibu Ningsih', width: '100%', height: '240px', objectFit: 'cover' },
+        },
+        {
           id: 'a1-name',
           type: 'heading',
           props: { content: 'Ibu Ningsih (54 Tahun)', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#ffffff' },
@@ -286,6 +321,11 @@ export default {
           props: { content: 'Telah mencanting selama 35 tahun, mewariskan keahlian pola pakem keraton kepada generasi muda di desanya.', fontSize: '13px', color: '#fed7aa' },
         },
         {
+          id: 'a2-img',
+          type: 'image',
+          props: { src: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80', alt: 'Mama Maria', width: '100%', height: '240px', objectFit: 'cover' },
+        },
+        {
           id: 'a2-name',
           type: 'heading',
           props: { content: 'Mama Maria (48 Tahun)', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#ffffff' },
@@ -299,6 +339,11 @@ export default {
           id: 'a2-bio',
           type: 'paragraph',
           props: { content: 'Memimpin 40 perajin tenun ikat pewarna alam yang kini produknya menembus pameran internasional di Tokyo & Paris.', fontSize: '13px', color: '#fed7aa' },
+        },
+        {
+          id: 'a3-img',
+          type: 'image',
+          props: { src: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80', alt: 'Pak Wayan Sudarma', width: '100%', height: '240px', objectFit: 'cover' },
         },
         {
           id: 'a3-name',

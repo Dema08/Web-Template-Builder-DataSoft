@@ -85,7 +85,7 @@ export default function DairyHeroArtisan({ components = [], sectionId = null }) 
   const stat2 = lc.filter(c => c.id === 'art-stat2-card');
   const stat3 = lc.filter(c => c.id === 'art-stat3-card');
   const stat4 = lc.filter(c => c.id === 'art-stat4-card');
-  const heroCard = lc.filter(c => c.id === 'artisan-hero-card');
+  const heroCard = lc.filter(c => c.id === 'art-hero-card' || c.id === 'artisan-hero-card');
 
   return (
     <section className="relative min-h-[88vh] flex items-center bg-[#04140e] text-emerald-100 overflow-hidden py-20 lg:py-24">

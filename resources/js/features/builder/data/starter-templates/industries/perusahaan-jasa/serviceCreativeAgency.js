@@ -90,6 +90,7 @@ export default {
           type: 'button',
           props: { label: 'Lihat Paket Harga', href: '#pricing', variant: 'outline', size: 'large', radius: 'full', background: 'rgba(255,255,255,0.05)', color: '#ffffff', borderColor: '#a78bfa' },
         },
+        { id: 'ag-hero-img', type: 'image', props: { src: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=1200&auto=format&fit=crop&q=80', alt: 'Nexus Studio Creative Work', width: '100%', height: '380px', objectFit: 'cover', borderRadius: '0' } },
       ],
     },
     {
@@ -195,6 +196,11 @@ export default {
           props: { content: 'Kami merancang identitas visual, kampanye digital, dan produk teknologi terobosan untuk brand terkemuka.', fontSize: '16px', color: '#cbd5e1', textAlign: 'center' },
         },
         {
+          id: 'port-item-img1',
+          type: 'image',
+          props: { src: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80', alt: 'FinVortex Global Rebranding', width: '100%', height: '280px', objectFit: 'cover' },
+        },
+        {
           id: 'port-item-title1',
           type: 'heading',
           props: { content: 'FinVortex Global Rebranding', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#ffffff' },
@@ -208,6 +214,11 @@ export default {
           id: 'port-item-tag1',
           type: 'badge',
           props: { text: 'Branding & UI/UX', variant: 'solid', background: '#7c3aed', color: '#ffffff' },
+        },
+        {
+          id: 'port-item-img2',
+          type: 'image',
+          props: { src: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=800&q=80', alt: 'Aura Lifestyle Mobile App', width: '100%', height: '280px', objectFit: 'cover' },
         },
         {
           id: 'port-item-title2',
@@ -225,6 +236,11 @@ export default {
           props: { text: 'App Development', variant: 'solid', background: '#ec4899', color: '#ffffff' },
         },
         {
+          id: 'port-item-img3',
+          type: 'image',
+          props: { src: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80', alt: 'CyberShield 3D Experience', width: '100%', height: '280px', objectFit: 'cover' },
+        },
+        {
           id: 'port-item-title3',
           type: 'heading',
           props: { content: 'CyberShield 3D Experience', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#ffffff' },
@@ -238,6 +254,11 @@ export default {
           id: 'port-item-tag3',
           type: 'badge',
           props: { text: '3D Web Experience', variant: 'solid', background: '#06b6d4', color: '#042f2e' },
+        },
+        {
+          id: 'port-item-img4',
+          type: 'image',
+          props: { src: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80', alt: 'Zenith Viral Social Campaign', width: '100%', height: '280px', objectFit: 'cover' },
         },
         {
           id: 'port-item-title4',

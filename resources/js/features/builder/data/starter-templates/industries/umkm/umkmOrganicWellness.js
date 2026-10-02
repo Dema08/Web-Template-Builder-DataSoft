@@ -110,6 +110,11 @@ export default {
           type: 'paragraph',
           props: { content: 'Uji Klinis Dermatologis', fontSize: '12px', color: '#cbd5e1' },
         },
+        {
+          id: 'wel-hero-img',
+          type: 'image',
+          props: { src: 'https://images.unsplash.com/photo-1608248597359-25f0a6d1b71d?auto=format&fit=crop&w=800&q=80', alt: 'Organic skincare botannical serum bottles', width: '100%', height: '460px', objectFit: 'cover', borderRadius: '0' },
+        },
       ],
     },
     {
@@ -133,6 +138,11 @@ export default {
           props: { content: 'Dirancang aman untuk kulit sensitif, ibu hamil & menyusui, dengan aroma relaksasi alami tanaman nusantara.', fontSize: '16px', color: '#a7f3d0', textAlign: 'center' },
         },
         {
+          id: 'wl1-img',
+          type: 'image',
+          props: { src: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=600&q=80', alt: 'Merapi Radiance Bakuchiol Face Oil', width: '100%', height: '240px', objectFit: 'cover' },
+        },
+        {
           id: 'wl1-title',
           type: 'heading',
           props: { content: 'Merapi Radiance Bakuchiol Face Oil', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#ffffff' },
@@ -146,6 +156,11 @@ export default {
           id: 'wl1-price',
           type: 'badge',
           props: { text: 'Rp 139.000', variant: 'solid', background: '#10b981', color: '#ffffff' },
+        },
+        {
+          id: 'wl2-img',
+          type: 'image',
+          props: { src: 'https://images.unsplash.com/photo-1607006314644-8d48721c5f30?auto=format&fit=crop&w=600&q=80', alt: 'Sabun Castille Calendula & Madu Hutan', width: '100%', height: '240px', objectFit: 'cover' },
         },
         {
           id: 'wl2-title',
@@ -163,6 +178,11 @@ export default {
           props: { text: 'Rp 79.000', variant: 'solid', background: '#10b981', color: '#ffffff' },
         },
         {
+          id: 'wl3-img',
+          type: 'image',
+          props: { src: 'https://images.unsplash.com/photo-1617897903246-719242758050?auto=format&fit=crop&w=600&q=80', alt: 'Minyak Aromaterapi Ketenangan Kenanga', width: '100%', height: '240px', objectFit: 'cover' },
+        },
+        {
           id: 'wl3-title',
           type: 'heading',
           props: { content: 'Minyak Aromaterapi Ketenangan Kenanga', level: 'h3', fontSize: '18px', fontWeight: '700', color: '#ffffff' },
@@ -176,6 +196,11 @@ export default {
           id: 'wl3-price',
           type: 'badge',
           props: { text: 'Rp 59.000', variant: 'solid', background: '#10b981', color: '#ffffff' },
+        },
+        {
+          id: 'wl4-img',
+          type: 'image',
+          props: { src: 'https://images.unsplash.com/photo-1567928815104-b7980ee5032e?auto=format&fit=crop&w=600&q=80', alt: 'Masker Detoks Temulawak & Kaolin Clay', width: '100%', height: '240px', objectFit: 'cover' },
         },
         {
           id: 'wl4-title',

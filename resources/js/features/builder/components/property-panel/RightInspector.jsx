@@ -1503,7 +1503,13 @@ export default function RightInspector() {
           ) : selectedComponent?.type === 'social' ? (
             renderSocialInspector(activeTab, formValues, handleChange, setActiveTab)
           ) : selectedComponent?.type === 'image' || 'src' in (selectedComponent?.props || {}) ? (
-            renderImageInspector(activeTab, formValues, handleChange, setActiveTab, addUpload)
+            <ImageInspector
+              activeTab={activeTab}
+              formValues={formValues}
+              handleChange={handleChange}
+              setActiveTab={setActiveTab}
+              addUpload={addUpload}
+            />
           ) : (
             (() => {
               const allProps = Object.entries(propertyConfig?.props || {});
@@ -2733,7 +2739,7 @@ const renderSocialInspector = (activeTab, formValues, handleChange, setActiveTab
   );
 };
 
-const renderImageInspector = (activeTab, formValues, handleChange, setActiveTab, addUpload) => {
+function ImageInspector({ activeTab, formValues, handleChange, setActiveTab, addUpload }) {
   const fileInputRef = useRef(null);
   const [selectedPresetCategory, setSelectedPresetCategory] = useState('all');
 

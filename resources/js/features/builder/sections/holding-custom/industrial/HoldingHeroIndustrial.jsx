@@ -12,6 +12,59 @@ export default function HoldingHeroIndustrial({ components = [], sectionId = nul
     { id: 'ind-desc', type: 'text', props: { content: 'Sovereign Industrial Group Tbk mengoperasikan 12 kawasan industri terpadu, 6 fasilitas smelter ramah lingkungan, manufaktur panel sel surya canggih, dan sistem robotika perakitan otomatis berstandar global.', fontSize: '18px', color: '#94a3b8', align: 'left', lineHeight: '1.7' } },
     { id: 'btn-divs', type: 'button', props: { label: 'Jelajahi Divisi Manufaktur Kami →', href: '#divisions', variant: 'primary', size: 'large', radius: 'xl', background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: '#020617', fontWeight: '800' } },
     { id: 'btn-b2b', type: 'button', props: { label: 'Unduh Industrial Capability Book (PDF)', href: '#procurement', variant: 'outline', size: 'large', radius: 'xl', border: '1px solid #475569', color: '#f8fafc', fontWeight: '600' } },
+    // Right Showcase Card with Industrial Plant Image & Smart Factory Status
+    {
+      id: 'ind-hero-card',
+      type: 'card',
+      props: {
+        background: '#091322',
+        borderColor: '#1e293b',
+        borderWidth: '1px',
+        borderRadius: '24px',
+        padding: '0px',
+        shadow: '2xl',
+      },
+      childrenComponents: [
+        {
+          id: 'ind-hero-img',
+          type: 'image',
+          props: {
+            src: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1000&auto=format&fit=crop&q=80',
+            alt: 'Sovereign Industrial Smart Plant',
+            width: '100%',
+            height: '440px',
+            objectFit: 'cover',
+            borderRadius: '24px 24px 0 0',
+          },
+        },
+        {
+          id: 'ind-smart-card',
+          type: 'card',
+          props: {
+            background: 'rgba(15, 23, 42, 0.95)',
+            borderColor: 'rgba(245, 158, 11, 0.4)',
+            borderWidth: '1px',
+            borderRadius: '16px',
+            padding: '16px',
+            margin: '-70px 16px 16px 16px',
+            shadow: 'xl',
+          },
+          childrenComponents: [
+            {
+              id: 'ind-smart-header',
+              type: 'card',
+              props: { background: 'transparent', borderWidth: '0px', padding: '0px', margin: '0 0 8px 0' },
+              childrenComponents: [
+                { id: 'ind-smart-title', type: 'heading', props: { content: 'SMART FACTORY AUTOMATION 4.0', level: 'h4', fontSize: '13px', fontWeight: '900', color: '#fbbf24', margin: '0' } },
+                { id: 'ind-smart-badge', type: 'badge', props: { text: '99.8% OEE Efficiency', variant: 'solid', background: 'rgba(16,185,129,0.2)', color: '#34d399' } },
+              ],
+            },
+            { id: 'ind-cap-txt', type: 'text', props: { content: 'Kapasitas Smelter Nikel: 120.000 MT/Tahun', fontSize: '12px', color: '#ffffff', fontWeight: '600' } },
+            { id: 'ind-cert-txt', type: 'text', props: { content: 'Sertifikasi Manajemen Aset: ISO 55001:2014', fontSize: '12px', color: '#fbbf24', fontWeight: '600' } },
+          ],
+        },
+      ],
+    },
     {
       id: 'ind-stat-1',
       type: 'card',
@@ -46,8 +99,9 @@ export default function HoldingHeroIndustrial({ components = [], sectionId = nul
   const headingComps = layoutComponents.filter(c => c.type === 'heading');
   const textComps = layoutComponents.filter(c => c.type === 'text');
   const buttonComps = layoutComponents.filter(c => c.type === 'button');
-  const cardComps = layoutComponents.filter(c => c.type === 'card');
-  const imageComps = layoutComponents.filter(c => c.type === 'image');
+  const statComps = layoutComponents.filter(c => c.id === 'ind-stat-1' || c.id === 'ind-stat-2' || c.id === 'ind-stat-3' || c.props?.variant === 'stat');
+  const heroCard = layoutComponents.filter(c => c.id === 'ind-hero-card');
+  const fallbackImageComps = layoutComponents.filter(c => c.type === 'image' || c.id === 'ind-hero-img');
 
   return (
     <section className="relative py-28 px-4 sm:px-6 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 overflow-hidden text-slate-100">
@@ -74,46 +128,22 @@ export default function HoldingHeroIndustrial({ components = [], sectionId = nul
           </div>
 
           {/* Key Metrics Cards */}
-          {cardComps.length > 0 && (
+          {statComps.length > 0 && (
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-12 pt-8 border-t border-slate-800 w-full">
-              {renderLayoutComponents(cardComps, sectionId)}
+              {renderLayoutComponents(statComps, sectionId)}
             </div>
           )}
         </div>
 
         {/* Right Visual Industrial Plant */}
         <div className="lg:col-span-5 relative">
-          <div className="relative rounded-3xl overflow-hidden border border-slate-800 bg-slate-900 shadow-2xl shadow-black/50">
-            {imageComps.length > 0 ? (
-              renderLayoutComponents(imageComps, sectionId)
-            ) : (
-              <img
-                src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1000&auto=format&fit=crop&q=80"
-                alt="Sovereign Industrial Smart Plant"
-                className="w-full h-[450px] object-cover"
-              />
-            )}
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/40 to-transparent flex flex-col justify-end p-6 text-white">
-              <div className="bg-slate-900/90 backdrop-blur-md border border-amber-500/30 rounded-2xl p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-bold text-amber-400">SMART FACTORY AUTOMATION 4.0</span>
-                  <span className="text-[10px] bg-emerald-500/20 text-emerald-400 font-bold px-2 py-0.5 rounded-full">
-                    99.8% OEE Efficiency
-                  </span>
-                </div>
-                <div className="space-y-1 text-xs text-slate-300">
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Kapasitas Smelter Nikel:</span>
-                    <span className="text-white font-bold">120.000 MT/Tahun</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Sertifikasi Manajemen Aset:</span>
-                    <span className="text-amber-400 font-bold">ISO 55001:2014</span>
-                  </div>
-                </div>
-              </div>
+          {heroCard.length > 0 ? (
+            renderLayoutComponents(heroCard, sectionId)
+          ) : fallbackImageComps.length > 0 ? (
+            <div className="relative rounded-3xl overflow-hidden border border-slate-800 bg-slate-900 shadow-2xl shadow-black/50">
+              {renderLayoutComponents(fallbackImageComps, sectionId)}
             </div>
-          </div>
+          ) : null}
         </div>
       </div>
     </section>

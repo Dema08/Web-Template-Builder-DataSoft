@@ -12,6 +12,7 @@ export default function ServiceHeroConsulting({ components = [], sectionId = nul
     { id: 'con-desc', type: 'text', props: { content: 'Advanta Partners menghadirkan solusi konsultasi manajemen, transformasi organisasi, strategi ekspansi pasar, dan optimasi operasional berbasis data bagi perusahaan skala menengah hingga korporasi Fortune 500.', fontSize: '18px', color: '#94a3b8', lineHeight: '1.75' } },
     { id: 'con-btn1', type: 'button', props: { label: 'Konsultasi Strategis Gratis →', href: '#contact', variant: 'primary', size: 'large', radius: 'xl', background: 'linear-gradient(135deg, #b8963e, #d4af6a)', color: '#0d1117', fontWeight: '800' } },
     { id: 'con-btn2', type: 'button', props: { label: 'Lihat Rekam Jejak Klien Kami', href: '#clients', variant: 'outline', size: 'large', radius: 'xl', borderColor: '#475569', color: '#e2e8f0', fontWeight: '600' } },
+    { id: 'con-hero-img', type: 'image', props: { src: 'https://images.unsplash.com/photo-1556761175-4b46a572b786?w=900&auto=format&fit=crop&q=80', alt: 'Advanta Partners Executive Team', width: '100%', height: '340px', objectFit: 'cover', borderRadius: '0' } },
     {
       id: 'con-stat-1',
       type: 'card',
@@ -80,14 +81,10 @@ export default function ServiceHeroConsulting({ components = [], sectionId = nul
         <div className="flex flex-col gap-6">
           <div className="relative rounded-3xl overflow-hidden border border-slate-700 shadow-2xl shadow-black/60">
             {imageComps.length > 0 ? renderLayoutComponents(imageComps, sectionId) : (
-              <img
-                src="https://images.unsplash.com/photo-1556761175-4b46a572b786?w=900&auto=format&fit=crop&q=80"
-                alt="Advanta Partners Executive Team"
-                className="w-full h-[340px] object-cover"
-              />
+              renderLayoutComponents(layoutComponents.filter(c => c.id === 'con-hero-img'), sectionId)
             )}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0d1627]/90 via-transparent to-transparent" />
-            <div className="absolute bottom-5 left-5 right-5">
+            <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-[#0d1627]/90 via-transparent to-transparent" />
+            <div className="pointer-events-none absolute bottom-5 left-5 right-5 z-10">
               <div className="bg-[#0d1627]/90 backdrop-blur-md border border-amber-500/20 rounded-2xl p-4 flex items-center gap-4">
                 <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-500 to-amber-700 flex items-center justify-center font-black text-[#0d1627] text-lg select-none">★</div>
                 <div>

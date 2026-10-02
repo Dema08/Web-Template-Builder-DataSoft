@@ -17,6 +17,7 @@ export default function EduHeroExecutive({ components = [], sectionId = null }) 
     { id: 'ex-stat1-lbl', type: 'paragraph', props: { content: 'Korporasi & BUMN Klien', fontSize: '12px', color: '#94a3b8' } },
     { id: 'ex-stat2-num', type: 'heading', props: { content: '4.92 / 5', level: 'h3', fontSize: '28px', fontWeight: '800', color: '#38bdf8' } },
     { id: 'ex-stat2-lbl', type: 'paragraph', props: { content: 'Skor Kepuasan Peserta Eksekutif', fontSize: '12px', color: '#94a3b8' } },
+    { id: 'ex-hero-img', type: 'image', props: { src: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=80', alt: 'Executive board leadership workshop', width: '100%', height: '460px', objectFit: 'cover', borderRadius: '0' } },
   ];
 
   const layoutComponents = components.length > 0 ? components : defaultComponents;
@@ -29,6 +30,7 @@ export default function EduHeroExecutive({ components = [], sectionId = null }) 
   const stat1Lbl = layoutComponents.filter(c => c.id === 'ex-stat1-lbl');
   const stat2Num = layoutComponents.filter(c => c.id === 'ex-stat2-num');
   const stat2Lbl = layoutComponents.filter(c => c.id === 'ex-stat2-lbl');
+  const heroImgComps = layoutComponents.filter(c => c.id === 'ex-hero-img' || c.type === 'image');
 
   return (
     <section className="relative min-h-[85vh] flex items-center bg-[#070b14] overflow-hidden py-20 lg:py-28">
@@ -66,24 +68,21 @@ export default function EduHeroExecutive({ components = [], sectionId = null }) 
             </div>
           </div>
 
-          {/* Right Executive Classroom Showcase */}
+          {/* Right Executive Classroom Showcase — editable via Right Inspector (image component) */}
           <div className="lg:col-span-5">
             <div className="relative rounded-3xl overflow-hidden border-2 border-cyan-700/40 shadow-2xl shadow-cyan-950/80 group">
-              <img
-                src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=80"
-                alt="Executive board leadership workshop"
-                className="w-full h-[460px] object-cover transform transition-transform duration-700 group-hover:scale-105"
-                loading="eager"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#070b14] via-transparent to-transparent" />
+              {renderLayoutComponents(heroImgComps, sectionId)}
+              <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-[#070b14] via-transparent to-transparent" />
               
-              <div className="absolute bottom-6 left-6 right-6 p-4 rounded-2xl bg-[#0d1624]/90 backdrop-blur-md border border-cyan-500/30 flex items-center justify-between">
-                <div>
-                  <div className="text-xs uppercase tracking-wider text-cyan-400 font-bold">C-Suite Executive Series</div>
-                  <div className="text-sm font-bold text-white">Strategic Agility & AI Governance Masterclass</div>
-                </div>
-                <div className="px-3 py-1 rounded-full bg-cyan-500 text-stone-950 text-xs font-extrabold shrink-0">
-                  Certified
+              <div className="pointer-events-none absolute bottom-6 left-6 right-6 z-10">
+                <div className="pointer-events-auto p-4 rounded-2xl bg-[#0d1624]/90 backdrop-blur-md border border-cyan-500/30 flex items-center justify-between">
+                  <div>
+                    <div className="text-xs uppercase tracking-wider text-cyan-400 font-bold">C-Suite Executive Series</div>
+                    <div className="text-sm font-bold text-white">Strategic Agility & AI Governance Masterclass</div>
+                  </div>
+                  <div className="px-3 py-1 rounded-full bg-cyan-500 text-stone-950 text-xs font-extrabold shrink-0">
+                    Certified
+                  </div>
                 </div>
               </div>
             </div>
