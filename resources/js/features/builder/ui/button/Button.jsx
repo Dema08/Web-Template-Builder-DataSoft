@@ -1,6 +1,7 @@
 import { useBuilderStore } from '../../stores/builderStore';
 import InlineEditableText from '../../components/editing/InlineEditableText';
 import { parseButtonHref } from './CanvasButton';
+import { handleCardFormSubmit } from '../../utils/formSubmissionHelper';
 import {
   MessageCircle,
   ArrowRight,
@@ -250,6 +251,21 @@ export default function Button({
         // --- PREVIEW MODE ACTIONS ---
         const actType = resolvedAction?.type || linkType || 'web_url';
         const actVal = resolvedAction?.value || linkTarget || href || '';
+
+        if (actType === 'card_form') {
+          e.preventDefault();
+          const formCardEl = e.currentTarget.closest('form') || e.currentTarget.closest('[data-form-card]') || e.currentTarget.closest('.shadow-2xl') || e.currentTarget.closest('.shadow-xl') || e.currentTarget.closest('[class*="rounded-3xl"]') || e.currentTarget.closest('[class*="rounded-2xl"]') || e.currentTarget.closest('section') || document.body;
+          
+          handleCardFormSubmit({
+            containerElement: formCardEl,
+            action: resolvedAction,
+            defaultTarget: actVal || resolvedAction?.formTarget || '',
+            defaultChannel: resolvedAction?.formChannel || (actVal.includes('@') ? 'email' : 'whatsapp'),
+            defaultIntro: resolvedAction?.message || 'Halo Admin, ada permohonan baru dari formulir website:',
+            defaultSubject: resolvedAction?.formSubject || resolvedAction?.subject || '[Form Website] Permohonan Baru',
+          });
+          return;
+        }
 
         if (actType === 'file_download' || actType === 'file') {
           e.preventDefault();

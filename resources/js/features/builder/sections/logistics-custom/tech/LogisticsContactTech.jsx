@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
+import { handleCardFormSubmit } from '../../../utils/formSubmissionHelper.js';
 
 /**
  * LogisticsContactTech
@@ -31,7 +32,7 @@ export default function LogisticsContactTech({ components = [], sectionId = null
         { id: 'tci2-d', type: 'text', props: { content: 'TrackFast Smart Hub, Jl. Senopati No. 88, Kebayoran Baru, Jakarta Selatan', fontSize: '13px', color: '#334155', margin: '0' } },
       ],
     },
-    { id: 'tcnt-btn', type: 'button', props: { label: 'Aktivasi Akun Seller Sekarang →', href: '#', variant: 'primary', size: 'large', radius: 'full', background: '#0284c7', color: '#ffffff', fontWeight: '800' } },
+    { id: 'tcnt-btn', type: 'button', props: { label: 'Aktivasi Akun Seller Sekarang →', href: '#', variant: 'primary', size: 'large', radius: 'full', background: '#0284c7', color: '#ffffff', fontWeight: '800', action: { type: 'card_form', formChannel: 'whatsapp', value: '08118722532', formSubject: 'Aktivasi Akun Seller TrackFast' } } },
   ];
 
   const layoutComponents = components.length > 0 ? components : defaultComponents;
@@ -41,7 +42,20 @@ export default function LogisticsContactTech({ components = [], sectionId = null
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setRegistered(true);
+    const cardFormBtn = btnComps.find(c => c.props?.action?.type === 'card_form' || c.props?.linkType === 'card_form') || btnComps[btnComps.length - 1] || btnComps[0] || {};
+    const btnAction = cardFormBtn.props?.action || {
+      type: 'card_form',
+      formChannel: cardFormBtn.props?.formChannel || 'whatsapp',
+      value: cardFormBtn.props?.actionValue || cardFormBtn.props?.formTarget || cardFormBtn.props?.href || '',
+      message: cardFormBtn.props?.actionMessage || '',
+      formSubject: 'Aktivasi Akun Seller TrackFast'
+    };
+    handleCardFormSubmit(e.currentTarget, btnAction, {
+      defaultTarget: btnAction.value || cardFormBtn.props?.formTarget || '',
+      defaultChannel: btnAction.formChannel || 'whatsapp',
+      defaultSubject: 'Aktivasi Akun Seller TrackFast',
+      onSuccess: () => setRegistered(true),
+    });
   };
 
   return (
@@ -127,7 +141,7 @@ export default function LogisticsContactTech({ components = [], sectionId = null
                 />
               </div>
 
-              <div className="w-full pt-2">
+              <div className="w-full pt-2 flex flex-col gap-3">
                 {btnComps.length > 0 ? (
                   renderLayoutComponents(btnComps, sectionId)
                 ) : (

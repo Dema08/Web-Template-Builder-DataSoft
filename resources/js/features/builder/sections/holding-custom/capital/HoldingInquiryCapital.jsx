@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
+import { handleCardFormSubmit } from '../../../utils/formSubmissionHelper';
 
 /**
  * HoldingInquiryCapital
@@ -10,9 +11,9 @@ export default function HoldingInquiryCapital({ components = [], sectionId = nul
   const [submitted, setSubmitted] = useState(false);
 
   const defaultComponents = [
-    { id: 'inq-badge', type: 'badge', props: { content: '🚀 FOUNDER PITCH & LP INQUIRY', variant: 'primary', background: '#022c22', color: '#34d399', size: 'medium' } },
-    { id: 'inq-title', type: 'heading', props: { content: 'Bermitra & Tumbuh Bersama Vanguard Apex', level: 'h2', fontSize: '38px', fontWeight: '900', color: '#ffffff', align: 'left', margin: '0 0 12px 0' } },
-    { id: 'inq-desc', type: 'text', props: { content: 'Apakah Anda pendiri startup tahap pertumbuhan dengan traksi kuat, atau pemodal institusional (LP) yang ingin berpartisipasi dalam Fund IV? Tim investasi kami siap berdiskusi.', fontSize: '16px', color: '#94a3b8', align: 'left', margin: '0 0 32px 0' } },
+    { id: 'ci-badge', type: 'badge', props: { content: '🚀 FOUNDER PITCH & LP INQUIRY', variant: 'primary', background: '#022c22', color: '#34d399', size: 'medium' } },
+    { id: 'ci-heading', type: 'heading', props: { content: 'Bermitra & Tumbuh Bersama Vanguard Apex', level: 'h2', fontSize: '38px', fontWeight: '900', color: '#ffffff', align: 'left', margin: '0 0 12px 0' } },
+    { id: 'ci-text', type: 'text', props: { content: 'Apakah Anda pendiri startup tahap pertumbuhan dengan traksi kuat, atau pemodal institusional (LP) yang ingin berpartisipasi dalam Fund IV? Tim investasi kami siap berdiskusi.', fontSize: '16px', color: '#94a3b8', align: 'left', margin: '0 0 32px 0' } },
     {
       id: 'inq-card-1',
       type: 'card',
@@ -31,26 +32,36 @@ export default function HoldingInquiryCapital({ components = [], sectionId = nul
         { id: 'iq2-d', type: 'text', props: { content: 'Pacific Century Place Lt. 24, SCBD Kav. 52-53, Jakarta Selatan', fontSize: '13px', color: '#d1d5db', margin: '0' } },
       ],
     },
-    {
-      id: 'inq-card-3',
-      type: 'card',
-      props: { variant: 'contact', background: '#09090b', borderRadius: '16px', borderWidth: '1px', borderColor: '#27272a', padding: '16px', margin: '0 0 12px 0' },
-      childrenComponents: [
-        { id: 'iq3-t', type: 'heading', props: { content: 'Direct Pitch & LP Email:', level: 'h4', fontSize: '14px', fontWeight: '800', color: '#34d399', margin: '0 0 4px 0' } },
-        { id: 'iq3-d', type: 'text', props: { content: 'dealflow@vanguardapex.com | lp-relations@vanguardapex.com', fontSize: '13px', color: '#d1d5db', margin: '0' } },
-      ],
-    },
-    { id: 'inq-submit-btn', type: 'button', props: { label: 'Submit Pitch Deck / LP Allocation Request →', href: '#', variant: 'primary', size: 'large', radius: 'full', background: '#10b981', color: '#042f2e', fontWeight: '800' } },
+    { id: 'ci-btn-1', type: 'button', props: { label: 'Jadwalkan Private Briefing LP 🔒', href: '#', action: { type: 'card_form', formChannel: 'whatsapp', value: '6591234567', message: 'Halo Investment Team Vanguard Apex, ada proposal pitch / alokasi LP baru:' }, variant: 'primary', size: 'large', radius: 'xl', background: '#10b981', color: '#042f2e', fontWeight: '800' } },
+    { id: 'ci-btn-2', type: 'button', props: { label: 'Kirim Pitch Deck (founders@apexcap.com)', href: 'mailto:founders@apexcap.com', action: { type: 'card_form', formChannel: 'email', value: 'founders@apexcap.com', message: '[Pitch Deck] Pengajuan Proposal Startup Baru' }, variant: 'outline', size: 'large', radius: 'xl', background: 'transparent', color: '#f9fafb', borderColor: '#374151', fontWeight: '700' } },
   ];
 
   const layoutComponents = components.length > 0 ? components : defaultComponents;
-  const leftComps = layoutComponents.filter(c => c.type === 'badge' || c.type === 'heading' || c.type === 'text');
+  const badgeComps = layoutComponents.filter(c => c.type === 'badge' || c.id === 'ci-badge' || c.id === 'inq-badge');
+  const headingComps = layoutComponents.filter(c => c.type === 'heading' || c.id === 'ci-heading' || c.id === 'inq-title');
+  const textComps = layoutComponents.filter(c => c.type === 'text' || c.id === 'ci-text' || c.id === 'inq-desc');
   const cardComps = layoutComponents.filter(c => c.type === 'card');
   const btnComps = layoutComponents.filter(c => c.type === 'button');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setSubmitted(true);
+    const cardFormBtn = btnComps.find(c => c.props?.action?.type === 'card_form' || c.props?.linkType === 'card_form') || btnComps[btnComps.length - 1] || btnComps[0] || {};
+    const btnAction = cardFormBtn.props?.action || {
+      type: 'card_form',
+      formChannel: cardFormBtn.props?.formChannel || 'whatsapp',
+      value: cardFormBtn.props?.actionValue || cardFormBtn.props?.formTarget || cardFormBtn.props?.href || '',
+      message: cardFormBtn.props?.actionMessage || '',
+    };
+
+    handleCardFormSubmit({
+      containerElement: e.currentTarget,
+      action: btnAction,
+      defaultTarget: btnAction.value || cardFormBtn.props?.formTarget || cardFormBtn.props?.actionValue || '',
+      defaultChannel: btnAction.formChannel || 'whatsapp',
+      defaultIntro: btnAction.message || 'Halo Investment Team Vanguard Apex, ada proposal pitch / alokasi LP baru:',
+      defaultSubject: '[Vanguard Apex] Proposal Pitch Deck / Alokasi LP',
+      onSuccess: () => setSubmitted(true),
+    });
   };
 
   return (
@@ -58,9 +69,9 @@ export default function HoldingInquiryCapital({ components = [], sectionId = nul
       <div className="max-w-7xl mx-auto grid lg:grid-cols-12 gap-12 items-start">
         {/* Left Information */}
         <div className="lg:col-span-6">
-          {renderLayoutComponents(leftComps.filter(c => c.type === 'badge'), sectionId)}
-          <div className="mt-3">{renderLayoutComponents(leftComps.filter(c => c.type === 'heading'), sectionId)}</div>
-          {renderLayoutComponents(leftComps.filter(c => c.type === 'text'), sectionId)}
+          {renderLayoutComponents(badgeComps, sectionId)}
+          <div className="mt-3">{renderLayoutComponents(headingComps, sectionId)}</div>
+          {renderLayoutComponents(textComps, sectionId)}
 
           <div className="space-y-3 mt-6">
             {renderLayoutComponents(cardComps, sectionId)}
@@ -147,7 +158,7 @@ export default function HoldingInquiryCapital({ components = [], sectionId = nul
                 />
               </div>
 
-              <div className="w-full pt-2">
+              <div className="w-full pt-2 flex flex-col gap-3">
                 {btnComps.length > 0 ? (
                   renderLayoutComponents(btnComps, sectionId)
                 ) : (

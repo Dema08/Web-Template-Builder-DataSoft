@@ -41,6 +41,10 @@ export function parseButtonHref(action = {}) {
   if (!value && type !== 'section') return '#';
 
   switch (type) {
+    case 'card_form': {
+      return '#';
+    }
+
     case 'file_download':
     case 'file': {
       return value || '#';

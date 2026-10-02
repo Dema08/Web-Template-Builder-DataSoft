@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
+import { handleCardFormSubmit } from '../../../utils/formSubmissionHelper';
 
 /**
  * HoldingInvestorConglomerate
@@ -10,47 +11,57 @@ export default function HoldingInvestorConglomerate({ components = [], sectionId
   const [submitted, setSubmitted] = useState(false);
 
   const defaultComponents = [
-    { id: 'ir-badge', type: 'badge', props: { content: '📊 HUBUNGAN INVESTOR & PEMEGANG SAHAM', variant: 'primary', background: '#fffbeb', color: '#b45309', size: 'medium' } },
-    { id: 'ir-title', type: 'heading', props: { content: 'Layanan Investor Relations & Keterbukaan Informasi', level: 'h2', fontSize: '38px', fontWeight: '900', color: '#ffffff', align: 'left', margin: '0 0 12px 0' } },
-    { id: 'ir-desc', type: 'text', props: { content: 'Divisi Investor Relations Nusantara Holdings siap melayani analis pasar modal, investor institusi, pemegang saham publik, dan pendaftaran RUPS Tahunan.', fontSize: '16px', color: '#94a3b8', align: 'left', margin: '0 0 32px 0' } },
+    { id: 'inv-badge', type: 'badge', props: { content: '📊 HUBUNGAN INVESTOR & PEMEGANG SAHAM', variant: 'primary', background: '#fffbeb', color: '#b45309', size: 'medium' } },
+    { id: 'inv-heading', type: 'heading', props: { content: 'Layanan Investor Relations & Keterbukaan Informasi', level: 'h2', fontSize: '38px', fontWeight: '900', color: '#ffffff', align: 'left', margin: '0 0 12px 0' } },
+    { id: 'inv-text', type: 'text', props: { content: 'Divisi Investor Relations Nusantara Holdings siap melayani analis pasar modal, investor institusi, pemegang saham publik, dan pendaftaran RUPS Tahunan.', fontSize: '16px', color: '#94a3b8', align: 'left', margin: '0 0 32px 0' } },
     {
-      id: 'ir-info-1',
+      id: 'inv-card-1',
       type: 'card',
       props: { variant: 'contact', background: '#091b33', borderRadius: '16px', borderWidth: '1px', borderColor: '#1e3a5f', padding: '16px', margin: '0 0 12px 0' },
       childrenComponents: [
-        { id: 'ii1-t', type: 'heading', props: { content: 'Sekretariat Perusahaan & IR Desk:', level: 'h4', fontSize: '14px', fontWeight: '800', color: '#fbbf24', margin: '0 0 4px 0' } },
-        { id: 'ii1-d', type: 'text', props: { content: 'Nusantara Tower Lt. 32, Jl. Jend. Sudirman Kav. 52-53, SCBD, Jakarta 12190', fontSize: '13px', color: '#cbd5e1', margin: '0' } },
+        { id: 'ic1-head', type: 'heading', props: { content: 'Sekretariat Perusahaan & IR Desk:', level: 'h4', fontSize: '14px', fontWeight: '800', color: '#fbbf24', margin: '0 0 4px 0' } },
+        { id: 'ic1-txt', type: 'text', props: { content: 'Nusantara Tower Lt. 32, Jl. Jend. Sudirman Kav. 52-53, SCBD, Jakarta 12190', fontSize: '13px', color: '#cbd5e1', margin: '0' } },
       ],
     },
     {
-      id: 'ir-info-2',
+      id: 'inv-card-2',
       type: 'card',
       props: { variant: 'contact', background: '#091b33', borderRadius: '16px', borderWidth: '1px', borderColor: '#1e3a5f', padding: '16px', margin: '0 0 12px 0' },
       childrenComponents: [
-        { id: 'ii2-t', type: 'heading', props: { content: 'Kontak Resmi Divisi Investor:', level: 'h4', fontSize: '14px', fontWeight: '800', color: '#fbbf24', margin: '0 0 4px 0' } },
-        { id: 'ii2-d', type: 'text', props: { content: 'Telepon: (021) 515-8888 | Email: ir@nusantaragroup.co.id', fontSize: '13px', color: '#cbd5e1', margin: '0' } },
+        { id: 'ic2-head', type: 'heading', props: { content: 'Kontak Resmi Divisi Investor:', level: 'h4', fontSize: '14px', fontWeight: '800', color: '#fbbf24', margin: '0 0 4px 0' } },
+        { id: 'ic2-txt', type: 'text', props: { content: 'Telepon: (021) 515-8888 | Email: ir@nusantaragroup.co.id', fontSize: '13px', color: '#cbd5e1', margin: '0' } },
       ],
     },
-    {
-      id: 'ir-info-3',
-      type: 'card',
-      props: { variant: 'contact', background: '#091b33', borderRadius: '16px', borderWidth: '1px', borderColor: '#1e3a5f', padding: '16px', margin: '0 0 12px 0' },
-      childrenComponents: [
-        { id: 'ii3-t', type: 'heading', props: { content: 'Biro Administrasi Efek (BAE):', level: 'h4', fontSize: '14px', fontWeight: '800', color: '#fbbf24', margin: '0 0 4px 0' } },
-        { id: 'ii3-d', type: 'text', props: { content: 'PT Raya Saham Registra — Gedung Plaza Sentral Lt. 2, Jakarta', fontSize: '13px', color: '#cbd5e1', margin: '0' } },
-      ],
-    },
-    { id: 'ir-submit-btn', type: 'button', props: { label: 'Kirim Permohonan Informasi / Registrasi RUPS →', href: '#', variant: 'primary', size: 'large', radius: 'xl', background: '#d97706', color: '#ffffff', fontWeight: '800' } },
+    { id: 'inv-btn-1', type: 'button', props: { label: 'Keterbukaan Informasi IDX →', href: 'https://idx.co.id', action: { type: 'card_form', formChannel: 'whatsapp', value: '081199887766', message: 'Halo Tim Hubungan Investor Nusantara Holdings, ada permohonan baru:' }, variant: 'primary', size: 'large', radius: 'xl', background: '#0ea5e9', color: '#ffffff', fontWeight: '800' } },
+    { id: 'inv-btn-2', type: 'button', props: { label: 'Kontak Sekretaris Perusahaan', href: '#contact', action: { type: 'card_form', formChannel: 'email', value: 'corsec@nusantaragroup.co.id', message: '[Investor Relations] Permohonan Keterbukaan Informasi / RUPS' }, variant: 'primary', size: 'large', radius: 'xl', background: '#6366f1', color: '#ffffff', fontWeight: '800' } },
   ];
 
   const layoutComponents = components.length > 0 ? components : defaultComponents;
-  const leftComps = layoutComponents.filter(c => c.type === 'badge' || c.type === 'heading' || c.type === 'text');
+  const badgeComps = layoutComponents.filter(c => c.type === 'badge' || c.id === 'inv-badge' || c.id === 'ir-badge');
+  const headingComps = layoutComponents.filter(c => c.type === 'heading' || c.id === 'inv-heading' || c.id === 'ir-title');
+  const textComps = layoutComponents.filter(c => c.type === 'text' || c.id === 'inv-text' || c.id === 'ir-desc');
   const cardComps = layoutComponents.filter(c => c.type === 'card');
   const btnComps = layoutComponents.filter(c => c.type === 'button');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setSubmitted(true);
+    const cardFormBtn = btnComps.find(c => c.props?.action?.type === 'card_form' || c.props?.linkType === 'card_form') || btnComps[btnComps.length - 1] || btnComps[0] || {};
+    const btnAction = cardFormBtn.props?.action || {
+      type: 'card_form',
+      formChannel: cardFormBtn.props?.formChannel || 'whatsapp',
+      value: cardFormBtn.props?.actionValue || cardFormBtn.props?.formTarget || cardFormBtn.props?.href || '',
+      message: cardFormBtn.props?.actionMessage || '',
+    };
+
+    handleCardFormSubmit({
+      containerElement: e.currentTarget,
+      action: btnAction,
+      defaultTarget: btnAction.value || cardFormBtn.props?.formTarget || cardFormBtn.props?.actionValue || '',
+      defaultChannel: btnAction.formChannel || 'whatsapp',
+      defaultIntro: btnAction.message || 'Halo Tim Investor Relations Nusantara Strategic Holdings, ada permohonan baru:',
+      defaultSubject: '[Investor Relations] Permohonan Keterbukaan Informasi / RUPS',
+      onSuccess: () => setSubmitted(true),
+    });
   };
 
   return (
@@ -58,9 +69,9 @@ export default function HoldingInvestorConglomerate({ components = [], sectionId
       <div className="max-w-7xl mx-auto grid lg:grid-cols-12 gap-12 items-start">
         {/* Left Information */}
         <div className="lg:col-span-6">
-          {renderLayoutComponents(leftComps.filter(c => c.type === 'badge'), sectionId)}
-          <div className="mt-3">{renderLayoutComponents(leftComps.filter(c => c.type === 'heading'), sectionId)}</div>
-          {renderLayoutComponents(leftComps.filter(c => c.type === 'text'), sectionId)}
+          {renderLayoutComponents(badgeComps, sectionId)}
+          <div className="mt-3">{renderLayoutComponents(headingComps, sectionId)}</div>
+          {renderLayoutComponents(textComps, sectionId)}
 
           <div className="space-y-3 mt-6">
             {renderLayoutComponents(cardComps, sectionId)}
@@ -147,16 +158,24 @@ export default function HoldingInvestorConglomerate({ components = [], sectionId
                 />
               </div>
 
-              <div className="w-full pt-2">
+              <div className="w-full pt-2 flex flex-col gap-3">
                 {btnComps.length > 0 ? (
                   renderLayoutComponents(btnComps, sectionId)
                 ) : (
-                  <button
-                    type="submit"
-                    className="w-full py-4 bg-amber-600 hover:bg-amber-700 text-white font-black text-sm rounded-xl transition-all shadow-lg"
-                  >
-                    Kirim Permohonan Informasi / Registrasi RUPS →
-                  </button>
+                  <>
+                    <button
+                      type="submit"
+                      className="w-full py-4 bg-sky-500 hover:bg-sky-600 text-white font-black text-sm rounded-xl transition-all shadow-lg"
+                    >
+                      Keterbukaan Informasi IDX →
+                    </button>
+                    <button
+                      type="button"
+                      className="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white font-black text-sm rounded-xl transition-all shadow-lg"
+                    >
+                      Kontak Sekretaris Perusahaan
+                    </button>
+                  </>
                 )}
               </div>
             </form>

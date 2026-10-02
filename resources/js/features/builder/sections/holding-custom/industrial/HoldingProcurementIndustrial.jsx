@@ -1,16 +1,20 @@
+import { useState } from 'react';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
+import { handleCardFormSubmit } from '../../../utils/formSubmissionHelper';
 
 /**
  * HoldingProcurementIndustrial
  * Section: B2B Industrial Vendor Procurement, Contractor Qualification & Tender Registration
  */
 export default function HoldingProcurementIndustrial({ components = [], sectionId = null }) {
+  const [submitted, setSubmitted] = useState(false);
+
   const defaultComponents = [
     { id: 'iproc-badge', type: 'badge', props: { content: '🏢 B2B VENDOR & CONTRACTOR QUALIFICATION PORTAL', variant: 'primary', background: 'rgba(245, 158, 11, 0.1)', color: '#fbbf24', size: 'medium' } },
     { id: 'iproc-heading', type: 'heading', props: { content: 'Portal Pengadaan Barang & Jasa (E-Procurement) Holding', level: 'h2', fontSize: '38px', fontWeight: '800', color: '#ffffff' } },
     { id: 'iproc-text', type: 'text', props: { content: 'Kami membuka peluang kemitraan bagi pemasok peralatan berat, bahan kimia industri, kontraktor EPC, dan penyedia logistik yang memenuhi standar integritas tinggi.', fontSize: '16px', color: '#94a3b8' } },
-    { id: 'iproc-btn-1', type: 'button', props: { label: 'Registrasi Vendor Rekanan Terdaftar →', href: '#', variant: 'primary', background: '#f59e0b', color: '#020617', size: 'large' } },
-    { id: 'iproc-btn-2', type: 'button', props: { label: 'Unduh Dokumen Prakualifikasi Tender (PDF)', href: '#', variant: 'outline', border: '1px solid #475569', color: '#ffffff', size: 'large' } },
+    { id: 'iproc-btn-1', type: 'button', props: { label: 'Registrasi Vendor Rekanan Terdaftar →', href: '#', action: { type: 'card_form', formChannel: 'whatsapp', value: '081288990011', message: 'Halo Tim E-Procurement Industri Holding, ada pengajuan rekanan vendor baru:' }, variant: 'primary', background: '#f59e0b', color: '#020617', size: 'large', radius: 'xl', fontWeight: '800' } },
+    { id: 'iproc-btn-2', type: 'button', props: { label: 'Unduh Dokumen Prakualifikasi Tender (PDF)', href: '#', action: { type: 'card_form', formChannel: 'email', value: 'procurement@nusantaragroup.co.id', message: '[Vendor Qualification] Pengajuan Pendaftaran Rekanan Baru' }, variant: 'outline', border: '1px solid #475569', color: '#ffffff', size: 'large', radius: 'xl', fontWeight: '700' } },
     {
       id: 'iproc-card-1',
       type: 'card',
@@ -40,6 +44,27 @@ export default function HoldingProcurementIndustrial({ components = [], sectionI
   const buttons = comps.filter((c) => c.type === 'button');
   const cards = comps.filter((c) => c.type === 'card');
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const cardFormBtn = buttons.find(c => c.props?.action?.type === 'card_form' || c.props?.linkType === 'card_form') || buttons[buttons.length - 1] || buttons[0] || {};
+    const btnAction = cardFormBtn.props?.action || {
+      type: 'card_form',
+      formChannel: cardFormBtn.props?.formChannel || 'whatsapp',
+      value: cardFormBtn.props?.actionValue || cardFormBtn.props?.formTarget || cardFormBtn.props?.href || '',
+      message: cardFormBtn.props?.actionMessage || '',
+    };
+
+    handleCardFormSubmit({
+      containerElement: e.currentTarget,
+      action: btnAction,
+      defaultTarget: btnAction.value || cardFormBtn.props?.formTarget || cardFormBtn.props?.actionValue || '',
+      defaultChannel: btnAction.formChannel || 'whatsapp',
+      defaultIntro: btnAction.message || 'Halo Tim E-Procurement Industri Holding, ada pengajuan rekanan vendor baru:',
+      defaultSubject: '[Vendor Qualification] Pengajuan Pendaftaran Rekanan Baru',
+      onSuccess: () => setSubmitted(true),
+    });
+  };
+
   return (
     <section className="py-24 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-slate-100 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -54,12 +79,6 @@ export default function HoldingProcurementIndustrial({ components = [], sectionI
             {cards.length > 0 && (
               <div className="space-y-4 mb-8">
                 {renderLayoutComponents(cards, sectionId)}
-              </div>
-            )}
-
-            {buttons.length > 0 && (
-              <div className="flex flex-wrap gap-4">
-                {renderLayoutComponents(buttons, sectionId)}
               </div>
             )}
           </div>
@@ -83,54 +102,78 @@ export default function HoldingProcurementIndustrial({ components = [], sectionI
                 Submit company credentials, ISO certifications, and capability profiles for ongoing group industrial tenders.
               </p>
 
-              <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {submitted ? (
+                <div className="p-8 text-center space-y-4">
+                  <span className="text-5xl">🏢</span>
+                  <h3 className="text-2xl font-bold text-white">Registrasi Vendor Diterima</h3>
+                  <p className="text-sm text-slate-300">
+                    Divisi Pengadaan & Verifikasi Vendor kami akan memproses dokumen prakualifikasi Anda dalam 1x24 jam kerja.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setSubmitted(false)}
+                    className="text-xs text-amber-400 underline font-bold mt-4"
+                  >
+                    Daftarkan entitas vendor lain
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-medium text-slate-300 mb-1.5 uppercase">
+                        Corporate Entity Name
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="PT Steel Dynamics Tbk"
+                        className="w-full px-4 py-2.5 rounded-lg bg-slate-950 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-amber-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-slate-300 mb-1.5 uppercase">
+                        Industry Sector / Category
+                      </label>
+                      <select
+                        className="w-full px-4 py-2.5 rounded-lg bg-slate-950 border border-slate-700 text-slate-300 text-sm focus:outline-none focus:border-amber-500"
+                      >
+                        <option>Heavy Metallurgy & Smelting Supplies</option>
+                        <option>Renewable Power Equipment & EPC</option>
+                        <option>Industrial Automation & Robotics</option>
+                        <option>Port Terminal & Logistics Services</option>
+                      </select>
+                    </div>
+                  </div>
+
                   <div>
-                    <label className="block text-xs font-medium text-slate-300 mb-1.5">
-                      Corporate Entity Name
+                    <label className="block text-xs font-medium text-slate-300 mb-1.5 uppercase">
+                      Executive Representative Email
                     </label>
                     <input
-                      type="text"
-                      readOnly
-                      placeholder="e.g. PT Steel Dynamics Tbk"
+                      type="email"
+                      required
+                      placeholder="procurement-lead@company.com"
                       className="w-full px-4 py-2.5 rounded-lg bg-slate-950 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-amber-500"
                     />
                   </div>
-                  <div>
-                    <label className="block text-xs font-medium text-slate-300 mb-1.5">
-                      Industry Sector / Category
-                    </label>
-                    <select
-                      disabled
-                      className="w-full px-4 py-2.5 rounded-lg bg-slate-950 border border-slate-700 text-slate-300 text-sm focus:outline-none focus:border-amber-500"
-                    >
-                      <option>Heavy Metallurgy & Smelting Supplies</option>
-                      <option>Renewable Power Equipment & EPC</option>
-                      <option>Industrial Automation & Robotics</option>
-                      <option>Port Terminal & Logistics Services</option>
-                    </select>
+
+                  <div className="pt-2">
+                    {buttons.length > 0 ? (
+                      <div className="flex flex-col gap-3">
+                        {renderLayoutComponents(buttons, sectionId)}
+                      </div>
+                    ) : (
+                      <button
+                        type="submit"
+                        className="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold shadow-lg shadow-amber-500/20 transition-all cursor-pointer text-sm"
+                      >
+                        Access E-Procurement Portal & Tender Docs →
+                      </button>
+                    )}
                   </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-medium text-slate-300 mb-1.5">
-                    Executive Representative Email
-                  </label>
-                  <input
-                    type="email"
-                    readOnly
-                    placeholder="procurement-lead@company.com"
-                    className="w-full px-4 py-2.5 rounded-lg bg-slate-950 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-amber-500"
-                  />
-                </div>
-
-                <button
-                  type="button"
-                  className="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold shadow-lg shadow-amber-500/20 transition-all cursor-pointer text-sm"
-                >
-                  Access E-Procurement Portal & Tender Docs →
-                </button>
-              </form>
+                </form>
+              )}
             </div>
           </div>
         </div>

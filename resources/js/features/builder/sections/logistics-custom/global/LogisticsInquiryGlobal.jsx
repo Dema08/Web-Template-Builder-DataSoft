@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
+import { handleCardFormSubmit } from '../../../utils/formSubmissionHelper.js';
 
 /**
  * LogisticsInquiryGlobal
@@ -40,17 +41,28 @@ export default function LogisticsInquiryGlobal({ components = [], sectionId = nu
         { id: 'iq3-d', type: 'text', props: { content: '+62 21 559 8899 / charter@nexusglobal-cargo.com', fontSize: '13px', color: '#d6d3d1', margin: '0' } },
       ],
     },
-    { id: 'inq-btn', type: 'button', props: { label: 'Submit International Booking Inquiry →', href: '#', variant: 'primary', size: 'large', radius: 'full', background: '#e7c873', color: '#0c0a09', fontWeight: '800' } },
+    { id: 'inq-btn', type: 'button', props: { label: 'Submit International Booking Inquiry →', href: '#', variant: 'primary', size: 'large', radius: 'full', background: '#e7c873', color: '#0c0a09', fontWeight: '800', action: { type: 'card_form', formChannel: 'whatsapp', value: '62215598899', formSubject: 'International Freight Booking Inquiry' } } },
   ];
 
   const layoutComponents = components.length > 0 ? components : defaultComponents;
   const leftComps = layoutComponents.filter(c => c.type === 'badge' || c.type === 'heading' || c.type === 'text');
   const cardComps = layoutComponents.filter(c => c.type === 'card');
-  const btnComps = layoutComponents.filter(c => c.type === 'button');
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    setSubmitted(true);
+    const cardFormBtn = btnComps.find(c => c.props?.action?.type === 'card_form' || c.props?.linkType === 'card_form') || btnComps[btnComps.length - 1] || btnComps[0] || {};
+    const btnAction = cardFormBtn.props?.action || {
+      type: 'card_form',
+      formChannel: cardFormBtn.props?.formChannel || 'whatsapp',
+      value: cardFormBtn.props?.actionValue || cardFormBtn.props?.formTarget || cardFormBtn.props?.href || '',
+      message: cardFormBtn.props?.actionMessage || '',
+      formSubject: 'International Freight Booking Inquiry'
+    };
+    handleCardFormSubmit(e.currentTarget, btnAction, {
+      defaultTarget: btnAction.value || cardFormBtn.props?.formTarget || '',
+      defaultChannel: btnAction.formChannel || 'whatsapp',
+      defaultSubject: 'International Freight Booking Inquiry',
+      onSuccess: () => setSubmitted(true),
+    });
   };
 
   return (
@@ -148,7 +160,7 @@ export default function LogisticsInquiryGlobal({ components = [], sectionId = nu
                 />
               </div>
 
-              <div className="w-full pt-2">
+              <div className="w-full pt-2 flex flex-col gap-3">
                 {btnComps.length > 0 ? (
                   renderLayoutComponents(btnComps, sectionId)
                 ) : (

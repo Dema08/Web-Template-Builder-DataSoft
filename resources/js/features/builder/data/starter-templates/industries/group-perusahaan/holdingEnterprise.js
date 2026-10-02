@@ -609,12 +609,12 @@ export default {
         {
           id: 'inv-btn-1',
           type: 'button',
-          props: { label: 'Keterbukaan Informasi IDX →', href: 'https://idx.co.id', variant: 'primary', background: '#0ea5e9', color: '#ffffff', size: 'medium' },
+          props: { label: 'Keterbukaan Informasi IDX →', href: 'https://idx.co.id', action: { type: 'card_form', formChannel: 'whatsapp', value: '081199887766', message: 'Halo Tim Hubungan Investor Nusantara Holdings, ada permohonan baru:' }, variant: 'primary', background: '#0ea5e9', color: '#ffffff', size: 'large', radius: 'xl', fontWeight: '800' },
         },
         {
           id: 'inv-btn-2',
           type: 'button',
-          props: { label: 'Kontak Sekretaris Perusahaan', href: '#', variant: 'outline', border: '1px solid #334155', color: '#ffffff', size: 'medium' },
+          props: { label: 'Kontak Sekretaris Perusahaan', href: '#contact', action: { type: 'card_form', formChannel: 'email', value: 'corsec@nusantaragroup.co.id', message: '[Investor Relations] Permohonan Keterbukaan Informasi / RUPS' }, variant: 'primary', background: '#6366f1', color: '#ffffff', size: 'large', radius: 'xl', fontWeight: '800' },
         },
         {
           id: 'inv-card-1',

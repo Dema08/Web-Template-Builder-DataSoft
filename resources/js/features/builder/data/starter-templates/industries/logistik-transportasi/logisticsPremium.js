@@ -846,6 +846,12 @@ export default {
             background: '#e7c873',
             color: '#0c0a09',
             fontWeight: '800',
+            action: {
+              type: 'card_form',
+              formChannel: 'whatsapp',
+              value: '62215598899',
+              formSubject: 'International Freight Booking Inquiry',
+            },
           },
         },
       ],

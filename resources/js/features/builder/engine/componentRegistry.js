@@ -181,6 +181,11 @@ export const COMPONENT_REGISTRY = {
         default: 'md',
         options: ['none', 'sm', 'md', 'lg'],
       },
+      action: {
+        type: 'object',
+        label: 'Action Destination',
+        default: null,
+      },
     },
   },
 

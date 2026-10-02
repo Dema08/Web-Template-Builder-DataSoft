@@ -734,6 +734,12 @@ export default {
             background: '#0284c7',
             color: '#ffffff',
             fontWeight: '800',
+            action: {
+              type: 'card_form',
+              formChannel: 'whatsapp',
+              value: '08118722532',
+              formSubject: 'Aktivasi Akun Seller TrackFast',
+            },
           },
         },
       ],

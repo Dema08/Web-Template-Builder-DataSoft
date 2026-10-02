@@ -930,6 +930,12 @@ export default {
             background: '#f97316',
             color: '#ffffff',
             fontWeight: '800',
+            action: {
+              type: 'card_form',
+              formChannel: 'whatsapp',
+              value: '081234567890',
+              formSubject: 'Permintaan RFQ & Penawaran Resmi',
+            },
           },
         },
       ],

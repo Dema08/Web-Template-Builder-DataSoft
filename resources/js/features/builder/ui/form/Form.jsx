@@ -1,3 +1,5 @@
+import { handleCardFormSubmit } from '../../utils/formSubmissionHelper.js';
+
 export default function Form({
   fields = [],
   submitLabel = 'Send Message',
@@ -6,6 +8,7 @@ export default function Form({
   borderRadius = '8px',
   margin = '0',
   gap = '14px',
+  action = null,
 }) {
   const defaultFields = fields.length > 0 ? fields : [
     { id: 'f1', type: 'text', label: 'Your Name', placeholder: 'Enter your name', required: true },
@@ -13,6 +16,13 @@ export default function Form({
     { id: 'f3', type: 'tel', label: 'Phone Number', placeholder: 'Enter your phone', required: false },
     { id: 'f4', type: 'textarea', label: 'Message', placeholder: 'Your message...', required: true },
   ];
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (action && action.type === 'card_form') {
+      handleCardFormSubmit(e.currentTarget, action);
+    }
+  };
 
   const inputStyle = {
     width: '100%',
@@ -30,7 +40,7 @@ export default function Form({
   return (
     <div style={{ margin }}>
       <form
-        onSubmit={(e) => e.preventDefault()}
+        onSubmit={handleSubmit}
         style={{ display: 'flex', flexDirection: 'column', gap }}
       >
         {defaultFields.map((field) => (

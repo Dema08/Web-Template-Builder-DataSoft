@@ -37,7 +37,12 @@ import {
   ExternalLink,
   FileText,
   Plus,
-  ArrowLeft
+  ArrowLeft,
+  Send,
+  MessageCircle,
+  Mail,
+  Phone,
+  Hash,
 } from 'lucide-react';
 import { toast } from '@store';
 import NavbarEditor from '../sections/NavbarEditor';
@@ -233,6 +238,9 @@ export default function RightInspector() {
         defaults.text = defaults.label;
         defaults.iconLeft = defaults.iconLeft || (typeof contentObj === 'object' ? contentObj.iconLeft : null) || null;
         defaults.iconRight = defaults.iconRight || (typeof contentObj === 'object' ? contentObj.iconRight : null) || null;
+        defaults.formChannel = selectedComponent.props?.formChannel || actionObj.formChannel || (actionObj.value?.includes('@') ? 'email' : 'whatsapp');
+        defaults.formTarget = selectedComponent.props?.formTarget || actionObj.formTarget || defaults.actionValue || '';
+        defaults.formSubject = selectedComponent.props?.formSubject || actionObj.formSubject || defaults.actionMessage || '';
         defaults.action = {
           type: defaults.actionType,
           value: defaults.actionValue,
@@ -240,6 +248,9 @@ export default function RightInspector() {
           fileName: defaults.fileName,
           fileSize: defaults.fileSize,
           target: defaults.target,
+          formChannel: defaults.formChannel,
+          formTarget: defaults.formTarget,
+          formSubject: defaults.formSubject,
         };
         defaults.content = {
           text: defaults.label,
@@ -347,6 +358,10 @@ export default function RightInspector() {
         const fSize = key === 'fileSize' ? value : (newValues.fileSize || '');
         const target = key === 'target' ? value : (key === 'linkOpenNewTab' ? (value ? '_blank' : '_self') : (newValues.target || '_self'));
 
+        const formChan = key === 'formChannel' ? value : (newValues.formChannel || newValues.action?.formChannel || (val.includes('@') ? 'email' : 'whatsapp'));
+        const formSub = key === 'formSubject' ? value : (newValues.formSubject || newValues.action?.formSubject || msg || '');
+        const formTar = key === 'formTarget' ? value : (newValues.formTarget || newValues.action?.formTarget || val || '');
+
         newValues.actionType = type;
         newValues.linkType = type;
         newValues.actionValue = val;
@@ -357,7 +372,20 @@ export default function RightInspector() {
         newValues.fileSize = fSize;
         newValues.target = target;
         newValues.linkOpenNewTab = target === '_blank';
-        newValues.action = { type, value: val, message: msg, fileName: fName, fileSize: fSize, target };
+        newValues.formChannel = formChan;
+        newValues.formSubject = formSub;
+        newValues.formTarget = formTar;
+        newValues.action = {
+          type,
+          value: val,
+          message: msg,
+          fileName: fName,
+          fileSize: fSize,
+          target,
+          formChannel: formChan,
+          formTarget: formTar,
+          formSubject: formSub,
+        };
 
         const text = key === 'label' || key === 'text' ? value : (newValues.label || newValues.text || 'Button');
         const iconLeft = key === 'iconLeft' ? value : (newValues.iconLeft || null);
@@ -1282,6 +1310,7 @@ export default function RightInspector() {
                 <label className="block text-[11px] font-bold text-slate-700 mb-1">Action Destination Type</label>
                 <div className="grid grid-cols-3 gap-1.5">
                   {[
+                    { id: 'card_form', label: '📋 Card Form' },
                     { id: 'web_url', label: '🌐 Web URL' },
                     { id: 'file_download', label: '📁 Download File' },
                     { id: 'whatsapp', label: '💬 WhatsApp' },
@@ -1320,6 +1349,122 @@ export default function RightInspector() {
                   onChange={handleButtonFileUpload}
                   className="hidden"
                 />
+
+                {/* 0. CARD FORM (SUBMIT FORM TO WHATSAPP / EMAIL) */}
+                {(formValues.actionType === 'card_form' || formValues.linkType === 'card_form' || formValues.action?.type === 'card_form') && (
+                  <div className="space-y-3">
+                    <div className="p-2.5 bg-indigo-50/80 border border-indigo-200/60 rounded-lg">
+                      <p className="text-[11px] font-bold text-indigo-900 flex items-center gap-1.5 mb-1">
+                        <Send className="w-3.5 h-3.5 text-indigo-600" />
+                        Otomatisasi Kirim Isian Formulir
+                      </p>
+                      <p className="text-[10px] text-indigo-700 leading-relaxed">
+                        Saat tombol ditekan, seluruh input data dari pengunjung pada kartu form ini akan otomatis dirangkum rapi dan dikirimkan ke WhatsApp atau Email.
+                      </p>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-[11px] font-semibold text-slate-700">Saluran Pengiriman Tujuan:</label>
+                      <div className="grid grid-cols-2 gap-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            handleChange('formChannel', 'whatsapp');
+                            if (formValues.action) {
+                              handleChange('action', { ...formValues.action, formChannel: 'whatsapp' });
+                            }
+                          }}
+                          className={`py-2 px-3 rounded-lg border text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer ${
+                            (formValues.formChannel || formValues.action?.formChannel || 'whatsapp') === 'whatsapp'
+                              ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs'
+                              : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
+                          }`}
+                        >
+                          <MessageCircle className="w-3.5 h-3.5" />
+                          <span>WhatsApp</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            handleChange('formChannel', 'email');
+                            if (formValues.action) {
+                              handleChange('action', { ...formValues.action, formChannel: 'email' });
+                            }
+                          }}
+                          className={`py-2 px-3 rounded-lg border text-xs font-bold flex items-center justify-center gap-1.5 transition cursor-pointer ${
+                            (formValues.formChannel || formValues.action?.formChannel) === 'email'
+                              ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs'
+                              : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
+                          }`}
+                        >
+                          <Mail className="w-3.5 h-3.5" />
+                          <span>Email</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {((formValues.formChannel || formValues.action?.formChannel || 'whatsapp') === 'whatsapp') ? (
+                      <>
+                        <div className="space-y-1">
+                          <label className="text-[11px] font-medium text-slate-700 flex items-center gap-1">
+                            <span className="text-emerald-600 font-bold">●</span> Nomor WhatsApp Penerima:
+                          </label>
+                          <input
+                            type="text"
+                            value={formValues.actionValue !== undefined ? formValues.actionValue : (formValues.formTarget || '')}
+                            onChange={(e) => {
+                              handleChange('actionValue', e.target.value);
+                              handleChange('formTarget', e.target.value);
+                            }}
+                            placeholder="Contoh: 081199887766 atau 6281199887766"
+                            className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-mono focus:bg-white focus:border-emerald-500 focus:outline-hidden"
+                          />
+                          <p className="text-[10px] text-slate-400">Pesan form akan dikirim langsung ke WhatsApp nomor ini.</p>
+                        </div>
+
+                        <div className="space-y-1">
+                          <label className="text-[11px] font-medium text-slate-700">Header / Salam Pembuka WhatsApp:</label>
+                          <input
+                            type="text"
+                            value={formValues.actionMessage !== undefined ? formValues.actionMessage : ''}
+                            onChange={(e) => handleChange('actionMessage', e.target.value)}
+                            placeholder="Halo Admin, ada permohonan baru dari formulir website:"
+                            className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:border-emerald-500 focus:outline-hidden"
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="space-y-1">
+                          <label className="text-[11px] font-medium text-slate-700 flex items-center gap-1">
+                            <span className="text-indigo-600 font-bold">●</span> Alamat Email Tujuan Penerima:
+                          </label>
+                          <input
+                            type="email"
+                            value={formValues.actionValue !== undefined ? formValues.actionValue : (formValues.formTarget || '')}
+                            onChange={(e) => {
+                              handleChange('actionValue', e.target.value);
+                              handleChange('formTarget', e.target.value);
+                            }}
+                            placeholder="secretariat@nusantaragroup.co.id"
+                            className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-mono focus:bg-white focus:border-indigo-500 focus:outline-hidden"
+                          />
+                        </div>
+
+                        <div className="space-y-1">
+                          <label className="text-[11px] font-medium text-slate-700">Subjek Email:</label>
+                          <input
+                            type="text"
+                            value={formValues.actionMessage !== undefined ? formValues.actionMessage : ''}
+                            onChange={(e) => handleChange('actionMessage', e.target.value)}
+                            placeholder="[Form Website] Permohonan Baru Pemegang Saham"
+                            className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:border-indigo-500 focus:outline-hidden"
+                          />
+                        </div>
+                      </>
+                    )}
+                  </div>
+                )}
 
                 {/* 1. WEB URL */}
                 {((formValues.actionType || formValues.linkType || formValues.action?.type || 'web_url') === 'web_url') && (

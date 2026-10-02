@@ -199,6 +199,7 @@ export default function ButtonInspector({ node, onUpdateNode, sectionId }) {
                   onChange={(e) => updateAction({ type: e.target.value })}
                   className="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-lg appearance-none focus:outline-hidden focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all pr-8 font-medium cursor-pointer"
                 >
+                  <option value="card_form">📋 Card Form (Kirim ke WhatsApp / Email)</option>
                   <option value="web_url">🌐 Buka URL Web Eksternal</option>
                   <option value="file_download">📁 Unduh File (Upload Dokumen / File)</option>
                   <option value="whatsapp">💬 Chat WhatsApp Langsung</option>
@@ -213,6 +214,108 @@ export default function ButtonInspector({ node, onUpdateNode, sectionId }) {
 
             {/* DYNAMIC ACTION INPUTS */}
             <div className="p-3 bg-slate-50/80 border border-slate-200/80 rounded-xl space-y-3">
+              {/* 0. CARD FORM (SUBMIT FORM TO WHATSAPP / EMAIL) */}
+              {action.type === 'card_form' && (
+                <div className="space-y-3">
+                  <div className="p-2.5 bg-indigo-50/80 border border-indigo-200/60 rounded-lg">
+                    <p className="text-[11px] font-bold text-indigo-900 flex items-center gap-1.5 mb-1">
+                      <Send className="w-3.5 h-3.5 text-indigo-600" />
+                      Otomatisasi Kirim Isian Formulir
+                    </p>
+                    <p className="text-[10px] text-indigo-700 leading-relaxed">
+                      Saat tombol ditekan, seluruh input data dari pengunjung pada kartu form ini akan otomatis dirangkum rapi dan dikirimkan ke WhatsApp atau Email.
+                    </p>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-[11px] font-semibold text-slate-700">Saluran Pengiriman Tujuan:</label>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        type="button"
+                        onClick={() => updateAction({ formChannel: 'whatsapp' })}
+                        className={`py-2 px-3 rounded-lg border text-xs font-bold flex items-center justify-center gap-1.5 transition ${
+                          (action.formChannel || 'whatsapp') === 'whatsapp'
+                            ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs'
+                            : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
+                        }`}
+                      >
+                        <MessageCircle className="w-3.5 h-3.5" />
+                        <span>WhatsApp</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => updateAction({ formChannel: 'email' })}
+                        className={`py-2 px-3 rounded-lg border text-xs font-bold flex items-center justify-center gap-1.5 transition ${
+                          action.formChannel === 'email'
+                            ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs'
+                            : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
+                        }`}
+                      >
+                        <Mail className="w-3.5 h-3.5" />
+                        <span>Email</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {(action.formChannel || 'whatsapp') === 'whatsapp' ? (
+                    <>
+                      <div className="space-y-1">
+                        <label className="text-[11px] font-medium text-slate-700 flex items-center gap-1">
+                          <MessageCircle className="w-3 h-3 text-emerald-600" />
+                          Nomor WhatsApp Penerima:
+                        </label>
+                        <input
+                          type="text"
+                          value={action.value || action.formTarget || ''}
+                          onChange={(e) => updateAction({ value: e.target.value, formTarget: e.target.value })}
+                          placeholder="Contoh: 081199887766 atau 6281199887766"
+                          className="w-full px-3 py-1.5 text-xs bg-white border border-slate-200 rounded-md focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 font-mono"
+                        />
+                        <p className="text-[10px] text-slate-400">Pesan form akan dikirim langsung ke WhatsApp nomor ini.</p>
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-[11px] font-medium text-slate-700">Header / Salam Pembuka WhatsApp:</label>
+                        <input
+                          type="text"
+                          value={action.message || ''}
+                          onChange={(e) => updateAction({ message: e.target.value })}
+                          placeholder="Halo Admin, ada permohonan baru dari formulir website:"
+                          className="w-full px-3 py-1.5 text-xs bg-white border border-slate-200 rounded-md focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500"
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="space-y-1">
+                        <label className="text-[11px] font-medium text-slate-700 flex items-center gap-1">
+                          <Mail className="w-3 h-3 text-indigo-600" />
+                          Alamat Email Tujuan Penerima:
+                        </label>
+                        <input
+                          type="email"
+                          value={action.value || action.formTarget || ''}
+                          onChange={(e) => updateAction({ value: e.target.value, formTarget: e.target.value })}
+                          placeholder="secretariat@nusantaragroup.co.id"
+                          className="w-full px-3 py-1.5 text-xs bg-white border border-slate-200 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 font-mono"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-[11px] font-medium text-slate-700">Subjek Email:</label>
+                        <input
+                          type="text"
+                          value={action.message || ''}
+                          onChange={(e) => updateAction({ message: e.target.value })}
+                          placeholder="[Form Website] Permohonan Baru Pemegang Saham"
+                          className="w-full px-3 py-1.5 text-xs bg-white border border-slate-200 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500"
+                        />
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
+
               {/* 1. WEB URL */}
               {action.type === 'web_url' && (
                 <>

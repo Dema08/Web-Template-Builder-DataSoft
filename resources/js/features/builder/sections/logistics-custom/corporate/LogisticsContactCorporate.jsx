@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
+import { handleCardFormSubmit } from '../../../utils/formSubmissionHelper.js';
 
 /**
  * LogisticsContactCorporate
@@ -40,17 +41,28 @@ export default function LogisticsContactCorporate({ components = [], sectionId =
         { id: 'ci-3-desc', type: 'text', props: { content: 'ISO 9001:2015, ISO 45001:2018 (K3), GDP Certified (Farmasi), Asosiasi Logistik Indonesia (ALI)', fontSize: '13px', color: '#cbd5e1', margin: '0' } },
       ],
     },
-    { id: 'cnt-submit-btn', type: 'button', props: { label: 'Kirim Formulir RFQ / Penawaran Resmi →', href: '#', variant: 'primary', size: 'large', radius: 'xl', background: '#f97316', color: '#ffffff', fontWeight: '800' } },
+    { id: 'cnt-submit-btn', type: 'button', props: { label: 'Kirim Formulir RFQ / Penawaran Resmi →', href: '#', variant: 'primary', size: 'large', radius: 'xl', background: '#f97316', color: '#ffffff', fontWeight: '800', action: { type: 'card_form', formChannel: 'whatsapp', value: '081234567890', formSubject: 'Permintaan RFQ & Penawaran Resmi' } } },
   ];
 
   const layoutComponents = components.length > 0 ? components : defaultComponents;
   const leftComps = layoutComponents.filter(c => c.type === 'badge' || c.type === 'heading' || c.type === 'text');
   const cardComps = layoutComponents.filter(c => c.type === 'card');
-  const btnComps = layoutComponents.filter(c => c.type === 'button');
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    setSubmitted(true);
+    const cardFormBtn = btnComps.find(c => c.props?.action?.type === 'card_form' || c.props?.linkType === 'card_form') || btnComps[btnComps.length - 1] || btnComps[0] || {};
+    const btnAction = cardFormBtn.props?.action || {
+      type: 'card_form',
+      formChannel: cardFormBtn.props?.formChannel || 'whatsapp',
+      value: cardFormBtn.props?.actionValue || cardFormBtn.props?.formTarget || cardFormBtn.props?.href || '',
+      message: cardFormBtn.props?.actionMessage || '',
+      formSubject: 'Permintaan RFQ & Penawaran Resmi'
+    };
+    handleCardFormSubmit(e.currentTarget, btnAction, {
+      defaultTarget: btnAction.value || cardFormBtn.props?.formTarget || '',
+      defaultChannel: btnAction.formChannel || 'whatsapp',
+      defaultSubject: 'Permintaan RFQ & Penawaran Resmi',
+      onSuccess: () => setSubmitted(true),
+    });
   };
 
   return (
@@ -147,7 +159,7 @@ export default function LogisticsContactCorporate({ components = [], sectionId =
                 />
               </div>
 
-              <div className="w-full pt-2">
+              <div className="w-full pt-2 flex flex-col gap-3">
                 {btnComps.length > 0 ? (
                   renderLayoutComponents(btnComps, sectionId)
                 ) : (
