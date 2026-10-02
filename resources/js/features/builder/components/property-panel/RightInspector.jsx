@@ -3056,7 +3056,7 @@ function FormCardInspector({ activeTab, formValues, handleChange, setActiveTab }
       placeholder: type === 'select' ? '-- Pilih Opsi --' : 'Ketik teks di sini...',
       required: false,
       width: 'full',
-      ...(type === 'select' ? { options: ['Pilihan 1', 'Pilihan 2', 'Pilihan 3'] } : {}),
+      ...(type === 'select' ? { options: ['Pilihan 1', 'Pilihan 2', 'Pilihan 3'], optionsText: 'Pilihan 1\nPilihan 2\nPilihan 3' } : {}),
     };
     updateFields([...fields, newField]);
     setEditingFieldIdx(fields.length);
@@ -3069,7 +3069,13 @@ function FormCardInspector({ activeTab, formValues, handleChange, setActiveTab }
   };
 
   const updateFieldProp = (idx, key, val) => {
-    const updated = fields.map((f, i) => i === idx ? { ...f, [key]: val } : f);
+    const updated = fields.map((f, i) => {
+      if (i !== idx) return f;
+      if (key === 'options' && Array.isArray(val)) {
+        return { ...f, options: val, optionsText: val.join('\n') };
+      }
+      return { ...f, [key]: val };
+    });
     updateFields(updated);
   };
 
@@ -3246,6 +3252,7 @@ function FormCardInspector({ activeTab, formValues, handleChange, setActiveTab }
                                     currentOpts[optIdx] = e.target.value;
                                     updateFieldProp(idx, 'options', currentOpts);
                                   }}
+                                  onKeyDown={(e) => e.stopPropagation()}
                                   className="flex-1 px-2.5 py-1.5 bg-white border border-indigo-200 rounded-lg text-xs font-bold text-slate-800 focus:border-indigo-600 focus:outline-hidden shadow-2xs"
                                   placeholder={`Pilihan ${optIdx + 1}`}
                                 />
@@ -3267,17 +3274,24 @@ function FormCardInspector({ activeTab, formValues, handleChange, setActiveTab }
 
                           {/* Multi-line Fast Textarea */}
                           <div className="pt-2 border-t border-indigo-200/60">
-                            <label className="block text-[9px] font-bold text-indigo-800 mb-1">
-                              Atau Edit Sekaligus (1 Pilihan Per Baris):
+                            <label className="block text-[9px] font-black text-indigo-900 uppercase tracking-wider mb-1">
+                              PILIHAN DROPDOWN (1 PER BARIS)
                             </label>
                             <textarea
-                              value={Array.isArray(field.options) ? field.options.join('\n') : ''}
+                              value={
+                                typeof field.optionsText === 'string'
+                                  ? field.optionsText
+                                  : (Array.isArray(field.options) ? field.options.join('\n') : (field.options || ''))
+                              }
                               onChange={(e) => {
-                                const lines = e.target.value.split('\n');
-                                updateFieldProp(idx, 'options', lines);
+                                const val = e.target.value;
+                                const lines = val.split('\n');
+                                const updated = fields.map((f, i) => i === idx ? { ...f, options: lines, optionsText: val } : f);
+                                updateFields(updated);
                               }}
-                              className="w-full px-2.5 py-1.5 bg-white border border-indigo-200 rounded-lg text-xs font-medium text-slate-800 resize-y"
-                              rows={3}
+                              onKeyDown={(e) => e.stopPropagation()}
+                              className="w-full px-3 py-2 bg-white border border-slate-900 rounded-xl text-xs font-bold text-slate-900 resize-y shadow-xs focus:border-indigo-600 focus:outline-hidden"
+                              rows={4}
                               placeholder="Pilihan 1&#10;Pilihan 2&#10;Pilihan 3"
                             />
                           </div>
