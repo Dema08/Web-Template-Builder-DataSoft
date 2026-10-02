@@ -11,7 +11,7 @@ const initialState = {
     brandName: 'Microdata',
     brandBadge: 'MD',
     brandColor: '#2563eb', // blue-600
-    logoUrl: '/storage/settings/microdata-emblem.png',
+    logoUrl: '/images/microdata-emblem.png',
     planLabel: 'Premium Plan',
 };
 

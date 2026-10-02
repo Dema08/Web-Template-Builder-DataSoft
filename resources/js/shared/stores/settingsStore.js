@@ -20,7 +20,7 @@ const initialState = {
     brand_badge: 'MD',
     brand_color: '#2563eb', // blue-600
     plan_label: 'Premium Plan',
-    logo_path: '/storage/settings/microdata-emblem.png',
+    logo_path: '/images/microdata-emblem.png',
     maintenance_mode: false,
     allow_registration: true,
     default_storage_limit: 100,

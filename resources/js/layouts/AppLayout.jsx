@@ -82,7 +82,7 @@ export default function AppLayout() {
                     >
                         <div className="flex shrink-0 items-center justify-center">
                             <img
-                                src={logo_path || '/storage/settings/microdata-emblem.png'}
+                                src={logo_path || '/images/microdata-emblem.png'}
                                 alt={brand_name || 'Microdata'}
                                 className="h-10 w-auto object-contain"
                                 onError={(e) => {

@@ -292,7 +292,12 @@ export default function AdminSettings() {
                             <img
                                 src={logoPreview}
                                 alt="Brand Logo"
-                                className="h-10 w-10 rounded-xl object-cover shadow-sm border border-[rgb(var(--color-border))]"
+                                className="h-10 w-10 rounded-xl object-contain shadow-sm border border-[rgb(var(--color-border))]"
+                                onError={(e) => {
+                                    if (!e.target.src.includes('/images/')) {
+                                        e.target.src = '/images/microdata-emblem.png';
+                                    }
+                                }}
                             />
                         ) : (
                             <div
@@ -397,6 +402,11 @@ export default function AdminSettings() {
                                 src={logoPreview}
                                 alt="Logo Preview"
                                 className="h-16 w-16 rounded-xl object-contain border border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface))] p-1 shadow-xs"
+                                onError={(e) => {
+                                    if (!e.target.src.includes('/images/')) {
+                                        e.target.src = '/images/microdata-emblem.png';
+                                    }
+                                }}
                             />
                             <div className="flex-1">
                                 <p className="text-xs font-extrabold text-[rgb(var(--color-text-primary))]">Custom logo uploaded</p>

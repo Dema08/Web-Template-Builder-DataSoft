@@ -189,7 +189,7 @@ function Navbar({ onDemo }) {
                         className="flex items-center gap-2.5 cursor-pointer select-none"
                     >
                         <img
-                            src="/storage/settings/microdata-emblem.png"
+                            src="/images/microdata-emblem.png"
                             alt="Microdata"
                             className="h-9 w-auto object-contain"
                             onError={(e) => { e.target.src = '/images/microdata-emblem.png'; }}

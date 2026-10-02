@@ -69,7 +69,13 @@ class AdminSettingController extends BaseController
             $raw = Setting::get($key, self::DEFAULTS[$key] ?? null);
 
             if ($key === 'logo_path') {
-                $settings[$key] = $raw ? Storage::url($raw) : null;
+                if (!$raw) {
+                    $settings[$key] = '/images/microdata-emblem.png';
+                } elseif (str_starts_with($raw, '/') || str_starts_with($raw, 'http://') || str_starts_with($raw, 'https://')) {
+                    $settings[$key] = $raw;
+                } else {
+                    $settings[$key] = Storage::url($raw);
+                }
             } elseif ($key === 'maintenance_mode' || $key === 'allow_registration' || $key === 'midtrans_is_production') {
                 $settings[$key] = (bool) $raw;
             } elseif ($key === 'default_storage_limit') {
