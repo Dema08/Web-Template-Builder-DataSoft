@@ -142,8 +142,20 @@ export default function Builder() {
           if (isMounted) {
             loadSections([]);
             setTemplateName('Blank Website');
+            try {
+              const newSite = await websiteApi.saveContent({
+                draft_json: { sections: [] },
+                name: 'Blank Website',
+                is_new: true,
+              });
+              if (newSite?.id) {
+                setWebsiteInfo(newSite);
+                window.history.replaceState(null, '', `${ROUTES.BUILDER}?website_id=${newSite.id}`);
+              }
+            } catch (blankErr) {
+              console.warn('Could not create blank site:', blankErr);
+            }
             toast.success('Builder dibuka dengan Template Kosong.', 'Blank Template');
-            await websiteApi.saveContent({ draft_json: { sections: [] } });
             setIsLoadingContent(false);
           }
           return;
@@ -186,13 +198,31 @@ export default function Builder() {
               if (sectionsToLoad.length > 0) {
                 loadSections(sectionsToLoad);
               }
-              setTemplateName(templateData.name || pendingTemplateName || 'My Website');
-              toast.success(`Template "${templateData.name || 'Selected Template'}" berhasil dimuat ke Builder!`, 'Template Loaded');
+              const siteName = templateData.name || pendingTemplateName || 'My Website';
+              setTemplateName(siteName);
 
-              // Auto-save initial draft for user
-              await websiteApi.saveContent({
-                draft_json: { sections: sectionsToLoad },
-              });
+              // Auto-create a NEW website record for this selected template
+              try {
+                const newSite = await websiteApi.saveContent({
+                  draft_json: { sections: sectionsToLoad },
+                  template_id: Number(pendingTemplateId),
+                  name: siteName,
+                  is_new: true,
+                });
+                if (newSite?.id) {
+                  setWebsiteInfo(newSite);
+                  window.history.replaceState(null, '', `${ROUTES.BUILDER}?website_id=${newSite.id}`);
+                }
+              } catch (saveErr) {
+                console.warn('Gagal membuat website baru untuk template:', saveErr);
+                if (saveErr?.response?.status === 422) {
+                  toast.error(saveErr?.response?.data?.message || 'Batas jumlah website paket tercapai.', 'Quota Exceeded');
+                  navigate(ROUTES.WEBSITES, { replace: true });
+                  return;
+                }
+              }
+
+              toast.success(`Website baru dari template "${templateData.name || 'Selected Template'}" berhasil dibuat!`, 'Template Loaded');
               setIsLoadingContent(false);
               return;
             }
@@ -208,6 +238,14 @@ export default function Builder() {
 
         // 2. Fetch existing user website content
         try {
+          const site = await websiteApi.getWebsite();
+          if (site && isMounted) {
+            setWebsiteInfo(site);
+            const currentWebsiteId = new URLSearchParams(window.location.search).get('website_id');
+            if (site.id && !currentWebsiteId) {
+              window.history.replaceState(null, '', `${ROUTES.BUILDER}?website_id=${site.id}`);
+            }
+          }
           const res = await websiteApi.getContent();
           const content = res.data?.data ?? res.data;
 

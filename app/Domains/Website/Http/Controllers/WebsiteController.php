@@ -122,19 +122,31 @@ class WebsiteController extends BaseController
     public function saveContent(Request $request): JsonResponse
     {
         $user = $request->user();
-        $website = $this->findUserWebsite($request);
+        $isNew = $request->boolean('is_new');
+        $websiteId = $request->query('website_id') ?? $request->input('website_id');
+
+        $website = null;
+        if ($websiteId !== null && !$isNew) {
+            $website = Website::where('user_id', $user->id)->whereKey($websiteId)->first();
+        }
+
+        if (!$website && !$isNew && $websiteId === null) {
+            $website = $this->findUserWebsite($request);
+        }
 
         $content = $request->input('draft_json') ?? $request->all();
 
-        if (!$website) {
+        if (!$website || $isNew) {
             $plan = $user->effective_pricelist;
             $maxDomains = (int) ($plan->maks_domain ?? 0);
             $websiteCount = Website::where('user_id', $user->id)->count();
+
             if (!$user->isAdmin() && $maxDomains !== -1 && $websiteCount >= $maxDomains) {
-                return $this->error("Paket {$plan->nama} hanya mengizinkan {$maxDomains} website.", 422);
+                return $this->error("Paket {$plan->nama} hanya mengizinkan {$maxDomains} website. Upgrade paket untuk menambah.", 422);
             }
 
-            $slugBase = str($user->name)->slug()->__toString() ?: 'my-website';
+            $siteName = $request->input('name') ?? ($user->name . ' Website');
+            $slugBase = str($siteName)->slug()->__toString() ?: 'my-website';
             $slug = $slugBase;
             while (Website::where('slug', $slug)->exists()) {
                 $slug = $slugBase . '-' . rand(100, 999);
@@ -147,15 +159,17 @@ class WebsiteController extends BaseController
                 'user_id' => $user->id,
                 'category_id' => $request->input('category_id') ?? $defaultCategory?->id ?? 1,
                 'template_id' => $request->input('template_id') ?? $defaultTemplate?->id ?? 1,
-                'name' => $user->name . ' Website',
+                'name' => $siteName,
                 'slug' => $slug,
                 'status' => 'draft',
                 'draft_json' => $content,
             ]);
         } else {
-            $website->update([
-                'draft_json' => $content,
-            ]);
+            $updatePayload = ['draft_json' => $content];
+            if ($request->filled('name')) {
+                $updatePayload['name'] = $request->input('name');
+            }
+            $website->update($updatePayload);
         }
 
         return $this->success(
@@ -292,14 +306,14 @@ class WebsiteController extends BaseController
         $query = Website::where('user_id', $request->user()->id);
 
         if ($websiteId !== null) {
-            return $query->whereKey($websiteId)->firstOrFail();
+            return $query->whereKey($websiteId)->first();
         }
 
-        if ($query->count() > 1) {
-            abort(422, 'Pilih website yang akan dikelola terlebih dahulu.');
+        if ($query->count() === 1) {
+            return $query->first();
         }
 
-        return $query->oldest('id')->first();
+        return $query->latest('id')->first();
     }
 
     private function quotaInfo(Request $request): array
