@@ -30,8 +30,8 @@ class DashboardService extends BaseService
         $cacheKey = "dashboard:{$user->id}:{$range}:{$startDateParam}:{$endDateParam}:" . ($forceAdmin ? 'admin' : 'user');
 
         return Cache::remember($cacheKey, 5, function () use ($user, $range, $startDateParam, $endDateParam, $forceAdmin) {
-            // Admin-specific dashboard metrics
-            if ($forceAdmin || $user->isAdmin() || request()->is('api/v1/admin/*') || request()->is('api/admin/*') || request()->is('admin/*')) {
+            // Admin-specific dashboard metrics (only for admin endpoints or explicit forceAdmin)
+            if ($forceAdmin || request()->is('api/v1/admin/*') || request()->is('api/admin/*') || request()->is('admin/*')) {
                 $totalWebsites = Website::count();
                 $totalUsers = User::count();
                 $totalViews = \Illuminate\Support\Facades\Schema::hasTable('website_view') ? \DB::table('website_view')->count() : 0;
