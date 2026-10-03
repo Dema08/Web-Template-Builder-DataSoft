@@ -67,8 +67,8 @@ export default function Builder() {
         }
 
         // 1. Check if user came from Templates page with a pending template selection
-        const editTemplateId = sessionStorage.getItem('edit_template_id');
-        const editTemplateName = sessionStorage.getItem('edit_template_name');
+        const editTemplateId = sessionStorage.getItem('edit_template_id') || sessionStorage.getItem('draft_template_id');
+        const editTemplateName = sessionStorage.getItem('edit_template_name') || sessionStorage.getItem('draft_template_name');
         const pendingTemplateId = sessionStorage.getItem('pending_template_id');
         const pendingTemplateName = sessionStorage.getItem('pending_template_name');
         const blankMode = sessionStorage.getItem('blank_template_mode');
@@ -84,23 +84,39 @@ export default function Builder() {
             const templateData = res.data?.data ?? res.data;
 
             if (templateData && isMounted) {
-              // Prioritaskan draft_json (yang sedang diedit), fallback ke published_json
-              const draftSections = templateData.draft_json?.sections;
-              const pubSections = templateData.published_json?.sections;
-              const sectionsToLoad =
-                (draftSections && Array.isArray(draftSections) && draftSections.length > 0)
-                  ? draftSections
-                  : ((pubSections && Array.isArray(pubSections) && pubSections.length > 0) ? pubSections : []);
+              // Parse sections & pages dari draft_json (fallback ke published_json)
+              let sectionsToLoad = [];
+              const draftObj = templateData.draft_json;
+              const pubObj = templateData.published_json;
+
+              if (Array.isArray(draftObj)) {
+                sectionsToLoad = draftObj;
+              } else if (draftObj && Array.isArray(draftObj.sections)) {
+                sectionsToLoad = draftObj.sections;
+              } else if (Array.isArray(pubObj)) {
+                sectionsToLoad = pubObj;
+              } else if (pubObj && Array.isArray(pubObj.sections)) {
+                sectionsToLoad = pubObj.sections;
+              }
+
+              const pagesToLoad = (draftObj && typeof draftObj === 'object' && draftObj.pages)
+                ? draftObj.pages
+                : ((pubObj && typeof pubObj === 'object' && pubObj.pages) ? pubObj.pages : {});
 
               if (sectionsToLoad.length > 0) {
-                loadSections(sectionsToLoad);
+                loadSections(sectionsToLoad, pagesToLoad);
               }
               const tplName = templateData.name || editTemplateName || 'Draft Template';
               setTemplateName(tplName);
 
-              // Set activeDraftTemplateId agar save draft UPDATE template ini, bukan buat baru
-              setActiveDraftTemplateId(Number(editTemplateId));
+              const numId = Number(editTemplateId);
+              setActiveDraftTemplateId(numId);
               setActiveDraftTemplateName(tplName);
+
+              try {
+                sessionStorage.setItem('draft_template_id', String(numId));
+                sessionStorage.setItem('draft_template_name', tplName);
+              } catch (_) {}
 
               toast.success(`Template "${tplName}" berhasil dimuat untuk diedit!`, 'Edit Mode');
               setIsLoadingContent(false);
@@ -108,7 +124,6 @@ export default function Builder() {
             }
           } catch (editErr) {
             console.warn('Gagal memuat template untuk edit, fallback ke website content:', editErr);
-            // Hapus draft_template_id dari sessionStorage juga jika gagal
             try {
               sessionStorage.removeItem('draft_template_id');
               sessionStorage.removeItem('draft_template_name');
@@ -121,6 +136,8 @@ export default function Builder() {
           sessionStorage.removeItem('blank_template_mode');
           sessionStorage.removeItem('pending_template_id');
           sessionStorage.removeItem('pending_template_name');
+          sessionStorage.removeItem('draft_template_id');
+          sessionStorage.removeItem('draft_template_name');
           if (isMounted) {
             loadSections([]);
             setTemplateName('Blank Website');
@@ -225,18 +242,25 @@ export default function Builder() {
    * silent=true → tidak tampilkan toast (untuk auto-save).
    */
   const saveDraftTemplate = useCallback(async ({ name, silent = false } = {}) => {
-    const templateName = name || activeDraftTemplateName;
-    if (!templateName) return; // Butuh nama template
+    const currentDraftId = activeDraftTemplateId || Number(sessionStorage.getItem('draft_template_id')) || null;
+    const templateName = name || activeDraftTemplateName || sessionStorage.getItem('draft_template_name') || 'Draft Template';
 
     const draftJson = useBuilderStore.getState().serializeDraftJson();
 
     try {
-      if (activeDraftTemplateId) {
+      if (currentDraftId) {
         // Update template draft yang sudah ada
-        await templateApi.updateMyTemplate(activeDraftTemplateId, {
+        await templateApi.updateMyTemplate(currentDraftId, {
+          name: templateName,
           draft_json: draftJson,
           status: 'draft',
         });
+        setActiveDraftTemplateId(currentDraftId);
+        setActiveDraftTemplateName(templateName);
+        try {
+          sessionStorage.setItem('draft_template_id', String(currentDraftId));
+          sessionStorage.setItem('draft_template_name', templateName);
+        } catch (_) {}
       } else {
         // Buat template draft baru
         const res = await templateApi.saveAsUserTemplate({
@@ -249,7 +273,6 @@ export default function Builder() {
         if (newTemplate?.id) {
           setActiveDraftTemplateId(newTemplate.id);
           setActiveDraftTemplateName(templateName);
-          // Simpan juga di sessionStorage agar reload tidak kehilangan context
           try {
             sessionStorage.setItem('draft_template_id', String(newTemplate.id));
             sessionStorage.setItem('draft_template_name', templateName);
@@ -262,7 +285,7 @@ export default function Builder() {
 
       if (!silent) {
         toast.success(
-          `Draft "${templateName}" tersimpan ke Template Saya!`,
+          `Draft "${templateName}" berhasil tersimpan!`,
           'Draft Disimpan'
         );
       }
@@ -280,7 +303,8 @@ export default function Builder() {
 
   // Auto-save setiap 10 detik jika ada draft template aktif
   useEffect(() => {
-    if (activeDraftTemplateId) {
+    const activeId = activeDraftTemplateId || Number(sessionStorage.getItem('draft_template_id')) || null;
+    if (activeId) {
       autoSaveIntervalRef.current = setInterval(() => {
         saveDraftTemplate({ silent: true });
       }, 10000); // 10 detik
@@ -291,23 +315,14 @@ export default function Builder() {
     return () => clearInterval(autoSaveIntervalRef.current);
   }, [activeDraftTemplateId, saveDraftTemplate]);
 
-  // Cek sessionStorage: apakah user sebelumnya sudah punya draft template aktif
-  useEffect(() => {
-    const savedDraftId = sessionStorage.getItem('draft_template_id');
-    const savedDraftName = sessionStorage.getItem('draft_template_name');
-    if (savedDraftId && savedDraftName) {
-      setActiveDraftTemplateId(Number(savedDraftId));
-      setActiveDraftTemplateName(savedDraftName);
-    }
-  }, []);
-
   /**
    * Dipanggil saat user klik tombol "Save Draft" di Toolbar.
    * Jika belum ada draft aktif → buka modal untuk isi nama.
    * Jika sudah ada draft aktif → langsung simpan (update).
    */
   const handleSaveDraft = async () => {
-    if (activeDraftTemplateId) {
+    const activeId = activeDraftTemplateId || Number(sessionStorage.getItem('draft_template_id')) || null;
+    if (activeId) {
       // Sudah ada draft aktif → langsung auto-save
       setIsSavingDraft(true);
       try {
@@ -334,19 +349,30 @@ export default function Builder() {
   // ─────────────────────────────────────────────────────────────────────────
 
   const handleBack = () => {
+    try {
+      sessionStorage.removeItem('edit_template_id');
+      sessionStorage.removeItem('edit_template_name');
+      sessionStorage.removeItem('draft_template_id');
+      sessionStorage.removeItem('draft_template_name');
+    } catch (_) {}
     navigate(ROUTES.TEMPLATES);
   };
 
   const handleSave = async () => {
     try {
       setIsSaving(true);
-      const draftJson = useBuilderStore.getState().serializeDraftJson();
+      const currentDraftId = activeDraftTemplateId || Number(sessionStorage.getItem('draft_template_id')) || null;
 
-      await websiteApi.saveContent({ draft_json: draftJson });
-      queryClient.invalidateQueries([ROUTES.WEBSITES]);
-      toast.success('Perubahan website berhasil disimpan!', 'Disimpan');
+      if (currentDraftId) {
+        await saveDraftTemplate({ silent: false });
+      } else {
+        const draftJson = useBuilderStore.getState().serializeDraftJson();
+        await websiteApi.saveContent({ draft_json: draftJson });
+        queryClient.invalidateQueries([ROUTES.WEBSITES]);
+        toast.success('Perubahan website berhasil disimpan!', 'Disimpan');
+      }
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Gagal menyimpan perubahan website.', 'Error');
+      toast.error(err.response?.data?.message || 'Gagal menyimpan perubahan.', 'Error');
     } finally {
       setIsSaving(false);
     }
@@ -462,6 +488,7 @@ export default function Builder() {
             onPublish={handleOpenPublishModal}
             onSaveAsTemplate={() => setIsSaveAsTemplateOpen(true)}
             onSaveDraft={handleSaveDraft}
+            isEditing={!!(activeDraftTemplateId || sessionStorage.getItem('draft_template_id'))}
             isSaving={isSaving}
             isPublishing={isPublishing}
             isSavingDraft={isSavingDraft}
