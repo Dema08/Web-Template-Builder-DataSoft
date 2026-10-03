@@ -32,6 +32,7 @@ import {
             BillingPage,
             Onboarding,
             TemplateGalleryPage,
+            PublicSitePage,
         } from './pages';
 import { ProtectedRoute, GuestRoute } from './guards';
 import { ROUTES } from '@constants';
@@ -54,6 +55,9 @@ export default function AppRouter() {
                 <Routes>
                     {/* Public Landing Page — accessible to everyone */}
                 <Route path="/" element={<LandingPage />} />
+
+                {/* Public Site Viewer — renders a user's published website by slug */}
+                <Route path="/public/site" element={<PublicSitePage />} />
 
                 {/* Public Template Gallery — accessible to everyone */}
                 <Route path={ROUTES.TEMPLATE_GALLERY} element={<TemplateGalleryPage />} />

@@ -41,3 +41,6 @@ export const Dashboard = lazy(() => import('@features/user/pages/Dashboard'));
 
 // Public Landing Page
 export const LandingPage = lazy(() => import('@features/publish/pages/LandingPage'));
+
+// Public Site Viewer (published user website)
+export const PublicSitePage = lazy(() => import('@features/publish/pages/PublicSitePage'));

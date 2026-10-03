@@ -46,17 +46,30 @@ class PublicSiteController extends BaseController
             $siteName = $website->name;
             $siteSubdomain = $website->slug;
             
-            $html = $website->published_json['html'] ?? $website->draft_json['html'] ?? "<h1>Selamat Datang di {$siteName}</h1>";
-            $css = $website->published_json['css'] ?? $website->draft_json['css'] ?? "h1 { color: {$brandColor}; }";
+            $publishedJson = $website->published_json ?? $website->draft_json ?? [];
+            
+            // Handle both structure formats: { sections: [...] } or direct section array [...]
+            $sections = [];
+            if (is_array($publishedJson)) {
+                if (isset($publishedJson['sections']) && is_array($publishedJson['sections'])) {
+                    $sections = $publishedJson['sections'];
+                } elseif (isset($publishedJson[0]['type']) || isset($publishedJson[0]['id'])) {
+                    $sections = $publishedJson;
+                }
+            }
+
+            $html = $publishedJson['html'] ?? "<h1>Selamat Datang di {$siteName}</h1>";
+            $css  = $publishedJson['css']  ?? "h1 { color: {$brandColor}; }";
 
             return $this->success([
-                'site_name' => $siteName,
-                'subdomain' => $siteSubdomain,
+                'site_name'   => $siteName,
+                'subdomain'   => $siteSubdomain,
                 'brand_badge' => $brandBadge,
                 'brand_color' => $brandColor,
                 'logo_url'    => $website->logo ? Storage::url($website->logo) : $logoUrl,
-                'html' => $html,
-                'css'  => $css,
+                'sections'    => $sections,
+                'html'        => $html,
+                'css'         => $css,
             ], 'Public site data retrieved');
         }
 
