@@ -1,4 +1,4 @@
-    import { useState } from 'react';
+import { useState } from 'react';
 import { NavLink, Outlet, Link, useLocation } from 'react-router-dom';
 import {
     Search,
@@ -20,6 +20,8 @@ import {
     CreditCard,
     DollarSign,
     LayoutTemplate,
+    Menu,
+    X,
 } from 'lucide-react';
 import { useAuth } from '@hooks';
 import { ROUTES } from '@constants';
@@ -31,6 +33,7 @@ export default function AppLayout() {
     const { user, logout, isLoggingOut } = useAuth();
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const location = useLocation();
 
     const isAdmin = user?.role === 'admin';
@@ -68,7 +71,7 @@ export default function AppLayout() {
     return (
         <div className="h-screen overflow-hidden bg-[rgb(var(--color-surface))] text-[rgb(var(--color-text-primary))] font-sans selection:bg-indigo-600 selection:text-white transition-colors duration-300">
             <div className="flex h-screen">
-                {/* Collapsible Left Sidebar */}
+                {/* Collapsible Desktop Left Sidebar */}
                 <aside
                     className={`sticky top-0 hidden h-screen flex-col border-r border-[rgb(var(--color-border))] bg-[rgb(var(--color-sidebar))] transition-all duration-300 ease-out lg:flex shrink-0 z-20 ${
                         isSidebarCollapsed ? 'w-20' : 'w-72'
@@ -97,7 +100,7 @@ export default function AppLayout() {
 
                         {!isSidebarCollapsed && (
                             <div className="min-w-0 flex-1">
-                                <div className="text-[15px] font-extrabold tracking-tight">{brand_name}</div>
+                                <div className="text-[15px] font-extrabold tracking-tight truncate">{brand_name}</div>
                                 <div
                                     className="text-[10px] font-bold uppercase tracking-[0.18em]"
                                     style={{ color: brand_color }}
@@ -157,21 +160,135 @@ export default function AppLayout() {
                     </div>
                 </aside>
 
+                {/* Mobile Drawer Overlay */}
+                {isMobileMenuOpen && (
+                    <div className="fixed inset-0 z-50 lg:hidden">
+                        <div
+                            className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity"
+                            onClick={() => setIsMobileMenuOpen(false)}
+                        />
+                        <aside className="fixed inset-y-0 left-0 w-4/5 max-w-xs bg-[rgb(var(--color-sidebar))] border-r border-[rgb(var(--color-border))] flex flex-col p-4 z-50 shadow-2xl transition duration-300">
+                            {/* Drawer Header */}
+                            <div className="flex items-center justify-between pb-4 border-b border-[rgb(var(--color-border-soft))]">
+                                <div className="flex items-center gap-3 min-w-0">
+                                    <img
+                                        src={logo_path || '/images/microdata-emblem.png'}
+                                        alt={brand_name || 'Microdata'}
+                                        className="h-8 w-auto object-contain shrink-0"
+                                        onError={(e) => {
+                                            e.target.src = '/images/microdata-emblem.png';
+                                        }}
+                                    />
+                                    <div className="min-w-0 flex-1">
+                                        <div className="text-sm font-extrabold tracking-tight truncate">{brand_name || 'Microdata'}</div>
+                                        <div
+                                            className="text-[10px] font-bold uppercase tracking-wider"
+                                            style={{ color: brand_color || '#2563eb' }}
+                                        >
+                                            {isAdmin ? 'Admin Panel' : plan_label}
+                                        </div>
+                                    </div>
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    className="rounded-xl p-2 text-[rgb(var(--color-text-tertiary))] hover:bg-[rgb(var(--color-surface-alt))] transition"
+                                >
+                                    <X className="h-5 w-5" />
+                                </button>
+                            </div>
+
+                            {/* Mobile Nav Links */}
+                            <nav className="flex-1 overflow-y-auto py-4 space-y-1 ds-scrollbar-thin">
+                                {sidebarItems.map(({ label, icon: Icon, to }) => {
+                                    const isActive = location.pathname === to;
+                                    return (
+                                        <NavLink
+                                            key={label}
+                                            to={to}
+                                            onClick={() => setIsMobileMenuOpen(false)}
+                                            className={`flex items-center gap-3 rounded-xl px-4 py-3 text-xs font-bold transition-all ${
+                                                isActive
+                                                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20'
+                                                    : 'text-[rgb(var(--color-text-secondary))] hover:bg-[rgb(var(--color-surface-alt))] hover:text-[rgb(var(--color-text-primary))]'
+                                            }`}
+                                        >
+                                            <Icon className="h-4 w-4 shrink-0 stroke-[2]" />
+                                            <span>{label}</span>
+                                        </NavLink>
+                                    );
+                                })}
+                            </nav>
+
+                            {/* Mobile Bottom Actions */}
+                            <div className="space-y-2 pt-3 border-t border-[rgb(var(--color-border-soft))]">
+                                <Link
+                                    to={ROUTES.ONBOARDING}
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-3 text-xs font-extrabold text-white shadow-md shadow-indigo-600/20"
+                                >
+                                    <Sparkles className="h-4 w-4" />
+                                    <span>Create New Site</span>
+                                </Link>
+
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setIsMobileMenuOpen(false);
+                                        logout();
+                                    }}
+                                    disabled={isLoggingOut}
+                                    className="flex w-full items-center justify-center gap-2 rounded-xl border border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface))] px-4 py-2.5 text-xs font-bold text-red-600"
+                                >
+                                    <LogOut className="h-4 w-4" />
+                                    <span>{isLoggingOut ? 'Logging out...' : 'Logout'}</span>
+                                </button>
+                            </div>
+                        </aside>
+                    </div>
+                )}
+
                 {/* Main Content & Top Header Area */}
                 <main className="flex-1 flex flex-col min-w-0 overflow-y-auto bg-[rgb(var(--color-surface-alt))] transition-colors duration-300">
                     {/* Top Navbar Header */}
                     <header className="sticky top-0 z-30 flex h-20 shrink-0 items-center justify-between border-b border-[rgb(var(--color-border))] bg-[rgb(var(--color-navbar))] px-4 sm:px-6 shadow-xs transition-colors duration-300">
                         <div className="flex items-center gap-3">
+                            {/* Mobile Hamburger Drawer Button */}
+                            <button
+                                type="button"
+                                aria-label="Open mobile menu"
+                                onClick={() => setIsMobileMenuOpen(true)}
+                                className="lg:hidden rounded-xl border border-[rgb(var(--color-border))] p-2.5 text-[rgb(var(--color-text-secondary))] hover:text-indigo-600 hover:border-indigo-300 transition"
+                            >
+                                <Menu className="h-5 w-5" />
+                            </button>
+
+                            {/* Desktop Collapse Toggle */}
                             <button
                                 type="button"
                                 aria-label={isSidebarCollapsed ? 'Show sidebar' : 'Hide sidebar'}
                                 onClick={() => setIsSidebarCollapsed((value) => !value)}
-                                className="rounded-full border border-[rgb(var(--color-border))] p-2 text-[rgb(var(--color-text-secondary))] transition hover:border-indigo-300 hover:text-indigo-600"
+                                className="hidden lg:flex rounded-full border border-[rgb(var(--color-border))] p-2 text-[rgb(var(--color-text-secondary))] transition hover:border-indigo-300 hover:text-indigo-600"
                             >
                                 {isSidebarCollapsed ? <PanelLeftOpen className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
                             </button>
 
-                            {/* Breadcrumb */}
+                            {/* Mobile Brand emblem */}
+                            <div className="flex items-center gap-2 lg:hidden">
+                                <img
+                                    src={logo_path || '/images/microdata-emblem.png'}
+                                    alt={brand_name || 'Microdata'}
+                                    className="h-7 w-auto object-contain"
+                                    onError={(e) => {
+                                        e.target.src = '/images/microdata-emblem.png';
+                                    }}
+                                />
+                                <span className="text-sm font-extrabold text-[rgb(var(--color-text-primary))] truncate max-w-[120px] sm:max-w-none">
+                                    {brand_name}
+                                </span>
+                            </div>
+
+                            {/* Desktop Breadcrumb */}
                             <nav className="hidden items-center gap-1.5 text-xs text-[rgb(var(--color-text-tertiary))] sm:flex">
                                 <Home className="h-3.5 w-3.5" />
                                 <span>/{location.pathname.split('/').filter(Boolean).join(' / ')}</span>
@@ -179,7 +296,7 @@ export default function AppLayout() {
                         </div>
 
                         {/* Top Right Actions */}
-                        <div className="flex items-center gap-3 sm:gap-4">
+                        <div className="flex items-center gap-2 sm:gap-4">
                             {/* Search bar */}
                             <div className="hidden sm:flex items-center gap-2.5 rounded-full border border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface-alt))] px-3.5 py-2 text-xs text-[rgb(var(--color-text-secondary))] focus-within:ring-2 focus-within:ring-indigo-600/20 focus-within:border-indigo-600 transition">
                                 <Search className="h-4 w-4 text-[rgb(var(--color-text-tertiary))] shrink-0" />
@@ -204,7 +321,7 @@ export default function AppLayout() {
                                 <button
                                     type="button"
                                     onClick={() => setUserMenuOpen(!userMenuOpen)}
-                                    className="flex items-center gap-3 rounded-full bg-[rgb(var(--color-surface))] px-2.5 py-1.5 shadow-xs ring-1 ring-[rgb(var(--color-border))] transition hover:ring-indigo-300 focus:outline-none"
+                                    className="flex items-center gap-2 sm:gap-3 rounded-full bg-[rgb(var(--color-surface))] p-1 sm:px-2.5 sm:py-1.5 shadow-xs ring-1 ring-[rgb(var(--color-border))] transition hover:ring-indigo-300 focus:outline-none"
                                 >
                                     <img
                                         src={profileAvatar || profileAvatarFallback}
@@ -273,10 +390,10 @@ export default function AppLayout() {
                         </div>
 
                         {/* App Footer */}
-                        <footer className="mt-12 border-t border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface))] px-8 py-6 flex flex-col sm:flex-row items-center justify-between text-xs text-[rgb(var(--color-text-secondary))] gap-4 transition-colors duration-300">
-                            <div className="flex items-center gap-2">
+                        <footer className="mt-12 border-t border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface))] px-4 sm:px-8 py-6 flex flex-col sm:flex-row items-center justify-between text-xs text-[rgb(var(--color-text-secondary))] gap-4 transition-colors duration-300">
+                            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 text-center sm:text-left">
                                 <span className="font-extrabold text-[rgb(var(--color-text-primary))]">{brand_name || 'Microdata'} Profile Builder</span>
-                                <span>•</span>
+                                <span className="hidden sm:inline">•</span>
                                 <span>© 2026 PT Microdata. All rights reserved.</span>
                             </div>
                             <a
