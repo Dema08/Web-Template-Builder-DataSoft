@@ -124,9 +124,12 @@ export default function UserDashboard() {
                                 >
                                     <div className="flex items-start justify-between gap-2">
                                         <div className="flex-1 min-w-0">
-                                            <p className="text-sm font-extrabold text-[rgb(var(--color-text-primary))] truncate group-hover:text-indigo-600 transition">
+                                            <Link
+                                                to={`${ROUTES.BUILDER}?website_id=${site.id}`}
+                                                className="text-sm font-extrabold text-[rgb(var(--color-text-primary))] truncate hover:text-indigo-600 transition block"
+                                            >
                                                 {site.name}
-                                            </p>
+                                            </Link>
                                             <p className="text-[11px] text-indigo-600 font-medium mt-0.5 flex items-center gap-1 truncate">
                                                 <Globe className="h-3 w-3 shrink-0" />
                                                 <span className="truncate">{slug}.{rootDomain}</span>

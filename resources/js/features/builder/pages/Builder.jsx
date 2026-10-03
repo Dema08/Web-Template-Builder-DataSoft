@@ -242,18 +242,40 @@ export default function Builder() {
           const site = await websiteApi.getWebsite();
           if (site && isMounted) {
             setWebsiteInfo(site);
+            if (site.name) {
+              setTemplateName(site.name);
+            }
             const currentWebsiteId = new URLSearchParams(window.location.search).get('website_id');
             if (site.id && !currentWebsiteId) {
               window.history.replaceState(null, '', `${ROUTES.BUILDER}?website_id=${site.id}`);
             }
           }
           const res = await websiteApi.getContent();
-          const content = res.data?.data ?? res.data;
+          const content = res.data?.data ?? res.data ?? site?.draft_json ?? site?.published_json;
 
           if (content && isMounted) {
-            const savedSections = content.sections || content.draft_json?.sections || content.published_json?.sections;
-            if (savedSections && Array.isArray(savedSections) && savedSections.length > 0) {
-              loadSections(savedSections);
+            let sectionsToLoad = [];
+            let pagesToLoad = {};
+
+            if (Array.isArray(content)) {
+              sectionsToLoad = content;
+            } else if (content && typeof content === 'object') {
+              if (Array.isArray(content.sections)) {
+                sectionsToLoad = content.sections;
+              } else if (Array.isArray(content.draft_json?.sections)) {
+                sectionsToLoad = content.draft_json.sections;
+              } else if (Array.isArray(content.published_json?.sections)) {
+                sectionsToLoad = content.published_json.sections;
+              } else if (Array.isArray(content.draft_json)) {
+                sectionsToLoad = content.draft_json;
+              } else if (Array.isArray(content.published_json)) {
+                sectionsToLoad = content.published_json;
+              }
+              if (content.pages) pagesToLoad = content.pages;
+            }
+
+            if (sectionsToLoad.length > 0) {
+              loadSections(sectionsToLoad, pagesToLoad);
             }
           }
         } catch (_err) {

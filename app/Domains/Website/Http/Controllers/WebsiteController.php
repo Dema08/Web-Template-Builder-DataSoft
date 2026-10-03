@@ -111,9 +111,14 @@ class WebsiteController extends BaseController
     {
         $website = $this->findUserWebsite($request);
 
-        if ($website && ($website->draft_json || $website->published_json)) {
+        if ($website) {
             $content = $website->draft_json ?? $website->published_json;
-            return $this->success($content, 'Website content retrieved');
+            if (!$content && $website->template) {
+                $content = $website->template->published_json ?? $website->template->draft_json;
+            }
+            if ($content) {
+                return $this->success($content, 'Website content retrieved');
+            }
         }
 
         return $this->success(null, 'No saved content found');
