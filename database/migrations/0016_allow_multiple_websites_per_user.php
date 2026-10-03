@@ -9,16 +9,22 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('website', function (Blueprint $table) {
-            $table->dropUnique(['user_id']);
-            $table->index('user_id');
+            $table->index('user_id', 'website_user_id_index');
+        });
+
+        Schema::table('website', function (Blueprint $table) {
+            $table->dropUnique('website_user_id_unique');
         });
     }
 
     public function down(): void
     {
         Schema::table('website', function (Blueprint $table) {
-            $table->dropIndex(['user_id']);
-            $table->unique('user_id');
+            $table->unique('user_id', 'website_user_id_unique');
+        });
+
+        Schema::table('website', function (Blueprint $table) {
+            $table->dropIndex('website_user_id_index');
         });
     }
 };
