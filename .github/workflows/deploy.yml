@@ -27,15 +27,6 @@ jobs:
           node-version: '24'
           cache: npm
 
-      - name: Install Composer dependencies
-        run: composer install --no-dev --prefer-dist --optimize-autoloader
-
-      - name: Install NPM dependencies
-        run: npm ci
-
-      - name: Build frontend
-        run: npm run build
-
       - name: Create production environment
         env:
           APP_KEY: ${{ secrets.APP_KEY }}
@@ -101,6 +92,15 @@ jobs:
           VITE_APP_NAME="\${APP_NAME}"
           EOF
 
+      - name: Install Composer dependencies
+        run: composer install --no-dev --prefer-dist --optimize-autoloader --no-scripts
+
+      - name: Install NPM dependencies
+        run: npm ci
+
+      - name: Build frontend
+        run: npm run build
+
       - name: Prepare deployment structure
         run: |
           rm -rf deploy
@@ -135,26 +135,19 @@ jobs:
 
               RewriteEngine On
 
-              # Block sensitive Laravel directories
               RewriteRule ^(?:app|bootstrap|config|database|resources|routes|storage|vendor)(?:/|$) - [F,L]
-
-              # Block environment and Git files
               RewriteRule ^(?:\.env|\.git)(?:/|$) - [F,L]
 
-              # Handle Authorization Header
               RewriteCond %{HTTP:Authorization} .
               RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-              # Handle X-XSRF-Token Header
               RewriteCond %{HTTP:x-xsrf-token} .
               RewriteRule .* - [E=HTTP_X_XSRF_TOKEN:%{HTTP:X-XSRF-Token}]
 
-              # Redirect Trailing Slashes If Not A Folder
               RewriteCond %{REQUEST_FILENAME} !-d
               RewriteCond %{REQUEST_URI} (.+)/$
               RewriteRule ^ %1 [L,R=301]
 
-              # Send Requests To Front Controller
               RewriteCond %{REQUEST_FILENAME} !-d
               RewriteCond %{REQUEST_FILENAME} !-f
               RewriteRule ^ index.php [L]
@@ -188,6 +181,7 @@ jobs:
           rm -rf deploy/.git
           rm -rf deploy/.github
 
+          # Copy production environment
           cp .env deploy/.env
 
       - name: Deploy application via FTP
