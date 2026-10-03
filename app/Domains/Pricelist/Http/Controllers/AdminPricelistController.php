@@ -2,6 +2,8 @@
 
 namespace App\Domains\Pricelist\Http\Controllers;
 
+use App\Domains\Billing\Enums\SubscriptionStatus;
+use App\Domains\Billing\Models\Subscription;
 use App\Domains\Pricelist\Models\Pricelist;
 use App\Domains\Pricelist\Resources\PricelistResource;
 use App\Domains\Shared\Http\Controllers\BaseController;
@@ -153,14 +155,37 @@ class AdminPricelistController extends BaseController
     public function updateUserPlan(Request $request, User $user): JsonResponse
     {
         $validated = $request->validate([
-            'paket_harga_id' => 'required|exists:paket_harga,id',
+            'paket_harga_id' => 'required|integer|exists:paket_harga,id',
         ]);
 
         $plan = Pricelist::findOrFail($validated['paket_harga_id']);
+
+        // 1. Perbarui kolom paket_harga_id pengguna
         $user->update(['paket_harga_id' => $plan->id]);
 
+        // 2. Nonaktifkan subscription aktif sebelumnya jika ada
+        Subscription::where('pengguna_id', $user->id)
+            ->where(function ($query) {
+                $query->where('status', SubscriptionStatus::Active->value)
+                      ->orWhere('status', 'active');
+            })
+            ->update(['status' => SubscriptionStatus::Cancelled->value]);
+
+        // 3. Buat entri subscription baru yang aktif untuk user ini (masa berlaku 10 tahun)
+        Subscription::create([
+            'pengguna_id'   => $user->id,
+            'paket_harga_id' => $plan->id,
+            'status'        => SubscriptionStatus::Active->value,
+            'started_at'    => now(),
+            'expired_at'    => now()->addYears(10),
+            'auto_renew'    => false,
+        ]);
+
+        // 4. Reload user dengan relasi lengkap agar UserResource bisa di-serialize dengan benar
+        $freshUser = User::with(['pricelist', 'subscriptions.pricelist'])->find($user->id);
+
         return $this->success(
-            new UserResource($user->fresh()),
+            new UserResource($freshUser),
             "Paket pengguna {$user->name} berhasil diubah menjadi '{$plan->nama}'."
         );
     }

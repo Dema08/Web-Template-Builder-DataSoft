@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Users, Search, Shield, ShieldCheck, Edit2, Trash2, X, Check, UserCheck, Clock, CreditCard } from 'lucide-react';
 import { http } from '@api';
 import { Spinner, Alert, Card, ConfirmModal } from '@shared/components/ui';
-import { toast } from '@store';
+import { toast, useAuthStore } from '@store';
 
 export default function AdminUsers() {
     const [search, setSearch] = useState('');
@@ -78,13 +78,25 @@ export default function AdminUsers() {
     // Mutation to update user plan
     const updatePlanMutation = useMutation({
         mutationFn: async ({ userId, planId }) => {
-            const { data } = await http.patch(`/admin/users/${userId}/plan`, { paket_harga_id: planId });
+            const { data } = await http.patch(`/admin/users/${userId}/plan`, { paket_harga_id: Number(planId) });
             return data;
         },
-        onSuccess: (data) => {
+        onSuccess: (res) => {
+            const updatedUser = res?.data;
             queryClient.invalidateQueries(['admin-users']);
             queryClient.invalidateQueries(['admin-pricelists']);
-            toast.success(data?.message || 'Paket user berhasil diperbarui!', 'Paket Changed');
+            queryClient.invalidateQueries(['current-user']);
+            queryClient.invalidateQueries(['user']);
+            queryClient.invalidateQueries(['billing-current']);
+            queryClient.invalidateQueries(['website-quota']);
+
+            // Sync current user state if admin edited their own account
+            const currentUser = useAuthStore.getState().user;
+            if (currentUser && updatedUser && (currentUser.id === updatedUser.id || String(currentUser.id) === String(updatedUser.id))) {
+                useAuthStore.getState().setUser({ ...currentUser, ...updatedUser });
+            }
+
+            toast.success(res?.message || 'Paket user berhasil diperbarui!', 'Paket Changed');
             setIsPlanModalOpen(false);
             setSelectedUser(null);
         },
@@ -120,7 +132,7 @@ export default function AdminUsers() {
 
     const handleOpenEditPlan = (user) => {
         setSelectedUser(user);
-        setSelectedPlanId(user.plan?.id || pricelists?.[0]?.id || '');
+        setSelectedPlanId(String(user.plan?.id || pricelists?.[0]?.id || ''));
         setIsPlanModalOpen(true);
     };
 
@@ -309,12 +321,7 @@ export default function AdminUsers() {
 
                                             {/* Paket Harga Badge */}
                                             <td className="py-4 px-6">
-                                                {isAdmin ? (
-                                                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-extrabold bg-indigo-100 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 shadow-2xs">
-                                                        <ShieldCheck className="h-3.5 w-3.5 text-indigo-600 dark:text-indigo-400" />
-                                                        Akses Admin (Unlimited)
-                                                    </span>
-                                                ) : (
+                                                <div className="flex flex-col items-start gap-1">
                                                     <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-extrabold ${
                                                         isFreePlan
                                                             ? 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
@@ -323,7 +330,12 @@ export default function AdminUsers() {
                                                         <CreditCard className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
                                                         {planName}
                                                     </span>
-                                                )}
+                                                    {isAdmin && (
+                                                        <span className="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 flex items-center gap-1">
+                                                            <ShieldCheck className="h-3 w-3" /> Akses Admin (Unlimited)
+                                                        </span>
+                                                    )}
+                                                </div>
                                             </td>
 
                                             <td className="py-4 px-6">

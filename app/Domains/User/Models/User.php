@@ -121,8 +121,35 @@ class User extends Authenticatable
      */
     public function activeSubscription(): ?\App\Domains\Billing\Models\Subscription
     {
+        if ($this->relationLoaded('subscriptions')) {
+            $active = $this->subscriptions
+                ->filter(function ($sub) {
+                    $statusValue = $sub->status instanceof \App\Domains\Billing\Enums\SubscriptionStatus
+                        ? $sub->status->value
+                        : (string) $sub->status;
+
+                    $isActiveStatus = strtolower($statusValue) === 'active';
+                    $notExpired = $sub->expired_at === null || \Illuminate\Support\Carbon::parse($sub->expired_at)->isFuture();
+
+                    return $isActiveStatus && $notExpired;
+                })
+                ->sortByDesc('id')
+                ->first();
+
+            if ($active) {
+                if (!$active->relationLoaded('pricelist')) {
+                    $active->load('pricelist');
+                }
+                return $active;
+            }
+        }
+
         return $this->subscriptions()
-            ->where('status', \App\Domains\Billing\Enums\SubscriptionStatus::Active)
+            ->with('pricelist')
+            ->where(function ($q) {
+                $q->where('status', \App\Domains\Billing\Enums\SubscriptionStatus::Active->value)
+                  ->orWhere('status', 'active');
+            })
             ->where(function ($query) {
                 $query->whereNull('expired_at')->orWhere('expired_at', '>', now());
             })
@@ -136,18 +163,37 @@ class User extends Authenticatable
     }
 
     /**
-     * Ambil paket langganan aktif, atau batasi ke paket Free jika tidak aktif.
+     * Ambil paket langganan efektif pengguna.
+     * Prioritas:
+     * 1. Langganan aktif (activeSubscription) dari transaksi/pembayaran pengguna.
+     * 2. Paket yang ditetapkan langsung pada akun pengguna ($this->pricelist via paket_harga_id).
+     * 3. Fallback ke paket default atau paket free.
      */
     public function getEffectivePricelistAttribute(): \App\Domains\Pricelist\Models\Pricelist
     {
         $subscription = $this->activeSubscription();
-        $subscriptionPlan = $subscription?->pricelist;
-
-        if ($subscriptionPlan) {
-            return $subscriptionPlan;
+        if ($subscription) {
+            if (!$subscription->relationLoaded('pricelist')) {
+                $subscription->load('pricelist');
+            }
+            if ($subscription->pricelist) {
+                return $subscription->pricelist;
+            }
         }
 
-        return \App\Domains\Pricelist\Models\Pricelist::where('slug', 'free')->first()
+        if ($this->paket_harga_id) {
+            $plan = \App\Domains\Pricelist\Models\Pricelist::find($this->paket_harga_id);
+            if ($plan) {
+                return $plan;
+            }
+        }
+
+        if ($this->relationLoaded('pricelist') && $this->pricelist) {
+            return $this->pricelist;
+        }
+
+        return \App\Domains\Pricelist\Models\Pricelist::where('is_default', true)->first()
+            ?? \App\Domains\Pricelist\Models\Pricelist::where('slug', 'free')->first()
             ?? new \App\Domains\Pricelist\Models\Pricelist([
                 'slug' => 'free',
                 'nama' => 'Free',
