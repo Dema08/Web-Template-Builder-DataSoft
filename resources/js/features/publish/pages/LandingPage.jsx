@@ -1431,44 +1431,7 @@ export default function LandingPage({ liveContent }) {
             ════════════════════════════════════════════════════ */}
             <StatsSection />
 
-            {/* ════════════════════════════════════════════════════
-                TESTIMONIALS
-            ════════════════════════════════════════════════════ */}
-            <section className="py-20 sm:py-28 bg-white">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="text-center mb-12">
-                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold mb-4 border"
-                            style={{ background: 'rgba(79,70,229,0.06)', borderColor: 'rgba(79,70,229,0.18)', color: '#4f46e5' }}>
-                            <Star className="h-3 w-3 fill-current text-amber-400 animate-pulse" /> Testimonials
-                        </div>
-                        <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-                            Loved by Businesses Everywhere
-                        </h2>
-                    </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {TESTIMONIALS.map((t, i) => (
-                            <div key={i}
-                                className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm ds-hover-lift ds-hover-glow transition-all duration-300">
-                                <Quote className="h-8 w-8 text-indigo-200 mb-3" />
-                                <p className="text-sm text-slate-600 leading-relaxed mb-5">"{t.review}"</p>
-                                <div className="flex items-center gap-3 pt-4 border-t border-slate-100">
-                                    <img src={t.avatar} alt={t.name} className="w-10 h-10 rounded-full object-cover shadow-sm" />
-                                    <div className="flex-1">
-                                        <p className="text-sm font-extrabold text-slate-900">{t.name}</p>
-                                        <p className="text-xs text-slate-500">{t.role}</p>
-                                    </div>
-                                    <div className="flex gap-0.5">
-                                        {[...Array(t.rating)].map((_, j) => (
-                                            <Star key={j} className="h-3.5 w-3.5 text-amber-400 fill-amber-400" />
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
 
             {/* ════════════════════════════════════════════════════
                 PRICING (With Rotation Entrance & Premium Hover)
