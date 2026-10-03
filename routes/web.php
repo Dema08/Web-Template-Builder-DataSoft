@@ -4,22 +4,25 @@ use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes — React SPA Entry Point
+| Web Routes — React SPA Entry Point & Storage Asset Streaming
 |--------------------------------------------------------------------------
 |
-| All web routes fall through to the root Blade view (`welcome.blade.php`),
-| which mounts the React Single Page Application (resources/js/app.jsx).
-| All backend data interactions are handled via `/api/v1/*` (routes/api.php).
-|
-| Maintenance mode protection for data & API requests is enforced by
-| the `maintenance` middleware on protected `/api/v1/*` routes. Non-admin
-| users receive 503 JSON responses which the Axios interceptor handles by
-| displaying a clean maintenance alert on the login screen.
+| Serve uploaded storage files (avatars, logos, thumbnails) dynamically
+| from storage/app/public, supporting servers without symlink permissions.
 |
 */
 
+Route::get('/storage/{path}', function (string $path) {
+    $filePath = storage_path('app/public/' . ltrim($path, '/'));
+    if (!file_exists($filePath) || is_dir($filePath)) {
+        abort(404);
+    }
+    $mimeType = mime_content_type($filePath) ?: 'application/octet-stream';
+    return response()->file($filePath, [
+        'Content-Type' => $mimeType,
+        'Cache-Control' => 'public, max-age=86400',
+    ]);
+})->where('path', '.*');
 
 Route::get('/{any?}', fn () => view('welcome'))->where('any', '.*');
 Route::post('/login', fn () => redirect('/login'));
-
-

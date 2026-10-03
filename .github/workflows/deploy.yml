@@ -138,7 +138,7 @@ jobs:
 
               RewriteEngine On
 
-              RewriteRule ^(?:app|bootstrap|config|database|resources|routes|storage|vendor)(?:/|$) - [F,L]
+              RewriteRule ^(?:app|bootstrap|config|database|resources|routes|vendor)(?:/|$) - [F,L]
               RewriteRule ^(?:\.env|\.git)(?:/|$) - [F,L]
 
               RewriteCond %{HTTP:Authorization} .
