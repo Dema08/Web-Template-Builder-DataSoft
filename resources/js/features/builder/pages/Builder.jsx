@@ -57,22 +57,13 @@ export default function Builder() {
       try {
         setIsLoadingContent(true);
 
-        // Fetch website metadata first
-        try {
-          const site = await websiteApi.getWebsite();
-          if (site && isMounted) {
-            setWebsiteInfo(site);
-          }
-        } catch (_siteErr) {
-          // ignore
-        }
-
         // 1. Check if user came from Templates page with a pending template selection
         const editTemplateId = sessionStorage.getItem('edit_template_id') || sessionStorage.getItem('draft_template_id');
         const editTemplateName = sessionStorage.getItem('edit_template_name') || sessionStorage.getItem('draft_template_name');
         const pendingTemplateId = sessionStorage.getItem('pending_template_id');
         const pendingTemplateName = sessionStorage.getItem('pending_template_name');
         const blankMode = sessionStorage.getItem('blank_template_mode');
+        const urlWebsiteId = new URLSearchParams(window.location.search).get('website_id');
 
         // ─── MODE: Edit User Draft Template (dari My Templates → Edit Builder) ───
         // Langsung update template yang ada, TANPA membuat template baru (mencegah duplikasi)
@@ -236,17 +227,16 @@ export default function Builder() {
           }
         }
 
-        // 2. Fetch existing user website content
+        // 2. Fetch existing user website content (only when not creating new template)
         try {
-          const site = await websiteApi.getWebsite();
+          const site = await websiteApi.getWebsite(urlWebsiteId);
           if (site && isMounted) {
             setWebsiteInfo(site);
-            const currentWebsiteId = new URLSearchParams(window.location.search).get('website_id');
-            if (site.id && !currentWebsiteId) {
+            if (site.id && !urlWebsiteId) {
               window.history.replaceState(null, '', `${ROUTES.BUILDER}?website_id=${site.id}`);
             }
           }
-          const res = await websiteApi.getContent();
+          const res = await websiteApi.getContent(urlWebsiteId || site?.id);
           const content = res.data?.data ?? res.data;
 
           if (content && isMounted) {
@@ -406,7 +396,8 @@ export default function Builder() {
         await saveDraftTemplate({ silent: false });
       } else {
         const draftJson = useBuilderStore.getState().serializeDraftJson();
-        await websiteApi.saveContent({ draft_json: draftJson });
+        const currentWebsiteId = websiteInfo?.id || new URLSearchParams(window.location.search).get('website_id');
+        await websiteApi.saveContent({ draft_json: draftJson, website_id: currentWebsiteId }, currentWebsiteId);
         queryClient.invalidateQueries([ROUTES.WEBSITES]);
         toast.success('Perubahan website berhasil disimpan!', 'Disimpan');
       }
@@ -420,7 +411,8 @@ export default function Builder() {
   const handleOpenPublishModal = async () => {
     setPublishResult(null);
     try {
-      const site = await websiteApi.getWebsite();
+      const currentWebsiteId = websiteInfo?.id || new URLSearchParams(window.location.search).get('website_id');
+      const site = await websiteApi.getWebsite(currentWebsiteId);
       if (site) setWebsiteInfo(site);
     } catch (_e) {
       // ignore
@@ -432,12 +424,13 @@ export default function Builder() {
     try {
       setIsPublishing(true);
       const draftJson = useBuilderStore.getState().serializeDraftJson();
+      const currentWebsiteId = websiteInfo?.id || new URLSearchParams(window.location.search).get('website_id');
 
       // 1. Save current canvas draft
-      await websiteApi.saveContent({ draft_json: draftJson });
+      await websiteApi.saveContent({ draft_json: draftJson, website_id: currentWebsiteId }, currentWebsiteId);
 
       // 2. Execute publish with domain settings
-      const res = await websiteApi.publish(domainConfig);
+      const res = await websiteApi.publish({ ...domainConfig, website_id: currentWebsiteId }, currentWebsiteId);
       const pubData = res?.data ?? res;
 
       setPublishResult(pubData);
@@ -561,6 +554,7 @@ export default function Builder() {
         initialSlug={websiteInfo?.slug || ''}
         initialCustomDomain={websiteInfo?.settings?.custom_domain || ''}
         initialDomainType={websiteInfo?.settings?.domain_type || 'subdomain'}
+        websiteId={websiteInfo?.id || new URLSearchParams(window.location.search).get('website_id')}
         isPublishing={isPublishing}
         publishResult={publishResult}
       />
