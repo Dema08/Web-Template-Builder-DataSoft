@@ -86,9 +86,12 @@ export default function Profile() {
         }
     };
 
-    const handleAvatarChange = (e) => {
+    const handleAvatarChange = async (e) => {
         const file = e.target.files?.[0];
         if (!file) return;
+
+        // Reset input so same file can be re-selected
+        e.target.value = '';
 
         if (!file.type.startsWith('image/')) {
             setStatusMessage('Silakan pilih file gambar yang valid.');
@@ -96,17 +99,37 @@ export default function Profile() {
             return;
         }
 
+        // Show local preview immediately while uploading
         const reader = new FileReader();
-        reader.onload = (ev) => {
-            setAvatarPreview(ev.target.result);
-            uploadAvatar(file);
-        };
+        reader.onload = (ev) => setAvatarPreview(ev.target.result);
         reader.readAsDataURL(file);
+
+        try {
+            const updatedUser = await uploadAvatar(file);
+            // Replace preview with the actual server-stored URL
+            if (updatedUser?.avatar) {
+                setAvatarPreview(updatedUser.avatar);
+            }
+            setStatusMessage('Foto profil berhasil diperbarui.');
+            setStatusVariant('success');
+        } catch {
+            // Revert preview to last saved avatar on error
+            setAvatarPreview(profile?.avatar || null);
+            setStatusMessage('Gagal mengunggah foto profil. Silakan coba lagi.');
+            setStatusVariant('error');
+        }
     };
 
-    const handleDeleteAvatar = () => {
-        setAvatarPreview(null);
-        deleteAvatar();
+    const handleDeleteAvatar = async () => {
+        try {
+            await deleteAvatar();
+            setAvatarPreview(null);
+            setStatusMessage('Foto profil berhasil dihapus.');
+            setStatusVariant('success');
+        } catch {
+            setStatusMessage('Gagal menghapus foto profil.');
+            setStatusVariant('error');
+        }
     };
 
     return (

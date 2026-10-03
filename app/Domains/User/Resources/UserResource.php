@@ -24,9 +24,15 @@ class UserResource extends JsonResource
         /** @var User $user */
         $user = $this->resource;
 
-        $avatar = $user->avatar
-            ? '/storage/' . ltrim($user->avatar, '/')
-            : null;
+        $avatar = null;
+        if ($user->avatar) {
+            if (str_starts_with($user->avatar, 'http://') || str_starts_with($user->avatar, 'https://') || str_starts_with($user->avatar, 'data:image')) {
+                $avatar = $user->avatar;
+            } else {
+                $cleanPath = ltrim($user->avatar, '/');
+                $avatar = url('storage/' . $cleanPath);
+            }
+        }
 
         $effectivePlan = $user->effective_pricelist;
 

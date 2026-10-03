@@ -49,8 +49,27 @@ class UserService extends BaseService
             Storage::disk('public')->delete($avatarPath);
         }
 
-        $filename = Str::uuid().'.'.$avatar->getClientOriginalExtension();
+        if ($avatarPath) {
+            $publicOldFile = public_path('storage/' . ltrim($avatarPath, '/'));
+            if (file_exists($publicOldFile)) {
+                @unlink($publicOldFile);
+            }
+        }
+
+        $extension = strtolower($avatar->getClientOriginalExtension() ?: 'jpg');
+        $filename = Str::uuid() . '.' . $extension;
         $storedPath = $avatar->storeAs('avatars', $filename, 'public');
+
+        // Dual-write to public_path/storage/avatars for instant web server static file delivery
+        try {
+            $publicDir = public_path('storage/avatars');
+            if (!file_exists($publicDir)) {
+                @mkdir($publicDir, 0755, true);
+            }
+            @copy(storage_path('app/public/' . $storedPath), $publicDir . '/' . $filename);
+        } catch (\Throwable $e) {
+            // Ignore if directory creation is restricted
+        }
 
         $user->update([
             'avatar' => $storedPath,
@@ -61,8 +80,14 @@ class UserService extends BaseService
 
     public function deleteAvatar(User $user): User
     {
-        if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
-            Storage::disk('public')->delete($user->avatar);
+        if ($user->avatar) {
+            if (Storage::disk('public')->exists($user->avatar)) {
+                Storage::disk('public')->delete($user->avatar);
+            }
+            $publicFile = public_path('storage/' . ltrim($user->avatar, '/'));
+            if (file_exists($publicFile)) {
+                @unlink($publicFile);
+            }
         }
 
         $user->update([
