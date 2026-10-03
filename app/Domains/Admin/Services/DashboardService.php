@@ -27,7 +27,8 @@ class DashboardService extends BaseService
         $startDateParam = request()->query('start_date', '');
         $endDateParam = request()->query('end_date', '');
 
-        $cacheKey = "dashboard:{$user->id}:{$range}:{$startDateParam}:{$endDateParam}:" . ($forceAdmin ? 'admin' : 'user');
+        $websiteIdParam = request()->query('website_id', '');
+        $cacheKey = "dashboard:{$user->id}:{$range}:{$startDateParam}:{$endDateParam}:{$websiteIdParam}:" . ($forceAdmin ? 'admin' : 'user');
 
         return Cache::remember($cacheKey, 5, function () use ($user, $range, $startDateParam, $endDateParam, $forceAdmin) {
             // Admin-specific dashboard metrics (only for admin endpoints or explicit forceAdmin)
@@ -117,7 +118,7 @@ class DashboardService extends BaseService
 
             // Standard user dashboard metrics
             $websites = Website::select([
-                'id', 'user_id', 'category_id', 'template_id', 'name', 'slug', 'status', 'published_at', 'created_at', 'updated_at'
+                'id', 'user_id', 'category_id', 'template_id', 'name', 'slug', 'status', 'settings', 'published_at', 'created_at', 'updated_at'
             ])->where('user_id', $user->id)->with('template')->get();
             $websitesFormatted = [];
             $totalViews = 0;
@@ -135,8 +136,19 @@ class DashboardService extends BaseService
                 ];
             }
 
-            $primaryWebsite = $websites->first();
-            if ($primaryWebsite) {
+            // Only published websites are tracked for visitor analytics
+            $publishedWebsites = $websites->filter(fn($w) => $w->status === 'published');
+            $requestedWebsiteId = request()->query('website_id');
+
+            $targetWebsite = null;
+            if ($requestedWebsiteId) {
+                $targetWebsite = $publishedWebsites->firstWhere('id', (int) $requestedWebsiteId);
+            }
+            if (!$targetWebsite) {
+                $targetWebsite = $publishedWebsites->first();
+            }
+
+            if ($targetWebsite) {
                 $startDate = null;
                 $endDate = now()->endOfDay();
 
@@ -172,11 +184,11 @@ class DashboardService extends BaseService
                     $startDate = $endDate->copy()->subDays(90)->startOfDay();
                 }
 
-                $totalViews = $primaryWebsite->views()
+                $totalViews = $targetWebsite->views()
                     ->whereBetween('created_at', [$startDate, $endDate])
                     ->count();
 
-                $uniqueVisitors = $primaryWebsite->views()
+                $uniqueVisitors = $targetWebsite->views()
                     ->whereBetween('created_at', [$startDate, $endDate])
                     ->distinct('ip_address')
                     ->count('ip_address');
@@ -193,7 +205,7 @@ class DashboardService extends BaseService
                     ];
                 }
 
-                $viewsQuery = $primaryWebsite->views()
+                $viewsQuery = $targetWebsite->views()
                     ->whereBetween('created_at', [$startDate, $endDate])
                     ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
                     ->groupBy('date')
@@ -214,6 +226,14 @@ class DashboardService extends BaseService
                 }
             }
 
+            $publishedWebsitesFormatted = $publishedWebsites->map(fn($w) => [
+                'id' => $w->id,
+                'name' => $w->name,
+                'domain' => ($w->settings['domain_type'] ?? '') === 'custom' && !empty($w->settings['custom_domain'])
+                    ? $w->settings['custom_domain']
+                    : ($w->slug . '.' . config('app.main_domain')),
+            ])->values()->all();
+
             return [
                 'user' => [
                     'id' => $user->id,
@@ -224,7 +244,9 @@ class DashboardService extends BaseService
                     'created_at' => $user->created_at?->toISOString(),
                 ],
                 'websites' => $websitesFormatted,
-                'website' => $primaryWebsite,
+                'published_websites' => $publishedWebsitesFormatted,
+                'selected_website_id' => $targetWebsite?->id ?? null,
+                'website' => $targetWebsite,
                 'analytics' => [
                     'total_views' => $totalViews,
                     'unique_visitors' => $uniqueVisitors,
