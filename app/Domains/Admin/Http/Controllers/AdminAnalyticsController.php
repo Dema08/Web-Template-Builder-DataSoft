@@ -14,10 +14,43 @@ class AdminAnalyticsController extends BaseController
     public function index(): JsonResponse
     {
         // 1. Real-time Server Performance Metrics (Direct OS Kernel Readings)
+        $cpuUsagePercent = null;
+        if (file_exists('/proc/stat')) {
+            $stat1 = @file_get_contents('/proc/stat');
+            usleep(50000); // 50ms sample for real-time CPU % calculation
+            $stat2 = @file_get_contents('/proc/stat');
+
+            if ($stat1 && $stat2) {
+                $lines1 = explode("\n", $stat1);
+                $lines2 = explode("\n", $stat2);
+                $cpu1 = preg_split('/\s+/', trim($lines1[0]));
+                $cpu2 = preg_split('/\s+/', trim($lines2[0]));
+
+                if (isset($cpu1[4]) && isset($cpu2[4])) {
+                    $user1 = (float)$cpu1[1] + (float)$cpu1[2];
+                    $sys1  = (float)$cpu1[3];
+                    $idle1 = (float)$cpu1[4];
+
+                    $user2 = (float)$cpu2[1] + (float)$cpu2[2];
+                    $sys2  = (float)$cpu2[3];
+                    $idle2 = (float)$cpu2[4];
+
+                    $total1 = $user1 + $sys1 + $idle1;
+                    $total2 = $user2 + $sys2 + $idle2;
+
+                    $diffTotal = $total2 - $total1;
+                    $diffIdle  = $idle2 - $idle1;
+
+                    if ($diffTotal > 0) {
+                        $cpuUsagePercent = round((($diffTotal - $diffIdle) / $diffTotal) * 100, 1);
+                    }
+                }
+            }
+        }
+
         $cpuLoad = function_exists('sys_getloadavg') ? sys_getloadavg() : [0.02, 0.05, 0.05];
         $loadAvg1Min = $cpuLoad[0] ?? 0.02;
 
-        // Detect number of CPU cores to calculate precise CPU % load
         $cores = 1;
         if (file_exists('/proc/cpuinfo')) {
             $cpuinfo = @file_get_contents('/proc/cpuinfo');
@@ -26,8 +59,12 @@ class AdminAnalyticsController extends BaseController
                 $cores = count($matchesCores[0]) ?: 1;
             }
         }
-        $rawCpuPercent = round(($loadAvg1Min / $cores) * 100, 1);
-        $cpuValue = $rawCpuPercent > 0 ? $rawCpuPercent . '%' : '< 1%';
+
+        if ($cpuUsagePercent === null) {
+            $cpuUsagePercent = round(min(($loadAvg1Min / $cores) * 100, 100), 1);
+        }
+
+        $cpuValue = $cpuUsagePercent . '%';
 
         $diskFree = @disk_free_space(base_path()) ?: (500 * 1024 * 1024 * 1024 * 0.8);
         $diskTotal = @disk_total_space(base_path()) ?: (500 * 1024 * 1024 * 1024);
