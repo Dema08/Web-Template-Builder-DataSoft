@@ -68,7 +68,7 @@ class UserTemplateController extends BaseController
      * Simpan konten builder sebagai template baru milik user.
      * POST /api/v1/my-templates
      *
-     * Body: { name, description?, draft_json, visibility, category_id? }
+     * Body: { name, description?, draft_json, visibility, category_id?, thumbnail? }
      */
     public function store(Request $request): JsonResponse
     {
@@ -79,6 +79,7 @@ class UserTemplateController extends BaseController
             'visibility'  => ['nullable', 'string', 'in:private,public'],
             'status'      => ['nullable', 'string', 'in:draft,published'],
             'category_id' => ['nullable', 'integer', 'exists:kategori_industri,id'],
+            'thumbnail'   => ['nullable', 'string', 'max:1000'],
         ], [
             'name.required'       => 'Nama template wajib diisi.',
             'draft_json.required' => 'Konten template tidak boleh kosong.',
@@ -217,6 +218,35 @@ class UserTemplateController extends BaseController
         return $this->success(
             new TemplateResource($template),
             'Template berhasil diubah menjadi private.'
+        );
+    }
+
+    /**
+     * Upload banner thumbnail untuk template milik user.
+     * POST /api/v1/my-templates/{id}/thumbnail
+     */
+    public function uploadThumbnail(Request $request, int $id): JsonResponse
+    {
+        $user     = $request->user();
+        $template = Template::findOrFail($id);
+
+        if (!$template->isOwnedBy($user->id)) {
+            return $this->error('Template tidak ditemukan atau bukan milik Anda.', 404);
+        }
+
+        $request->validate([
+            'thumbnail' => ['required', 'image', 'mimes:jpg,jpeg,png,webp,svg', 'max:5120'],
+        ], [
+            'thumbnail.required' => 'File banner wajib dipilih.',
+            'thumbnail.image'    => 'File harus berupa gambar.',
+            'thumbnail.max'      => 'Ukuran banner maksimal 5MB.',
+        ]);
+
+        $template = $this->templateService->uploadThumbnail($template, $request->file('thumbnail'));
+
+        return $this->success(
+            new TemplateResource($template),
+            'Banner thumbnail template berhasil diunggah.'
         );
     }
 }

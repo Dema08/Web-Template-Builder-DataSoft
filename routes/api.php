@@ -176,6 +176,7 @@ Route::prefix('v1')->group(function (): void {
             Route::get('/{id}', [App\Domains\Template\Http\Controllers\UserTemplateController::class, 'show']);
             Route::put('/{id}', [App\Domains\Template\Http\Controllers\UserTemplateController::class, 'update']);
             Route::delete('/{id}', [App\Domains\Template\Http\Controllers\UserTemplateController::class, 'destroy']);
+            Route::post('/{id}/thumbnail', [App\Domains\Template\Http\Controllers\UserTemplateController::class, 'uploadThumbnail']);
             Route::patch('/{id}/publish', [App\Domains\Template\Http\Controllers\UserTemplateController::class, 'publish']);
             Route::patch('/{id}/unpublish', [App\Domains\Template\Http\Controllers\UserTemplateController::class, 'unpublish']);
         });

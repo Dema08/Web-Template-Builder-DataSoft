@@ -442,9 +442,19 @@ export default function Builder() {
         description: templateData.description,
         visibility: templateData.visibility,
         draft_json: draftJson,
+        thumbnail: templateData.bannerOption === 'default' ? '/images/default-template-banner.png' : undefined,
       };
 
-      await templateApi.saveAsUserTemplate(payload);
+      const res = await templateApi.saveAsUserTemplate(payload);
+      const savedTemplate = res.data?.data ?? res.data;
+
+      // Upload custom banner file jika user memilih upload custom banner
+      if (templateData.bannerOption === 'custom' && templateData.bannerFile && savedTemplate?.id) {
+        const formData = new FormData();
+        formData.append('thumbnail', templateData.bannerFile);
+        await templateApi.uploadMyTemplateThumbnail(savedTemplate.id, formData);
+      }
+
       setIsSaveAsTemplateOpen(false);
       queryClient.invalidateQueries(['my-templates']);
       toast.success(

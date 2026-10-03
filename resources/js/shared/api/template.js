@@ -73,6 +73,10 @@ const templateApi = {
   getMyTemplate: (id) => http.get(`/my-templates/${id}`),
   updateMyTemplate: (id, data) => http.put(`/my-templates/${id}`, data),
   deleteMyTemplate: (id) => http.delete(`/my-templates/${id}`),
+  uploadMyTemplateThumbnail: (id, formData) =>
+    http.post(`/my-templates/${id}/thumbnail`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    }),
   publishMyTemplate: (id) => http.patch(`/my-templates/${id}/publish`),
   unpublishMyTemplate: (id) => http.patch(`/my-templates/${id}/unpublish`),
 };

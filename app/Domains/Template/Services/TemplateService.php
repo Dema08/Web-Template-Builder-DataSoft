@@ -90,20 +90,24 @@ class TemplateService extends BaseService
             $categoryId = $firstCategory?->id ?? 1;
         }
 
+        $thumbnailPath = $data['thumbnail'] ?? '/images/default-template-banner.png';
+
         return $this->templateRepository->create([
-            'category_id'  => $categoryId,
-            'code'         => $code,
-            'name'         => $data['name'],
-            'slug'         => $slug,
-            'description'  => $data['description'] ?? null,
-            'draft_json'   => $data['draft_json'] ?? null,
+            'category_id'    => $categoryId,
+            'code'           => $code,
+            'name'           => $data['name'],
+            'slug'           => $slug,
+            'description'    => $data['description'] ?? null,
+            'thumbnail'      => $thumbnailPath,
+            'preview_image'  => $thumbnailPath,
+            'draft_json'     => $data['draft_json'] ?? null,
             'published_json' => $data['draft_json'] ?? null, // snapshot saat disimpan
-            'version'      => '1.0.0',
-            'status'       => (isset($data['status']) && $data['status'] === 'draft') ? TemplateStatus::Draft : TemplateStatus::Published,
-            'visibility'   => $visibility,
-            'owner_id'     => $owner->id,
-            'created_by'   => $owner->id,
-            'updated_by'   => $owner->id,
+            'version'        => '1.0.0',
+            'status'         => (isset($data['status']) && $data['status'] === 'draft') ? TemplateStatus::Draft : TemplateStatus::Published,
+            'visibility'     => $visibility,
+            'owner_id'       => $owner->id,
+            'created_by'     => $owner->id,
+            'updated_by'     => $owner->id,
         ]);
     }
 
