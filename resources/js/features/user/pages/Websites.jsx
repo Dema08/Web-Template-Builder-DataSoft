@@ -29,7 +29,6 @@ export default function Websites() {
     });
 
     const [searchQuery, setSearchQuery] = useState('');
-    const [statusFilter, setStatusFilter] = useState('all');
 
     const [siteToDelete, setSiteToDelete] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -62,9 +61,7 @@ export default function Websites() {
         const matchesSearch =
             site.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
             site.domain.toLowerCase().includes(searchQuery.toLowerCase());
-        const matchesStatus =
-            statusFilter === 'all' || site.status.toLowerCase() === statusFilter.toLowerCase();
-        return matchesSearch && matchesStatus;
+        return matchesSearch;
     });
 
     const handleDeleteWebsite = (id, name) => {
@@ -91,9 +88,9 @@ export default function Websites() {
             {/* Header Section */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">Websites</h1>
+                    <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">Website Published Saya</h1>
                     <p className="text-sm text-[rgb(var(--color-text-secondary))] mt-1">
-                        Manage your company profile websites, custom subdomains, and published deployments.
+                        Kelola website yang sudah dipublikasikan ke subdomain atau custom domain Anda.
                     </p>
                 </div>
 
@@ -160,42 +157,6 @@ export default function Websites() {
                         />
                     </div>
 
-                    {/* Status Filter */}
-                    <div className="flex items-center gap-2 bg-[rgb(var(--color-surface-alt))] p-1 rounded-xl">
-                        <button
-                            type="button"
-                            onClick={() => setStatusFilter('all')}
-                                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                                    statusFilter === 'all'
-                                        ? 'bg-[rgb(var(--color-surface))] text-[rgb(var(--color-text-primary))] shadow-sm'
-                                        : 'text-[rgb(var(--color-text-secondary))] hover:text-[rgb(var(--color-text-primary))]'
-                                }`}
-                        >
-                            All ({websitesList.length})
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => setStatusFilter('published')}
-                                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                                    statusFilter === 'published'
-                                        ? 'bg-[rgb(var(--color-surface))] text-emerald-600 shadow-sm'
-                                        : 'text-[rgb(var(--color-text-secondary))] hover:text-[rgb(var(--color-text-primary))]'
-                                }`}
-                        >
-                            Published ({websitesList.filter((w) => w.status === 'Published').length})
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => setStatusFilter('draft')}
-                                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                                    statusFilter === 'draft'
-                                        ? 'bg-[rgb(var(--color-surface))] text-amber-600 shadow-sm'
-                                        : 'text-[rgb(var(--color-text-secondary))] hover:text-[rgb(var(--color-text-primary))]'
-                                }`}
-                        >
-                            Draft ({websitesList.filter((w) => w.status === 'Draft').length})
-                        </button>
-                    </div>
                 </div>
             </div>
 

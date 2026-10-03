@@ -440,15 +440,17 @@ export default function Builder() {
       // Resolve the active website_id from URL query param or websiteInfo state
       const urlWebsiteId = new URLSearchParams(window.location.search).get('website_id');
       const activeWebsiteId = urlWebsiteId || (websiteInfo?.id ? String(websiteInfo.id) : null);
+      if (!activeWebsiteId) {
+        toast.error('Simpan website terlebih dahulu sebelum mempublikasikannya.', 'Gagal mempublish');
+        return;
+      }
 
       // 1. Save current canvas draft — always pass website_id explicitly to avoid wrong target
-      const savePayload = { draft_json: draftJson };
-      if (activeWebsiteId) savePayload.website_id = activeWebsiteId;
+      const savePayload = { draft_json: draftJson, website_id: activeWebsiteId };
       await websiteApi.saveContent(savePayload);
 
       // 2. Execute publish with domain settings — pass website_id explicitly
-      const publishPayload = { ...domainConfig };
-      if (activeWebsiteId) publishPayload.website_id = activeWebsiteId;
+      const publishPayload = { ...domainConfig, website_id: activeWebsiteId };
       const res = await websiteApi.publish(publishPayload);
       const pubData = res?.data ?? res;
 

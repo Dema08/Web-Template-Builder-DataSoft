@@ -229,26 +229,72 @@ jobs:
         env:
           DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
         run: |
+          : "${DEPLOY_TOKEN:?Set the DEPLOY_TOKEN repository secret}"
+          DEPLOY_TOKEN_PHP=$(php -r 'echo var_export(getenv("DEPLOY_TOKEN"), true);')
+
           cat > unzip.php <<PHP
           <?php
-          if (!isset(\$_GET['token']) || \$_GET['token'] !== '${DEPLOY_TOKEN}') {
+          \$expectedToken = ${DEPLOY_TOKEN_PHP};
+          \$providedToken = \$_GET['token'] ?? null;
+          if (!is_string(\$providedToken) || !hash_equals(\$expectedToken, \$providedToken)) {
               http_response_code(403);
               exit('Forbidden');
           }
           set_time_limit(0);
-          \$zip = __DIR__ . '/deploy.zip';
-          if (!file_exists(\$zip)) {
-              exit('Zip not found');
+          ignore_user_abort(true);
+
+          try {
+              \$zip = __DIR__ . '/deploy.zip';
+              if (!is_file(\$zip)) {
+                  throw new RuntimeException('Deployment archive not found.');
+              }
+
+              \$archive = new ZipArchive();
+              if (\$archive->open(\$zip) !== true) {
+                  throw new RuntimeException('Unable to open deployment archive.');
+              }
+              if (!\$archive->extractTo(__DIR__)) {
+                  \$archive->close();
+                  throw new RuntimeException('Unable to extract deployment archive.');
+              }
+              \$archive->close();
+
+              \$configCache = __DIR__ . '/bootstrap/cache/config.php';
+              if (is_file(\$configCache) && !unlink(\$configCache)) {
+                  throw new RuntimeException('Unable to clear cached Laravel configuration.');
+              }
+
+              require __DIR__ . '/vendor/autoload.php';
+              \$app = require __DIR__ . '/bootstrap/app.php';
+              \$kernel = \$app->make(Illuminate\Contracts\Console\Kernel::class);
+
+              \$commands = [
+                  'migrate' => ['--force' => true],
+                  'config:clear' => [],
+                  'cache:clear' => [],
+              ];
+
+              foreach (\$commands as \$command => \$arguments) {
+                  \$exitCode = \$kernel->call(\$command, \$arguments);
+                  echo strtoupper(\$command) . " OUTPUT:\n" . \$kernel->output() . "\n";
+                  if (\$exitCode !== 0) {
+                      throw new RuntimeException("Artisan command failed: {\$command} (exit {\$exitCode}).");
+                  }
+              }
+
+              if (!unlink(\$zip)) {
+                  throw new RuntimeException('Deployment succeeded but archive cleanup failed.');
+              }
+              if (!unlink(__FILE__)) {
+                  throw new RuntimeException('Deployment succeeded but deploy script cleanup failed.');
+              }
+
+              echo "DEPLOY AND MIGRATIONS OK\n";
+          } catch (Throwable \$exception) {
+              error_log('Deployment failed: ' . \$exception->getMessage());
+              http_response_code(500);
+              echo 'DEPLOY FAILED: ' . \$exception->getMessage() . "\n";
           }
-          \$z = new ZipArchive();
-          if (\$z->open(\$zip) !== TRUE) {
-              exit('Cannot open zip');
-          }
-          \$z->extractTo(__DIR__);
-          \$z->close();
-          @unlink(\$zip);
-          @unlink(__FILE__);
-          echo 'DEPLOY OK';
           PHP
 
       - name: Upload zip and unzip.php via FTP
@@ -289,12 +335,14 @@ jobs:
           upload_ftp_file deploy.zip deploy.zip
           upload_ftp_file unzip.php unzip.php
 
-      - name: Trigger extraction
+      - name: Trigger extraction and migrate
         env:
           DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
         run: |
           sleep 3
-          echo "Triggering extraction..."
-          curl -sS --max-time 300 "https://web.microdata.co.id/unzip.php?token=${DEPLOY_TOKEN}"
+          echo "Triggering extraction and migrations..."
+          curl --fail-with-body --show-error --silent --max-time 600 \
+            --get --data-urlencode "token=${DEPLOY_TOKEN}" \
+            "https://web.microdata.co.id/unzip.php"
           echo ""
-          echo "Extraction done."
+          echo "Extraction and migrations completed."

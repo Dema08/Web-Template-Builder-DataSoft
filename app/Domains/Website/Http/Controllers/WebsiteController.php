@@ -19,7 +19,8 @@ class WebsiteController extends BaseController
     public function index(Request $request): JsonResponse
     {
         $websites = Website::where('user_id', $request->user()->id)
-            ->latest('id')
+            ->where('status', 'published')
+            ->orderByDesc('published_at')
             ->get();
         $quotaInfo = $this->quotaInfo($request);
         $websites->each(fn (Website $website) => $website->setAttribute('quota_info', $quotaInfo));
@@ -195,13 +196,8 @@ class WebsiteController extends BaseController
     public function publish(PublishWebsiteRequest $request): JsonResponse
     {
         $user = $request->user();
-        $website = $this->findUserWebsite($request);
-
-        if (!$website) {
-            return $this->error('Website not found. Please save your site first.', 404);
-        }
-
         $validated = $request->validated();
+        $website = $user->websites()->findOrFail($validated['website_id']);
         $domainType = $validated['domain_type'];
         $customDomain = trim((string) ($validated['custom_domain'] ?? ''));
         $slug = $validated['slug'];

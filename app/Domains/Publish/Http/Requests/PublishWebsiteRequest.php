@@ -32,12 +32,9 @@ class PublishWebsiteRequest extends FormRequest
 
     public function rules(): array
     {
-        $requestedWebsiteId = $this->input('website_id') ?? $this->query('website_id');
-        $websiteId = $requestedWebsiteId === null
-            ? Website::where('user_id', $this->user()->id)->oldest('id')->value('id')
-            : Website::where('user_id', $this->user()->id)
-                ->whereKey($requestedWebsiteId)
-                ->value('id');
+        $websiteId = Website::where('user_id', $this->user()->id)
+            ->whereKey($this->input('website_id'))
+            ->value('id');
         $slugRules = [
             'required',
             'string',
@@ -49,7 +46,11 @@ class PublishWebsiteRequest extends FormRequest
         ];
 
         return [
-            'website_id' => ['sometimes', 'integer'],
+            'website_id' => [
+                'required',
+                'integer',
+                Rule::exists('website', 'id')->where('user_id', $this->user()->id),
+            ],
             'slug' => $slugRules,
             'domain_type' => ['required', Rule::in(['subdomain', 'custom'])],
             'custom_domain' => ['required_if:domain_type,custom', 'nullable', 'string', 'max:253'],
