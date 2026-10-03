@@ -96,6 +96,7 @@ Route::prefix('v1')->group(function (): void {
 
         // Dashboard summary (admin-only, always accessible even in maintenance)
         Route::get('/dashboard-summary', [App\Domains\Admin\Http\Controllers\DashboardController::class, 'index']);
+        Route::get('/analytics', [App\Domains\Admin\Http\Controllers\AdminAnalyticsController::class, 'index']);
 
         // Admin websites & transactions management
         Route::get('/websites', [App\Domains\Admin\Http\Controllers\AdminWebsiteController::class, 'index']);
