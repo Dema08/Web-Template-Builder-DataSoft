@@ -272,13 +272,16 @@ jobs:
               --show-error \
               --progress-bar \
               --ftp-pasv \
+              --disable-epsv \
+              --ftp-skip-pasv-ip \
               --connect-timeout 30 \
               --max-time 1200 \
-              --retry 2 \
+              --retry 1 \
               --retry-delay 5 \
               --retry-max-time 1800 \
               --user "${FTP_USERNAME}:${FTP_PASSWORD}" \
               --upload-file "$file" \
+              --write-out "\nTransfer complete: %{size_upload} bytes in %{time_total}s\n" \
               "ftp://${FTP_SERVER}/webroot/ROOT/${remote_name}"
             echo "Uploaded ${remote_name}"
           }
