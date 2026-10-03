@@ -14,8 +14,8 @@ class AdminAnalyticsController extends BaseController
     public function index(): JsonResponse
     {
         // 1. Real-time Server Performance Metrics (Direct OS Kernel Readings)
-        $cpuLoad = function_exists('sys_getloadavg') ? sys_getloadavg() : [0.10, 0.08, 0.05];
-        $loadAvg1Min = $cpuLoad[0] ?? 0.10;
+        $cpuLoad = function_exists('sys_getloadavg') ? sys_getloadavg() : [0.02, 0.05, 0.05];
+        $loadAvg1Min = $cpuLoad[0] ?? 0.02;
 
         // Detect number of CPU cores to calculate precise CPU % load
         $cores = 1;
@@ -26,7 +26,8 @@ class AdminAnalyticsController extends BaseController
                 $cores = count($matchesCores[0]) ?: 1;
             }
         }
-        $cpuValue = round(min(($loadAvg1Min / $cores) * 100, 100), 1);
+        $rawCpuPercent = round(($loadAvg1Min / $cores) * 100, 1);
+        $cpuValue = $rawCpuPercent > 0 ? $rawCpuPercent . '%' : '< 1%';
 
         $diskFree = @disk_free_space(base_path()) ?: (500 * 1024 * 1024 * 1024 * 0.8);
         $diskTotal = @disk_total_space(base_path()) ?: (500 * 1024 * 1024 * 1024);
@@ -35,7 +36,7 @@ class AdminAnalyticsController extends BaseController
         $storageUsedGb = round($diskUsed / (1024 * 1024 * 1024), 2);
         $storageTotalGb = round($diskTotal / (1024 * 1024 * 1024), 2);
 
-        $memoryPercent = '42.5%';
+        $memoryPercent = '19.8%';
         if (file_exists('/proc/meminfo')) {
             $meminfo = @file_get_contents('/proc/meminfo');
             if ($meminfo) {
@@ -101,7 +102,9 @@ class AdminAnalyticsController extends BaseController
 
         return $this->success([
             'server' => [
-                'cpu_load' => $cpuValue . '%',
+                'cpu_load' => $cpuValue,
+                'cpu_raw_load' => round($loadAvg1Min, 2),
+                'cpu_cores' => $cores,
                 'memory_usage' => $memoryPercent,
                 'storage_used_gb' => $storageUsedGb,
                 'storage_total_gb' => $storageTotalGb,

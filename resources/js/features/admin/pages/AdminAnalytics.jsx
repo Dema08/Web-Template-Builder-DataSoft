@@ -56,7 +56,7 @@ export default function AdminAnalytics() {
         {
             label: 'Beban CPU Server',
             value: serverStats?.cpu_load || '-',
-            subtext: `Memory RAM: ${serverStats?.memory_usage || 'Optimal'}`,
+            subtext: `Load Avg: ${serverStats?.cpu_raw_load ?? '0.00'} (${serverStats?.cpu_cores || 1} vCPU)`,
             icon: Server,
             iconBg: 'bg-purple-50 text-purple-600 dark:bg-purple-950/40 dark:text-purple-400',
         },
