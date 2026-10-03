@@ -111,10 +111,12 @@ class OnboardingService
 
     public function createWebsite(User $user, array $data): WebsiteData
     {
-        $existingWebsite = $this->websiteRepository->findActiveByUser($user);
+        $plan = $user->effective_pricelist;
+        $maxDomains = (int) ($plan->maks_domain ?? 0);
+        $websiteCount = $user->websites()->count();
 
-        if ($existingWebsite) {
-            abort(403, 'You already own a website. Each user can only have one website.');
+        if (!$user->isAdmin() && $maxDomains !== -1 && $websiteCount >= $maxDomains) {
+            abort(422, "Paket {$plan->nama} hanya mengizinkan {$maxDomains} website.");
         }
 
         $template = $this->templateRepository->findById($data['template_id']);

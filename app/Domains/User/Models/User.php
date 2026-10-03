@@ -74,6 +74,11 @@ class User extends Authenticatable
         return $this->belongsTo(\App\Domains\Pricelist\Models\Pricelist::class, 'paket_harga_id');
     }
 
+    public function websites(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(\App\Domains\Website\Models\Website::class, 'user_id');
+    }
+
     /**
      * Relasi transaksi pembayaran pengguna.
      */
@@ -125,34 +130,25 @@ class User extends Authenticatable
             ->first();
     }
 
+    public function hasActiveSubscription(): bool
+    {
+        return $this->activeSubscription() !== null;
+    }
+
     /**
-     * Ambil paket harga pengguna saat ini atau default (Free).
+     * Ambil paket langganan aktif, atau batasi ke paket Free jika tidak aktif.
      */
     public function getEffectivePricelistAttribute(): \App\Domains\Pricelist\Models\Pricelist
     {
-        try {
-            if ($this->relationLoaded('pricelist') && $this->pricelist) {
-                return $this->pricelist;
-            }
+        $subscription = $this->activeSubscription();
+        $subscriptionPlan = $subscription?->pricelist;
 
-            if ($this->paket_harga_id) {
-                $plan = $this->pricelist()->first();
-                if ($plan) return $plan;
-            }
+        if ($subscriptionPlan) {
+            return $subscriptionPlan;
+        }
 
-            return \App\Domains\Pricelist\Models\Pricelist::where('is_default', true)->first()
-                ?? \App\Domains\Pricelist\Models\Pricelist::first()
-                ?? new \App\Domains\Pricelist\Models\Pricelist([
-                    'slug' => 'free',
-                    'nama' => 'Free',
-                    'harga' => 0,
-                    'maks_domain' => 0,
-                    'maks_starter_template' => 0,
-                    'bisa_upload_website' => false,
-                    'bisa_custom_domain' => false,
-                ]);
-        } catch (\Throwable $e) {
-            return new \App\Domains\Pricelist\Models\Pricelist([
+        return \App\Domains\Pricelist\Models\Pricelist::where('slug', 'free')->first()
+            ?? new \App\Domains\Pricelist\Models\Pricelist([
                 'slug' => 'free',
                 'nama' => 'Free',
                 'harga' => 0,
@@ -161,7 +157,6 @@ class User extends Authenticatable
                 'bisa_upload_website' => false,
                 'bisa_custom_domain' => false,
             ]);
-        }
     }
 
     /**

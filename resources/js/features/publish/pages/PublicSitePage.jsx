@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import SectionRenderer from '@builder/components/sections/SectionRenderer';
 import http from '@shared/api/http';
 
@@ -11,8 +11,9 @@ import http from '@shared/api/http';
  * Tidak memerlukan autentikasi.
  */
 export default function PublicSitePage() {
+    const { slug: pathSlug } = useParams();
     const [searchParams] = useSearchParams();
-    const slug = searchParams.get('slug');
+    const slug = pathSlug || searchParams.get('slug');
 
     const [siteData, setSiteData] = useState(null);
     const [sections, setSections] = useState([]);
@@ -24,7 +25,7 @@ export default function PublicSitePage() {
             setIsLoading(true);
             setError(null);
             try {
-                const url = slug ? `/public/site?slug=${slug}` : '/public/site';
+                const url = slug ? `/public/site?slug=${encodeURIComponent(slug)}` : '/public/site';
                 const { data } = await http.get(url);
                 const site = data?.data ?? data;
                 setSiteData(site);
@@ -96,11 +97,15 @@ export default function PublicSitePage() {
 
     // Legacy mode: website disimpan sebagai raw HTML + CSS
     if (siteData.legacyMode && siteData.html) {
+        const srcDoc = `<!doctype html><html><head><meta charset="utf-8"><style>${siteData.css || ''}</style></head><body>${siteData.html}</body></html>`;
+
         return (
-            <>
-                <style dangerouslySetInnerHTML={{ __html: siteData.css || '' }} />
-                <div dangerouslySetInnerHTML={{ __html: siteData.html }} />
-            </>
+            <iframe
+                title={siteData.site_name || 'Published site'}
+                srcDoc={srcDoc}
+                sandbox="allow-scripts allow-popups"
+                className="block w-full min-h-screen border-0"
+            />
         );
     }
 

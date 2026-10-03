@@ -5,13 +5,35 @@ namespace App\Domains\Website\Models;
 use App\Domains\Category\Models\Category;
 use App\Domains\Template\Models\Template;
 use App\Domains\User\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Cache;
 
 class Website extends Model
 {
     protected $table = 'website';
+
+    protected static function booted(): void
+    {
+        static::saving(function (Website $website): void {
+            $originalSlug = $website->getOriginal('slug');
+            if ($originalSlug) {
+                Cache::forget("site:{$originalSlug}");
+            }
+
+            if ($website->slug) {
+                Cache::forget("site:{$website->slug}");
+            }
+        });
+
+        static::deleting(function (Website $website): void {
+            if ($website->slug) {
+                Cache::forget("site:{$website->slug}");
+            }
+        });
+    }
 
     protected $fillable = [
         'user_id',
@@ -34,6 +56,27 @@ class Website extends Model
         'settings' => 'array',
         'published_at' => 'datetime',
     ];
+
+    public function scopePublished(Builder $query): Builder
+    {
+        return $query->where('status', 'published');
+    }
+
+    public function getUrlPathAttribute(): string
+    {
+        return '/p/'.$this->slug;
+    }
+
+    public function getUrlSubdomainAttribute(): ?string
+    {
+        if (!$this->slug) {
+            return null;
+        }
+
+        $mainDomain = config('app.main_domain', 'microdata.co.id');
+
+        return "https://{$this->slug}.{$mainDomain}";
+    }
 
     public function user(): BelongsTo
     {

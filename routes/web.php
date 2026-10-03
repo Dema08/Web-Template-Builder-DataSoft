@@ -1,5 +1,6 @@
 <?php
 
+use App\Domains\Publish\Http\Controllers\PublicSiteController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -7,8 +8,8 @@ use Illuminate\Support\Facades\Route;
 | Web Routes — React SPA Entry Point & Storage Asset Streaming
 |--------------------------------------------------------------------------
 |
-| Serve uploaded storage files (avatars, logos, thumbnails) dynamically
-| from storage/app/public, supporting servers without symlink permissions.
+| Serve public storage files dynamically for servers without symlink support,
+| route published sites before the SPA catch-all, and serve the React app.
 |
 */
 
@@ -24,5 +25,6 @@ Route::get('/storage/{path}', function (string $path) {
     ]);
 })->where('path', '.*');
 
+Route::get('/p/{slug}', [PublicSiteController::class, 'showBySlug'])->name('site.show');
 Route::get('/{any?}', fn () => view('welcome'))->where('any', '.*');
 Route::post('/login', fn () => redirect('/login'));

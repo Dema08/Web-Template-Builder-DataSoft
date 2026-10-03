@@ -6,6 +6,8 @@ use App\Domains\Shared\Http\Controllers\BaseController;
 use App\Domains\System\Models\Setting;
 use App\Domains\Website\Models\Website;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -18,71 +20,73 @@ use Illuminate\Support\Facades\Storage;
  */
 class PublicSiteController extends BaseController
 {
-    public function show(): JsonResponse
+    public function showBySlug(Request $request, string $slug)
     {
-        $brandName  = Setting::get('brand_name', 'DataSoft');
+        $slug = $request->attributes->get('published_slug', $slug);
+        $website = $this->findPublishedWebsite($slug);
+
+        abort_unless($website, 404);
+
+        return view('welcome');
+    }
+
+    public function show(Request $request): JsonResponse
+    {
+        $hostSlug = $request->attributes->get('published_slug');
+        $slug = $hostSlug ?? $request->query('slug');
+
+        abort_if(!is_string($slug) || $slug === '', 404);
+
+        $website = $this->findPublishedWebsite($slug);
+
+        abort_unless($website, 404);
+
         $brandBadge = Setting::get('brand_badge', 'DS');
         $brandColor = Setting::get('brand_color', '#2563eb');
         $logoRaw    = Setting::get('logo_path');
 
         $logoUrl = $logoRaw ? Storage::url($logoRaw) : null;
 
-        // Try to look up website by slug (subdomain), or fallback to the first active/published site
-        $slug = request()->query('slug');
-        if ($slug) {
-            $website = Website::where('slug', $slug)->first();
-        } else {
-            $website = Website::where('status', 'published')->first() ?? Website::first();
-        }
+        // Record view/visitor
+        $website->views()->create([
+            'ip_address' => $request->ip(),
+            'user_agent' => $request->userAgent(),
+        ]);
 
-        if ($website) {
-            // Record view/visitor
-            $website->views()->create([
-                'ip_address' => request()->ip(),
-                'user_agent' => request()->userAgent(),
-            ]);
+        $siteName = $website->name;
+        $siteSubdomain = $website->slug;
+        $publishedJson = $website->published_json ?? [];
 
-            // Set branding values from website settings if available, or fall back to system defaults
-            $siteName = $website->name;
-            $siteSubdomain = $website->slug;
-            
-            $publishedJson = $website->published_json ?? $website->draft_json ?? [];
-            
-            // Handle both structure formats: { sections: [...] } or direct section array [...]
-            $sections = [];
-            if (is_array($publishedJson)) {
-                if (isset($publishedJson['sections']) && is_array($publishedJson['sections'])) {
-                    $sections = $publishedJson['sections'];
-                } elseif (isset($publishedJson[0]['type']) || isset($publishedJson[0]['id'])) {
-                    $sections = $publishedJson;
-                }
+        // Handle both structure formats: { sections: [...] } or direct section array [...]
+        $sections = [];
+        if (is_array($publishedJson)) {
+            if (isset($publishedJson['sections']) && is_array($publishedJson['sections'])) {
+                $sections = $publishedJson['sections'];
+            } elseif (isset($publishedJson[0]['type']) || isset($publishedJson[0]['id'])) {
+                $sections = $publishedJson;
             }
-
-            $html = $publishedJson['html'] ?? "<h1>Selamat Datang di {$siteName}</h1>";
-            $css  = $publishedJson['css']  ?? "h1 { color: {$brandColor}; }";
-
-            return $this->success([
-                'site_name'   => $siteName,
-                'subdomain'   => $siteSubdomain,
-                'brand_badge' => $brandBadge,
-                'brand_color' => $brandColor,
-                'logo_url'    => $website->logo ? Storage::url($website->logo) : $logoUrl,
-                'sections'    => $sections,
-                'html'        => $html,
-                'css'         => $css,
-            ], 'Public site data retrieved');
         }
 
-        // Fallback to default demo site when no websites exist in database
+        $html = $publishedJson['html'] ?? '';
+        $css  = $publishedJson['css']  ?? '';
+
         return $this->success([
-            'site_name' => $brandName,
-            'subdomain' => 'koperasimaju',
+            'site_name' => $siteName,
+            'subdomain' => $siteSubdomain,
             'brand_badge' => $brandBadge,
             'brand_color' => $brandColor,
-            'logo_url'    => $logoUrl,
-            'html' => '<h1>Selamat Datang di Website Resmi</h1>',
-            'css'  => "h1 { color: {$brandColor}; }",
+            'logo_url' => $website->logo ? Storage::url($website->logo) : $logoUrl,
+            'sections' => $sections,
+            'html' => $html,
+            'css' => $css,
         ], 'Public site data retrieved');
+    }
+
+    private function findPublishedWebsite(string $slug): ?Website
+    {
+        return Cache::remember("site:{$slug}", 300, function () use ($slug): ?Website {
+            return Website::published()->where('slug', $slug)->first();
+        });
     }
 
     /**

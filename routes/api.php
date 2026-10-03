@@ -141,12 +141,19 @@ Route::prefix('v1')->group(function (): void {
 
         // Website builder endpoints (implemented in later features)
         Route::prefix('website')->group(function (): void {
+            Route::get('/list', [App\Domains\Website\Http\Controllers\WebsiteController::class, 'index']);
+            Route::get('/quota', [App\Domains\Website\Http\Controllers\WebsiteController::class, 'quota']);
+            Route::get('/check-slug', [App\Domains\Website\Http\Controllers\WebsiteController::class, 'checkSlug'])
+                ->middleware('throttle:30,1');
             Route::get('/', [App\Domains\Website\Http\Controllers\WebsiteController::class, 'show']);
             Route::get('/content', [App\Domains\Website\Http\Controllers\WebsiteController::class, 'getContent']);
             Route::post('/content', [App\Domains\Website\Http\Controllers\WebsiteController::class, 'saveContent']);
             Route::patch('/settings', [App\Domains\Website\Http\Controllers\WebsiteController::class, 'updateSettings']);
-            Route::post('/publish', [App\Domains\Website\Http\Controllers\WebsiteController::class, 'publish']);
+            Route::post('/publish', [App\Domains\Website\Http\Controllers\WebsiteController::class, 'publish'])
+                ->middleware('throttle:10,1');
             Route::post('/assets', [App\Domains\Media\Http\Controllers\MediaController::class, 'upload']);
+            Route::post('/{websiteId}/unpublish', [App\Domains\Website\Http\Controllers\WebsiteController::class, 'unpublish']);
+            Route::delete('/{websiteId}', [App\Domains\Website\Http\Controllers\WebsiteController::class, 'destroy']);
         });
 
         // Onboarding endpoints
@@ -154,7 +161,8 @@ Route::prefix('v1')->group(function (): void {
             Route::get('/categories', [App\Domains\Onboarding\Http\Controllers\OnboardingController::class, 'getCategories']);
             Route::get('/templates/{categoryId}', [App\Domains\Onboarding\Http\Controllers\OnboardingController::class, 'getTemplatesByCategory']);
             Route::get('/template/{id}', [App\Domains\Onboarding\Http\Controllers\OnboardingController::class, 'getTemplate']);
-            Route::post('/check-slug', [App\Domains\Onboarding\Http\Controllers\OnboardingController::class, 'checkSlug']);
+            Route::post('/check-slug', [App\Domains\Onboarding\Http\Controllers\OnboardingController::class, 'checkSlug'])
+                ->middleware('throttle:10,1');
             Route::post('/create', [App\Domains\Onboarding\Http\Controllers\OnboardingController::class, 'createWebsite']);
         });
 

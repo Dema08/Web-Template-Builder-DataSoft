@@ -54,6 +54,18 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    'main_domain' => env('APP_MAIN_DOMAIN', 'microdata.co.id'),
+
+    'primary_host' => env('APP_PRIMARY_HOST', 'web.microdata.co.id'),
+
+    'trusted_hosts' => array_filter(array_map(
+        'trim',
+        explode(',', env(
+            'APP_TRUSTED_HOSTS',
+            'web.microdata.co.id,*.microdata.co.id,localhost,127.0.0.1'
+        ))
+    )),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

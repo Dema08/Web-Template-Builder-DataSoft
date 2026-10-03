@@ -3,7 +3,9 @@
 namespace App\Domains\Website\Http\Controllers;
 
 use App\Domains\Shared\Http\Controllers\BaseController;
+use App\Domains\Publish\Http\Requests\PublishWebsiteRequest;
 use App\Domains\Website\Models\Website;
+use App\Domains\Website\Resources\WebsiteResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -14,13 +16,87 @@ use Illuminate\Http\Request;
  */
 class WebsiteController extends BaseController
 {
-    public function show(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $user = auth()->user();
-        $website = Website::where('user_id', $user->id)->first();
+        $websites = Website::where('user_id', $request->user()->id)
+            ->latest('id')
+            ->get();
+        $quotaInfo = $this->quotaInfo($request);
+        $websites->each(fn (Website $website) => $website->setAttribute('quota_info', $quotaInfo));
+
+        return $this->success(
+            WebsiteResource::collection($websites)->resolve($request),
+            'Websites retrieved'
+        );
+    }
+
+    public function quota(Request $request): JsonResponse
+    {
+        $user = $request->user();
+        $plan = $user->effective_pricelist;
+        $maxDomains = (int) ($plan->maks_domain ?? 0);
+        $publishedCount = $user->websites()
+            ->where('status', 'published')
+            ->count();
+        $websiteId = $request->query('website_id');
+        $selectedSiteIsPublished = $websiteId !== null
+            && $user->websites()
+                ->whereKey($websiteId)
+                ->where('status', 'published')
+                ->exists();
+        $unlimited = $maxDomains === -1;
+
+        return $this->success([
+            'package' => $plan->nama,
+            'current' => $publishedCount,
+            'max' => $maxDomains,
+            'can_publish' => $user->isAdmin()
+                || $unlimited
+                || $publishedCount < $maxDomains
+                || $selectedSiteIsPublished,
+            'unlimited' => $unlimited,
+        ], 'Website quota retrieved');
+    }
+
+    public function checkSlug(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'slug' => ['required', 'string', 'min:3', 'max:50', 'regex:/^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/'],
+            'website_id' => ['nullable', 'integer'],
+        ]);
+
+        $reservedSlugs = [
+            'admin', 'api', 'www', 'app', 'mail', 'ftp', 'cdn', 'static',
+            'assets', 'public', 'storage', 'p', 'dashboard', 'web',
+        ];
+        $slug = $validated['slug'];
+        $websiteId = $request->query('website_id');
+        $user = $request->user();
+
+        $currentWebsiteId = $websiteId === null
+            ? ($user->websites()->count() === 1 ? $user->websites()->value('id') : null)
+            : $user->websites()->whereKey($websiteId)->value('id');
+        abort_if($websiteId !== null && $currentWebsiteId === null, 404);
+
+        $available = !in_array($slug, $reservedSlugs, true)
+            && !Website::where('slug', $slug)
+                ->when($currentWebsiteId, fn ($query) => $query->where('id', '!=', $currentWebsiteId))
+                ->exists();
+
+        return $this->success([
+            'slug' => $slug,
+            'available' => $available,
+            'message' => $available ? 'Slug tersedia.' : 'Slug sudah digunakan atau tidak dapat dipakai.',
+        ], 'Slug availability checked');
+    }
+
+    public function show(Request $request): JsonResponse
+    {
+        $user = $request->user();
+        $website = $this->findUserWebsite($request);
 
         if ($website) {
-            return $this->success($website, 'Website retrieved');
+            return $this->success(WebsiteResource::make($website)->resolve($request), 'Website retrieved');
         }
 
         return $this->success([
@@ -31,10 +107,9 @@ class WebsiteController extends BaseController
         ], 'Website retrieved');
     }
 
-    public function getContent(): JsonResponse
+    public function getContent(Request $request): JsonResponse
     {
-        $user = auth()->user();
-        $website = Website::where('user_id', $user->id)->first();
+        $website = $this->findUserWebsite($request);
 
         if ($website && ($website->draft_json || $website->published_json)) {
             $content = $website->draft_json ?? $website->published_json;
@@ -46,12 +121,19 @@ class WebsiteController extends BaseController
 
     public function saveContent(Request $request): JsonResponse
     {
-        $user = auth()->user();
-        $website = Website::where('user_id', $user->id)->first();
+        $user = $request->user();
+        $website = $this->findUserWebsite($request);
 
         $content = $request->input('draft_json') ?? $request->all();
 
         if (!$website) {
+            $plan = $user->effective_pricelist;
+            $maxDomains = (int) ($plan->maks_domain ?? 0);
+            $websiteCount = Website::where('user_id', $user->id)->count();
+            if (!$user->isAdmin() && $maxDomains !== -1 && $websiteCount >= $maxDomains) {
+                return $this->error("Paket {$plan->nama} hanya mengizinkan {$maxDomains} website.", 422);
+            }
+
             $slugBase = str($user->name)->slug()->__toString() ?: 'my-website';
             $slug = $slugBase;
             while (Website::where('slug', $slug)->exists()) {
@@ -76,46 +158,69 @@ class WebsiteController extends BaseController
             ]);
         }
 
-        return $this->success($website->fresh(), 'Content saved successfully');
+        return $this->success(
+            WebsiteResource::make($website->fresh())->resolve($request),
+            'Content saved successfully'
+        );
     }
 
     public function updateSettings(Request $request): JsonResponse
     {
-        $user = auth()->user();
-        $website = Website::where('user_id', $user->id)->first();
+        $website = $this->findUserWebsite($request);
 
         if ($website) {
             $website->update($request->only(['name', 'slug', 'settings', 'logo', 'favicon']));
         }
 
-        return $this->success($website?->fresh(), 'Settings updated successfully');
+        return $this->success(
+            $website ? WebsiteResource::make($website->fresh())->resolve($request) : null,
+            'Settings updated successfully'
+        );
     }
 
-    public function publish(Request $request): JsonResponse
+    public function publish(PublishWebsiteRequest $request): JsonResponse
     {
-        $user = auth()->user();
-        $website = Website::where('user_id', $user->id)->first();
+        $user = $request->user();
+        $website = $this->findUserWebsite($request);
 
         if (!$website) {
             return $this->error('Website not found. Please save your site first.', 404);
         }
 
-        $domainType = $request->input('domain_type', 'subdomain');
-        $customDomain = trim((string) $request->input('custom_domain', ''));
-        $slug = trim((string) $request->input('slug', $website->slug));
-
-        // Validate plan for custom domain
+        $validated = $request->validated();
+        $domainType = $validated['domain_type'];
+        $customDomain = trim((string) ($validated['custom_domain'] ?? ''));
+        $slug = $validated['slug'];
         $plan = $user->effective_pricelist;
-        $planSlug = strtolower($plan->slug ?? 'free');
-        $limit = (int) ($plan->maks_starter_template ?? 0);
-        $isFree = ($planSlug === 'free' || $limit === 0) && !$user->isAdmin();
 
-        if ($domainType === 'custom' && $isFree) {
+        $maxDomains = (int) ($plan->maks_domain ?? 0);
+        $publishedCount = Website::where('user_id', $user->id)
+            ->where('status', 'published')
+            ->count();
+
+        if (
+            !$user->isAdmin()
+            && $maxDomains !== -1
+            && $publishedCount >= $maxDomains
+            && $website->status !== 'published'
+        ) {
             return response()->json([
                 'success' => false,
-                'message' => 'Fitur Domain Sendiri khusus untuk akun berlangganan (Starter / Unlimited). Silakan upgrade paket Anda.',
+                'message' => "Paket {$plan->nama} hanya mengizinkan {$maxDomains} website. Upgrade paket untuk menambah.",
+                'code' => 'DOMAIN_LIMIT_REACHED',
+                'current' => $publishedCount,
+                'max' => $maxDomains,
+                'package' => $plan->nama,
+            ], 422);
+        }
+
+        if ($domainType === 'custom' && !$plan->bisa_custom_domain && !$user->isAdmin()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Paket kamu tidak mengizinkan custom domain. Upgrade paket untuk fitur ini.',
+                'code' => 'CUSTOM_DOMAIN_NOT_ALLOWED',
                 'upgrade_required' => true,
-            ], 403);
+            ], 422);
         }
 
         $settings = $website->settings ?? [];
@@ -139,13 +244,75 @@ class WebsiteController extends BaseController
 
         $publishedUrl = ($domainType === 'custom' && $customDomain)
             ? (str_starts_with($customDomain, 'http') ? $customDomain : 'https://' . $customDomain)
-            : url('/public/site?slug=' . $website->slug);
+            : ($domainType === 'subdomain'
+                ? 'https://' . $website->slug . '.' . config('app.main_domain')
+                : url('/p/' . $website->slug));
 
         return $this->success([
             'published_url' => $publishedUrl,
+            'path_url' => url('/p/'.rawurlencode($website->slug)),
+            'subdomain_url' => $website->url_subdomain,
             'domain_type' => $domainType,
             'custom_domain' => $customDomain,
-            'website' => $website->fresh(),
+            'website' => WebsiteResource::make($website->fresh())->resolve($request),
         ], 'Website published successfully');
+    }
+
+    public function destroy(Request $request, int $websiteId): JsonResponse
+    {
+        $website = Website::where('user_id', $request->user()->id)
+            ->whereKey($websiteId)
+            ->firstOrFail();
+
+        $website->delete();
+
+        return $this->success(null, 'Website deleted successfully');
+    }
+
+    public function unpublish(Request $request, int $websiteId): JsonResponse
+    {
+        $website = Website::where('user_id', $request->user()->id)
+            ->whereKey($websiteId)
+            ->firstOrFail();
+
+        $website->update([
+            'status' => 'draft',
+            'published_at' => null,
+        ]);
+
+        return $this->success(
+            WebsiteResource::make($website->fresh())->resolve($request),
+            'Website unpublished successfully'
+        );
+    }
+
+    private function findUserWebsite(Request $request): ?Website
+    {
+        $websiteId = $request->query('website_id') ?? $request->input('website_id');
+        $query = Website::where('user_id', $request->user()->id);
+
+        if ($websiteId !== null) {
+            return $query->whereKey($websiteId)->firstOrFail();
+        }
+
+        if ($query->count() > 1) {
+            abort(422, 'Pilih website yang akan dikelola terlebih dahulu.');
+        }
+
+        return $query->oldest('id')->first();
+    }
+
+    private function quotaInfo(Request $request): array
+    {
+        $user = $request->user();
+        $plan = $user->effective_pricelist;
+        $maxDomains = (int) ($plan->maks_domain ?? 0);
+
+        return [
+            'package' => $plan->nama,
+            'current' => $user->websites()->where('status', 'published')->count(),
+            'max' => $maxDomains,
+            'unlimited' => $maxDomains === -1,
+        ];
     }
 }

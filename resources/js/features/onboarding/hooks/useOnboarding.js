@@ -99,7 +99,7 @@ export function useCreateWebsite() {
             reset();
 
             setTimeout(() => {
-                window.location.href = ROUTES.BUILDER;
+                window.location.href = `${ROUTES.BUILDER}?website_id=${website.id}`;
             }, 1500);
         },
         onError: (error) => {

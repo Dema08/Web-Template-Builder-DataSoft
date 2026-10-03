@@ -58,6 +58,7 @@ export default function AppRouter() {
 
                 {/* Public Site Viewer — renders a user's published website by slug */}
                 <Route path="/public/site" element={<PublicSitePage />} />
+                <Route path="/p/:slug" element={<PublicSitePage />} />
 
                 {/* Public Template Gallery — accessible to everyone */}
                 <Route path={ROUTES.TEMPLATE_GALLERY} element={<TemplateGalleryPage />} />

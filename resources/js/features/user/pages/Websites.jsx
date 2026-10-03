@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import {
     Globe,
     Plus,
@@ -10,57 +11,52 @@ import {
     Clock,
     Eye,
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { useWebsite, useDashboard } from '@hooks';
+import { Link, useNavigate } from 'react-router-dom';
 import { ROUTES } from '@constants';
 import { Card, Button, Spinner, StatusBadge, ConfirmModal } from '@shared/components/ui';
 import { toast } from '@store';
+import websiteApi from '@api/website';
 
 export default function Websites() {
-    const { website, isWebsiteLoading } = useWebsite();
-    const { websites: dbWebsites, analytics } = useDashboard();
+    const navigate = useNavigate();
+    const { data: websites = [], isLoading: isWebsiteLoading, isError: isWebsiteError, refetch } = useQuery({
+        queryKey: ['websites'],
+        queryFn: websiteApi.getWebsites,
+    });
+    const { data: quota } = useQuery({
+        queryKey: ['website-quota'],
+        queryFn: websiteApi.getQuota,
+    });
 
     const [searchQuery, setSearchQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
-    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-    const [newSiteName, setNewSiteName] = useState('');
-    const [newSubdomain, setNewSubdomain] = useState('');
 
     const [siteToDelete, setSiteToDelete] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [extraWebsites, setExtraWebsites] = useState([]);
 
     const websitesList = useMemo(() => {
-        const list = [];
-        if (website && website.id) {
-            const isPub = website.status === 'published';
+        const rootDomain = window.location.hostname.replace(/^web\./, '');
+        return websites.map((website) => {
             const customDomain = website.settings?.custom_domain;
-            const domainType = website.settings?.domain_type;
-            const domainStr = (domainType === 'custom' && customDomain)
-                ? customDomain
-                : `web.microdata.co.id/s/${website.slug || 'my-website'}`;
+            const isCustomDomain = website.settings?.domain_type === 'custom' && customDomain;
+            const slug = website.slug || 'my-website';
 
-            const publicUrlStr = (domainType === 'custom' && customDomain)
-                ? (customDomain.startsWith('http') ? customDomain : `https://${customDomain}`)
-                : `https://web.microdata.co.id/public/site?slug=${website.slug}`;
-
-            list.push({
+            return {
                 id: website.id,
                 name: website.name || 'Website Perusahaan Saya',
-                subdomain: website.slug || 'my-website',
-                domain: domainStr,
-                publicUrl: publicUrlStr,
-                status: isPub ? 'Published' : 'Draft',
-                updatedAt: website.updated_at ? new Date(website.updated_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Baru saja',
-                visitors: analytics?.unique_visitors ? analytics.unique_visitors.toLocaleString() : '0',
-                views: analytics?.total_views ? analytics.total_views.toLocaleString() : '0',
+                domain: isCustomDomain ? customDomain : `${slug}.${rootDomain}`,
+                publicUrl: isCustomDomain
+                    ? (customDomain.startsWith('http') ? customDomain : `https://${customDomain}`)
+                    : `https://${slug}.${rootDomain}`,
+                status: website.status === 'published' ? 'Published' : 'Draft',
+                updatedAt: website.updated_at
+                    ? new Date(website.updated_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })
+                    : 'Baru saja',
                 thumbnail: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop&q=80',
-                templateName: website.template?.name || 'Microdata Corporate Template',
-            });
-        }
-
-        return [...list, ...extraWebsites];
-    }, [website, analytics, extraWebsites]);
+                templateName: 'Microdata Website Template',
+            };
+        });
+    }, [websites]);
 
     const filteredWebsites = websitesList.filter((site) => {
         const matchesSearch =
@@ -71,41 +67,22 @@ export default function Websites() {
         return matchesSearch && matchesStatus;
     });
 
-    const handleCreateWebsite = (e) => {
-        e.preventDefault();
-        if (!newSiteName.trim()) return;
-
-        const newSite = {
-            id: Date.now(),
-            name: newSiteName,
-            subdomain: newSubdomain || newSiteName.toLowerCase().replace(/\s+/g, '-'),
-            domain: `web.microdata.co.id/s/${newSubdomain || newSiteName.toLowerCase().replace(/\s+/g, '-')}`,
-            status: 'Draft',
-            updatedAt: 'Just now',
-            visitors: '0',
-            views: '0',
-            thumbnail: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop&q=80',
-            templateName: 'Microdata Default Template',
-        };
-
-        setExtraWebsites([newSite, ...extraWebsites]);
-        setIsCreateModalOpen(false);
-        setNewSiteName('');
-        setNewSubdomain('');
-        toast.success(`Website "${newSite.name}" created successfully!`, 'Website Created');
-    };
-
     const handleDeleteWebsite = (id, name) => {
         setSiteToDelete({ id, name });
         setIsDeleteModalOpen(true);
     };
 
-    const handleConfirmDeleteWebsite = () => {
+    const handleConfirmDeleteWebsite = async () => {
         if (!siteToDelete) return;
-        setExtraWebsites(extraWebsites.filter((w) => w.id !== siteToDelete.id));
-        toast.info(`Website "${siteToDelete.name}" deleted.`, 'Website Deleted');
-        setIsDeleteModalOpen(false);
-        setSiteToDelete(null);
+        try {
+            await websiteApi.deleteWebsite(siteToDelete.id);
+            await refetch();
+            toast.success(`Website "${siteToDelete.name}" deleted.`, 'Website Deleted');
+            setIsDeleteModalOpen(false);
+            setSiteToDelete(null);
+        } catch (error) {
+            toast.error(error.response?.data?.message || 'Gagal menghapus website.', 'Error');
+        }
     };
 
 
@@ -120,7 +97,7 @@ export default function Websites() {
                     </p>
                 </div>
 
-                <Button onClick={() => setIsCreateModalOpen(true)} variant="primary" size="md">
+                <Button onClick={() => navigate(ROUTES.ONBOARDING)} variant="primary" size="md">
                     <Plus className="h-4 w-4 stroke-[3]" />
                     <span>Create New Site</span>
                 </Button>
@@ -160,6 +137,13 @@ export default function Websites() {
                     </div>
                 </Card>
             </div>
+
+            {quota && (
+                <div className="rounded-xl border border-indigo-100 bg-indigo-50 px-4 py-3 text-sm text-indigo-900">
+                    Website published: <strong>{quota.current} / {quota.unlimited ? 'Unlimited' : quota.max}</strong>
+                    <span className="text-indigo-700"> (Paket {quota.package})</span>
+                </div>
+            )}
 
             {/* Search & Filter Toolbar - Modern Premium Design */}
             <div className="bg-[rgb(var(--color-surface))] rounded-2xl border border-[rgb(var(--color-border))] p-4 shadow-sm hover:shadow-md transition-shadow duration-200">
@@ -217,7 +201,15 @@ export default function Websites() {
 
             {/* Grid of Website Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredWebsites.map((site) => (
+                {isWebsiteLoading ? (
+                    <div className="col-span-full flex justify-center py-12"><Spinner /></div>
+                ) : isWebsiteError ? (
+                    <p className="col-span-full text-center text-sm text-red-600">Gagal memuat daftar website.</p>
+                ) : filteredWebsites.length === 0 ? (
+                    <p className="col-span-full text-center text-sm text-[rgb(var(--color-text-secondary))] py-12">
+                        Belum ada website untuk ditampilkan.
+                    </p>
+                ) : filteredWebsites.map((site) => (
                     <Card
                         key={site.id}
                         className="overflow-hidden flex flex-col group hover:shadow-md transition-all duration-200"
@@ -264,7 +256,7 @@ export default function Websites() {
                                 </a>
 
                                 <Link
-                                    to={ROUTES.BUILDER}
+                                    to={`${ROUTES.BUILDER}?website_id=${site.id}`}
                                     className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-3 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition shadow-xs"
                                 >
                                     <Edit3 className="h-3.5 w-3.5" />
@@ -285,78 +277,6 @@ export default function Websites() {
                 ))}
             </div>
 
-            {/* Create Website Modal */}
-            {isCreateModalOpen && (
-                <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
-                    <div className="bg-[rgb(var(--color-surface))] rounded-3xl max-w-md w-full p-6 shadow-2xl border border-[rgb(var(--color-border))] space-y-5 animate-in fade-in zoom-in-95 duration-150">
-                        <div className="flex items-center justify-between border-b border-[rgb(var(--color-border))] pb-4">
-                            <div className="flex items-center gap-2.5">
-                                <div className="h-9 w-9 rounded-xl bg-indigo-100 text-indigo-900 flex items-center justify-center font-bold">
-                                    <Globe className="h-5 w-5 stroke-[2]" />
-                                </div>
-                                <div>
-                                    <h3 className="text-base font-extrabold text-[rgb(var(--color-text-primary))]">Create New Website</h3>
-                                    <p className="text-xs text-[rgb(var(--color-text-secondary))]">Set up your Microdata company profile</p>
-                                </div>
-                            </div>
-                            <button
-                                type="button"
-                                onClick={() => setIsCreateModalOpen(false)}
-                                className="text-[rgb(var(--color-text-tertiary))] hover:text-[rgb(var(--color-text-primary))] p-1 rounded-lg hover:bg-[rgb(var(--color-surface-alt))] transition"
-                            >
-                                ✕
-                            </button>
-                        </div>
-
-                        <form onSubmit={handleCreateWebsite} className="space-y-4">
-                            <div>
-                                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Website Name</label>
-                                <input
-                                    type="text"
-                                    required
-                                    placeholder="e.g. Microdata Global Profile"
-                                    value={newSiteName}
-                                    onChange={(e) => setNewSiteName(e.target.value)}
-                                    className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Subdomain</label>
-                                <div className="flex items-center">
-                                    <input
-                                        type="text"
-                                        placeholder="Microdata-global"
-                                        value={newSubdomain}
-                                        onChange={(e) => setNewSubdomain(e.target.value)}
-                                        className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-l-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input rounded-r-none"
-                                    />
-                                    <span className="bg-[rgb(var(--color-surface-alt))] text-[rgb(var(--color-text-secondary))] px-3 py-2.5 text-xs border border-l-0 border-[rgb(var(--color-border))] rounded-r-xl font-medium">
-                                        .web.microdata.co.id
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div className="pt-4 flex items-center justify-end gap-3 border-t border-[rgb(var(--color-border))]">
-                                <button
-                                    type="button"
-                                    onClick={() => setIsCreateModalOpen(false)}
-                                    className="px-4 py-2 text-xs font-bold text-[rgb(var(--color-text-secondary))] hover:bg-[rgb(var(--color-surface-alt))] rounded-xl transition"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    type="submit"
-                                    className="px-5 py-2 text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-md shadow-indigo-600/20 transition flex items-center gap-2"
-                                >
-                                    <Plus className="h-3 w-3" />
-                                    <span>Launch Website</span>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
             {/* Delete Website Confirm Modal */}
             <ConfirmModal
                 isOpen={isDeleteModalOpen}
@@ -382,4 +302,3 @@ export default function Websites() {
         </div>
     );
 }
-

@@ -28,6 +28,7 @@ export default function Builder() {
   const [isSaving, setIsSaving] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
   const [isPublishModalOpen, setIsPublishModalOpen] = useState(false);
+  const [publishResult, setPublishResult] = useState(null);
   const [isSaveAsTemplateOpen, setIsSaveAsTemplateOpen] = useState(false);
   const [isSavingTemplate, setIsSavingTemplate] = useState(false);
   const [websiteInfo, setWebsiteInfo] = useState(null);
@@ -379,6 +380,7 @@ export default function Builder() {
   };
 
   const handleOpenPublishModal = async () => {
+    setPublishResult(null);
     try {
       const site = await websiteApi.getWebsite();
       if (site) setWebsiteInfo(site);
@@ -400,31 +402,15 @@ export default function Builder() {
       const res = await websiteApi.publish(domainConfig);
       const pubData = res?.data ?? res;
 
-      setIsPublishModalOpen(false);
+      setPublishResult(pubData);
+      queryClient.invalidateQueries({ queryKey: ['websites'] });
+      queryClient.invalidateQueries({ queryKey: ['website-quota'] });
       queryClient.invalidateQueries({ queryKey: [ROUTES.WEBSITES] });
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.WEBSITE] });
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.WEBSITE_CONTENT] });
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.DASHBOARD] });
 
-      toast.success(
-        <div>
-          <p className="font-bold">Website Berhasil Dipublish!</p>
-          {pubData?.published_url && (
-            <a
-              href={pubData.published_url}
-              target="_blank"
-              rel="noreferrer"
-              className="text-xs text-indigo-200 underline mt-1 inline-block"
-            >
-              Lihat Website Live ({pubData?.domain_type === 'custom' ? pubData.custom_domain : `web.microdata.co.id/public/site?slug=${pubData.website?.slug}`}) →
-            </a>
-          )}
-        </div>,
-        'Publish Berhasil'
-      );
-
-      // Keluar dari builder menuju ke halaman website
-      navigate(ROUTES.WEBSITES);
+      toast.success('Website berhasil dipublish. URL publik sudah siap disalin.', 'Publish Berhasil');
     } catch (err) {
       toast.error(err.response?.data?.message || 'Gagal mempublish website.', 'Error');
     } finally {
@@ -529,12 +515,16 @@ export default function Builder() {
 
       <PublishDomainModal
         isOpen={isPublishModalOpen}
-        onClose={() => setIsPublishModalOpen(false)}
+        onClose={() => {
+          setIsPublishModalOpen(false);
+          if (publishResult) navigate(ROUTES.WEBSITES);
+        }}
         onPublish={handleConfirmPublish}
         initialSlug={websiteInfo?.slug || ''}
         initialCustomDomain={websiteInfo?.settings?.custom_domain || ''}
         initialDomainType={websiteInfo?.settings?.domain_type || 'subdomain'}
         isPublishing={isPublishing}
+        publishResult={publishResult}
       />
 
       <SaveAsTemplateModal

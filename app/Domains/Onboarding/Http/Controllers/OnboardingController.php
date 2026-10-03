@@ -6,6 +6,7 @@ use App\Domains\Shared\Helpers\ApiResponse;
 use App\Domains\Shared\Http\Controllers\BaseController;
 use App\Domains\Category\Resources\CategoryResource;
 use App\Domains\Template\Resources\TemplateResource;
+use App\Domains\Website\Models\Website;
 use App\Domains\Website\Resources\WebsiteResource;
 use App\Domains\Onboarding\Services\OnboardingService;
 use Illuminate\Http\JsonResponse;
@@ -65,8 +66,13 @@ class OnboardingController extends BaseController
             'template_id' => 'required|integer|exists:template,id',
         ]);
 
-        $website = $this->onboardingService->createWebsite($request->user(), $validated);
+        $websiteData = $this->onboardingService->createWebsite($request->user(), $validated);
+        $website = Website::findOrFail($websiteData->id);
 
-        return ApiResponse::success(new WebsiteResource($website), 'Website created successfully.', 201);
+        return ApiResponse::success(
+            WebsiteResource::make($website)->resolve($request),
+            'Website created successfully.',
+            201
+        );
     }
 }

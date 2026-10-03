@@ -27,10 +27,22 @@ return Application::configure(basePath: dirname(__DIR__))
         // Sanctum stateful API for SPA cookie authentication.
         $middleware->statefulApi();
 
-        // Trusted frontend hosts.
+        // Trust configured hosts. Convert wildcard host entries to regex patterns
+        // because Laravel's TrustHosts middleware expects regular expressions.
         $middleware->trustHosts(
-            at: ['localhost:5173', '127.0.0.1:5173', 'localhost:3000', '127.0.0.1:3000'],
+            at: static fn (): array => array_map(
+                static fn (string $host): string => '^'.str_replace('\*', '[^.]+', preg_quote($host, '/')).'$',
+                config('app.trusted_hosts', []),
+            ),
+            subdomains: false,
         );
+
+        $middleware->web(append: [
+            \App\Domains\Publish\Http\Middleware\ResolvePublishedSite::class,
+        ]);
+        $middleware->api(append: [
+            \App\Domains\Publish\Http\Middleware\ResolvePublishedSite::class,
+        ]);
 
         // Custom middleware aliases.
         $middleware->alias([
