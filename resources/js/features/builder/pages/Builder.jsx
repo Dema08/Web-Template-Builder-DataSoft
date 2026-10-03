@@ -67,9 +67,54 @@ export default function Builder() {
         }
 
         // 1. Check if user came from Templates page with a pending template selection
+        const editTemplateId = sessionStorage.getItem('edit_template_id');
+        const editTemplateName = sessionStorage.getItem('edit_template_name');
         const pendingTemplateId = sessionStorage.getItem('pending_template_id');
         const pendingTemplateName = sessionStorage.getItem('pending_template_name');
         const blankMode = sessionStorage.getItem('blank_template_mode');
+
+        // ─── MODE: Edit User Draft Template (dari My Templates → Edit Builder) ───
+        // Langsung update template yang ada, TANPA membuat template baru (mencegah duplikasi)
+        if (editTemplateId) {
+          sessionStorage.removeItem('edit_template_id');
+          sessionStorage.removeItem('edit_template_name');
+
+          try {
+            const res = await templateApi.getMyTemplate(editTemplateId);
+            const templateData = res.data?.data ?? res.data;
+
+            if (templateData && isMounted) {
+              // Prioritaskan draft_json (yang sedang diedit), fallback ke published_json
+              const draftSections = templateData.draft_json?.sections;
+              const pubSections = templateData.published_json?.sections;
+              const sectionsToLoad =
+                (draftSections && Array.isArray(draftSections) && draftSections.length > 0)
+                  ? draftSections
+                  : ((pubSections && Array.isArray(pubSections) && pubSections.length > 0) ? pubSections : []);
+
+              if (sectionsToLoad.length > 0) {
+                loadSections(sectionsToLoad);
+              }
+              const tplName = templateData.name || editTemplateName || 'Draft Template';
+              setTemplateName(tplName);
+
+              // Set activeDraftTemplateId agar save draft UPDATE template ini, bukan buat baru
+              setActiveDraftTemplateId(Number(editTemplateId));
+              setActiveDraftTemplateName(tplName);
+
+              toast.success(`Template "${tplName}" berhasil dimuat untuk diedit!`, 'Edit Mode');
+              setIsLoadingContent(false);
+              return;
+            }
+          } catch (editErr) {
+            console.warn('Gagal memuat template untuk edit, fallback ke website content:', editErr);
+            // Hapus draft_template_id dari sessionStorage juga jika gagal
+            try {
+              sessionStorage.removeItem('draft_template_id');
+              sessionStorage.removeItem('draft_template_name');
+            } catch (_) {}
+          }
+        }
 
         // Blank Template mode — selalu diizinkan (tanpa memuat layout template manapun)
         if (blankMode) {

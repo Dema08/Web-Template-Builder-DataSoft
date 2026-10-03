@@ -78,8 +78,16 @@ export default function MyTemplates() {
     /** Edit user-generated template directly in builder */
     const handleEditInBuilder = (tpl) => {
         try {
-            sessionStorage.setItem('pending_template_id', String(tpl.id));
-            sessionStorage.setItem('pending_template_name', tpl.name);
+            // Gunakan 'edit_template_id' bukan 'pending_template_id' agar Builder
+            // tahu ini adalah mode EDIT (update template yang ada), bukan mode "gunakan template baru"
+            sessionStorage.removeItem('pending_template_id');
+            sessionStorage.removeItem('pending_template_name');
+            sessionStorage.removeItem('blank_template_mode');
+            sessionStorage.setItem('edit_template_id', String(tpl.id));
+            sessionStorage.setItem('edit_template_name', tpl.name);
+            // Juga set di draft_template_id agar auto-save langsung update template ini
+            sessionStorage.setItem('draft_template_id', String(tpl.id));
+            sessionStorage.setItem('draft_template_name', tpl.name);
         } catch (_) { /* ignore */ }
         toast.success(`Membuka template "${tpl.name}" untuk diedit di Builder...`, 'Edit Template');
         navigate(ROUTES.BUILDER);
