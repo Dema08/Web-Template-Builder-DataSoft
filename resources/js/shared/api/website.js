@@ -1,16 +1,12 @@
 import http from './http';
 
 const getSelectedWebsiteId = () => new URLSearchParams(window.location.search).get('website_id');
-
-const resolveWebsiteId = (explicitId) => explicitId || getSelectedWebsiteId();
-
-const withWebsiteId = (payload = {}, explicitId) => {
-    const websiteId = resolveWebsiteId(explicitId || payload?.website_id);
+const withSelectedWebsite = (payload = {}) => {
+    const websiteId = getSelectedWebsiteId();
     return websiteId ? { ...payload, website_id: websiteId } : payload;
 };
-
-const websiteParams = (explicitId) => {
-    const websiteId = resolveWebsiteId(explicitId);
+const selectedWebsiteParams = () => {
+    const websiteId = getSelectedWebsiteId();
     return websiteId ? { params: { website_id: websiteId } } : {};
 };
 
@@ -22,8 +18,8 @@ const websiteApi = {
     /**
      * Get the user's website (settings + status).
      */
-    async getWebsite(websiteId) {
-        const { data } = await http.get('/website', websiteParams(websiteId));
+    async getWebsite() {
+        const { data } = await http.get('/website', selectedWebsiteParams());
         return data.data;
     },
 
@@ -32,14 +28,14 @@ const websiteApi = {
         return data.data;
     },
 
-    async getQuota(websiteId) {
-        const { data } = await http.get('/website/quota', websiteParams(websiteId));
+    async getQuota() {
+        const { data } = await http.get('/website/quota', selectedWebsiteParams());
         return data.data;
     },
 
-    async checkSlug(slug, websiteId) {
+    async checkSlug(slug) {
         const { data } = await http.get('/website/check-slug', {
-            params: { ...websiteParams(websiteId).params, slug },
+            params: { ...selectedWebsiteParams().params, slug },
         });
         return data.data;
     },
@@ -47,36 +43,34 @@ const websiteApi = {
     /**
      * Get the saved HTML/CSS/JS content of the website.
      */
-    async getContent(websiteId) {
-        const { data } = await http.get('/website/content', websiteParams(websiteId));
+    async getContent() {
+        const { data } = await http.get('/website/content', selectedWebsiteParams());
         return data.data;
     },
 
     /**
      * Save the GrapesJS-generated content of the website.
      * @param {Object} content - { html, css, js, components, styles, assets }
-     * @param {number|string} [websiteId]
      */
-    async saveContent(content, websiteId) {
-        const { data } = await http.post('/website/content', withWebsiteId(content, websiteId));
+    async saveContent(content) {
+        const { data } = await http.post('/website/content', withSelectedWebsite(content));
         return data.data;
     },
 
     /**
      * Update website settings (name, description, logo, SEO, etc).
      * @param {Object} settings
-     * @param {number|string} [websiteId]
      */
-    async updateSettings(settings, websiteId) {
-        const { data } = await http.patch('/website/settings', withWebsiteId(settings, websiteId));
+    async updateSettings(settings) {
+        const { data } = await http.patch('/website/settings', withSelectedWebsite(settings));
         return data.data;
     },
 
     /**
      * Publish the website to be publicly accessible.
      */
-    async publish(payload = {}, websiteId) {
-        const { data } = await http.post('/website/publish', withWebsiteId(payload, websiteId));
+    async publish(payload = {}) {
+        const { data } = await http.post('/website/publish', withSelectedWebsite(payload));
         return data.data;
     },
 

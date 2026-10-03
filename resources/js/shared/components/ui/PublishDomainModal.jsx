@@ -12,7 +12,6 @@ export default function PublishDomainModal({
     initialSlug = '',
     initialCustomDomain = '',
     initialDomainType = 'subdomain',
-    websiteId = null,
     isPublishing = false,
     publishResult = null,
 }) {
@@ -46,7 +45,7 @@ export default function PublishDomainModal({
         if (!isOpen) return undefined;
         let active = true;
 
-        websiteApi.getQuota(websiteId)
+        websiteApi.getQuota()
             .then((data) => {
                 if (active) setQuota(data);
             })
@@ -60,7 +59,7 @@ export default function PublishDomainModal({
         return () => {
             active = false;
         };
-    }, [isOpen, websiteId]);
+    }, [isOpen]);
 
     const cleanSlug = slug.trim().toLowerCase().replace(/[^a-z0-9-]/g, '');
     const isSlugFormatValid = cleanSlug.length >= 3
@@ -85,7 +84,7 @@ export default function PublishDomainModal({
         let active = true;
         setSlugCheck({ status: 'checking', message: 'Memeriksa ketersediaan slug...' });
         const timeoutId = window.setTimeout(() => {
-            websiteApi.checkSlug(cleanSlug, websiteId)
+            websiteApi.checkSlug(cleanSlug)
                 .then((result) => {
                     if (active) {
                         setSlugCheck({
@@ -108,7 +107,7 @@ export default function PublishDomainModal({
             active = false;
             window.clearTimeout(timeoutId);
         };
-    }, [isOpen, domainType, cleanSlug, isSlugFormatValid, websiteId]);
+    }, [isOpen, domainType, cleanSlug, isSlugFormatValid]);
 
     if (!isOpen) return null;
 
@@ -131,7 +130,6 @@ export default function PublishDomainModal({
             domain_type: domainType,
             slug: cleanSlug,
             custom_domain: customDomain.trim().toLowerCase(),
-            website_id: websiteId,
         });
     };
 

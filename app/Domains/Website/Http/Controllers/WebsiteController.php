@@ -130,7 +130,7 @@ class WebsiteController extends BaseController
             $website = Website::where('user_id', $user->id)->whereKey($websiteId)->first();
         }
 
-        if (!$website && !$isNew && $websiteId === null) {
+        if (!$website && !$isNew) {
             $website = $this->findUserWebsite($request);
         }
 

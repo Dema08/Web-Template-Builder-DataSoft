@@ -34,7 +34,7 @@ class PublishWebsiteRequest extends FormRequest
     {
         $requestedWebsiteId = $this->input('website_id') ?? $this->query('website_id');
         $websiteId = $requestedWebsiteId === null
-            ? Website::where('user_id', $this->user()->id)->latest('id')->value('id')
+            ? Website::where('user_id', $this->user()->id)->oldest('id')->value('id')
             : Website::where('user_id', $this->user()->id)
                 ->whereKey($requestedWebsiteId)
                 ->value('id');
