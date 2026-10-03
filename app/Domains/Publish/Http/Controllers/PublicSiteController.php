@@ -84,9 +84,15 @@ class PublicSiteController extends BaseController
 
     private function findPublishedWebsite(string $slug): ?Website
     {
-        return Cache::remember("site:{$slug}", 300, function () use ($slug): ?Website {
-            return Website::published()->where('slug', $slug)->first();
+        $websiteId = Cache::remember("site:website-id:{$slug}", 300, function () use ($slug): int|string|null {
+            return Website::published()->where('slug', $slug)->value('id');
         });
+
+        if (!is_int($websiteId) && !is_string($websiteId)) {
+            return null;
+        }
+
+        return Website::published()->whereKey($websiteId)->first();
     }
 
     /**

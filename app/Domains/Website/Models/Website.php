@@ -21,16 +21,19 @@ class Website extends Model
             $originalSlug = $website->getOriginal('slug');
             if ($originalSlug) {
                 Cache::forget("site:{$originalSlug}");
+                Cache::forget("site:website-id:{$originalSlug}");
             }
 
             if ($website->slug) {
                 Cache::forget("site:{$website->slug}");
+                Cache::forget("site:website-id:{$website->slug}");
             }
         });
 
         static::deleting(function (Website $website): void {
             if ($website->slug) {
                 Cache::forget("site:{$website->slug}");
+                Cache::forget("site:website-id:{$website->slug}");
             }
         });
     }
