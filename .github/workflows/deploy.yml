@@ -1,0 +1,213 @@
+name: Deploy Laravel to Microdata
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, bcmath, pdo_mysql
+          tools: composer:v2
+          coverage: none
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Install Composer dependencies
+        run: composer install --no-dev --prefer-dist --optimize-autoloader
+
+      - name: Install NPM dependencies
+        run: npm ci
+
+      - name: Build frontend
+        run: npm run build
+
+      - name: Create production environment
+        env:
+          APP_KEY: ${{ secrets.APP_KEY }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_DATABASE: ${{ secrets.DB_DATABASE }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        run: |
+          cat > .env <<EOF
+          APP_NAME="Company Profile Website Builder"
+          APP_ENV=production
+          APP_KEY=${APP_KEY}
+          APP_DEBUG=false
+          APP_URL=https://web.microdata.co.id
+
+          APP_LOCALE=en
+          APP_FALLBACK_LOCALE=en
+          APP_FAKER_LOCALE=en_US
+
+          APP_MAINTENANCE_DRIVER=file
+
+          BCRYPT_ROUNDS=12
+
+          LOG_CHANNEL=stack
+          LOG_STACK=single
+          LOG_DEPRECATIONS_CHANNEL=null
+          LOG_LEVEL=error
+
+          DB_CONNECTION=mysql
+          DB_HOST=${DB_HOST}
+          DB_PORT=3306
+          DB_DATABASE=${DB_DATABASE}
+          DB_USERNAME=${DB_USERNAME}
+          DB_PASSWORD=${DB_PASSWORD}
+
+          SESSION_DRIVER=database
+          SESSION_LIFETIME=120
+          SESSION_ENCRYPT=false
+          SESSION_PATH=/
+          SESSION_DOMAIN=null
+
+          BROADCAST_CONNECTION=log
+          FILESYSTEM_DISK=local
+          QUEUE_CONNECTION=database
+          CACHE_STORE=database
+
+          MAIL_MAILER=log
+          MAIL_SCHEME=null
+          MAIL_HOST=127.0.0.1
+          MAIL_PORT=2525
+          MAIL_USERNAME=null
+          MAIL_PASSWORD=null
+          MAIL_FROM_ADDRESS="hello@example.com"
+          MAIL_FROM_NAME="\${APP_NAME}"
+
+          FRONTEND_URL=https://web.microdata.co.id
+          FRONTEND_URL_ALT=https://web.microdata.co.id
+
+          SANCTUM_STATEFUL_DOMAINS=web.microdata.co.id
+          SANCTUM_TOKEN_PREFIX="cpwb"
+          AUTH_TOKEN_NAME=auth-token
+
+          VITE_APP_NAME="\${APP_NAME}"
+          EOF
+
+      - name: Prepare deployment structure
+        run: |
+          rm -rf deploy
+          mkdir -p deploy
+
+          # Copy Laravel application
+          cp -a app deploy/
+          cp -a bootstrap deploy/
+          cp -a config deploy/
+          cp -a database deploy/
+          cp -a resources deploy/
+          cp -a routes deploy/
+          cp -a storage deploy/
+          cp -a vendor deploy/
+
+          cp artisan deploy/
+          cp composer.json deploy/
+          cp composer.lock deploy/
+
+          # Copy public assets/files except public/index.php
+          cp -a public/. deploy/
+          rm -f deploy/index.php
+
+          # Configure Apache for Laravel at ROOT document root
+          cat > deploy/.htaccess <<'HTACCESS'
+          DirectoryIndex index.php
+
+          <IfModule mod_rewrite.c>
+              <IfModule mod_negotiation.c>
+                  Options -MultiViews -Indexes
+              </IfModule>
+
+              RewriteEngine On
+
+              # Block sensitive Laravel directories
+              RewriteRule ^(?:app|bootstrap|config|database|resources|routes|storage|vendor)(?:/|$) - [F,L]
+
+              # Block environment and Git files
+              RewriteRule ^(?:\.env|\.git)(?:/|$) - [F,L]
+
+              # Handle Authorization Header
+              RewriteCond %{HTTP:Authorization} .
+              RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+              # Handle X-XSRF-Token Header
+              RewriteCond %{HTTP:x-xsrf-token} .
+              RewriteRule .* - [E=HTTP_X_XSRF_TOKEN:%{HTTP:X-XSRF-Token}]
+
+              # Redirect Trailing Slashes If Not A Folder
+              RewriteCond %{REQUEST_FILENAME} !-d
+              RewriteCond %{REQUEST_URI} (.+)/$
+              RewriteRule ^ %1 [L,R=301]
+
+              # Send Requests To Front Controller
+              RewriteCond %{REQUEST_FILENAME} !-d
+              RewriteCond %{REQUEST_FILENAME} !-f
+              RewriteRule ^ index.php [L]
+          </IfModule>
+          HTACCESS
+
+          # Create Laravel entry point for ROOT document root
+          cat > deploy/index.php <<'PHP'
+          <?php
+
+          use Illuminate\Foundation\Application;
+          use Illuminate\Http\Request;
+
+          define('LARAVEL_START', microtime(true));
+
+          if (file_exists($maintenance = __DIR__.'/storage/framework/maintenance.php')) {
+              require $maintenance;
+          }
+
+          require __DIR__.'/vendor/autoload.php';
+
+          /** @var Application $app */
+          $app = require_once __DIR__.'/bootstrap/app.php';
+
+          $app->handleRequest(Request::capture());
+          PHP
+
+          # Remove development/unnecessary files
+          rm -rf deploy/tests
+          rm -rf deploy/node_modules
+          rm -rf deploy/.git
+          rm -rf deploy/.github
+
+          cp .env deploy/.env
+
+      - name: Deploy application via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftp
+          port: 21
+          local-dir: ./deploy/
+          server-dir: /webroot/ROOT/
+          exclude: |
+            **/.git*
+            **/.github/**
+            **/tests/**
+            **/node_modules/**
+            **/.env.example
+            **/README.md
+            **/phpunit.xml
+            **/vite.config.js
+            **/package.json
+            **/package-lock.json
