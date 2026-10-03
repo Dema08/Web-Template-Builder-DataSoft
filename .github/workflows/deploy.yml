@@ -34,7 +34,33 @@ jobs:
           DB_DATABASE: ${{ secrets.DB_DATABASE }}
           DB_USERNAME: ${{ secrets.DB_USERNAME }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          MIDTRANS_MERCHANT_ID: ${{ secrets.MIDTRANS_MERCHANT_ID }}
+          MIDTRANS_SERVER_KEY: ${{ secrets.MIDTRANS_SERVER_KEY }}
+          MIDTRANS_CLIENT_KEY: ${{ secrets.MIDTRANS_CLIENT_KEY }}
+          MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+          MAIL_FROM_ADDRESS: ${{ secrets.MAIL_FROM_ADDRESS }}
         run: |
+          : "${APP_KEY:?Set the APP_KEY repository secret}"
+          : "${DB_HOST:?Set the DB_HOST repository secret}"
+          : "${DB_DATABASE:?Set the DB_DATABASE repository secret}"
+          : "${DB_USERNAME:?Set the DB_USERNAME repository secret}"
+          : "${DB_PASSWORD:?Set the DB_PASSWORD repository secret}"
+          : "${MIDTRANS_SERVER_KEY:?Set the Sandbox MIDTRANS_SERVER_KEY repository secret}"
+          : "${MIDTRANS_CLIENT_KEY:?Set the Sandbox MIDTRANS_CLIENT_KEY repository secret}"
+          : "${MAIL_USERNAME:?Set the MAIL_USERNAME repository secret}"
+          : "${MAIL_PASSWORD:?Set a newly rotated MAIL_PASSWORD repository secret}"
+          : "${MAIL_FROM_ADDRESS:?Set the MAIL_FROM_ADDRESS repository secret}"
+
+          case "$MIDTRANS_SERVER_KEY" in
+            SB-Mid-server-*) ;;
+            *) echo "::error::MIDTRANS_SERVER_KEY must be a Sandbox key"; exit 1 ;;
+          esac
+          case "$MIDTRANS_CLIENT_KEY" in
+            SB-Mid-client-*) ;;
+            *) echo "::error::MIDTRANS_CLIENT_KEY must be a Sandbox key"; exit 1 ;;
+          esac
+
           cat > .env <<EOF
           APP_NAME="Company Profile Website Builder"
           APP_ENV=production
@@ -45,6 +71,9 @@ jobs:
           APP_LOCALE=en
           APP_FALLBACK_LOCALE=en
           APP_FAKER_LOCALE=en_US
+          APP_MAIN_DOMAIN=microdata.co.id
+          APP_PRIMARY_HOST=web.microdata.co.id
+          APP_TRUSTED_HOSTS=web.microdata.co.id,*.microdata.co.id,localhost,127.0.0.1
 
           APP_MAINTENANCE_DRIVER=file
 
@@ -73,13 +102,14 @@ jobs:
           QUEUE_CONNECTION=database
           CACHE_STORE=database
 
-          MAIL_MAILER=log
+          MAIL_MAILER=smtp
           MAIL_SCHEME=null
-          MAIL_HOST=127.0.0.1
-          MAIL_PORT=2525
-          MAIL_USERNAME=null
-          MAIL_PASSWORD=null
-          MAIL_FROM_ADDRESS="hello@example.com"
+          MAIL_HOST=smtp.gmail.com
+          MAIL_PORT=587
+          MAIL_USERNAME=${MAIL_USERNAME}
+          MAIL_PASSWORD=${MAIL_PASSWORD}
+          MAIL_ENCRYPTION=tls
+          MAIL_FROM_ADDRESS=${MAIL_FROM_ADDRESS}
           MAIL_FROM_NAME="\${APP_NAME}"
 
           FRONTEND_URL=https://web.microdata.co.id
@@ -88,6 +118,13 @@ jobs:
           SANCTUM_STATEFUL_DOMAINS=web.microdata.co.id
           SANCTUM_TOKEN_PREFIX="cpwb"
           AUTH_TOKEN_NAME=auth-token
+
+          MIDTRANS_MERCHANT_ID=${MIDTRANS_MERCHANT_ID}
+          MIDTRANS_SERVER_KEY=${MIDTRANS_SERVER_KEY}
+          MIDTRANS_CLIENT_KEY=${MIDTRANS_CLIENT_KEY}
+          MIDTRANS_IS_PRODUCTION=false
+          MIDTRANS_SANITIZED=true
+          MIDTRANS_3DS=true
 
           VITE_APP_NAME="\${APP_NAME}"
           EOF
