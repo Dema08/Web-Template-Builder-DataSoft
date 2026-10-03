@@ -52,15 +52,6 @@ jobs:
           : "${MAIL_PASSWORD:?Set a newly rotated MAIL_PASSWORD repository secret}"
           : "${MAIL_FROM_ADDRESS:?Set the MAIL_FROM_ADDRESS repository secret}"
 
-          case "$MIDTRANS_SERVER_KEY" in
-            SB-Mid-server-*) ;;
-            *) echo "::error::MIDTRANS_SERVER_KEY must be a Sandbox key"; exit 1 ;;
-          esac
-          case "$MIDTRANS_CLIENT_KEY" in
-            SB-Mid-client-*) ;;
-            *) echo "::error::MIDTRANS_CLIENT_KEY must be a Sandbox key"; exit 1 ;;
-          esac
-
           cat > .env <<EOF
           APP_NAME="Company Profile Website Builder"
           APP_ENV=production
@@ -122,7 +113,7 @@ jobs:
           MIDTRANS_MERCHANT_ID=${MIDTRANS_MERCHANT_ID}
           MIDTRANS_SERVER_KEY=${MIDTRANS_SERVER_KEY}
           MIDTRANS_CLIENT_KEY=${MIDTRANS_CLIENT_KEY}
-          MIDTRANS_IS_PRODUCTION=true
+          MIDTRANS_IS_PRODUCTION=false
           MIDTRANS_SANITIZED=true
           MIDTRANS_3DS=true
 
