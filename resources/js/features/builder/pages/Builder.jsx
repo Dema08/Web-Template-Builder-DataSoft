@@ -57,22 +57,23 @@ export default function Builder() {
       try {
         setIsLoadingContent(true);
 
-        // Fetch website metadata first
-        try {
-          const site = await websiteApi.getWebsite();
-          if (site && isMounted) {
-            setWebsiteInfo(site);
-          }
-        } catch (_siteErr) {
-          // ignore
-        }
-
-        // 1. Check if user came from Templates page with a pending template selection
         const editTemplateId = sessionStorage.getItem('edit_template_id') || sessionStorage.getItem('draft_template_id');
         const editTemplateName = sessionStorage.getItem('edit_template_name') || sessionStorage.getItem('draft_template_name');
         const pendingTemplateId = sessionStorage.getItem('pending_template_id');
         const pendingTemplateName = sessionStorage.getItem('pending_template_name');
         const blankMode = sessionStorage.getItem('blank_template_mode');
+
+        // Fetch existing website metadata ONLY if user is not creating a brand-new website from a template/blank mode
+        if (!pendingTemplateId && !blankMode) {
+          try {
+            const site = await websiteApi.getWebsite();
+            if (site && isMounted) {
+              setWebsiteInfo(site);
+            }
+          } catch (_siteErr) {
+            // ignore
+          }
+        }
 
         // ─── MODE: Edit User Draft Template (dari My Templates → Edit Builder) ───
         // Langsung update template yang ada, TANPA membuat template baru (mencegah duplikasi)
@@ -570,6 +571,7 @@ export default function Builder() {
           if (publishResult) navigate(ROUTES.WEBSITES);
         }}
         onPublish={handleConfirmPublish}
+        initialWebsiteId={websiteInfo?.id || null}
         initialSlug={websiteInfo?.slug || ''}
         initialCustomDomain={websiteInfo?.settings?.custom_domain || ''}
         initialDomainType={websiteInfo?.settings?.domain_type || 'subdomain'}

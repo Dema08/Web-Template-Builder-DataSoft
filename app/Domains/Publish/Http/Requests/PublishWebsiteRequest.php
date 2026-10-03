@@ -33,11 +33,16 @@ class PublishWebsiteRequest extends FormRequest
     public function rules(): array
     {
         $requestedWebsiteId = $this->input('website_id') ?? $this->query('website_id');
-        $websiteId = $requestedWebsiteId === null
-            ? Website::where('user_id', $this->user()->id)->oldest('id')->value('id')
-            : Website::where('user_id', $this->user()->id)
+        $websiteId = null;
+        if ($requestedWebsiteId !== null) {
+            $websiteId = Website::where('user_id', $this->user()->id)
                 ->whereKey($requestedWebsiteId)
                 ->value('id');
+        } elseif ($this->user()->websites()->count() === 1) {
+            $websiteId = $this->user()->websites()->value('id');
+        } else {
+            $websiteId = $this->user()->websites()->latest('id')->value('id');
+        }
         $slugRules = [
             'required',
             'string',
