@@ -9,6 +9,7 @@ export default function PublishDomainModal({
     isOpen,
     onClose,
     onPublish,
+    initialWebsiteId = null,
     initialSlug = '',
     initialCustomDomain = '',
     initialDomainType = 'subdomain',
@@ -84,7 +85,7 @@ export default function PublishDomainModal({
         let active = true;
         setSlugCheck({ status: 'checking', message: 'Memeriksa ketersediaan slug...' });
         const timeoutId = window.setTimeout(() => {
-            websiteApi.checkSlug(cleanSlug)
+            websiteApi.checkSlug(cleanSlug, initialWebsiteId)
                 .then((result) => {
                     if (active) {
                         setSlugCheck({
@@ -107,7 +108,7 @@ export default function PublishDomainModal({
             active = false;
             window.clearTimeout(timeoutId);
         };
-    }, [isOpen, domainType, cleanSlug, isSlugFormatValid]);
+    }, [isOpen, domainType, cleanSlug, isSlugFormatValid, initialWebsiteId]);
 
     if (!isOpen) return null;
 
@@ -130,6 +131,7 @@ export default function PublishDomainModal({
             domain_type: domainType,
             slug: cleanSlug,
             custom_domain: customDomain.trim().toLowerCase(),
+            website_id: initialWebsiteId || undefined,
         });
     };
 

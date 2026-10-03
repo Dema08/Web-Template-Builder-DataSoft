@@ -33,9 +33,13 @@ const websiteApi = {
         return data.data;
     },
 
-    async checkSlug(slug) {
+    async checkSlug(slug, websiteId = null) {
+        const targetWebsiteId = websiteId || getSelectedWebsiteId();
         const { data } = await http.get('/website/check-slug', {
-            params: { ...selectedWebsiteParams().params, slug },
+            params: {
+                ...(targetWebsiteId ? { website_id: targetWebsiteId } : {}),
+                slug,
+            },
         });
         return data.data;
     },

@@ -28,6 +28,7 @@ const templateCards = [
 
 export default function UserDashboard() {
     const { user } = useAuth();
+    const [selectedWebsiteId, setSelectedWebsiteId] = useState('');
     const [range, setRange] = useState('7days');
     const [startDate, setStartDate] = useState(() => {
         const d = new Date();
@@ -39,12 +40,15 @@ export default function UserDashboard() {
     });
 
     const params = { range };
+    if (selectedWebsiteId) {
+        params.website_id = selectedWebsiteId;
+    }
     if (range === 'custom' && startDate && endDate) {
         params.start_date = startDate;
         params.end_date = endDate;
     }
 
-    const { websites, analytics, isLoading } = useDashboard(params);
+    const { websites, published_websites = [], selected_website_id, analytics, isLoading } = useDashboard(params);
     const { brand_name } = useSettingsStore();
 
     if (isLoading) {
@@ -124,9 +128,12 @@ export default function UserDashboard() {
                                 >
                                     <div className="flex items-start justify-between gap-2">
                                         <div className="flex-1 min-w-0">
-                                            <p className="text-sm font-extrabold text-[rgb(var(--color-text-primary))] truncate group-hover:text-indigo-600 transition">
+                                            <Link
+                                                to={`${ROUTES.BUILDER}?website_id=${site.id}`}
+                                                className="text-sm font-extrabold text-[rgb(var(--color-text-primary))] truncate hover:text-indigo-600 transition block"
+                                            >
                                                 {site.name}
-                                            </p>
+                                            </Link>
                                             <p className="text-[11px] text-indigo-600 font-medium mt-0.5 flex items-center gap-1 truncate">
                                                 <Globe className="h-3 w-3 shrink-0" />
                                                 <span className="truncate">{slug}.{rootDomain}</span>
@@ -188,8 +195,30 @@ export default function UserDashboard() {
                             </p>
                         </div>
 
-                        {/* Range Select Controls */}
+                        {/* Range & Published Website Select Controls */}
                         <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                            {published_websites && published_websites.length > 0 ? (
+                                <div className="relative">
+                                    <select
+                                        value={selectedWebsiteId || selected_website_id || ''}
+                                        onChange={(e) => setSelectedWebsiteId(e.target.value)}
+                                        className="appearance-none pl-3 pr-8 py-1.5 bg-indigo-50 border border-indigo-200 rounded-xl text-xs font-bold text-indigo-900 hover:bg-indigo-100/80 transition focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
+                                        title="Pilih Website Dipublish"
+                                    >
+                                        {published_websites.map((site) => (
+                                            <option key={site.id} value={site.id}>
+                                                🌐 {site.name} ({site.domain})
+                                            </option>
+                                        ))}
+                                    </select>
+                                    <ChevronRight className="h-3.5 w-3.5 text-indigo-600 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none rotate-90" />
+                                </div>
+                            ) : (
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-amber-50 text-amber-700 border border-amber-200 text-xs font-bold">
+                                    Belum ada website dipublish
+                                </span>
+                            )}
+
                             {range === 'custom' && (
                                 <div className="flex items-center gap-2">
                                     <input

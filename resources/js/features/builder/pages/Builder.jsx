@@ -57,22 +57,23 @@ export default function Builder() {
       try {
         setIsLoadingContent(true);
 
-        // Fetch website metadata first
-        try {
-          const site = await websiteApi.getWebsite();
-          if (site && isMounted) {
-            setWebsiteInfo(site);
-          }
-        } catch (_siteErr) {
-          // ignore
-        }
-
-        // 1. Check if user came from Templates page with a pending template selection
         const editTemplateId = sessionStorage.getItem('edit_template_id') || sessionStorage.getItem('draft_template_id');
         const editTemplateName = sessionStorage.getItem('edit_template_name') || sessionStorage.getItem('draft_template_name');
         const pendingTemplateId = sessionStorage.getItem('pending_template_id');
         const pendingTemplateName = sessionStorage.getItem('pending_template_name');
         const blankMode = sessionStorage.getItem('blank_template_mode');
+
+        // Fetch existing website metadata ONLY if user is not creating a brand-new website from a template/blank mode
+        if (!pendingTemplateId && !blankMode) {
+          try {
+            const site = await websiteApi.getWebsite();
+            if (site && isMounted) {
+              setWebsiteInfo(site);
+            }
+          } catch (_siteErr) {
+            // ignore
+          }
+        }
 
         // ─── MODE: Edit User Draft Template (dari My Templates → Edit Builder) ───
         // Langsung update template yang ada, TANPA membuat template baru (mencegah duplikasi)
@@ -241,18 +242,40 @@ export default function Builder() {
           const site = await websiteApi.getWebsite();
           if (site && isMounted) {
             setWebsiteInfo(site);
+            if (site.name) {
+              setTemplateName(site.name);
+            }
             const currentWebsiteId = new URLSearchParams(window.location.search).get('website_id');
             if (site.id && !currentWebsiteId) {
               window.history.replaceState(null, '', `${ROUTES.BUILDER}?website_id=${site.id}`);
             }
           }
           const res = await websiteApi.getContent();
-          const content = res.data?.data ?? res.data;
+          const content = res.data?.data ?? res.data ?? site?.draft_json ?? site?.published_json;
 
           if (content && isMounted) {
-            const savedSections = content.sections || content.draft_json?.sections || content.published_json?.sections;
-            if (savedSections && Array.isArray(savedSections) && savedSections.length > 0) {
-              loadSections(savedSections);
+            let sectionsToLoad = [];
+            let pagesToLoad = {};
+
+            if (Array.isArray(content)) {
+              sectionsToLoad = content;
+            } else if (content && typeof content === 'object') {
+              if (Array.isArray(content.sections)) {
+                sectionsToLoad = content.sections;
+              } else if (Array.isArray(content.draft_json?.sections)) {
+                sectionsToLoad = content.draft_json.sections;
+              } else if (Array.isArray(content.published_json?.sections)) {
+                sectionsToLoad = content.published_json.sections;
+              } else if (Array.isArray(content.draft_json)) {
+                sectionsToLoad = content.draft_json;
+              } else if (Array.isArray(content.published_json)) {
+                sectionsToLoad = content.published_json;
+              }
+              if (content.pages) pagesToLoad = content.pages;
+            }
+
+            if (sectionsToLoad.length > 0) {
+              loadSections(sectionsToLoad, pagesToLoad);
             }
           }
         } catch (_err) {
@@ -572,6 +595,7 @@ export default function Builder() {
           if (publishResult) navigate(ROUTES.WEBSITES);
         }}
         onPublish={handleConfirmPublish}
+        initialWebsiteId={websiteInfo?.id || null}
         initialSlug={websiteInfo?.slug || ''}
         initialCustomDomain={websiteInfo?.settings?.custom_domain || ''}
         initialDomainType={websiteInfo?.settings?.domain_type || 'subdomain'}
