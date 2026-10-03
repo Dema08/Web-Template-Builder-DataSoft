@@ -67,6 +67,15 @@ class PublicSettingsController extends BaseController
             }
         }
 
+        $settings['public_stats'] = [
+            'published_websites' => \App\Domains\Website\Models\Website::where('status', 'published')->count(),
+            'total_users' => \App\Domains\User\Models\User::count(),
+            'total_views' => \Illuminate\Support\Facades\Schema::hasTable('website_view')
+                ? \DB::table('website_view')->count()
+                : 0,
+            'total_templates' => \App\Domains\Template\Models\Template::where('status', 'published')->count(),
+        ];
+
         return $this->success($settings, 'Public settings retrieved successfully');
     }
 }

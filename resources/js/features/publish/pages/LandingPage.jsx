@@ -448,11 +448,18 @@ function DashboardIllustration() {
 /* ─────────────────────────────────────────────────────────
    ANIMATED STATS SECTION
 ───────────────────────────────────────────────────────── */
-function StatsSection() {
+function StatsSection({ publicStats }) {
     const sectionRef = useRef(null);
     const bgRef = useRef(null);
     const [isAnimated, setIsAnimated] = useState(false);
-    const [counts, setCounts] = useState(['0', '0%', '0', '0/7']);
+    const [counts, setCounts] = useState(['0', '0', '0', '0']);
+
+    const statsItems = [
+        { key: 'published_websites', label: 'Websites Dipublish', icon: Globe, targetVal: publicStats?.published_websites ?? 0 },
+        { key: 'total_users', label: 'Total Member', icon: Users, targetVal: publicStats?.total_users ?? 0 },
+        { key: 'total_views', label: 'Total Pengunjung', icon: Eye, targetVal: publicStats?.total_views ?? 0 },
+        { key: 'total_templates', label: 'Template Ready', icon: Sparkles, targetVal: publicStats?.total_templates ?? 0 },
+    ];
 
     // Intersection Observer to trigger counter once
     useEffect(() => {
@@ -473,11 +480,11 @@ function StatsSection() {
         return () => observer.disconnect();
     }, []);
 
-    // requestAnimationFrame Counter Logic with easeOutExpo (2200ms)
+    // requestAnimationFrame Counter Logic with easeOutExpo (2000ms)
     useEffect(() => {
         if (!isAnimated) return;
 
-        const duration = 2200;
+        const duration = 2000;
         const startTime = performance.now();
         let animationFrameId;
 
@@ -488,36 +495,17 @@ function StatsSection() {
             const progress = Math.min(elapsed / duration, 1);
             const easeVal = easeOutExpo(progress);
 
-            // Item 1: 1.2M+ (Websites Created) -> 0 to 1.2M+
-            const val1 = 1.2 * easeVal;
-            let display1;
-            if (progress >= 1) {
-                display1 = '1.2M+';
-            } else if (val1 < 1.0) {
-                display1 = Math.floor(val1 * 1000) + 'K';
-            } else {
-                display1 = val1.toFixed(1) + 'M+';
-            }
+            const updatedCounts = statsItems.map((item) => {
+                const target = item.targetVal;
+                if (target <= 0) return '0';
+                const current = Math.floor(target * easeVal);
+                if (progress >= 1) {
+                    return target >= 1000 ? target.toLocaleString('id-ID') : String(target);
+                }
+                return current >= 1000 ? current.toLocaleString('id-ID') : String(current);
+            });
 
-            // Item 2: 99.9% (Platform Uptime) -> 0% to 99.9%
-            const val2 = 99.9 * easeVal;
-            let display2 = progress >= 1 ? '99.9%' : val2.toFixed(1) + '%';
-
-            // Item 3: 10K+ (Active Users) -> 0 to 10K+
-            const val3 = 10 * easeVal;
-            let display3;
-            if (progress >= 1) {
-                display3 = '10K+';
-            } else {
-                const kVal = Math.floor(val3);
-                display3 = kVal > 0 ? `${kVal}K` : '0';
-            }
-
-            // Item 4: 24/7 (Expert Support) -> 0/7 to 24/7
-            const val4 = Math.floor(24 * easeVal);
-            let display4 = progress >= 1 ? '24/7' : `${val4}/7`;
-
-            setCounts([display1, display2, display3, display4]);
+            setCounts(updatedCounts);
 
             if (progress < 1) {
                 animationFrameId = requestAnimationFrame(updateCounters);
@@ -529,9 +517,9 @@ function StatsSection() {
         return () => {
             if (animationFrameId) cancelAnimationFrame(animationFrameId);
         };
-    }, [isAnimated]);
+    }, [isAnimated, publicStats]);
 
-    // Parallax background on scroll (translateY = scroll * 0.15)
+    // Parallax background on scroll
     useEffect(() => {
         let animationFrameId;
 
@@ -579,11 +567,11 @@ function StatsSection() {
                     <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
                         Trusted at Scale
                     </h2>
-                    <p className="text-slate-400 mt-2 font-medium">Numbers that speak for themselves.</p>
+                    <p className="text-slate-400 mt-2 font-medium">Statistik real-time platform Microdata Website Builder.</p>
                 </div>
 
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
-                    {STATS.map((s, idx) => {
+                    {statsItems.map((s, idx) => {
                         const Icon = s.icon;
                         return (
                             <div
@@ -1164,6 +1152,7 @@ export default function LandingPage({ liveContent }) {
     const [activeTemplate, setActiveTemplate] = useState(null);
     const [landingContent, setLandingContent] = useState(liveContent || DEFAULT_LANDING_CONTENT);
     const [pricingPlans, setPricingPlans] = useState(null);
+    const [publicStats, setPublicStats] = useState(null);
 
     useEffect(() => {
         if (liveContent) {
@@ -1173,6 +1162,9 @@ export default function LandingPage({ liveContent }) {
         let isMounted = true;
         settingsApi.getPublicSettings().then((settings) => {
             if (!isMounted) return;
+            if (settings?.public_stats) {
+                setPublicStats(settings.public_stats);
+            }
             if (settings?.landing_content) {
                 const parsed = typeof settings.landing_content === 'string'
                     ? JSON.parse(settings.landing_content)
@@ -1429,7 +1421,7 @@ export default function LandingPage({ liveContent }) {
             {/* ════════════════════════════════════════════════════
                 STATS (Dark with Animated Counter & Parallax)
             ════════════════════════════════════════════════════ */}
-            <StatsSection />
+            <StatsSection publicStats={publicStats} />
 
 
 
