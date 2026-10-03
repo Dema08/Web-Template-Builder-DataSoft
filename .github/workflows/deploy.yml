@@ -46,11 +46,13 @@ jobs:
           : "${DB_DATABASE:?Set the DB_DATABASE repository secret}"
           : "${DB_USERNAME:?Set the DB_USERNAME repository secret}"
           : "${DB_PASSWORD:?Set the DB_PASSWORD repository secret}"
-          : "${MIDTRANS_SERVER_KEY:?Set the Sandbox MIDTRANS_SERVER_KEY repository secret}"
-          : "${MIDTRANS_CLIENT_KEY:?Set the Sandbox MIDTRANS_CLIENT_KEY repository secret}"
           : "${MAIL_USERNAME:?Set the MAIL_USERNAME repository secret}"
           : "${MAIL_PASSWORD:?Set a newly rotated MAIL_PASSWORD repository secret}"
           : "${MAIL_FROM_ADDRESS:?Set the MAIL_FROM_ADDRESS repository secret}"
+
+          if [ -z "$MIDTRANS_SERVER_KEY" ] || [ -z "$MIDTRANS_CLIENT_KEY" ]; then
+            echo "::warning::Midtrans keys are missing; payment checkout will not work until both secrets are configured."
+          fi
 
           cat > .env <<EOF
           APP_NAME="Company Profile Website Builder"
