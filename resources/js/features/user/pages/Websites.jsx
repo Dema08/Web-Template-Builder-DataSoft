@@ -38,11 +38,11 @@ export default function Websites() {
             const domainType = website.settings?.domain_type;
             const domainStr = (domainType === 'custom' && customDomain)
                 ? customDomain
-                : `${website.slug || 'my-website'}.microdata.id`;
+                : `web.microdata.co.id/s/${website.slug || 'my-website'}`;
 
             const publicUrlStr = (domainType === 'custom' && customDomain)
                 ? (customDomain.startsWith('http') ? customDomain : `https://${customDomain}`)
-                : `/public/site?slug=${website.slug}`;
+                : `https://web.microdata.co.id/public/site?slug=${website.slug}`;
 
             list.push({
                 id: website.id,
@@ -79,7 +79,7 @@ export default function Websites() {
             id: Date.now(),
             name: newSiteName,
             subdomain: newSubdomain || newSiteName.toLowerCase().replace(/\s+/g, '-'),
-            domain: `${newSubdomain || newSiteName.toLowerCase().replace(/\s+/g, '-')}.Microdata.id`,
+            domain: `web.microdata.co.id/s/${newSubdomain || newSiteName.toLowerCase().replace(/\s+/g, '-')}`,
             status: 'Draft',
             updatedAt: 'Just now',
             visitors: '0',
@@ -332,7 +332,7 @@ export default function Websites() {
                                         className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-l-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input rounded-r-none"
                                     />
                                     <span className="bg-[rgb(var(--color-surface-alt))] text-[rgb(var(--color-text-secondary))] px-3 py-2.5 text-xs border border-l-0 border-[rgb(var(--color-border))] rounded-r-xl font-medium">
-                                        .Microdata.id
+                                        .web.microdata.co.id
                                     </span>
                                 </div>
                             </div>

@@ -124,7 +124,7 @@ export default function PublishDomainModal({
                                 <div>
                                     <div className="flex items-center gap-2">
                                         <span className="text-sm font-extrabold text-slate-900">
-                                            Subdomain Microdata (.microdata.id)
+                                            Subdomain Microdata (.web.microdata.co.id)
                                         </span>
                                         <span className="px-2 py-0.5 rounded-md bg-indigo-100 text-indigo-700 text-[10px] font-bold">
                                             GRATIS
@@ -150,14 +150,14 @@ export default function PublishDomainModal({
                                         className="flex-1 h-10 px-3 bg-white border border-slate-300 rounded-l-xl text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600"
                                     />
                                     <span className="h-10 px-3.5 bg-slate-100 border border-l-0 border-slate-300 rounded-r-xl text-xs font-bold text-slate-600 flex items-center">
-                                        .microdata.id
+                                        .web.microdata.co.id
                                     </span>
                                 </div>
 
                                 <div className="p-2.5 bg-white rounded-xl border border-indigo-100 flex items-center justify-between text-xs">
                                     <span className="text-slate-500 text-[11px] font-medium">URL Publik:</span>
                                     <span className="font-extrabold text-indigo-600 truncate max-w-[280px]">
-                                        https://{cleanSlug || 'subdomain'}.microdata.id
+                                        https://web.microdata.co.id/public/site?slug={cleanSlug || 'subdomain'}
                                     </span>
                                 </div>
                             </div>

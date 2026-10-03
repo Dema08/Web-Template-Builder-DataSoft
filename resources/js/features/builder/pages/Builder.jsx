@@ -345,7 +345,7 @@ export default function Builder() {
               rel="noreferrer"
               className="text-xs text-indigo-200 underline mt-1 inline-block"
             >
-              Lihat Website Live ({pubData?.domain_type === 'custom' ? pubData.custom_domain : `${pubData.website?.slug}.microdata.id`}) →
+              Lihat Website Live ({pubData?.domain_type === 'custom' ? pubData.custom_domain : `web.microdata.co.id/public/site?slug=${pubData.website?.slug}`}) →
             </a>
           )}
         </div>,
