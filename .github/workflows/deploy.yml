@@ -251,26 +251,40 @@ jobs:
           echo 'DEPLOY OK';
           PHP
 
-      - name: Install lftp
-        run: sudo apt-get update -qq && sudo apt-get install -y -qq lftp
-
       - name: Upload zip and unzip.php via FTP
+        timeout-minutes: 45
         env:
           FTP_SERVER: ${{ secrets.FTP_SERVER }}
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
         run: |
-          lftp -c "
-            set ftp:ssl-allow no;
-            set ftp:passive-mode true;
-            set net:timeout 120;
-            set net:max-retries 3;
-            set net:reconnect-interval-base 5;
-            open -u \"$FTP_USERNAME\",\"$FTP_PASSWORD\" \"$FTP_SERVER\";
-            cd /webroot/ROOT;
-            put deploy.zip;
-            put unzip.php;
-          "
+          : "${FTP_SERVER:?Set the FTP_SERVER repository secret}"
+          : "${FTP_USERNAME:?Set the FTP_USERNAME repository secret}"
+          : "${FTP_PASSWORD:?Set the FTP_PASSWORD repository secret}"
+
+          upload_ftp_file() {
+            local file="$1"
+            local remote_name="$2"
+
+            echo "Uploading ${file} ($(du -h "$file" | cut -f1)) to /webroot/ROOT/${remote_name}"
+            curl \
+              --fail \
+              --show-error \
+              --progress-bar \
+              --ftp-pasv \
+              --connect-timeout 30 \
+              --max-time 1200 \
+              --retry 2 \
+              --retry-delay 5 \
+              --retry-max-time 1800 \
+              --user "${FTP_USERNAME}:${FTP_PASSWORD}" \
+              --upload-file "$file" \
+              "ftp://${FTP_SERVER}/webroot/ROOT/${remote_name}"
+            echo "Uploaded ${remote_name}"
+          }
+
+          upload_ftp_file deploy.zip deploy.zip
+          upload_ftp_file unzip.php unzip.php
 
       - name: Trigger extraction
         env:
