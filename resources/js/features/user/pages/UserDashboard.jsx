@@ -27,6 +27,7 @@ const templateCards = [
 ];
 
 export default function UserDashboard() {
+    const { user } = useAuth();
     const [selectedWebsiteId, setSelectedWebsiteId] = useState('');
     const [range, setRange] = useState('7days');
     const [startDate, setStartDate] = useState(() => {
