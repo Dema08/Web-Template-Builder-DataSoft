@@ -13,16 +13,27 @@ class AdminAnalyticsController extends BaseController
 {
     public function index(): JsonResponse
     {
-        // 1. Real-time Server Performance Metrics
-        $cpuLoad = function_exists('sys_getloadavg') ? sys_getloadavg() : [0.15, 0.10, 0.05];
-        $cpuValue = isset($cpuLoad[0]) ? round(min($cpuLoad[0] * 20, 99), 1) : 14.2;
+        // 1. Real-time Server Performance Metrics (Direct OS Kernel Readings)
+        $cpuLoad = function_exists('sys_getloadavg') ? sys_getloadavg() : [0.10, 0.08, 0.05];
+        $loadAvg1Min = $cpuLoad[0] ?? 0.10;
+
+        // Detect number of CPU cores to calculate precise CPU % load
+        $cores = 1;
+        if (file_exists('/proc/cpuinfo')) {
+            $cpuinfo = @file_get_contents('/proc/cpuinfo');
+            if ($cpuinfo) {
+                preg_match_all('/^processor/m', $cpuinfo, $matchesCores);
+                $cores = count($matchesCores[0]) ?: 1;
+            }
+        }
+        $cpuValue = round(min(($loadAvg1Min / $cores) * 100, 100), 1);
 
         $diskFree = @disk_free_space(base_path()) ?: (500 * 1024 * 1024 * 1024 * 0.8);
         $diskTotal = @disk_total_space(base_path()) ?: (500 * 1024 * 1024 * 1024);
-        $diskUsed = $diskTotal - $diskFree;
+        $diskUsed = max($diskTotal - $diskFree, 0);
 
-        $storageUsedGb = round($diskUsed / (1024 * 1024 * 1024), 1);
-        $storageTotalGb = round($diskTotal / (1024 * 1024 * 1024), 1);
+        $storageUsedGb = round($diskUsed / (1024 * 1024 * 1024), 2);
+        $storageTotalGb = round($diskTotal / (1024 * 1024 * 1024), 2);
 
         $memoryPercent = '42.5%';
         if (file_exists('/proc/meminfo')) {
