@@ -4,10 +4,12 @@ namespace App\Domains\Website\Http\Controllers;
 
 use App\Domains\Shared\Http\Controllers\BaseController;
 use App\Domains\Publish\Http\Requests\PublishWebsiteRequest;
+use App\Domains\Website\Http\Requests\UploadThumbnailRequest;
 use App\Domains\Website\Models\Website;
 use App\Domains\Website\Resources\WebsiteResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 
@@ -297,20 +299,39 @@ class WebsiteController extends BaseController
         ], 'Website published successfully');
     }
 
-    public function uploadThumbnail(Request $request, int $websiteId): JsonResponse
+    public function uploadThumbnail(UploadThumbnailRequest $request, int $websiteId): JsonResponse
     {
-        $website = $request->user()->websites()->whereKey($websiteId)->firstOrFail();
+        $user = $request->user();
+        $website = $user->isAdmin()
+            ? Website::findOrFail($websiteId)
+            : $user->websites()->whereKey($websiteId)->firstOrFail();
 
-        $request->validate([
-            'thumbnail' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
-        ]);
+        $disk = Storage::disk('public');
+        $previousThumbnailPath = $website->thumbnail_path;
+        $path = $request->file('thumbnail')->store("website-thumbnails/{$website->id}", 'public');
 
-        if ($website->thumbnail_path && Storage::disk('public')->exists($website->thumbnail_path)) {
-            Storage::disk('public')->delete($website->thumbnail_path);
+        if (! is_string($path) || $path === '') {
+            Log::error('Unable to store website thumbnail.', [
+                'website_id' => $website->id,
+                'user_id' => $user->id,
+            ]);
+
+            return $this->serverError('Gagal menyimpan file thumbnail.');
         }
 
-        $path = $request->file('thumbnail')->store("website-thumbnails/{$website->id}", 'public');
         $website->update(['thumbnail_path' => $path]);
+
+        if (
+            $previousThumbnailPath
+            && $previousThumbnailPath !== $path
+            && $disk->exists($previousThumbnailPath)
+            && ! $disk->delete($previousThumbnailPath)
+        ) {
+            Log::warning('Unable to delete replaced website thumbnail.', [
+                'website_id' => $website->id,
+                'thumbnail_path' => $previousThumbnailPath,
+            ]);
+        }
 
         return $this->success(
             WebsiteResource::make($website->fresh())->resolve($request),
@@ -320,7 +341,10 @@ class WebsiteController extends BaseController
 
     public function deleteThumbnail(Request $request, int $websiteId): JsonResponse
     {
-        $website = $request->user()->websites()->whereKey($websiteId)->firstOrFail();
+        $user = $request->user();
+        $website = $user->isAdmin()
+            ? Website::findOrFail($websiteId)
+            : $user->websites()->whereKey($websiteId)->firstOrFail();
 
         if ($website->thumbnail_path && Storage::disk('public')->exists($website->thumbnail_path)) {
             Storage::disk('public')->delete($website->thumbnail_path);
