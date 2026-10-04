@@ -35,6 +35,11 @@ class PublishWebsiteRequest extends FormRequest
         $websiteId = Website::where('user_id', $this->user()->id)
             ->whereKey($this->input('website_id'))
             ->value('id');
+        $publishAction = $this->input('publish_action', 'update');
+        $slugUniqueRule = Rule::unique('website', 'slug');
+        if ($publishAction === 'update' && $websiteId !== null) {
+            $slugUniqueRule->ignore($websiteId);
+        }
         $slugRules = [
             'required',
             'string',
@@ -42,7 +47,7 @@ class PublishWebsiteRequest extends FormRequest
             'max:50',
             'regex:/^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/',
             Rule::notIn(self::RESERVED_SLUGS),
-            Rule::unique('website', 'slug')->ignore($websiteId),
+            $slugUniqueRule,
         ];
 
         return [
@@ -51,6 +56,8 @@ class PublishWebsiteRequest extends FormRequest
                 'integer',
                 Rule::exists('website', 'id')->where('user_id', $this->user()->id),
             ],
+            'publish_action' => ['sometimes', Rule::in(['update', 'new'])],
+            'draft_json' => ['sometimes', 'array'],
             'slug' => $slugRules,
             'domain_type' => ['required', Rule::in(['subdomain', 'custom'])],
             'custom_domain' => ['required_if:domain_type,custom', 'nullable', 'string', 'max:253'],
@@ -66,6 +73,7 @@ class PublishWebsiteRequest extends FormRequest
             'slug.regex' => 'Slug hanya boleh berisi huruf kecil, angka, dan tanda hubung.',
             'slug.not_in' => 'Slug tersebut tidak dapat digunakan.',
             'slug.unique' => 'Slug tersebut sudah digunakan website lain.',
+            'publish_action.in' => 'Pilihan publikasi tidak valid.',
             'domain_type.required' => 'Jenis domain wajib dipilih.',
             'domain_type.in' => 'Jenis domain tidak valid.',
             'custom_domain.required_if' => 'Custom domain wajib diisi.',

@@ -9,6 +9,7 @@ use App\Domains\Website\Resources\WebsiteResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 /**
  * WebsiteController
@@ -77,6 +78,7 @@ class WebsiteController extends BaseController
         $validated = $request->validate([
             'slug' => ['required', 'string', 'min:3', 'max:50', 'regex:/^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/'],
             'website_id' => ['nullable', 'integer'],
+            'ignore_current_website' => ['sometimes', 'boolean'],
         ]);
 
         $reservedSlugs = [
@@ -87,8 +89,9 @@ class WebsiteController extends BaseController
         $websiteId = $request->query('website_id');
         $user = $request->user();
 
+        $ignoreCurrentWebsite = $request->boolean('ignore_current_website', true);
         $currentWebsiteId = $websiteId === null
-            ? ($user->websites()->count() === 1 ? $user->websites()->value('id') : null)
+            ? ($ignoreCurrentWebsite && $user->websites()->count() === 1 ? $user->websites()->value('id') : null)
             : $user->websites()->whereKey($websiteId)->value('id');
         abort_if($websiteId !== null && $currentWebsiteId === null, 404);
 
@@ -207,10 +210,13 @@ class WebsiteController extends BaseController
     {
         $user = $request->user();
         $validated = $request->validated();
-        $website = $user->websites()->findOrFail($validated['website_id']);
-        $domainType = $validated['domain_type'];
+        $sourceWebsite = $user->websites()->findOrFail($validated['website_id']);
+        $publishAction = $validated['publish_action'] ?? 'update';
+        $isCreatingNew = $publishAction === 'new';
+        $domainType = $isCreatingNew ? 'subdomain' : $validated['domain_type'];
         $customDomain = trim((string) ($validated['custom_domain'] ?? ''));
         $slug = $validated['slug'];
+        $draftJson = $validated['draft_json'] ?? $sourceWebsite->draft_json;
         $plan = $user->effective_pricelist;
 
         $maxDomains = (int) ($plan->maks_domain ?? 0);
@@ -222,7 +228,7 @@ class WebsiteController extends BaseController
             !$user->isAdmin()
             && $maxDomains !== -1
             && $publishedCount >= $maxDomains
-            && $website->status !== 'published'
+            && ($isCreatingNew || $sourceWebsite->status !== 'published')
         ) {
             return response()->json([
                 'success' => false,
@@ -243,24 +249,36 @@ class WebsiteController extends BaseController
             ], 422);
         }
 
-        $settings = $website->settings ?? [];
-        $settings['domain_type'] = $domainType;
-        if ($customDomain) {
-            $settings['custom_domain'] = $customDomain;
-        }
+        $website = DB::transaction(function () use ($sourceWebsite, $isCreatingNew, $slug, $domainType, $customDomain, $draftJson) {
+            $website = $sourceWebsite;
+            $settings = $sourceWebsite->settings ?? [];
 
-        $updateData = [
-            'published_json' => $website->draft_json,
-            'status' => 'published',
-            'published_at' => now(),
-            'settings' => $settings,
-        ];
+            if ($isCreatingNew) {
+                $website = $sourceWebsite->replicate();
+                $website->slug = $slug;
+            } elseif ($slug && $slug !== $sourceWebsite->slug) {
+                $website->slug = $slug;
+            }
 
-        if ($slug && $slug !== $website->slug) {
-            $updateData['slug'] = $slug;
-        }
+            $settings['domain_type'] = $domainType;
+            if ($domainType === 'subdomain') {
+                unset($settings['custom_domain']);
+            }
+            if ($customDomain) {
+                $settings['custom_domain'] = $customDomain;
+            }
 
-        $website->update($updateData);
+            $website->fill([
+                'draft_json' => $draftJson,
+                'published_json' => $draftJson,
+                'status' => 'published',
+                'published_at' => now(),
+                'settings' => $settings,
+            ]);
+            $website->save();
+
+            return $website;
+        });
 
         $publishedUrl = ($domainType === 'custom' && $customDomain)
             ? (str_starts_with($customDomain, 'http') ? $customDomain : 'https://' . $customDomain)
@@ -269,6 +287,7 @@ class WebsiteController extends BaseController
                 : url('/p/' . $website->slug));
 
         return $this->success([
+            'publish_action' => $publishAction,
             'published_url' => $publishedUrl,
             'path_url' => url('/p/'.rawurlencode($website->slug)),
             'subdomain_url' => $website->url_subdomain,

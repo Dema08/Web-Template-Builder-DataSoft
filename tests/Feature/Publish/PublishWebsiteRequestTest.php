@@ -67,3 +67,20 @@ it('allows the owner to republish the selected website without conflicting with 
 
     expect($validator->passes())->toBeTrue();
 });
+
+it('does not allow a new website to reuse the source website slug', function () {
+    $websiteId = DB::table('website')->insertGetId([
+        'user_id' => 10,
+        'slug' => 'my-site',
+    ]);
+
+    $validator = publishWebsiteValidator([
+        'website_id' => $websiteId,
+        'publish_action' => 'new',
+        'slug' => 'my-site',
+        'domain_type' => 'subdomain',
+    ], 10);
+
+    expect($validator->fails())->toBeTrue()
+        ->and($validator->errors()->has('slug'))->toBeTrue();
+});

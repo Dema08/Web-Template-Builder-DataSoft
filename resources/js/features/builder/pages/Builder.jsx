@@ -463,16 +463,24 @@ export default function Builder() {
         return;
       }
 
-      // 1. Save current canvas draft — always pass website_id explicitly to avoid wrong target
-      const savePayload = { draft_json: draftJson, website_id: activeWebsiteId };
-      await websiteApi.saveContent(savePayload);
-
-      // 2. Execute publish with domain settings — pass website_id explicitly
-      const publishPayload = { ...domainConfig, website_id: activeWebsiteId };
+      // Publish the exact current canvas snapshot so draft and live content are persisted atomically.
+      const publishPayload = {
+        ...domainConfig,
+        website_id: activeWebsiteId,
+        draft_json: draftJson,
+      };
       const res = await websiteApi.publish(publishPayload);
       const pubData = res?.data ?? res;
 
-      setPublishResult(pubData);
+      const publishedWebsite = pubData?.website;
+      if (publishedWebsite?.id) {
+        setWebsiteInfo(publishedWebsite);
+        window.history.replaceState(null, '', `${ROUTES.BUILDER}?website_id=${publishedWebsite.id}`);
+      }
+      setPublishResult({
+        ...pubData,
+        publish_action: domainConfig.publish_action || 'update',
+      });
       queryClient.invalidateQueries({ queryKey: ['websites'] });
       queryClient.invalidateQueries({ queryKey: ['website-quota'] });
       queryClient.invalidateQueries({ queryKey: [ROUTES.WEBSITES] });
@@ -594,6 +602,7 @@ export default function Builder() {
         initialSlug={websiteInfo?.slug || ''}
         initialCustomDomain={websiteInfo?.settings?.custom_domain || ''}
         initialDomainType={websiteInfo?.settings?.domain_type || 'subdomain'}
+        initialIsPublished={websiteInfo?.status === 'published'}
         isPublishing={isPublishing}
         publishResult={publishResult}
       />

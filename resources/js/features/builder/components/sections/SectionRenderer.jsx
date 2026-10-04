@@ -102,9 +102,13 @@ export default function SectionRenderer({ section, isSelected, onClick, isPrevie
   // Hydrate section customTexts overrides onto matching template elements
   useEffect(() => {
     if (sectionRef.current && section.customTexts) {
+      const elements = Array.from(sectionRef.current.querySelectorAll('*'));
       Object.entries(section.customTexts).forEach(([key, val]) => {
-        const el = sectionRef.current.querySelector(`[data-text-key="${key}"]`);
+        const textIndex = key.match(/^t_(\d+)_/)?.[1];
+        const el = sectionRef.current.querySelector(`[data-text-key="${key}"]`)
+          || (textIndex !== undefined ? elements[Number(textIndex)] : null);
         if (el && val !== undefined && el.innerText !== val) {
+          el.setAttribute('data-text-key', key);
           el.innerText = val;
         }
       });
@@ -258,7 +262,14 @@ export default function SectionRenderer({ section, isSelected, onClick, isPrevie
   // Compute background style
   const getSectionStyle = () => {
     const bg = section.background;
-    let style = { position: 'relative', minHeight: section.type === 'navbar' || section.type === 'header' || section.type === 'footer' ? 0 : '120px' };
+    const sectionStyles = section.styles && typeof section.styles === 'object' && !Array.isArray(section.styles)
+      ? section.styles
+      : {};
+    let style = {
+      position: 'relative',
+      minHeight: section.type === 'navbar' || section.type === 'header' || section.type === 'footer' ? 0 : '120px',
+      ...sectionStyles,
+    };
     if (!bg || bg.type === 'none') return style;
 
     if (bg.type === 'color') {

@@ -13,6 +13,7 @@ export default function PublishDomainModal({
     initialSlug = '',
     initialCustomDomain = '',
     initialDomainType = 'subdomain',
+    initialIsPublished = false,
     isPublishing = false,
     publishResult = null,
 }) {
@@ -22,6 +23,7 @@ export default function PublishDomainModal({
     const isFreeAccount = isFree && !isAdmin;
 
     const [domainType, setDomainType] = useState(initialDomainType || 'subdomain');
+    const [publishAction, setPublishAction] = useState('update');
     const [slug, setSlug] = useState(initialSlug || '');
     const [customDomain, setCustomDomain] = useState(initialCustomDomain || '');
     const [slugCheck, setSlugCheck] = useState({ status: 'idle', message: '' });
@@ -33,6 +35,7 @@ export default function PublishDomainModal({
         if (isOpen) {
             setSlug(initialSlug || '');
             setCustomDomain(initialCustomDomain || '');
+            setPublishAction('update');
             setSlugCheck({ status: 'idle', message: '' });
             setQuota(null);
             setQuotaError('');
@@ -85,7 +88,11 @@ export default function PublishDomainModal({
         let active = true;
         setSlugCheck({ status: 'checking', message: 'Memeriksa ketersediaan slug...' });
         const timeoutId = window.setTimeout(() => {
-            websiteApi.checkSlug(cleanSlug, initialWebsiteId)
+            websiteApi.checkSlug(
+                cleanSlug,
+                publishAction === 'update' ? initialWebsiteId : null,
+                publishAction === 'update'
+            )
                 .then((result) => {
                     if (active) {
                         setSlugCheck({
@@ -108,7 +115,7 @@ export default function PublishDomainModal({
             active = false;
             window.clearTimeout(timeoutId);
         };
-    }, [isOpen, domainType, cleanSlug, isSlugFormatValid, initialWebsiteId]);
+    }, [isOpen, domainType, publishAction, cleanSlug, isSlugFormatValid, initialWebsiteId]);
 
     if (!isOpen) return null;
 
@@ -128,6 +135,7 @@ export default function PublishDomainModal({
         }
 
         onPublish({
+            publish_action: publishAction,
             domain_type: domainType,
             slug: cleanSlug,
             custom_domain: customDomain.trim().toLowerCase(),
@@ -145,7 +153,7 @@ export default function PublishDomainModal({
     };
 
     const handleSelectCustomDomain = () => {
-        if (isFreeAccount) {
+        if (isFreeAccount || publishAction === 'new') {
             return;
         }
         setDomainType('custom');
@@ -165,7 +173,9 @@ export default function PublishDomainModal({
                         <div className="flex items-center gap-3">
                             <CheckCircle2 className="h-8 w-8 text-emerald-600" />
                             <div>
-                                <h3 className="text-lg font-extrabold text-slate-900">Website berhasil dipublish</h3>
+                                <h3 className="text-lg font-extrabold text-slate-900">
+                                    {publishResult.publish_action === 'new' ? 'Subdomain baru berhasil dibuat' : 'Website berhasil diperbarui'}
+                                </h3>
                                 <p className="text-xs text-slate-500 mt-1">Website dapat diakses melalui URL berikut.</p>
                             </div>
                         </div>
@@ -233,6 +243,53 @@ export default function PublishDomainModal({
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-5">
+                    {initialIsPublished && (
+                        <fieldset className="space-y-2">
+                            <legend className="text-xs font-extrabold text-slate-700">Pilih tindakan publikasi</legend>
+                            <label className={`flex cursor-pointer items-start gap-3 rounded-2xl border-2 p-4 transition ${
+                                publishAction === 'update' ? 'border-indigo-600 bg-indigo-50/40' : 'border-slate-200 hover:border-slate-300'
+                            }`}>
+                                <input
+                                    type="radio"
+                                    name="publish_action"
+                                    value="update"
+                                    checked={publishAction === 'update'}
+                                    onChange={() => {
+                                        setPublishAction('update');
+                                        setSlug(initialSlug || '');
+                                        setDomainType(initialDomainType || 'subdomain');
+                                    }}
+                                    className="mt-1 h-4 w-4 text-indigo-600"
+                                />
+                                <span>
+                                    <span className="block text-sm font-extrabold text-slate-900">Perbarui website yang sudah ada</span>
+                                    <span className="mt-1 block text-xs text-slate-500">Isi terbaru akan menggantikan konten pada website dan alamat yang sama.</span>
+                                </span>
+                            </label>
+                            <label className={`flex cursor-pointer items-start gap-3 rounded-2xl border-2 p-4 transition ${
+                                publishAction === 'new' ? 'border-indigo-600 bg-indigo-50/40' : 'border-slate-200 hover:border-slate-300'
+                            }`}>
+                                <input
+                                    type="radio"
+                                    name="publish_action"
+                                    value="new"
+                                    checked={publishAction === 'new'}
+                                    onChange={() => {
+                                        setPublishAction('new');
+                                        setDomainType('subdomain');
+                                        const baseSlug = (initialSlug || 'website').slice(0, 45);
+                                        setSlug(`${baseSlug}-baru`);
+                                    }}
+                                    className="mt-1 h-4 w-4 text-indigo-600"
+                                />
+                                <span>
+                                    <span className="block text-sm font-extrabold text-slate-900">Buat subdomain baru</span>
+                                    <span className="mt-1 block text-xs text-slate-500">Website lama tetap aktif; konten saat ini diterbitkan sebagai website baru dengan alamat terpisah.</span>
+                                </span>
+                            </label>
+                        </fieldset>
+                    )}
+
                     {/* Domain Choice 1: Subdomain Microdata */}
                     <div
                         onClick={() => setDomainType('subdomain')}
@@ -278,12 +335,18 @@ export default function PublishDomainModal({
                                         onChange={(e) => setSlug(e.target.value)}
                                         placeholder="nama-perusahaan"
                                         required
+                                        disabled={initialIsPublished && publishAction === 'update'}
                                         className="flex-1 h-10 px-3 bg-white border border-slate-300 rounded-l-xl text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600"
                                     />
                                     <span className="h-10 px-3.5 bg-slate-100 border border-l-0 border-slate-300 rounded-r-xl text-xs font-bold text-slate-600 flex items-center">
                                         .microdata.co.id
                                     </span>
                                 </div>
+                                {initialIsPublished && publishAction === 'update' && (
+                                    <p className="text-[11px] text-slate-500">
+                                        Alamat website yang sudah aktif akan dipertahankan saat diperbarui.
+                                    </p>
+                                )}
                                 {slugCheck.message && (
                                     <p className={`text-[11px] font-semibold flex items-center gap-1 ${
                                         slugCheck.status === 'available' ? 'text-emerald-700'
@@ -308,7 +371,7 @@ export default function PublishDomainModal({
                     </div>
 
                     {/* Domain Choice 2: Domain Sendiri / Custom Domain */}
-                    <div
+                    {publishAction === 'update' && <div
                         onClick={handleSelectCustomDomain}
                         className={`p-4 rounded-2xl border-2 transition-all relative ${
                             isFreeAccount
@@ -401,7 +464,7 @@ export default function PublishDomainModal({
                                 </div>
                             )
                         )}
-                    </div>
+                    </div>}
 
 
 
@@ -412,7 +475,7 @@ export default function PublishDomainModal({
                                 : 'bg-amber-50 border-amber-200 text-amber-900'
                         }`}>
                             Kuota paket <strong>{quota.package}</strong>: {quota.current} / {quota.unlimited ? 'Unlimited' : quota.max} website published.
-                            {!quota.can_publish && (
+                            {(!quota.can_publish || (publishAction === 'new' && !quota.unlimited && quota.current >= quota.max)) && (
                                 <p className="mt-1 font-semibold" title="Limit paket tercapai">
                                     Limit paket tercapai. Unpublish website lain atau upgrade paket untuk melanjutkan.
                                 </p>
@@ -448,7 +511,8 @@ export default function PublishDomainModal({
                                 || (domainType === 'subdomain' && (!isSlugFormatValid || slugCheck.status !== 'available'))
                                 || (domainType === 'custom' && !customDomain.trim())
                                 || quotaLoading
-                                || quota?.can_publish === false
+                                || (publishAction === 'update' && quota?.can_publish === false)
+                                || (publishAction === 'new' && quota && !quota.unlimited && quota.current >= quota.max)
                             }
                             className="px-6 py-2.5 rounded-xl text-xs font-extrabold text-white bg-indigo-600 hover:bg-indigo-700 shadow-md shadow-indigo-600/20 transition flex items-center gap-2 disabled:opacity-50 cursor-pointer"
                         >
@@ -460,7 +524,7 @@ export default function PublishDomainModal({
                             ) : (
                                 <>
                                     <Globe className="h-4 w-4" />
-                                    <span>Terbitkan Sekarang</span>
+                                    <span>{publishAction === 'new' ? 'Terbitkan sebagai Website Baru' : 'Terbitkan Sekarang'}</span>
                                 </>
                             )}
                         </button>

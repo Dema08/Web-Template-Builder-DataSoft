@@ -33,11 +33,12 @@ const websiteApi = {
         return data.data;
     },
 
-    async checkSlug(slug, websiteId = null) {
-        const targetWebsiteId = websiteId || getSelectedWebsiteId();
+    async checkSlug(slug, websiteId = undefined, ignoreCurrentWebsite = true) {
+        const targetWebsiteId = websiteId === undefined ? getSelectedWebsiteId() : websiteId;
         const { data } = await http.get('/website/check-slug', {
             params: {
                 ...(targetWebsiteId ? { website_id: targetWebsiteId } : {}),
+                ignore_current_website: ignoreCurrentWebsite ? 1 : 0,
                 slug,
             },
         });
