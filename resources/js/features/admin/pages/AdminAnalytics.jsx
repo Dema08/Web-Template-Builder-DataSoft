@@ -188,7 +188,7 @@ export default function AdminAnalytics() {
             {/* Visual Chart Graphic Section & Top Websites */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Traffic Chart */}
-                <Card className="p-6 sm:p-8 space-y-6 lg:col-span-2">
+                <Card className="p-6 sm:p-8 space-y-6 lg:col-span-2 overflow-hidden">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         <div>
                             <div className="flex items-center gap-2">
@@ -271,51 +271,57 @@ export default function AdminAnalytics() {
                         </div>
                     </div>
 
-                    {/* Interactive Bar Chart Graphic */}
-                    <div className="h-64 bg-gradient-to-b from-indigo-50/50 to-[rgb(var(--color-surface))] dark:from-indigo-950/20 dark:to-[rgb(var(--color-surface))] rounded-2xl border border-[rgb(var(--color-border))] flex items-end p-6 gap-2 sm:gap-3">
-                        {monthlyTraffic.map((item, idx) => {
-                            const views = item.views || 0;
-                            const isPeak = maxViews > 0 && views === maxViews && views > 0;
-                            const heightPercent = maxViews > 0 ? Math.max((views / maxViews) * 100, 10) : 10;
+                    {/* Interactive Bar Chart Graphic with horizontal scroll protection */}
+                    <div className="w-full overflow-x-auto ds-scrollbar-thin pb-2">
+                        <div
+                            className={`h-64 bg-gradient-to-b from-indigo-50/50 to-[rgb(var(--color-surface))] dark:from-indigo-950/20 dark:to-[rgb(var(--color-surface))] rounded-2xl border border-[rgb(var(--color-border))] flex items-end p-4 sm:p-6 gap-1 sm:gap-2 ${
+                                monthlyTraffic.length > 20 ? 'min-w-[920px]' : monthlyTraffic.length > 10 ? 'min-w-[560px]' : 'w-full'
+                            }`}
+                        >
+                            {monthlyTraffic.map((item, idx) => {
+                                const views = item.views || 0;
+                                const isPeak = maxViews > 0 && views === maxViews && views > 0;
+                                const heightPercent = maxViews > 0 ? Math.max((views / maxViews) * 100, 10) : 10;
 
-                            return (
-                                <div key={idx} className="flex-1 flex flex-col items-center gap-1.5 group h-full justify-end">
-                                    {/* Number label on top of bar */}
-                                    <span className={`text-[10px] font-extrabold transition-opacity duration-200 ${
-                                        isPeak ? 'text-amber-600 dark:text-amber-400' : 'text-slate-500 dark:text-slate-400'
-                                    }`}>
-                                        {views > 0 ? (views >= 1000 ? `${(views / 1000).toFixed(1)}k` : views) : 0}
-                                    </span>
+                                return (
+                                    <div key={idx} className="flex-1 flex flex-col items-center gap-1.5 group h-full justify-end min-w-0">
+                                        {/* Number label on top of bar */}
+                                        <span className={`text-[10px] font-extrabold transition-opacity duration-200 truncate max-w-full ${
+                                            isPeak ? 'text-amber-600 dark:text-amber-400' : 'text-slate-500 dark:text-slate-400'
+                                        }`}>
+                                            {views > 0 ? (views >= 1000 ? `${(views / 1000).toFixed(1)}k` : views) : 0}
+                                        </span>
 
-                                    {/* Bar element */}
-                                    <div className="w-full relative flex-1 flex items-end justify-center">
-                                        <div
-                                            className={`w-full rounded-t-lg transition-all duration-300 relative group-hover:scale-105 ${
-                                                isPeak
-                                                    ? 'bg-gradient-to-t from-amber-500 to-amber-400 shadow-md shadow-amber-500/20'
-                                                    : views > 0
-                                                    ? 'bg-gradient-to-t from-indigo-600 to-indigo-500 group-hover:from-indigo-700 group-hover:to-indigo-600 shadow-sm'
-                                                    : 'bg-slate-200 dark:bg-slate-800 opacity-60'
-                                            }`}
-                                            style={{ height: `${heightPercent}%` }}
-                                        >
-                                            {/* Tooltip on hover */}
-                                            <div className="absolute -top-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-slate-900 text-white text-[10px] font-bold px-2 py-1 rounded-lg shadow-xl transition-all whitespace-nowrap z-20 pointer-events-none flex flex-col items-center">
-                                                <span>{item.month || item.label}</span>
-                                                <span className="text-indigo-300 font-extrabold">{views.toLocaleString()} visits ({item.unique_visitors ?? 0} unique)</span>
+                                        {/* Bar element */}
+                                        <div className="w-full relative flex-1 flex items-end justify-center">
+                                            <div
+                                                className={`w-full rounded-t-lg transition-all duration-300 relative group-hover:scale-105 ${
+                                                    isPeak
+                                                        ? 'bg-gradient-to-t from-amber-500 to-amber-400 shadow-md shadow-amber-500/20'
+                                                        : views > 0
+                                                        ? 'bg-gradient-to-t from-indigo-600 to-indigo-500 group-hover:from-indigo-700 group-hover:to-indigo-600 shadow-sm'
+                                                        : 'bg-slate-200 dark:bg-slate-800 opacity-60'
+                                                }`}
+                                                style={{ height: `${heightPercent}%` }}
+                                            >
+                                                {/* Tooltip on hover */}
+                                                <div className="absolute -top-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-slate-900 text-white text-[10px] font-bold px-2 py-1 rounded-lg shadow-xl transition-all whitespace-nowrap z-20 pointer-events-none flex flex-col items-center">
+                                                    <span>{item.month || item.label}</span>
+                                                    <span className="text-indigo-300 font-extrabold">{views.toLocaleString()} visits ({item.unique_visitors ?? 0} unique)</span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    {/* Month/Date label at bottom */}
-                                    <span className={`text-[10px] font-bold truncate max-w-[36px] ${
-                                        isPeak ? 'text-amber-600 dark:text-amber-400' : 'text-[rgb(var(--color-text-tertiary))]'
-                                    }`} title={item.month}>
-                                        {item.label}
-                                    </span>
-                                </div>
-                            );
-                        })}
+                                        {/* Month/Date label at bottom */}
+                                        <span className={`text-[10px] font-bold truncate w-full text-center ${
+                                            isPeak ? 'text-amber-600 dark:text-amber-400' : 'text-[rgb(var(--color-text-tertiary))]'
+                                        }`} title={item.month}>
+                                            {item.label}
+                                        </span>
+                                    </div>
+                                );
+                            })}
+                        </div>
                     </div>
                 </Card>
 
