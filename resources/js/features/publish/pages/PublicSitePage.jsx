@@ -24,24 +24,42 @@ export default function PublicSitePage() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Override body/html background dari dashboard CSS saat halaman publik dimuat.
-    // CSS global app.css mengaplikasikan warna dashboard ke html/body — kita reset di sini
-    // agar website yang dipublish tampil dengan warna background-nya sendiri.
+    // Override body/html dari dashboard CSS saat halaman publik dimuat.
+    // CSS global app.css mengaplikasikan warna dashboard ke html/body via CSS variables.
+    // Kita reset semua di sini agar website yang dipublish tampil normal.
     useEffect(() => {
-        const prevBodyBg = document.body.style.backgroundColor;
-        const prevBodyColor = document.body.style.color;
-        const prevHtmlBg = document.documentElement.style.backgroundColor;
+        const htmlEl = document.documentElement;
+        const bodyEl = document.body;
 
-        document.documentElement.style.setProperty('background-color', 'transparent', 'important');
-        document.body.style.setProperty('background-color', 'transparent', 'important');
-        document.body.style.setProperty('color', 'inherit', 'important');
-        document.body.classList.add('public-site-body');
+        // Simpan nilai sebelumnya
+        const prevBodyBg = bodyEl.style.backgroundColor;
+        const prevBodyColor = bodyEl.style.color;
+        const prevHtmlBg = htmlEl.style.backgroundColor;
+        const prevHtmlColor = htmlEl.style.color;
+        const prevHtmlTransition = htmlEl.style.transition;
+        const prevBodyTransition = bodyEl.style.transition;
+
+        // Reset background dan color agar tidak terpengaruh CSS variable dashboard
+        htmlEl.style.setProperty('background-color', 'transparent', 'important');
+        htmlEl.style.setProperty('color', 'inherit', 'important');
+        htmlEl.style.setProperty('transition', 'none', 'important');
+        bodyEl.style.setProperty('background-color', 'transparent', 'important');
+        bodyEl.style.setProperty('color', 'inherit', 'important');
+        bodyEl.style.setProperty('transition', 'none', 'important');
+
+        // Tambahkan class untuk override CSS spesifik
+        bodyEl.classList.add('public-site-body');
+        htmlEl.classList.add('public-html-body');
 
         return () => {
-            document.documentElement.style.backgroundColor = prevHtmlBg;
-            document.body.style.backgroundColor = prevBodyBg;
-            document.body.style.color = prevBodyColor;
-            document.body.classList.remove('public-site-body');
+            htmlEl.style.backgroundColor = prevHtmlBg;
+            htmlEl.style.color = prevHtmlColor;
+            htmlEl.style.transition = prevHtmlTransition;
+            bodyEl.style.backgroundColor = prevBodyBg;
+            bodyEl.style.color = prevBodyColor;
+            bodyEl.style.transition = prevBodyTransition;
+            bodyEl.classList.remove('public-site-body');
+            htmlEl.classList.remove('public-html-body');
         };
     }, []);
 

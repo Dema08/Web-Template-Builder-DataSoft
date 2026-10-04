@@ -1308,7 +1308,20 @@ html, body, * {
  * Public Site Wrapper — Isolate published website from dashboard CSS
  * Ensures the published site looks like a normal website without
  * any builder UI artifacts, rings, outlines, or dashboard styles.
+ *
+ * Root cause of "garis di pinggiran teks":
+ * 1. Tailwind v4 Preflight sets outline-color: currentColor globally
+ * 2. Dashboard CSS variables leak into public pages via html/body rule
+ * 3. SectionRenderer wrapper adds ring classes in builder mode
  * ========================================================= */
+
+/* --- Body override when public site is active --- */
+.public-site-body {
+    background-color: transparent !important;
+    color: inherit !important;
+}
+
+/* --- Main wrapper for all published site content --- */
 .public-site-wrapper {
     display: block;
     width: 100%;
@@ -1316,34 +1329,122 @@ html, body, * {
     overflow-x: hidden;
     background-color: #ffffff;
     position: relative;
+    /* Reset CSS variables dari dashboard agar tidak bocor ke template */
+    --color-surface: 255, 255, 255;
+    --color-text-primary: 15, 23, 42;
+    --color-border: 226, 232, 240;
 }
 
-/* Remove outline from all elements inside public site wrapper */
+/* Hapus outline/border dari SEMUA elemen di dalam public site wrapper */
+/* Ini mencegah Tailwind v4 Preflight outline-color: currentColor muncul */
+.public-site-wrapper *,
+.public-site-wrapper *::before,
+.public-site-wrapper *::after {
+    outline: none !important;
+    outline-width: 0 !important;
+    outline-color: transparent !important;
+}
+
+/* Khusus untuk focus state — jangan tampilkan outline apapun */
 .public-site-wrapper *:focus,
-.public-site-wrapper *:focus-visible {
+.public-site-wrapper *:focus-visible,
+.public-site-wrapper *:focus-within {
+    outline: none !important;
+    outline-offset: 0 !important;
+    box-shadow: none !important;
+}
+
+/* Hapus semua ring Tailwind dari wrapper section */
+.public-site-wrapper [class*="ring-"],
+.public-site-wrapper [class*="hover:ring-"] {
+    --tw-ring-color: transparent !important;
+    --tw-ring-shadow: 0 0 #0000 !important;
+    --tw-ring-offset-shadow: 0 0 #0000 !important;
+    --tw-ring-offset-color: transparent !important;
+    box-shadow: none !important;
+}
+
+/* Hapus semua border builder dari section wrapper */
+.public-site-wrapper > div {
+    border: none !important;
+    outline: none !important;
+    cursor: default !important;
+}
+
+/* Pastikan section renderer content tidak punya border/outline */
+.public-site-wrapper .section-renderer-content,
+.public-site-wrapper .section-renderer-content * {
+    /* Hanya reset outline, jangan reset border (karena template bisa punya border intentional) */
+    outline: none !important;
+}
+
+/* Sembunyikan semua UI builder yang tidak perlu di public mode */
+.public-site-wrapper [class*="builder-"],
+.public-site-wrapper [data-builder-ui],
+.public-site-wrapper .snap-grid {
+    display: none !important;
+}
+
+/* Kursor default untuk semua elemen (bukan pointer dari builder) */
+.public-site-wrapper > div {
+    cursor: default !important;
+}
+
+/* Link dan button tetap menampilkan pointer cursor */
+.public-site-wrapper a,
+.public-site-wrapper button,
+.public-site-wrapper [role="button"],
+.public-site-wrapper input,
+.public-site-wrapper select,
+.public-site-wrapper textarea {
+    cursor: pointer !important;
+}
+
+/* Override untuk html element saat public site aktif */
+html.public-html-body {
+    background-color: transparent !important;
+    color: inherit !important;
+}
+
+/* ============================================================
+ * Fix: Tailwind v4 Preflight sets outline-color: currentColor
+ * yang menyebabkan "garis di pinggiran teks" pada h1, h2, p, span, dll.
+ * Rule ini menghapus outline dari semua teks secara spesifik.
+ * ========================================================= */
+.public-site-wrapper h1,
+.public-site-wrapper h2,
+.public-site-wrapper h3,
+.public-site-wrapper h4,
+.public-site-wrapper h5,
+.public-site-wrapper h6,
+.public-site-wrapper p,
+.public-site-wrapper span,
+.public-site-wrapper a,
+.public-site-wrapper li,
+.public-site-wrapper strong,
+.public-site-wrapper em,
+.public-site-wrapper b,
+.public-site-wrapper i,
+.public-site-wrapper label,
+.public-site-wrapper blockquote,
+.public-site-wrapper small {
+    outline: none !important;
+    outline-width: 0 !important;
+    outline-style: none !important;
+    outline-color: transparent !important;
+    -webkit-text-stroke: 0 !important;
+}
+
+/* Reset border-color default dari Tailwind v4 yang bisa menyebabkan
+ * border tidak diinginkan muncul di sekitar elemen teks */
+.public-site-wrapper * {
+    border-color: inherit;
+}
+
+/* Semua div container section tidak boleh punya border dari builder */
+.public-site-wrapper .relative.w-full.overflow-hidden {
+    border: none !important;
     outline: none !important;
     box-shadow: none !important;
 }
 
-/* Hide all builder-specific UI: hover rings, selection rings, drag handles */
-.public-site-wrapper .group\/section-wrapper > :first-child > div[class*="absolute -top-3"] {
-    display: none !important;
-}
-
-/* Remove ring from section wrappers — shown on hover in builder mode */
-.public-site-wrapper [class*="hover:ring-"] {
-    --tw-ring-shadow: 0 0 #0000 !important;
-    --tw-ring-offset-shadow: 0 0 #0000 !important;
-}
-
-/* Prevent any cursor-pointer builder behavior from showing hand cursor on hover */
-.public-site-wrapper .relative.w-full {
-    border: none !important;
-    outline: none !important;
-}
-
-/* Override global body CSS for public site - prevent dashboard background */
-.public-site-body {
-    background-color: transparent !important;
-    color: inherit !important;
-}
