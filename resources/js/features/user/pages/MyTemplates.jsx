@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Sparkles,
@@ -14,6 +14,8 @@ import {
     Shield,
     CheckCircle2,
     Calendar,
+    Camera,
+    Loader2,
 } from 'lucide-react';
 import { Card, Button } from '@shared/components/ui';
 import { ROUTES } from '@constants';
@@ -132,6 +134,24 @@ export default function MyTemplates() {
         } catch (err) {
             toast.error(err.response?.data?.message || 'Gagal menghapus template.', 'Error');
         }
+    };
+
+    const handleUploadThumbnail = async (tpl, file) => {
+        const formData = new FormData();
+        formData.append('thumbnail', file);
+
+        try {
+            await templateApi.uploadMyTemplateThumbnail(tpl.id, formData);
+            await queryClient.invalidateQueries({ queryKey: ['my-templates'] });
+            toast.success(`Banner template "${tpl.name}" berhasil diperbarui.`, 'Banner Diperbarui');
+        } catch (err) {
+            toast.error(
+                err.response?.data?.errors?.thumbnail?.[0] || err.response?.data?.message || 'Gagal mengupload banner template.',
+                'Upload Gagal'
+            );
+            return false;
+        }
+        return true;
     };
 
     /** Buat template baru dari blank template mode */
@@ -327,6 +347,7 @@ export default function MyTemplates() {
                             onUse={handleUseTemplate}
                             onToggleVisibility={handleToggleVisibility}
                             onDelete={handleDeleteTemplate}
+                            onUploadThumbnail={handleUploadThumbnail}
                         />
                     ))}
                 </div>
@@ -336,9 +357,34 @@ export default function MyTemplates() {
 }
 
 /* ─── User Template Item Card Component ─────────────────────────────────── */
-function UserTemplateItemCard({ tpl, onPreview, onEdit, onUse, onToggleVisibility, onDelete }) {
+function UserTemplateItemCard({ tpl, onPreview, onEdit, onUse, onToggleVisibility, onDelete, onUploadThumbnail }) {
     const isDraft = tpl.status === 'draft';
     const isPublic = tpl.visibility === 'public';
+    const thumbnailInputRef = useRef(null);
+    const [isUploadingThumbnail, setIsUploadingThumbnail] = useState(false);
+
+    const handleThumbnailChange = async (event) => {
+        const file = event.target.files?.[0];
+        event.target.value = '';
+        if (!file) return;
+
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+        if (!allowedTypes.includes(file.type)) {
+            toast.error('Format banner harus JPG, PNG, atau WEBP.', 'File Tidak Valid');
+            return;
+        }
+        if (file.size > 5 * 1024 * 1024) {
+            toast.error('Ukuran banner maksimal 5 MB.', 'File Terlalu Besar');
+            return;
+        }
+
+        setIsUploadingThumbnail(true);
+        try {
+            await onUploadThumbnail(tpl, file);
+        } finally {
+            setIsUploadingThumbnail(false);
+        }
+    };
 
     return (
         <Card className="border border-[rgb(var(--color-border))] hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col group rounded-3xl bg-white">
@@ -349,6 +395,14 @@ function UserTemplateItemCard({ tpl, onPreview, onEdit, onUse, onToggleVisibilit
                     alt={tpl.name}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     onError={(e) => handleImageError(e, tpl)}
+                />
+                <input
+                    ref={thumbnailInputRef}
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    className="hidden"
+                    onChange={handleThumbnailChange}
+                    disabled={isUploadingThumbnail}
                 />
 
                 {/* Badges — Draft / Private / Public */}
@@ -388,6 +442,18 @@ function UserTemplateItemCard({ tpl, onPreview, onEdit, onUse, onToggleVisibilit
                         title="Sunting di Builder"
                     >
                         <Wand2 className="h-3.5 w-3.5" /> Edit Builder
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => thumbnailInputRef.current?.click()}
+                        disabled={isUploadingThumbnail}
+                        className="px-3.5 py-2.5 bg-white text-slate-900 font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-lg hover:bg-slate-50 transition active:scale-95 cursor-pointer disabled:opacity-60"
+                        title="Ganti banner template"
+                    >
+                        {isUploadingThumbnail
+                            ? <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                            : <Camera className="h-3.5 w-3.5" />}
+                        Ganti Banner
                     </button>
                 </div>
             </div>

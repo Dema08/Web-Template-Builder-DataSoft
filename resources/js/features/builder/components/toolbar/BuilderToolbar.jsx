@@ -492,7 +492,7 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
         </button>
 
         {/* Save Draft button */}
-        {!isEditingUserTemplate && <button
+        <button
           onClick={onSaveDraft}
           disabled={isSavingDraft || isSaving}
           className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200/80 rounded-lg transition font-bold disabled:opacity-50 text-xs"
@@ -502,7 +502,7 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
           <span className="hidden sm:inline">
             {isSavingDraft ? 'Menyimpan...' : 'Save Draft'}
           </span>
-        </button>}
+        </button>
 
         {/* Auto-save indicator pill */}
         {activeDraftTemplateName && !isEditingUserTemplate && (

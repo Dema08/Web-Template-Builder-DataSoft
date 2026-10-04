@@ -301,20 +301,24 @@ export default function Builder() {
    * Dipanggil oleh tombol "Save Draft" dan juga auto-save interval.
    * silent=true → tidak tampilkan toast (untuk auto-save).
    */
-  const saveDraftTemplate = useCallback(async ({ name, silent = false } = {}) => {
+  const saveDraftTemplate = useCallback(async ({ name, bannerFile = null, silent = false } = {}) => {
     const currentDraftId = activeDraftTemplateId || Number(sessionStorage.getItem('draft_template_id')) || null;
     const templateName = name || activeDraftTemplateName || sessionStorage.getItem('draft_template_name') || 'Draft Template';
 
     const draftJson = useBuilderStore.getState().serializeDraftJson();
+    let templateId = currentDraftId;
 
     try {
       if (currentDraftId) {
         // Update template draft yang sudah ada
-        await templateApi.updateMyTemplate(currentDraftId, {
+        const updatePayload = {
           name: templateName,
           draft_json: draftJson,
-          status: 'draft',
-        });
+        };
+        if (!isEditingUserTemplate) {
+          updatePayload.status = 'draft';
+        }
+        await templateApi.updateMyTemplate(currentDraftId, updatePayload);
         setActiveDraftTemplateId(currentDraftId);
         setActiveDraftTemplateName(templateName);
         try {
@@ -330,14 +334,22 @@ export default function Builder() {
           status: 'draft',
         });
         const newTemplate = res.data?.data ?? res.data;
-        if (newTemplate?.id) {
-          setActiveDraftTemplateId(newTemplate.id);
-          setActiveDraftTemplateName(templateName);
-          try {
-            sessionStorage.setItem('draft_template_id', String(newTemplate.id));
-            sessionStorage.setItem('draft_template_name', templateName);
-          } catch (_) {}
+        if (!newTemplate?.id) {
+          throw new Error('Template tersimpan tetapi ID template tidak diterima.');
         }
+        templateId = newTemplate.id;
+        setActiveDraftTemplateId(newTemplate.id);
+        setActiveDraftTemplateName(templateName);
+        try {
+          sessionStorage.setItem('draft_template_id', String(newTemplate.id));
+          sessionStorage.setItem('draft_template_name', templateName);
+        } catch (_) {}
+      }
+
+      if (bannerFile && templateId) {
+        const formData = new FormData();
+        formData.append('thumbnail', bannerFile);
+        await templateApi.uploadMyTemplateThumbnail(templateId, formData);
       }
 
       setLastAutoSaveTime(new Date());
@@ -349,6 +361,7 @@ export default function Builder() {
           'Draft Disimpan'
         );
       }
+      return true;
     } catch (err) {
       if (!silent) {
         toast.error(
@@ -358,8 +371,9 @@ export default function Builder() {
       } else {
         console.warn('[AutoSave] Failed to auto-save draft template:', err);
       }
+      return false;
     }
-  }, [activeDraftTemplateId, activeDraftTemplateName, queryClient]);
+  }, [activeDraftTemplateId, activeDraftTemplateName, isEditingUserTemplate, queryClient]);
 
   // Auto-save setiap 10 detik jika ada draft template aktif
   useEffect(() => {
@@ -377,30 +391,17 @@ export default function Builder() {
 
   /**
    * Dipanggil saat user klik tombol "Save Draft" di Toolbar.
-   * Jika belum ada draft aktif → buka modal untuk isi nama.
-   * Jika sudah ada draft aktif → langsung simpan (update).
+   * Buka modal agar nama dan banner opsional bisa dipilih sebelum penyimpanan.
    */
   const handleSaveDraft = async () => {
-    const activeId = activeDraftTemplateId || Number(sessionStorage.getItem('draft_template_id')) || null;
-    if (activeId) {
-      // Sudah ada draft aktif → langsung auto-save
-      setIsSavingDraft(true);
-      try {
-        await saveDraftTemplate({ silent: false });
-      } finally {
-        setIsSavingDraft(false);
-      }
-    } else {
-      // Belum ada draft → minta nama dulu
-      setIsSaveDraftModalOpen(true);
-    }
+    setIsSaveDraftModalOpen(true);
   };
 
-  const handleConfirmSaveDraft = async ({ name }) => {
+  const handleConfirmSaveDraft = async ({ name, bannerFile }) => {
     setIsSavingDraft(true);
     try {
-      await saveDraftTemplate({ name, silent: false });
-      setIsSaveDraftModalOpen(false);
+      const saved = await saveDraftTemplate({ name, bannerFile, silent: false });
+      if (saved) setIsSaveDraftModalOpen(false);
     } finally {
       setIsSavingDraft(false);
     }
@@ -716,6 +717,7 @@ export default function Builder() {
         onClose={() => setIsSaveDraftModalOpen(false)}
         onSave={handleConfirmSaveDraft}
         isSaving={isSavingDraft}
+        initialName={activeDraftTemplateName || sessionStorage.getItem('draft_template_name') || ''}
       />
     </>
   );

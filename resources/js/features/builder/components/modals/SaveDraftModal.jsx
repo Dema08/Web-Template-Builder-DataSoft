@@ -1,29 +1,65 @@
-import { useState, useEffect } from 'react';
-import { Save, X, Loader2, BookmarkCheck } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Save, X, Loader2, BookmarkCheck, Image as ImageIcon, UploadCloud } from 'lucide-react';
 
 /**
  * SaveDraftModal
- * Ditampilkan saat user pertama kali menekan "Save Draft" dan belum punya
- * draft template aktif. User diminta mengisi nama template.
+ * Meminta nama dan banner opsional sebelum menyimpan atau memperbarui draft.
  */
 export default function SaveDraftModal({
     isOpen,
     onClose,
     onSave,
     isSaving = false,
+    initialName = '',
 }) {
-    const [name, setName] = useState('');
+    const [name, setName] = useState(initialName);
+    const [bannerFile, setBannerFile] = useState(null);
+    const [bannerPreviewUrl, setBannerPreviewUrl] = useState('');
+    const [bannerError, setBannerError] = useState('');
+    const fileInputRef = useRef(null);
 
     useEffect(() => {
-        if (isOpen) setName('');
-    }, [isOpen]);
+        if (isOpen) {
+            setName(initialName);
+            setBannerFile(null);
+            setBannerError('');
+        }
+    }, [isOpen, initialName]);
+
+    useEffect(() => {
+        if (!bannerFile) {
+            setBannerPreviewUrl('');
+            return undefined;
+        }
+        const previewUrl = URL.createObjectURL(bannerFile);
+        setBannerPreviewUrl(previewUrl);
+        return () => URL.revokeObjectURL(previewUrl);
+    }, [bannerFile]);
 
     if (!isOpen) return null;
+
+    const handleFileChange = (event) => {
+        const file = event.target.files?.[0];
+        event.target.value = '';
+        if (!file) return;
+
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+        if (!allowedTypes.includes(file.type)) {
+            setBannerError('Format banner harus JPG, PNG, atau WEBP.');
+            return;
+        }
+        if (file.size > 5 * 1024 * 1024) {
+            setBannerError('Ukuran banner maksimal 5 MB.');
+            return;
+        }
+        setBannerError('');
+        setBannerFile(file);
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!name.trim()) return;
-        onSave({ name: name.trim() });
+        onSave({ name: name.trim(), bannerFile });
     };
 
     return (
@@ -84,6 +120,55 @@ export default function SaveDraftModal({
                         <p className="text-[10px] text-slate-400 mt-1.5">
                             Nama ini akan muncul di halaman "Template Saya" Anda.
                         </p>
+                    </div>
+
+                    <div>
+                        <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                            Banner Template <span className="font-normal text-slate-400">(Opsional)</span>
+                        </label>
+                        <input
+                            ref={fileInputRef}
+                            type="file"
+                            accept="image/jpeg,image/png,image/webp"
+                            onChange={handleFileChange}
+                            className="hidden"
+                        />
+                        <button
+                            type="button"
+                            onClick={() => fileInputRef.current?.click()}
+                            disabled={isSaving}
+                            className="flex w-full items-center gap-3 rounded-xl border border-dashed border-amber-300 bg-amber-50 p-3 text-left transition hover:bg-amber-100 disabled:opacity-50"
+                        >
+                            {bannerPreviewUrl ? (
+                                <img src={bannerPreviewUrl} alt="Preview banner" className="h-14 w-24 rounded-lg object-cover" />
+                            ) : (
+                                <span className="flex h-14 w-24 items-center justify-center rounded-lg bg-white text-amber-500">
+                                    <ImageIcon className="h-6 w-6" />
+                                </span>
+                            )}
+                            <span className="min-w-0 flex-1">
+                                <span className="block text-xs font-bold text-amber-900">
+                                    {bannerFile ? bannerFile.name : 'Gunakan banner default atau pilih gambar'}
+                                </span>
+                                <span className="mt-1 block text-[10px] text-amber-700">
+                                    JPG, PNG, atau WEBP · Maksimal 5 MB
+                                </span>
+                            </span>
+                            <UploadCloud className="h-4 w-4 shrink-0 text-amber-700" />
+                        </button>
+                        {bannerError && (
+                            <p className="mt-1 text-[10px] font-semibold text-rose-600">{bannerError}</p>
+                        )}
+                        {bannerFile && (
+                            <button
+                                type="button"
+                                onClick={() => setBannerFile(null)}
+                                disabled={isSaving}
+                                className="mt-1 text-[10px] font-semibold text-slate-500 hover:text-rose-600"
+                            >
+                                Hapus pilihan gambar
+                            </button>
+                        )}
                     </div>
 
                     {/* Footer buttons */}
