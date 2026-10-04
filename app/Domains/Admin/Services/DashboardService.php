@@ -128,7 +128,7 @@ class DashboardService extends BaseService
             $isQuotaReached = !$user->isAdmin() && !$unlimited && $maxDomains > 0 && $publishedCount >= $maxDomains;
 
             $websitesQuery = Website::select([
-                'id', 'user_id', 'category_id', 'template_id', 'name', 'slug', 'status', 'settings', 'published_at', 'created_at', 'updated_at'
+                'id', 'user_id', 'category_id', 'template_id', 'name', 'slug', 'thumbnail_path', 'status', 'settings', 'published_at', 'created_at', 'updated_at'
             ])->where('user_id', $user->id)->with('template');
 
             if ($isQuotaReached) {
@@ -146,6 +146,7 @@ class DashboardService extends BaseService
                     'id' => $website->id,
                     'name' => $website->name,
                     'subdomain' => $website->slug,
+                    'thumbnail_url' => $website->thumbnail_url,
                     'is_published' => $website->status === 'published',
                     'template' => $website->template?->name ?? 'Default Template',
                     'created_at' => $website->created_at?->toISOString(),

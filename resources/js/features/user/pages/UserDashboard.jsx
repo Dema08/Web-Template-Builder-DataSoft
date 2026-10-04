@@ -13,11 +13,13 @@ import {
     Clock,
     ExternalLink,
     Edit3,
+    Camera,
 } from 'lucide-react';
 import { useAuth, useDashboard } from '@hooks';
 import { Spinner, Card, StatusBadge } from '@shared/components/ui';
 import { ROUTES } from '@constants';
-import { useSettingsStore } from '@store';
+import { toast, useSettingsStore } from '@store';
+import UploadThumbnailButton from '@shared/components/UploadThumbnailButton';
 
 const templateCards = [
     { title: 'Architectural Vanguard', subtitle: 'Premium • Business', accent: 'from-indigo-100 via-white to-white' },
@@ -48,7 +50,7 @@ export default function UserDashboard() {
         params.end_date = endDate;
     }
 
-    const { websites, published_websites = [], selected_website_id, analytics, isLoading } = useDashboard(params);
+    const { websites, published_websites = [], selected_website_id, analytics, isLoading, refetch } = useDashboard(params);
     const { brand_name } = useSettingsStore();
 
     if (isLoading) {
@@ -125,6 +127,25 @@ export default function UserDashboard() {
                                     key={site.id}
                                     className="p-4 flex flex-col gap-3 hover:shadow-md transition-all duration-200 group"
                                 >
+                                    <div className="relative h-28 overflow-hidden rounded-xl bg-gradient-to-br from-indigo-100 via-white to-slate-100">
+                                        {site.thumbnail_url && (
+                                            <img
+                                                src={site.thumbnail_url}
+                                                alt={`${site.name} thumbnail`}
+                                                className="h-full w-full object-cover"
+                                            />
+                                        )}
+                                        <UploadThumbnailButton
+                                            website={site}
+                                            onSuccess={async () => {
+                                                await refetch();
+                                                toast.success('Thumbnail website berhasil diperbarui.', 'Berhasil');
+                                            }}
+                                            className="absolute right-2 top-2 inline-flex items-center justify-center rounded-full bg-white/90 p-2 text-slate-700 shadow-sm transition hover:bg-white disabled:opacity-60"
+                                        >
+                                            <Camera className="h-4 w-4" />
+                                        </UploadThumbnailButton>
+                                    </div>
                                     <div className="flex items-start justify-between gap-2">
                                         <div className="flex-1 min-w-0">
                                             <Link
