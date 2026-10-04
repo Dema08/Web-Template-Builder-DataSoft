@@ -102,7 +102,9 @@ const websiteApi = {
         const formData = new FormData();
         formData.append('thumbnail', file);
 
-        const { data } = await http.post(`/website/${id}/thumbnail`, formData);
+        const { data } = await http.post(`/website/${id}/thumbnail`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        });
         return data.data;
     },
 
