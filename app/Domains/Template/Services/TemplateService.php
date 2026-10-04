@@ -239,16 +239,27 @@ class TemplateService extends BaseService
 
     public function uploadThumbnail(Template $template, UploadedFile $thumbnail): Template
     {
-        if ($template->thumbnail && Storage::disk('public')->exists($template->thumbnail)) {
-            Storage::disk('public')->delete($template->thumbnail);
-        }
-
         $filename = Str::uuid() . '.' . $thumbnail->getClientOriginalExtension();
         $storedPath = $thumbnail->storeAs('templates/thumbnails', $filename, 'public');
+        if (!$storedPath) {
+            throw new \RuntimeException('Unable to store the uploaded template thumbnail.');
+        }
 
+        $oldThumbnail = $template->thumbnail;
         $template->update([
             'thumbnail' => $storedPath,
         ]);
+
+        if (
+            $oldThumbnail
+            && !str_starts_with($oldThumbnail, '/')
+            && !str_starts_with($oldThumbnail, 'http://')
+            && !str_starts_with($oldThumbnail, 'https://')
+            && $oldThumbnail !== $storedPath
+            && Storage::disk('public')->exists($oldThumbnail)
+        ) {
+            Storage::disk('public')->delete($oldThumbnail);
+        }
 
         return $template->fresh();
     }

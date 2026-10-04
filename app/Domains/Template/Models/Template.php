@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Template
@@ -91,7 +92,7 @@ class Template extends Model
      */
     public function getThumbnailUrlAttribute(): ?string
     {
-        if (!$this->thumbnail) {
+        if (!$this->thumbnail || !is_string($this->thumbnail)) {
             return null;
         }
 
@@ -99,15 +100,14 @@ class Template extends Model
             return $this->thumbnail;
         }
 
-        if (str_starts_with($this->thumbnail, 'storage/')) {
-            return asset($this->thumbnail);
-        }
-
-        if (str_starts_with($this->thumbnail, '/storage/')) {
+        if (str_starts_with($this->thumbnail, '/images/')) {
             return asset(ltrim($this->thumbnail, '/'));
         }
 
-        return asset('storage/' . $this->thumbnail);
+        $path = ltrim($this->thumbnail, '/');
+        $path = str_starts_with($path, 'storage/') ? substr($path, strlen('storage/')) : $path;
+
+        return Storage::disk('public')->url($path);
     }
 
     /**
@@ -115,7 +115,7 @@ class Template extends Model
      */
     public function getPreviewImageUrlAttribute(): ?string
     {
-        if (!$this->preview_image) {
+        if (!$this->preview_image || !is_string($this->preview_image)) {
             return null;
         }
 
@@ -123,15 +123,14 @@ class Template extends Model
             return $this->preview_image;
         }
 
-        if (str_starts_with($this->preview_image, 'storage/')) {
-            return asset($this->preview_image);
-        }
-
-        if (str_starts_with($this->preview_image, '/storage/')) {
+        if (str_starts_with($this->preview_image, '/images/')) {
             return asset(ltrim($this->preview_image, '/'));
         }
 
-        return asset('storage/' . $this->preview_image);
+        $path = ltrim($this->preview_image, '/');
+        $path = str_starts_with($path, 'storage/') ? substr($path, strlen('storage/')) : $path;
+
+        return Storage::disk('public')->url($path);
     }
 
     /**

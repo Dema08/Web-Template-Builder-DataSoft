@@ -68,6 +68,8 @@ jobs:
           APP_MAIN_DOMAIN=microdata.co.id
           APP_PRIMARY_HOST=web.microdata.co.id
           APP_TRUSTED_HOSTS=web.microdata.co.id,*.microdata.co.id,localhost,127.0.0.1
+          FILESYSTEM_PUBLIC_URL=https://web.microdata.co.id/uploads
+          FILESYSTEM_WEBSITES_URL=https://web.microdata.co.id/uploads/websites
 
           APP_MAINTENANCE_DRIVER=file
 
@@ -259,6 +261,21 @@ jobs:
                   throw new RuntimeException('Unable to extract deployment archive.');
               }
               \$archive->close();
+
+              \$publicStorage = __DIR__ . '/storage/app/public';
+              \$uploadsPath = __DIR__ . '/uploads';
+              if (!is_dir(\$publicStorage) && !mkdir(\$publicStorage, 0775, true) && !is_dir(\$publicStorage)) {
+                  throw new RuntimeException('Public storage directory is missing.');
+              }
+              if (is_link(\$uploadsPath)) {
+                  if (realpath(\$uploadsPath) !== realpath(\$publicStorage)) {
+                      throw new RuntimeException('The uploads link points to an unexpected location.');
+                  }
+              } elseif (file_exists(\$uploadsPath)) {
+                  throw new RuntimeException('The uploads path already exists and is not a symbolic link.');
+              } elseif (!symlink(\$publicStorage, \$uploadsPath)) {
+                  throw new RuntimeException('Unable to create the public uploads link.');
+              }
 
               \$configCache = __DIR__ . '/bootstrap/cache/config.php';
               if (is_file(\$configCache) && !unlink(\$configCache)) {
