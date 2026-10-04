@@ -64,14 +64,15 @@ class WebsiteController extends BaseController
         $unlimited = $maxDomains === -1;
 
         return $this->success([
-            'package' => $plan->nama,
-            'current' => $publishedCount,
-            'max' => $maxDomains,
-            'can_publish' => $user->isAdmin()
+            'package'              => $plan->nama,
+            'current'              => $publishedCount,
+            'max'                  => $maxDomains,
+            'can_publish'          => $user->isAdmin()
                 || $unlimited
                 || $publishedCount < $maxDomains
                 || $selectedSiteIsPublished,
-            'unlimited' => $unlimited,
+            'unlimited'            => $unlimited,
+            'can_use_custom_domain' => $user->isAdmin() || (bool) ($plan->bisa_custom_domain ?? false),
         ], 'Website quota retrieved');
     }
 

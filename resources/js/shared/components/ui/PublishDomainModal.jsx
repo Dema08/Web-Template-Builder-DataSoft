@@ -18,9 +18,8 @@ export default function PublishDomainModal({
     publishResult = null,
 }) {
     const user = useAuthStore((s) => s.user);
-    const { isFree, openUpgradeModal } = useSubscriptionStore();
+    const { openUpgradeModal } = useSubscriptionStore();
     const isAdmin = user?.role === 'admin';
-    const isFreeAccount = isFree && !isAdmin;
 
     const [domainType, setDomainType] = useState(initialDomainType || 'subdomain');
     const [publishAction, setPublishAction] = useState('update');
@@ -40,10 +39,9 @@ export default function PublishDomainModal({
             setQuota(null);
             setQuotaError('');
             setQuotaLoading(true);
-            const defaultType = initialDomainType === 'custom' && isFreeAccount ? 'subdomain' : (initialDomainType || 'subdomain');
-            setDomainType(defaultType);
+            setDomainType(initialDomainType || 'subdomain');
         }
-    }, [isOpen, initialSlug, initialCustomDomain, initialDomainType, isFreeAccount]);
+    }, [isOpen, initialSlug, initialCustomDomain, initialDomainType]);
 
     useEffect(() => {
         if (!isOpen) return undefined;
@@ -119,10 +117,13 @@ export default function PublishDomainModal({
 
     if (!isOpen) return null;
 
+    // Derived: can this user use custom domain (based on plan, from quota API)
+    const canUseCustomDomain = isAdmin || quota?.can_use_custom_domain === true;
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (domainType === 'custom' && isFreeAccount) {
+        if (domainType === 'custom' && !canUseCustomDomain) {
             return;
         }
 
@@ -153,7 +154,7 @@ export default function PublishDomainModal({
     };
 
     const handleSelectCustomDomain = () => {
-        if (isFreeAccount || publishAction === 'new') {
+        if (!canUseCustomDomain || publishAction === 'new') {
             return;
         }
         setDomainType('custom');
@@ -374,7 +375,7 @@ export default function PublishDomainModal({
                     {publishAction === 'update' && <div
                         onClick={handleSelectCustomDomain}
                         className={`p-4 rounded-2xl border-2 transition-all relative ${
-                            isFreeAccount
+                            !canUseCustomDomain
                                 ? 'bg-slate-50/70 border-slate-200 opacity-95 cursor-not-allowed'
                                 : domainType === 'custom'
                                 ? 'bg-indigo-50/40 border-indigo-600 shadow-sm cursor-pointer'
@@ -387,17 +388,17 @@ export default function PublishDomainModal({
                                     type="radio"
                                     name="domain_type"
                                     value="custom"
-                                    disabled={isFreeAccount}
+                                    disabled={!canUseCustomDomain}
                                     checked={domainType === 'custom'}
-                                    onChange={() => !isFreeAccount && setDomainType('custom')}
+                                    onChange={() => canUseCustomDomain && setDomainType('custom')}
                                     className="mt-1 h-4 w-4 text-indigo-600 focus:ring-indigo-500 cursor-pointer disabled:opacity-50"
                                 />
                                 <div>
                                     <div className="flex items-center gap-2">
-                                        <span className={`text-sm font-extrabold ${isFreeAccount ? 'text-slate-500' : 'text-slate-900'}`}>
+                                        <span className={`text-sm font-extrabold ${!canUseCustomDomain ? 'text-slate-500' : 'text-slate-900'}`}>
                                             Domain Sendiri (Custom Domain)
                                         </span>
-                                        {isFreeAccount ? (
+                                        {!canUseCustomDomain ? (
                                             <span className="px-2 py-0.5 rounded-md bg-amber-100 text-amber-800 text-[10px] font-extrabold flex items-center gap-1">
                                                 <Lock className="h-3 w-3" />
                                                 PRO / STARTER
@@ -416,7 +417,7 @@ export default function PublishDomainModal({
                         </div>
 
                         {/* Free Account Lock Restriction & Upgrade Trigger */}
-                        {isFreeAccount ? (
+                        {!canUseCustomDomain ? (
                             <div className="mt-3.5 p-3.5 bg-amber-50/80 border border-amber-200/80 rounded-xl space-y-2.5">
                                 <div className="flex items-start gap-2.5">
                                     <Lock className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
@@ -509,7 +510,7 @@ export default function PublishDomainModal({
                             disabled={
                                 isPublishing
                                 || (domainType === 'subdomain' && (!isSlugFormatValid || slugCheck.status !== 'available'))
-                                || (domainType === 'custom' && !customDomain.trim())
+                                || (domainType === 'custom' && (!canUseCustomDomain || !customDomain.trim()))
                                 || quotaLoading
                                 || (publishAction === 'update' && quota?.can_publish === false)
                                 || (publishAction === 'new' && quota && !quota.unlimited && quota.current >= quota.max)
