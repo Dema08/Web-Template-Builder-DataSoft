@@ -53,9 +53,10 @@ export default function AdminTemplatePreview() {
   const applyDataIfChanged = (sectionsData, pagesData = {}, name = null, industry = null) => {
     if (!sectionsData || !Array.isArray(sectionsData) || sectionsData.length === 0) return;
     const hash = JSON.stringify({
-      s: sectionsData.map(s => `${s.id}-${s.layout}-${s.components?.length || 0}`),
-      l: sectionsData.length,
-      n: name,
+      sections: sectionsData,
+      pages: pagesData,
+      name,
+      industry,
     });
     if (hash === lastDataHashRef.current) return;
     lastDataHashRef.current = hash;
@@ -66,33 +67,30 @@ export default function AdminTemplatePreview() {
     setLastUpdated(Date.now());
   };
 
-  // 1. Force isPreviewMode = true on mount, clear selections, and immediately load cached preview
+  // 1. Force isPreviewMode = true on mount, clear selections, and load preview (localStorage first, then API fallback)
   useEffect(() => {
     setIsPreviewMode(true);
     if (selectComponent) selectComponent(null);
     if (selectSection) selectSection(null);
 
-    // Synchronously / immediately load cached preview state so user never sees empty flash
+    let loaded = false;
+
+    // Synchronously / immediately load cached preview state from builder
     try {
       const rawData = localStorage.getItem('template_builder_preview_data');
       if (rawData) {
         const parsed = JSON.parse(rawData);
         if (parsed.sections && Array.isArray(parsed.sections) && parsed.sections.length > 0) {
           applyDataIfChanged(parsed.sections, parsed.pages || {}, parsed.templateName, parsed.industrySlug);
+          loaded = true;
         }
       }
     } catch (err) {
       console.error('Failed to parse preview storage data:', err);
     }
 
-    return () => {
-      setIsPreviewMode(false);
-    };
-  }, []);
-
-  // 2. If template ID parameter exists in URL, fetch from API in background
-  useEffect(() => {
-    if (id) {
+    // 2. If not loaded from localStorage and template ID parameter exists in URL, fetch from API
+    if (!loaded && id) {
       const applyTemplateData = (res) => {
         const data = res.data?.data ?? res.data;
         if (data) {
@@ -117,10 +115,14 @@ export default function AdminTemplatePreview() {
           templateApi.getById(id)
             .then(applyTemplateData)
             .catch(() => {
-              // already loaded from storage
+              // already loaded from storage or fallback
             });
         });
     }
+
+    return () => {
+      setIsPreviewMode(false);
+    };
   }, [id]);
 
   // 3. Realtime Live Synchronization via BroadcastChannel + Storage Event Listener
