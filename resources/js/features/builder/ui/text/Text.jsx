@@ -22,6 +22,8 @@ export default function Text({
   componentId = null,
   sectionId = null,
 }) {
+  const updateComponentProps = useBuilderStore((state) => state.updateComponentProps);
+
   // Ensure responsive font scaling and prevent overflow on mobile devices
   let computedFontSize = fontSize;
   if (typeof fontSize === 'string' && fontSize.endsWith('px')) {

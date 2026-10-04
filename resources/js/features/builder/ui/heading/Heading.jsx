@@ -42,6 +42,7 @@ export default function Heading({
   componentId = null,
   sectionId = null,
 }) {
+  const updateComponentProps = useBuilderStore((state) => state.updateComponentProps);
   const responsiveFontSize = getResponsiveFontSize(fontSize);
 
   const style = {
