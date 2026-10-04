@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
     Globe,
@@ -18,6 +18,7 @@ import { ROUTES } from '@constants';
 import { Card, Button, Spinner, StatusBadge, ConfirmModal } from '@shared/components/ui';
 import { toast } from '@store';
 import websiteApi from '@api/website';
+import UploadThumbnailButton from '@shared/components/UploadThumbnailButton';
 
 export default function Websites() {
     const navigate = useNavigate();
@@ -32,21 +33,12 @@ export default function Websites() {
 
     const [searchQuery, setSearchQuery] = useState('');
     const [uploadTarget, setUploadTarget] = useState(null);
-    const [thumbnailFile, setThumbnailFile] = useState(null);
     const [thumbnailPreview, setThumbnailPreview] = useState('');
     const [isUploadingThumbnail, setIsUploadingThumbnail] = useState(false);
     const [thumbnailError, setThumbnailError] = useState('');
 
     const [siteToDelete, setSiteToDelete] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
-    useEffect(() => {
-        return () => {
-            if (thumbnailPreview.startsWith('blob:')) {
-                URL.revokeObjectURL(thumbnailPreview);
-            }
-        };
-    }, [thumbnailPreview]);
 
     const websitesList = useMemo(() => {
         return websites.map((website) => {
@@ -66,6 +58,7 @@ export default function Websites() {
                 templateName: 'Microdata Website Template',
                 viewsCount: website.views_count || 0,
                 monthlyViewsCount: website.monthly_views_count || 0,
+                thumbnailUrl: website.thumbnail_url || null,
             };
         });
     }, [websites]);
@@ -89,63 +82,15 @@ export default function Websites() {
     };
 
     const openThumbnailModal = (website) => {
-        if (thumbnailPreview.startsWith('blob:')) {
-            URL.revokeObjectURL(thumbnailPreview);
-        }
-
         setUploadTarget(website);
-        setThumbnailFile(null);
-        setThumbnailPreview(website.thumbnail_url || '');
+        setThumbnailPreview(website.thumbnail || '');
         setThumbnailError('');
     };
 
     const closeThumbnailModal = () => {
-        if (thumbnailPreview.startsWith('blob:')) {
-            URL.revokeObjectURL(thumbnailPreview);
-        }
-
         setUploadTarget(null);
-        setThumbnailFile(null);
         setThumbnailPreview('');
         setThumbnailError('');
-    };
-
-    const handleThumbnailFileChange = (event) => {
-        const file = event.target.files?.[0];
-        if (!file) return;
-
-        if (!file.type.startsWith('image/')) {
-            setThumbnailError('File harus berupa gambar.');
-            return;
-        }
-
-        if (file.size > 5 * 1024 * 1024) {
-            setThumbnailError('Ukuran gambar maksimal 5MB.');
-            return;
-        }
-
-        setThumbnailFile(file);
-        setThumbnailPreview(URL.createObjectURL(file));
-        setThumbnailError('');
-    };
-
-    const handleUploadThumbnail = async () => {
-        if (!uploadTarget || !thumbnailFile) return;
-
-        try {
-            setIsUploadingThumbnail(true);
-            setThumbnailError('');
-            await websiteApi.uploadWebsiteThumbnail(uploadTarget.id, thumbnailFile);
-            await refetch();
-            toast.success('Gambar card website berhasil diupdate.', 'Berhasil');
-            setUploadTarget(null);
-            setThumbnailFile(null);
-            setThumbnailPreview('');
-        } catch (error) {
-            setThumbnailError(error.response?.data?.message || 'Gagal mengupload gambar.');
-        } finally {
-            setIsUploadingThumbnail(false);
-        }
     };
 
     const handleDeleteThumbnail = async () => {
@@ -157,7 +102,6 @@ export default function Websites() {
             await refetch();
             toast.success('Gambar card website dihapus.', 'Berhasil');
             setUploadTarget(null);
-            setThumbnailFile(null);
             setThumbnailPreview('');
         } catch (error) {
             setThumbnailError(error.response?.data?.message || 'Gagal menghapus gambar.');
@@ -389,17 +333,25 @@ export default function Websites() {
                             )}
                         </div>
 
-                        <label className="mt-4 flex cursor-pointer items-center justify-center rounded-xl border border-dashed border-indigo-300 bg-indigo-50 px-4 py-3 text-sm font-semibold text-indigo-700 transition hover:bg-indigo-100">
-                            <input type="file" accept="image/*" className="hidden" onChange={handleThumbnailFileChange} />
-                            {thumbnailFile ? 'Ganti gambar' : 'Pilih gambar'}
-                        </label>
+                        <UploadThumbnailButton
+                            website={uploadTarget}
+                            onSuccess={async () => {
+                                await refetch();
+                                toast.success('Gambar card website berhasil diupdate.', 'Berhasil');
+                                closeThumbnailModal();
+                            }}
+                            className="mt-4 flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-dashed border-indigo-300 bg-indigo-50 px-4 py-3 text-sm font-semibold text-indigo-700 transition hover:bg-indigo-100 disabled:cursor-wait disabled:opacity-60"
+                        >
+                            <Camera className="h-4 w-4" />
+                            Pilih gambar untuk upload
+                        </UploadThumbnailButton>
 
                         {thumbnailError && (
                             <p className="mt-3 text-sm text-red-600">{thumbnailError}</p>
                         )}
 
                         <div className="mt-5 flex items-center justify-end gap-2">
-                            {uploadTarget.thumbnail && !thumbnailFile && (
+                            {uploadTarget.thumbnailUrl && (
                                 <button
                                     type="button"
                                     onClick={handleDeleteThumbnail}
@@ -416,14 +368,6 @@ export default function Websites() {
                                 className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
                             >
                                 Batal
-                            </button>
-                            <button
-                                type="button"
-                                onClick={handleUploadThumbnail}
-                                disabled={!thumbnailFile || isUploadingThumbnail}
-                                className="rounded-xl bg-indigo-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-indigo-300"
-                            >
-                                {isUploadingThumbnail ? 'Menyimpan...' : 'Simpan'}
                             </button>
                         </div>
                     </div>

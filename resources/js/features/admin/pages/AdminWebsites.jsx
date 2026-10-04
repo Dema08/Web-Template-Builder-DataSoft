@@ -22,11 +22,13 @@ import {
     Info,
     ChevronRight,
     Tag,
+    Camera,
 } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card } from '@shared/components/ui';
 import { toast } from '@store';
 import { websiteApi } from '@api';
+import UploadThumbnailButton from '@shared/components/UploadThumbnailButton';
 
 function getStatusConfig(status) {
     switch (status) {
@@ -240,8 +242,22 @@ export default function AdminWebsites() {
                                         {/* Website & Domain */}
                                         <td className="py-4 px-4">
                                             <div className="flex items-start gap-3">
-                                                <div className="h-10 w-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold shrink-0 border border-indigo-200/50 dark:border-indigo-900/50 mt-0.5">
-                                                    <Globe className="h-5 w-5 stroke-[2]" />
+                                                <div className="relative h-12 w-12 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold shrink-0 border border-indigo-200/50 dark:border-indigo-900/50 mt-0.5 overflow-hidden">
+                                                    {site.thumbnail_url ? (
+                                                        <img src={site.thumbnail_url} alt={`${site.name} thumbnail`} className="h-full w-full object-cover" />
+                                                    ) : (
+                                                        <Globe className="h-5 w-5 stroke-[2]" />
+                                                    )}
+                                                    <UploadThumbnailButton
+                                                        website={site}
+                                                        onSuccess={() => {
+                                                            queryClient.invalidateQueries({ queryKey: ['admin-websites'] });
+                                                            toast.success('Thumbnail website berhasil diperbarui.', 'Berhasil');
+                                                        }}
+                                                        className="absolute inset-0 flex items-center justify-center bg-slate-950/55 text-white opacity-0 hover:opacity-100 focus:opacity-100 transition-opacity"
+                                                    >
+                                                        <Camera className="h-4 w-4" />
+                                                    </UploadThumbnailButton>
                                                 </div>
                                                 <div className="space-y-1 min-w-0">
                                                     <div className="flex items-center gap-2">
