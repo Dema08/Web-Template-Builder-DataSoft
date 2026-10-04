@@ -36,6 +36,8 @@ export default function Builder() {
   // Draft template to My Templates state
   const [isSaveDraftModalOpen, setIsSaveDraftModalOpen] = useState(false);
   const [isSavingDraft, setIsSavingDraft] = useState(false);
+  const [isTemplateUpdateChoiceOpen, setIsTemplateUpdateChoiceOpen] = useState(false);
+  const [isEditingUserTemplate, setIsEditingUserTemplate] = useState(false);
   const [activeDraftTemplateId, setActiveDraftTemplateId] = useState(null); // ID template draft yang sedang diedit
   const [activeDraftTemplateName, setActiveDraftTemplateName] = useState('');
   const [lastAutoSaveTime, setLastAutoSaveTime] = useState(null);
@@ -64,7 +66,7 @@ export default function Builder() {
         const blankMode = sessionStorage.getItem('blank_template_mode');
 
         // Fetch existing website metadata ONLY if user is not creating a brand-new website from a template/blank mode
-        if (!pendingTemplateId && !blankMode) {
+        if (!editTemplateId && !pendingTemplateId && !blankMode) {
           try {
             const site = await websiteApi.getWebsite();
             if (site && isMounted) {
@@ -114,6 +116,7 @@ export default function Builder() {
               const numId = Number(editTemplateId);
               setActiveDraftTemplateId(numId);
               setActiveDraftTemplateName(tplName);
+              setIsEditingUserTemplate(true);
 
               try {
                 sessionStorage.setItem('draft_template_id', String(numId));
@@ -361,7 +364,7 @@ export default function Builder() {
   // Auto-save setiap 10 detik jika ada draft template aktif
   useEffect(() => {
     const activeId = activeDraftTemplateId || Number(sessionStorage.getItem('draft_template_id')) || null;
-    if (activeId) {
+    if (activeId && !isEditingUserTemplate) {
       autoSaveIntervalRef.current = setInterval(() => {
         saveDraftTemplate({ silent: true });
       }, 10000); // 10 detik
@@ -370,7 +373,7 @@ export default function Builder() {
     }
 
     return () => clearInterval(autoSaveIntervalRef.current);
-  }, [activeDraftTemplateId, saveDraftTemplate]);
+  }, [activeDraftTemplateId, isEditingUserTemplate, saveDraftTemplate]);
 
   /**
    * Dipanggil saat user klik tombol "Save Draft" di Toolbar.
@@ -400,6 +403,55 @@ export default function Builder() {
       setIsSaveDraftModalOpen(false);
     } finally {
       setIsSavingDraft(false);
+    }
+  };
+
+  const handleUpdateUserTemplate = async () => {
+    const templateId = activeDraftTemplateId || Number(sessionStorage.getItem('draft_template_id'));
+    if (!templateId) {
+      toast.error('Template yang sedang diedit tidak ditemukan.', 'Gagal memperbarui');
+      return;
+    }
+
+    try {
+      setIsSaving(true);
+      const draftJson = useBuilderStore.getState().serializeDraftJson();
+      await templateApi.updateMyTemplate(templateId, { draft_json: draftJson });
+      queryClient.invalidateQueries({ queryKey: ['my-templates'] });
+      setIsTemplateUpdateChoiceOpen(false);
+      toast.success(`Template "${activeDraftTemplateName || 'Template'}" berhasil diperbarui.`, 'Template Diperbarui');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Gagal memperbarui template.', 'Error');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handlePublishUserTemplateAsWebsite = async () => {
+    try {
+      setIsSaving(true);
+      const draftJson = useBuilderStore.getState().serializeDraftJson();
+      const websiteName = activeDraftTemplateName || useBuilderStore.getState().templateName || 'Website';
+      const res = await websiteApi.saveContent({
+        draft_json: draftJson,
+        name: websiteName,
+        is_new: true,
+      });
+      const newWebsite = res?.data ?? res;
+      if (!newWebsite?.id) {
+        throw new Error('Website baru tidak berhasil dibuat.');
+      }
+
+      setWebsiteInfo(newWebsite);
+      setPublishResult(null);
+      setIsTemplateUpdateChoiceOpen(false);
+      window.history.replaceState(null, '', `${ROUTES.BUILDER}?website_id=${newWebsite.id}`);
+      setIsPublishModalOpen(true);
+      toast.success('Website draft berhasil dibuat. Tentukan subdomain untuk melanjutkan publish.', 'Siap Dipublish');
+    } catch (err) {
+      toast.error(err.response?.data?.message || err.message || 'Gagal membuat website dari template.', 'Error');
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -560,8 +612,10 @@ export default function Builder() {
             onBack={handleBack}
             onSave={handleSave}
             onPublish={handleOpenPublishModal}
+            onUpdate={isEditingUserTemplate ? () => setIsTemplateUpdateChoiceOpen(true) : undefined}
             onSaveAsTemplate={() => setIsSaveAsTemplateOpen(true)}
             onSaveDraft={handleSaveDraft}
+            isEditingUserTemplate={isEditingUserTemplate}
             isEditing={!!(activeDraftTemplateId || sessionStorage.getItem('draft_template_id'))}
             isSaving={isSaving}
             isPublishing={isPublishing}
@@ -606,6 +660,49 @@ export default function Builder() {
         isPublishing={isPublishing}
         publishResult={publishResult}
       />
+
+      {isTemplateUpdateChoiceOpen && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-950/60 p-4">
+          <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="template-update-title">
+            <h2 id="template-update-title" className="text-lg font-extrabold text-slate-900">
+              Update template
+            </h2>
+            <p className="mt-1 text-sm text-slate-600">
+              Pilih apakah perubahan hanya disimpan ke Template Saya atau dibuat menjadi website dengan subdomain.
+            </p>
+            <div className="mt-5 grid gap-3">
+              <button
+                type="button"
+                onClick={handleUpdateUserTemplate}
+                disabled={isSaving}
+                className="rounded-xl border border-indigo-200 bg-indigo-50 p-4 text-left transition hover:bg-indigo-100 disabled:opacity-60"
+              >
+                <span className="block text-sm font-bold text-indigo-900">Update template saja</span>
+                <span className="mt-1 block text-xs text-indigo-700">Perbarui konten template ini tanpa membuat website baru.</span>
+              </button>
+              <button
+                type="button"
+                onClick={handlePublishUserTemplateAsWebsite}
+                disabled={isSaving}
+                className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-left transition hover:bg-emerald-100 disabled:opacity-60"
+              >
+                <span className="block text-sm font-bold text-emerald-900">Publish menjadi subdomain</span>
+                <span className="mt-1 block text-xs text-emerald-700">Buat website baru dari versi saat ini, lalu pilih slug subdomain untuk publish.</span>
+              </button>
+            </div>
+            <div className="mt-5 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setIsTemplateUpdateChoiceOpen(false)}
+                disabled={isSaving}
+                className="rounded-lg px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100 disabled:opacity-60"
+              >
+                Batal
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <SaveAsTemplateModal
         isOpen={isSaveAsTemplateOpen}
