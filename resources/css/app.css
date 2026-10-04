@@ -1303,3 +1303,47 @@ html, body, * {
 .builder-canvas-tablet [class*="grid-cols-4"] {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
 }
+
+/* ============================================================
+ * Public Site Wrapper — Isolate published website from dashboard CSS
+ * Ensures the published site looks like a normal website without
+ * any builder UI artifacts, rings, outlines, or dashboard styles.
+ * ========================================================= */
+.public-site-wrapper {
+    display: block;
+    width: 100%;
+    min-height: 100vh;
+    overflow-x: hidden;
+    background-color: #ffffff;
+    position: relative;
+}
+
+/* Remove outline from all elements inside public site wrapper */
+.public-site-wrapper *:focus,
+.public-site-wrapper *:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Hide all builder-specific UI: hover rings, selection rings, drag handles */
+.public-site-wrapper .group\/section-wrapper > :first-child > div[class*="absolute -top-3"] {
+    display: none !important;
+}
+
+/* Remove ring from section wrappers — shown on hover in builder mode */
+.public-site-wrapper [class*="hover:ring-"] {
+    --tw-ring-shadow: 0 0 #0000 !important;
+    --tw-ring-offset-shadow: 0 0 #0000 !important;
+}
+
+/* Prevent any cursor-pointer builder behavior from showing hand cursor on hover */
+.public-site-wrapper .relative.w-full {
+    border: none !important;
+    outline: none !important;
+}
+
+/* Override global body CSS for public site - prevent dashboard background */
+.public-site-body {
+    background-color: transparent !important;
+    color: inherit !important;
+}
