@@ -81,7 +81,7 @@ class AdminWebsiteController extends BaseController
                     'email' => $user?->email ?? '-',
                     'phone' => $user?->phone ?? '-',
                     'role'  => $user?->role ?? 'user',
-                    'plan'  => $plan?->nama_paket ?? 'Free Tier',
+                    'plan'  => $plan?->nama ?? $plan?->nama_paket ?? 'Free Tier',
                 ],
                 'template' => [
                     'id'   => $site->template?->id,
@@ -109,6 +109,8 @@ class AdminWebsiteController extends BaseController
 
     /**
      * Update a website's status.
+     * When publishing a draft, checks the website owner's domain quota.
+     * Admin cannot bypass user quota limits when publishing.
      */
     public function updateStatus(Request $request, Website $website): JsonResponse
     {
@@ -116,13 +118,53 @@ class AdminWebsiteController extends BaseController
             'status' => 'required|in:published,draft,suspended',
         ]);
 
-        $website->update(['status' => $validated['status']]);
+        $newStatus = $validated['status'];
+
+        // Jika admin mencoba mempublish website yang masih draft,
+        // periksa apakah kuota domain user sudah penuh.
+        if ($newStatus === 'published' && $website->status !== 'published') {
+            $user = $website->user;
+            $plan = $user?->effective_pricelist;
+            $maxDomains = (int) ($plan?->maks_domain ?? 0);
+            $unlimited = $maxDomains === -1;
+
+            if (!$unlimited && $maxDomains > 0) {
+                $publishedCount = Website::where('user_id', $website->user_id)
+                    ->where('status', 'published')
+                    ->count();
+
+                if ($publishedCount >= $maxDomains) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => "Tidak bisa dipublish: Kuota domain user \"{$user?->name}\" sudah penuh ({$publishedCount}/{$maxDomains} domain pada paket {$plan?->nama}). User perlu upgrade paket terlebih dahulu.",
+                        'code'    => 'DOMAIN_LIMIT_REACHED',
+                        'current' => $publishedCount,
+                        'max'     => $maxDomains,
+                        'package' => $plan?->nama,
+                    ], 422);
+                }
+            }
+
+            // Set published_at saat dipublish oleh admin
+            $website->update([
+                'status'       => $newStatus,
+                'published_at' => now(),
+            ]);
+        } else {
+            // Unpublish / suspend: bebas dilakukan admin
+            $updateData = ['status' => $newStatus];
+            if ($newStatus !== 'published') {
+                $updateData['published_at'] = null;
+            }
+            $website->update($updateData);
+        }
 
         return $this->success([
             'id'     => $website->id,
-            'status' => $website->status,
+            'status' => $website->fresh()->status,
         ], 'Website status updated successfully');
     }
+
 
     /**
      * Delete a website permanently.
