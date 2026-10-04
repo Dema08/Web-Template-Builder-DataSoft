@@ -117,9 +117,25 @@ class DashboardService extends BaseService
             }
 
             // Standard user dashboard metrics
-            $websites = Website::select([
+            $userPlan = $user->effective_pricelist;
+            $maxDomains = (int) ($userPlan?->maks_domain ?? 0);
+            $unlimited = $maxDomains === -1;
+
+            $publishedCount = Website::where('user_id', $user->id)
+                ->where('status', 'published')
+                ->count();
+
+            $isQuotaReached = !$user->isAdmin() && !$unlimited && $maxDomains > 0 && $publishedCount >= $maxDomains;
+
+            $websitesQuery = Website::select([
                 'id', 'user_id', 'category_id', 'template_id', 'name', 'slug', 'status', 'settings', 'published_at', 'created_at', 'updated_at'
-            ])->where('user_id', $user->id)->with('template')->get();
+            ])->where('user_id', $user->id)->with('template');
+
+            if ($isQuotaReached) {
+                $websitesQuery->where('status', 'published');
+            }
+
+            $websites = $websitesQuery->get();
             $websitesFormatted = [];
             $totalViews = 0;
             $uniqueVisitors = 0;
