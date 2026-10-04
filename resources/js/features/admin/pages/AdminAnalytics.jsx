@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { TrendingUp, Users, Globe, Eye, Server, Shield, ArrowUpRight, Database, RefreshCw, Cpu, HardDrive, Clock, ExternalLink } from 'lucide-react';
+import { TrendingUp, Users, Globe, Eye, Server, Shield, ArrowUpRight, Database, RefreshCw, Cpu, HardDrive, Clock, Filter, BarChart3 } from 'lucide-react';
 import { Card, Button } from '@shared/components/ui';
 import http from '@shared/api/http';
 
@@ -8,11 +8,18 @@ export default function AdminAnalytics() {
     const [isLoading, setIsLoading] = useState(true);
     const [isRefreshing, setIsRefreshing] = useState(false);
     const [error, setError] = useState(null);
+    const [selectedRange, setSelectedRange] = useState('12months');
+    const [selectedWebsite, setSelectedWebsite] = useState('all');
 
-    const fetchAnalytics = async (showRefresh = false) => {
+    const fetchAnalytics = async (showRefresh = false, rangeParam = selectedRange, siteParam = selectedWebsite) => {
         if (showRefresh) setIsRefreshing(true);
         try {
-            const { data } = await http.get('/admin/analytics');
+            const { data } = await http.get('/admin/analytics', {
+                params: {
+                    range: rangeParam,
+                    website_id: siteParam !== 'all' ? siteParam : undefined,
+                },
+            });
             setAnalytics(data?.data ?? data);
             setError(null);
         } catch (err) {
@@ -25,17 +32,27 @@ export default function AdminAnalytics() {
     };
 
     useEffect(() => {
-        fetchAnalytics();
+        fetchAnalytics(false, selectedRange, selectedWebsite);
         // Auto refresh server metrics every 30 seconds for real-time monitoring
         const interval = setInterval(() => {
-            fetchAnalytics();
+            fetchAnalytics(false, selectedRange, selectedWebsite);
         }, 30000);
         return () => clearInterval(interval);
-    }, []);
+    }, [selectedRange, selectedWebsite]);
+
+    const handleRangeChange = (newRange) => {
+        setSelectedRange(newRange);
+    };
+
+    const handleWebsiteChange = (newSiteId) => {
+        setSelectedWebsite(newSiteId);
+    };
 
     const serverStats = analytics?.server;
     const stats = analytics?.stats;
     const monthlyTraffic = analytics?.monthly_traffic || [];
+    const trafficSummary = analytics?.traffic_summary || {};
+    const websitesFilter = analytics?.websites_filter || [];
     const topWebsites = analytics?.top_websites || [];
 
     const kpiCards = [
@@ -101,7 +118,7 @@ export default function AdminAnalytics() {
                     <Button
                         variant="secondary"
                         size="sm"
-                        onClick={() => fetchAnalytics(true)}
+                        onClick={() => fetchAnalytics(true, selectedRange, selectedWebsite)}
                         disabled={isRefreshing}
                         className="gap-2 text-xs font-bold"
                     >
@@ -171,36 +188,140 @@ export default function AdminAnalytics() {
             {/* Visual Chart Graphic Section & Top Websites */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Traffic Chart */}
-                <Card className="p-6 sm:p-8 space-y-6 lg:col-span-2">
-                    <div className="flex items-center justify-between">
+                <Card className="p-6 sm:p-8 space-y-6 lg:col-span-2 overflow-hidden">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         <div>
-                            <h2 className="text-lg font-extrabold text-[rgb(var(--color-text-primary))]">Trafik Pengunjung (12 Bulan Terakhir)</h2>
-                            <p className="text-xs text-[rgb(var(--color-text-secondary))]">Akumulasi total tayangan halaman seluruh website terpublikasi</p>
+                            <div className="flex items-center gap-2">
+                                <BarChart3 className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+                                <h2 className="text-lg font-extrabold text-[rgb(var(--color-text-primary))]">
+                                    Trafik Pengunjung ({selectedRange === '12months' ? '12 Bulan Terakhir' : selectedRange === '6months' ? '6 Bulan Terakhir' : selectedRange === '30days' ? '30 Hari Terakhir' : '7 Hari Terakhir'})
+                                </h2>
+                            </div>
+                            <p className="text-xs text-[rgb(var(--color-text-secondary))] mt-0.5">
+                                Akumulasi total tayangan halaman (hits) dan pengunjung unik seluruh website
+                            </p>
                         </div>
-                        <span className="px-3 py-1 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 text-xs font-bold rounded-full">
-                            Live Data
-                        </span>
+
+                        {/* Filter Controls */}
+                        <div className="flex flex-wrap items-center gap-2">
+                            {/* Website Filter Dropdown */}
+                            <select
+                                value={selectedWebsite}
+                                onChange={(e) => handleWebsiteChange(e.target.value)}
+                                className="px-3 py-1.5 rounded-xl border border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface-alt))] text-xs font-bold text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                            >
+                                <option value="all">🌐 Semua Website</option>
+                                {websitesFilter.map((site) => (
+                                    <option key={site.id} value={site.id}>
+                                        {site.name} ({site.slug})
+                                    </option>
+                                ))}
+                            </select>
+
+                            {/* Range Selector Buttons */}
+                            <div className="flex bg-[rgb(var(--color-surface-alt))] p-1 rounded-xl border border-[rgb(var(--color-border))] text-xs font-bold">
+                                {[
+                                    { id: '12months', label: '12 Bulan' },
+                                    { id: '6months', label: '6 Bulan' },
+                                    { id: '30days', label: '30 Hari' },
+                                    { id: '7days', label: '7 Hari' },
+                                ].map((r) => (
+                                    <button
+                                        key={r.id}
+                                        type="button"
+                                        onClick={() => handleRangeChange(r.id)}
+                                        className={`px-2.5 py-1 rounded-lg text-[11px] transition-all ${
+                                            selectedRange === r.id
+                                                ? 'bg-indigo-600 text-white shadow-xs'
+                                                : 'text-[rgb(var(--color-text-secondary))] hover:text-[rgb(var(--color-text-primary))]'
+                                        }`}
+                                    >
+                                        {r.label}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
                     </div>
 
-                    <div className="h-56 bg-gradient-to-b from-indigo-50/50 to-[rgb(var(--color-surface))] dark:from-indigo-950/20 dark:to-[rgb(var(--color-surface))] rounded-2xl border border-[rgb(var(--color-border))] flex items-end p-6 gap-2">
-                        {monthlyTraffic.map((item, idx) => {
-                            const heightPercent = maxViews > 0 ? Math.max((item.views / maxViews) * 100, 8) : 8;
-                            return (
-                                <div key={idx} className="flex-1 flex flex-col items-center gap-2 group">
-                                    <div
-                                        className="w-full bg-indigo-600 rounded-t-lg group-hover:bg-indigo-700 transition duration-300 relative"
-                                        style={{ height: `${heightPercent}%` }}
-                                    >
-                                        <div className="absolute -top-7 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-slate-900 text-white text-[10px] font-bold px-1.5 py-0.5 rounded transition whitespace-nowrap z-10">
-                                            {item.views.toLocaleString()} visits
+                    {/* Summary KPI Badges */}
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+                        <div className="p-3 rounded-xl bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))]">
+                            <span className="text-[10px] font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider block">Total Tayangan</span>
+                            <span className="text-base font-extrabold text-indigo-600 dark:text-indigo-400">
+                                {(trafficSummary.total_views ?? 0).toLocaleString()} <span className="text-[10px] font-normal text-slate-500">hits</span>
+                            </span>
+                        </div>
+                        <div className="p-3 rounded-xl bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))]">
+                            <span className="text-[10px] font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider block">Pengunjung Unik</span>
+                            <span className="text-base font-extrabold text-emerald-600 dark:text-emerald-400">
+                                {(trafficSummary.total_unique ?? 0).toLocaleString()} <span className="text-[10px] font-normal text-slate-500">IP</span>
+                            </span>
+                        </div>
+                        <div className="p-3 rounded-xl bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))]">
+                            <span className="text-[10px] font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider block">Rata-rata / Periode</span>
+                            <span className="text-base font-extrabold text-purple-600 dark:text-purple-400">
+                                {(trafficSummary.avg_views ?? 0).toLocaleString()} <span className="text-[10px] font-normal text-slate-500">views</span>
+                            </span>
+                        </div>
+                        <div className="p-3 rounded-xl bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))]">
+                            <span className="text-[10px] font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider block">Bulan/Hari Puncak</span>
+                            <span className="text-xs font-extrabold text-amber-600 dark:text-amber-400 block truncate" title={trafficSummary.peak_label}>
+                                {trafficSummary.peak_label || '-'} ({(trafficSummary.peak_views ?? 0).toLocaleString()})
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Interactive Bar Chart Graphic with horizontal scroll protection */}
+                    <div className="w-full overflow-x-auto ds-scrollbar-thin pb-2">
+                        <div
+                            className={`h-64 bg-gradient-to-b from-indigo-50/50 to-[rgb(var(--color-surface))] dark:from-indigo-950/20 dark:to-[rgb(var(--color-surface))] rounded-2xl border border-[rgb(var(--color-border))] flex items-end p-4 sm:p-6 gap-1 sm:gap-2 ${
+                                monthlyTraffic.length > 20 ? 'min-w-[920px]' : monthlyTraffic.length > 10 ? 'min-w-[560px]' : 'w-full'
+                            }`}
+                        >
+                            {monthlyTraffic.map((item, idx) => {
+                                const views = item.views || 0;
+                                const isPeak = maxViews > 0 && views === maxViews && views > 0;
+                                const heightPercent = maxViews > 0 ? Math.max((views / maxViews) * 100, 10) : 10;
+
+                                return (
+                                    <div key={idx} className="flex-1 flex flex-col items-center gap-1.5 group h-full justify-end min-w-0">
+                                        {/* Number label on top of bar */}
+                                        <span className={`text-[10px] font-extrabold transition-opacity duration-200 truncate max-w-full ${
+                                            isPeak ? 'text-amber-600 dark:text-amber-400' : 'text-slate-500 dark:text-slate-400'
+                                        }`}>
+                                            {views > 0 ? (views >= 1000 ? `${(views / 1000).toFixed(1)}k` : views) : 0}
+                                        </span>
+
+                                        {/* Bar element */}
+                                        <div className="w-full relative flex-1 flex items-end justify-center">
+                                            <div
+                                                className={`w-full rounded-t-lg transition-all duration-300 relative group-hover:scale-105 ${
+                                                    isPeak
+                                                        ? 'bg-gradient-to-t from-amber-500 to-amber-400 shadow-md shadow-amber-500/20'
+                                                        : views > 0
+                                                        ? 'bg-gradient-to-t from-indigo-600 to-indigo-500 group-hover:from-indigo-700 group-hover:to-indigo-600 shadow-sm'
+                                                        : 'bg-slate-200 dark:bg-slate-800 opacity-60'
+                                                }`}
+                                                style={{ height: `${heightPercent}%` }}
+                                            >
+                                                {/* Tooltip on hover */}
+                                                <div className="absolute -top-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-slate-900 text-white text-[10px] font-bold px-2 py-1 rounded-lg shadow-xl transition-all whitespace-nowrap z-20 pointer-events-none flex flex-col items-center">
+                                                    <span>{item.month || item.label}</span>
+                                                    <span className="text-indigo-300 font-extrabold">{views.toLocaleString()} visits ({item.unique_visitors ?? 0} unique)</span>
+                                                </div>
+                                            </div>
                                         </div>
+
+                                        {/* Month/Date label at bottom */}
+                                        <span className={`text-[10px] font-bold truncate w-full text-center ${
+                                            isPeak ? 'text-amber-600 dark:text-amber-400' : 'text-[rgb(var(--color-text-tertiary))]'
+                                        }`} title={item.month}>
+                                            {item.label}
+                                        </span>
                                     </div>
-                                    <span className="text-[10px] font-bold text-[rgb(var(--color-text-tertiary))] truncate max-w-[30px]" title={item.month}>
-                                        {item.label}
-                                    </span>
-                                </div>
-                            );
-                        })}
+                                );
+                            })}
+                        </div>
                     </div>
                 </Card>
 

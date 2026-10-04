@@ -2,7 +2,6 @@ import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
     Globe,
-    Plus,
     Search,
     ExternalLink,
     Edit3,
@@ -127,18 +126,11 @@ export default function Websites() {
     return (
         <div className="p-6 sm:p-8 max-w-7xl mx-auto space-y-8">
             {/* Header Section */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                    <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">Website Published Saya</h1>
-                    <p className="text-sm text-[rgb(var(--color-text-secondary))] mt-1">
-                        Kelola website yang sudah dipublikasikan ke subdomain atau custom domain Anda.
-                    </p>
-                </div>
-
-                <Button onClick={() => navigate(ROUTES.ONBOARDING)} variant="primary" size="md">
-                    <Plus className="h-4 w-4 stroke-[3]" />
-                    <span>Create New Site</span>
-                </Button>
+            <div>
+                <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">Website Published Saya</h1>
+                <p className="text-sm text-[rgb(var(--color-text-secondary))] mt-1">
+                    Kelola website yang sudah dipublikasikan ke subdomain atau custom domain Anda.
+                </p>
             </div>
 
             {/* KPI Cards */}

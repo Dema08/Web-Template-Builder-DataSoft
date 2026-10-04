@@ -6,12 +6,13 @@ use App\Domains\Shared\Http\Controllers\BaseController;
 use App\Domains\User\Models\User;
 use App\Domains\Website\Models\Website;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class AdminAnalyticsController extends BaseController
 {
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         // 1. Real-time Server Performance Metrics (Direct OS Kernel Readings)
         $cpuUsagePercent = null;
@@ -97,21 +98,96 @@ class AdminAnalyticsController extends BaseController
         $totalViews = $hasViewsTable ? DB::table('website_view')->count() : 0;
         $monthlyVisits = $hasViewsTable ? DB::table('website_view')->where('created_at', '>=', now()->subDays(30))->count() : 0;
 
-        // 3. Traffic Monthly Chart (Last 12 Months)
-        $monthlyTraffic = [];
-        for ($i = 11; $i >= 0; $i--) {
-            $monthDate = now()->subMonths($i);
-            $count = $hasViewsTable 
-                ? DB::table('website_view')
+        // Filter parameters
+        $websiteId = $request->query('website_id');
+        $range = $request->query('range', '12months');
+
+        // Available websites list for filter dropdown
+        $websitesFilter = Website::select('id', 'name', 'slug')
+            ->where('status', 'published')
+            ->orderBy('name')
+            ->get()
+            ->map(fn($w) => [
+                'id'   => $w->id,
+                'name' => $w->name,
+                'slug' => $w->slug,
+            ]);
+
+        // 3. Traffic Chart Breakdown
+        $trafficData = [];
+        $totalPeriodViews = 0;
+        $totalPeriodUnique = 0;
+        $peakViews = 0;
+        $peakLabel = '-';
+
+        if ($range === '7days' || $range === '30days') {
+            $daysCount = $range === '7days' ? 7 : 30;
+            for ($i = $daysCount - 1; $i >= 0; $i--) {
+                $date = now()->subDays($i);
+                $dateStr = $date->format('Y-m-d');
+                $label = $daysCount === 7 ? $date->format('D, d M') : $date->format('d M');
+
+                $viewsQuery = DB::table('website_view')->whereDate('created_at', $dateStr);
+                $uniqueQuery = DB::table('website_view')->whereDate('created_at', $dateStr);
+
+                if ($websiteId && $websiteId !== 'all') {
+                    $viewsQuery->where('website_id', $websiteId);
+                    $uniqueQuery->where('website_id', $websiteId);
+                }
+
+                $views = $hasViewsTable ? $viewsQuery->count() : 0;
+                $unique = $hasViewsTable ? $uniqueQuery->distinct('ip_address')->count('ip_address') : 0;
+
+                $totalPeriodViews += $views;
+                $totalPeriodUnique += $unique;
+                if ($views > $peakViews) {
+                    $peakViews = $views;
+                    $peakLabel = $label;
+                }
+
+                $trafficData[] = [
+                    'month' => $dateStr,
+                    'label' => $label,
+                    'views' => $views,
+                    'unique_visitors' => $unique,
+                ];
+            }
+        } else {
+            // 6months or 12months (default 12months)
+            $monthsCount = $range === '6months' ? 6 : 12;
+            for ($i = $monthsCount - 1; $i >= 0; $i--) {
+                $monthDate = now()->subMonths($i);
+
+                $viewsQuery = DB::table('website_view')
                     ->whereYear('created_at', $monthDate->year)
-                    ->whereMonth('created_at', $monthDate->month)
-                    ->count()
-                : 0;
-            $monthlyTraffic[] = [
-                'month' => $monthDate->format('M Y'),
-                'label' => $monthDate->format('M'),
-                'views' => $count,
-            ];
+                    ->whereMonth('created_at', $monthDate->month);
+
+                $uniqueQuery = DB::table('website_view')
+                    ->whereYear('created_at', $monthDate->year)
+                    ->whereMonth('created_at', $monthDate->month);
+
+                if ($websiteId && $websiteId !== 'all') {
+                    $viewsQuery->where('website_id', $websiteId);
+                    $uniqueQuery->where('website_id', $websiteId);
+                }
+
+                $views = $hasViewsTable ? $viewsQuery->count() : 0;
+                $unique = $hasViewsTable ? $uniqueQuery->distinct('ip_address')->count('ip_address') : 0;
+
+                $totalPeriodViews += $views;
+                $totalPeriodUnique += $unique;
+                if ($views > $peakViews) {
+                    $peakViews = $views;
+                    $peakLabel = $monthDate->format('M Y');
+                }
+
+                $trafficData[] = [
+                    'month' => $monthDate->format('M Y'),
+                    'label' => $monthDate->format('M'),
+                    'views' => $views,
+                    'unique_visitors' => $unique,
+                ];
+            }
         }
 
         // 4. Top 5 Most Visited Websites
@@ -156,7 +232,17 @@ class AdminAnalyticsController extends BaseController
                 'total_websites' => $totalWebsites,
                 'total_users' => $totalUsers,
             ],
-            'monthly_traffic' => $monthlyTraffic,
+            'monthly_traffic' => $trafficData,
+            'traffic_summary' => [
+                'total_views' => $totalPeriodViews,
+                'total_unique' => $totalPeriodUnique,
+                'peak_views' => $peakViews,
+                'peak_label' => $peakLabel,
+                'avg_views' => count($trafficData) > 0 ? round($totalPeriodViews / count($trafficData), 1) : 0,
+                'range' => $range,
+                'selected_website_id' => $websiteId ?: 'all',
+            ],
+            'websites_filter' => $websitesFilter,
             'top_websites' => $topWebsites,
         ], 'Analytics data retrieved successfully');
     }
