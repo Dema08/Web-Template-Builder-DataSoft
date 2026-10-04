@@ -1,6 +1,7 @@
 <?php
 
 use App\Domains\Publish\Http\Controllers\PublicSiteController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,6 +25,39 @@ Route::get('/storage/{path}', function (string $path) {
         'Cache-Control' => 'public, max-age=86400',
     ]);
 })->where('path', '.*');
+
+/*
+|--------------------------------------------------------------------------
+| Internal queue worker (dipicu GitHub Actions cron, tanpa SSH/IT)
+|--------------------------------------------------------------------------
+| GET /internal/queue-worker?token=DEPLOY_TOKEN
+| Menjalankan queue:work --stop-when-empty max 55 detik agar job
+| OptimizeVideoJob tidak nyangkut di tabel jobs.
+*/
+Route::get('/internal/queue-worker', function (\Illuminate\Http\Request $request) {
+    $token = (string) (config('app.deploy_token') ?? env('DEPLOY_TOKEN', ''));
+    $provided = (string) $request->query('token', '');
+    if ($token === '' || ! hash_equals($token, $provided)) {
+        abort(403);
+    }
+
+    $exit = Artisan::call('queue:work', [
+        '--stop-when-empty' => true,
+        '--max-time' => 55,
+        '--tries' => 1,
+    ]);
+
+    // Ringkasan singkat: kelihatan di log GitHub Actions cron -> tahu apakah
+    // video dikompresi (ffmpeg ada) atau hanya dicopy (ffmpeg tidak ada).
+    $ffmpeg = \App\Domains\Shared\Helpers\Ffmpeg::ffmpeg();
+    $summary = sprintf(
+        "queue worker: exit=%d, ffmpeg=%s\n",
+        $exit,
+        $ffmpeg ?: 'NOT FOUND (video dicopy tanpa kompresi)'
+    );
+
+    return response($summary.(string) (Artisan::output() ?: ''))->header('Content-Type', 'text/plain');
+})->middleware('throttle:60,1');
 
 Route::get('/p/{slug}', [PublicSiteController::class, 'showBySlug'])->name('site.show');
 Route::get('/{any?}', fn () => view('welcome'))->where('any', '.*');

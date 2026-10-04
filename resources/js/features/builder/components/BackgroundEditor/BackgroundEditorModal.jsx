@@ -115,50 +115,11 @@ export default function BackgroundEditorModal() {
     reader.readAsDataURL(file);
   };
 
-  // Handle local Video file upload (Max 50MB, auto-optimize/convert files > 15MB to 15MB optimized profile without quality loss, zero server overhead)
-  const handleVideoFileUpload = (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (!file.type.startsWith('video/')) {
-      toast.error('Please upload a valid video file (MP4, WebM, OGG)', 'Invalid File');
-      return;
-    }
-
-    if (file.size > 50 * 1024 * 1024) {
-      toast.error('Ukuran video maksimal adalah 50MB', 'File Terlalu Besar');
-      return;
-    }
-
-    setIsUploading(true);
-    try {
-      const isLarge = file.size > 15 * 1024 * 1024;
-      if (isLarge) {
-        toast.info('Video > 15MB terdeteksi. Otomatis dikonversi & dioptimasi ke profil 15MB tanpa merusak kualitas video.', 'Optimasi Video');
-      }
-
-      const blobUrl = URL.createObjectURL(file);
-      updateConfig({
-        type: 'video',
-        video: {
-          ...backgroundConfig.video,
-          url: blobUrl,
-          fileName: file.name,
-        }
-      });
-      // Save to media store
-      addUpload({
-        name: file.name,
-        url: blobUrl,
-        size: isLarge ? '~15.0 MB (Optimized)' : `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
-        type: 'video'
-      });
-      setIsUploading(false);
-      toast.success(`Video "${file.name}" berhasil dimuat & dioptimalkan!`, 'Video Uploaded');
-    } catch (err) {
-      setIsUploading(false);
-      toast.error('Failed to process video file', 'Upload Error');
-    }
+  // Handle local Video file upload — DINONAKTIFKAN.
+  // Upload video background hanya via VideoBackgroundUploader (server, chunked 5MB, max 50MB).
+  // Jalur blob lokal dihapus agar draft_json/published_json tidak pernah berisi blob:.
+  const handleVideoFileUpload = () => {
+    toast.info('Upload video via panel "Video Background (upload server)" di tab Background.', 'Upload Video');
   };
 
   // Drop handlers for drag & drop zone

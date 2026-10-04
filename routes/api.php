@@ -154,6 +154,10 @@ Route::prefix('v1')->group(function (): void {
             Route::post('/assets', [App\Domains\Media\Http\Controllers\MediaController::class, 'upload']);
             Route::post('/{websiteId}/thumbnail', [App\Domains\Website\Http\Controllers\WebsiteController::class, 'uploadThumbnail']);
             Route::delete('/{websiteId}/thumbnail', [App\Domains\Website\Http\Controllers\WebsiteController::class, 'deleteThumbnail']);
+            Route::post('/{websiteId}/video/upload', [App\Domains\Website\Http\Controllers\VideoUploadController::class, 'upload'])
+                ->middleware('throttle:60,1');
+            Route::get('/{websiteId}/video/status', [App\Domains\Website\Http\Controllers\VideoUploadController::class, 'status']);
+            Route::delete('/{websiteId}/video', [App\Domains\Website\Http\Controllers\VideoUploadController::class, 'delete']);
             Route::post('/{websiteId}/unpublish', [App\Domains\Website\Http\Controllers\WebsiteController::class, 'unpublish']);
             Route::delete('/{websiteId}', [App\Domains\Website\Http\Controllers\WebsiteController::class, 'destroy']);
         });

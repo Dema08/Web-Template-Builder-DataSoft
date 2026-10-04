@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useBuilderStore } from '../../stores/builderStore';
 import { useMediaStore } from '../../stores/mediaStore';
+import VideoBackgroundUploader from '../VideoBackgroundUploader';
 import {
   BACKGROUND_IMAGES,
   BACKGROUND_IMAGE_CATEGORIES,
@@ -61,6 +62,23 @@ const FONT_FAMILIES = [
   { value: 'monospace', label: 'Monospace' },
 ];
 
+// Susun objek background lengkap dari config section supaya setiap perubahan
+// hanya menimpa field yang relevan (field lain tidak hilang).
+const buildFullBackground = (bg) => ({
+  type: bg?.type || 'none',
+  color: { hex: '#ffffff', opacity: 100, ...(bg?.color || {}) },
+  gradient: {
+    type: 'linear',
+    angle: 90,
+    stops: [{ color: '#4f46e5', position: 0 }, { color: '#ec4899', position: 100 }],
+    ...(bg?.gradient || {}),
+  },
+  image: { url: '', position: 'center', size: 'cover', repeat: 'no-repeat', attachment: 'scroll', ...(bg?.image || {}) },
+  video: { url: '', autoplay: true, loop: true, muted: true, ...(bg?.video || {}) },
+  overlay: { color: '#000000', opacity: 0, blendMode: 'normal', ...(bg?.overlay || {}) },
+  filters: { blur: 0, brightness: 100, contrast: 100, saturation: 100, ...(bg?.filters || {}) },
+});
+
 const COMPONENT_TABS = [
   { id: 'content', label: 'Content', icon: Type },
   { id: 'typography', label: 'Typography', icon: Type },
@@ -115,14 +133,12 @@ export default function RightInspector() {
   });
 
   const inspectorImgInputRef = useRef(null);
-  const inspectorVidInputRef = useRef(null);
   const buttonFileInputRef = useRef(null);
 
   // Inspector Section Background state
   const [selectedImgCategory, setSelectedImgCategory] = useState('all');
   const [searchImgQuery, setSearchImgQuery] = useState('');
   const [isDraggingImage, setIsDraggingImage] = useState(false);
-  const [isDraggingVideo, setIsDraggingVideo] = useState(false);
 
   const selectedSection = sections.find(s => s.id === selectedSectionId);
 
@@ -178,28 +194,22 @@ export default function RightInspector() {
   };
 
   /**
+   * Helper: terapkan background ke SECTION tertentu (dibaca ulang dari store
+   * saat dipanggil) — dipakai juga oleh hasil upload video yang async supaya
+   * tetap masuk ke section pemiliknya, bukan section yang sedang aktif.
+   */
+  const applyBackgroundToSection = (sectionId, updater) => {
+    if (!sectionId) return;
+    const target = useBuilderStore.getState().sections.find(s => s.id === sectionId);
+    const current = buildFullBackground(target?.background || bgConfig);
+    const newConfig = typeof updater === 'function' ? updater(current) : { ...current, ...updater };
+    updateSectionBackground(sectionId, newConfig);
+  };
+
+  /**
    * Helper: Apply real-time live background changes immediately
    */
-  const applyLiveBackground = (updater) => {
-    if (!selectedSectionId) return;
-    const current = {
-      type: bgConfig.type || 'none',
-      color: { hex: '#ffffff', opacity: 100, ...(bgConfig.color || {}) },
-      gradient: {
-        type: 'linear',
-        angle: 90,
-        stops: [{ color: '#4f46e5', position: 0 }, { color: '#ec4899', position: 100 }],
-        ...(bgConfig.gradient || {})
-      },
-      image: { url: '', position: 'center', size: 'cover', repeat: 'no-repeat', attachment: 'scroll', ...(bgConfig.image || {}) },
-      video: { url: '', autoplay: true, loop: true, muted: true, ...(bgConfig.video || {}) },
-      overlay: { color: '#000000', opacity: 0, blendMode: 'normal', ...(bgConfig.overlay || {}) },
-      filters: { blur: 0, brightness: 100, contrast: 100, saturation: 100, ...(bgConfig.filters || {}) },
-    };
-
-    const newConfig = typeof updater === 'function' ? updater(current) : { ...current, ...updater };
-    updateSectionBackground(selectedSectionId, newConfig);
-  };
+  const applyLiveBackground = (updater) => applyBackgroundToSection(selectedSectionId, updater);
 
   // Sync component form values only when selected component ID changes
   useEffect(() => {
@@ -463,39 +473,10 @@ export default function RightInspector() {
     reader.readAsDataURL(file);
   };
 
-  // Handle local video file upload live (Max 50MB, auto-optimize/convert files > 15MB to 15MB optimized profile without quality loss)
-  const handleVideoUpload = (file) => {
-    if (!file) return;
-    if (!file.type.startsWith('video/')) {
-      toast.error('Please upload a video file (MP4, WebM)', 'Invalid File');
-      return;
-    }
-    if (file.size > 50 * 1024 * 1024) {
-      toast.error('Ukuran video maksimal adalah 50MB', 'File Terlalu Besar');
-      return;
-    }
-    try {
-      const isLarge = file.size > 15 * 1024 * 1024;
-      if (isLarge) {
-        toast.info('Video > 15MB terdeteksi. Otomatis dikonversi & dioptimasi ke profil 15MB tanpa merusak kualitas video.', 'Optimasi Video');
-      }
-
-      const blobUrl = URL.createObjectURL(file);
-      applyLiveBackground(curr => ({
-        ...curr,
-        type: 'video',
-        video: { ...curr.video, url: blobUrl, fileName: file.name }
-      }));
-      addUpload({
-        name: file.name,
-        url: blobUrl,
-        size: isLarge ? '~15.0 MB (Optimized)' : `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
-        type: 'video'
-      });
-      toast.success(`Video "${file.name}" berhasil diterapkan & dioptimalkan!`, 'Background Video');
-    } catch (err) {
-      toast.error('Failed to process video file', 'Upload Error');
-    }
+  // Jalur blob video lama DIHAPUS — upload video hanya via VideoBackgroundUploader (server).
+  // Fungsi dipertahankan sebagai no-op agar ref lama tidak crash bila terpanggil.
+  const handleVideoUpload = () => {
+    toast.info('Gunakan uploader "Video Background (upload server)" di bawah untuk upload video.', 'Upload Video');
   };
 
   // Filtered background images
@@ -539,13 +520,6 @@ export default function RightInspector() {
           type="file"
           accept="image/*"
           onChange={(e) => handleImageUpload(e.target.files?.[0])}
-          className="hidden"
-        />
-        <input
-          ref={inspectorVidInputRef}
-          type="file"
-          accept="video/mp4,video/webm,video/ogg"
-          onChange={(e) => handleVideoUpload(e.target.files?.[0])}
           className="hidden"
         />
 
@@ -1016,32 +990,7 @@ export default function RightInspector() {
                 </h4>
               </div>
 
-              {/* Upload Video Dropzone & Button */}
-              <div
-                onDragOver={(e) => { e.preventDefault(); setIsDraggingVideo(true); }}
-                onDragLeave={() => setIsDraggingVideo(false)}
-                onDrop={(e) => {
-                  e.preventDefault();
-                  setIsDraggingVideo(false);
-                  handleVideoUpload(e.dataTransfer.files?.[0]);
-                }}
-                onClick={() => inspectorVidInputRef.current?.click()}
-                className={`border-2 border-dashed rounded-xl p-3.5 text-center cursor-pointer transition-all ${
-                  isDraggingVideo
-                    ? 'border-indigo-600 bg-indigo-50/70 scale-[1.01]'
-                    : 'border-slate-300 hover:border-indigo-400 bg-white'
-                }`}
-              >
-                <div className="w-8 h-8 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center mx-auto mb-1">
-                  <Video className="h-4 w-4" />
-                </div>
-                <p className="text-xs font-bold text-slate-700">
-                  Upload Video from Device
-                </p>
-                <p className="text-[10px] text-slate-400">
-                  Drag & drop MP4 / WebM (up to 50MB)
-                </p>
-              </div>
+              {/* Upload video lokal via server — SATU-SATUNYA uploader video. Dropzone blob lama dihapus. */}
 
               {/* Direct Video URL Input */}
               <div>
@@ -1123,6 +1072,48 @@ export default function RightInspector() {
                   />
                   <span className="text-[11px] font-bold text-slate-700">Looping</span>
                 </label>
+              </div>
+
+              {/* === Video Background (server upload max 50MB, chunked 5MB) === */}
+              <div className="space-y-2 pt-3 border-t border-slate-200">
+                <label className="text-[11px] font-bold text-slate-600">Video Background (upload server)</label>
+                <VideoBackgroundUploader
+                  websiteId={new URLSearchParams(window.location.search).get('website_id')}
+                  sectionId={selectedSectionId}
+                  initialVideoUrl={bgConfig.video?.uploadedUrl || null}
+                  initialPosterUrl={bgConfig.video?.poster || null}
+                  onSuccess={(data, targetSectionId) => {
+                    // Hasil upload (async, bisa selesai setelah user pindah
+                    // section) selalu diterapkan ke section pemiliknya.
+                    const targetId = targetSectionId || selectedSectionId;
+
+                    if (!data) {
+                      applyBackgroundToSection(targetId, (curr) => ({
+                        ...curr,
+                        video: {
+                          ...curr.video,
+                          // url dibersihkan hanya kalau memang menunjuk file yang
+                          // baru dihapus; preset URL tetap dipertahankan.
+                          url: curr.video?.url === curr.video?.uploadedUrl ? '' : curr.video?.url,
+                          uploadedUrl: null,
+                          poster: null,
+                        },
+                      }));
+                      return;
+                    }
+
+                    applyBackgroundToSection(targetId, (curr) => ({
+                      ...curr,
+                      type: 'video',
+                      video: {
+                        ...curr.video,
+                        url: data.video_url,
+                        uploadedUrl: data.video_url,
+                        poster: data.poster_url || curr.video?.poster,
+                      },
+                    }));
+                  }}
+                />
               </div>
             </div>
           )}

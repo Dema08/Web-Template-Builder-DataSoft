@@ -135,4 +135,16 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Internal Deploy Token
+    |--------------------------------------------------------------------------
+    |
+    | Dipakai untuk endpoint internal (mis. /internal/queue-worker) yang
+    | dipicu oleh GitHub Actions cron tanpa akses SSH/IT.
+    |
+    */
+
+    'deploy_token' => env('DEPLOY_TOKEN'),
+
 ];

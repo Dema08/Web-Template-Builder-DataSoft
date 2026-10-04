@@ -35,6 +35,7 @@ jobs:
           DB_DATABASE: ${{ secrets.DB_DATABASE }}
           DB_USERNAME: ${{ secrets.DB_USERNAME }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
           MIDTRANS_MERCHANT_ID: ${{ secrets.MIDTRANS_MERCHANT_ID }}
           MIDTRANS_SERVER_KEY: ${{ secrets.MIDTRANS_SERVER_KEY }}
           MIDTRANS_CLIENT_KEY: ${{ secrets.MIDTRANS_CLIENT_KEY }}
@@ -79,6 +80,8 @@ jobs:
           LOG_STACK=single
           LOG_DEPRECATIONS_CHANNEL=null
           LOG_LEVEL=error
+
+          DEPLOY_TOKEN=${DEPLOY_TOKEN}
 
           DB_CONNECTION=mysql
           DB_HOST=${DB_HOST}
@@ -125,6 +128,18 @@ jobs:
           VITE_APP_NAME="\${APP_NAME}"
           EOF
 
+      - name: Download FFmpeg static binary
+        run: |
+          mkdir -p deploy-bin && cd deploy-bin
+          curl -L --fail --max-time 300 -o ffmpeg.tar.xz \
+            "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz"
+          tar -xf ffmpeg.tar.xz
+          FFMPEG_DIR=$(find . -maxdepth 1 -type d -name "ffmpeg-*-amd64-static" | head -n 1)
+          cp "$FFMPEG_DIR/ffmpeg" ffmpeg-bin
+          cp "$FFMPEG_DIR/ffprobe" ffprobe-bin
+          chmod +x ffmpeg-bin ffprobe-bin
+          ./ffmpeg-bin -version | head -n 1
+
       - name: Install Composer dependencies
         run: composer install --no-dev --prefer-dist --optimize-autoloader --no-scripts
 
@@ -152,6 +167,12 @@ jobs:
           cp artisan deploy/
           cp composer.json deploy/
           cp composer.lock deploy/
+
+          # FFmpeg static binary (tanpa install di server, tanpa IT)
+          mkdir -p deploy/storage/app/bin
+          cp deploy-bin/ffmpeg-bin deploy/storage/app/bin/ffmpeg
+          cp deploy-bin/ffprobe-bin deploy/storage/app/bin/ffprobe
+          chmod +x deploy/storage/app/bin/ffmpeg deploy/storage/app/bin/ffprobe
 
           # Copy public assets/files to ROOT (except public/index.php)
           cp -a public/. deploy/
@@ -299,6 +320,34 @@ jobs:
                       throw new RuntimeException("Artisan command failed: {\$command} (exit {\$exitCode}).");
                   }
               }
+
+              // Folder video + binary (auto init tanpa IT, tanpa SSH).
+              // /uploads sudah di-symlink ke storage/app/public di tahap ekstraksi,
+              // jadi storage:link tidak diperlukan (public path = project root).
+              if (!is_link(__DIR__.'/uploads') && !is_dir(__DIR__.'/uploads')) {
+                  try { symlink(__DIR__.'/storage/app/public', __DIR__.'/uploads'); echo "UPLOADS LINK CREATED\n"; }
+                  catch (Throwable \$e) { echo "UPLOADS LINK SKIP: ".\$e->getMessage()."\n"; }
+              }
+              @mkdir(__DIR__.'/storage/app/public/website-videos', 0755, true);
+              @mkdir(__DIR__.'/storage/app/private/videos/temp', 0755, true);
+              @mkdir(__DIR__.'/storage/app/private/video-chunks', 0755, true);
+              @mkdir(__DIR__.'/storage/app/bin', 0755, true);
+              @chmod(__DIR__.'/storage/app/bin/ffmpeg', 0755);
+              @chmod(__DIR__.'/storage/app/bin/ffprobe', 0755);
+              echo "FOLDERS READY\n";
+
+              // Cleanup orphan chunks
+              try {
+                  \$kernel->call('video:cleanup-chunks', ['--hours' => 24]);
+                  echo "CLEANUP DONE\n".\$kernel->output()."\n";
+              } catch (Throwable \$e) { echo "CLEANUP SKIP: ".\$e->getMessage()."\n"; }
+
+              // Diagnosa kesiapan ffmpeg (non-fatal, tampil di log GitHub Actions).
+              // Kalau "TIDAK DITEMUKAN", video tetap terupload tapi tanpa kompresi.
+              try {
+                  \$kernel->call('video:ffmpeg-check');
+                  echo "FFMPEG CHECK\n".\$kernel->output()."\n";
+              } catch (Throwable \$e) { echo "FFMPEG CHECK SKIP: ".\$e->getMessage()."\n"; }
 
               if (is_file(\$zip) && !@unlink(\$zip) && is_file(\$zip)) {
                   throw new RuntimeException('Deployment succeeded but archive cleanup failed.');

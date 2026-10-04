@@ -29,7 +29,10 @@ export default function ThumbnailUploader({
 
     const handleFileChange = (file) => {
         if (!file) return;
+        // Revoke preview lama agar tidak bocor memori.
+        if (file._prevObjectUrl) URL.revokeObjectURL(file._prevObjectUrl);
         const objectUrl = URL.createObjectURL(file);
+        try { file._prevObjectUrl = objectUrl; } catch { /* abaikan */ }
         setLocalFile(file);
         onChange(objectUrl);
         onFileSelect?.(file);
@@ -62,6 +65,10 @@ export default function ThumbnailUploader({
     const handleDragLeave = () => setIsDragging(false);
 
     const clearSelection = () => {
+        // Revoke blob preview saat dibersihkan agar tidak bocor memori.
+        if (value && typeof value === 'string' && value.startsWith('blob:')) {
+            try { URL.revokeObjectURL(value); } catch { /* abaikan */ }
+        }
         setLocalFile(null);
         setDimensions(null);
         onChange('');

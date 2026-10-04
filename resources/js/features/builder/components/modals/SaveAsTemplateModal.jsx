@@ -36,6 +36,10 @@ export default function SaveAsTemplateModal({
                 alert('Ukuran file maksimal 5MB');
                 return;
             }
+            // Revoke preview lama agar tidak bocor memori (preview sementara, file asli dikirim saat save).
+            if (bannerPreviewUrl && bannerPreviewUrl.startsWith('blob:')) {
+                try { URL.revokeObjectURL(bannerPreviewUrl); } catch { /* abaikan */ }
+            }
             setBannerFile(file);
             setBannerPreviewUrl(URL.createObjectURL(file));
         }
@@ -43,6 +47,9 @@ export default function SaveAsTemplateModal({
 
     const handleRemoveFile = (e) => {
         e.stopPropagation();
+        if (bannerPreviewUrl && bannerPreviewUrl.startsWith('blob:')) {
+            try { URL.revokeObjectURL(bannerPreviewUrl); } catch { /* abaikan */ }
+        }
         setBannerFile(null);
         setBannerPreviewUrl(null);
         if (fileInputRef.current) fileInputRef.current.value = '';

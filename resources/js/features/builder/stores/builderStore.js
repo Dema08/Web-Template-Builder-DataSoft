@@ -29,6 +29,36 @@ const cloneComponentWithNewIds = (comp) => {
   return cloned;
 };
 
+// Helper: bersihkan blob:/data: URL agar tidak pernah masuk draft/published_json.
+// Blob hanya untuk preview lokal sementara — yang disimpan harus URL server.
+const sanitizeServerUrl = (url) => {
+  if (!url || typeof url !== 'string') return url ?? null;
+  if (url.startsWith('blob:') || url.startsWith('data:')) return null;
+  return url;
+};
+
+const sanitizeBackgroundUrls = (bg) => {
+  if (!bg || typeof bg !== 'object') return bg ?? null;
+  const clean = { ...bg };
+  if (clean.video && typeof clean.video === 'object') {
+    const videoUrl = sanitizeServerUrl(clean.video.url);
+    clean.video = {
+      ...clean.video,
+      url: videoUrl ?? sanitizeServerUrl(clean.video.uploadedUrl),
+      uploadedUrl: sanitizeServerUrl(clean.video.uploadedUrl),
+      poster: sanitizeServerUrl(clean.video.poster),
+    };
+  }
+  if (clean.image && typeof clean.image === 'object') {
+    clean.image = {
+      ...clean.image,
+      url: sanitizeServerUrl(clean.image.url),
+      uploadedUrl: sanitizeServerUrl(clean.image.uploadedUrl),
+    };
+  }
+  return clean;
+};
+
 export const useBuilderStore = create((set, get) => ({
   // Initial state
   status: 'draft',
@@ -169,6 +199,8 @@ export const useBuilderStore = create((set, get) => ({
   },
 
   // Serialize the CURRENT canvas into the draft_json shape the backend expects.
+  // Blob/data URL tidak pernah ikut tersimpan — disanitasi ke null agar
+  // draft/published_json selalu berisi URL server yang valid.
   serializeDraftJson: () => {
     const { sections, landingSections, pages, currentPageId } = get();
     // Sync current active sections back to correct store bucket first
@@ -184,7 +216,7 @@ export const useBuilderStore = create((set, get) => ({
         type: s.type,
         layout: s.layout,
         styles: s.styles || {},
-        background: s.background || null,
+        background: sanitizeBackgroundUrls(s.background || null),
         customTexts: s.customTexts || {},
         customImages: s.customImages || {},
         isLocked: s.isLocked || false,
@@ -226,7 +258,7 @@ export const useBuilderStore = create((set, get) => ({
         components: components.map((c, ci) => normalizeComponent(c, ci)),
         order: index,
         styles: section.styles || {},
-        background: section.background || null,
+        background: sanitizeBackgroundUrls(section.background || null),
         customTexts: section.customTexts || {},
         customImages: section.customImages || {},
         isLocked: section.isLocked || false,

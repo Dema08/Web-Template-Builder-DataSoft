@@ -53,6 +53,11 @@ class Website extends Model
         'favicon',
         'logo',
         'published_at',
+        'background_video_path',
+        'background_video_poster',
+        'background_video_size',
+        'background_video_duration',
+        'background_video_format',
     ];
 
     protected $casts = [
@@ -85,11 +90,35 @@ class Website extends Model
 
     public function getThumbnailUrlAttribute(): ?string
     {
-        if (!$this->thumbnail_path) {
+        if (! $this->thumbnail_path) {
             return null;
         }
 
         return Storage::disk('public')->url($this->thumbnail_path);
+    }
+
+    public function getBackgroundVideoUrlAttribute(): ?string
+    {
+        if (! $this->background_video_path) {
+            return null;
+        }
+        if (! Storage::disk('public')->exists($this->background_video_path)) {
+            return null;
+        }
+
+        return Storage::disk('public')->url($this->background_video_path);
+    }
+
+    public function getBackgroundVideoPosterUrlAttribute(): ?string
+    {
+        if (! $this->background_video_poster) {
+            return null;
+        }
+        if (! Storage::disk('public')->exists($this->background_video_poster)) {
+            return null;
+        }
+
+        return Storage::disk('public')->url($this->background_video_poster);
     }
 
     public function user(): BelongsTo

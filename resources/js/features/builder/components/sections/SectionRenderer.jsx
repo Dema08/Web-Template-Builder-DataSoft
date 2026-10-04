@@ -20,6 +20,10 @@ const layoutIdToComponentName = (layoutId) => {
     .join('');
 };
 
+const isRenderableVideoUrl = (url) => typeof url === 'string' && url !== '' && !url.startsWith('blob:') && !url.startsWith('data:');
+
+const renderablePoster = (poster) => (isRenderableVideoUrl(poster) ? poster : undefined);
+
 // Helper: Convert hex color and opacity (0-1) to rgba string
 const hexToRgba = (hex, opacity = 1) => {
   if (!hex) return `rgba(255, 255, 255, ${opacity})`;
@@ -317,11 +321,12 @@ export default function SectionRenderer({ section, isSelected, onClick, isPrevie
 
     return (
       <div ref={sectionRef} id={section.id} className="relative w-full overflow-hidden" style={getSectionStyle()}>
-        {/* Background Video if applicable */}
-        {section.background?.type === 'video' && section.background.video?.url && (
+        {/* Background Video if applicable (hanya URL server) */}
+        {section.background?.type === 'video' && isRenderableVideoUrl(section.background.video?.url) && (
           <video
             className="absolute inset-0 w-full h-full object-cover pointer-events-none z-0"
             src={section.background.video.url}
+            poster={renderablePoster(section.background.video.poster)}
             autoPlay={section.background.video.autoplay ?? true}
             loop={section.background.video.loop ?? true}
             muted={section.background.video.muted ?? true}
@@ -464,11 +469,12 @@ export default function SectionRenderer({ section, isSelected, onClick, isPrevie
       }`}
       style={getSectionStyle()}
     >
-      {/* Background Video if applicable */}
-      {section.background?.type === 'video' && section.background.video?.url && (
+      {/* Background Video if applicable (hanya URL server) */}
+      {section.background?.type === 'video' && isRenderableVideoUrl(section.background.video?.url) && (
         <video
           className="absolute inset-0 w-full h-full object-cover pointer-events-none z-0"
           src={section.background.video.url}
+          poster={renderablePoster(section.background.video.poster)}
           autoPlay={section.background.video.autoplay ?? true}
           loop={section.background.video.loop ?? true}
           muted={section.background.video.muted ?? true}
