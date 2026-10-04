@@ -188,7 +188,7 @@ export default function AdminAnalytics() {
             {/* Visual Chart Graphic Section & Top Websites */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Traffic Chart */}
-                <Card className="p-6 sm:p-8 space-y-6 lg:col-span-2 overflow-hidden">
+                <Card className="p-6 sm:p-8 space-y-6 lg:col-span-2 min-w-0 overflow-hidden">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         <div>
                             <div className="flex items-center gap-2">
@@ -208,7 +208,7 @@ export default function AdminAnalytics() {
                             <select
                                 value={selectedWebsite}
                                 onChange={(e) => handleWebsiteChange(e.target.value)}
-                                className="px-3 py-1.5 rounded-xl border border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface-alt))] text-xs font-bold text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                                className="px-3 py-1.5 rounded-xl border border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface-alt))] text-xs font-bold text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-500/20 max-w-[200px] truncate"
                             >
                                 <option value="all">🌐 Semua Website</option>
                                 {websitesFilter.map((site) => (
@@ -245,67 +245,66 @@ export default function AdminAnalytics() {
 
                     {/* Summary KPI Badges */}
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
-                        <div className="p-3 rounded-xl bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))]">
-                            <span className="text-[10px] font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider block">Total Tayangan</span>
-                            <span className="text-base font-extrabold text-indigo-600 dark:text-indigo-400">
+                        <div className="p-3 rounded-xl bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] min-w-0">
+                            <span className="text-[10px] font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider block truncate">Total Tayangan</span>
+                            <span className="text-base font-extrabold text-indigo-600 dark:text-indigo-400 block truncate">
                                 {(trafficSummary.total_views ?? 0).toLocaleString()} <span className="text-[10px] font-normal text-slate-500">hits</span>
                             </span>
                         </div>
-                        <div className="p-3 rounded-xl bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))]">
-                            <span className="text-[10px] font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider block">Pengunjung Unik</span>
-                            <span className="text-base font-extrabold text-emerald-600 dark:text-emerald-400">
+                        <div className="p-3 rounded-xl bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] min-w-0">
+                            <span className="text-[10px] font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider block truncate">Pengunjung Unik</span>
+                            <span className="text-base font-extrabold text-emerald-600 dark:text-emerald-400 block truncate">
                                 {(trafficSummary.total_unique ?? 0).toLocaleString()} <span className="text-[10px] font-normal text-slate-500">IP</span>
                             </span>
                         </div>
-                        <div className="p-3 rounded-xl bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))]">
-                            <span className="text-[10px] font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider block">Rata-rata / Periode</span>
-                            <span className="text-base font-extrabold text-purple-600 dark:text-purple-400">
+                        <div className="p-3 rounded-xl bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] min-w-0">
+                            <span className="text-[10px] font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider block truncate">Rata-rata / Periode</span>
+                            <span className="text-base font-extrabold text-purple-600 dark:text-purple-400 block truncate">
                                 {(trafficSummary.avg_views ?? 0).toLocaleString()} <span className="text-[10px] font-normal text-slate-500">views</span>
                             </span>
                         </div>
-                        <div className="p-3 rounded-xl bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))]">
-                            <span className="text-[10px] font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider block">Bulan/Hari Puncak</span>
+                        <div className="p-3 rounded-xl bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] min-w-0">
+                            <span className="text-[10px] font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider block truncate">Bulan/Hari Puncak</span>
                             <span className="text-xs font-extrabold text-amber-600 dark:text-amber-400 block truncate" title={trafficSummary.peak_label}>
                                 {trafficSummary.peak_label || '-'} ({(trafficSummary.peak_views ?? 0).toLocaleString()})
                             </span>
                         </div>
                     </div>
 
-                    {/* Interactive Bar Chart Graphic with horizontal scroll protection */}
-                    <div className="w-full overflow-x-auto ds-scrollbar-thin pb-2">
-                        <div
-                            className={`h-64 bg-gradient-to-b from-indigo-50/50 to-[rgb(var(--color-surface))] dark:from-indigo-950/20 dark:to-[rgb(var(--color-surface))] rounded-2xl border border-[rgb(var(--color-border))] flex items-end p-4 sm:p-6 gap-1 sm:gap-2 ${
-                                monthlyTraffic.length > 20 ? 'min-w-[920px]' : monthlyTraffic.length > 10 ? 'min-w-[560px]' : 'w-full'
-                            }`}
-                        >
+                    {/* Interactive Bar Chart Graphic — 100% Responsive & Strict Bounds */}
+                    <div className="w-full min-w-0 overflow-hidden">
+                        <div className="h-64 w-full bg-gradient-to-b from-indigo-50/50 to-[rgb(var(--color-surface))] dark:from-indigo-950/20 dark:to-[rgb(var(--color-surface))] rounded-2xl border border-[rgb(var(--color-border))] flex items-end p-4 sm:p-6 gap-1 sm:gap-1.5 overflow-hidden">
                             {monthlyTraffic.map((item, idx) => {
                                 const views = item.views || 0;
                                 const isPeak = maxViews > 0 && views === maxViews && views > 0;
-                                const heightPercent = maxViews > 0 ? Math.max((views / maxViews) * 100, 10) : 10;
+                                const heightPercent = maxViews > 0 ? Math.max((views / maxViews) * 100, 8) : 8;
+                                const showLabel = monthlyTraffic.length > 20
+                                    ? (idx % 5 === 0 || idx === monthlyTraffic.length - 1)
+                                    : true;
 
                                 return (
-                                    <div key={idx} className="flex-1 flex flex-col items-center gap-1.5 group h-full justify-end min-w-0">
-                                        {/* Number label on top of bar */}
-                                        <span className={`text-[10px] font-extrabold transition-opacity duration-200 truncate max-w-full ${
-                                            isPeak ? 'text-amber-600 dark:text-amber-400' : 'text-slate-500 dark:text-slate-400'
+                                    <div key={idx} className="flex-1 min-w-0 flex flex-col items-center gap-1 group h-full justify-end relative">
+                                        {/* Number label on top of bar (only shown if views > 0 to avoid clutter) */}
+                                        <span className={`text-[10px] font-extrabold transition-opacity duration-200 truncate max-w-full h-4 flex items-center ${
+                                            isPeak ? 'text-amber-600 dark:text-amber-400 font-black' : 'text-indigo-600 dark:text-indigo-400'
                                         }`}>
-                                            {views > 0 ? (views >= 1000 ? `${(views / 1000).toFixed(1)}k` : views) : 0}
+                                            {views > 0 ? (views >= 1000 ? `${(views / 1000).toFixed(1)}k` : views) : ''}
                                         </span>
 
                                         {/* Bar element */}
-                                        <div className="w-full relative flex-1 flex items-end justify-center">
+                                        <div className="w-full relative flex-1 flex items-end justify-center min-w-0">
                                             <div
-                                                className={`w-full rounded-t-lg transition-all duration-300 relative group-hover:scale-105 ${
+                                                className={`w-full rounded-t transition-all duration-300 relative group-hover:scale-105 ${
                                                     isPeak
                                                         ? 'bg-gradient-to-t from-amber-500 to-amber-400 shadow-md shadow-amber-500/20'
                                                         : views > 0
                                                         ? 'bg-gradient-to-t from-indigo-600 to-indigo-500 group-hover:from-indigo-700 group-hover:to-indigo-600 shadow-sm'
-                                                        : 'bg-slate-200 dark:bg-slate-800 opacity-60'
+                                                        : 'bg-slate-200 dark:bg-slate-800 opacity-40'
                                                 }`}
                                                 style={{ height: `${heightPercent}%` }}
                                             >
                                                 {/* Tooltip on hover */}
-                                                <div className="absolute -top-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-slate-900 text-white text-[10px] font-bold px-2 py-1 rounded-lg shadow-xl transition-all whitespace-nowrap z-20 pointer-events-none flex flex-col items-center">
+                                                <div className="absolute -top-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-slate-900 text-white text-[10px] font-bold px-2 py-1 rounded-lg shadow-xl transition-all whitespace-nowrap z-30 pointer-events-none flex flex-col items-center">
                                                     <span>{item.month || item.label}</span>
                                                     <span className="text-indigo-300 font-extrabold">{views.toLocaleString()} visits ({item.unique_visitors ?? 0} unique)</span>
                                                 </div>
@@ -313,7 +312,9 @@ export default function AdminAnalytics() {
                                         </div>
 
                                         {/* Month/Date label at bottom */}
-                                        <span className={`text-[10px] font-bold truncate w-full text-center ${
+                                        <span className={`text-[10px] font-bold h-4 flex items-center justify-center whitespace-nowrap ${
+                                            showLabel ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                                        } ${
                                             isPeak ? 'text-amber-600 dark:text-amber-400' : 'text-[rgb(var(--color-text-tertiary))]'
                                         }`} title={item.month}>
                                             {item.label}
