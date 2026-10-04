@@ -15,6 +15,7 @@ export default function EditableComponent({
   sectionId,
   parentComponentId = null,
   children,
+  isPreview = false,
 }) {
   const {
     selectedComponentId,
@@ -24,8 +25,16 @@ export default function EditableComponent({
     selectComponent,
     updateComponentProps,
     updateComponentPosition,
-    isPreviewMode,
+    isPreviewMode: storePreviewMode,
   } = useBuilderStore();
+
+  const isPublicRoute = typeof window !== 'undefined' && (
+    window.location.pathname.startsWith('/public') ||
+    window.location.pathname.startsWith('/p/') ||
+    window.location.search.includes('slug=')
+  );
+
+  const isPreviewMode = isPreview || storePreviewMode || isPublicRoute;
 
   const dnd = useBuilderDndContext();
   const { snapPosition } = useSnapGrid();

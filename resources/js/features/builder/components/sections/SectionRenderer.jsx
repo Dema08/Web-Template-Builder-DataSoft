@@ -35,10 +35,18 @@ const hexToRgba = (hex, opacity = 1) => {
   return `rgba(${r}, ${g}, ${b}, ${opacity})`;
 };
 
-export default function SectionRenderer({ section, isSelected, onClick }) {
+export default function SectionRenderer({ section, isSelected, onClick, isPreview = false }) {
   const config = getSectionConfig('default', section?.type);
-  const { selectedSectionId, selectSection, selectComponent, isPreviewMode, setRightPanelOpen } = useBuilderStore();
+  const { selectedSectionId, selectSection, selectComponent, isPreviewMode: storePreviewMode, setRightPanelOpen } = useBuilderStore();
   const sectionRef = useRef(null);
+
+  const isPublicRoute = typeof window !== 'undefined' && (
+    window.location.pathname.startsWith('/public') ||
+    window.location.pathname.startsWith('/p/') ||
+    window.location.search.includes('slug=')
+  );
+
+  const isPreviewMode = isPreview || storePreviewMode || isPublicRoute;
 
   if (!section) return null;
 

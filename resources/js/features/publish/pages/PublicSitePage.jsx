@@ -117,6 +117,7 @@ export default function PublicSitePage() {
                     <SectionRenderer
                         key={section.id}
                         section={section}
+                        isPreview={true}
                         isSelected={false}
                         onClick={() => {}}
                     />
