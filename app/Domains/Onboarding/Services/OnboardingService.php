@@ -111,14 +111,6 @@ class OnboardingService
 
     public function createWebsite(User $user, array $data): WebsiteData
     {
-        $plan = $user->effective_pricelist;
-        $maxDomains = (int) ($plan->maks_domain ?? 0);
-        $websiteCount = $user->websites()->count();
-
-        if (!$user->isAdmin() && $maxDomains !== -1 && $websiteCount >= $maxDomains) {
-            abort(422, "Paket {$plan->nama} hanya mengizinkan {$maxDomains} website.");
-        }
-
         $template = $this->templateRepository->findById($data['template_id']);
 
         if (!$template || !$template->is_active) {

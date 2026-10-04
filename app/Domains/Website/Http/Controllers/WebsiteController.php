@@ -155,14 +155,6 @@ class WebsiteController extends BaseController
         $content = $request->input('draft_json') ?? $request->all();
 
         if (!$website || $isNew) {
-            $plan = $user->effective_pricelist;
-            $maxDomains = (int) ($plan->maks_domain ?? 0);
-            $websiteCount = Website::where('user_id', $user->id)->count();
-
-            if (!$user->isAdmin() && $maxDomains !== -1 && $websiteCount >= $maxDomains) {
-                return $this->error("Paket {$plan->nama} hanya mengizinkan {$maxDomains} website. Upgrade paket untuk menambah.", 422);
-            }
-
             $siteName = $request->input('name') ?? ($user->name . ' Website');
             $slugBase = str($siteName)->slug()->__toString() ?: 'my-website';
             $slug = $slugBase;

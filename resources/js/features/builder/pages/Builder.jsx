@@ -216,11 +216,6 @@ export default function Builder() {
                 }
               } catch (saveErr) {
                 console.warn('Gagal membuat website baru untuk template:', saveErr);
-                if (saveErr?.response?.status === 422) {
-                  toast.error(saveErr?.response?.data?.message || 'Batas jumlah website paket tercapai.', 'Quota Exceeded');
-                  navigate(ROUTES.WEBSITES, { replace: true });
-                  return;
-                }
               }
 
               toast.success(`Website baru dari template "${templateData.name || 'Selected Template'}" berhasil dibuat!`, 'Template Loaded');
