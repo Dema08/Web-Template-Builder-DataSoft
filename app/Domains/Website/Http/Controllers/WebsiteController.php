@@ -18,10 +18,22 @@ class WebsiteController extends BaseController
 {
     public function index(Request $request): JsonResponse
     {
-        $websites = Website::where('user_id', $request->user()->id)
+        $hasViewsTable = \Illuminate\Support\Facades\Schema::hasTable('website_view');
+
+        $query = Website::where('user_id', $request->user()->id)
             ->where('status', 'published')
-            ->orderByDesc('published_at')
-            ->get();
+            ->orderByDesc('published_at');
+
+        if ($hasViewsTable) {
+            $query->withCount([
+                'views',
+                'views as monthly_views_count' => function ($q) {
+                    $q->where('created_at', '>=', now()->subDays(30));
+                },
+            ]);
+        }
+
+        $websites = $query->get();
         $quotaInfo = $this->quotaInfo($request);
         $websites->each(fn (Website $website) => $website->setAttribute('quota_info', $quotaInfo));
 

@@ -53,9 +53,17 @@ export default function Websites() {
                     : 'Baru saja',
                 thumbnail: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop&q=80',
                 templateName: 'Microdata Website Template',
+                viewsCount: website.views_count || 0,
+                monthlyViewsCount: website.monthly_views_count || 0,
             };
         });
     }, [websites]);
+
+    const totalMonthlyViews = useMemo(() => {
+        return websitesList
+            .filter((site) => site.status === 'Published')
+            .reduce((sum, site) => sum + (site.monthlyViewsCount || site.viewsCount || 0), 0);
+    }, [websitesList]);
 
     const filteredWebsites = websitesList.filter((site) => {
         const matchesSearch =
@@ -130,7 +138,11 @@ export default function Websites() {
                     </div>
                     <div>
                         <p className="text-xs font-semibold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Total Monthly Views</p>
-                        <p className="text-2xl font-extrabold text-[rgb(var(--color-text-primary))] mt-1">69.3k</p>
+                        <p className="text-2xl font-extrabold text-[rgb(var(--color-text-primary))] mt-1">
+                            {totalMonthlyViews >= 10000
+                                ? `${(totalMonthlyViews / 1000).toFixed(1)}k`
+                                : totalMonthlyViews.toLocaleString('id-ID')}
+                        </p>
                     </div>
                 </Card>
             </div>
@@ -199,8 +211,13 @@ export default function Websites() {
                                     <Globe className="h-3.5 w-3.5 shrink-0" />
                                     <span className="truncate">{site.domain}</span>
                                 </p>
-                                <p className="text-[11px] text-[rgb(var(--color-text-tertiary))] mt-2 flex items-center gap-1">
-                                    <Clock className="h-3 w-3" /> Updated {site.updatedAt} • Template: {site.templateName}
+                                <p className="text-[11px] text-[rgb(var(--color-text-tertiary))] mt-2 flex items-center justify-between gap-1">
+                                    <span className="flex items-center gap-1">
+                                        <Clock className="h-3 w-3" /> {site.updatedAt}
+                                    </span>
+                                    <span className="flex items-center gap-1 font-semibold text-indigo-600">
+                                        <Eye className="h-3 w-3" /> {site.monthlyViewsCount.toLocaleString('id-ID')} views
+                                    </span>
                                 </p>
                             </div>
 

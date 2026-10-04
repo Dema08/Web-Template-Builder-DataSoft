@@ -43,6 +43,8 @@ class WebsiteResource extends JsonResource
             'url_path' => $this->url_path,
             'url_subdomain' => $this->url_subdomain,
             'quota_info' => $quotaInfo,
+            'views_count' => (int) ($this->views_count ?? 0),
+            'monthly_views_count' => (int) ($this->monthly_views_count ?? 0),
             'created_at' => $this->created_at?->toDateTimeString(),
             'updated_at' => $this->updated_at?->toDateTimeString(),
         ];
