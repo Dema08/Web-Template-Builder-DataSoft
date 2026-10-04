@@ -47,6 +47,7 @@ export default function Builder() {
     sections,
     loadSections,
     setTemplateName,
+    setTemplateId,
     selectSection,
     resetBuilder,
   } = useBuilderStore();
@@ -58,6 +59,7 @@ export default function Builder() {
     const initializeBuilderContent = async () => {
       try {
         setIsLoadingContent(true);
+        setTemplateId(null);
 
         const editTemplateId = sessionStorage.getItem('edit_template_id') || sessionStorage.getItem('draft_template_id');
         const editTemplateName = sessionStorage.getItem('edit_template_name') || sessionStorage.getItem('draft_template_name');
@@ -80,6 +82,7 @@ export default function Builder() {
         // ─── MODE: Edit User Draft Template (dari My Templates → Edit Builder) ───
         // Langsung update template yang ada, TANPA membuat template baru (mencegah duplikasi)
         if (editTemplateId) {
+          setTemplateId(null);
           sessionStorage.removeItem('edit_template_id');
           sessionStorage.removeItem('edit_template_name');
 
@@ -138,6 +141,7 @@ export default function Builder() {
 
         // Blank Template mode — selalu diizinkan (tanpa memuat layout template manapun)
         if (blankMode) {
+          setTemplateId(null);
           sessionStorage.removeItem('blank_template_mode');
           sessionStorage.removeItem('pending_template_id');
           sessionStorage.removeItem('pending_template_name');
@@ -193,6 +197,7 @@ export default function Builder() {
             const templateData = payload.template ?? (await templateApi.getPublicById(pendingTemplateId).then((r) => r.data?.data ?? r.data));
 
             if (templateData && isMounted) {
+              setTemplateId(Number(pendingTemplateId));
               const pubSections = templateData.published_json?.sections;
               const draftSections = templateData.draft_json?.sections;
               const sectionsToLoad = (pubSections && Array.isArray(pubSections) && pubSections.length > 0)
@@ -239,6 +244,7 @@ export default function Builder() {
         try {
           const site = await websiteApi.getWebsite();
           if (site && isMounted) {
+            setTemplateId(site.template_id ? Number(site.template_id) : null);
             setWebsiteInfo(site);
             if (site.name) {
               setTemplateName(site.name);
@@ -292,7 +298,7 @@ export default function Builder() {
     return () => {
       isMounted = false;
     };
-  }, [loadSections, setTemplateName]);
+  }, [loadSections, setTemplateId, setTemplateName]);
 
   // ─── Draft Template Auto-Save to My Templates ───────────────────────────
 
@@ -314,6 +320,7 @@ export default function Builder() {
         const updatePayload = {
           name: templateName,
           draft_json: draftJson,
+          source_template_id: useBuilderStore.getState().templateId || undefined,
         };
         if (!isEditingUserTemplate) {
           updatePayload.status = 'draft';
@@ -332,6 +339,7 @@ export default function Builder() {
           draft_json: draftJson,
           visibility: 'private',
           status: 'draft',
+          source_template_id: useBuilderStore.getState().templateId || undefined,
         });
         const newTemplate = res.data?.data ?? res.data;
         if (!newTemplate?.id) {
@@ -417,7 +425,10 @@ export default function Builder() {
     try {
       setIsSaving(true);
       const draftJson = useBuilderStore.getState().serializeDraftJson();
-      await templateApi.updateMyTemplate(templateId, { draft_json: draftJson });
+      await templateApi.updateMyTemplate(templateId, {
+        draft_json: draftJson,
+        source_template_id: useBuilderStore.getState().templateId || undefined,
+      });
       queryClient.invalidateQueries({ queryKey: ['my-templates'] });
       setIsTemplateUpdateChoiceOpen(false);
       toast.success(`Template "${activeDraftTemplateName || 'Template'}" berhasil diperbarui.`, 'Template Diperbarui');
@@ -436,6 +447,9 @@ export default function Builder() {
       const res = await websiteApi.saveContent({
         draft_json: draftJson,
         name: websiteName,
+        ...(useBuilderStore.getState().templateId
+          ? { template_id: useBuilderStore.getState().templateId }
+          : {}),
         is_new: true,
       });
       const newWebsite = res?.data ?? res;
@@ -479,7 +493,11 @@ export default function Builder() {
         const draftJson = useBuilderStore.getState().serializeDraftJson();
         const urlWebsiteId = new URLSearchParams(window.location.search).get('website_id');
         const activeWebsiteId = urlWebsiteId || (websiteInfo?.id ? String(websiteInfo.id) : null);
-        const savePayload = { draft_json: draftJson };
+        const savePayload = {
+          draft_json: draftJson,
+          record_template_usage: true,
+          source_template_id: useBuilderStore.getState().templateId || null,
+        };
         if (activeWebsiteId) savePayload.website_id = activeWebsiteId;
         await websiteApi.saveContent(savePayload);
         queryClient.invalidateQueries({ queryKey: ['websites'] });
@@ -521,6 +539,7 @@ export default function Builder() {
         ...domainConfig,
         website_id: activeWebsiteId,
         draft_json: draftJson,
+        source_template_id: useBuilderStore.getState().templateId || null,
       };
       const res = await websiteApi.publish(publishPayload);
       const pubData = res?.data ?? res;
@@ -559,6 +578,7 @@ export default function Builder() {
         description: templateData.description,
         visibility: templateData.visibility,
         draft_json: draftJson,
+        source_template_id: useBuilderStore.getState().templateId || undefined,
         thumbnail: templateData.bannerOption === 'default' ? '/images/default-template-banner.png' : undefined,
       };
 

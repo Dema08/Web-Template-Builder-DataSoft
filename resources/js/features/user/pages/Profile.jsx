@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Camera, Trash2, Shield, Crown, LayoutTemplate, X } from 'lucide-react';
+import { Camera, Trash2, Shield, Crown, LayoutTemplate } from 'lucide-react';
 import { Card, Input, Button, Alert, Spinner } from '@shared/components/ui';
 import { useProfile } from '@hooks';
 import { useAuthStore, useSettingsStore, useSubscriptionStore, toast } from '@store';
@@ -278,9 +278,7 @@ function SubscriptionQuotaPanel() {
     const isUnlimited = useSubscriptionStore((s) => s.isUnlimited);
     const isFree = useSubscriptionStore((s) => s.isFree);
     const usedIds = useSubscriptionStore((s) => s.usedTemplateIds);
-    const deactivate = useSubscriptionStore((s) => s.deactivateTemplate);
     const [names, setNames] = useState({});
-    const [removingId, setRemovingId] = useState(null);
 
     useEffect(() => { fetchStatus(); }, []);
 
@@ -323,27 +321,13 @@ function SubscriptionQuotaPanel() {
             {!isFree && !isUnlimited && usedIds.length > 0 && (
                 <div className="mt-3 space-y-1.5">
                     {usedIds.map((id) => (
-                        <div key={id} className="flex items-center justify-between gap-2 rounded-xl border border-[rgb(var(--color-border))] px-2.5 py-1.5">
+                        <div key={id} className="flex items-center gap-2 rounded-xl border border-[rgb(var(--color-border))] px-2.5 py-1.5">
                             <span className="text-[11px] font-bold text-[rgb(var(--color-text-primary))] flex items-center gap-1.5 truncate">
                                 <LayoutTemplate className="h-3 w-3 text-indigo-500 shrink-0" />
                                 <span className="truncate">{names[id] || `Template #${id}`}</span>
                             </span>
-                            <button
-                                type="button"
-                                disabled={removingId === id}
-                                onClick={async () => {
-                                    setRemovingId(id);
-                                    await deactivate(id);
-                                    setRemovingId(null);
-                                }}
-                                className="p-1 rounded-lg text-red-500 hover:bg-red-50 disabled:opacity-50"
-                                title="Hapus dari pilihan (kuota kembali)"
-                            >
-                                <X className="h-3.5 w-3.5" />
-                            </button>
                         </div>
                     ))}
-                    <p className="text-[10px] text-slate-400">Hapus salah satu untuk memberi ruang bagi template baru (maks {limit}).</p>
                 </div>
             )}
         </div>

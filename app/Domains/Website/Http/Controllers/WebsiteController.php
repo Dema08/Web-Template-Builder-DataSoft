@@ -147,6 +147,9 @@ class WebsiteController extends BaseController
     public function saveContent(Request $request): JsonResponse
     {
         $user = $request->user();
+        $validated = $request->validate([
+            'source_template_id' => ['nullable', 'integer', 'exists:template,id'],
+        ]);
         $isNew = $request->boolean('is_new');
         $websiteId = $request->query('website_id') ?? $request->input('website_id');
 
@@ -161,33 +164,42 @@ class WebsiteController extends BaseController
 
         $content = $request->input('draft_json') ?? $request->all();
 
-        if (!$website || $isNew) {
-            $siteName = $request->input('name') ?? ($user->name . ' Website');
-            $slugBase = str($siteName)->slug()->__toString() ?: 'my-website';
-            $slug = $slugBase;
-            while (Website::where('slug', $slug)->exists()) {
-                $slug = $slugBase . '-' . rand(100, 999);
+        $website = DB::transaction(function () use ($request, $user, $website, $isNew, $content, $validated): Website {
+            if (!$website || $isNew) {
+                $siteName = $request->input('name') ?? ($user->name . ' Website');
+                $slugBase = str($siteName)->slug()->__toString() ?: 'my-website';
+                $slug = $slugBase;
+                while (Website::where('slug', $slug)->exists()) {
+                    $slug = $slugBase . '-' . rand(100, 999);
+                }
+
+                $defaultCategory = \App\Domains\Category\Models\Category::first();
+                $defaultTemplate = \App\Domains\Template\Models\Template::first();
+
+                $website = Website::create([
+                    'user_id' => $user->id,
+                    'category_id' => $request->input('category_id') ?? $defaultCategory?->id ?? 1,
+                    'template_id' => $request->input('template_id') ?? $defaultTemplate?->id ?? 1,
+                    'name' => $siteName,
+                    'slug' => $slug,
+                    'status' => 'draft',
+                    'draft_json' => $content,
+                ]);
+            } else {
+                $updatePayload = ['draft_json' => $content];
+                if ($request->filled('name')) {
+                    $updatePayload['name'] = $request->input('name');
+                }
+                $website->update($updatePayload);
             }
 
-            $defaultCategory = \App\Domains\Category\Models\Category::first();
-            $defaultTemplate = \App\Domains\Template\Models\Template::first();
-
-            $website = Website::create([
-                'user_id' => $user->id,
-                'category_id' => $request->input('category_id') ?? $defaultCategory?->id ?? 1,
-                'template_id' => $request->input('template_id') ?? $defaultTemplate?->id ?? 1,
-                'name' => $siteName,
-                'slug' => $slug,
-                'status' => 'draft',
-                'draft_json' => $content,
-            ]);
-        } else {
-            $updatePayload = ['draft_json' => $content];
-            if ($request->filled('name')) {
-                $updatePayload['name'] = $request->input('name');
+            if ($request->boolean('record_template_usage')) {
+                app(\App\Domains\Template\Services\TemplateAccessService::class)
+                    ->recordTemplateUsage($user, $validated['source_template_id'] ?? null);
             }
-            $website->update($updatePayload);
-        }
+
+            return $website;
+        });
 
         return $this->success(
             WebsiteResource::make($website->fresh())->resolve($request),
@@ -252,7 +264,7 @@ class WebsiteController extends BaseController
             ], 422);
         }
 
-        $website = DB::transaction(function () use ($sourceWebsite, $isCreatingNew, $slug, $domainType, $customDomain, $draftJson) {
+        $website = DB::transaction(function () use ($sourceWebsite, $isCreatingNew, $slug, $domainType, $customDomain, $draftJson, $user, $validated) {
             $website = $sourceWebsite;
             $settings = $sourceWebsite->settings ?? [];
 
@@ -279,6 +291,11 @@ class WebsiteController extends BaseController
                 'settings' => $settings,
             ]);
             $website->save();
+
+            if ($domainType === 'subdomain') {
+                app(\App\Domains\Template\Services\TemplateAccessService::class)
+                    ->recordTemplateUsage($user, $validated['source_template_id'] ?? null);
+            }
 
             return $website;
         });

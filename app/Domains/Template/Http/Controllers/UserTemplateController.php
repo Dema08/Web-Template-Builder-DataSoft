@@ -5,9 +5,11 @@ namespace App\Domains\Template\Http\Controllers;
 use App\Domains\Shared\Http\Controllers\BaseController;
 use App\Domains\Template\Models\Template;
 use App\Domains\Template\Resources\TemplateResource;
+use App\Domains\Template\Services\TemplateAccessService;
 use App\Domains\Template\Services\TemplateService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 /**
  * UserTemplateController
@@ -21,10 +23,10 @@ use Illuminate\Http\Request;
  */
 class UserTemplateController extends BaseController
 {
-    public function __construct(protected TemplateService $templateService)
-    {
-        //
-    }
+    public function __construct(
+        protected TemplateService $templateService,
+        protected TemplateAccessService $templateAccessService
+    ) {}
 
     /**
      * Daftar semua template milik user yang login (private + public).
@@ -80,6 +82,7 @@ class UserTemplateController extends BaseController
             'status'      => ['nullable', 'string', 'in:draft,published'],
             'category_id' => ['nullable', 'integer', 'exists:kategori_industri,id'],
             'thumbnail'   => ['nullable', 'string', 'max:1000'],
+            'source_template_id' => ['nullable', 'integer', 'exists:template,id'],
         ], [
             'name.required'       => 'Nama template wajib diisi.',
             'draft_json.required' => 'Konten template tidak boleh kosong.',
@@ -88,7 +91,15 @@ class UserTemplateController extends BaseController
 
         $validated['visibility'] = $validated['visibility'] ?? 'private';
 
-        $template = $this->templateService->saveAsUserTemplate($request->user(), $validated);
+        $template = DB::transaction(function () use ($request, $validated) {
+            $template = $this->templateService->saveAsUserTemplate($request->user(), $validated);
+            $this->templateAccessService->recordTemplateUsage(
+                $request->user(),
+                $validated['source_template_id'] ?? null
+            );
+
+            return $template;
+        });
         $template->load('industryCategory');
 
         return $this->success(
@@ -135,7 +146,11 @@ class UserTemplateController extends BaseController
             'description' => ['nullable', 'string', 'max:2000'],
             'draft_json'  => ['sometimes', 'array'],
             'status'      => ['nullable', 'string', 'in:draft,published'],
+            'source_template_id' => ['nullable', 'integer', 'exists:template,id'],
         ]);
+
+        $sourceTemplateId = $validated['source_template_id'] ?? null;
+        unset($validated['source_template_id']);
 
         // Jika draft_json diupdate, sync juga ke published_json agar bisa langsung digunakan
         if (isset($validated['draft_json'])) {
@@ -144,7 +159,10 @@ class UserTemplateController extends BaseController
 
         $validated['updated_by'] = $user->id;
 
-        $template->update($validated);
+        DB::transaction(function () use ($template, $validated, $user, $sourceTemplateId): void {
+            $template->update($validated);
+            $this->templateAccessService->recordTemplateUsage($user, $sourceTemplateId);
+        });
         $template->load('industryCategory');
 
         return $this->success(

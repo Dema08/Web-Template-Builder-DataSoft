@@ -171,13 +171,9 @@ class OnboardingService
 
         $this->templateRepository->incrementUsageCount($template);
 
-        // Catat template premium ke kuota user (dipakai untuk batas Starter N).
-        try {
-            app(\App\Domains\Template\Services\TemplateAccessService::class)
-                ->applyTemplate($user, $template);
-        } catch (\Throwable $e) {
-            // Abaikan — akses sudah lolos di atas; pencatatan bersifat best-effort.
-        }
+        // Onboarding menyimpan website draft, jadi catat hanya template PRO yang dipakai.
+        app(\App\Domains\Template\Services\TemplateAccessService::class)
+            ->recordTemplateUsage($user, $template);
 
         return WebsiteData::fromModel($website);
     }

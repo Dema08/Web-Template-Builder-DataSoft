@@ -160,10 +160,9 @@ class TemplateAccessController extends BaseController
     public function deactivate(Request $request, int $id): JsonResponse
     {
         $user = $request->user();
-        $template = Template::findOrFail($id);
 
         try {
-            $result = $this->templateAccessService->deactivateTemplate($user, $template);
+            $result = $this->templateAccessService->deactivateTemplate($user, $id);
 
             return $this->success($result, $result['message'] ?? 'Template berhasil dinonaktifkan.');
         } catch (\Throwable $e) {

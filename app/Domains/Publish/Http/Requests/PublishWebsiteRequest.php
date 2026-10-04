@@ -58,6 +58,7 @@ class PublishWebsiteRequest extends FormRequest
             ],
             'publish_action' => ['sometimes', Rule::in(['update', 'new'])],
             'draft_json' => ['sometimes', 'array'],
+            'source_template_id' => ['nullable', 'integer', Rule::exists('template', 'id')],
             'slug' => $slugRules,
             'domain_type' => ['required', Rule::in(['subdomain', 'custom'])],
             'custom_domain' => ['required_if:domain_type,custom', 'nullable', 'string', 'max:253'],

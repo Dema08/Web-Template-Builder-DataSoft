@@ -75,8 +75,8 @@ class TemplateAccessService
         $planSlug = strtolower($plan->slug ?? 'free');
         $limit = (int) ($plan->maks_starter_template ?? 0);
 
-        // Ambil riwayat template yang sudah pernah digunakan oleh user
-        $usedTemplateIds = $user->templateUsages()->pluck('template_id')->toArray();
+        // Kuota hanya menghitung template PRO; entri template Free lama diabaikan.
+        $usedTemplateIds = $this->getUsedPremiumTemplateIds($user);
         $isAlreadyUsed = in_array($templateModel->id, $usedTemplateIds);
         $usedCount = count($usedTemplateIds);
 
@@ -185,13 +185,14 @@ class TemplateAccessService
     public function getQuotaStatus(User $user): array
     {
         if ($user->isAdmin()) {
+            $usedTemplateIds = $this->getUsedPremiumTemplateIds($user);
             return [
                 'plan' => 'unlimited',
                 'plan_name' => 'Admin Unlimited',
                 'limit' => -1,
-                'used_count' => $user->templateUsages()->count(),
+                'used_count' => count($usedTemplateIds),
                 'remaining_quota' => 'unlimited',
-                'used_template_ids' => $user->templateUsages()->pluck('template_id')->toArray(),
+                'used_template_ids' => $usedTemplateIds,
                 'is_unlimited' => true,
                 'is_free' => false,
             ];
@@ -200,7 +201,7 @@ class TemplateAccessService
         $plan = $user->effective_pricelist;
         $planSlug = strtolower($plan->slug ?? 'free');
         $limit = (int) ($plan->maks_starter_template ?? 0);
-        $usedTemplateIds = $user->templateUsages()->pluck('template_id')->toArray();
+        $usedTemplateIds = $this->getUsedPremiumTemplateIds($user);
         $usedCount = count($usedTemplateIds);
 
         $remainingQuota = match (true) {
@@ -222,7 +223,7 @@ class TemplateAccessService
     }
 
     /**
-     * Terapkan template ke workspace pengguna dan catat penggunaan kuota.
+     * Terapkan template ke workspace pengguna. Kuota baru dicatat saat konten disimpan.
      */
     public function applyTemplate(User $user, Template|int $template): array
     {
@@ -233,17 +234,6 @@ class TemplateAccessService
             throw new AccessDeniedHttpException($access['reason'] ?? 'Akses ke template ini dibatasi oleh paket langganan Anda.');
         }
 
-        // Catat penggunaan jika bukan blank template dan belum pernah dicatat
-        if (!$templateModel->isBlankTemplate() && !$user->isAdmin()) {
-            TemplateUsage::firstOrCreate([
-                'pengguna_id' => $user->id,
-                'template_id' => $templateModel->id,
-            ]);
-        }
-
-        // Ambil status kuota terkini setelah pencatatan
-        $updatedQuota = $this->getQuotaStatus($user);
-
         return [
             'template' => [
                 'id' => $templateModel->id,
@@ -252,16 +242,48 @@ class TemplateAccessService
                 'draft_json' => $templateModel->draft_json,
                 'published_json' => $templateModel->published_json,
             ],
-            'quota' => $updatedQuota,
-            'access' => $this->canUseTemplate($user->fresh(), $templateModel->id),
+            'quota' => $this->getQuotaStatus($user),
+            'access' => $access,
             'message' => "Template \"{$templateModel->name}\" berhasil diterapkan ke workspace.",
         ];
     }
 
     /**
-     * Aktifkan (pilih) template premium ke dalam kuota user Starter.
-     * POST /api/v1/templates/{id}/activate
-     * Idempotent: template yang sudah aktif tidak memotong kuota lagi.
+     * Catat penggunaan template PRO hanya saat hasilnya benar-benar disimpan/dipublikasikan.
+     */
+    public function recordTemplateUsage(User $user, Template|int|null $template): array
+    {
+        $templateModel = $template instanceof Template
+            ? $template
+            : ($template === null ? null : Template::findOrFail($template));
+
+        if ($user->isAdmin() || !$templateModel || !$templateModel->isPremium()) {
+            return [
+                'recorded' => false,
+                'quota' => $this->getQuotaStatus($user),
+            ];
+        }
+
+        $access = $this->canUseTemplate($user, $templateModel);
+        if (!$access['allowed']) {
+            throw new AccessDeniedHttpException(
+                $access['reason'] ?? 'Batas maksimal template PRO telah tercapai.'
+            );
+        }
+
+        $usage = TemplateUsage::firstOrCreate([
+            'pengguna_id' => $user->id,
+            'template_id' => $templateModel->id,
+        ]);
+
+        return [
+            'recorded' => $usage->wasRecentlyCreated,
+            'quota' => $this->getQuotaStatus($user),
+        ];
+    }
+
+    /**
+     * Periksa hak aktivasi template tanpa mencatat kuota sebelum konten disimpan.
      */
     public function activateTemplate(User $user, Template|int $template): array
     {
@@ -278,24 +300,20 @@ class TemplateAccessService
         }
 
         $access = $this->canUseTemplate($user, $templateModel);
-
         if (!$access['allowed']) {
             throw new AccessDeniedHttpException($access['reason'] ?? 'Batas maksimal template telah tercapai.');
         }
 
-        $usage = TemplateUsage::firstOrCreate([
-            'pengguna_id' => $user->id,
-            'template_id' => $templateModel->id,
-        ]);
+        $alreadyRecorded = $this->isTemplateActivated($user, $templateModel->id);
 
         return [
             'activated' => true,
-            'already' => !$usage->wasRecentlyCreated,
-            'quota' => $this->getQuotaStatus($user->fresh()),
-            'access' => $this->canUseTemplate($user->fresh(), $templateModel),
-            'message' => $usage->wasRecentlyCreated
-                ? "Template \"{$templateModel->name}\" ditambahkan ke pilihan Anda."
-                : "Template \"{$templateModel->name}\" sudah ada di pilihan Anda.",
+            'already' => $alreadyRecorded,
+            'quota' => $this->getQuotaStatus($user),
+            'access' => $access,
+            'message' => $alreadyRecorded
+                ? "Template \"{$templateModel->name}\" sudah tercatat pada kuota Anda."
+                : "Template \"{$templateModel->name}\" akan tercatat setelah draft/template disimpan atau dipublikasikan sebagai subdomain.",
         ];
     }
 
@@ -305,16 +323,26 @@ class TemplateAccessService
      */
     public function deactivateTemplate(User $user, Template|int $template): array
     {
-        $templateModel = $template instanceof Template ? $template : Template::findOrFail($template);
+        $templateModel = $template instanceof Template ? $template : Template::find($template);
+        $templateId = $templateModel?->id ?? ($template instanceof Template ? $template->id : $template);
 
         TemplateUsage::where('pengguna_id', $user->id)
-            ->where('template_id', $templateModel->id)
+            ->where('template_id', $templateId)
             ->delete();
+
+        if (!$templateModel) {
+            return [
+                'deactivated' => true,
+                'quota' => $this->getQuotaStatus($user),
+                'access' => null,
+                'message' => 'Template yang sudah tidak tersedia dihapus dari daftar pilihan Anda. Kuota diperbarui.',
+            ];
+        }
 
         return [
             'deactivated' => true,
-            'quota' => $this->getQuotaStatus($user->fresh()),
-            'access' => $this->canUseTemplate($user->fresh(), $templateModel),
+            'quota' => $this->getQuotaStatus($user),
+            'access' => $this->canUseTemplate($user, $templateModel),
             'message' => "Template \"{$templateModel->name}\" dihapus dari pilihan Anda. Kuota kembali tersedia.",
         ];
     }
@@ -324,9 +352,29 @@ class TemplateAccessService
      */
     public function isTemplateActivated(User $user, int $templateId): bool
     {
+        $template = Template::find($templateId);
+        if (!$template?->isPremium()) {
+            return false;
+        }
+
         return TemplateUsage::where('pengguna_id', $user->id)
             ->where('template_id', $templateId)
             ->exists();
+    }
+
+    /**
+     * @return array<int, int>
+     */
+    private function getUsedPremiumTemplateIds(User $user): array
+    {
+        return $user->templateUsages()
+            ->with('template')
+            ->get()
+            ->filter(fn (TemplateUsage $usage) => $usage->template?->isPremium())
+            ->pluck('template_id')
+            ->map(fn ($id) => (int) $id)
+            ->values()
+            ->all();
     }
 
     /**
