@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
     Globe,
@@ -10,6 +10,8 @@ import {
     CheckCircle2,
     Clock,
     Eye,
+    Camera,
+    X,
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ROUTES } from '@constants';
@@ -29,29 +31,38 @@ export default function Websites() {
     });
 
     const [searchQuery, setSearchQuery] = useState('');
+    const [uploadTarget, setUploadTarget] = useState(null);
+    const [thumbnailFile, setThumbnailFile] = useState(null);
+    const [thumbnailPreview, setThumbnailPreview] = useState('');
+    const [isUploadingThumbnail, setIsUploadingThumbnail] = useState(false);
+    const [thumbnailError, setThumbnailError] = useState('');
 
     const [siteToDelete, setSiteToDelete] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
+    useEffect(() => {
+        return () => {
+            if (thumbnailPreview.startsWith('blob:')) {
+                URL.revokeObjectURL(thumbnailPreview);
+            }
+        };
+    }, [thumbnailPreview]);
+
     const websitesList = useMemo(() => {
-        const rootDomain = window.location.hostname.replace(/^web\./, '');
         return websites.map((website) => {
-            const customDomain = website.settings?.custom_domain;
-            const isCustomDomain = website.settings?.domain_type === 'custom' && customDomain;
             const slug = website.slug || 'my-website';
+            const publicPath = website.url_path || `/p/${encodeURIComponent(slug)}`;
 
             return {
                 id: website.id,
                 name: website.name || 'Website Perusahaan Saya',
-                domain: isCustomDomain ? customDomain : `${slug}.${rootDomain}`,
-                publicUrl: isCustomDomain
-                    ? (customDomain.startsWith('http') ? customDomain : `https://${customDomain}`)
-                    : `https://${slug}.${rootDomain}`,
+                domain: publicPath,
+                publicPath,
                 status: website.status === 'published' ? 'Published' : 'Draft',
                 updatedAt: website.updated_at
                     ? new Date(website.updated_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })
                     : 'Baru saja',
-                thumbnail: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop&q=80',
+                thumbnail: website.thumbnail_url || 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop&q=80',
                 templateName: 'Microdata Website Template',
                 viewsCount: website.views_count || 0,
                 monthlyViewsCount: website.monthly_views_count || 0,
@@ -75,6 +86,84 @@ export default function Websites() {
     const handleDeleteWebsite = (id, name) => {
         setSiteToDelete({ id, name });
         setIsDeleteModalOpen(true);
+    };
+
+    const openThumbnailModal = (website) => {
+        if (thumbnailPreview.startsWith('blob:')) {
+            URL.revokeObjectURL(thumbnailPreview);
+        }
+
+        setUploadTarget(website);
+        setThumbnailFile(null);
+        setThumbnailPreview(website.thumbnail_url || '');
+        setThumbnailError('');
+    };
+
+    const closeThumbnailModal = () => {
+        if (thumbnailPreview.startsWith('blob:')) {
+            URL.revokeObjectURL(thumbnailPreview);
+        }
+
+        setUploadTarget(null);
+        setThumbnailFile(null);
+        setThumbnailPreview('');
+        setThumbnailError('');
+    };
+
+    const handleThumbnailFileChange = (event) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        if (!file.type.startsWith('image/')) {
+            setThumbnailError('File harus berupa gambar.');
+            return;
+        }
+
+        if (file.size > 5 * 1024 * 1024) {
+            setThumbnailError('Ukuran gambar maksimal 5MB.');
+            return;
+        }
+
+        setThumbnailFile(file);
+        setThumbnailPreview(URL.createObjectURL(file));
+        setThumbnailError('');
+    };
+
+    const handleUploadThumbnail = async () => {
+        if (!uploadTarget || !thumbnailFile) return;
+
+        try {
+            setIsUploadingThumbnail(true);
+            setThumbnailError('');
+            await websiteApi.uploadWebsiteThumbnail(uploadTarget.id, thumbnailFile);
+            await refetch();
+            toast.success('Gambar card website berhasil diupdate.', 'Berhasil');
+            setUploadTarget(null);
+            setThumbnailFile(null);
+            setThumbnailPreview('');
+        } catch (error) {
+            setThumbnailError(error.response?.data?.message || 'Gagal mengupload gambar.');
+        } finally {
+            setIsUploadingThumbnail(false);
+        }
+    };
+
+    const handleDeleteThumbnail = async () => {
+        if (!uploadTarget) return;
+
+        try {
+            setIsUploadingThumbnail(true);
+            await websiteApi.deleteWebsiteThumbnail(uploadTarget.id);
+            await refetch();
+            toast.success('Gambar card website dihapus.', 'Berhasil');
+            setUploadTarget(null);
+            setThumbnailFile(null);
+            setThumbnailPreview('');
+        } catch (error) {
+            setThumbnailError(error.response?.data?.message || 'Gagal menghapus gambar.');
+        } finally {
+            setIsUploadingThumbnail(false);
+        }
     };
 
     const handleConfirmDeleteWebsite = async () => {
@@ -194,6 +283,15 @@ export default function Websites() {
                                 alt={site.name}
                                 className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                             />
+                            <button
+                                type="button"
+                                onClick={() => openThumbnailModal(site)}
+                                className="absolute top-3 right-3 flex items-center gap-1.5 rounded-full bg-white/90 px-2.5 py-1.5 text-[10px] font-semibold text-slate-700 shadow-sm backdrop-blur-sm transition hover:bg-white"
+                                title="Upload thumbnail"
+                            >
+                                <Camera className="h-3.5 w-3.5" />
+                                <span>{site.thumbnail && site.thumbnail !== 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop&q=80' ? 'Edit' : 'Add'}</span>
+                            </button>
                             <div className="absolute top-3 left-3">
                                 <StatusBadge status={site.status === 'Published' ? 'published' : 'draft'} />
                             </div>
@@ -209,7 +307,15 @@ export default function Websites() {
                                 </div>
                                 <p className="text-xs text-indigo-600 font-medium mt-1 flex items-center gap-1">
                                     <Globe className="h-3.5 w-3.5 shrink-0" />
-                                    <span className="truncate">{site.domain}</span>
+                                    <a
+                                        href={site.publicPath}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="truncate hover:underline"
+                                        title={`Buka ${site.publicPath} di tab baru`}
+                                    >
+                                        {site.domain}
+                                    </a>
                                 </p>
                                 <p className="text-[11px] text-[rgb(var(--color-text-tertiary))] mt-2 flex items-center justify-between gap-1">
                                     <span className="flex items-center gap-1">
@@ -224,7 +330,7 @@ export default function Websites() {
                             {/* Card Footer Actions */}
                             <div className="pt-3 border-t border-[rgb(var(--color-border))] flex items-center justify-between gap-2">
                                 <a
-                                    href={site.publicUrl || `http://${site.domain}`}
+                                    href={site.publicPath}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="p-2 text-[rgb(var(--color-text-secondary))] hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition border border-[rgb(var(--color-border))]"
@@ -254,6 +360,75 @@ export default function Websites() {
                     </Card>
                 ))}
             </div>
+
+            {uploadTarget && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 px-4">
+                    <div className="w-full max-w-md rounded-2xl bg-white p-5 shadow-2xl">
+                        <div className="flex items-center justify-between gap-3">
+                            <div>
+                                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-indigo-600">Website Thumbnail</p>
+                                <h3 className="mt-1 text-xl font-extrabold text-slate-900">{uploadTarget.name}</h3>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={closeThumbnailModal}
+                                className="rounded-full p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-700"
+                                aria-label="Close"
+                            >
+                                <X className="h-4 w-4" />
+                            </button>
+                        </div>
+
+                        <div className="mt-5 overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
+                            {thumbnailPreview ? (
+                                <img src={thumbnailPreview} alt="Preview thumbnail" className="h-56 w-full object-cover" />
+                            ) : (
+                                <div className="flex h-56 items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 text-slate-400">
+                                    <Camera className="h-12 w-12" />
+                                </div>
+                            )}
+                        </div>
+
+                        <label className="mt-4 flex cursor-pointer items-center justify-center rounded-xl border border-dashed border-indigo-300 bg-indigo-50 px-4 py-3 text-sm font-semibold text-indigo-700 transition hover:bg-indigo-100">
+                            <input type="file" accept="image/*" className="hidden" onChange={handleThumbnailFileChange} />
+                            {thumbnailFile ? 'Ganti gambar' : 'Pilih gambar'}
+                        </label>
+
+                        {thumbnailError && (
+                            <p className="mt-3 text-sm text-red-600">{thumbnailError}</p>
+                        )}
+
+                        <div className="mt-5 flex items-center justify-end gap-2">
+                            {uploadTarget.thumbnail && !thumbnailFile && (
+                                <button
+                                    type="button"
+                                    onClick={handleDeleteThumbnail}
+                                    disabled={isUploadingThumbnail}
+                                    className="inline-flex items-center justify-center gap-2 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-100 disabled:opacity-60"
+                                >
+                                    <Trash2 className="h-4 w-4" />
+                                    Hapus
+                                </button>
+                            )}
+                            <button
+                                type="button"
+                                onClick={closeThumbnailModal}
+                                className="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                            >
+                                Batal
+                            </button>
+                            <button
+                                type="button"
+                                onClick={handleUploadThumbnail}
+                                disabled={!thumbnailFile || isUploadingThumbnail}
+                                className="rounded-xl bg-indigo-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-indigo-300"
+                            >
+                                {isUploadingThumbnail ? 'Menyimpan...' : 'Simpan'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Delete Website Confirm Modal */}
             <ConfirmModal

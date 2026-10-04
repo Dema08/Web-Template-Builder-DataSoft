@@ -8,6 +8,7 @@ use App\Domains\Website\Models\Website;
 use App\Domains\Website\Resources\WebsiteResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * WebsiteController
@@ -275,6 +276,40 @@ class WebsiteController extends BaseController
             'custom_domain' => $customDomain,
             'website' => WebsiteResource::make($website->fresh())->resolve($request),
         ], 'Website published successfully');
+    }
+
+    public function uploadThumbnail(Request $request, int $websiteId): JsonResponse
+    {
+        $website = $request->user()->websites()->whereKey($websiteId)->firstOrFail();
+
+        $request->validate([
+            'thumbnail' => ['required', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
+        ]);
+
+        if ($website->thumbnail_path && Storage::disk('public')->exists($website->thumbnail_path)) {
+            Storage::disk('public')->delete($website->thumbnail_path);
+        }
+
+        $path = $request->file('thumbnail')->store("website-thumbnails/{$website->id}", 'public');
+        $website->update(['thumbnail_path' => $path]);
+
+        return $this->success(
+            WebsiteResource::make($website->fresh())->resolve($request),
+            'Thumbnail uploaded successfully'
+        );
+    }
+
+    public function deleteThumbnail(Request $request, int $websiteId): JsonResponse
+    {
+        $website = $request->user()->websites()->whereKey($websiteId)->firstOrFail();
+
+        if ($website->thumbnail_path && Storage::disk('public')->exists($website->thumbnail_path)) {
+            Storage::disk('public')->delete($website->thumbnail_path);
+        }
+
+        $website->update(['thumbnail_path' => null]);
+
+        return $this->success(null, 'Thumbnail deleted successfully');
     }
 
     public function destroy(Request $request, int $websiteId): JsonResponse

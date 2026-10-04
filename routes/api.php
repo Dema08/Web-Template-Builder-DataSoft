@@ -152,6 +152,8 @@ Route::prefix('v1')->group(function (): void {
             Route::post('/publish', [App\Domains\Website\Http\Controllers\WebsiteController::class, 'publish'])
                 ->middleware('throttle:10,1');
             Route::post('/assets', [App\Domains\Media\Http\Controllers\MediaController::class, 'upload']);
+            Route::post('/{websiteId}/thumbnail', [App\Domains\Website\Http\Controllers\WebsiteController::class, 'uploadThumbnail']);
+            Route::delete('/{websiteId}/thumbnail', [App\Domains\Website\Http\Controllers\WebsiteController::class, 'deleteThumbnail']);
             Route::post('/{websiteId}/unpublish', [App\Domains\Website\Http\Controllers\WebsiteController::class, 'unpublish']);
             Route::delete('/{websiteId}', [App\Domains\Website\Http\Controllers\WebsiteController::class, 'destroy']);
         });

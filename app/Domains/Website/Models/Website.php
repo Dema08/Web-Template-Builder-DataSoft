@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 
 class Website extends Model
 {
@@ -44,6 +45,7 @@ class Website extends Model
         'template_id',
         'name',
         'slug',
+        'thumbnail_path',
         'status',
         'draft_json',
         'published_json',
@@ -79,6 +81,15 @@ class Website extends Model
         $mainDomain = config('app.main_domain', 'microdata.co.id');
 
         return "https://{$this->slug}.{$mainDomain}";
+    }
+
+    public function getThumbnailUrlAttribute(): ?string
+    {
+        if (!$this->thumbnail_path) {
+            return null;
+        }
+
+        return Storage::disk('public')->url($this->thumbnail_path);
     }
 
     public function user(): BelongsTo

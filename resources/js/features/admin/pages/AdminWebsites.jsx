@@ -234,6 +234,7 @@ export default function AdminWebsites() {
                             )}
                             {websites.map((site) => {
                                 const statusCfg = getStatusConfig(site.status);
+                                const publicPath = site.url_path || `/p/${encodeURIComponent(site.slug)}`;
                                 return (
                                     <tr key={site.id} className="hover:bg-[rgb(var(--color-surface-alt))]/80 transition">
                                         {/* Website & Domain */}
@@ -255,14 +256,14 @@ export default function AdminWebsites() {
                                                     </div>
                                                     <div className="flex items-center gap-1.5">
                                                         <a
-                                                            href={site.published_url}
+                                                            href={publicPath}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
                                                             className="text-xs text-indigo-600 dark:text-indigo-400 font-bold hover:underline inline-flex items-center gap-1 truncate max-w-[220px]"
-                                                            title={site.published_url}
+                                                            title={`Buka ${publicPath} di tab baru`}
                                                         >
                                                             <Link2 className="h-3.5 w-3.5 shrink-0" />
-                                                            <span className="truncate">{site.domain}</span>
+                                                            <span className="truncate">{publicPath}</span>
                                                             <ExternalLink className="h-3 w-3 shrink-0 opacity-70" />
                                                         </a>
                                                     </div>
@@ -338,7 +339,7 @@ export default function AdminWebsites() {
                                             <div className="flex items-center justify-end gap-1.5">
                                                 {/* Visit Live Website */}
                                                 <a
-                                                    href={site.published_url}
+                                                    href={publicPath}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                     className="p-2 bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-950/50 dark:hover:bg-indigo-900/60 text-indigo-600 dark:text-indigo-400 rounded-xl transition"
@@ -476,13 +477,13 @@ export default function AdminWebsites() {
                                     <div className="sm:col-span-2">
                                         <p className="text-[10px] text-[rgb(var(--color-text-tertiary))] font-bold">Domain Akses Publik</p>
                                         <a
-                                            href={detailModal.published_url}
+                                            href={detailModal.url_path || `/p/${encodeURIComponent(detailModal.slug)}`}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="font-bold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1.5 mt-0.5 bg-indigo-50/70 dark:bg-indigo-950/40 p-2 rounded-xl border border-indigo-200/50 dark:border-indigo-900/50"
                                         >
                                             <Link2 className="h-4 w-4 text-indigo-500 shrink-0" />
-                                            <span className="truncate">{detailModal.published_url}</span>
+                                            <span className="truncate">{detailModal.url_path || `/p/${encodeURIComponent(detailModal.slug)}`}</span>
                                             <ExternalLink className="h-3.5 w-3.5 shrink-0 ml-auto" />
                                         </a>
                                     </div>
@@ -504,7 +505,7 @@ export default function AdminWebsites() {
                         {/* Modal Footer Actions */}
                         <div className="flex items-center justify-between pt-2 border-t border-[rgb(var(--color-border))]">
                             <a
-                                href={detailModal.published_url}
+                                href={detailModal.url_path || `/p/${encodeURIComponent(detailModal.slug)}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl shadow-md transition flex items-center gap-1.5"

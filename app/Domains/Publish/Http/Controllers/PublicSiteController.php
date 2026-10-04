@@ -69,6 +69,7 @@ class PublicSiteController extends BaseController
 
         $html = $publishedJson['html'] ?? '';
         $css  = $publishedJson['css']  ?? '';
+        $pages = $publishedJson['pages'] ?? [];
 
         return $this->success([
             'site_name' => $siteName,
@@ -77,6 +78,7 @@ class PublicSiteController extends BaseController
             'brand_color' => $brandColor,
             'logo_url' => $website->logo ? Storage::url($website->logo) : $logoUrl,
             'sections' => $sections,
+            'pages' => is_array($pages) ? $pages : [],
             'html' => $html,
             'css' => $css,
         ], 'Public site data retrieved');

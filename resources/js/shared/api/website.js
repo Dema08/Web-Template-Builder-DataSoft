@@ -97,6 +97,21 @@ const websiteApi = {
         return data.data;
     },
 
+    async uploadWebsiteThumbnail(id, file) {
+        const formData = new FormData();
+        formData.append('thumbnail', file);
+
+        const { data } = await http.post(`/website/${id}/thumbnail`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        return data.data;
+    },
+
+    async deleteWebsiteThumbnail(id) {
+        const { data } = await http.delete(`/website/${id}/thumbnail`);
+        return data.data;
+    },
+
     // --- Admin-only ---
 
     /**

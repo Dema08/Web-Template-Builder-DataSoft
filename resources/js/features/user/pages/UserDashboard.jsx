@@ -118,9 +118,8 @@ export default function UserDashboard() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         {websites.map((site) => {
                             const isPublished = site.is_published;
-                            const rootDomain = window.location.hostname.replace(/^web\./, '');
                             const slug = site.subdomain || 'my-website';
-                            const publicUrl = `https://${slug}.${rootDomain}`;
+                            const publicPath = site.url_path || `/p/${encodeURIComponent(slug)}`;
                             return (
                                 <Card
                                     key={site.id}
@@ -134,10 +133,16 @@ export default function UserDashboard() {
                                             >
                                                 {site.name}
                                             </Link>
-                                            <p className="text-[11px] text-indigo-600 font-medium mt-0.5 flex items-center gap-1 truncate">
+                                            <a
+                                                href={publicPath}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-[11px] text-indigo-600 font-medium mt-0.5 flex items-center gap-1 truncate hover:text-indigo-700 hover:underline"
+                                                title={`Buka ${publicPath} di tab baru`}
+                                            >
                                                 <Globe className="h-3 w-3 shrink-0" />
-                                                <span className="truncate">{slug}.{rootDomain}</span>
-                                            </p>
+                                                <span className="truncate">{publicPath}</span>
+                                            </a>
                                         </div>
                                         <StatusBadge status={isPublished ? 'published' : 'draft'} />
                                     </div>
@@ -155,7 +160,7 @@ export default function UserDashboard() {
                                     <div className="flex items-center gap-2 pt-2 border-t border-[rgb(var(--color-border))]">
                                         {isPublished && (
                                             <a
-                                                href={publicUrl}
+                                                href={publicPath}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 className="p-1.5 text-[rgb(var(--color-text-secondary))] hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition border border-[rgb(var(--color-border))]"

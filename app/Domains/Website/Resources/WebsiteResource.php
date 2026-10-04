@@ -33,6 +33,8 @@ class WebsiteResource extends JsonResource
             'template_id' => $this->template_id,
             'name' => $this->name,
             'slug' => $this->slug,
+            'thumbnail_path' => $this->thumbnail_path,
+            'thumbnail_url' => $this->thumbnail_url,
             'status' => $this->status,
             'draft_json' => $this->draft_json,
             'published_json' => $this->published_json,

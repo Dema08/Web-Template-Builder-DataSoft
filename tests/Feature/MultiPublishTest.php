@@ -115,7 +115,12 @@ it('publishes multiple selected websites without replacing previous publishes', 
             'name' => $slug,
             'slug' => $slug,
             'status' => 'draft',
-            'draft_json' => json_encode(['sections' => []]),
+            'draft_json' => json_encode([
+                'sections' => [],
+                'pages' => $slug === 'tokoku'
+                    ? ['about' => ['id' => 'about', 'name' => 'About', 'slug' => 'about', 'sections' => []]]
+                    : [],
+            ]),
             'settings' => json_encode([]),
             'created_at' => now(),
             'updated_at' => now(),
@@ -142,6 +147,10 @@ it('publishes multiple selected websites without replacing previous publishes', 
         $publicResponse = app(PublicSiteController::class)->show($publicRequest);
         expect($publicResponse->getStatusCode())->toBe(200)
             ->and(DB::table('website')->where('id', $websiteId)->value('status'))->toBe('published');
+        if ($slug === 'tokoku') {
+            expect($publicResponse->getData(true)['data']['pages'])
+                ->toHaveKey('about');
+        }
 
         $this->withoutVite()->get('/p/'.$slug)->assertOk();
     }

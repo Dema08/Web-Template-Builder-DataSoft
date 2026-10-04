@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import SectionRenderer from '@builder/components/sections/SectionRenderer';
+import { useBuilderStore } from '@builder/stores/builderStore';
 import http from '@shared/api/http';
 
 /**
@@ -23,6 +24,31 @@ export default function PublicSitePage() {
     const [sections, setSections] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const currentPreviewPageId = useBuilderStore((state) => state.currentPreviewPageId);
+    const pages = useBuilderStore((state) => state.pages);
+    const loadSections = useBuilderStore((state) => state.loadSections);
+
+    useEffect(() => {
+        const store = useBuilderStore.getState();
+        const previousBuilderState = {
+            sections: store.sections,
+            landingSections: store.landingSections,
+            pages: store.pages,
+            currentPageId: store.currentPageId,
+            currentPreviewPageId: store.currentPreviewPageId,
+            history: store.history,
+            historyIndex: store.historyIndex,
+            selectedSectionId: store.selectedSectionId,
+            selectedComponentId: store.selectedComponentId,
+            isPreviewMode: store.isPreviewMode,
+        };
+
+        store.setIsPreviewMode(true);
+
+        return () => {
+            useBuilderStore.setState(previousBuilderState);
+        };
+    }, []);
 
     // Override body/html dari dashboard CSS saat halaman publik dimuat.
     // CSS global app.css mengaplikasikan warna dashboard ke html/body via CSS variables.
@@ -85,6 +111,9 @@ export default function PublicSitePage() {
                 }
 
                 setSections(loadedSections);
+                if (Array.isArray(site?.sections)) {
+                    loadSections(site.sections, site.pages || {});
+                }
             } catch (err) {
                 setError('Website tidak ditemukan atau belum dipublish.');
                 console.error('Public site fetch error:', err);
@@ -94,7 +123,7 @@ export default function PublicSitePage() {
         };
 
         fetchSite();
-    }, [slug]);
+    }, [slug, loadSections]);
 
     // Update document title & meta description
     useEffect(() => {
@@ -177,14 +206,16 @@ export default function PublicSitePage() {
 
     // Legacy mode: website disimpan sebagai raw HTML + CSS
     if (siteData.legacyMode && siteData.html) {
-        const srcDoc = `<!doctype html><html><head><meta charset="utf-8"><style>${siteData.css || ''} * { outline: none; } </style></head><body style="margin:0;padding:0;">${siteData.html}</body></html>`;
+        const readOnlyScript = '<script>document.designMode="off";document.querySelectorAll("[contenteditable]").forEach((element)=>element.setAttribute("contenteditable","false"));</script>';
+        const srcDoc = `<!doctype html><html><head><meta charset="utf-8"><style>${siteData.css || ''} * { outline: none; } </style></head><body style="margin:0;padding:0;">${siteData.html}${readOnlyScript}</body></html>`;
 
         return (
             <iframe
                 title={siteData.site_name || 'Published site'}
                 srcDoc={srcDoc}
-                sandbox="allow-scripts allow-popups"
+                sandbox="allow-scripts allow-popups allow-forms allow-downloads"
                 style={{ display: 'block', width: '100%', minHeight: '100vh', border: 'none', outline: 'none' }}
+                className="block w-full min-h-screen border-0"
             />
         );
     }
@@ -193,9 +224,13 @@ export default function PublicSitePage() {
     // Render di dalam .public-site-wrapper untuk isolasi CSS dari dashboard.
     // Semua ring-*, border builder, dan outline dari Tailwind dihilangkan via CSS class.
     if (sections && sections.length > 0) {
+        const activeSections = currentPreviewPageId === 'landing'
+            ? sections
+            : (pages[currentPreviewPageId]?.sections || []);
+
         return (
             <div className="public-site-wrapper">
-                {sections.map((section) => (
+                {activeSections.map((section) => (
                     <SectionRenderer
                         key={section.id}
                         section={section}

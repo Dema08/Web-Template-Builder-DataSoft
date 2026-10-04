@@ -54,9 +54,11 @@ class AdminWebsiteController extends BaseController
             $settings = $site->settings ?? [];
             $domainType = $settings['domain_type'] ?? 'subdomain';
             $customDomain = $settings['custom_domain'] ?? null;
+            $subdomainUrl = $site->url_subdomain ?: 'https://' . $site->slug . '.' . config('app.main_domain', 'microdata.co.id');
             $publishedUrl = ($domainType === 'custom' && $customDomain)
                 ? (str_starts_with($customDomain, 'http') ? $customDomain : 'https://' . $customDomain)
-                : url('/public/site?slug=' . $site->slug);
+                : $subdomainUrl;
+            $displayDomain = $customDomain ?: str_replace(['https://', 'http://'], '', $subdomainUrl);
 
             $user = $site->user;
             $plan = $user?->effective_pricelist;
@@ -65,7 +67,8 @@ class AdminWebsiteController extends BaseController
                 'id'                     => $site->id,
                 'name'                   => $site->name,
                 'slug'                   => $site->slug,
-                'domain'                 => $customDomain ?: ($site->slug . '.datasoft.id'),
+                'url_path'               => $site->url_path,
+                'domain'                 => $displayDomain,
                 'domain_type'            => $domainType,
                 'custom_domain'          => $customDomain,
                 'published_url'          => $publishedUrl,
