@@ -300,7 +300,7 @@ jobs:
                   }
               }
 
-              if (!unlink(\$zip)) {
+              if (is_file(\$zip) && !@unlink(\$zip) && is_file(\$zip)) {
                   throw new RuntimeException('Deployment succeeded but archive cleanup failed.');
               }
               if (!unlink(__FILE__)) {
