@@ -317,7 +317,7 @@ export default function SectionRenderer({ section, isSelected, onClick, isPrevie
     if (!LayoutComponent) return null;
 
     return (
-      <div ref={sectionRef} id={section.id} className="relative w-full overflow-hidden" style={getSectionStyle()}>
+      <div ref={sectionRef} id={section.id} className="relative w-full overflow-x-clip" style={getSectionStyle()}>
         {/* Background Video hemat resource (streaming progresif + lazy-play) */}
         {section.background?.type === 'video' && section.background.video?.url && (
           <BackgroundVideo
