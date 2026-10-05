@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import useMobileNavClose from '../../../utils/useMobileNavClose';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 /**
@@ -10,6 +11,7 @@ export default function Navbar20({ components = [], sectionId = null }) {
   const [mega, setMega] = useState(false);
   const [progress] = useState(32);
   const [mobileOpen, setMobileOpen] = useState(false);
+  useMobileNavClose(mobileOpen, setMobileOpen);
 
   const defaultComponents = [
     { id: 'logo-20', type: 'heading', props: { content: 'AETHER', level: 'h2', fontSize: '20px', fontWeight: '900', color: '#ffffff', letterSpacing: '0.25em' } },

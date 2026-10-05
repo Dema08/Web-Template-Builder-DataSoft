@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import useMobileNavClose from '../../../utils/useMobileNavClose';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 /**
@@ -8,6 +9,7 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
  */
 export default function ServiceNavTech({ components = [], sectionId = null }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  useMobileNavClose(mobileOpen, setMobileOpen);
 
   const defaultComponents = [
     { id: 'tech-logo', type: 'heading', props: { content: 'SYNAPSE.TECH', level: 'h2', fontSize: '20px', fontWeight: '800', color: '#ffffff', letterSpacing: '0.05em' } },
@@ -58,6 +60,7 @@ export default function ServiceNavTech({ components = [], sectionId = null }) {
               onClick={() => setMobileOpen(v => !v)}
               className="lg:hidden p-2 rounded-lg bg-cyan-950 text-cyan-400 border border-cyan-800"
               aria-label="Toggle Navigation"
+              aria-expanded={mobileOpen}
             >
               {mobileOpen ? '✕' : '☰'}
             </button>

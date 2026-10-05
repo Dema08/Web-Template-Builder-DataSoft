@@ -39,4 +39,9 @@ export {
   getStarterTemplateById,
   getTotalStarterTemplateCount,
   sid,
+  NAV_CTA_ID_FIXES,
+  isNavCtaId,
+  normalizeNavbarComponents,
+  normalizeComponent,
+  normalizeStarterTemplate,
 } from './index.js';

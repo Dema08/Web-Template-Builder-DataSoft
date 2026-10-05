@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import useMobileNavClose from '../../../utils/useMobileNavClose';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 /**
@@ -7,6 +8,7 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
  */
 export default function RetailNavOmni({ components = [], sectionId = null }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  useMobileNavClose(mobileOpen, setMobileOpen);
 
   const defaultComponents = [
     { id: 'omni-brand', type: 'heading', props: { content: 'SUPERMART', level: 'h3', fontSize: '22px', fontWeight: '900', color: '#ffffff', letterSpacing: '0.02em' } },
@@ -53,6 +55,7 @@ export default function RetailNavOmni({ components = [], sectionId = null }) {
               onClick={() => setMobileOpen(!mobileOpen)}
               className="p-2.5 rounded-xl bg-rose-950/80 border border-rose-800/60 text-rose-200 hover:text-white focus:outline-none transition shadow-sm"
               aria-label="Toggle Menu"
+              aria-expanded={mobileOpen}
             >
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 {mobileOpen ? (

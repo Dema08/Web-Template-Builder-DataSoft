@@ -44,7 +44,7 @@ export default {
       components: [
         { id: 'heavy-badge', type: 'badge', props: { text: '⚙️ HEAVY PRECISION MANUFACTURING & ENGINEERING', variant: 'outline', background: 'rgba(245,158,11,0.15)', color: '#fbbf24', borderColor: 'rgba(245,158,11,0.45)' } },
         { id: 'heavy-title', type: 'heading', props: { content: 'Manufaktur Presisi Tinggi & Fabrikasi Baja Berat Berstandar Global', level: 'h1', fontSize: '46px', fontWeight: '900', color: '#f8fafc', letterSpacing: '-0.025em' } },
-        { id: 'heavy-desc', type: 'paragraph', props: { content: 'Kapasitas fabrikasi 50.000 ton/bulan didukung fasilitas CNC 5-axis mutakhir, robot welding otomatis, dan sertifikasi ASME & ISO 9001 untuk sektor pertambangan, energi, dan infrastruktur.', fontSize: '17px', color: '#cbd5e1' } },
+        { id: 'heavy-desc', type: 'text', props: { content: 'Kapasitas fabrikasi 50.000 ton/bulan didukung fasilitas CNC 5-axis mutakhir, robot welding otomatis, dan sertifikasi ASME & ISO 9001 untuk sektor pertambangan, energi, dan infrastruktur.', fontSize: '17px', color: '#cbd5e1' } },
         { id: 'heavy-btn1', type: 'button', props: { label: 'Minta Penawaran (RFQ) ⚡', href: '#rfq', variant: 'primary', size: 'large', radius: 'md', background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: '#0f172a', fontWeight: '800' } },
         { id: 'heavy-btn2', type: 'button', props: { label: 'Lihat Spesifikasi Fasilitas', href: '#capabilities', variant: 'outline', size: 'large', radius: 'md', background: 'rgba(30,41,59,0.7)', color: '#fbbf24', borderColor: 'rgba(245,158,11,0.4)' } },
 
@@ -55,7 +55,7 @@ export default {
           props: { background: '#111624', borderColor: 'rgba(245,158,11,0.3)', borderWidth: '1px', borderRadius: '12px', padding: '16px', shadow: 'lg', hoverEffect: 'lift' },
           childrenComponents: [
             { id: 'heavy-stat1-num', type: 'heading', props: { content: '50.000 Ton', level: 'h3', fontSize: '26px', fontWeight: '900', color: '#fbbf24' } },
-            { id: 'heavy-stat1-lbl', type: 'paragraph', props: { content: 'Kapasitas Produksi / Bulan', fontSize: '12px', color: '#94a3b8' } },
+            { id: 'heavy-stat1-lbl', type: 'text', props: { content: 'Kapasitas Produksi / Bulan', fontSize: '12px', color: '#94a3b8' } },
           ]
         },
         {
@@ -64,7 +64,7 @@ export default {
           props: { background: '#111624', borderColor: 'rgba(245,158,11,0.3)', borderWidth: '1px', borderRadius: '12px', padding: '16px', shadow: 'lg', hoverEffect: 'lift' },
           childrenComponents: [
             { id: 'heavy-stat2-num', type: 'heading', props: { content: '±0.001 mm', level: 'h3', fontSize: '26px', fontWeight: '900', color: '#fbbf24' } },
-            { id: 'heavy-stat2-lbl', type: 'paragraph', props: { content: 'Toleransi Presisi CNC', fontSize: '12px', color: '#94a3b8' } },
+            { id: 'heavy-stat2-lbl', type: 'text', props: { content: 'Toleransi Presisi CNC', fontSize: '12px', color: '#94a3b8' } },
           ]
         },
         {
@@ -73,7 +73,7 @@ export default {
           props: { background: '#111624', borderColor: 'rgba(245,158,11,0.3)', borderWidth: '1px', borderRadius: '12px', padding: '16px', shadow: 'lg', hoverEffect: 'lift' },
           childrenComponents: [
             { id: 'heavy-stat3-num', type: 'heading', props: { content: '25.000 m²', level: 'h3', fontSize: '26px', fontWeight: '900', color: '#fbbf24' } },
-            { id: 'heavy-stat3-lbl', type: 'paragraph', props: { content: 'Luas Area Plant & Pabrik', fontSize: '12px', color: '#94a3b8' } },
+            { id: 'heavy-stat3-lbl', type: 'text', props: { content: 'Luas Area Plant & Pabrik', fontSize: '12px', color: '#94a3b8' } },
           ]
         },
 
@@ -97,7 +97,7 @@ export default {
             },
             { id: 'heavy-card-badge', type: 'badge', props: { text: '🏭 PLANT CILEGON INDONESIA · LINE A-01 ACTIVE', variant: 'solid', background: 'rgba(245,158,11,0.2)', color: '#fbbf24' } },
             { id: 'heavy-card-title', type: 'heading', props: { content: 'Fasilitas Fabrikasi & Robot Welding 5-Axis', level: 'h4', fontSize: '17px', fontWeight: '800', color: '#f8fafc' } },
-            { id: 'heavy-card-desc', type: 'paragraph', props: { content: 'Dilengkapi overhead crane 50 Ton, heat treatment furnace, dan laboratorium uji NDT (Non-Destructive Testing) bersertifikasi internasional.', fontSize: '13px', color: '#94a3b8' } },
+            { id: 'heavy-card-desc', type: 'text', props: { content: 'Dilengkapi overhead crane 50 Ton, heat treatment furnace, dan laboratorium uji NDT (Non-Destructive Testing) bersertifikasi internasional.', fontSize: '13px', color: '#94a3b8' } },
           ]
         }
       ],
@@ -109,7 +109,7 @@ export default {
       components: [
         { id: 'cap-badge', type: 'badge', props: { text: '⚡ FASILITAS & KAPABILITAS PRODUKSI', variant: 'outline', background: 'rgba(245,158,11,0.15)', color: '#fbbf24', borderColor: 'rgba(245,158,11,0.45)' } },
         { id: 'cap-title', type: 'heading', props: { content: 'Lini Fabrikasi Presisi & Rekayasa Manufaktur Berat', level: 'h2', fontSize: '38px', fontWeight: '900', color: '#f8fafc', letterSpacing: '-0.02em' } },
-        { id: 'cap-desc', type: 'paragraph', props: { content: 'Didukung permesinan terstandarisasi Jerman & Jepang untuk pengerjaan komponen berukuran masif dengan toleransi ultra-presisi.', fontSize: '16px', color: '#cbd5e1' } },
+        { id: 'cap-desc', type: 'text', props: { content: 'Didukung permesinan terstandarisasi Jerman & Jepang untuk pengerjaan komponen berukuran masif dengan toleransi ultra-presisi.', fontSize: '16px', color: '#cbd5e1' } },
 
         // Capability 1: CNC Machining & Milling
         {
@@ -131,7 +131,7 @@ export default {
             },
             { id: 'cap1-badge', type: 'badge', props: { text: 'TOLERANSI ±0.001 MM', variant: 'solid', background: 'rgba(245,158,11,0.2)', color: '#fbbf24' } },
             { id: 'cap1-title', type: 'heading', props: { content: 'CNC 5-Axis Machining Center & Milling', level: 'h3', fontSize: '19px', fontWeight: '800', color: '#f8fafc' } },
-            { id: 'cap1-desc', type: 'paragraph', props: { content: 'Pemrosesan komponen turbine, impeller, housing gearbox industri berat, dan cetakan die-casting presisi hingga dimensi 6.000 x 3.500 mm.', fontSize: '13px', color: '#94a3b8' } },
+            { id: 'cap1-desc', type: 'text', props: { content: 'Pemrosesan komponen turbine, impeller, housing gearbox industri berat, dan cetakan die-casting presisi hingga dimensi 6.000 x 3.500 mm.', fontSize: '13px', color: '#94a3b8' } },
             { id: 'cap1-spec', type: 'heading', props: { content: 'Kapasitas: 35 Ton per unit | Mesin: DMG MORI & MAZAK', level: 'h4', fontSize: '12px', fontWeight: '700', color: '#fbbf24' } },
           ]
         },
@@ -156,7 +156,7 @@ export default {
             },
             { id: 'cap2-badge', type: 'badge', props: { text: 'ASME SEC IX CERTIFIED WELDERS', variant: 'solid', background: 'rgba(245,158,11,0.2)', color: '#fbbf24' } },
             { id: 'cap2-title', type: 'heading', props: { content: 'Automated Robotic Welding & Pressure Vessels', level: 'h3', fontSize: '19px', fontWeight: '800', color: '#f8fafc' } },
-            { id: 'cap2-desc', type: 'paragraph', props: { content: 'Fabrikasi struktur baja jembatan, pressure vessels, tangki minyak & gas, serta piping system bertekanan tinggi dengan uji Radiography 100%.', fontSize: '13px', color: '#94a3b8' } },
+            { id: 'cap2-desc', type: 'text', props: { content: 'Fabrikasi struktur baja jembatan, pressure vessels, tangki minyak & gas, serta piping system bertekanan tinggi dengan uji Radiography 100%.', fontSize: '13px', color: '#94a3b8' } },
             { id: 'cap2-spec', type: 'heading', props: { content: 'Standar: ASME U-Stamp, API 650, AWS D1.1', level: 'h4', fontSize: '12px', fontWeight: '700', color: '#fbbf24' } },
           ]
         },
@@ -181,7 +181,7 @@ export default {
             },
             { id: 'cap3-badge', type: 'badge', props: { text: 'PRESS 4.000 TON HYDRAULIC', variant: 'solid', background: 'rgba(245,158,11,0.2)', color: '#fbbf24' } },
             { id: 'cap3-title', type: 'heading', props: { content: 'Heavy Stamping, Forging & Heat Treatment', level: 'h3', fontSize: '19px', fontWeight: '800', color: '#f8fafc' } },
-            { id: 'cap3-desc', type: 'paragraph', props: { content: 'Penempaan panas baja paduan khusus, quenching & tempering furnace berkapasitas 1.200°C dengan pengujian kekerasan Rockwell & Brinell.', fontSize: '13px', color: '#94a3b8' } },
+            { id: 'cap3-desc', type: 'text', props: { content: 'Penempaan panas baja paduan khusus, quenching & tempering furnace berkapasitas 1.200°C dengan pengujian kekerasan Rockwell & Brinell.', fontSize: '13px', color: '#94a3b8' } },
             { id: 'cap3-spec', type: 'heading', props: { content: 'Furnace: Kapasitas 20 Ton/Batch | Kontrol PID Otomatis', level: 'h4', fontSize: '12px', fontWeight: '700', color: '#fbbf24' } },
           ]
         },
@@ -196,7 +196,7 @@ export default {
       components: [
         { id: 'std-badge', type: 'badge', props: { text: '🏅 SERTIFIKASI MUTU & KESELAMATAN INTERNASIONAL', variant: 'outline', background: 'rgba(245,158,11,0.15)', color: '#fbbf24', borderColor: 'rgba(245,158,11,0.45)' } },
         { id: 'std-title', type: 'heading', props: { content: 'Standar Mutu Berlapis & Sistem Quality Control Ketat', level: 'h2', fontSize: '38px', fontWeight: '900', color: '#f8fafc', letterSpacing: '-0.02em' } },
-        { id: 'std-desc', type: 'paragraph', props: { content: 'Setiap komponen melewati pengujian ultrasonik, spektrometri material, dan CMM (Coordinate Measuring Machine) sebelum dikirim ke klien.', fontSize: '16px', color: '#cbd5e1' } },
+        { id: 'std-desc', type: 'text', props: { content: 'Setiap komponen melewati pengujian ultrasonik, spektrometri material, dan CMM (Coordinate Measuring Machine) sebelum dikirim ke klien.', fontSize: '16px', color: '#cbd5e1' } },
 
         // Standard 1: ISO 9001:2015
         {
@@ -206,7 +206,7 @@ export default {
           childrenComponents: [
             { id: 'std1-tag', type: 'badge', props: { text: 'QUALITY SYSTEM', variant: 'solid', background: 'rgba(245,158,11,0.2)', color: '#fbbf24' } },
             { id: 'std1-title', type: 'heading', props: { content: 'ISO 9001:2015 Quality Management', level: 'h3', fontSize: '18px', fontWeight: '800', color: '#f8fafc' } },
-            { id: 'std1-desc', type: 'paragraph', props: { content: 'Sistem manajemen mutu terakreditasi internasional yang menjamin ketelitian pengerjaan dan ketertelusuran nomor seri material.', fontSize: '13px', color: '#94a3b8' } },
+            { id: 'std1-desc', type: 'text', props: { content: 'Sistem manajemen mutu terakreditasi internasional yang menjamin ketelitian pengerjaan dan ketertelusuran nomor seri material.', fontSize: '13px', color: '#94a3b8' } },
           ]
         },
 
@@ -218,7 +218,7 @@ export default {
           childrenComponents: [
             { id: 'std2-tag', type: 'badge', props: { text: 'U & S STAMP', variant: 'solid', background: 'rgba(245,158,11,0.2)', color: '#fbbf24' } },
             { id: 'std2-title', type: 'heading', props: { content: 'ASME Section VIII Div 1 & 2', level: 'h3', fontSize: '18px', fontWeight: '800', color: '#f8fafc' } },
-            { id: 'std2-desc', type: 'paragraph', props: { content: 'Sertifikasi bejana tekan dan tangki bertekanan tinggi untuk proyek migas, petrokimia, dan pembangkit listrik tenaga uap.', fontSize: '13px', color: '#94a3b8' } },
+            { id: 'std2-desc', type: 'text', props: { content: 'Sertifikasi bejana tekan dan tangki bertekanan tinggi untuk proyek migas, petrokimia, dan pembangkit listrik tenaga uap.', fontSize: '13px', color: '#94a3b8' } },
           ]
         },
 
@@ -230,7 +230,7 @@ export default {
           childrenComponents: [
             { id: 'std3-tag', type: 'badge', props: { text: 'ENVIRONMENTAL', variant: 'solid', background: 'rgba(16,185,129,0.2)', color: '#6ee7b7' } },
             { id: 'std3-title', type: 'heading', props: { content: 'ISO 14001:2015 Environmental', level: 'h3', fontSize: '18px', fontWeight: '800', color: '#f8fafc' } },
-            { id: 'std3-desc', type: 'paragraph', props: { content: 'Pengelolaan limbah industri, filter emisi udara, dan pemulihan cairan pendingin CNC dengan sistem zero-liquid discharge.', fontSize: '13px', color: '#94a3b8' } },
+            { id: 'std3-desc', type: 'text', props: { content: 'Pengelolaan limbah industri, filter emisi udara, dan pemulihan cairan pendingin CNC dengan sistem zero-liquid discharge.', fontSize: '13px', color: '#94a3b8' } },
           ]
         },
 
@@ -242,7 +242,7 @@ export default {
           childrenComponents: [
             { id: 'std4-tag', type: 'badge', props: { text: 'ZERO ACCIDENT', variant: 'solid', background: 'rgba(245,158,11,0.2)', color: '#fbbf24' } },
             { id: 'std4-title', type: 'heading', props: { content: 'ISO 45001:2018 K3 Keselamatan Kerja', level: 'h3', fontSize: '18px', fontWeight: '800', color: '#f8fafc' } },
-            { id: 'std4-desc', type: 'paragraph', props: { content: 'Penerapan protokol keselamatan kerja ketat dengan pencapaian 5.000.000+ jam kerja bebas kecelakaan fatal (Zero LTI).', fontSize: '13px', color: '#94a3b8' } },
+            { id: 'std4-desc', type: 'text', props: { content: 'Penerapan protokol keselamatan kerja ketat dengan pencapaian 5.000.000+ jam kerja bebas kecelakaan fatal (Zero LTI).', fontSize: '13px', color: '#94a3b8' } },
           ]
         },
 
@@ -254,7 +254,7 @@ export default {
           childrenComponents: [
             { id: 'lab-badge', type: 'badge', props: { text: '🔬 IN-HOUSE QUALITY ASSURANCE LABORATORY', variant: 'solid', background: 'rgba(245,158,11,0.25)', color: '#fbbf24' } },
             { id: 'lab-title', type: 'heading', props: { content: 'Laboratorium Pengujian Material & CMM Zeiss 3D Inspection', level: 'h3', fontSize: '22px', fontWeight: '900', color: '#f8fafc' } },
-            { id: 'lab-desc', type: 'paragraph', props: { content: 'Setiap pesanan dilengkapi dengan Mill Test Certificate (MTC) 3.1, Laporan Inspeksi Dimensi CMM Zeiss, Ultrasonic Testing (UT), Magnetic Particle Inspection (MPI), dan uji tarik material hidrolik.', fontSize: '14px', color: '#cbd5e1' } },
+            { id: 'lab-desc', type: 'text', props: { content: 'Setiap pesanan dilengkapi dengan Mill Test Certificate (MTC) 3.1, Laporan Inspeksi Dimensi CMM Zeiss, Ultrasonic Testing (UT), Magnetic Particle Inspection (MPI), dan uji tarik material hidrolik.', fontSize: '14px', color: '#cbd5e1' } },
           ]
         }
       ],
@@ -271,7 +271,7 @@ export default {
           childrenComponents: [
             { id: 'rfq-badge', type: 'badge', props: { text: '⚙️ FAST-TRACK B2B RFQ ESTIMATION', variant: 'outline', background: 'rgba(245,158,11,0.2)', color: '#fbbf24', borderColor: 'rgba(245,158,11,0.5)' } },
             { id: 'rfq-title', type: 'heading', props: { content: 'Kirim Gambar Teknik & Dapatkan Penawaran Harga dalam 24 Jam', level: 'h2', fontSize: '38px', fontWeight: '900', color: '#f8fafc', letterSpacing: '-0.02em', textAlign: 'center' } },
-            { id: 'rfq-desc', type: 'paragraph', props: { content: 'Tim Engineering kami siap mereview file CAD/STEP/DWG Anda, memberikan analisa manufacturability (DFM), dan menghitung estimasi biaya produksi terbaik.', fontSize: '16px', color: '#cbd5e1', textAlign: 'center' } },
+            { id: 'rfq-desc', type: 'text', props: { content: 'Tim Engineering kami siap mereview file CAD/STEP/DWG Anda, memberikan analisa manufacturability (DFM), dan menghitung estimasi biaya produksi terbaik.', fontSize: '16px', color: '#cbd5e1', textAlign: 'center' } },
             { id: 'rfq-btn1', type: 'button', props: { label: 'Submit File CAD & Permintaan RFQ ⚡', href: 'mailto:rfq@nusantaraindustrial.co.id', variant: 'primary', size: 'large', radius: 'md', background: 'linear-gradient(135deg, #f59e0b, #d97706)', color: '#0f172a', fontWeight: '800' } },
             { id: 'rfq-btn2', type: 'button', props: { label: 'Konsultasi Tim Lead Engineer (WhatsApp)', href: 'https://wa.me/6281122334455', variant: 'outline', size: 'large', radius: 'md', background: 'rgba(15,23,42,0.8)', color: '#fbbf24', borderColor: 'rgba(245,158,11,0.4)' } },
           ]
@@ -284,9 +284,9 @@ export default {
       layout: 'ind-footer-heavy',
       components: [
         { id: 'heavy-foot-logo', type: 'heading', props: { content: 'PT NUSANTARA HEAVY INDUSTRY', level: 'h3', fontSize: '18px', fontWeight: '900', color: '#f8fafc', letterSpacing: '0.04em' } },
-        { id: 'heavy-foot-desc', type: 'paragraph', props: { content: 'Perusahaan manufaktur presisi dan rekayasa baja berat terintegrasi. Berpengalaman lebih dari 25 tahun melayani proyek strategis energi, pertambangan, dan infrastruktur nasional.', fontSize: '13px', color: '#94a3b8' } },
-        { id: 'heavy-foot-plant', type: 'paragraph', props: { content: 'Main Plant: Kawasan Industri Krakatau Steel Kav. C-12, Cilegon, Banten 42435', fontSize: '13px', color: '#cbd5e1' } },
-        { id: 'heavy-foot-contact', type: 'paragraph', props: { content: 'Tel: (021) 8990-2026 / 2027 | Email: rfq@nusantaraindustrial.co.id | Web: www.nusantaraindustrial.co.id', fontSize: '13px', color: '#fbbf24' } },
+        { id: 'heavy-foot-desc', type: 'text', props: { content: 'Perusahaan manufaktur presisi dan rekayasa baja berat terintegrasi. Berpengalaman lebih dari 25 tahun melayani proyek strategis energi, pertambangan, dan infrastruktur nasional.', fontSize: '13px', color: '#94a3b8' } },
+        { id: 'heavy-foot-plant', type: 'text', props: { content: 'Main Plant: Kawasan Industri Krakatau Steel Kav. C-12, Cilegon, Banten 42435', fontSize: '13px', color: '#cbd5e1' } },
+        { id: 'heavy-foot-contact', type: 'text', props: { content: 'Tel: (021) 8990-2026 / 2027 | Email: rfq@nusantaraindustrial.co.id | Web: www.nusantaraindustrial.co.id', fontSize: '13px', color: '#fbbf24' } },
       ],
     },
   ],

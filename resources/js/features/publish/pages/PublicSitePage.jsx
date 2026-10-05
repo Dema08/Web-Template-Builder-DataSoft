@@ -207,7 +207,7 @@ export default function PublicSitePage() {
     // Legacy mode: website disimpan sebagai raw HTML + CSS
     if (siteData.legacyMode && siteData.html) {
         const readOnlyScript = '<script>document.designMode="off";document.querySelectorAll("[contenteditable]").forEach((element)=>element.setAttribute("contenteditable","false"));</script>';
-        const srcDoc = `<!doctype html><html><head><meta charset="utf-8"><style>${siteData.css || ''} * { outline: none; } </style></head><body style="margin:0;padding:0;">${siteData.html}${readOnlyScript}</body></html>`;
+        const srcDoc = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><style>${siteData.css || ''} * { outline: none; } </style></head><body style="margin:0;padding:0;">${siteData.html}${readOnlyScript}</body></html>`;
 
         return (
             <iframe

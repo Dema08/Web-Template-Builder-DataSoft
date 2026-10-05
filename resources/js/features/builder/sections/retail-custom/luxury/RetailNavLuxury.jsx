@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import useMobileNavClose from '../../../utils/useMobileNavClose';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 /**
@@ -7,6 +8,7 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
  */
 export default function RetailNavLuxury({ components = [], sectionId = null }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  useMobileNavClose(mobileOpen, setMobileOpen);
 
   const defaultComponents = [
     { id: 'lux-brand', type: 'heading', props: { content: 'MAISON PRESTIGE', level: 'h3', fontSize: '20px', fontWeight: '900', color: '#f8fafc', letterSpacing: '0.15em' } },
@@ -53,6 +55,7 @@ export default function RetailNavLuxury({ components = [], sectionId = null }) {
               onClick={() => setMobileOpen(!mobileOpen)}
               className="p-2.5 rounded-xl bg-purple-950/80 border border-purple-800/60 text-purple-200 hover:text-white focus:outline-none transition shadow-sm"
               aria-label="Toggle Menu"
+              aria-expanded={mobileOpen}
             >
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 {mobileOpen ? (

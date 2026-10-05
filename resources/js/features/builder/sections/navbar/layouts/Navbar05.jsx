@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import useMobileNavClose from '../../../utils/useMobileNavClose';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 /**
@@ -9,6 +10,7 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 export default function Navbar05({ components = [], sectionId = null }) {
   const [openMenu, setOpenMenu] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  useMobileNavClose(mobileOpen, setMobileOpen);
 
   const defaultComponents = [
     { id: 'logo-5', type: 'heading', props: { content: 'VELOCE', level: 'h2', fontSize: '22px', fontWeight: '900', color: '#ffffff', letterSpacing: '0.12em' } },

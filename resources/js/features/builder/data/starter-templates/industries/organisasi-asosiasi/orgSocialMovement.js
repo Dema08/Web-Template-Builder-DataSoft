@@ -43,15 +43,15 @@ export default {
       components: [
         { id: 'soc-badge', type: 'badge', props: { text: '🌿 GERAKAN SOSIAL YANG BERDAMPAK NYATA', variant: 'outline', background: 'rgba(16,185,129,0.2)', color: '#6ee7b7', borderColor: 'rgba(16,185,129,0.5)' } },
         { id: 'soc-title', type: 'heading', props: { content: 'Bersatu, Bergerak, Mengubah Hidup Jutaan Saudara Kita', level: 'h1', fontSize: '48px', fontWeight: '900', color: '#ffffff', letterSpacing: '-0.025em' } },
-        { id: 'soc-desc', type: 'paragraph', props: { content: 'Gerakan Berdaya hadir untuk menghadirkan keadilan akses pendidikan, layanan kesehatan cuma-cuma, dan kemandirian ekonomi bagi keluarga di pelosok Nusantara.', fontSize: '17px', color: '#a7f3d0' } },
+        { id: 'soc-desc', type: 'text', props: { content: 'Gerakan Berdaya hadir untuk menghadirkan keadilan akses pendidikan, layanan kesehatan cuma-cuma, dan kemandirian ekonomi bagi keluarga di pelosok Nusantara.', fontSize: '17px', color: '#a7f3d0' } },
         { id: 'soc-btn1', type: 'button', props: { label: 'Bergabung Jadi Relawan 💚', href: '#join', variant: 'primary', size: 'large', radius: 'full', background: 'linear-gradient(135deg, #f97316, #ea580c)', color: '#ffffff', fontWeight: '700' } },
         { id: 'soc-btn2', type: 'button', props: { label: 'Lihat Laporan Dampak Kami', href: '#impact', variant: 'outline', size: 'large', radius: 'full', background: 'rgba(2,44,34,0.7)', color: '#6ee7b7', borderColor: 'rgba(16,185,129,0.5)' } },
         { id: 'soc-stat1-num', type: 'heading', props: { content: '150.000+', level: 'h3', fontSize: '30px', fontWeight: '900', color: '#6ee7b7' } },
-        { id: 'soc-stat1-lbl', type: 'paragraph', props: { content: 'Penerima Manfaat Program', fontSize: '12px', color: '#34d399' } },
+        { id: 'soc-stat1-lbl', type: 'text', props: { content: 'Penerima Manfaat Program', fontSize: '12px', color: '#34d399' } },
         { id: 'soc-stat2-num', type: 'heading', props: { content: '12.000+', level: 'h3', fontSize: '30px', fontWeight: '900', color: '#6ee7b7' } },
-        { id: 'soc-stat2-lbl', type: 'paragraph', props: { content: 'Relawan Aktif di 34 Provinsi', fontSize: '12px', color: '#34d399' } },
+        { id: 'soc-stat2-lbl', type: 'text', props: { content: 'Relawan Aktif di 34 Provinsi', fontSize: '12px', color: '#34d399' } },
         { id: 'soc-stat3-num', type: 'heading', props: { content: '320', level: 'h3', fontSize: '30px', fontWeight: '900', color: '#6ee7b7' } },
-        { id: 'soc-stat3-lbl', type: 'paragraph', props: { content: 'Desa Binaan Berkelanjutan', fontSize: '12px', color: '#34d399' } },
+        { id: 'soc-stat3-lbl', type: 'text', props: { content: 'Desa Binaan Berkelanjutan', fontSize: '12px', color: '#34d399' } },
         { id: 'soc-hero-bg', type: 'image', props: { src: 'https://images.unsplash.com/photo-1559027615-cd4628902d4a?auto=format&fit=crop&w=1600&q=80', alt: 'Komunitas Relawan Gerakan Berdaya', width: '100%', height: '100%', objectFit: 'cover', borderRadius: '0' } },
       ],
     },
@@ -62,7 +62,7 @@ export default {
       components: [
         { id: 'prog-badge', type: 'badge', props: { text: '💚 4 PILAR PROGRAM UTAMA', variant: 'outline', background: 'rgba(16,185,129,0.18)', color: '#6ee7b7', borderColor: 'rgba(16,185,129,0.45)' } },
         { id: 'prog-title', type: 'heading', props: { content: 'Program Berkelanjutan untuk Perubahan Nyata di Lapangan', level: 'h2', fontSize: '38px', fontWeight: '900', color: '#ffffff', letterSpacing: '-0.02em' } },
-        { id: 'prog-desc', type: 'paragraph', props: { content: 'Kami merancang program berbasis kebutuhan riil masyarakat dengan pendampingan intensif dari para relawan ahli dan donatur terpercaya.', fontSize: '16px', color: '#a7f3d0' } },
+        { id: 'prog-desc', type: 'text', props: { content: 'Kami merancang program berbasis kebutuhan riil masyarakat dengan pendampingan intensif dari para relawan ahli dan donatur terpercaya.', fontSize: '16px', color: '#a7f3d0' } },
         // Card 1
         {
           id: 'card-p1',
@@ -76,7 +76,7 @@ export default {
             },
             { id: 'p1-tag', type: 'badge', props: { text: '🎓 PENDIDIKAN', variant: 'solid', background: 'rgba(1,26,18,0.9)', color: '#6ee7b7' } },
             { id: 'p1-title', type: 'heading', props: { content: 'Beasiswa Pelajar Nusantara', level: 'h3', fontSize: '18px', fontWeight: '800', color: '#ffffff' } },
-            { id: 'p1-desc', type: 'paragraph', props: { content: 'Bantuan biaya SPP, buku, dan mentoring persiapan perguruan tinggi untuk 2.500 anak berprestasi dari keluarga prasejahtera.', fontSize: '13px', color: '#a7f3d0' } },
+            { id: 'p1-desc', type: 'text', props: { content: 'Bantuan biaya SPP, buku, dan mentoring persiapan perguruan tinggi untuk 2.500 anak berprestasi dari keluarga prasejahtera.', fontSize: '13px', color: '#a7f3d0' } },
             { id: 'p1-stat', type: 'heading', props: { content: '2.500 Pelajar / Tahun', level: 'h4', fontSize: '13px', fontWeight: '800', color: '#f97316' } },
           ]
         },
@@ -93,7 +93,7 @@ export default {
             },
             { id: 'p2-tag', type: 'badge', props: { text: '🏥 KESEHATAN', variant: 'solid', background: 'rgba(1,26,18,0.9)', color: '#6ee7b7' } },
             { id: 'p2-title', type: 'heading', props: { content: 'Klinik Apung & Keliling Medis', level: 'h3', fontSize: '18px', fontWeight: '800', color: '#ffffff' } },
-            { id: 'p2-desc', type: 'paragraph', props: { content: 'Armada ambulans dan kapal medis menjangkau pulau terluar untuk pemeriksaan kesehatan cuma-cuma, USG ibu hamil, dan obat gratis.', fontSize: '13px', color: '#a7f3d0' } },
+            { id: 'p2-desc', type: 'text', props: { content: 'Armada ambulans dan kapal medis menjangkau pulau terluar untuk pemeriksaan kesehatan cuma-cuma, USG ibu hamil, dan obat gratis.', fontSize: '13px', color: '#a7f3d0' } },
             { id: 'p2-stat', type: 'heading', props: { content: '48.000 Pasien Terlayani', level: 'h4', fontSize: '13px', fontWeight: '800', color: '#f97316' } },
           ]
         },
@@ -110,7 +110,7 @@ export default {
             },
             { id: 'p3-tag', type: 'badge', props: { text: '🌾 EKONOMI KERAKYATAN', variant: 'solid', background: 'rgba(1,26,18,0.9)', color: '#6ee7b7' } },
             { id: 'p3-title', type: 'heading', props: { content: 'Pemberdayaan UMKM Desa', level: 'h3', fontSize: '18px', fontWeight: '800', color: '#ffffff' } },
-            { id: 'p3-desc', type: 'paragraph', props: { content: 'Pelatihan literasi digital, akses modal mikro tanpa bunga, dan pendampingan pemasaran produk olahan tani dan kerajinan ibu-ibu desa.', fontSize: '13px', color: '#a7f3d0' } },
+            { id: 'p3-desc', type: 'text', props: { content: 'Pelatihan literasi digital, akses modal mikro tanpa bunga, dan pendampingan pemasaran produk olahan tani dan kerajinan ibu-ibu desa.', fontSize: '13px', color: '#a7f3d0' } },
             { id: 'p3-stat', type: 'heading', props: { content: '8.400 Usaha Mandiri', level: 'h4', fontSize: '13px', fontWeight: '800', color: '#f97316' } },
           ]
         },
@@ -127,7 +127,7 @@ export default {
             },
             { id: 'p4-tag', type: 'badge', props: { text: '🌱 LINGKUNGAN HIDUP', variant: 'solid', background: 'rgba(1,26,18,0.9)', color: '#6ee7b7' } },
             { id: 'p4-title', type: 'heading', props: { content: 'Hutan & Pesisir Lestari', level: 'h3', fontSize: '18px', fontWeight: '800', color: '#ffffff' } },
-            { id: 'p4-desc', type: 'paragraph', props: { content: 'Gerakan restorasi 1 juta bibit mangrove dan reboisasi sumber mata air desa untuk menahan abrasi dan memitigasi krisis iklim lokal.', fontSize: '13px', color: '#a7f3d0' } },
+            { id: 'p4-desc', type: 'text', props: { content: 'Gerakan restorasi 1 juta bibit mangrove dan reboisasi sumber mata air desa untuk menahan abrasi dan memitigasi krisis iklim lokal.', fontSize: '13px', color: '#a7f3d0' } },
             { id: 'p4-stat', type: 'heading', props: { content: '1.200 Ha Kawasan Hijau', level: 'h4', fontSize: '13px', fontWeight: '800', color: '#f97316' } },
           ]
         },
@@ -141,7 +141,7 @@ export default {
       components: [
         { id: 'imp-badge', type: 'badge', props: { text: '🏆 TRANSPARANSI & AKUNTABILITAS', variant: 'outline', background: 'rgba(16,185,129,0.18)', color: '#6ee7b7', borderColor: 'rgba(16,185,129,0.45)' } },
         { id: 'imp-title', type: 'heading', props: { content: 'Setiap Rupiah Berubah Menjadi Senyuman & Harapan Nyata', level: 'h2', fontSize: '38px', fontWeight: '900', color: '#ffffff', letterSpacing: '-0.02em' } },
-        { id: 'imp-desc', type: 'paragraph', props: { content: 'Kami menjunjung tinggi tata kelola nirlaba yang profesional. Laporan keuangan diaudit berkala oleh Kantor Akuntan Publik independen dengan opini Wajar Tanpa Pengecualian (WTP).', fontSize: '16px', color: '#a7f3d0' } },
+        { id: 'imp-desc', type: 'text', props: { content: 'Kami menjunjung tinggi tata kelola nirlaba yang profesional. Laporan keuangan diaudit berkala oleh Kantor Akuntan Publik independen dengan opini Wajar Tanpa Pengecualian (WTP).', fontSize: '16px', color: '#a7f3d0' } },
         // KPI Cards
         {
           id: 'card-i1',
@@ -150,7 +150,7 @@ export default {
           childrenComponents: [
             { id: 'i1-tag', type: 'badge', props: { text: '❤️ PENERIMA MANFAAT', variant: 'solid', background: 'rgba(16,185,129,0.2)', color: '#6ee7b7' } },
             { id: 'i1-num', type: 'heading', props: { content: '150.000+', level: 'h3', fontSize: '36px', fontWeight: '900', color: '#6ee7b7' } },
-            { id: 'i1-lbl', type: 'paragraph', props: { content: 'Jiwa tersentuh langsung melalui 4 program utama', fontSize: '13px', color: '#34d399' } },
+            { id: 'i1-lbl', type: 'text', props: { content: 'Jiwa tersentuh langsung melalui 4 program utama', fontSize: '13px', color: '#34d399' } },
           ]
         },
         {
@@ -160,7 +160,7 @@ export default {
           childrenComponents: [
             { id: 'i2-tag', type: 'badge', props: { text: '💎 PENYALURAN AMANAH', variant: 'solid', background: 'rgba(16,185,129,0.2)', color: '#6ee7b7' } },
             { id: 'i2-num', type: 'heading', props: { content: 'Rp 48,2 Miliar', level: 'h3', fontSize: '36px', fontWeight: '900', color: '#6ee7b7' } },
-            { id: 'i2-lbl', type: 'paragraph', props: { content: 'Dana amanah masyarakat tersalurkan 92,4% ke program riil', fontSize: '13px', color: '#34d399' } },
+            { id: 'i2-lbl', type: 'text', props: { content: 'Dana amanah masyarakat tersalurkan 92,4% ke program riil', fontSize: '13px', color: '#34d399' } },
           ]
         },
         {
@@ -170,7 +170,7 @@ export default {
           childrenComponents: [
             { id: 'i3-tag', type: 'badge', props: { text: '🤝 GERAKAN KERELAWANAN', variant: 'solid', background: 'rgba(16,185,129,0.2)', color: '#6ee7b7' } },
             { id: 'i3-num', type: 'heading', props: { content: '12.500', level: 'h3', fontSize: '36px', fontWeight: '900', color: '#6ee7b7' } },
-            { id: 'i3-lbl', type: 'paragraph', props: { content: 'Relawan terlatih aktif di 34 provinsi Nusantara', fontSize: '13px', color: '#34d399' } },
+            { id: 'i3-lbl', type: 'text', props: { content: 'Relawan terlatih aktif di 34 provinsi Nusantara', fontSize: '13px', color: '#34d399' } },
           ]
         },
         {
@@ -180,7 +180,7 @@ export default {
           childrenComponents: [
             { id: 'i4-tag', type: 'badge', props: { text: '🏡 WILAYAH JANGKAUAN', variant: 'solid', background: 'rgba(16,185,129,0.2)', color: '#6ee7b7' } },
             { id: 'i4-num', type: 'heading', props: { content: '320 Desa', level: 'h3', fontSize: '36px', fontWeight: '900', color: '#6ee7b7' } },
-            { id: 'i4-lbl', type: 'paragraph', props: { content: 'Komunitas & desa mandiri binaan berkelanjutan', fontSize: '13px', color: '#34d399' } },
+            { id: 'i4-lbl', type: 'text', props: { content: 'Komunitas & desa mandiri binaan berkelanjutan', fontSize: '13px', color: '#34d399' } },
           ]
         },
         // Banner Card
@@ -208,7 +208,7 @@ export default {
           childrenComponents: [
             { id: 'cta-badge', type: 'badge', props: { text: '🌱 MARI BERGABUNG DALAM PERUBAHAN', variant: 'outline', background: 'rgba(16,185,129,0.2)', color: '#6ee7b7', borderColor: 'rgba(16,185,129,0.5)' } },
             { id: 'cta-title', type: 'heading', props: { content: 'Satu Kebaikan Kecilmu Adalah Harapan Besar Bagi Mereka', level: 'h2', fontSize: '38px', fontWeight: '900', color: '#ffffff', letterSpacing: '-0.02em', textAlign: 'center' } },
-            { id: 'cta-desc', type: 'paragraph', props: { content: 'Bergabunglah bersama 12.000+ relawan dan ratusan donatur setia. Jadilah bagian dari gerakan nyata yang menyalakan harapan di pelosok Indonesia.', fontSize: '16px', color: '#a7f3d0', textAlign: 'center' } },
+            { id: 'cta-desc', type: 'text', props: { content: 'Bergabunglah bersama 12.000+ relawan dan ratusan donatur setia. Jadilah bagian dari gerakan nyata yang menyalakan harapan di pelosok Indonesia.', fontSize: '16px', color: '#a7f3d0', textAlign: 'center' } },
             { id: 'cta-btn1', type: 'button', props: { label: 'Daftar Jadi Relawan 💚', href: '#volunteer', variant: 'primary', size: 'large', radius: 'full', background: 'linear-gradient(135deg, #f97316, #ea580c)', color: '#ffffff', fontWeight: '700' } },
             { id: 'cta-btn2', type: 'button', props: { label: 'Salurkan Donasi Program', href: '#donate', variant: 'outline', size: 'large', radius: 'full', background: 'rgba(2,44,34,0.8)', color: '#6ee7b7', borderColor: 'rgba(16,185,129,0.5)' } },
           ]
@@ -221,9 +221,9 @@ export default {
       layout: 'org-footer-social',
       components: [
         { id: 'soc-foot-logo', type: 'heading', props: { content: 'GERAKAN BERDAYA INDONESIA', level: 'h3', fontSize: '18px', fontWeight: '900', color: '#ffffff', letterSpacing: '0.02em' } },
-        { id: 'soc-foot-desc', type: 'paragraph', props: { content: 'Yayasan nirlaba pemberdayaan masyarakat terdaftar di Kementerian Sosial RI. Berkomitmen mewujudkan keadilan akses pendidikan, kesehatan, dan kemandirian ekonomi.', fontSize: '13px', color: '#a7f3d0' } },
-        { id: 'soc-foot-addr', type: 'paragraph', props: { content: 'Rumah Pemberdayaan DPP: Jl. Tebet Timur Raya No. 45, Jakarta Selatan 12820', fontSize: '13px', color: '#a7f3d0' } },
-        { id: 'soc-foot-phone', type: 'paragraph', props: { content: 'Call Center Relawan: +62 21 8370 5522 | halo@gerakanberdaya.id', fontSize: '13px', color: '#6ee7b7' } },
+        { id: 'soc-foot-desc', type: 'text', props: { content: 'Yayasan nirlaba pemberdayaan masyarakat terdaftar di Kementerian Sosial RI. Berkomitmen mewujudkan keadilan akses pendidikan, kesehatan, dan kemandirian ekonomi.', fontSize: '13px', color: '#a7f3d0' } },
+        { id: 'soc-foot-addr', type: 'text', props: { content: 'Rumah Pemberdayaan DPP: Jl. Tebet Timur Raya No. 45, Jakarta Selatan 12820', fontSize: '13px', color: '#a7f3d0' } },
+        { id: 'soc-foot-phone', type: 'text', props: { content: 'Call Center Relawan: +62 21 8370 5522 | halo@gerakanberdaya.id', fontSize: '13px', color: '#6ee7b7' } },
       ],
     },
   ],

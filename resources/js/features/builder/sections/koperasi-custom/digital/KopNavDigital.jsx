@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import useMobileNavClose from '../../../utils/useMobileNavClose';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 /**
@@ -8,6 +9,7 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
  */
 export default function KopNavDigital({ components = [], sectionId = null }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  useMobileNavClose(mobileOpen, setMobileOpen);
 
   const defaultComponents = [
     { id: 'dig-kop-logo', type: 'heading', props: { content: 'KOPERASI DIGITAL ID', level: 'h2', fontSize: '15px', fontWeight: '900', color: '#f8fafc', letterSpacing: '0.04em' } },
@@ -75,6 +77,7 @@ export default function KopNavDigital({ components = [], sectionId = null }) {
             onClick={() => setMobileOpen(!mobileOpen)}
             className="p-2.5 rounded-xl bg-cyan-950/80 border border-cyan-800/60 text-cyan-200 hover:text-white focus:outline-none transition shadow-sm"
             aria-label="Toggle Menu"
+              aria-expanded={mobileOpen}
           >
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               {mobileOpen ? (

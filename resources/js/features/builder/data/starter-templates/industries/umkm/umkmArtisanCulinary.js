@@ -77,7 +77,7 @@ export default {
         },
         {
           id: 'cul-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Biji kopi single-origin pilihan langsung dari petani lokal, disangrai dengan presisi tinggi dan disajikan bersama pastry hangat buatan dapur sendiri.', fontSize: '17px', color: '#fed7aa' },
         },
         {
@@ -97,7 +97,7 @@ export default {
         },
         {
           id: 'cul-stat1-lbl',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Single Origin Lokal', fontSize: '12px', color: '#d6d3d1' },
         },
         {
@@ -107,7 +107,7 @@ export default {
         },
         {
           id: 'cul-stat2-lbl',
-          type: 'paragraph',
+          type: 'text',
           props: { content: '1,500+ Ulasan Google', fontSize: '12px', color: '#d6d3d1' },
         },
         {
@@ -134,7 +134,7 @@ export default {
         },
         {
           id: 'menu-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Setiap cangkir kopi dan hidangan disiapkan segar dengan bahan baku alami berkualitas tinggi tanpa pengawet.', fontSize: '16px', color: '#fed7aa', textAlign: 'center' },
         },
         {
@@ -149,7 +149,7 @@ export default {
         },
         {
           id: 'm1-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Espresso blend khas dengan gula aren organik murni dan fresh milk creamy.', fontSize: '13px', color: '#fed7aa' },
         },
         {
@@ -169,7 +169,7 @@ export default {
         },
         {
           id: 'm2-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Pilihan single-origin Gayo Wine, Flores Bajawa, atau Toraja Sapan dengan tasting notes floral & fruity.', fontSize: '13px', color: '#fed7aa' },
         },
         {
@@ -189,7 +189,7 @@ export default {
         },
         {
           id: 'm3-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Pastry renyah berlapis dengan isian krim almond manis dan taburan almond panggang renyah.', fontSize: '13px', color: '#fed7aa' },
         },
         {
@@ -209,7 +209,7 @@ export default {
         },
         {
           id: 'm4-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Nasi goreng harum rempah bunga kecombrang dengan suwiran iga sapi empuk dan emping gurih.', fontSize: '13px', color: '#fed7aa' },
         },
         {
@@ -229,7 +229,7 @@ export default {
         },
         {
           id: 'm5-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Ceremonial grade matcha Jepang berpadu lembut dengan susu gandum (oat milk) bebas laktosa.', fontSize: '13px', color: '#fed7aa' },
         },
         {
@@ -249,7 +249,7 @@ export default {
         },
         {
           id: 'm6-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Pasta al dente ditumis dengan potongan tuna segar, bawang merah, serai, dan irisan cabai rawit khas Bali.', fontSize: '13px', color: '#fed7aa' },
         },
         {
@@ -281,7 +281,7 @@ export default {
         },
         {
           id: 'sty-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Didirikan pada tahun 2019 di sudut kota Yogyakarta, Kopi Karsa bertekad menjembatani kerja keras kelompok tani lokal di pelosok Sumatra, Jawa, Bali, hingga Flores langsung ke meja Anda dengan skema Direct-Trade berkeadilan.', fontSize: '16px', color: '#fed7aa' },
         },
         {
@@ -291,7 +291,7 @@ export default {
         },
         {
           id: 'v1-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Kami membeli biji kopi di atas harga pasar untuk mendukung kesejahteraan keluarga petani kopi binaan.', fontSize: '13px', color: '#fed7aa' },
         },
         {
@@ -301,7 +301,7 @@ export default {
         },
         {
           id: 'v2-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Disangrai dalam jumlah kecil maksimal 5kg per batch menggunakan mesin buatan anak bangsa untuk profil rasa optimal.', fontSize: '13px', color: '#fed7aa' },
         },
         {
@@ -311,7 +311,7 @@ export default {
         },
         {
           id: 'v3-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Semua sirup, saus karamel, dan adonan bakery dibuat secara manual (from scratch) setiap pagi.', fontSize: '13px', color: '#fed7aa' },
         },
         {
@@ -338,12 +338,12 @@ export default {
         },
         {
           id: 'rev-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Pengalaman nyata dari para pecinta kopi, remote worker, dan pelanggan setia kami.', fontSize: '16px', color: '#fed7aa', textAlign: 'center' },
         },
         {
           id: 'r1-quote',
-          type: 'paragraph',
+          type: 'text',
           props: { content: '"V60 Gayo Wine-nya luar biasa! Profil acidity-nya pas dan aftertaste floral yang lembut. Suasana tempatnya sangat nyaman untuk WFC berjam-jam."', fontSize: '14px', color: '#fed7aa' },
         },
         {
@@ -353,12 +353,12 @@ export default {
         },
         {
           id: 'r1-role',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Coffee Enthusiast & UI Designer', fontSize: '12px', color: '#f59e0b' },
         },
         {
           id: 'r2-quote',
-          type: 'paragraph',
+          type: 'text',
           props: { content: '"Karsa Aren Cremoso dan Croissant Almond-nya perpaduan juara. Selalu mampir ke sini setiap akhir pekan bareng keluarga. Pelayanannya sangat ramah!"', fontSize: '14px', color: '#fed7aa' },
         },
         {
@@ -368,12 +368,12 @@ export default {
         },
         {
           id: 'r2-role',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Pelanggan Setia Karsa', fontSize: '12px', color: '#f59e0b' },
         },
         {
           id: 'r3-quote',
-          type: 'paragraph',
+          type: 'text',
           props: { content: '"Biji kopi sangrai mereka (beans) selalu saya stok di kantor. Packaging rapi dengan degas valve berkualitas dan roasting date selalu fresh < 7 hari."', fontSize: '14px', color: '#fed7aa' },
         },
         {
@@ -383,7 +383,7 @@ export default {
         },
         {
           id: 'r3-role',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Founder Startup & Home Brewer', fontSize: '12px', color: '#f59e0b' },
         },
       ],
@@ -405,7 +405,7 @@ export default {
         },
         {
           id: 'loc-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Tersedia area indoor ber-AC bebas asap rokok, outdoor garden yang rindang, stopkontak di setiap meja, dan WiFi berkecepatan tinggi.', fontSize: '16px', color: '#fed7aa' },
         },
         {
@@ -415,7 +415,7 @@ export default {
         },
         {
           id: 'loc-addr-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Jl. Prawirotaman No. 42, Brontokusuman, Mergangsan, Kota Yogyakarta, D.I. Yogyakarta 55153', fontSize: '14px', color: '#fed7aa' },
         },
         {
@@ -425,7 +425,7 @@ export default {
         },
         {
           id: 'loc-hrs-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Senin - Minggu: 07.00 - 23.00 WIB (Dapur tutup pukul 22.00 WIB)', fontSize: '14px', color: '#fed7aa' },
         },
         {
@@ -457,12 +457,12 @@ export default {
         },
         {
           id: 'ftr-cul-tagline',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Artisan Coffee Roastery & Homemade Kitchen. Menghargai setiap proses dari biji kopi hingga cangkir Anda.', fontSize: '13px', color: '#fed7aa' },
         },
         {
           id: 'ftr-cul-copy',
-          type: 'paragraph',
+          type: 'text',
           props: { content: '© 2026 Kopi Karsa Nusantara. Bangga Buatan Indonesia.', fontSize: '12px', color: '#a8a29e' },
         },
         {

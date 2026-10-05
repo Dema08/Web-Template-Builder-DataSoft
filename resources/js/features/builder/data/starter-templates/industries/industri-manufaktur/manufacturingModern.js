@@ -44,7 +44,7 @@ export default {
       components: [
         { id: 'smart-badge', type: 'badge', props: { text: '⚡ SMART FACTORY & INDUSTRIAL IOT 4.0', variant: 'outline', background: 'rgba(59,130,246,0.15)', color: '#60a5fa', borderColor: 'rgba(59,130,246,0.45)' } },
         { id: 'smart-title', type: 'heading', props: { content: 'Transformasi Pabrik Cerdas dengan Otomasi Robotik & AI Vision', level: 'h1', fontSize: '46px', fontWeight: '900', color: '#f8fafc', letterSpacing: '-0.025em' } },
-        { id: 'smart-desc', type: 'paragraph', props: { content: 'Integrasi sistem manufaktur cerdas dengan Autonomous Mobile Robots (AMR), computer vision quality inspection real-time, dan digital twin analytics untuk efisiensi produksi maksimal.', fontSize: '17px', color: '#cbd5e1' } },
+        { id: 'smart-desc', type: 'text', props: { content: 'Integrasi sistem manufaktur cerdas dengan Autonomous Mobile Robots (AMR), computer vision quality inspection real-time, dan digital twin analytics untuk efisiensi produksi maksimal.', fontSize: '17px', color: '#cbd5e1' } },
         { id: 'smart-btn1', type: 'button', props: { label: 'Konsultasi Solusi Otomasi 🚀', href: '#audit', variant: 'primary', size: 'large', radius: 'md', background: 'linear-gradient(135deg, #3b82f6, #06b6d4)', color: '#ffffff', fontWeight: '700' } },
         { id: 'smart-btn2', type: 'button', props: { label: 'Eksplorasi Solusi Robotik', href: '#solutions', variant: 'outline', size: 'large', radius: 'md', background: 'rgba(15,23,42,0.8)', color: '#67e8f9', borderColor: 'rgba(6,182,212,0.4)' } },
 
@@ -55,7 +55,7 @@ export default {
           props: { background: '#0b1329', borderColor: 'rgba(59,130,246,0.3)', borderWidth: '1px', borderRadius: '12px', padding: '16px', shadow: 'lg', hoverEffect: 'lift' },
           childrenComponents: [
             { id: 'smart-stat1-num', type: 'heading', props: { content: '94.8%', level: 'h3', fontSize: '26px', fontWeight: '900', color: '#60a5fa' } },
-            { id: 'smart-stat1-lbl', type: 'paragraph', props: { content: 'Overall Equipment Effectiveness', fontSize: '12px', color: '#94a3b8' } },
+            { id: 'smart-stat1-lbl', type: 'text', props: { content: 'Overall Equipment Effectiveness', fontSize: '12px', color: '#94a3b8' } },
           ]
         },
         {
@@ -64,7 +64,7 @@ export default {
           props: { background: '#0b1329', borderColor: 'rgba(59,130,246,0.3)', borderWidth: '1px', borderRadius: '12px', padding: '16px', shadow: 'lg', hoverEffect: 'lift' },
           childrenComponents: [
             { id: 'smart-stat2-num', type: 'heading', props: { content: '120+', level: 'h3', fontSize: '26px', fontWeight: '900', color: '#67e8f9' } },
-            { id: 'smart-stat2-lbl', type: 'paragraph', props: { content: 'Robotik & AGV Terintegrasi', fontSize: '12px', color: '#94a3b8' } },
+            { id: 'smart-stat2-lbl', type: 'text', props: { content: 'Robotik & AGV Terintegrasi', fontSize: '12px', color: '#94a3b8' } },
           ]
         },
         {
@@ -73,7 +73,7 @@ export default {
           props: { background: '#0b1329', borderColor: 'rgba(59,130,246,0.3)', borderWidth: '1px', borderRadius: '12px', padding: '16px', shadow: 'lg', hoverEffect: 'lift' },
           childrenComponents: [
             { id: 'smart-stat3-num', type: 'heading', props: { content: '-35%', level: 'h3', fontSize: '26px', fontWeight: '900', color: '#34d399' } },
-            { id: 'smart-stat3-lbl', type: 'paragraph', props: { content: 'Reduksi Biaya Downtime', fontSize: '12px', color: '#94a3b8' } },
+            { id: 'smart-stat3-lbl', type: 'text', props: { content: 'Reduksi Biaya Downtime', fontSize: '12px', color: '#94a3b8' } },
           ]
         },
         {
@@ -82,7 +82,7 @@ export default {
           props: { background: '#0b1329', borderColor: 'rgba(59,130,246,0.3)', borderWidth: '1px', borderRadius: '12px', padding: '16px', shadow: 'lg', hoverEffect: 'lift' },
           childrenComponents: [
             { id: 'smart-stat4-num', type: 'heading', props: { content: '99.98%', level: 'h3', fontSize: '26px', fontWeight: '900', color: '#a78bfa' } },
-            { id: 'smart-stat4-lbl', type: 'paragraph', props: { content: 'Akurasi Inspeksi AI Vision', fontSize: '12px', color: '#94a3b8' } },
+            { id: 'smart-stat4-lbl', type: 'text', props: { content: 'Akurasi Inspeksi AI Vision', fontSize: '12px', color: '#94a3b8' } },
           ]
         },
 
@@ -106,7 +106,7 @@ export default {
             },
             { id: 'smart-card-badge', type: 'badge', props: { text: '🤖 CELL 04 · HIGH-SPEED PICK & PLACE', variant: 'solid', background: 'rgba(59,130,246,0.2)', color: '#60a5fa' } },
             { id: 'smart-card-title', type: 'heading', props: { content: 'Sistem Robotik Fleksibel 6-Axis dengan Computer Vision', level: 'h4', fontSize: '17px', fontWeight: '800', color: '#f8fafc' } },
-            { id: 'smart-card-desc', type: 'paragraph', props: { content: 'Mendeteksi dan merakit komponen mikro dengan kecepatan 120 cycle/menit, terhubung langsung ke ERP dan cloud MES platform.', fontSize: '13px', color: '#94a3b8' } },
+            { id: 'smart-card-desc', type: 'text', props: { content: 'Mendeteksi dan merakit komponen mikro dengan kecepatan 120 cycle/menit, terhubung langsung ke ERP dan cloud MES platform.', fontSize: '13px', color: '#94a3b8' } },
           ]
         }
       ],
@@ -118,7 +118,7 @@ export default {
       components: [
         { id: 'sol-badge', type: 'badge', props: { text: '🤖 SOLUSI INTEGRASI INDUSTRI 4.0', variant: 'outline', background: 'rgba(59,130,246,0.15)', color: '#60a5fa', borderColor: 'rgba(59,130,246,0.45)' } },
         { id: 'sol-title', type: 'heading', props: { content: 'Ekosistem Otomasi Robotik & Intelligent Manufacturing', level: 'h2', fontSize: '38px', fontWeight: '900', color: '#f8fafc', letterSpacing: '-0.02em' } },
-        { id: 'sol-desc', type: 'paragraph', props: { content: 'Solusi modular end-to-end mulai dari logistik intra-pabrik otonom, inspeksi kualitas berbasis AI, hingga kontrol digital twin terpusat.', fontSize: '16px', color: '#cbd5e1' } },
+        { id: 'sol-desc', type: 'text', props: { content: 'Solusi modular end-to-end mulai dari logistik intra-pabrik otonom, inspeksi kualitas berbasis AI, hingga kontrol digital twin terpusat.', fontSize: '16px', color: '#cbd5e1' } },
 
         // Solution 1: Autonomous Mobile Robots (AMR/AGV)
         {
@@ -140,7 +140,7 @@ export default {
             },
             { id: 'sol1-badge', type: 'badge', props: { text: 'LIDAR SLAM NAVIGATION', variant: 'solid', background: 'rgba(59,130,246,0.2)', color: '#60a5fa' } },
             { id: 'sol1-title', type: 'heading', props: { content: 'Autonomous Mobile Robots (AMR) & AGV Fleet', level: 'h3', fontSize: '19px', fontWeight: '800', color: '#f8fafc' } },
-            { id: 'sol1-desc', type: 'paragraph', props: { content: 'Armada robot pemindah material otomatis tanpa rel fisik dengan kapasitas angkut 500kg - 2 Ton, tersinkronisasi langsung dengan WMS pabrik.', fontSize: '13px', color: '#94a3b8' } },
+            { id: 'sol1-desc', type: 'text', props: { content: 'Armada robot pemindah material otomatis tanpa rel fisik dengan kapasitas angkut 500kg - 2 Ton, tersinkronisasi langsung dengan WMS pabrik.', fontSize: '13px', color: '#94a3b8' } },
             { id: 'sol1-spec', type: 'heading', props: { content: 'Payload: 2.000 kg | Navigasi: LiDAR 3D + AI Obstacle Bypass', level: 'h4', fontSize: '12px', fontWeight: '700', color: '#60a5fa' } },
           ]
         },
@@ -165,7 +165,7 @@ export default {
             },
             { id: 'sol2-badge', type: 'badge', props: { text: 'ZERO DEFECT 99.98%', variant: 'solid', background: 'rgba(6,182,212,0.2)', color: '#67e8f9' } },
             { id: 'sol2-title', type: 'heading', props: { content: 'AI Computer Vision Quality Inspection', level: 'h3', fontSize: '19px', fontWeight: '800', color: '#f8fafc' } },
-            { id: 'sol2-desc', type: 'paragraph', props: { content: 'Kamera industri multi-spektral dengan deep learning untuk mendeteksi cacat mikro, retakan permukaan, dan ketidaksesuaian dimensi dalam milidetik.', fontSize: '13px', color: '#94a3b8' } },
+            { id: 'sol2-desc', type: 'text', props: { content: 'Kamera industri multi-spektral dengan deep learning untuk mendeteksi cacat mikro, retakan permukaan, dan ketidaksesuaian dimensi dalam milidetik.', fontSize: '13px', color: '#94a3b8' } },
             { id: 'sol2-spec', type: 'heading', props: { content: 'Kecepatan: 600 Parts/Menit | Resolusi Defect: 10 Mikron', level: 'h4', fontSize: '12px', fontWeight: '700', color: '#67e8f9' } },
           ]
         },
@@ -190,7 +190,7 @@ export default {
             },
             { id: 'sol3-badge', type: 'badge', props: { text: 'PREDICTIVE AI MES', variant: 'solid', background: 'rgba(16,185,129,0.2)', color: '#6ee7b7' } },
             { id: 'sol3-title', type: 'heading', props: { content: 'Digital Twin & AI Predictive Maintenance', level: 'h3', fontSize: '19px', fontWeight: '800', color: '#f8fafc' } },
-            { id: 'sol3-desc', type: 'paragraph', props: { content: 'Simulasi 3D real-time seluruh lantai pabrik dengan sensor getaran dan suhu IoT untuk memprediksi kerusakan mesin 14 hari sebelum terjadi.', fontSize: '13px', color: '#94a3b8' } },
+            { id: 'sol3-desc', type: 'text', props: { content: 'Simulasi 3D real-time seluruh lantai pabrik dengan sensor getaran dan suhu IoT untuk memprediksi kerusakan mesin 14 hari sebelum terjadi.', fontSize: '13px', color: '#94a3b8' } },
             { id: 'sol3-spec', type: 'heading', props: { content: 'Protokol: OPC-UA, MQTT | Integrasi: SAP, Oracle ERP', level: 'h4', fontSize: '12px', fontWeight: '700', color: '#6ee7b7' } },
           ]
         },
@@ -205,7 +205,7 @@ export default {
       components: [
         { id: 'tel-badge', type: 'badge', props: { text: '📊 REAL-TIME SMART FACTORY TELEMETRY', variant: 'outline', background: 'rgba(59,130,246,0.15)', color: '#60a5fa', borderColor: 'rgba(59,130,246,0.45)' } },
         { id: 'tel-title', type: 'heading', props: { content: 'Visibilitas Operasional Penuh dengan Data Telemetri Real-Time', level: 'h2', fontSize: '38px', fontWeight: '900', color: '#f8fafc', letterSpacing: '-0.02em' } },
-        { id: 'tel-desc', type: 'paragraph', props: { content: 'Pantau status permesinan, konsumsi daya listrik per stasiun, dan tingkat cacat produk secara langsung dari dashboard cloud terpusat.', fontSize: '16px', color: '#cbd5e1' } },
+        { id: 'tel-desc', type: 'text', props: { content: 'Pantau status permesinan, konsumsi daya listrik per stasiun, dan tingkat cacat produk secara langsung dari dashboard cloud terpusat.', fontSize: '16px', color: '#cbd5e1' } },
 
         // Metric 1: Energy Reduction
         {
@@ -215,7 +215,7 @@ export default {
           childrenComponents: [
             { id: 'tel1-tag', type: 'badge', props: { text: 'ENERGY MANAGEMENT', variant: 'solid', background: 'rgba(16,185,129,0.2)', color: '#6ee7b7' } },
             { id: 'tel1-title', type: 'heading', props: { content: 'Efisiensi Energi -30% dengan AI Load Balancing', level: 'h3', fontSize: '18px', fontWeight: '800', color: '#f8fafc' } },
-            { id: 'tel1-desc', type: 'paragraph', props: { content: 'Optimasi konsumsi listrik otomatis saat beban puncak (peak load) yang menghemat biaya operasional hingga miliaran rupiah per tahun.', fontSize: '13px', color: '#94a3b8' } },
+            { id: 'tel1-desc', type: 'text', props: { content: 'Optimasi konsumsi listrik otomatis saat beban puncak (peak load) yang menghemat biaya operasional hingga miliaran rupiah per tahun.', fontSize: '13px', color: '#94a3b8' } },
           ]
         },
 
@@ -227,7 +227,7 @@ export default {
           childrenComponents: [
             { id: 'tel2-tag', type: 'badge', props: { text: 'RELIABILITY INDEX', variant: 'solid', background: 'rgba(59,130,246,0.2)', color: '#60a5fa' } },
             { id: 'tel2-title', type: 'heading', props: { content: 'MTBF (Mean Time Between Failures) 4.200 Jam', level: 'h3', fontSize: '18px', fontWeight: '800', color: '#f8fafc' } },
-            { id: 'tel2-desc', type: 'paragraph', props: { content: 'Ketahanan sistem robotik dengan protokol pemeliharaan preventif yang menjaga lini produksi tetap beroperasi tanpa henti.', fontSize: '13px', color: '#94a3b8' } },
+            { id: 'tel2-desc', type: 'text', props: { content: 'Ketahanan sistem robotik dengan protokol pemeliharaan preventif yang menjaga lini produksi tetap beroperasi tanpa henti.', fontSize: '13px', color: '#94a3b8' } },
           ]
         },
 
@@ -239,7 +239,7 @@ export default {
           childrenComponents: [
             { id: 'tel3-tag', type: 'badge', props: { text: 'SPEED OPTIMIZATION', variant: 'solid', background: 'rgba(6,182,212,0.2)', color: '#67e8f9' } },
             { id: 'tel3-title', type: 'heading', props: { content: 'Percepatan Cycle Time Produksi hingga 45%', level: 'h3', fontSize: '18px', fontWeight: '800', color: '#f8fafc' } },
-            { id: 'tel3-desc', type: 'paragraph', props: { content: 'Sinkronisasi pergerakan robotik multi-sumbu mengurangi waktu tunggu (idle time) antar stasiun kerja perakitan.', fontSize: '13px', color: '#94a3b8' } },
+            { id: 'tel3-desc', type: 'text', props: { content: 'Sinkronisasi pergerakan robotik multi-sumbu mengurangi waktu tunggu (idle time) antar stasiun kerja perakitan.', fontSize: '13px', color: '#94a3b8' } },
           ]
         },
 
@@ -251,7 +251,7 @@ export default {
           childrenComponents: [
             { id: 'tel4-tag', type: 'badge', props: { text: 'CYBER SECURITY', variant: 'solid', background: 'rgba(168,85,247,0.2)', color: '#c084fc' } },
             { id: 'tel4-title', type: 'heading', props: { content: 'Keamanan Data Industri Berstandar IEC 62443', level: 'h3', fontSize: '18px', fontWeight: '800', color: '#f8fafc' } },
-            { id: 'tel4-desc', type: 'paragraph', props: { content: 'Enkripsi jaringan kontrol SCADA/PLC tingkat militer untuk melindungi formula manufaktur dan data produksi dari ancaman siber.', fontSize: '13px', color: '#94a3b8' } },
+            { id: 'tel4-desc', type: 'text', props: { content: 'Enkripsi jaringan kontrol SCADA/PLC tingkat militer untuk melindungi formula manufaktur dan data produksi dari ancaman siber.', fontSize: '13px', color: '#94a3b8' } },
           ]
         },
 
@@ -263,7 +263,7 @@ export default {
           childrenComponents: [
             { id: 'ctrl-badge', type: 'badge', props: { text: '🕹 INTEGRATED COMMAND CENTER 24/7', variant: 'solid', background: 'rgba(59,130,246,0.25)', color: '#60a5fa' } },
             { id: 'ctrl-title', type: 'heading', props: { content: 'Centralized Manufacturing Execution System (MES) & Cloud SCADA', level: 'h3', fontSize: '22px', fontWeight: '900', color: '#f8fafc' } },
-            { id: 'ctrl-desc', type: 'paragraph', props: { content: 'Terintegrasi secara seamless dengan API ERP (SAP/Oracle/Microsoft Dynamics), barcode QR traceability per batch produk, dan automated alert WhatsApp/Email saat terjadi anomali produksi.', fontSize: '14px', color: '#cbd5e1' } },
+            { id: 'ctrl-desc', type: 'text', props: { content: 'Terintegrasi secara seamless dengan API ERP (SAP/Oracle/Microsoft Dynamics), barcode QR traceability per batch produk, dan automated alert WhatsApp/Email saat terjadi anomali produksi.', fontSize: '14px', color: '#cbd5e1' } },
           ]
         }
       ],
@@ -280,7 +280,7 @@ export default {
           childrenComponents: [
             { id: 'cta-smart-badge', type: 'badge', props: { text: '⚡ MODERNISASI PABRIK & AUDIT OTOMASI 4.0', variant: 'outline', background: 'rgba(59,130,246,0.2)', color: '#60a5fa', borderColor: 'rgba(59,130,246,0.5)' } },
             { id: 'cta-smart-title', type: 'heading', props: { content: 'Siap Mengubah Pabrik Anda Menjadi Smart Factory Cerdas & Efisien?', level: 'h2', fontSize: '38px', fontWeight: '900', color: '#f8fafc', letterSpacing: '-0.02em', textAlign: 'center' } },
-            { id: 'cta-smart-desc', type: 'paragraph', props: { content: 'Jadwalkan audit kesiapan otomasi gratis bersama Principal Automation Engineer kami. Dapatkan blueprint integrasi robotik dan estimasi ROI dalam 5 hari kerja.', fontSize: '16px', color: '#cbd5e1', textAlign: 'center' } },
+            { id: 'cta-smart-desc', type: 'text', props: { content: 'Jadwalkan audit kesiapan otomasi gratis bersama Principal Automation Engineer kami. Dapatkan blueprint integrasi robotik dan estimasi ROI dalam 5 hari kerja.', fontSize: '16px', color: '#cbd5e1', textAlign: 'center' } },
             { id: 'cta-smart-btn1', type: 'button', props: { label: 'Jadwalkan Kunjungan Audit & Live Demo 🚀', href: 'mailto:automation@nexus4.id', variant: 'primary', size: 'large', radius: 'md', background: 'linear-gradient(135deg, #3b82f6, #06b6d4)', color: '#ffffff', fontWeight: '700' } },
             { id: 'cta-smart-btn2', type: 'button', props: { label: 'Diskusi Teknis WhatsApp', href: 'https://wa.me/6281133445566', variant: 'outline', size: 'large', radius: 'md', background: 'rgba(10,18,38,0.8)', color: '#67e8f9', borderColor: 'rgba(6,182,212,0.4)' } },
           ]
@@ -293,9 +293,9 @@ export default {
       layout: 'ind-footer-smart',
       components: [
         { id: 'smart-foot-logo', type: 'heading', props: { content: 'NEXUS AUTOMATION 4.0', level: 'h3', fontSize: '18px', fontWeight: '900', color: '#f8fafc', letterSpacing: '0.04em' } },
-        { id: 'smart-foot-desc', type: 'paragraph', props: { content: 'Penyedia solusi otomasi industri, robotika manufaktur, dan sistem AI quality control terdepan di Asia Tenggara. Menghubungkan sensor cerdas, robotik, dan cloud MES.', fontSize: '13px', color: '#94a3b8' } },
-        { id: 'smart-foot-center', type: 'paragraph', props: { content: 'Robotics Center: Kawasan Industri Jababeka V Blok G-8, Cikarang, Bekasi 17530', fontSize: '13px', color: '#cbd5e1' } },
-        { id: 'smart-foot-contact', type: 'paragraph', props: { content: 'Support: (021) 8934-4000 | Email: connect@nexus4.id | API Portal: dev.nexus4.id', fontSize: '13px', color: '#67e8f9' } },
+        { id: 'smart-foot-desc', type: 'text', props: { content: 'Penyedia solusi otomasi industri, robotika manufaktur, dan sistem AI quality control terdepan di Asia Tenggara. Menghubungkan sensor cerdas, robotik, dan cloud MES.', fontSize: '13px', color: '#94a3b8' } },
+        { id: 'smart-foot-center', type: 'text', props: { content: 'Robotics Center: Kawasan Industri Jababeka V Blok G-8, Cikarang, Bekasi 17530', fontSize: '13px', color: '#cbd5e1' } },
+        { id: 'smart-foot-contact', type: 'text', props: { content: 'Support: (021) 8934-4000 | Email: connect@nexus4.id | API Portal: dev.nexus4.id', fontSize: '13px', color: '#67e8f9' } },
       ],
     },
   ],

@@ -77,7 +77,7 @@ export default {
         },
         {
           id: 'ex-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Program pelatihan eksekutif tersertifikasi internasional yang dirancang khusus untuk Dewan Direksi, General Manager, dan pemimpin masa depan BUMN serta korporasi multinasional.', fontSize: '17px', color: '#cbd5e1' },
         },
         {
@@ -97,7 +97,7 @@ export default {
         },
         {
           id: 'ex-stat1-lbl',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Korporasi & BUMN Klien', fontSize: '12px', color: '#94a3b8' },
         },
         {
@@ -107,7 +107,7 @@ export default {
         },
         {
           id: 'ex-stat2-lbl',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Skor Kepuasan Peserta Eksekutif', fontSize: '12px', color: '#94a3b8' },
         },
         {
@@ -134,7 +134,7 @@ export default {
         },
         {
           id: 'ex-prog-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Materi intensif berbasis studi kasus riil korporasi dunia dengan sertifikasi kompetensi bertaraf internasional.', fontSize: '16px', color: '#cbd5e1', textAlign: 'center' },
         },
         {
@@ -144,7 +144,7 @@ export default {
         },
         {
           id: 'ep1-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Pengambilan keputusan tingkat dewan, manajemen krisis korporasi, etika tata kelola (GCG), dan penciptaan nilai pemegang saham.', fontSize: '13px', color: '#cbd5e1' },
         },
         {
@@ -159,7 +159,7 @@ export default {
         },
         {
           id: 'ep2-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Roadmap transformasi digital, adopsi AI generatif korporasi, arsitektur data modern, dan manajemen perubahan budaya digital.', fontSize: '13px', color: '#cbd5e1' },
         },
         {
@@ -174,7 +174,7 @@ export default {
         },
         {
           id: 'ep3-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Persiapan komprehensif sertifikasi PMP resmi dari Project Management Institute (PMI) dengan tingkat kelulusan 98%.', fontSize: '13px', color: '#cbd5e1' },
         },
         {
@@ -189,7 +189,7 @@ export default {
         },
         {
           id: 'ep4-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Analisis valuasi investasi, struktur permodalan optimal, mitigasi Enterprise Risk Management (ERM), dan kepatuhan ESG.', fontSize: '13px', color: '#cbd5e1' },
         },
         {
@@ -221,7 +221,7 @@ export default {
         },
         {
           id: 'mth-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Setiap program pelatihan disesuaikan secara khusus (tailor-made) dengan strategi bisnis, budaya organisasi, dan target Key Performance Indicators (KPI) korporasi Anda.', fontSize: '16px', color: '#cbd5e1' },
         },
         {
@@ -231,7 +231,7 @@ export default {
         },
         {
           id: 's1-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Pemetaan kompetensi kepemimpinan dan asesmen kebutuhan pembelajaran (TNA) berbasis data objektif.', fontSize: '13px', color: '#cbd5e1' },
         },
         {
@@ -241,7 +241,7 @@ export default {
         },
         {
           id: 's2-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Penyusunan kurikulum modular, simulasi bisnis gamifikasi, dan studi kasus spesifik industri perusahaan.', fontSize: '13px', color: '#cbd5e1' },
         },
         {
@@ -251,7 +251,7 @@ export default {
         },
         {
           id: 's3-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Fasilitasi interaktif oleh mantan C-level executives dan praktisi industri global berakreditasi.', fontSize: '13px', color: '#cbd5e1' },
         },
         {
@@ -261,7 +261,7 @@ export default {
         },
         {
           id: 's4-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Evaluasi Kirkpatrick Level 4 untuk mengukur implementasi di tempat kerja dan pertumbuhan ROI bisnis.', fontSize: '13px', color: '#cbd5e1' },
         },
         {
@@ -288,7 +288,7 @@ export default {
         },
         {
           id: 'trn-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Bukan sekadar akademisi, fasilitator kami adalah mantan CEO, Direktur SDM, dan konsultan strategis berkaliber internasional.', fontSize: '16px', color: '#cbd5e1', textAlign: 'center' },
         },
         {
@@ -303,12 +303,12 @@ export default {
         },
         {
           id: 'tr1-role',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Mantan Direktur Utama BUMN Energi • Lead Strategic Leadership', fontSize: '12px', color: '#38bdf8', fontWeight: '600' },
         },
         {
           id: 'tr1-bio',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Pengalaman 28 tahun memimpin restrukturisasi korporasi dan transformasi digital skala masif di kawasan Asia.', fontSize: '13px', color: '#94a3b8' },
         },
         {
@@ -323,12 +323,12 @@ export default {
         },
         {
           id: 'tr2-role',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Senior Vice President of Transformation • Lead Agile & PMP', fontSize: '12px', color: '#38bdf8', fontWeight: '600' },
         },
         {
           id: 'tr2-bio',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Telah membimbing lebih dari 3.000 project manager lulus ujian PMP® dan mengelola PMO bernilai miliaran dolar.', fontSize: '13px', color: '#94a3b8' },
         },
         {
@@ -343,12 +343,12 @@ export default {
         },
         {
           id: 'tr3-role',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Former Chief People Officer • Lead Culture & Talent', fontSize: '12px', color: '#38bdf8', fontWeight: '600' },
         },
         {
           id: 'tr3-bio',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Pakar asesmen suksesi eksekutif, desain organisasi masa depan, dan perancangan sistem remunerasi berbasis performa.', fontSize: '13px', color: '#94a3b8' },
         },
       ],
@@ -370,7 +370,7 @@ export default {
         },
         {
           id: 'cta-ex-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Diskusikan kebutuhan pelatihan internal khusus (in-house) untuk jajaran manajerial dan direksi perusahaan Anda bersama Lead Advisory kami.', fontSize: '16px', color: '#cbd5e1', textAlign: 'center' },
         },
         {
@@ -397,12 +397,12 @@ export default {
         },
         {
           id: 'ftr-ex-tagline',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Lembaga Pengembangan Eksekutif & Sertifikasi Manajemen Global. Membangun pemimpin tangguh untuk masa depan korporasi Indonesia.', fontSize: '13px', color: '#94a3b8' },
         },
         {
           id: 'ftr-ex-copy',
-          type: 'paragraph',
+          type: 'text',
           props: { content: '© 2026 Apex Leadership & Corporate Institute. All rights reserved.', fontSize: '12px', color: '#64748b' },
         },
         {

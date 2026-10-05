@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import useMobileNavClose from '../../../utils/useMobileNavClose';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 /**
@@ -8,6 +9,7 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
  */
 export default function UmkmNavWellness({ components = [], sectionId = null }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  useMobileNavClose(mobileOpen, setMobileOpen);
 
   const defaultComponents = [
     { id: 'wel-logo', type: 'heading', props: { content: 'SEKAR ARUM', level: 'h2', fontSize: '20px', fontWeight: '800', color: '#ecfdf5', letterSpacing: '0.08em' } },
@@ -55,6 +57,7 @@ export default function UmkmNavWellness({ components = [], sectionId = null }) {
               onClick={() => setMobileOpen(v => !v)}
               className="lg:hidden p-2.5 rounded-xl bg-emerald-950 text-emerald-300 border border-emerald-800/60"
               aria-label="Toggle Navigation"
+              aria-expanded={mobileOpen}
             >
               {mobileOpen ? '✕' : '☰'}
             </button>

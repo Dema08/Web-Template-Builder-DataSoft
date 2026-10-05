@@ -1269,6 +1269,34 @@ html, body, * {
     .section-renderer-content nav :is([class*="sm:hidden"], [class*="md:hidden"], [class*="lg:hidden"], [class*="xl:hidden"]):not(button) {
         display: flex !important;
     }
+
+    /* Tombol/teks nowrap boleh wrap agar tidak meluber di layar kecil */
+    .section-renderer-content [class*="whitespace-nowrap"] {
+        white-space: normal !important;
+        overflow-wrap: anywhere;
+    }
+
+    /* Baris flex non-navbar boleh wrap ke bawah (kecuali kolom/marquee) */
+    .section-renderer-content :is([class*="flex"]):not(nav *):not(header *):not([class*="flex-col"]):not([class*="flex-nowrap"]):not([class*="animate-"]) {
+        flex-wrap: wrap !important;
+    }
+
+    /* Gambar dengan tinggi fix inline (mis. 450px) dibatasi di mobile */
+    .section-renderer-content img[style*="height"] {
+        height: auto !important;
+        max-height: 300px !important;
+    }
+
+    /* Section tinggi (mis. min-h-[85vh]) jangan paksa tinggi di mobile */
+    .section-renderer-content :is(section, header, footer)[class*="min-h-"] {
+        min-height: auto !important;
+    }
+
+    /* Padding vertikal section diringkas di mobile */
+    .section-renderer-content :is(section[class*="py-"], header[class*="py-"], footer[class*="py-"]) {
+        padding-top: clamp(2.5rem, 8cqi, 4rem) !important;
+        padding-bottom: clamp(2.5rem, 8cqi, 4rem) !important;
+    }
 }
 
 @media (max-width: 640px) {
@@ -1290,6 +1318,95 @@ html, body, * {
 .builder-canvas-tablet {
     padding-left: 0.5rem;
     padding-right: 0.5rem;
+}
+
+/* 2b. Forced device behavior inside phone/tablet frames (viewport-independent).
+ * Alasan: Tailwind `sm:/md:/lg:` memakai @media berbasis lebar viewport browser,
+ * sehingga frame HP 375px di layar desktop lebar tetap merender varian desktop
+ * (menu desktop muncul, hamburger `lg:hidden` ikut hilang). Blok ini memaksa
+ * frame berperilaku seperti HP/tablet beneran tanpa tergantung viewport. */
+.builder-canvas-mobile .section-renderer-content :is(.max-w-7xl, .max-w-6xl, .max-w-5xl, .max-w-4xl, .max-w-3xl, .max-w-2xl, .max-w-xl),
+.builder-canvas-mobile .section-renderer-content [style*="width"] {
+    max-width: 100% !important;
+}
+
+.builder-canvas-mobile .section-renderer-content :where(*) {
+    min-width: 0;
+}
+
+.builder-canvas-mobile .section-renderer-content :is(.grid, [class*="grid-cols-"]) {
+    grid-template-columns: minmax(0, 1fr) !important;
+    min-width: 0 !important;
+}
+
+.builder-canvas-mobile .section-renderer-content :is(h1, [data-component-type="heading"] h1) {
+    font-size: clamp(1.75rem, 8cqi, 2.5rem) !important;
+    line-height: 1.15 !important;
+}
+
+.builder-canvas-mobile .section-renderer-content :is(h2, [data-component-type="heading"] h2) {
+    font-size: clamp(1.375rem, 6cqi, 2rem) !important;
+    line-height: 1.2 !important;
+}
+
+.builder-canvas-mobile .section-renderer-content :is(p, [data-component-type="text"]) {
+    overflow-wrap: anywhere;
+}
+
+.builder-canvas-mobile .section-renderer-content :is(img, video, iframe, canvas) {
+    max-width: 100% !important;
+}
+
+.builder-canvas-mobile .section-renderer-content img {
+    height: auto !important;
+}
+
+.builder-canvas-mobile .section-renderer-content img[style*="height"] {
+    height: auto !important;
+    max-height: 300px !important;
+}
+
+.builder-canvas-mobile .section-renderer-content :is(section, header, footer)[class*="min-h-"] {
+    min-height: auto !important;
+}
+
+.builder-canvas-mobile .section-renderer-content [class*="whitespace-nowrap"] {
+    white-space: normal !important;
+    overflow-wrap: anywhere;
+}
+
+.builder-canvas-mobile .section-renderer-content :is([class*="flex"]):not(nav *):not(header *):not([class*="flex-col"]):not([class*="flex-nowrap"]):not([class*="animate-"]) {
+    flex-wrap: wrap !important;
+}
+
+/* Navbar HP: paksa menu desktop sembunyi + hamburger muncul */
+.builder-canvas-mobile .section-renderer-content nav :is([class*="hidden md:flex"], [class*="hidden lg:flex"], [class*="hidden xl:flex"], [class*="hidden sm:flex"]) {
+    display: none !important;
+}
+
+.builder-canvas-mobile .section-renderer-content nav [class*="hidden sm:block"] {
+    display: none !important;
+}
+
+.builder-canvas-mobile .section-renderer-content nav button:is([class*="sm:hidden"], [class*="md:hidden"], [class*="lg:hidden"], [class*="xl:hidden"]) {
+    display: inline-flex !important;
+}
+
+.builder-canvas-mobile .section-renderer-content nav :is([class*="sm:hidden"], [class*="md:hidden"], [class*="lg:hidden"], [class*="xl:hidden"]):not(button) {
+    display: flex !important;
+}
+
+/* Navbar tablet (768px): paksa varian `lg:` ke mode mobile juga */
+.builder-canvas-tablet .section-renderer-content nav :is([class*="hidden lg:flex"], [class*="hidden xl:flex"]) {
+    display: none !important;
+}
+
+.builder-canvas-tablet .section-renderer-content nav button:is([class*="lg:hidden"], [class*="xl:hidden"]) {
+    display: inline-flex !important;
+}
+
+.builder-canvas-tablet .section-renderer-content nav :is([class*="lg:hidden"], [class*="xl:hidden"]):not(button) {
+    display: flex !important;
 }
 
 .builder-canvas-tablet h1 {

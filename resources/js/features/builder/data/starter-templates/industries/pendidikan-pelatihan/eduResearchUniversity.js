@@ -78,7 +78,7 @@ export default {
         },
         {
           id: 'uni-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Universitas riset berstandar internasional dengan kurikulum berbasis industri mutakhir, laboratorium canggih, dan kemitraan global di 30+ negara.', fontSize: '17px', color: '#cbd5e1' },
         },
         {
@@ -98,7 +98,7 @@ export default {
         },
         {
           id: 'uni-stat1-lbl',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Serapan Kerja Lulusan < 3 Bulan', fontSize: '12px', color: '#94a3b8' },
         },
         {
@@ -108,7 +108,7 @@ export default {
         },
         {
           id: 'uni-stat2-lbl',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Dana Riset & Beasiswa Tahunan', fontSize: '12px', color: '#94a3b8' },
         },
         {
@@ -135,7 +135,7 @@ export default {
         },
         {
           id: 'prog-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Kurikulum berbasis proyek industri riil dengan sertifikasi kompetensi internasional dari Microsoft, AWS, dan Cisco.', fontSize: '16px', color: '#cbd5e1', textAlign: 'center' },
         },
         {
@@ -145,7 +145,7 @@ export default {
         },
         {
           id: 'pr1-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Spesialisasi machine learning, computer vision, deep neural network, dan scalable cloud engineering.', fontSize: '13px', color: '#94a3b8' },
         },
         {
@@ -160,7 +160,7 @@ export default {
         },
         {
           id: 'pr2-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Fokus pada Internet of Things (IoT), autonomous vehicles, mekatronika presisi, dan smart manufacturing.', fontSize: '13px', color: '#94a3b8' },
         },
         {
@@ -175,7 +175,7 @@ export default {
         },
         {
           id: 'pr3-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Mengintegrasikan manajemen strategi, blockchain analytics, algoritma kuantitatif trading, dan venture capital.', fontSize: '13px', color: '#94a3b8' },
         },
         {
@@ -190,7 +190,7 @@ export default {
         },
         {
           id: 'pr4-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Program pascasarjana pertahanan siber, post-quantum cryptography, dan audit kepatuhan keamanan infrastruktur vital.', fontSize: '13px', color: '#94a3b8' },
         },
         {
@@ -222,7 +222,7 @@ export default {
         },
         {
           id: 'res-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'NIT mengelola 8 pusat riset interdisipliner dengan pendanaan internasional dan fasilitas supercomputing untuk memecahkan tantangan energi, kesehatan, dan kecerdasan buatan.', fontSize: '16px', color: '#cbd5e1' },
         },
         {
@@ -232,7 +232,7 @@ export default {
         },
         {
           id: 'r1-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Klaster GPU H100 berkapasitas tinggi untuk komputasi model bahasa besar dan simulasi molekuler obat.', fontSize: '13px', color: '#94a3b8' },
         },
         {
@@ -242,7 +242,7 @@ export default {
         },
         {
           id: 'r2-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Pengembangan sel baterai sodium-ion generasi baru dan optimasi pembangkit smart grid tenaga surya.', fontSize: '13px', color: '#94a3b8' },
         },
         {
@@ -252,7 +252,7 @@ export default {
         },
         {
           id: 'r3-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Riset wahana nirawak (drone otonom) dan satelit mikro nano bekerja sama dengan badan antariksa.', fontSize: '13px', color: '#94a3b8' },
         },
         {
@@ -279,7 +279,7 @@ export default {
         },
         {
           id: 'cmp-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Lingkungan kampus hijau berteknologi tinggi yang dirancang untuk mendukung kreativitas, kolaborasi, dan kesejahteraan mahasiswa.', fontSize: '16px', color: '#cbd5e1', textAlign: 'center' },
         },
         {
@@ -294,7 +294,7 @@ export default {
         },
         {
           id: 'f1-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Akses ke 500.000+ e-journal internasional, pod studi hening, dan ruang kolaborasi multimedia.', fontSize: '13px', color: '#cbd5e1' },
         },
         {
@@ -309,7 +309,7 @@ export default {
         },
         {
           id: 'f2-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Co-working space, makerspace 3D printing, dan pendanaan awal (seed fund) untuk proyek rintisan mahasiswa.', fontSize: '13px', color: '#cbd5e1' },
         },
         {
@@ -324,7 +324,7 @@ export default {
         },
         {
           id: 'f3-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Asrama mahasiswa mandiri energi bertenaga surya, kolam renang olympic, dan lapangan indoor berstandar KONI.', fontSize: '13px', color: '#cbd5e1' },
         },
       ],
@@ -346,7 +346,7 @@ export default {
         },
         {
           id: 'adm-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Pilih jalur seleksi yang sesuai dengan minat dan potensimu. Dapatkan kesempatan beasiswa bebas biaya kuliah penuh hingga lulus.', fontSize: '16px', color: '#cbd5e1', textAlign: 'center' },
         },
         {
@@ -373,12 +373,12 @@ export default {
         },
         {
           id: 'ftr-uni-tagline',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Pusat Keunggulan Riset, Rekayasa Teknologi, dan Kepemimpinan Inovatif Indonesia Berkelas Dunia.', fontSize: '13px', color: '#94a3b8' },
         },
         {
           id: 'ftr-uni-copy',
-          type: 'paragraph',
+          type: 'text',
           props: { content: '© 2026 Nusantara Institute of Technology. Terakreditasi Unggul BAN-PT.', fontSize: '12px', color: '#64748b' },
         },
         {

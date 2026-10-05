@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import useMobileNavClose from '../../../utils/useMobileNavClose';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 /**
@@ -8,6 +9,7 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
  */
 export default function ServiceNavAgency({ components = [], sectionId = null }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  useMobileNavClose(mobileOpen, setMobileOpen);
 
   const defaultComponents = [
     { id: 'ag-logo', type: 'heading', props: { content: 'NEXUS.STUDIO', level: 'h2', fontSize: '22px', fontWeight: '900', color: '#ffffff', letterSpacing: '-0.02em' } },
@@ -48,6 +50,7 @@ export default function ServiceNavAgency({ components = [], sectionId = null }) 
               onClick={() => setMobileOpen(v => !v)}
               className="lg:hidden p-2.5 rounded-xl bg-violet-900/50 text-white hover:bg-violet-800/60 border border-violet-700/50"
               aria-label="Toggle Navigation"
+              aria-expanded={mobileOpen}
             >
               {mobileOpen ? '✕' : '☰'}
             </button>

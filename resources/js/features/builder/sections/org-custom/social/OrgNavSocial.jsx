@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import useMobileNavClose from '../../../utils/useMobileNavClose';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 /**
@@ -8,6 +9,7 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
  */
 export default function OrgNavSocial({ components = [], sectionId = null }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  useMobileNavClose(mobileOpen, setMobileOpen);
 
   const defaultComponents = [
     { id: 'soc-logo', type: 'heading', props: { content: 'GERAKAN BERDAYA', level: 'h2', fontSize: '18px', fontWeight: '900', color: '#ffffff', letterSpacing: '0.02em' } },
@@ -71,6 +73,7 @@ export default function OrgNavSocial({ components = [], sectionId = null }) {
             onClick={() => setMobileOpen(v => !v)}
             className="lg:hidden p-2 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/25 transition-all cursor-pointer"
             aria-label="Toggle Navigation"
+              aria-expanded={mobileOpen}
           >
             {mobileOpen ? '✕' : '☰'}
           </button>

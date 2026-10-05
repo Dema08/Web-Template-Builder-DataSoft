@@ -67,7 +67,7 @@ export default {
           props: { label: 'Dewan Direksi', href: '#governance', variant: 'ghost', size: 'small', background: 'transparent', color: '#e2e8f0' },
         },
         {
-          id: 'i-cta-vendor',
+          id: 'cta-vendor',
           type: 'button',
           props: {
             label: 'Portal E-Procurement B2B →',

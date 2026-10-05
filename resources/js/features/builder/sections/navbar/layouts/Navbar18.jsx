@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import useMobileNavClose from '../../../utils/useMobileNavClose';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 /**
@@ -8,6 +9,7 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
  */
 export default function Navbar18({ components = [], sectionId = null }) {
   const [open, setOpen] = useState(false);
+  useMobileNavClose(open, setOpen);
 
   const defaultComponents = [
     { id: 'logo-18', type: 'heading', props: { content: 'TRANSGO', level: 'h2', fontSize: '20px', fontWeight: '900', color: '#ffffff', letterSpacing: '0.1em' } },

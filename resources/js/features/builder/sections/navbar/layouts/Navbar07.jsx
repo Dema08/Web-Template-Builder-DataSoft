@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import useMobileNavClose from '../../../utils/useMobileNavClose';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 /**
@@ -9,6 +10,7 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 export default function Navbar07({ components = [], sectionId = null }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  useMobileNavClose(mobileOpen, setMobileOpen);
 
   useEffect(() => {
     const onScroll = (e) => {

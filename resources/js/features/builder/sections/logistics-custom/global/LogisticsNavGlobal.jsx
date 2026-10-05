@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import useMobileNavClose from '../../../utils/useMobileNavClose';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 /**
@@ -7,6 +8,7 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
  */
 export default function LogisticsNavGlobal({ components = [], sectionId = null }) {
   const [open, setOpen] = useState(false);
+  useMobileNavClose(open, setOpen);
 
   const defaultComponents = [
     { id: 'global-logo', type: 'heading', props: { content: 'NEXUS GLOBAL', level: 'h2', fontSize: '18px', fontWeight: '900', color: '#e7c873', letterSpacing: '0.12em' } },
@@ -70,6 +72,7 @@ export default function LogisticsNavGlobal({ components = [], sectionId = null }
               onClick={() => setOpen(v => !v)}
               className="lg:hidden p-2.5 rounded-lg bg-[#1c1917] border border-[#e7c873]/30 text-[#e7c873]"
               aria-label="Toggle Navigation"
+              aria-expanded={open}
             >
               {open ? '✕' : '☰'}
             </button>

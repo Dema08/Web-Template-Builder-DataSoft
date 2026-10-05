@@ -77,7 +77,7 @@ export default {
         },
         {
           id: 'crf-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Setiap lembar kain tenun ikat dan batik tulis kami dikerjakan secara manual oleh perempuan perajin di pelosok desa, melestarikan motif sakral dengan sentuhan busana modern siap pakai.', fontSize: '17px', color: '#fed7aa' } },
         {
           id: 'crf-btn-pri',
@@ -96,7 +96,7 @@ export default {
         },
         {
           id: 'crf-stat1-lbl',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Ibu Pengrajin Desa Binaan', fontSize: '12px', color: '#cbd5e1' },
         },
         {
@@ -106,7 +106,7 @@ export default {
         },
         {
           id: 'crf-stat2-lbl',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Pewarna Alami Ekologis', fontSize: '12px', color: '#cbd5e1' },
         },
         {
@@ -133,7 +133,7 @@ export default {
         },
         {
           id: 'prd-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Setiap helai kain dibuat dalam jumlah sangat terbatas (limited edition) dengan sertifikat keaslian dan nomor seri pengrajin.', fontSize: '16px', color: '#fed7aa', textAlign: 'center' },
         },
         {
@@ -148,7 +148,7 @@ export default {
         },
         {
           id: 'p1-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Tenun tradisional Flores dengan pewarna alami daun Indigofera, siluet modern long outer.', fontSize: '13px', color: '#fed7aa' },
         },
         {
@@ -168,7 +168,7 @@ export default {
         },
         {
           id: 'p2-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Batik tulis canting malam halus di atas sutra ATBM dengan motif agung Parang Kusumo.', fontSize: '13px', color: '#fed7aa' },
         },
         {
@@ -188,7 +188,7 @@ export default {
         },
         {
           id: 'p3-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Scarf lembut bernuansa terakota hangat dari rebusan kulit kayu tingi dan kayu secang.', fontSize: '13px', color: '#fed7aa' },
         },
         {
@@ -208,7 +208,7 @@ export default {
         },
         {
           id: 'p4-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Kombinasi rotan lulubang halus dengan aksen vegetable tanned leather buatan perajin Yogyakarta.', fontSize: '13px', color: '#fed7aa' },
         },
         {
@@ -240,7 +240,7 @@ export default {
         },
         {
           id: 'hrt-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Di balik keindahan visual sehelai kain tradisional, tersimpan narasi peradaban leluhur yang mengajarkan keselarasan antara manusia, alam semesta, dan Sang Pencipta.', fontSize: '16px', color: '#fed7aa' },
         },
         {
@@ -250,7 +250,7 @@ export default {
         },
         {
           id: 'm1-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Melambangkan ombak samudera yang pantang menyerah, keteguhan hati, dan kepemimpinan yang adil.', fontSize: '13px', color: '#fed7aa' },
         },
         {
@@ -260,7 +260,7 @@ export default {
         },
         {
           id: 'm2-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Terinspirasi buah kolang-kaling yang melambangkan kemurnian hati, kesederhanaan, dan pengendalian diri.', fontSize: '13px', color: '#fed7aa' },
         },
         {
@@ -270,7 +270,7 @@ export default {
         },
         {
           id: 'm3-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Simbol status kehormatan, kekuatan fisik, serta persaudaraan erat antarsuku di Nusa Tenggara Timur.', fontSize: '13px', color: '#fed7aa' },
         },
         {
@@ -297,7 +297,7 @@ export default {
         },
         {
           id: 'art-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Kami bekerja langsung bersama 120+ perempuan penenun dan pembatik di 4 sentra desa binaan Jawa dan NTT untuk kemandirian ekonomi keluarga.', fontSize: '16px', color: '#fed7aa', textAlign: 'center' },
         },
         {
@@ -312,12 +312,12 @@ export default {
         },
         {
           id: 'a1-role',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Master Batik Tulis Halus — Giriloyo, Bantul', fontSize: '12px', color: '#fb923c', fontWeight: '600' },
         },
         {
           id: 'a1-bio',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Telah mencanting selama 35 tahun, mewariskan keahlian pola pakem keraton kepada generasi muda di desanya.', fontSize: '13px', color: '#fed7aa' },
         },
         {
@@ -332,12 +332,12 @@ export default {
         },
         {
           id: 'a2-role',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Ketua Kelompok Tenun Ikat — Sikka, NTT', fontSize: '12px', color: '#fb923c', fontWeight: '600' },
         },
         {
           id: 'a2-bio',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Memimpin 40 perajin tenun ikat pewarna alam yang kini produknya menembus pameran internasional di Tokyo & Paris.', fontSize: '13px', color: '#fed7aa' },
         },
         {
@@ -352,12 +352,12 @@ export default {
         },
         {
           id: 'a3-role',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Perajin Kriya Kayu & Aksen Perak — Celuk, Bali', fontSize: '12px', color: '#fb923c', fontWeight: '600' },
         },
         {
           id: 'a3-bio',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Membuat handle tas dan ornamen kriya ukir dari kayu jati bekas kapal nelayan dengan finishing ramah lingkungan.', fontSize: '13px', color: '#fed7aa' },
         },
       ],
@@ -379,7 +379,7 @@ export default {
         },
         {
           id: 'cta-cr-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Kami melayani pembuatan busana seragam tenun custom, gift set cinderamata instansi, dan pesanan motif batik khusus bernilai tinggi.', fontSize: '16px', color: '#fed7aa', textAlign: 'center' },
         },
         {
@@ -406,12 +406,12 @@ export default {
         },
         {
           id: 'ftr-cr-tagline',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Rumah Kriya & Wastra Nusantara. Melestarikan tradisi tenun ikat dan batik tulis pewarna alam untuk generasi masa depan.', fontSize: '13px', color: '#fed7aa' },
         },
         {
           id: 'ftr-cr-copy',
-          type: 'paragraph',
+          type: 'text',
           props: { content: '© 2026 Pusaka Heritage Studio. Dilindungi Hak Cipta & Kebudayaan Nasional.', fontSize: '12px', color: '#a8a29e' },
         },
         {

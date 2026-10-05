@@ -200,7 +200,7 @@ export default function CanvasButton({
   };
 
   const buttonClasses = [
-    'inline-flex items-center justify-center font-medium transition-all duration-200 cursor-pointer select-none no-underline',
+    'inline-flex items-center justify-center max-w-full min-w-0 text-center font-medium transition-all duration-200 cursor-pointer select-none no-underline whitespace-normal break-words',
     variantStyles[styles.variant] || variantStyles.primary,
     sizeStyles[styles.size] || sizeStyles.md,
     resolvedRadiusClass,
@@ -264,7 +264,7 @@ export default function CanvasButton({
         <IconLeftComponent className={`${iconClass} shrink-0 transition-transform group-hover:-translate-x-0.5`} />
       )}
 
-      <span className="truncate whitespace-nowrap">{content.text || 'Button'}</span>
+      <span className="min-w-0 max-w-full whitespace-normal break-words text-center leading-snug">{content.text || 'Button'}</span>
 
       {IconRightComponent && (
         <IconRightComponent className={`${iconClass} shrink-0 transition-transform group-hover:translate-x-0.5`} />

@@ -98,6 +98,7 @@ export default function Button({
     'justify-center',
     'gap-2',
     'max-w-full',
+    'min-w-0',
     'shrink-0',
     'select-none',
     'transition-all',
@@ -105,6 +106,9 @@ export default function Button({
     'ease-out',
     'cursor-pointer',
     'no-underline',
+    'whitespace-normal',
+    'break-words',
+    'text-center',
   ].join(' ');
 
   const variantStyles = {
@@ -329,7 +333,7 @@ export default function Button({
     >
       {IconLeftComp && <IconLeftComp className="w-4 h-4 shrink-0 transition-transform group-hover:-translate-x-0.5" />}
 
-      <span className="inline-flex items-center gap-1.5 whitespace-nowrap shrink-0">
+      <span className="inline-flex items-center gap-1.5 min-w-0 max-w-full flex-wrap justify-center text-center">
         <InlineEditableText
           value={cleanLabel}
           onUpdate={handleUpdate}
@@ -339,15 +343,18 @@ export default function Button({
             fontWeight,
             letterSpacing,
             textTransform,
-            whiteSpace: 'nowrap',
+            whiteSpace: 'normal',
+            overflowWrap: 'anywhere',
+            wordBreak: 'break-word',
             display: 'inline-block',
+            maxWidth: '100%',
           }}
           tag="span"
         />
 
         {hasArrow && !IconRightComp && (
           <span
-            className="inline-flex items-center justify-center shrink-0 whitespace-nowrap transition-transform duration-300 group-hover:translate-x-1"
+            className="inline-flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:translate-x-1"
             aria-hidden="true"
           >
             →

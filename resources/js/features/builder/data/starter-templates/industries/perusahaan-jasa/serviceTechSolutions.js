@@ -77,7 +77,7 @@ export default {
         },
         {
           id: 'tech-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Kami merancang, mengamankan, dan menskalakan ekosistem cloud, microservices, dan software kustom untuk perusahaan modern dengan standar keandalan 99.99%.', fontSize: '17px', color: '#94a3b8' },
         },
         {
@@ -124,7 +124,7 @@ export default {
         },
         {
           id: 'srv-tc-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Membantu perusahaan bertransformasi melalui arsitektur cloud cerdas, keamanan siber ketat, dan software engineering mutakhir.', fontSize: '16px', color: '#94a3b8', textAlign: 'center' },
         },
         {
@@ -134,7 +134,7 @@ export default {
         },
         {
           id: 'srv1-tc-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Migrasi cloud tanpa downtime, otomatisasi CI/CD, manajemen Kubernetes cluster, dan optimalisasi biaya multi-cloud.', fontSize: '14px', color: '#94a3b8' },
         },
         {
@@ -144,7 +144,7 @@ export default {
         },
         {
           id: 'srv2-tc-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Pengembangan web & core systems berskala jutaan pengguna dengan arsitektur microservices dan API-first design.', fontSize: '14px', color: '#94a3b8' },
         },
         {
@@ -154,7 +154,7 @@ export default {
         },
         {
           id: 'srv3-tc-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Audit keamanan berkala, penetration testing, implementasi zero-trust network, serta sertifikasi ISO 27001.', fontSize: '14px', color: '#94a3b8' },
         },
         {
@@ -164,7 +164,7 @@ export default {
         },
         {
           id: 'srv4-tc-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Pembangunan data pipeline berkecepatan tinggi, data warehouse terdistribusi, dan visualisasi dashboard eksekutif.', fontSize: '14px', color: '#94a3b8' },
         },
         {
@@ -174,7 +174,7 @@ export default {
         },
         {
           id: 'srv5-tc-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Implementasi LLM khusus korporasi, otomatisasi cerdas NLP, dan model prediktif untuk optimasi operasional bisnis.', fontSize: '14px', color: '#94a3b8' },
         },
         {
@@ -184,7 +184,7 @@ export default {
         },
         {
           id: 'srv6-tc-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Monitoring proaktif round-the-clock, incident response dengan SLA < 15 menit, dan disaster recovery drills.', fontSize: '14px', color: '#94a3b8' },
         },
       ],
@@ -206,7 +206,7 @@ export default {
         },
         {
           id: 'sol-tc-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Kami membangun fondasi teknologi yang mampu menangani jutaan transaksi simultan tanpa penurunan performa dengan toleransi kesalahan tingkat tinggi.', fontSize: '16px', color: '#94a3b8' },
         },
         {
@@ -216,7 +216,7 @@ export default {
         },
         {
           id: 'sol1-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Infrastruktur aktif-aktif lintas data center geografis untuk ketahanan bisnis mutlak.', fontSize: '14px', color: '#94a3b8' },
         },
         {
@@ -226,7 +226,7 @@ export default {
         },
         {
           id: 'sol2-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Deployment otomatis dengan canary release, automated rollback, dan keamanan kontainer terintegrasi.', fontSize: '14px', color: '#94a3b8' },
         },
         {
@@ -236,7 +236,7 @@ export default {
         },
         {
           id: 'sol3-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Enkripsi data at-rest & in-transit (AES-256), SSO IAM kustom, dan audit logging otomatis.', fontSize: '14px', color: '#94a3b8' },
         },
         {
@@ -263,7 +263,7 @@ export default {
         },
         {
           id: 'stat-tc-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Metrik nyata dari infrastruktur yang kami kelola untuk korporasi lintas industri.', fontSize: '16px', color: '#94a3b8', textAlign: 'center' },
         },
         {
@@ -273,12 +273,12 @@ export default {
         },
         {
           id: 'st1-lbl',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Uptime SLA Terjamin', fontSize: '15px', color: '#ffffff', fontWeight: '600' },
         },
         {
           id: 'st1-sub',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Multi-region failover aktif', fontSize: '13px', color: '#64748b' },
         },
         {
@@ -288,12 +288,12 @@ export default {
         },
         {
           id: 'st2-lbl',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'API Requests / Hari', fontSize: '15px', color: '#ffffff', fontWeight: '600' },
         },
         {
           id: 'st2-sub',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Throughput konsisten tanpa lonjakan latensi', fontSize: '13px', color: '#64748b' },
         },
         {
@@ -303,12 +303,12 @@ export default {
         },
         {
           id: 'st3-lbl',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Rata-Rata Respon Server', fontSize: '15px', color: '#ffffff', fontWeight: '600' },
         },
         {
           id: 'st3-sub',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Edge cache teroptimasi', fontSize: '13px', color: '#64748b' },
         },
         {
@@ -318,12 +318,12 @@ export default {
         },
         {
           id: 'st4-lbl',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Enterprise Deployments', level: 'h4', fontSize: '15px', color: '#ffffff', fontWeight: '600' },
         },
         {
           id: 'st4-sub',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Fintech, Retail, Telco, Healthcare', fontSize: '13px', color: '#64748b' },
         },
       ],
@@ -345,7 +345,7 @@ export default {
         },
         {
           id: 'cta-tc-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Dapatkan audit arsitektur sistem komprehensif dari Lead Cloud Architect kami. Tanpa biaya, analisis mendalam dalam 48 jam.', fontSize: '16px', color: '#94a3b8', textAlign: 'center' },
         },
         {
@@ -372,12 +372,12 @@ export default {
         },
         {
           id: 'ftr-tc-tagline',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Enterprise Cloud Architecture & Distributed Systems Engineering. Built for mission-critical digital scale.', fontSize: '13px', color: '#94a3b8' },
         },
         {
           id: 'ftr-tc-copy',
-          type: 'paragraph',
+          type: 'text',
           props: { content: '© 2026 Synapse Technologies Ltd. High-Reliability Systems Architecture.', fontSize: '12px', color: '#64748b' },
         },
         {

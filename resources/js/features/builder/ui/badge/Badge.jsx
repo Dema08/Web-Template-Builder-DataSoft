@@ -96,7 +96,7 @@ export default function Badge({
     hasCustomColor ? '' : variantText[variant] || variantText.primary
   } ${sizeStyles[size] || sizeStyles.medium} ${radiusStyles[radius] || radiusStyles.full} ${
     shadowStyles[shadow] || ''
-  } font-semibold inline-flex items-center justify-center gap-1.5 whitespace-nowrap cursor-pointer transition-all ${
+  } font-semibold inline-flex items-center justify-center gap-1.5 max-w-full whitespace-normal break-words text-center cursor-pointer transition-all ${
     isSelected
       ? 'ring-2 ring-indigo-600 ring-offset-2'
       : isHovered

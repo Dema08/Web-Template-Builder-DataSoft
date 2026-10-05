@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import useMobileNavClose from '../../../utils/useMobileNavClose';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 /**
@@ -9,6 +10,7 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 export default function Navbar11({ components = [], sectionId = null }) {
   const [issue] = useState('Vol. 42 — Autumn');
   const [mobileOpen, setMobileOpen] = useState(false);
+  useMobileNavClose(mobileOpen, setMobileOpen);
 
   const defaultComponents = [
     { id: 'logo-11', type: 'heading', props: { content: 'The Monocle Post', level: 'h2', fontSize: '28px', fontWeight: '700', color: '#1c1917' } },

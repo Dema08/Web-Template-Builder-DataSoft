@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import useMobileNavClose from '../../../utils/useMobileNavClose';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 /**
@@ -7,6 +8,7 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
  */
 export default function DairyNavArtisan({ components = [], sectionId = null }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  useMobileNavClose(mobileOpen, setMobileOpen);
 
   const defaultComponents = [
     { id: 'art-brand', type: 'heading', props: { content: 'VALLEY PASTURES DAIRY', level: 'h3', fontSize: '20px', fontWeight: '900', color: '#fef3c7', letterSpacing: '0.08em' } },
@@ -53,6 +55,7 @@ export default function DairyNavArtisan({ components = [], sectionId = null }) {
               onClick={() => setMobileOpen(!mobileOpen)}
               className="p-2.5 rounded-xl bg-amber-950/80 border border-amber-800/60 text-amber-200 hover:text-white focus:outline-none transition shadow-sm"
               aria-label="Toggle Menu"
+              aria-expanded={mobileOpen}
             >
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 {mobileOpen ? (

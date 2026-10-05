@@ -44,7 +44,7 @@ export default {
       components: [
         { id: 'agri-badge', type: 'badge', props: { text: '🌾 KOPERASI PRODUSEN & AGRIBISNIS TERPADU', variant: 'outline', background: 'rgba(217,119,6,0.15)', color: '#fbbf24', borderColor: 'rgba(217,119,6,0.45)' } },
         { id: 'agri-title', type: 'heading', props: { content: 'Dari Lahan Petani Hingga Pasar Ekspor — Sejahtera Melalui Gotong Royong', level: 'h1', fontSize: '46px', fontWeight: '900', color: '#fef3c7', letterSpacing: '-0.025em' } },
-        { id: 'agri-desc', type: 'paragraph', props: { content: 'Koperasi produsen pertanian dan perkebunan terintegrasi. Menjamin ketersediaan pupuk berkualitas, fasilitas cold-storage modern, dan kepastian harga beli panen langsung dari 8.500+ petani anggota.', fontSize: '17px', color: '#fde68a' } },
+        { id: 'agri-desc', type: 'text', props: { content: 'Koperasi produsen pertanian dan perkebunan terintegrasi. Menjamin ketersediaan pupuk berkualitas, fasilitas cold-storage modern, dan kepastian harga beli panen langsung dari 8.500+ petani anggota.', fontSize: '17px', color: '#fde68a' } },
         { id: 'agri-btn1', type: 'button', props: { label: 'Gabung Mitra Kelompok Tani 🌾', href: '#partner', variant: 'primary', size: 'large', radius: 'md', background: 'linear-gradient(135deg, #d97706, #b45309)', color: '#ffffff', fontWeight: '700' } },
         { id: 'agri-btn2', type: 'button', props: { label: 'Lihat Komoditas & Pasokan B2B', href: '#programs', variant: 'outline', size: 'large', radius: 'md', background: 'rgba(35,22,6,0.7)', color: '#fbbf24', borderColor: 'rgba(217,119,6,0.4)' } },
 
@@ -55,7 +55,7 @@ export default {
           props: { background: '#251707', borderColor: 'rgba(217,119,6,0.3)', borderWidth: '1px', borderRadius: '12px', padding: '16px', shadow: 'lg', hoverEffect: 'lift' },
           childrenComponents: [
             { id: 'agri-stat1-num', type: 'heading', props: { content: '12.000 Ha', level: 'h3', fontSize: '24px', fontWeight: '900', color: '#fbbf24' } },
-            { id: 'agri-stat1-lbl', type: 'paragraph', props: { content: 'Luas Lahan Tani Terkelola', fontSize: '12px', color: '#94a3b8' } },
+            { id: 'agri-stat1-lbl', type: 'text', props: { content: 'Luas Lahan Tani Terkelola', fontSize: '12px', color: '#94a3b8' } },
           ]
         },
         {
@@ -64,7 +64,7 @@ export default {
           props: { background: '#251707', borderColor: 'rgba(217,119,6,0.3)', borderWidth: '1px', borderRadius: '12px', padding: '16px', shadow: 'lg', hoverEffect: 'lift' },
           childrenComponents: [
             { id: 'agri-stat2-num', type: 'heading', props: { content: '350+ Ton', level: 'h3', fontSize: '24px', fontWeight: '900', color: '#fde68a' } },
-            { id: 'agri-stat2-lbl', type: 'paragraph', props: { content: 'Distribusi Panen per Hari', fontSize: '12px', color: '#94a3b8' } },
+            { id: 'agri-stat2-lbl', type: 'text', props: { content: 'Distribusi Panen per Hari', fontSize: '12px', color: '#94a3b8' } },
           ]
         },
         {
@@ -73,7 +73,7 @@ export default {
           props: { background: '#251707', borderColor: 'rgba(217,119,6,0.3)', borderWidth: '1px', borderRadius: '12px', padding: '16px', shadow: 'lg', hoverEffect: 'lift' },
           childrenComponents: [
             { id: 'agri-stat3-num', type: 'heading', props: { content: '100% Fair', level: 'h3', fontSize: '24px', fontWeight: '900', color: '#86efac' } },
-            { id: 'agri-stat3-lbl', type: 'paragraph', props: { content: 'Kepastian Pembelian Panen', fontSize: '12px', color: '#94a3b8' } },
+            { id: 'agri-stat3-lbl', type: 'text', props: { content: 'Kepastian Pembelian Panen', fontSize: '12px', color: '#94a3b8' } },
           ]
         },
         {
@@ -82,7 +82,7 @@ export default {
           props: { background: '#251707', borderColor: 'rgba(217,119,6,0.3)', borderWidth: '1px', borderRadius: '12px', padding: '16px', shadow: 'lg', hoverEffect: 'lift' },
           childrenComponents: [
             { id: 'agri-stat4-num', type: 'heading', props: { content: '85 Mitra', level: 'h3', fontSize: '24px', fontWeight: '900', color: '#fbbf24' } },
-            { id: 'agri-stat4-lbl', type: 'paragraph', props: { content: 'Off-taker Ekspor & Supermarket', fontSize: '12px', color: '#94a3b8' } },
+            { id: 'agri-stat4-lbl', type: 'text', props: { content: 'Off-taker Ekspor & Supermarket', fontSize: '12px', color: '#94a3b8' } },
           ]
         },
 
@@ -106,7 +106,7 @@ export default {
             },
             { id: 'agri-card-badge', type: 'badge', props: { text: '🌾 SENTRA LOGISTIK PANGAN & COLD STORAGE', variant: 'solid', background: 'rgba(217,119,6,0.25)', color: '#fbbf24' } },
             { id: 'agri-card-title', type: 'heading', props: { content: 'Fasilitas Pasca Panen Berkapasitas 2.500 Ton', level: 'h4', fontSize: '17px', fontWeight: '800', color: '#fef3c7' } },
-            { id: 'agri-card-desc', type: 'paragraph', props: { content: 'Dilengkapi mesin pengering gabah otomatis, grading sortasi digital, dan cold storage terkontrol suhu untuk menjaga kesegaran komoditas ekspor.', fontSize: '13px', color: '#fde68a' } },
+            { id: 'agri-card-desc', type: 'text', props: { content: 'Dilengkapi mesin pengering gabah otomatis, grading sortasi digital, dan cold storage terkontrol suhu untuk menjaga kesegaran komoditas ekspor.', fontSize: '13px', color: '#fde68a' } },
           ]
         }
       ],
@@ -118,7 +118,7 @@ export default {
       components: [
         { id: 'prog-badge', type: 'badge', props: { text: '🌾 PROGRAM PEMBERDAYAAN & LOGISTIK TANI', variant: 'outline', background: 'rgba(217,119,6,0.15)', color: '#fbbf24', borderColor: 'rgba(217,119,6,0.45)' } },
         { id: 'prog-title', type: 'heading', props: { content: 'Ekosistem Terintegrasi dari Hulu Tani hingga Hilir Pasar Global', level: 'h2', fontSize: '38px', fontWeight: '900', color: '#fef3c7', letterSpacing: '-0.02em' } },
-        { id: 'prog-desc', type: 'paragraph', props: { content: 'Kami memutus rantai tengkulak yang merugikan dengan menyediakan sarana produksi bersubsidi, fasilitas resi gudang resmi, dan kontrak pembelian panen pasti.', fontSize: '16px', color: '#fde68a' } },
+        { id: 'prog-desc', type: 'text', props: { content: 'Kami memutus rantai tengkulak yang merugikan dengan menyediakan sarana produksi bersubsidi, fasilitas resi gudang resmi, dan kontrak pembelian panen pasti.', fontSize: '16px', color: '#fde68a' } },
 
         // Program 1: Saprotan & Pupuk Bersubsidi
         {
@@ -140,7 +140,7 @@ export default {
             },
             { id: 'prog1-badge', type: 'badge', props: { text: 'SUBSIDI BIBIT & PUPUK', variant: 'solid', background: 'rgba(217,119,6,0.2)', color: '#fbbf24' } },
             { id: 'prog1-title', type: 'heading', props: { content: 'Penyediaan Sarana Produksi Tani (Saprotan)', level: 'h3', fontSize: '19px', fontWeight: '800', color: '#fef3c7' } },
-            { id: 'prog1-desc', type: 'paragraph', props: { content: 'Akses pupuk organik kualitas tinggi, bibit unggul bersertifikasi BPSB, dan sewa traktor mekanis modern dengan skema bayar saat panen (Yarnen).', fontSize: '13px', color: '#94a3b8' } },
+            { id: 'prog1-desc', type: 'text', props: { content: 'Akses pupuk organik kualitas tinggi, bibit unggul bersertifikasi BPSB, dan sewa traktor mekanis modern dengan skema bayar saat panen (Yarnen).', fontSize: '13px', color: '#94a3b8' } },
             { id: 'prog1-spec', type: 'heading', props: { content: 'Skema: Bayar Pasca Panen (Yarnen) | Diskon Pupuk: s/d 25%', level: 'h4', fontSize: '12px', fontWeight: '700', color: '#fbbf24' } },
           ]
         },
@@ -165,7 +165,7 @@ export default {
             },
             { id: 'prog2-badge', type: 'badge', props: { text: 'RESI GUDANG BAPPEBTI', variant: 'solid', background: 'rgba(22,163,74,0.2)', color: '#86efac' } },
             { id: 'prog2-title', type: 'heading', props: { content: 'Fasilitas Cold Storage & Sistem Resi Gudang (SRG)', level: 'h3', fontSize: '19px', fontWeight: '800', color: '#fef3c7' } },
-            { id: 'prog2-desc', type: 'paragraph', props: { content: 'Cegah anjloknya harga saat panen raya dengan menyimpan gabah, jagung, cabai, dan kopi di cold storage berpendingin, serta jadikan resi gudang jaminan pinjaman.', fontSize: '13px', color: '#94a3b8' } },
+            { id: 'prog2-desc', type: 'text', props: { content: 'Cegah anjloknya harga saat panen raya dengan menyimpan gabah, jagung, cabai, dan kopi di cold storage berpendingin, serta jadikan resi gudang jaminan pinjaman.', fontSize: '13px', color: '#94a3b8' } },
             { id: 'prog2-spec', type: 'heading', props: { content: 'Kapasitas: 2.500 Ton | Pembiayaan SRG s/d 70% Nilai Komoditas', level: 'h4', fontSize: '12px', fontWeight: '700', color: '#86efac' } },
           ]
         },
@@ -190,7 +190,7 @@ export default {
             },
             { id: 'prog3-badge', type: 'badge', props: { text: 'JARINGAN EKSPOR B2B', variant: 'solid', background: 'rgba(234,179,8,0.2)', color: '#fde047' } },
             { id: 'prog3-title', type: 'heading', props: { content: 'Kontrak Pembelian Off-Taker Pasar Modern & Ekspor', level: 'h3', fontSize: '19px', fontWeight: '800', color: '#fef3c7' } },
-            { id: 'prog3-desc', type: 'paragraph', props: { content: 'Koperasi menjadi jembatan langsung pasokan komoditas pertanian ke jaringan supermarket nasional, industri pengolahan makanan, dan buyer ekspor Timur Tengah & Asia.', fontSize: '13px', color: '#94a3b8' } },
+            { id: 'prog3-desc', type: 'text', props: { content: 'Koperasi menjadi jembatan langsung pasokan komoditas pertanian ke jaringan supermarket nasional, industri pengolahan makanan, dan buyer ekspor Timur Tengah & Asia.', fontSize: '13px', color: '#94a3b8' } },
             { id: 'prog3-spec', type: 'heading', props: { content: 'Mitra: 85+ Korporasi & Eksportir | Garansi Pembayaran Tepat Waktu', level: 'h4', fontSize: '12px', fontWeight: '700', color: '#fde047' } },
           ]
         },
@@ -205,7 +205,7 @@ export default {
       components: [
         { id: 'imp-badge', type: 'badge', props: { text: '📈 DAMPAK KESEJAHTERAAN PETANI ANGGOTA', variant: 'outline', background: 'rgba(217,119,6,0.15)', color: '#fbbf24', borderColor: 'rgba(217,119,6,0.45)' } },
         { id: 'imp-title', type: 'heading', props: { content: 'Meningkatkan Taraf Hidup Komunitas Petani Indonesia', level: 'h2', fontSize: '38px', fontWeight: '900', color: '#fef3c7', letterSpacing: '-0.02em' } },
-        { id: 'imp-desc', type: 'paragraph', props: { content: 'Melalui pembagian SHU usaha perdagangan hasil bumi, jaminan asuransi tani, dan edukasi pertanian modern berkelanjutan.', fontSize: '16px', color: '#fde68a' } },
+        { id: 'imp-desc', type: 'text', props: { content: 'Melalui pembagian SHU usaha perdagangan hasil bumi, jaminan asuransi tani, dan edukasi pertanian modern berkelanjutan.', fontSize: '16px', color: '#fde68a' } },
 
         // Impact 1: Peningkatan Pendapatan
         {
@@ -215,7 +215,7 @@ export default {
           childrenComponents: [
             { id: 'imp1-tag', type: 'badge', props: { text: 'PENDAPATAN NAIK +65%', variant: 'solid', background: 'rgba(217,119,6,0.2)', color: '#fbbf24' } },
             { id: 'imp1-title', type: 'heading', props: { content: 'Penghapusan Margin Tengkulak Non-Resmi', level: 'h3', fontSize: '18px', fontWeight: '800', color: '#fef3c7' } },
-            { id: 'imp1-desc', type: 'paragraph', props: { content: 'Petani anggota menerima harga beli di tingkat kebun 25-40% lebih tinggi dibandingkan sistem tengkulak konvensional.', fontSize: '13px', color: '#94a3b8' } },
+            { id: 'imp1-desc', type: 'text', props: { content: 'Petani anggota menerima harga beli di tingkat kebun 25-40% lebih tinggi dibandingkan sistem tengkulak konvensional.', fontSize: '13px', color: '#94a3b8' } },
           ]
         },
 
@@ -227,7 +227,7 @@ export default {
           childrenComponents: [
             { id: 'imp2-tag', type: 'badge', props: { text: 'PROTEKSI PETANI', variant: 'solid', background: 'rgba(22,163,74,0.2)', color: '#86efac' } },
             { id: 'imp2-title', type: 'heading', props: { content: 'Dana Perlindungan Gagal Panen (AUTP)', level: 'h3', fontSize: '18px', fontWeight: '800', color: '#fef3c7' } },
-            { id: 'imp2-desc', type: 'paragraph', props: { content: 'Fasilitas asuransi usaha tani bekerjasama dengan BUMN untuk mengganti kerugian saat terjadi bencana banjir, kekeringan, atau hama wereng.', fontSize: '13px', color: '#94a3b8' } },
+            { id: 'imp2-desc', type: 'text', props: { content: 'Fasilitas asuransi usaha tani bekerjasama dengan BUMN untuk mengganti kerugian saat terjadi bencana banjir, kekeringan, atau hama wereng.', fontSize: '13px', color: '#94a3b8' } },
           ]
         },
 
@@ -239,7 +239,7 @@ export default {
           childrenComponents: [
             { id: 'imp3-tag', type: 'badge', props: { text: 'DIVIDEN SHU RAT', variant: 'solid', background: 'rgba(234,179,8,0.2)', color: '#fde047' } },
             { id: 'imp3-title', type: 'heading', props: { content: 'SHU Ekspor Dibagi Rata ke Seluruh Anggota', level: 'h3', fontSize: '18px', fontWeight: '800', color: '#fef3c7' } },
-            { id: 'imp3-desc', type: 'paragraph', props: { content: 'Keuntungan dari perdagangan komoditas ekspor dan sewa cold storage dikembalikan sebagai dividen SHU tahunan yang ditransfer langsung.', fontSize: '13px', color: '#94a3b8' } },
+            { id: 'imp3-desc', type: 'text', props: { content: 'Keuntungan dari perdagangan komoditas ekspor dan sewa cold storage dikembalikan sebagai dividen SHU tahunan yang ditransfer langsung.', fontSize: '13px', color: '#94a3b8' } },
           ]
         },
 
@@ -251,7 +251,7 @@ export default {
           childrenComponents: [
             { id: 'imp4-tag', type: 'badge', props: { text: 'SMART FARMING', variant: 'solid', background: 'rgba(217,119,6,0.2)', color: '#fbbf24' } },
             { id: 'imp4-title', type: 'heading', props: { content: 'Pelatihan IoT Drone Semprot & Sensor Tanah', level: 'h3', fontSize: '18px', fontWeight: '800', color: '#fef3c7' } },
-            { id: 'imp4-desc', type: 'paragraph', props: { content: 'Modernisasi pertanian dengan drone sprayer pupuk organik, sensor kelembapan tanah, dan sertifikasi Good Agricultural Practices (GAP).', fontSize: '13px', color: '#94a3b8' } },
+            { id: 'imp4-desc', type: 'text', props: { content: 'Modernisasi pertanian dengan drone sprayer pupuk organik, sensor kelembapan tanah, dan sertifikasi Good Agricultural Practices (GAP).', fontSize: '13px', color: '#94a3b8' } },
           ]
         },
 
@@ -263,7 +263,7 @@ export default {
           childrenComponents: [
             { id: 'gap-badge', type: 'badge', props: { text: '🏅 SERTIFIKASI INDO-GAP & ORGANIK INTERNASIONAL', variant: 'solid', background: 'rgba(217,119,6,0.25)', color: '#fbbf24' } },
             { id: 'gap-title', type: 'heading', props: { content: 'Standar Mutu Komoditas Ekspor Berdaya Saing Global', level: 'h3', fontSize: '22px', fontWeight: '900', color: '#fef3c7' } },
-            { id: 'gap-desc', type: 'paragraph', props: { content: 'Seluruh komoditas beras organik, kopi arabika specialty, kakao fermentasi, dan vanili yang dikelola koperasi teruji bebas residu pestisida kimia berbahaya dan bersertifikasi organik resmi.', fontSize: '14px', color: '#fde68a' } },
+            { id: 'gap-desc', type: 'text', props: { content: 'Seluruh komoditas beras organik, kopi arabika specialty, kakao fermentasi, dan vanili yang dikelola koperasi teruji bebas residu pestisida kimia berbahaya dan bersertifikasi organik resmi.', fontSize: '14px', color: '#fde68a' } },
           ]
         }
       ],
@@ -280,7 +280,7 @@ export default {
           childrenComponents: [
             { id: 'cta-agri-badge', type: 'badge', props: { text: '🌾 KEMITRAAN KELOMPOK TANI & OFF-TAKER KOMODITAS', variant: 'outline', background: 'rgba(217,119,6,0.2)', color: '#fbbf24', borderColor: 'rgba(217,119,6,0.5)' } },
             { id: 'cta-agri-title', type: 'heading', props: { content: 'Waktunya Petani Berdaulat & Menguasai Pasar dengan Koperasi', level: 'h2', fontSize: '38px', fontWeight: '900', color: '#fef3c7', letterSpacing: '-0.02em', textAlign: 'center' } },
-            { id: 'cta-agri-desc', type: 'paragraph', props: { content: 'Daftarkan kelompok tani (Poktan/Gapoktan) Anda untuk mendapatkan pasokan pupuk bersubsidi, akses sewa alat panen, dan kepastian kontrak pembelian hasil bumi.', fontSize: '16px', color: '#fde68a', textAlign: 'center' } },
+            { id: 'cta-agri-desc', type: 'text', props: { content: 'Daftarkan kelompok tani (Poktan/Gapoktan) Anda untuk mendapatkan pasokan pupuk bersubsidi, akses sewa alat panen, dan kepastian kontrak pembelian hasil bumi.', fontSize: '16px', color: '#fde68a', textAlign: 'center' } },
             { id: 'cta-agri-btn1', type: 'button', props: { label: 'Daftar Kemitraan Poktan 🌾', href: 'mailto:kemitraan@koperasitani.id', variant: 'primary', size: 'large', radius: 'md', background: 'linear-gradient(135deg, #d97706, #b45309)', color: '#ffffff', fontWeight: '700' } },
             { id: 'cta-agri-btn2', type: 'button', props: { label: 'Kontak Tim Pengadaan B2B (WhatsApp)', href: 'https://wa.me/6281188990011', variant: 'outline', size: 'large', radius: 'md', background: 'rgba(35,22,6,0.8)', color: '#fbbf24', borderColor: 'rgba(217,119,6,0.4)' } },
           ]
@@ -293,9 +293,9 @@ export default {
       layout: 'kop-footer-agri',
       components: [
         { id: 'agri-foot-logo', type: 'heading', props: { content: 'KOPERASI TANI NUSANTARA', level: 'h3', fontSize: '18px', fontWeight: '900', color: '#fef3c7', letterSpacing: '0.04em' } },
-        { id: 'agri-foot-desc', type: 'paragraph', props: { content: 'Koperasi produsen pertanian terpadu skala nasional. Menghubungkan ribuan petani dengan teknologi pasca panen modern, resi gudang, dan rantai pasok pasar global berkeadilan.', fontSize: '13px', color: '#94a3b8' } },
-        { id: 'agri-foot-addr', type: 'paragraph', props: { content: 'Sentra Logistik & Cold Storage: Jl. Raya Agribisnis KM 14, Malang, Jawa Timur 65152', fontSize: '13px', color: '#fde68a' } },
-        { id: 'agri-foot-contact', type: 'paragraph', props: { content: 'Hotline Kemitraan: (0341) 789-2233 | WA Poktan: 0811-8899-0011 | Email: kemitraan@koperasitani.id', fontSize: '13px', color: '#fbbf24' } },
+        { id: 'agri-foot-desc', type: 'text', props: { content: 'Koperasi produsen pertanian terpadu skala nasional. Menghubungkan ribuan petani dengan teknologi pasca panen modern, resi gudang, dan rantai pasok pasar global berkeadilan.', fontSize: '13px', color: '#94a3b8' } },
+        { id: 'agri-foot-addr', type: 'text', props: { content: 'Sentra Logistik & Cold Storage: Jl. Raya Agribisnis KM 14, Malang, Jawa Timur 65152', fontSize: '13px', color: '#fde68a' } },
+        { id: 'agri-foot-contact', type: 'text', props: { content: 'Hotline Kemitraan: (0341) 789-2233 | WA Poktan: 0811-8899-0011 | Email: kemitraan@koperasitani.id', fontSize: '13px', color: '#fbbf24' } },
       ],
     },
   ],

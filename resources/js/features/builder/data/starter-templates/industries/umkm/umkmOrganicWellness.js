@@ -77,7 +77,7 @@ export default {
         },
         {
           id: 'wel-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Diformulasikan dari ekstrak kunyit, temulawak, bunga kenanga, dan minyak kelapa murni (VCO) yang dipanen secara lestari dari kebun organik lereng Gunung Merapi.', fontSize: '17px', color: '#a7f3d0' },
         },
         {
@@ -97,7 +97,7 @@ export default {
         },
         {
           id: 'wel-stat1-lbl',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Bahan Baku Alami Nabati', fontSize: '12px', color: '#cbd5e1' },
         },
         {
@@ -107,7 +107,7 @@ export default {
         },
         {
           id: 'wel-stat2-lbl',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Uji Klinis Dermatologis', fontSize: '12px', color: '#cbd5e1' },
         },
         {
@@ -134,7 +134,7 @@ export default {
         },
         {
           id: 'prd-wl-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Dirancang aman untuk kulit sensitif, ibu hamil & menyusui, dengan aroma relaksasi alami tanaman nusantara.', fontSize: '16px', color: '#a7f3d0', textAlign: 'center' },
         },
         {
@@ -149,7 +149,7 @@ export default {
         },
         {
           id: 'wl1-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Alternatif retinol alami nabati untuk menyamarkan garis halus, mencerahkan, dan mengunci kelembapan kulit.', fontSize: '13px', color: '#a7f3d0' },
         },
         {
@@ -169,7 +169,7 @@ export default {
         },
         {
           id: 'wl2-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Sabun cair murni minyak zaitun & VCO, lembut membersihkan tanpa membuat kulit kering atau iritasi.', fontSize: '13px', color: '#a7f3d0' },
         },
         {
@@ -189,7 +189,7 @@ export default {
         },
         {
           id: 'wl3-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Essential oil roll-on murni bunga kenanga Jawa & lavender untuk meredakan stres dan tidur lebih lelap.', fontSize: '13px', color: '#a7f3d0' },
         },
         {
@@ -209,7 +209,7 @@ export default {
         },
         {
           id: 'wl4-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Masker bilas pembersih pori mendalam untuk meredakan jerawat meradang dan memudarkan bekas noda.', fontSize: '13px', color: '#a7f3d0' },
         },
         {
@@ -241,7 +241,7 @@ export default {
         },
         {
           id: 'ben-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Kami percaya bahwa perawatan terbaik berasal dari alam yang diolah dengan integritas sains dermatologi modern tanpa merusak bumi.', fontSize: '16px', color: '#a7f3d0' },
         },
         {
@@ -251,7 +251,7 @@ export default {
         },
         {
           id: 'b1-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Minyak alami diekstraksi tanpa pemanasan berlebih untuk menjaga nutrisi dan antioksidan tetap utuh.', fontSize: '13px', color: '#a7f3d0' },
         },
         {
@@ -261,7 +261,7 @@ export default {
         },
         {
           id: 'b2-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Formula bebas paraben, sulfat (SLS/SLES), pewangi sintetis, alkohol kering, dan pewarna buatan.', fontSize: '13px', color: '#a7f3d0' },
         },
         {
@@ -271,7 +271,7 @@ export default {
         },
         {
           id: 'b3-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Botol kaca amber pelindung UV yang dapat diisi ulang (refillable) untuk mengurangi limbah plastik.', fontSize: '13px', color: '#a7f3d0' },
         },
       ],
@@ -293,12 +293,12 @@ export default {
         },
         {
           id: 'rev-wl-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Lebih dari 10.000 pelanggan telah beralih ke perawatan kulit organik yang ramah kulit dan lingkungan.', fontSize: '16px', color: '#a7f3d0', textAlign: 'center' },
         },
         {
           id: 'rv1-quote',
-          type: 'paragraph',
+          type: 'text',
           props: { content: '"Bakuchiol Face Oil-nya penyelamat kulit sensitifku saat hamil! Tidak bikin breakout sama sekali, teksturnya cepat meresap dan bekas jerawat cepat memudar."', fontSize: '14px', color: '#a7f3d0' },
         },
         {
@@ -308,12 +308,12 @@ export default {
         },
         {
           id: 'rv1-tag',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Pemilik Kulit Sensitif (Jakarta)', fontSize: '12px', color: '#34d399' },
         },
         {
           id: 'rv2-quote',
-          type: 'paragraph',
+          type: 'text',
           props: { content: '"Sabun Castille Calendula-nya sangat lembut, anak saya yang ada eksim kulitnya jadi tenang dan tidak gatal lagi. Aroma alaminya sangat menenangkan."', fontSize: '14px', color: '#a7f3d0' },
         },
         {
@@ -323,12 +323,12 @@ export default {
         },
         {
           id: 'rv2-tag',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Dokter Umum & Ibu Rumah Tangga', fontSize: '12px', color: '#34d399' },
         },
         {
           id: 'rv3-quote',
-          type: 'paragraph',
+          type: 'text',
           props: { content: '"Minyak roll-on Kenanga selalu ada di tas kerja. Saat pusing atau lelah meeting, tinggal oles di pelipis langsung rileks seketika. Sangat rekomen!"', fontSize: '14px', color: '#a7f3d0' } },
         {
           id: 'rv3-name',
@@ -337,7 +337,7 @@ export default {
         },
         {
           id: 'rv3-tag',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Corporate Professional (Bandung)', fontSize: '12px', color: '#34d399' },
         },
       ],
@@ -359,7 +359,7 @@ export default {
         },
         {
           id: 'cta-wl-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Konsultasikan keluhan kulit Anda secara personal dengan Beauty & Herbalist Advisor kami via WhatsApp. Dapatkan rekomendasi produk sesuai jenis kulit dan panduan pemakaian rutin.', fontSize: '16px', color: '#a7f3d0', textAlign: 'center' },
         },
         {
@@ -386,12 +386,12 @@ export default {
         },
         {
           id: 'ftr-wl-tagline',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Perawatan kulit alami berbasis kearifan botani herbal Indonesia. Menghidupkan kembali rahasia kecantikan tradisional yang teruji secara sains.', fontSize: '13px', color: '#a7f3d0' },
         },
         {
           id: 'ftr-wl-copy',
-          type: 'paragraph',
+          type: 'text',
           props: { content: '© 2026 PT Sekar Arum Nusantara. All rights reserved.', fontSize: '12px', color: '#6ee7b7' },
         },
         {

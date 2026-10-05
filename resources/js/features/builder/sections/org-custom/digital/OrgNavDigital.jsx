@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import useMobileNavClose from '../../../utils/useMobileNavClose';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 /**
@@ -8,6 +9,7 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
  */
 export default function OrgNavDigital({ components = [], sectionId = null }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  useMobileNavClose(mobileOpen, setMobileOpen);
 
   const defaultComponents = [
     { id: 'dig-logo', type: 'heading', props: { content: 'KOMUNITAS INOVASI DIGITAL', level: 'h2', fontSize: '15px', fontWeight: '900', color: '#f1f5f9', letterSpacing: '0.04em' } },
@@ -70,6 +72,7 @@ export default function OrgNavDigital({ components = [], sectionId = null }) {
             onClick={() => setMobileOpen(v => !v)}
             className="lg:hidden p-2 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/20 transition-all cursor-pointer"
             aria-label="Toggle Navigation"
+              aria-expanded={mobileOpen}
           >
             {mobileOpen ? '✕' : '☰'}
           </button>

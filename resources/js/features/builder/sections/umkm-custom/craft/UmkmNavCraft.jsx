@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import useMobileNavClose from '../../../utils/useMobileNavClose';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 /**
@@ -8,6 +9,7 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
  */
 export default function UmkmNavCraft({ components = [], sectionId = null }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  useMobileNavClose(mobileOpen, setMobileOpen);
 
   const defaultComponents = [
     { id: 'crf-logo', type: 'heading', props: { content: 'PUSAKA HERITAGE', level: 'h2', fontSize: '20px', fontWeight: '800', color: '#ffedd5', letterSpacing: '0.12em' } },
@@ -53,6 +55,7 @@ export default function UmkmNavCraft({ components = [], sectionId = null }) {
               onClick={() => setMobileOpen(v => !v)}
               className="lg:hidden p-2 rounded bg-orange-950 text-orange-200 border border-orange-800"
               aria-label="Toggle Navigation"
+              aria-expanded={mobileOpen}
             >
               {mobileOpen ? '✕' : '☰'}
             </button>

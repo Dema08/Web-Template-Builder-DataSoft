@@ -77,7 +77,7 @@ export default {
         },
         {
           id: 'bt-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Belajar langsung dari Tech Lead unicorn & global startup dengan kurikulum berbasis proyek nyata. Dapatkan jaminan koneksi kerja ke 350+ hiring partners.', fontSize: '17px', color: '#cbd5e1' },
         },
         {
@@ -124,7 +124,7 @@ export default {
         },
         {
           id: 'trk-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Dirancang dari nol hingga siap kerja (Zero to Hero) bersama mentor praktisi industri top tech companies.', fontSize: '16px', color: '#cbd5e1', textAlign: 'center' },
         },
         {
@@ -134,7 +134,7 @@ export default {
         },
         {
           id: 't1-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Menguasai ekosistem React, Next.js, Node.js/Go, database SQL/NoSQL, microservices, dan deployment AWS.', fontSize: '14px', color: '#cbd5e1' },
         },
         {
@@ -149,7 +149,7 @@ export default {
         },
         {
           id: 't2-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Membangun aplikasi cerdas dengan Large Language Models (LLM), LangChain, RAG architecture, dan vector database.', fontSize: '14px', color: '#cbd5e1' },
         },
         {
@@ -164,7 +164,7 @@ export default {
         },
         {
           id: 't3-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Eksplorasi big data, visualisasi analitik eksekutif, predictive modeling, algoritma klasifikasi, dan pipeline MLOps.', fontSize: '14px', color: '#cbd5e1' },
         },
         {
@@ -179,7 +179,7 @@ export default {
         },
         {
           id: 't4-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Otomasi CI/CD pipelines, container orchestration Kubernetes, Terraform IaC, dan monitoring Prometheus.', fontSize: '14px', color: '#cbd5e1' },
         },
         {
@@ -211,7 +211,7 @@ export default {
         },
         {
           id: 'cur-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Di CodeSphere, Anda menulis lebih dari 15.000 baris kode nyata, menyelesaikan pull request harian di GitHub, dan mendeploy 4 proyek skala produksi yang siap dipamerkan ke recruiter.', fontSize: '16px', color: '#cbd5e1' },
         },
         {
@@ -221,7 +221,7 @@ export default {
         },
         {
           id: 'cs1-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Fondasi logika algoritma, struktur data efisien, dan clean architecture standar enterprise.', fontSize: '13px', color: '#94a3b8' },
         },
         {
@@ -231,7 +231,7 @@ export default {
         },
         {
           id: 'cs2-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Setiap baris kode Anda diulas langsung untuk memastikan best practice, security, dan readability.', fontSize: '13px', color: '#94a3b8' },
         },
         {
@@ -241,7 +241,7 @@ export default {
         },
         {
           id: 'cs3-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Membangun aplikasi fullstack kompleks dengan live database, payment gateway, dan deployment CI/CD.', fontSize: '13px', color: '#94a3b8' },
         },
         {
@@ -268,12 +268,12 @@ export default {
         },
         {
           id: 'hir-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Program Career Support mendampingi Anda dari simulasi technical interview, optimasi CV/LinkedIn, hingga negosiasi penawaran gaji.', fontSize: '16px', color: '#cbd5e1', textAlign: 'center' },
         },
         {
           id: 'al1-quote',
-          type: 'paragraph',
+          type: 'text',
           props: { content: '"Dari latar belakang lulusan hukum tanpa basic coding sama sekali, setelah 16 minggu di CodeSphere saya diterima sebagai Frontend Engineer di unicorn fintech."', fontSize: '14px', color: '#cbd5e1' },
         },
         {
@@ -283,12 +283,12 @@ export default {
         },
         {
           id: 'al1-role',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Frontend Engineer @ DANA Indonesia (Alumni Batch 18)', fontSize: '12px', color: '#818cf8' },
         },
         {
           id: 'al2-quote',
-          type: 'paragraph',
+          type: 'text',
           props: { content: '"1-on-1 code review dari Tech Lead sangat mengubah cara berpikir arsitektur backend saya. Portofolio capstone-nya membuat recruiter terkesan."', fontSize: '14px', color: '#cbd5e1' },
         },
         {
@@ -298,12 +298,12 @@ export default {
         },
         {
           id: 'al2-role',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Backend Developer @ Traveloka (Alumni Batch 19)', fontSize: '12px', color: '#818cf8' },
         },
         {
           id: 'al3-quote',
-          type: 'paragraph',
+          type: 'text',
           props: { content: '"Career track AI Engineer di sini sangat up-to-date dengan industri. Saya langsung dipercaya membangun sistem RAG AI di perusahaan logistik."', fontSize: '14px', color: '#cbd5e1' },
         },
         {
@@ -313,7 +313,7 @@ export default {
         },
         {
           id: 'al3-role',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'AI Solutions Engineer @ J&T Express (Alumni Batch 20)', fontSize: '12px', color: '#818cf8' },
         },
       ],
@@ -335,7 +335,7 @@ export default {
         },
         {
           id: 'prc-bt-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Pilih opsi pembayaran yang paling sesuai dengan kondisi finansial Anda saat ini.', fontSize: '16px', color: '#cbd5e1', textAlign: 'center' },
         },
         {
@@ -350,7 +350,7 @@ export default {
         },
         {
           id: 'pl1-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Hemat Rp 3.5 Jt dengan pembayaran lunas di awal sebelum batch dimulai.', fontSize: '13px', color: '#94a3b8' },
         },
         {
@@ -370,7 +370,7 @@ export default {
         },
         {
           id: 'pl2-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Cicilan 12 bulan tanpa bunga via kartu kredit atau mitra finansial edukasi.', fontSize: '13px', color: '#cbd5e1' },
         },
         {
@@ -390,7 +390,7 @@ export default {
         },
         {
           id: 'pl3-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Belajar tanpa biaya di depan. Bayar persentase gaji hanya setelah Anda mendapat pekerjaan.', fontSize: '13px', color: '#94a3b8' },
         },
         {
@@ -412,12 +412,12 @@ export default {
         },
         {
           id: 'ftr-bt-tagline',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Akselerator Karir Teknologi Terdepan. Menjembatani talenta non-IT dan profesional menuju karir software engineer kelas dunia.', fontSize: '13px', color: '#94a3b8' },
         },
         {
           id: 'ftr-bt-copy',
-          type: 'paragraph',
+          type: 'text',
           props: { content: '© 2026 CodeSphere Academy Inc. All rights reserved.', fontSize: '12px', color: '#64748b' },
         },
         {

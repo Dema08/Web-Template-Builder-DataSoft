@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import useMobileNavClose from '../../../utils/useMobileNavClose';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 /**
@@ -8,6 +9,7 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
  */
 export default function EduNavBootcamp({ components = [], sectionId = null }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  useMobileNavClose(mobileOpen, setMobileOpen);
 
   const defaultComponents = [
     { id: 'boot-logo', type: 'heading', props: { content: 'CODESPHERE.ACADEMY', level: 'h2', fontSize: '18px', fontWeight: '900', color: '#ffffff', letterSpacing: '0.02em' } },
@@ -54,6 +56,7 @@ export default function EduNavBootcamp({ components = [], sectionId = null }) {
               onClick={() => setMobileOpen(v => !v)}
               className="lg:hidden p-2.5 rounded-xl bg-purple-950 text-white border border-purple-800"
               aria-label="Toggle Navigation"
+              aria-expanded={mobileOpen}
             >
               {mobileOpen ? '✕' : '☰'}
             </button>

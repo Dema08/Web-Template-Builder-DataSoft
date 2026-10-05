@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import useMobileNavClose from '../../../utils/useMobileNavClose';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 /**
@@ -8,6 +9,7 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
  */
 export default function OrgNavProfessional({ components = [], sectionId = null }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  useMobileNavClose(mobileOpen, setMobileOpen);
 
   const defaultComponents = [
     { id: 'pro-logo', type: 'heading', props: { content: 'FORUM PROFESI NUSANTARA', level: 'h2', fontSize: '16px', fontWeight: '900', color: '#f8fafc', letterSpacing: '0.06em' } },
@@ -68,6 +70,7 @@ export default function OrgNavProfessional({ components = [], sectionId = null }
             onClick={() => setMobileOpen(v => !v)}
             className="lg:hidden p-2 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-300 hover:bg-amber-500/20 transition-all cursor-pointer"
             aria-label="Toggle Navigation"
+              aria-expanded={mobileOpen}
           >
             {mobileOpen ? '✕' : '☰'}
           </button>

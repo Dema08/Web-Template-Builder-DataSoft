@@ -44,7 +44,7 @@ export default {
       components: [
         { id: 'syariah-badge', type: 'badge', props: { text: '🕌 KOPERASI SIMPAN PINJAM & PEMBIAYAAN SYARIAH (KSPPS)', variant: 'outline', background: 'rgba(234,179,8,0.15)', color: '#fde047', borderColor: 'rgba(234,179,8,0.45)' } },
         { id: 'syariah-title', type: 'heading', props: { content: 'Membangun Kesejahteraan Finansial Ummat Berlandaskan Syariat Islam', level: 'h1', fontSize: '46px', fontWeight: '900', color: '#f0fdf4', letterSpacing: '-0.025em' } },
-        { id: 'syariah-desc', type: 'paragraph', props: { content: 'Wadah muamalah keuangan adil, transparan, dan bebas riba. Menghubungkan 24.000+ anggota aktif dengan akad mudharabah & murabahah terpercaya sejak 2002.', fontSize: '17px', color: '#a7f3d0' } },
+        { id: 'syariah-desc', type: 'text', props: { content: 'Wadah muamalah keuangan adil, transparan, dan bebas riba. Menghubungkan 24.000+ anggota aktif dengan akad mudharabah & murabahah terpercaya sejak 2002.', fontSize: '17px', color: '#a7f3d0' } },
         { id: 'syariah-btn1', type: 'button', props: { label: 'Daftar Jadi Anggota 🕌', href: '#register', variant: 'primary', size: 'large', radius: 'md', background: 'linear-gradient(135deg, #059669, #047857)', color: '#ffffff', fontWeight: '700' } },
         { id: 'syariah-btn2', type: 'button', props: { label: 'Simulasi Pembiayaan Usaha', href: '#products', variant: 'outline', size: 'large', radius: 'md', background: 'rgba(4,47,30,0.7)', color: '#fde047', borderColor: 'rgba(234,179,8,0.4)' } },
 
@@ -55,7 +55,7 @@ export default {
           props: { background: '#022d1d', borderColor: 'rgba(16,185,129,0.3)', borderWidth: '1px', borderRadius: '12px', padding: '16px', shadow: 'lg', hoverEffect: 'lift' },
           childrenComponents: [
             { id: 'syariah-stat1-num', type: 'heading', props: { content: 'Rp 180 Miliar', level: 'h3', fontSize: '24px', fontWeight: '900', color: '#fde047' } },
-            { id: 'syariah-stat1-lbl', type: 'paragraph', props: { content: 'Total Aset Kelolaan Ummat', fontSize: '12px', color: '#94a3b8' } },
+            { id: 'syariah-stat1-lbl', type: 'text', props: { content: 'Total Aset Kelolaan Ummat', fontSize: '12px', color: '#94a3b8' } },
           ]
         },
         {
@@ -64,7 +64,7 @@ export default {
           props: { background: '#022d1d', borderColor: 'rgba(16,185,129,0.3)', borderWidth: '1px', borderRadius: '12px', padding: '16px', shadow: 'lg', hoverEffect: 'lift' },
           childrenComponents: [
             { id: 'syariah-stat2-num', type: 'heading', props: { content: '24.500+', level: 'h3', fontSize: '24px', fontWeight: '900', color: '#6ee7b7' } },
-            { id: 'syariah-stat2-lbl', type: 'paragraph', props: { content: 'Anggota Aktif Terdaftar', fontSize: '12px', color: '#94a3b8' } },
+            { id: 'syariah-stat2-lbl', type: 'text', props: { content: 'Anggota Aktif Terdaftar', fontSize: '12px', color: '#94a3b8' } },
           ]
         },
         {
@@ -73,7 +73,7 @@ export default {
           props: { background: '#022d1d', borderColor: 'rgba(16,185,129,0.3)', borderWidth: '1px', borderRadius: '12px', padding: '16px', shadow: 'lg', hoverEffect: 'lift' },
           childrenComponents: [
             { id: 'syariah-stat3-num', type: 'heading', props: { content: '0.42%', level: 'h3', fontSize: '24px', fontWeight: '900', color: '#6ee7b7' } },
-            { id: 'syariah-stat3-lbl', type: 'paragraph', props: { content: 'Tingkat NPF Sehat Terjaga', fontSize: '12px', color: '#94a3b8' } },
+            { id: 'syariah-stat3-lbl', type: 'text', props: { content: 'Tingkat NPF Sehat Terjaga', fontSize: '12px', color: '#94a3b8' } },
           ]
         },
         {
@@ -82,7 +82,7 @@ export default {
           props: { background: '#022d1d', borderColor: 'rgba(16,185,129,0.3)', borderWidth: '1px', borderRadius: '12px', padding: '16px', shadow: 'lg', hoverEffect: 'lift' },
           childrenComponents: [
             { id: 'syariah-stat4-num', type: 'heading', props: { content: '100% Syariah', level: 'h3', fontSize: '24px', fontWeight: '900', color: '#fde047' } },
-            { id: 'syariah-stat4-lbl', type: 'paragraph', props: { content: 'Bebas Riba, Gharar, Maysir', fontSize: '12px', color: '#94a3b8' } },
+            { id: 'syariah-stat4-lbl', type: 'text', props: { content: 'Bebas Riba, Gharar, Maysir', fontSize: '12px', color: '#94a3b8' } },
           ]
         },
 
@@ -106,7 +106,7 @@ export default {
             },
             { id: 'syariah-card-badge', type: 'badge', props: { text: '🕌 KANTOR PUSAT & 35 JARINGAN CABANG', variant: 'solid', background: 'rgba(234,179,8,0.2)', color: '#fde047' } },
             { id: 'syariah-card-title', type: 'heading', props: { content: 'Pelayanan Ramah, Amanah & Teruji Puluhan Tahun', level: 'h4', fontSize: '17px', fontWeight: '800', color: '#f0fdf4' } },
-            { id: 'syariah-card-desc', type: 'paragraph', props: { content: 'Setiap transaksi keuangan diawasi langsung oleh Dewan Pengawas Syariah (DPS) bersertifikasi DSN-MUI untuk menjamin keberkahan usaha.', fontSize: '13px', color: '#a7f3d0' } },
+            { id: 'syariah-card-desc', type: 'text', props: { content: 'Setiap transaksi keuangan diawasi langsung oleh Dewan Pengawas Syariah (DPS) bersertifikasi DSN-MUI untuk menjamin keberkahan usaha.', fontSize: '13px', color: '#a7f3d0' } },
           ]
         }
       ],
@@ -118,7 +118,7 @@ export default {
       components: [
         { id: 'prods-badge', type: 'badge', props: { text: '⚖️ PRODUK SIMPANAN & PEMBIAYAAN SYARIAH', variant: 'outline', background: 'rgba(234,179,8,0.15)', color: '#fde047', borderColor: 'rgba(234,179,8,0.45)' } },
         { id: 'prods-title', type: 'heading', props: { content: 'Pilihan Akad Syariah yang Menenteramkan & Menguntungkan', level: 'h2', fontSize: '38px', fontWeight: '900', color: '#f0fdf4', letterSpacing: '-0.02em' } },
-        { id: 'prods-desc', type: 'paragraph', props: { content: 'Dirancang untuk membantu permodalan usaha anggota, tabungan masa depan, dan perencanaan ibadah dengan sistem bagi hasil murni tanpa riba.', fontSize: '16px', color: '#a7f3d0' } },
+        { id: 'prods-desc', type: 'text', props: { content: 'Dirancang untuk membantu permodalan usaha anggota, tabungan masa depan, dan perencanaan ibadah dengan sistem bagi hasil murni tanpa riba.', fontSize: '16px', color: '#a7f3d0' } },
 
         // Product 1: Simpanan Berjangka Mudharabah
         {
@@ -140,7 +140,7 @@ export default {
             },
             { id: 'prod1-badge', type: 'badge', props: { text: 'AKAD MUDHARABAH MUTHLAQAH', variant: 'solid', background: 'rgba(234,179,8,0.2)', color: '#fde047' } },
             { id: 'prod1-title', type: 'heading', props: { content: 'Simpanan Berjangka Mudharabah (Deposito Syariah)', level: 'h3', fontSize: '19px', fontWeight: '800', color: '#f0fdf4' } },
-            { id: 'prod1-desc', type: 'paragraph', props: { content: 'Investasi dana amanah dengan jangka waktu 3, 6, 12 bulan. Pembagian bagi hasil nisbah kompetitif yang ditransfer langsung ke rekening tabungan anggota setiap bulan.', fontSize: '13px', color: '#94a3b8' } },
+            { id: 'prod1-desc', type: 'text', props: { content: 'Investasi dana amanah dengan jangka waktu 3, 6, 12 bulan. Pembagian bagi hasil nisbah kompetitif yang ditransfer langsung ke rekening tabungan anggota setiap bulan.', fontSize: '13px', color: '#94a3b8' } },
             { id: 'prod1-nisbah', type: 'heading', props: { content: 'Nisbah: 65% Anggota : 35% BMT | Minimal Rp 1.000.000', level: 'h4', fontSize: '12px', fontWeight: '700', color: '#fde047' } },
           ]
         },
@@ -165,7 +165,7 @@ export default {
             },
             { id: 'prod2-badge', type: 'badge', props: { text: 'AKAD MURABAHAH JUAL-BELI', variant: 'solid', background: 'rgba(16,185,129,0.2)', color: '#6ee7b7' } },
             { id: 'prod2-title', type: 'heading', props: { content: 'Pembiayaan Modal Usaha & Pengadaan Barang', level: 'h3', fontSize: '19px', fontWeight: '800', color: '#f0fdf4' } },
-            { id: 'prod2-desc', type: 'paragraph', props: { content: 'Bantuan modal pengadaan stok dagang, mesin produksi, dan inventaris usaha toko dengan skema cicilan margin transparan yang disepakati bersama tanpa denda berlipat.', fontSize: '13px', color: '#94a3b8' } },
+            { id: 'prod2-desc', type: 'text', props: { content: 'Bantuan modal pengadaan stok dagang, mesin produksi, dan inventaris usaha toko dengan skema cicilan margin transparan yang disepakati bersama tanpa denda berlipat.', fontSize: '13px', color: '#94a3b8' } },
             { id: 'prod2-nisbah', type: 'heading', props: { content: 'Plafon: s/d Rp 250 Juta | Tenor Fleksibel 6 - 36 Bulan', level: 'h4', fontSize: '12px', fontWeight: '700', color: '#6ee7b7' } },
           ]
         },
@@ -190,7 +190,7 @@ export default {
             },
             { id: 'prod3-badge', type: 'badge', props: { text: 'AKAD WADI\'AH YAD DHAMANAH', variant: 'solid', background: 'rgba(234,179,8,0.2)', color: '#fde047' } },
             { id: 'prod3-title', type: 'heading', props: { content: 'Tabungan Rencana Haji, Umroh & Qurban', level: 'h3', fontSize: '19px', fontWeight: '800', color: '#f0fdf4' } },
-            { id: 'prod3-desc', type: 'paragraph', props: { content: 'Simpanan titipan aman tanpa biaya administrasi bulanan untuk mewujudkan niat suci ibadah ke tanah suci dan ibadah qurban tahunan dengan pendampingan bimbingan resmi.', fontSize: '13px', color: '#94a3b8' } },
+            { id: 'prod3-desc', type: 'text', props: { content: 'Simpanan titipan aman tanpa biaya administrasi bulanan untuk mewujudkan niat suci ibadah ke tanah suci dan ibadah qurban tahunan dengan pendampingan bimbingan resmi.', fontSize: '13px', color: '#94a3b8' } },
             { id: 'prod3-nisbah', type: 'heading', props: { content: 'Bebas Biaya Admin | Bonus Hadiah & Pendampingan Porsi', level: 'h4', fontSize: '12px', fontWeight: '700', color: '#fde047' } },
           ]
         },
@@ -205,7 +205,7 @@ export default {
       components: [
         { id: 'shu-badge', type: 'badge', props: { text: '📊 TRANSPARANSI SHU & KEPATUHAN SYARIAH', variant: 'outline', background: 'rgba(234,179,8,0.15)', color: '#fde047', borderColor: 'rgba(234,179,8,0.45)' } },
         { id: 'shu-title', type: 'heading', props: { content: 'Distribusi Sisa Hasil Usaha (SHU) Adil & Audit Terbuka', level: 'h2', fontSize: '38px', fontWeight: '900', color: '#f0fdf4', letterSpacing: '-0.02em' } },
-        { id: 'shu-desc', type: 'paragraph', props: { content: 'Prinsip dari anggota, oleh anggota, untuk anggota dijalankan dengan akuntabilitas laporan keuangan WTP (Wajar Tanpa Pengecualian) setiap tahun.', fontSize: '16px', color: '#a7f3d0' } },
+        { id: 'shu-desc', type: 'text', props: { content: 'Prinsip dari anggota, oleh anggota, untuk anggota dijalankan dengan akuntabilitas laporan keuangan WTP (Wajar Tanpa Pengecualian) setiap tahun.', fontSize: '16px', color: '#a7f3d0' } },
 
         // Card 1: Pembagian SHU Tepat Waktu
         {
@@ -215,7 +215,7 @@ export default {
           childrenComponents: [
             { id: 'shu1-tag', type: 'badge', props: { text: 'BAGI HASIL SHU', variant: 'solid', background: 'rgba(234,179,8,0.2)', color: '#fde047' } },
             { id: 'shu1-title', type: 'heading', props: { content: 'Pembagian SHU Rutin Setiap RAT Tahunan', level: 'h3', fontSize: '18px', fontWeight: '800', color: '#f0fdf4' } },
-            { id: 'shu1-desc', type: 'paragraph', props: { content: 'SHU dibagikan secara proporsional berdasarkan kontribusi simpanan dan keaktifan transaksi pembiayaan masing-masing anggota.', fontSize: '13px', color: '#94a3b8' } },
+            { id: 'shu1-desc', type: 'text', props: { content: 'SHU dibagikan secara proporsional berdasarkan kontribusi simpanan dan keaktifan transaksi pembiayaan masing-masing anggota.', fontSize: '13px', color: '#94a3b8' } },
           ]
         },
 
@@ -227,7 +227,7 @@ export default {
           childrenComponents: [
             { id: 'shu2-tag', type: 'badge', props: { text: 'AUDIT INDEPENDEN', variant: 'solid', background: 'rgba(16,185,129,0.2)', color: '#6ee7b7' } },
             { id: 'shu2-title', type: 'heading', props: { content: 'Predikat Opini WTP (Wajar Tanpa Pengecualian)', level: 'h3', fontSize: '18px', fontWeight: '800', color: '#f0fdf4' } },
-            { id: 'shu2-desc', type: 'paragraph', props: { content: 'Laporan keuangan diaudit berkala oleh Kantor Akuntan Publik (KAP) terdaftar OJK dan Kemenkop secara independen.', fontSize: '13px', color: '#94a3b8' } },
+            { id: 'shu2-desc', type: 'text', props: { content: 'Laporan keuangan diaudit berkala oleh Kantor Akuntan Publik (KAP) terdaftar OJK dan Kemenkop secara independen.', fontSize: '13px', color: '#94a3b8' } },
           ]
         },
 
@@ -239,7 +239,7 @@ export default {
           childrenComponents: [
             { id: 'shu3-tag', type: 'badge', props: { text: 'BAITUL MAAL ZISWAF', variant: 'solid', background: 'rgba(234,179,8,0.2)', color: '#fde047' } },
             { id: 'shu3-title', type: 'heading', props: { content: 'Pemberdayaan Dana ZISWAF Produktif', level: 'h3', fontSize: '18px', fontWeight: '800', color: '#f0fdf4' } },
-            { id: 'shu3-desc', type: 'paragraph', props: { content: 'Penyaluran zakat, infaq, sedekah, dan wakaf untuk beasiswa anak anggota kurang mampu dan modal bergulir mustahik tanpa bunga (Qardhul Hasan).', fontSize: '13px', color: '#94a3b8' } },
+            { id: 'shu3-desc', type: 'text', props: { content: 'Penyaluran zakat, infaq, sedekah, dan wakaf untuk beasiswa anak anggota kurang mampu dan modal bergulir mustahik tanpa bunga (Qardhul Hasan).', fontSize: '13px', color: '#94a3b8' } },
           ]
         },
 
@@ -251,7 +251,7 @@ export default {
           childrenComponents: [
             { id: 'shu4-tag', type: 'badge', props: { text: 'EDUKASI & CAPACITY BUILDING', variant: 'solid', background: 'rgba(16,185,129,0.2)', color: '#6ee7b7' } },
             { id: 'shu4-title', type: 'heading', props: { content: 'Inkubasi Bisnis & Pelatihan Usaha Mikro', level: 'h3', fontSize: '18px', fontWeight: '800', color: '#f0fdf4' } },
-            { id: 'shu4-desc', type: 'paragraph', props: { content: 'Fasilitas bimbingan pembukuan digital, sertifikasi halal gratis, dan temu bisnis antar-anggota koperasi setiap triwulan.', fontSize: '13px', color: '#94a3b8' } },
+            { id: 'shu4-desc', type: 'text', props: { content: 'Fasilitas bimbingan pembukuan digital, sertifikasi halal gratis, dan temu bisnis antar-anggota koperasi setiap triwulan.', fontSize: '13px', color: '#94a3b8' } },
           ]
         },
 
@@ -263,7 +263,7 @@ export default {
           childrenComponents: [
             { id: 'dps-badge', type: 'badge', props: { text: '📜 DEWAN PENGAWAS SYARIAH (DPS)', variant: 'solid', background: 'rgba(234,179,8,0.25)', color: '#fde047' } },
             { id: 'dps-title', type: 'heading', props: { content: 'Jaminan Kepatuhan Syariah Sepenuhnya (Sharia Compliance)', level: 'h3', fontSize: '22px', fontWeight: '900', color: '#f0fdf4' } },
-            { id: 'dps-desc', type: 'paragraph', props: { content: 'Dewan Pengawas Syariah kami memastikan setiap akad, alur perputaran dana simpanan, dan margin pembiayaan bebas dari unsur maysir (judi), gharar (ketidakjelasan), dan riba (bunga terlarang).', fontSize: '14px', color: '#a7f3d0' } },
+            { id: 'dps-desc', type: 'text', props: { content: 'Dewan Pengawas Syariah kami memastikan setiap akad, alur perputaran dana simpanan, dan margin pembiayaan bebas dari unsur maysir (judi), gharar (ketidakjelasan), dan riba (bunga terlarang).', fontSize: '14px', color: '#a7f3d0' } },
           ]
         }
       ],
@@ -280,7 +280,7 @@ export default {
           childrenComponents: [
             { id: 'cta-syariah-badge', type: 'badge', props: { text: '🕌 PENDAFTARAN ANGGOTA BARU 2026', variant: 'outline', background: 'rgba(234,179,8,0.2)', color: '#fde047', borderColor: 'rgba(234,179,8,0.5)' } },
             { id: 'cta-syariah-title', type: 'heading', props: { content: 'Mari Bergabung & Rasakan Berkah Berkeuangan Bersama Koperasi Syariah', level: 'h2', fontSize: '38px', fontWeight: '900', color: '#f0fdf4', letterSpacing: '-0.02em', textAlign: 'center' } },
-            { id: 'cta-syariah-desc', type: 'paragraph', props: { content: 'Buka rekening simpanan atau ajukan pembiayaan usaha Anda dengan mudah. Nikmati kemudahan layanan digital dan bagi hasil yang menenteramkan hati.', fontSize: '16px', color: '#a7f3d0', textAlign: 'center' } },
+            { id: 'cta-syariah-desc', type: 'text', props: { content: 'Buka rekening simpanan atau ajukan pembiayaan usaha Anda dengan mudah. Nikmati kemudahan layanan digital dan bagi hasil yang menenteramkan hati.', fontSize: '16px', color: '#a7f3d0', textAlign: 'center' } },
             { id: 'cta-syariah-btn1', type: 'button', props: { label: 'Daftar Jadi Anggota Sekarang 🕌', href: 'mailto:daftar@bmtamanah.id', variant: 'primary', size: 'large', radius: 'md', background: 'linear-gradient(135deg, #059669, #047857)', color: '#ffffff', fontWeight: '700' } },
             { id: 'cta-syariah-btn2', type: 'button', props: { label: 'Konsultasi Petugas Layanan (WhatsApp)', href: 'https://wa.me/6281155667788', variant: 'outline', size: 'large', radius: 'md', background: 'rgba(4,47,30,0.8)', color: '#fde047', borderColor: 'rgba(234,179,8,0.4)' } },
           ]
@@ -293,9 +293,9 @@ export default {
       layout: 'kop-footer-syariah',
       components: [
         { id: 'syariah-foot-logo', type: 'heading', props: { content: 'KSPPS BMT AMANAH NUSANTARA', level: 'h3', fontSize: '18px', fontWeight: '900', color: '#f0fdf4', letterSpacing: '0.04em' } },
-        { id: 'syariah-foot-desc', type: 'paragraph', props: { content: 'Koperasi Simpan Pinjam dan Pembiayaan Syariah terpercaya. Berkhidmat memberdayakan ekonomi ummat melalui permodalan mikro, simpanan berkah, dan tata kelola profesional berlandaskan syariat Islam.', fontSize: '13px', color: '#94a3b8' } },
-        { id: 'syariah-foot-addr', type: 'paragraph', props: { content: 'Kantor Pusat: Gedung Graha BMT, Jl. KH. Ahmad Dahlan No. 45, Yogyakarta 55262', fontSize: '13px', color: '#a7f3d0' } },
-        { id: 'syariah-foot-contact', type: 'paragraph', props: { content: 'Call Center: (0274) 556-7890 | WA Anggota: 0811-5566-7788 | Email: layanan@bmtamanah.id', fontSize: '13px', color: '#fde047' } },
+        { id: 'syariah-foot-desc', type: 'text', props: { content: 'Koperasi Simpan Pinjam dan Pembiayaan Syariah terpercaya. Berkhidmat memberdayakan ekonomi ummat melalui permodalan mikro, simpanan berkah, dan tata kelola profesional berlandaskan syariat Islam.', fontSize: '13px', color: '#94a3b8' } },
+        { id: 'syariah-foot-addr', type: 'text', props: { content: 'Kantor Pusat: Gedung Graha BMT, Jl. KH. Ahmad Dahlan No. 45, Yogyakarta 55262', fontSize: '13px', color: '#a7f3d0' } },
+        { id: 'syariah-foot-contact', type: 'text', props: { content: 'Call Center: (0274) 556-7890 | WA Anggota: 0811-5566-7788 | Email: layanan@bmtamanah.id', fontSize: '13px', color: '#fde047' } },
       ],
     },
   ],

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import useMobileNavClose from '../../../utils/useMobileNavClose';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 /**
@@ -8,6 +9,7 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 export default function LogisticsNavTech({ components = [], sectionId = null }) {
   const [promoOpen, setPromoOpen] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
+  useMobileNavClose(menuOpen, setMenuOpen);
 
   const defaultComponents = [
     { id: 'tech-logo', type: 'heading', props: { content: 'TRACKFAST', level: 'h2', fontSize: '20px', fontWeight: '900', color: '#0284c7', letterSpacing: '0.04em' } },
@@ -73,6 +75,7 @@ export default function LogisticsNavTech({ components = [], sectionId = null }) 
               onClick={() => setMenuOpen(v => !v)}
               className="lg:hidden p-2 text-slate-700 hover:bg-slate-100 rounded-xl transition text-base font-bold select-none"
               aria-label="Toggle Navigation Menu"
+              aria-expanded={menuOpen}
             >
               {menuOpen ? '✕' : '☰'}
             </button>

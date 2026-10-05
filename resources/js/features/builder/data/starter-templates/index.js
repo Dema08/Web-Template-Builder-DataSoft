@@ -24,7 +24,7 @@
  *  hero-08 → Solid indigo + radial light, split layout
  */
 
-import { sid } from './helpers.js';
+import { sid, normalizeStarterTemplate } from './helpers.js';
 
 import { category as umkm } from './industries/umkm/index.js';
 import { category as logistik } from './industries/logistik-transportasi/index.js';
@@ -60,6 +60,9 @@ export const INDUSTRY_STARTER_TEMPLATES = {
 
 /**
  * Get all starter templates for a given industry category slug.
+ * Returns mobile-normalized deep clones (registry stays pristine) so every
+ * template renders on small screens and navbar CTAs land in the mobile
+ * dropdown.
  *
  * @param {string} categorySlug - The industry category slug (e.g. 'umkm', 'logistik-transportansi').
  * @returns {Array} Array of starter template objects, or empty array if not found.
@@ -83,11 +86,13 @@ export const getCategoryStarterTemplates = (categorySlug) => {
 
   const normalizedSlug = slugMap[categorySlug] || categorySlug;
   const categoryData = INDUSTRY_STARTER_TEMPLATES[normalizedSlug];
-  return categoryData ? categoryData.templates : [];
+  if (!categoryData) return [];
+  return categoryData.templates.map((t) => normalizeStarterTemplate(t));
 };
 
 /**
  * Get a single starter template by its unique ID.
+ * Returns a mobile-normalized deep clone (registry stays pristine).
  *
  * @param {string} templateId - The template id (e.g. 'umkm-modern').
  * @returns {object|null} The template object, or null if not found.
@@ -95,7 +100,7 @@ export const getCategoryStarterTemplates = (categorySlug) => {
 export const getStarterTemplateById = (templateId) => {
   for (const category of Object.values(INDUSTRY_STARTER_TEMPLATES)) {
     const found = category.templates.find(t => t.id === templateId);
-    if (found) return found;
+    if (found) return normalizeStarterTemplate(found);
   }
   return null;
 };
@@ -114,3 +119,11 @@ export const getTotalStarterTemplateCount = () => {
 
 // Re-export the sid helper for downstream consumers
 export { sid };
+// Re-export mobile normalizers so renderers/tests can reuse the same rules
+export {
+  NAV_CTA_ID_FIXES,
+  isNavCtaId,
+  normalizeNavbarComponents,
+  normalizeComponent,
+  normalizeStarterTemplate,
+} from './helpers.js';

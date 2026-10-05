@@ -44,7 +44,7 @@ export default {
       components: [
         { id: 'eco-badge', type: 'badge', props: { text: '🌱 GREEN SUSTAINABLE FMCG & PACKAGING PLANT', variant: 'outline', background: 'rgba(16,185,129,0.15)', color: '#6ee7b7', borderColor: 'rgba(16,185,129,0.45)' } },
         { id: 'eco-title', type: 'heading', props: { content: 'Manufaktur FMCG Ramah Lingkungan & Kemasan Biodegradable', level: 'h1', fontSize: '46px', fontWeight: '900', color: '#f0fdf4', letterSpacing: '-0.025em' } },
-        { id: 'eco-desc', type: 'paragraph', props: { content: 'Pabrik manufaktur kontrak (OEM/ODM) berstandar Cleanroom ISO Class 8 bertenaga 100% panel surya untuk produk makanan minuman, kosmetik organik, dan kemasan daur ulang ramah bumi.', fontSize: '17px', color: '#a7f3d0' } },
+        { id: 'eco-desc', type: 'text', props: { content: 'Pabrik manufaktur kontrak (OEM/ODM) berstandar Cleanroom ISO Class 8 bertenaga 100% panel surya untuk produk makanan minuman, kosmetik organik, dan kemasan daur ulang ramah bumi.', fontSize: '17px', color: '#a7f3d0' } },
         { id: 'eco-btn1', type: 'button', props: { label: 'Konsultasi OEM / Private Label 🌱', href: '#oem', variant: 'primary', size: 'large', radius: 'full', background: 'linear-gradient(135deg, #10b981, #059669)', color: '#ffffff', fontWeight: '700' } },
         { id: 'eco-btn2', type: 'button', props: { label: 'Lihat Katalog Kemasan Hijau', href: '#products', variant: 'outline', size: 'large', radius: 'full', background: 'rgba(2,44,34,0.7)', color: '#6ee7b7', borderColor: 'rgba(16,185,129,0.4)' } },
 
@@ -55,7 +55,7 @@ export default {
           props: { background: '#032c1e', borderColor: 'rgba(16,185,129,0.3)', borderWidth: '1px', borderRadius: '12px', padding: '16px', shadow: 'lg', hoverEffect: 'lift' },
           childrenComponents: [
             { id: 'eco-stat1-num', type: 'heading', props: { content: '1.5 Juta', level: 'h3', fontSize: '26px', fontWeight: '900', color: '#6ee7b7' } },
-            { id: 'eco-stat1-lbl', type: 'paragraph', props: { content: 'Kapasitas Produksi / Hari', fontSize: '12px', color: '#94a3b8' } },
+            { id: 'eco-stat1-lbl', type: 'text', props: { content: 'Kapasitas Produksi / Hari', fontSize: '12px', color: '#94a3b8' } },
           ]
         },
         {
@@ -64,7 +64,7 @@ export default {
           props: { background: '#032c1e', borderColor: 'rgba(16,185,129,0.3)', borderWidth: '1px', borderRadius: '12px', padding: '16px', shadow: 'lg', hoverEffect: 'lift' },
           childrenComponents: [
             { id: 'eco-stat2-num', type: 'heading', props: { content: '100% Solar', level: 'h3', fontSize: '26px', fontWeight: '900', color: '#86efac' } },
-            { id: 'eco-stat2-lbl', type: 'paragraph', props: { content: 'Energi Terbarukan Atap Pabrik', fontSize: '12px', color: '#94a3b8' } },
+            { id: 'eco-stat2-lbl', type: 'text', props: { content: 'Energi Terbarukan Atap Pabrik', fontSize: '12px', color: '#94a3b8' } },
           ]
         },
         {
@@ -73,7 +73,7 @@ export default {
           props: { background: '#032c1e', borderColor: 'rgba(16,185,129,0.3)', borderWidth: '1px', borderRadius: '12px', padding: '16px', shadow: 'lg', hoverEffect: 'lift' },
           childrenComponents: [
             { id: 'eco-stat3-num', type: 'heading', props: { content: '0% Landfill', level: 'h3', fontSize: '26px', fontWeight: '900', color: '#a7f3d0' } },
-            { id: 'eco-stat3-lbl', type: 'paragraph', props: { content: 'Zero Waste Circular Economy', fontSize: '12px', color: '#94a3b8' } },
+            { id: 'eco-stat3-lbl', type: 'text', props: { content: 'Zero Waste Circular Economy', fontSize: '12px', color: '#94a3b8' } },
           ]
         },
         {
@@ -82,7 +82,7 @@ export default {
           props: { background: '#032c1e', borderColor: 'rgba(16,185,129,0.3)', borderWidth: '1px', borderRadius: '12px', padding: '16px', shadow: 'lg', hoverEffect: 'lift' },
           childrenComponents: [
             { id: 'eco-stat4-num', type: 'heading', props: { content: 'BPOM & Halal', level: 'h3', fontSize: '26px', fontWeight: '900', color: '#6ee7b7' } },
-            { id: 'eco-stat4-lbl', type: 'paragraph', props: { content: 'Grade A CPPOB & CPKB', fontSize: '12px', color: '#94a3b8' } },
+            { id: 'eco-stat4-lbl', type: 'text', props: { content: 'Grade A CPPOB & CPKB', fontSize: '12px', color: '#94a3b8' } },
           ]
         },
 
@@ -106,7 +106,7 @@ export default {
             },
             { id: 'eco-card-badge', type: 'badge', props: { text: '🍃 CLEANROOM ISO CLASS 8 · KARAWANG PLANT', variant: 'solid', background: 'rgba(16,185,129,0.25)', color: '#6ee7b7' } },
             { id: 'eco-card-title', type: 'heading', props: { content: 'Fasilitas Manufaktur Steril & Packaging Otomatis', level: 'h4', fontSize: '17px', fontWeight: '800', color: '#f0fdf4' } },
-            { id: 'eco-card-desc', type: 'paragraph', props: { content: 'Dilengkapi automated filling & sealing berkecepatan tinggi, sistem HEPA filter 99.97%, dan lini packaging biodegradable non-plastik.', fontSize: '13px', color: '#a7f3d0' } },
+            { id: 'eco-card-desc', type: 'text', props: { content: 'Dilengkapi automated filling & sealing berkecepatan tinggi, sistem HEPA filter 99.97%, dan lini packaging biodegradable non-plastik.', fontSize: '13px', color: '#a7f3d0' } },
           ]
         }
       ],
@@ -118,7 +118,7 @@ export default {
       components: [
         { id: 'ecoprod-badge', type: 'badge', props: { text: '🍃 LINI PRODUKSI & OEM MANUFAKTUR', variant: 'outline', background: 'rgba(16,185,129,0.15)', color: '#6ee7b7', borderColor: 'rgba(16,185,129,0.45)' } },
         { id: 'ecoprod-title', type: 'heading', props: { content: 'Solusi OEM & Manufaktur Berkelanjutan Skala Besar', level: 'h2', fontSize: '38px', fontWeight: '900', color: '#f0fdf4', letterSpacing: '-0.02em' } },
-        { id: 'ecoprod-desc', type: 'paragraph', props: { content: 'Dari formulasi bahan organik tersertifikasi hingga kemasan ramah lingkungan yang dapat terurai alami dalam waktu 180 hari.', fontSize: '16px', color: '#a7f3d0' } },
+        { id: 'ecoprod-desc', type: 'text', props: { content: 'Dari formulasi bahan organik tersertifikasi hingga kemasan ramah lingkungan yang dapat terurai alami dalam waktu 180 hari.', fontSize: '16px', color: '#a7f3d0' } },
 
         // Category 1: Biodegradable Packaging
         {
@@ -140,7 +140,7 @@ export default {
             },
             { id: 'eco1-badge', type: 'badge', props: { text: '100% COMPOSTABLE', variant: 'solid', background: 'rgba(16,185,129,0.2)', color: '#6ee7b7' } },
             { id: 'eco1-title', type: 'heading', props: { content: 'Kemasan Makanan Biodegradable & Box Daur Ulang', level: 'h3', fontSize: '19px', fontWeight: '800', color: '#f0fdf4' } },
-            { id: 'eco1-desc', type: 'paragraph', props: { content: 'Kemasan food-grade berbahan serat tebu (bagasse) dan pati jagung (PLA) tahan panas hingga 120°C, microwave safe, dan bebas racun mikroplastik.', fontSize: '13px', color: '#94a3b8' } },
+            { id: 'eco1-desc', type: 'text', props: { content: 'Kemasan food-grade berbahan serat tebu (bagasse) dan pati jagung (PLA) tahan panas hingga 120°C, microwave safe, dan bebas racun mikroplastik.', fontSize: '13px', color: '#94a3b8' } },
             { id: 'eco1-moq', type: 'heading', props: { content: 'MOQ: 10.000 Pcs | Sertifikasi: ASTM D6400, EN 13432', level: 'h4', fontSize: '12px', fontWeight: '700', color: '#6ee7b7' } },
           ]
         },
@@ -165,7 +165,7 @@ export default {
             },
             { id: 'eco2-badge', type: 'badge', props: { text: 'CPKB GRADE A & HALAL', variant: 'solid', background: 'rgba(16,185,129,0.2)', color: '#6ee7b7' } },
             { id: 'eco2-title', type: 'heading', props: { content: 'Kontrak Manufaktur Kosmetik & Skincare Organik', level: 'h3', fontSize: '19px', fontWeight: '800', color: '#f0fdf4' } },
-            { id: 'eco2-desc', type: 'paragraph', props: { content: 'Layanan maklon kosmetik bersih dari formulasi bahan botani lokal, uji efikasi klinis, pendaftaran izin edar BPOM, hingga pengemasan botol ramah lingkungan.', fontSize: '13px', color: '#94a3b8' } },
+            { id: 'eco2-desc', type: 'text', props: { content: 'Layanan maklon kosmetik bersih dari formulasi bahan botani lokal, uji efikasi klinis, pendaftaran izin edar BPOM, hingga pengemasan botol ramah lingkungan.', fontSize: '13px', color: '#94a3b8' } },
             { id: 'eco2-moq', type: 'heading', props: { content: 'MOQ: 1.000 Unit | Layanan Full OEM Formulasi Custom', level: 'h4', fontSize: '12px', fontWeight: '700', color: '#6ee7b7' } },
           ]
         },
@@ -190,7 +190,7 @@ export default {
             },
             { id: 'eco3-badge', type: 'badge', props: { text: 'ASEPTIC HOT-FILL 12.000 BPH', variant: 'solid', background: 'rgba(16,185,129,0.2)', color: '#6ee7b7' } },
             { id: 'eco3-title', type: 'heading', props: { content: 'Bottling & Packaging Minuman Fungsional Steril', level: 'h3', fontSize: '19px', fontWeight: '800', color: '#f0fdf4' } },
-            { id: 'eco3-desc', type: 'paragraph', props: { content: 'Lini pengisian aseptik otomatis untuk RTD kombucha, cold-pressed juice, dan suplemen herbal cair dengan kemasan botol kaca daur ulang dan aluminium kaleng.', fontSize: '13px', color: '#94a3b8' } },
+            { id: 'eco3-desc', type: 'text', props: { content: 'Lini pengisian aseptik otomatis untuk RTD kombucha, cold-pressed juice, dan suplemen herbal cair dengan kemasan botol kaca daur ulang dan aluminium kaleng.', fontSize: '13px', color: '#94a3b8' } },
             { id: 'eco3-moq', type: 'heading', props: { content: 'Kapasitas: 50.000 Botol/Hari | Sertifikasi: FSSC 22000', level: 'h4', fontSize: '12px', fontWeight: '700', color: '#6ee7b7' } },
           ]
         },
@@ -215,7 +215,7 @@ export default {
             },
             { id: 'eco4-badge', type: 'badge', props: { text: 'MOLDED PULP FIBER', variant: 'solid', background: 'rgba(16,185,129,0.2)', color: '#6ee7b7' } },
             { id: 'eco4-title', type: 'heading', props: { content: 'Molded Pulp Cushioning & Industrial Blister', level: 'h3', fontSize: '19px', fontWeight: '800', color: '#f0fdf4' } },
-            { id: 'eco4-desc', type: 'paragraph', props: { content: 'Pelindung kemasan elektronik, botol parfum, dan kosmetik berbahan bubur kertas daur ulang 100% menggantikan styrofoam dan plastik bubble wrap.', fontSize: '13px', color: '#94a3b8' } },
+            { id: 'eco4-desc', type: 'text', props: { content: 'Pelindung kemasan elektronik, botol parfum, dan kosmetik berbahan bubur kertas daur ulang 100% menggantikan styrofoam dan plastik bubble wrap.', fontSize: '13px', color: '#94a3b8' } },
             { id: 'eco4-moq', type: 'heading', props: { content: 'Custom Mold Design 3D | Kekuatan Beban Uji Drop-Test', level: 'h4', fontSize: '12px', fontWeight: '700', color: '#6ee7b7' } },
           ]
         },
@@ -230,7 +230,7 @@ export default {
       components: [
         { id: 'esg-badge', type: 'badge', props: { text: '🌱 KOMITMEN KEBERLANJUTAN & ESG PERFORMANCE', variant: 'outline', background: 'rgba(16,185,129,0.15)', color: '#6ee7b7', borderColor: 'rgba(16,185,129,0.45)' } },
         { id: 'esg-title', type: 'heading', props: { content: 'Standar Pabrik Hijau Ramah Lingkungan Masa Depan', level: 'h2', fontSize: '38px', fontWeight: '900', color: '#f0fdf4', letterSpacing: '-0.02em' } },
-        { id: 'esg-desc', type: 'paragraph', props: { content: 'Kami membuktikan bahwa efisiensi manufaktur skala besar dapat berjalan selaras dengan pelestarian alam dan pengurangan jejak karbon global.', fontSize: '16px', color: '#a7f3d0' } },
+        { id: 'esg-desc', type: 'text', props: { content: 'Kami membuktikan bahwa efisiensi manufaktur skala besar dapat berjalan selaras dengan pelestarian alam dan pengurangan jejak karbon global.', fontSize: '16px', color: '#a7f3d0' } },
 
         // Metric 1: Solar PV Rooftop
         {
@@ -240,7 +240,7 @@ export default {
           childrenComponents: [
             { id: 'esg1-tag', type: 'badge', props: { text: 'CLEAN ENERGY', variant: 'solid', background: 'rgba(16,185,129,0.2)', color: '#6ee7b7' } },
             { id: 'esg1-title', type: 'heading', props: { content: '2.4 MWp Panel Surya Atap Pabrik Terpasang', level: 'h3', fontSize: '18px', fontWeight: '800', color: '#f0fdf4' } },
-            { id: 'esg1-desc', type: 'paragraph', props: { content: 'Menghasilkan 3.200 MWh energi bersih per tahun, menyuplai 100% kebutuhan listrik lini produksi utama di siang hari.', fontSize: '13px', color: '#94a3b8' } },
+            { id: 'esg1-desc', type: 'text', props: { content: 'Menghasilkan 3.200 MWh energi bersih per tahun, menyuplai 100% kebutuhan listrik lini produksi utama di siang hari.', fontSize: '13px', color: '#94a3b8' } },
           ]
         },
 
@@ -252,7 +252,7 @@ export default {
           childrenComponents: [
             { id: 'esg2-tag', type: 'badge', props: { text: 'WATER STEWARDSHIP', variant: 'solid', background: 'rgba(16,185,129,0.2)', color: '#6ee7b7' } },
             { id: 'esg2-title', type: 'heading', props: { content: 'Daur Ulang Air 85% dengan Sistem Ultrafiltrasi', level: 'h3', fontSize: '18px', fontWeight: '800', color: '#f0fdf4' } },
-            { id: 'esg2-desc', type: 'paragraph', props: { content: 'Instalasi pengolahan air limbah terpadu (WWTP) dengan teknologi membrane bioreactor memastikan zero-liquid harmful contamination.', fontSize: '13px', color: '#94a3b8' } },
+            { id: 'esg2-desc', type: 'text', props: { content: 'Instalasi pengolahan air limbah terpadu (WWTP) dengan teknologi membrane bioreactor memastikan zero-liquid harmful contamination.', fontSize: '13px', color: '#94a3b8' } },
           ]
         },
 
@@ -264,7 +264,7 @@ export default {
           childrenComponents: [
             { id: 'esg3-tag', type: 'badge', props: { text: 'CARBON OFFSET', variant: 'solid', background: 'rgba(16,185,129,0.2)', color: '#6ee7b7' } },
             { id: 'esg3-title', type: 'heading', props: { content: '14.000 Ton Emisi Karbon Berhasil Direduksi', level: 'h3', fontSize: '18px', fontWeight: '800', color: '#f0fdf4' } },
-            { id: 'esg3-desc', type: 'paragraph', props: { content: 'Setara dengan menanam 250.000 pohon produktif di hutan konservasi tropis bersama mitra petani lokal.', fontSize: '13px', color: '#94a3b8' } },
+            { id: 'esg3-desc', type: 'text', props: { content: 'Setara dengan menanam 250.000 pohon produktif di hutan konservasi tropis bersama mitra petani lokal.', fontSize: '13px', color: '#94a3b8' } },
           ]
         },
 
@@ -276,7 +276,7 @@ export default {
           childrenComponents: [
             { id: 'esg4-tag', type: 'badge', props: { text: 'CIRCULAR PACKAGING', variant: 'solid', background: 'rgba(16,185,129,0.2)', color: '#6ee7b7' } },
             { id: 'esg4-title', type: 'heading', props: { content: 'Sertifikasi FSC & Kompos Alami Rumah Tangga', level: 'h3', fontSize: '18px', fontWeight: '800', color: '#f0fdf4' } },
-            { id: 'esg4-desc', type: 'paragraph', props: { content: 'Semua bahan baku karton dan kertas kemasan bersertifikat Forest Stewardship Council (FSC) dari hutan tanaman industri lestari.', fontSize: '13px', color: '#94a3b8' } },
+            { id: 'esg4-desc', type: 'text', props: { content: 'Semua bahan baku karton dan kertas kemasan bersertifikat Forest Stewardship Council (FSC) dari hutan tanaman industri lestari.', fontSize: '13px', color: '#94a3b8' } },
           ]
         },
 
@@ -288,7 +288,7 @@ export default {
           childrenComponents: [
             { id: 'esgb-badge', type: 'badge', props: { text: '📋 AUDITED ESG REPORT 2026', variant: 'solid', background: 'rgba(16,185,129,0.25)', color: '#6ee7b7' } },
             { id: 'esgb-title', type: 'heading', props: { content: 'Transparansi Penuh untuk Mitra Brand Korporasi Global', level: 'h3', fontSize: '22px', fontWeight: '900', color: '#f0fdf4' } },
-            { id: 'esgb-desc', type: 'paragraph', props: { content: 'Dapatkan laporan audit jejak karbon (Scope 1, 2, 3 GHG Protocol) dan sertifikat keberlanjutan resmi untuk setiap batch produksi produk private label brand Anda.', fontSize: '14px', color: '#a7f3d0' } },
+            { id: 'esgb-desc', type: 'text', props: { content: 'Dapatkan laporan audit jejak karbon (Scope 1, 2, 3 GHG Protocol) dan sertifikat keberlanjutan resmi untuk setiap batch produksi produk private label brand Anda.', fontSize: '14px', color: '#a7f3d0' } },
           ]
         }
       ],
@@ -305,7 +305,7 @@ export default {
           childrenComponents: [
             { id: 'cta-eco-badge', type: 'badge', props: { text: '🌱 KERJASAMA KONTRAK OEM & PRIVATE LABEL', variant: 'outline', background: 'rgba(16,185,129,0.2)', color: '#6ee7b7', borderColor: 'rgba(16,185,129,0.5)' } },
             { id: 'cta-eco-title', type: 'heading', props: { content: 'Wujudkan Produk Ramah Lingkungan untuk Brand Anda Bersama Kami', level: 'h2', fontSize: '38px', fontWeight: '900', color: '#f0fdf4', letterSpacing: '-0.02em', textAlign: 'center' } },
-            { id: 'cta-eco-desc', type: 'paragraph', props: { content: 'Dapatkan sample kit kemasan biodegradable gratis dan konsultasi formulasi produk bersama tim R&D ahli kami. Proses cepat, legalitas BPOM terjamin, dan kapasitas produksi masif.', fontSize: '16px', color: '#a7f3d0', textAlign: 'center' } },
+            { id: 'cta-eco-desc', type: 'text', props: { content: 'Dapatkan sample kit kemasan biodegradable gratis dan konsultasi formulasi produk bersama tim R&D ahli kami. Proses cepat, legalitas BPOM terjamin, dan kapasitas produksi masif.', fontSize: '16px', color: '#a7f3d0', textAlign: 'center' } },
             { id: 'cta-eco-btn1', type: 'button', props: { label: 'Klaim Sample Kit & Penawaran OEM 🌱', href: 'mailto:oem@ecoplant.id', variant: 'primary', size: 'large', radius: 'full', background: 'linear-gradient(135deg, #10b981, #059669)', color: '#ffffff', fontWeight: '700' } },
             { id: 'cta-eco-btn2', type: 'button', props: { label: 'Chat R&D Specialist (WhatsApp)', href: 'https://wa.me/6281144556677', variant: 'outline', size: 'large', radius: 'full', background: 'rgba(2,44,34,0.8)', color: '#6ee7b7', borderColor: 'rgba(16,185,129,0.5)' } },
           ]
@@ -318,9 +318,9 @@ export default {
       layout: 'ind-footer-eco',
       components: [
         { id: 'eco-foot-logo', type: 'heading', props: { content: 'ECOPLANT NUSANTARA', level: 'h3', fontSize: '18px', fontWeight: '900', color: '#f0fdf4', letterSpacing: '0.04em' } },
-        { id: 'eco-foot-desc', type: 'paragraph', props: { content: 'Pionir manufaktur kontrak FMCG dan kemasan ramah lingkungan berskala industri di Indonesia. Berkomitmen mencapai Net-Zero Emission dengan standar kualitas global.', fontSize: '13px', color: '#94a3b8' } },
-        { id: 'eco-foot-plant', type: 'paragraph', props: { content: 'Eco Plant & Cleanroom: Kawasan Industri KIIC Lot B-15, Karawang Barat, Jawa Barat 41361', fontSize: '13px', color: '#a7f3d0' } },
-        { id: 'eco-foot-contact', type: 'paragraph', props: { content: 'B2B Hotline: (0267) 840-5500 | Email: oem@ecoplant.id | Web: www.ecoplant.id', fontSize: '13px', color: '#6ee7b7' } },
+        { id: 'eco-foot-desc', type: 'text', props: { content: 'Pionir manufaktur kontrak FMCG dan kemasan ramah lingkungan berskala industri di Indonesia. Berkomitmen mencapai Net-Zero Emission dengan standar kualitas global.', fontSize: '13px', color: '#94a3b8' } },
+        { id: 'eco-foot-plant', type: 'text', props: { content: 'Eco Plant & Cleanroom: Kawasan Industri KIIC Lot B-15, Karawang Barat, Jawa Barat 41361', fontSize: '13px', color: '#a7f3d0' } },
+        { id: 'eco-foot-contact', type: 'text', props: { content: 'B2B Hotline: (0267) 840-5500 | Email: oem@ecoplant.id | Web: www.ecoplant.id', fontSize: '13px', color: '#6ee7b7' } },
       ],
     },
   ],

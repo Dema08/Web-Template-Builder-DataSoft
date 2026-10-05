@@ -223,9 +223,15 @@ export const useBuilderStore = create((set, get) => ({
 
   loadSections: (sectionsData, pagesData = {}) => {
     const normalizeComponent = (c, idx = 0) => {
+      // Legacy starter-template used `type: 'paragraph'` (now normalized to
+      // `text` in the starter-template sources). Keep a tolerant remap here
+      // so old drafts/DB rows still render on all devices.
+      // NOTE: Do NOT rename button ids here — several navbar layouts filter
+      // by explicit id (e.g. `heavy-nav-cta`), so renaming would hide the CTA.
+      const rawType = c.type === 'paragraph' ? 'text' : c.type;
       const normalized = {
         id: c.id || `comp-${Date.now()}-${idx}-${Math.random().toString(36).substr(2, 9)}`,
-        type: c.type,
+        type: rawType,
         props: c.props || {},
         position: c.position || { x: 0, y: 0, width: null, height: null, rotation: 0, scale: 1, zIndex: 1 },
         isLocked: c.isLocked || false,
@@ -1363,6 +1369,8 @@ export const broadcastBuilderState = (state) => {
     industrySlug: state.industrySlug,
     status: state.status,
     templateId: state.templateId,
+    deviceView: state.deviceView || 'desktop',
+    viewport: state.deviceView || 'desktop',
     timestamp: Date.now(),
   };
 

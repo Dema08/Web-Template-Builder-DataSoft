@@ -19,7 +19,29 @@ export default function AdminTemplatePreview() {
   const { id, slug } = useParams();
   const navigate = useNavigate();
 
-  const [viewport, setViewport] = useState('desktop'); // 'desktop' | 'tablet' | 'mobile'
+  const getInitialViewport = () => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const fromQuery = params.get('viewport') || params.get('deviceView');
+      if (['desktop', 'tablet', 'mobile'].includes(fromQuery)) return fromQuery;
+    } catch (e) { /* abaikan */ }
+    try {
+      const raw = localStorage.getItem('template_builder_preview_data');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        const fromPayload = parsed.viewport || parsed.deviceView;
+        if (['desktop', 'tablet', 'mobile'].includes(fromPayload)) return fromPayload;
+      }
+    } catch (e) { /* abaikan */ }
+    try {
+      const storeView = useBuilderStore.getState()?.deviceView;
+      if (['desktop', 'tablet', 'mobile'].includes(storeView)) return storeView;
+    } catch (e) { /* abaikan */ }
+    return 'desktop';
+  };
+
+  const [viewport, setViewport] = useState(getInitialViewport); // 'desktop' | 'tablet' | 'mobile'
+  const userPickedViewportRef = useRef(false);
   const [zoom, setZoom] = useState(100); // 100 | 90 | 80 | 75
   const [showZoomMenu, setShowZoomMenu] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(Date.now());
@@ -41,9 +63,19 @@ export default function AdminTemplatePreview() {
 
   // Handle viewport changes and sync with builder store
   const handleViewportChange = (newViewport) => {
+    userPickedViewportRef.current = true;
     setViewport(newViewport);
     if (setDeviceView) {
       setDeviceView(newViewport);
+    }
+  };
+
+  const syncViewportFromPayload = (parsed) => {
+    if (userPickedViewportRef.current || !parsed) return;
+    const fromPayload = parsed.viewport || parsed.deviceView;
+    if (['desktop', 'tablet', 'mobile'].includes(fromPayload) && fromPayload !== viewport) {
+      setViewport(fromPayload);
+      if (setDeviceView) setDeviceView(fromPayload);
     }
   };
 
@@ -81,8 +113,11 @@ export default function AdminTemplatePreview() {
       if (rawData) {
         const parsed = JSON.parse(rawData);
         if (parsed.sections && Array.isArray(parsed.sections) && parsed.sections.length > 0) {
+          syncViewportFromPayload(parsed);
           applyDataIfChanged(parsed.sections, parsed.pages || {}, parsed.templateName, parsed.industrySlug);
           loaded = true;
+        } else {
+          syncViewportFromPayload(parsed);
         }
       }
     } catch (err) {
@@ -133,6 +168,7 @@ export default function AdminTemplatePreview() {
       try {
         channel = new BroadcastChannel('datasoft_builder_sync');
         channel.onmessage = (event) => {
+          syncViewportFromPayload(event.data);
           if (event.data && event.data.sections && event.data.sections.length > 0) {
             applyDataIfChanged(event.data.sections, event.data.pages || {}, event.data.templateName, event.data.industrySlug);
           }
@@ -146,6 +182,7 @@ export default function AdminTemplatePreview() {
       if (e.key === 'template_builder_preview_data' && e.newValue) {
         try {
           const parsed = JSON.parse(e.newValue);
+          syncViewportFromPayload(parsed);
           if (parsed.sections && parsed.sections.length > 0) {
             applyDataIfChanged(parsed.sections, parsed.pages || {}, parsed.templateName, parsed.industrySlug);
           }

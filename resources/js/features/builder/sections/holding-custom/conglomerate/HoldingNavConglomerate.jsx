@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import useMobileNavClose from '../../../utils/useMobileNavClose';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 /**
@@ -8,6 +9,7 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
  */
 export default function HoldingNavConglomerate({ components = [], sectionId = null }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  useMobileNavClose(mobileOpen, setMobileOpen);
 
   const defaultComponents = [
     { id: 'cong-logo', type: 'heading', props: { content: 'NUSANTARA HOLDINGS', level: 'h2', fontSize: '20px', fontWeight: '900', color: '#ffffff', letterSpacing: '0.1em' } },
@@ -75,6 +77,7 @@ export default function HoldingNavConglomerate({ components = [], sectionId = nu
               onClick={() => setMobileOpen(v => !v)}
               className="lg:hidden p-2.5 rounded-lg bg-slate-800 text-white hover:bg-slate-700"
               aria-label="Toggle Navigation"
+              aria-expanded={mobileOpen}
             >
               {mobileOpen ? '✕' : '☰'}
             </button>

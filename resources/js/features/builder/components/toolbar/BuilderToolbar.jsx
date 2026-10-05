@@ -82,7 +82,7 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
 
   const handleOpenPreview = () => {
     const currentState = useBuilderStore.getState();
-    const { sections, landingSections, pages, currentPageId, templateName, industryName, industrySlug, status, templateId } = currentState;
+    const { sections, landingSections, pages, currentPageId, templateName, industryName, industrySlug, status, templateId, deviceView } = currentState;
 
     const activeLanding = currentPageId === 'landing' ? sections : (landingSections || sections);
     const activePages = { ...pages };
@@ -95,7 +95,9 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
       return;
     }
 
-    // Save snapshot to localStorage for instant new tab preview
+    const activeViewport = ['desktop', 'tablet', 'mobile'].includes(deviceView) ? deviceView : 'desktop';
+
+    // Save snapshot to localStorage for instant new tab preview (ikutkan deviceView agar preview dibuka sesuai mode kanvas aktif)
     const payload = {
       sections: activeLanding,
       pages: activePages,
@@ -104,6 +106,8 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
       industrySlug,
       status,
       templateId,
+      deviceView: activeViewport,
+      viewport: activeViewport,
       timestamp: Date.now(),
     };
 
@@ -113,15 +117,16 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
       console.warn('Failed to write preview payload to localStorage', e);
     }
 
-    broadcastBuilderState({ ...currentState, sections: activeLanding, pages: activePages });
+    broadcastBuilderState({ ...currentState, sections: activeLanding, pages: activePages, deviceView: activeViewport });
 
-    // Open clean, full live website preview in a new tab
-    const previewUrl = templateId
+    // Open clean, full live website preview in a new tab (bawa ?viewport agar tab preview langsung pakai frame mobile/tablet)
+    const basePreviewUrl = templateId
       ? `/admin/templates/builder/${templateId}/preview`
       : '/preview/template';
+    const previewUrl = `${basePreviewUrl}?viewport=${activeViewport}`;
 
     window.open(previewUrl, '_blank');
-    toast.success('Live website preview opened in new tab', 'Preview Mode');
+    toast.success(`Live website preview opened in new tab (${activeViewport})`, 'Preview Mode');
   };
 
   const handleSave = async () => {
@@ -334,6 +339,27 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
                     <div className="flex items-center gap-2">
                       <device.icon className="h-4 w-4 shrink-0 text-slate-500" />
                       <span>{device.label}</span>
+                    </div>
+                    {deviceView === device.id && <Check className="h-3.5 w-3.5 text-indigo-600" />}
+                  </button>
+                ))}
+                <div className="border-t border-slate-100 my-1" />
+                <button
+                  onClick={() => {
+                    handleOpenPreview();
+                    setShowDeviceMenu(false);
+                  }}
+                  className="w-full flex items-center justify-between px-3 py-2 text-xs font-bold text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition"
+                >
+                  <div className="flex items-center gap-2">
+                    <ExternalLink className="h-4 w-4 shrink-0 text-indigo-600" />
+                    <span>Preview in New Tab ({deviceView})</span>
+                  </div>
+                  <span className="text-[10px] bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded font-extrabold">NEW TAB</span>
+                </button>
+              </div>
+            </>
+          )}
         </div>
 
         <div className="w-px h-5 bg-slate-200 mx-0.5" />
@@ -350,7 +376,7 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
             title="Switch between Landing Page and Subpages to edit on canvas"
           >
             <span className="text-xs">
-              {currentPageId === 'landing' ? '🏠 Landing Page' : `📄 ${pages[currentPageId]?.name || 'Subpage'}`}
+              {currentPageId === 'landing' ? 'Landing Page' : (pages[currentPageId]?.name || 'Subpage')}
             </span>
             <ChevronDown className="h-3.5 w-3.5 text-indigo-500 shrink-0" />
           </button>
@@ -360,7 +386,7 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
               <div className="fixed inset-0 z-40" onClick={() => setShowPageMenu(false)} />
               <div className="absolute top-full mt-1.5 left-0 bg-white border border-slate-200/90 rounded-2xl shadow-2xl py-1.5 z-50 min-w-[200px]">
                 <div className="px-3 py-1 text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">
-                  Pages & Subpages
+                  Pages and Subpages
                 </div>
                 <button
                   onClick={() => {
@@ -372,7 +398,7 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
                     currentPageId === 'landing' ? 'text-indigo-600 bg-indigo-50/70' : 'text-slate-700 hover:bg-slate-50'
                   }`}
                 >
-                  <span>🏠 Landing Page (Main)</span>
+                  <span>Landing Page (Main)</span>
                   {currentPageId === 'landing' && <Check className="h-3.5 w-3.5 text-indigo-600" />}
                 </button>
 
@@ -382,13 +408,13 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
                     onClick={() => {
                       switchPage(p.id);
                       setShowPageMenu(false);
-                      toast.success(`Switched to "${p.name}" page`, 'Page');
+                      toast.success('Switched page', 'Page');
                     }}
                     className={`w-full flex items-center justify-between px-3 py-2 text-xs font-bold transition ${
                       currentPageId === p.id ? 'text-indigo-600 bg-indigo-50/70' : 'text-slate-700 hover:bg-slate-50'
                     }`}
                   >
-                    <span>📄 {p.name}</span>
+                    <span>{p.name}</span>
                     {currentPageId === p.id && <Check className="h-3.5 w-3.5 text-indigo-600" />}
                   </button>
                 ))}
@@ -403,27 +429,6 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
                 >
                   <Plus className="h-3.5 w-3.5" />
                   <span>+ Create New Subpage</span>
-                </button>
-              </div>
-            </>
-          )}
-        </div>
-                    {deviceView === device.id && <Check className="h-3.5 w-3.5 text-indigo-600" />}
-                  </button>
-                ))}
-                <div className="border-t border-slate-100 my-1" />
-                <button
-                  onClick={() => {
-                    handleOpenPreview();
-                    setShowDeviceMenu(false);
-                  }}
-                  className="w-full flex items-center justify-between px-3 py-2 text-xs font-bold text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition"
-                >
-                  <div className="flex items-center gap-2">
-                    <ExternalLink className="h-4 w-4 shrink-0 text-indigo-600" />
-                    <span>Preview in New Tab</span>
-                  </div>
-                  <span className="text-[10px] bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded font-extrabold">NEW TAB</span>
                 </button>
               </div>
             </>

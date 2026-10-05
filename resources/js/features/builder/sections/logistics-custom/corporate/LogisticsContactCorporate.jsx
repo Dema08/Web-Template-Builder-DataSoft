@@ -47,6 +47,7 @@ export default function LogisticsContactCorporate({ components = [], sectionId =
   const layoutComponents = components.length > 0 ? components : defaultComponents;
   const leftComps = layoutComponents.filter(c => c.type === 'badge' || c.type === 'heading' || c.type === 'text');
   const cardComps = layoutComponents.filter(c => c.type === 'card');
+  const btnComps = layoutComponents.filter(c => c.type === 'button');
   const handleSubmit = (e) => {
     e.preventDefault();
     const cardFormBtn = btnComps.find(c => c.props?.action?.type === 'card_form' || c.props?.linkType === 'card_form') || btnComps[btnComps.length - 1] || btnComps[0] || {};

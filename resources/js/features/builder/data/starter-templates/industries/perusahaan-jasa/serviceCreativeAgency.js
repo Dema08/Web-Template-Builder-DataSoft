@@ -77,7 +77,7 @@ export default {
         },
         {
           id: 'hero-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Menggabungkan estetika visual kelas dunia, strategi storytelling memukau, dan rekayasa web modern untuk melipatgandakan valuasi brand Anda.', fontSize: '18px', color: '#cbd5e1', textAlign: 'center' },
         },
         {
@@ -110,7 +110,7 @@ export default {
         },
         {
           id: 'srv-ag-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Dari konsep brand identity hingga website dengan performa tinggi, kami mengeksekusi setiap detail dengan presisi kreatif tertinggi.', fontSize: '16px', color: '#cbd5e1', textAlign: 'center' },
         },
         {
@@ -120,7 +120,7 @@ export default {
         },
         {
           id: 'srv1-ag-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Pondasi identitas brand yang kuat, guidelines visual komprehensif, typography khusus, dan narasi positioning pasar yang otentik.', fontSize: '14px', color: '#cbd5e1' },
         },
         {
@@ -130,7 +130,7 @@ export default {
         },
         {
           id: 'srv2-ag-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Perancangan antarmuka digital yang intuitif, riset pengalaman pengguna, design system berskala besar, dan prototipe interaktif.', fontSize: '14px', color: '#cbd5e1' },
         },
         {
@@ -140,7 +140,7 @@ export default {
         },
         {
           id: 'srv3-ag-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Pengembangan web mutakhir dengan React, Next.js, animasi 3D WebGL, integrasi API dinamis, dan kecepatan akses luar biasa.', fontSize: '14px', color: '#cbd5e1' },
         },
         {
@@ -150,7 +150,7 @@ export default {
         },
         {
           id: 'srv4-ag-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Animasi 3D memukau untuk kampanye promosi, aset interaktif website, visualisasi produk fotorealistis, dan explainer video bergengsi.', fontSize: '14px', color: '#cbd5e1' },
         },
         {
@@ -160,7 +160,7 @@ export default {
         },
         {
           id: 'srv5-ag-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Strategi konten viral omnichannel, optimasi konversi (CRO), targeted performance ads, dan manajemen kampanye influencer skala regional.', fontSize: '14px', color: '#cbd5e1' },
         },
         {
@@ -170,7 +170,7 @@ export default {
         },
         {
           id: 'srv6-ag-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Pengembangan filter AR/VR imersif, microsite event interaktif dengan gamifikasi, dan integrasi AI generatif khusus brand.', fontSize: '14px', color: '#cbd5e1' },
         },
       ],
@@ -192,7 +192,7 @@ export default {
         },
         {
           id: 'port-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Kami merancang identitas visual, kampanye digital, dan produk teknologi terobosan untuk brand terkemuka.', fontSize: '16px', color: '#cbd5e1', textAlign: 'center' },
         },
         {
@@ -207,7 +207,7 @@ export default {
         },
         {
           id: 'port-item-desc1',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Transformasi brand fintech skala regional dengan peningkatan konversi 340%.', fontSize: '14px', color: '#cbd5e1' },
         },
         {
@@ -227,7 +227,7 @@ export default {
         },
         {
           id: 'port-item-desc2',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Aplikasi e-commerce gaya hidup dengan 1M+ active users dalam 6 bulan.', fontSize: '14px', color: '#cbd5e1' },
         },
         {
@@ -247,7 +247,7 @@ export default {
         },
         {
           id: 'port-item-desc3',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Website interaktif WebGL 3D pemenang penghargaan Awwwards Site of the Day.', fontSize: '14px', color: '#cbd5e1' },
         },
         {
@@ -267,7 +267,7 @@ export default {
         },
         {
           id: 'port-item-desc4',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Kampanye digital lintas platform menjangkau 25 juta audiens muda di SEA.', fontSize: '14px', color: '#cbd5e1' },
         },
         {
@@ -299,7 +299,7 @@ export default {
         },
         {
           id: 'proc-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Dari riset mendalam hingga peluncuran tanpa celah, metode kami menjamin hasil yang melampaui ekspektasi bisnis Anda.', fontSize: '16px', color: '#cbd5e1', textAlign: 'center' },
         },
         {
@@ -314,7 +314,7 @@ export default {
         },
         {
           id: 'proc-step1-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Menganalisis lanskap pasar, persona audiens, kompetitor, serta tujuan objektif bisnis secara mendalam.', fontSize: '14px', color: '#94a3b8' },
         },
         {
@@ -329,7 +329,7 @@ export default {
         },
         {
           id: 'proc-step2-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Merumuskan arah visual, moodboard, user journey, arsitektur informasi, serta positioning yang unik.', fontSize: '14px', color: '#94a3b8' },
         },
         {
@@ -344,7 +344,7 @@ export default {
         },
         {
           id: 'proc-step3-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Eksekusi desain pixel-perfect, prototyping interaktif, serta coding performa tinggi dengan teknologi modern.', fontSize: '14px', color: '#94a3b8' },
         },
         {
@@ -359,7 +359,7 @@ export default {
         },
         {
           id: 'proc-step4-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Pengujian menyeluruh (QA), deployment produksi, tracking analytics, dan evaluasi performa berkelanjutan.', fontSize: '14px', color: '#94a3b8' },
         },
       ],
@@ -381,7 +381,7 @@ export default {
         },
         {
           id: 'price-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Pilih paket yang paling sesuai dengan target pertumbuhan dan kebutuhan digital brand Anda.', fontSize: '16px', color: '#cbd5e1', textAlign: 'center' },
         },
         {
@@ -396,7 +396,7 @@ export default {
         },
         {
           id: 'plan1-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Solusi esensial untuk bisnis baru yang ingin membangun reputasi kuat sejak hari pertama.', fontSize: '14px', color: '#94a3b8' },
         },
         {
@@ -416,7 +416,7 @@ export default {
         },
         {
           id: 'plan2-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Akselerasi penuh dengan kombinasi desain, sistem digital, dan kampanye terpadu.', fontSize: '14px', color: '#cbd5e1' },
         },
         {
@@ -436,7 +436,7 @@ export default {
         },
         {
           id: 'plan3-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Dedicated multidisciplinary team untuk transformasi digital jangka panjang korporasi.', fontSize: '14px', color: '#94a3b8' },
         },
         {
@@ -463,7 +463,7 @@ export default {
         },
         {
           id: 'cta-ag-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Jadwalkan sesi brainstorming eksklusif 30 menit bersama Creative Director kami hari ini. Gratis tanpa komitmen.', fontSize: '16px', color: '#e2e8f0', textAlign: 'center' },
         },
         {
@@ -490,12 +490,12 @@ export default {
         },
         {
           id: 'ftr-ag-tagline',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Boutique Creative & Digital Innovation Agency yang mendefinisikan standar visual dan pengalaman masa depan.', fontSize: '14px', color: '#94a3b8' },
         },
         {
           id: 'ftr-ag-copy',
-          type: 'paragraph',
+          type: 'text',
           props: { content: '© 2026 Nexus Studio Inc. All rights reserved. Designed for market leaders.', fontSize: '13px', color: '#64748b' },
         },
         {

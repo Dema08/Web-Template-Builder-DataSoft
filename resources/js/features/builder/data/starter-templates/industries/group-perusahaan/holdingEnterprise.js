@@ -67,7 +67,7 @@ export default {
           props: { label: 'Jejak Sejarah', href: '#timeline', variant: 'ghost', size: 'small', background: 'transparent', color: '#e2e8f0' },
         },
         {
-          id: 'nav-cta-investor',
+          id: 'cta-investor',
           type: 'button',
           props: {
             label: 'Portal Investor Tbk →',

@@ -78,7 +78,7 @@ export default {
         },
         {
           id: 'cs-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Membimbing dewan direksi dan pemimpin industri melalui transformasi bisnis kompleks, merger & akuisisi, serta efisiensi operasional dengan wawasan berbasis data berstandar global.', fontSize: '17px', color: '#cbd5e1' },
         },
         {
@@ -98,7 +98,7 @@ export default {
         },
         {
           id: 'stat1-lbl',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Nilai Transaksi M&A', fontSize: '12px', color: '#94a3b8' },
         },
         {
@@ -108,7 +108,7 @@ export default {
         },
         {
           id: 'stat2-lbl',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Retensi Klien C-Level', fontSize: '12px', color: '#94a3b8' },
         },
         {
@@ -118,7 +118,7 @@ export default {
         },
         {
           id: 'stat3-lbl',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Proyek Transformasi', fontSize: '12px', color: '#94a3b8' },
         },
         {
@@ -145,7 +145,7 @@ export default {
         },
         {
           id: 'srv-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Keahlian terintegrasi lintas disiplin untuk memacu keunggulan kompetitif jangka panjang perusahaan Anda.', fontSize: '16px', color: '#cbd5e1', textAlign: 'center' },
         },
         {
@@ -155,7 +155,7 @@ export default {
         },
         {
           id: 'srv1-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Perumusan roadmap bisnis 5-10 tahun, diversifikasi pasar, dan perancangan model bisnis tangguh masa depan.', fontSize: '14px', color: '#cbd5e1' },
         },
         {
@@ -165,7 +165,7 @@ export default {
         },
         {
           id: 'srv2-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Uji tuntas komersial (commercial due diligence), valuasi bisnis presisi, dan integrasi pasca-merger (PMI).', fontSize: '14px', color: '#cbd5e1' },
         },
         {
@@ -175,7 +175,7 @@ export default {
         },
         {
           id: 'srv3-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Modernisasi arsitektur enterprise IT, adopsi analitik cerdas/AI, dan otomasi alur kerja korporasi.', fontSize: '14px', color: '#cbd5e1' },
         },
         {
@@ -185,7 +185,7 @@ export default {
         },
         {
           id: 'srv4-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Optimasi biaya struktural, streamlining proses end-to-end, dan penguatan ketahanan supply chain.', fontSize: '14px', color: '#cbd5e1' },
         },
         {
@@ -195,7 +195,7 @@ export default {
         },
         {
           id: 'srv5-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Restrukturisasi tata kelola organisasi, suksesi dewan direksi, dan transformasi budaya performa tinggi.', fontSize: '14px', color: '#cbd5e1' },
         },
         {
@@ -205,7 +205,7 @@ export default {
         },
         {
           id: 'srv6-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Integrasi pilar Environmental, Social & Governance ke dalam strategi inti demi menciptakan nilai pemangku kepentingan.', fontSize: '14px', color: '#cbd5e1' },
         },
       ],
@@ -227,7 +227,7 @@ export default {
         },
         {
           id: 'abt-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Kami tidak sekadar memberikan rekomendasi teoretis. Tim konsultan senior kami mendampingi klien dari tahap diagnosa mendalam hingga realisasi dampak finansial nyata di lapangan.', fontSize: '16px', color: '#cbd5e1' },
         },
         {
@@ -237,7 +237,7 @@ export default {
         },
         {
           id: 'meth1-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Audit kuantitatif dan benchmark kompetitif internasional untuk mengidentifikasi celah nilai strategis.', fontSize: '14px', color: '#cbd5e1' },
         },
         {
@@ -247,7 +247,7 @@ export default {
         },
         {
           id: 'meth2-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Workshop intensif dan perancangan skenario masa depan yang selaras dengan visi pemegang saham.', fontSize: '14px', color: '#cbd5e1' },
         },
         {
@@ -257,7 +257,7 @@ export default {
         },
         {
           id: 'meth3-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Program Management Office (PMO) berdedikasi untuk memastikan target terlaksana tepat waktu.', fontSize: '14px', color: '#cbd5e1' },
         },
       ],
@@ -279,7 +279,7 @@ export default {
         },
         {
           id: 'team-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Setiap proyek dipimpin langsung oleh Senior Partner dengan rekam jejak lebih dari 20 tahun di ranah eksekutif multinasional.', fontSize: '16px', color: '#cbd5e1', textAlign: 'center' },
         },
         {
@@ -289,12 +289,12 @@ export default {
         },
         {
           id: 't1-role',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Managing Partner & Head of Strategy', fontSize: '13px', color: '#d4af37', fontWeight: '600' },
         },
         {
           id: 't1-bio',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Mantan Senior Advisor Forum Ekonomi Dunia dengan spesialisasi restrukturisasi makro dan strategi diversifikasi korporasi.', fontSize: '13px', color: '#cbd5e1' },
         },
         {
@@ -304,12 +304,12 @@ export default {
         },
         {
           id: 't2-role',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Senior Partner, M&A & Private Equity', fontSize: '13px', color: '#d4af37', fontWeight: '600' },
         },
         {
           id: 't2-bio',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Telah memimpin lebih dari 40 transaksi merger lintas negara di kawasan Asia Pasifik dengan total valuasi $4B+.', fontSize: '13px', color: '#cbd5e1' },
         },
         {
@@ -319,12 +319,12 @@ export default {
         },
         {
           id: 't3-role',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Partner, Digital Transformation & AI', fontSize: '13px', color: '#d4af37', fontWeight: '600' },
         },
         {
           id: 't3-bio',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Pakar arsitektur enterprise dan adopsi AI industri dengan latar belakang riset di Silicon Valley dan Zurich.', fontSize: '13px', color: '#cbd5e1' },
         },
         {
@@ -334,12 +334,12 @@ export default {
         },
         {
           id: 't4-role',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Partner, ESG & Sustainable Finance', fontSize: '13px', color: '#d4af37', fontWeight: '600' },
         },
         {
           id: 't4-bio',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Konsultan rujukan untuk dekarbonisasi industri berat dan penerbitan instrumen obligasi hijau (Green Bonds).', fontSize: '13px', color: '#cbd5e1' },
         },
       ],
@@ -361,12 +361,12 @@ export default {
         },
         {
           id: 'test-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Bagaimana keterlibatan strategis kami memberikan akselerasi nyata bagi dewan direksi dan pemegang saham.', fontSize: '16px', color: '#cbd5e1', textAlign: 'center' },
         },
         {
           id: 'quote1-text',
-          type: 'paragraph',
+          type: 'text',
           props: { content: '"Aurelius & Partners memberikan ketajaman analisis luar biasa yang memungkinkan kami menyelesaikan merger senilai $800M tepat waktu dengan integrasi pasca-merger yang mulus."', fontSize: '15px', color: '#cbd5e1' },
         },
         {
@@ -376,12 +376,12 @@ export default {
         },
         {
           id: 'quote1-title',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Direktur Utama, PT Nusantara Finansial Tbk', fontSize: '12px', color: '#d4af37' },
         },
         {
           id: 'quote2-text',
-          type: 'paragraph',
+          type: 'text',
           props: { content: '"Transformasi digital yang didampingi tim Aurelius berhasil memangkas biaya operasional kami sebesar 28% dalam kurun waktu 14 bulan tanpa friksi internal."', fontSize: '15px', color: '#cbd5e1' },
         },
         {
@@ -391,12 +391,12 @@ export default {
         },
         {
           id: 'quote2-title',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Chief Operating Officer, Pan-Asia Logistics Group', fontSize: '12px', color: '#d4af37' },
         },
         {
           id: 'quote3-text',
-          type: 'paragraph',
+          type: 'text',
           props: { content: '"Roadmap ESG dan dekarbonisasi yang dirancang membuka akses pendanaan hijau global hingga $350M untuk ekspansi fasilitas manufaktur baru kami."', fontSize: '15px', color: '#cbd5e1' },
         },
         {
@@ -406,7 +406,7 @@ export default {
         },
         {
           id: 'quote3-title',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Komisaris Utama, Mega Energi Nusantara', fontSize: '12px', color: '#d4af37' },
         },
       ],
@@ -428,7 +428,7 @@ export default {
         },
         {
           id: 'cta-desc',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Kami menyambut diskusi rahasia (confidential briefing) dengan Dewan Komisaris dan Direksi untuk mengeksplorasi potensi nilai strategis.', fontSize: '16px', color: '#cbd5e1', textAlign: 'center' },
         },
         {
@@ -455,12 +455,12 @@ export default {
         },
         {
           id: 'ftr-tagline',
-          type: 'paragraph',
+          type: 'text',
           props: { content: 'Firma konsultasi manajemen strategis terkemuka yang mendampingi transformasi korporasi dan penciptaan nilai pemegang saham berkelanjutan.', fontSize: '13px', color: '#94a3b8' },
         },
         {
           id: 'ftr-copy',
-          type: 'paragraph',
+          type: 'text',
           props: { content: '© 2026 Aurelius & Partners Advisory Ltd. All rights reserved. Strict confidentiality guaranteed.', fontSize: '12px', color: '#64748b' },
         },
         {

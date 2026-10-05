@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import useMobileNavClose from '../../../utils/useMobileNavClose';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 /**
@@ -8,6 +9,7 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
  */
 export default function Navbar06({ components = [], sectionId = null }) {
   const [open, setOpen] = useState(false);
+  useMobileNavClose(open, setOpen);
 
   const defaultComponents = [
     { id: 'logo-6', type: 'heading', props: { content: 'Sakura & Co.', level: 'h2', fontSize: '26px', fontWeight: '700', color: '#831843' } },

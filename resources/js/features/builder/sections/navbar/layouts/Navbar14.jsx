@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import useMobileNavClose from '../../../utils/useMobileNavClose';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 /**
@@ -9,6 +10,7 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 export default function Navbar14({ components = [], sectionId = null }) {
   const [lang, setLang] = useState('ID');
   const [mobileOpen, setMobileOpen] = useState(false);
+  useMobileNavClose(mobileOpen, setMobileOpen);
 
   const defaultComponents = [
     { id: 'logo-14', type: 'heading', props: { content: 'MAISON DOUBLE', level: 'h2', fontSize: '20px', fontWeight: '900', color: '#1e3a8a', letterSpacing: '0.08em' } },

@@ -67,7 +67,7 @@ export default {
           props: { label: 'Sindikasi LP', href: '#syndicate', variant: 'ghost', size: 'small', background: 'transparent', color: '#e5e7eb' },
         },
         {
-          id: 'c-cta-lp',
+          id: 'cta-lp',
           type: 'button',
           props: {
             label: 'Institutional LP Portal 🔒',
