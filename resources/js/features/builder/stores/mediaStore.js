@@ -29,16 +29,23 @@ export const useMediaStore = create(
       selectedMedia: null,
 
       addUpload: (fileData) => {
+        // JANGAN simpan base64 / blob ke localStorage — 50MB base64 (~66MB string)
+        // akan meledakkan quota localStorage (5MB) + membuat builder lambat.
+        // Hanya URL statis server / URL remote yang boleh persist.
+        const url = fileData.url || '';
+        const isHeavyLocal = url.startsWith('data:') || url.startsWith('blob:');
+        if (isHeavyLocal) return null;
         const newUpload = {
           id: `upload-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`,
           name: fileData.name,
-          url: fileData.url,
+          url,
           size: fileData.size || '1.2 MB',
           type: fileData.type || 'image',
           date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
         };
         set((state) => ({
-          uploads: [newUpload, ...state.uploads],
+          // Batasi 50 item agar storage tetap ringan
+          uploads: [newUpload, ...state.uploads].slice(0, 50),
         }));
         return newUpload;
       },

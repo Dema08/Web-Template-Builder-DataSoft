@@ -16,7 +16,7 @@ import {
     Camera,
 } from 'lucide-react';
 import { useAuth, useDashboard } from '@hooks';
-import { Spinner, Card, StatusBadge } from '@shared/components/ui';
+import { Spinner, Card, StatusBadge, CreateSiteChoiceModal } from '@shared/components/ui';
 import { ROUTES } from '@constants';
 import { toast, useSettingsStore } from '@store';
 import UploadThumbnailButton from '@shared/components/UploadThumbnailButton';
@@ -30,6 +30,7 @@ const templateCards = [
 
 export default function UserDashboard() {
     const { user } = useAuth();
+    const [isChoiceOpen, setIsChoiceOpen] = useState(false);
     const [selectedWebsiteId, setSelectedWebsiteId] = useState('');
     const [range, setRange] = useState('7days');
     const [startDate, setStartDate] = useState(() => {
@@ -77,13 +78,15 @@ export default function UserDashboard() {
                         Here's what's happening with your websites today.
                     </p>
                 </div>
-                <Link
-                    to={ROUTES.ONBOARDING}
-                    className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-xl text-xs font-bold hover:bg-blue-700 transition shadow-md shadow-blue-600/20"
+                <button
+                    type="button"
+                    onClick={() => setIsChoiceOpen(true)}
+                    className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-xl text-xs font-bold hover:bg-blue-700 transition shadow-md shadow-blue-600/20 cursor-pointer"
                 >
                     <Sparkles className="h-4 w-4" />
                     Create New Site
-                </Link>
+                </button>
+                <CreateSiteChoiceModal isOpen={isChoiceOpen} onClose={() => setIsChoiceOpen(false)} />
             </div>
 
             {/* Published Websites Section */}

@@ -169,6 +169,9 @@ export const useBuilderStore = create((set, get) => ({
   },
 
   // Serialize the CURRENT canvas into the draft_json shape the backend expects.
+  // PENGAMAN SERVER: base64 video (data:video/...) TIDAK BOLEH ikut tersimpan —
+  // 50MB base64 = ~66MB string yang bikin DB + save berat. Pending blob juga
+  // ditandai agar user wajib selesaikan upload streaming dulu.
   serializeDraftJson: () => {
     const { sections, landingSections, pages, currentPageId } = get();
     // Sync current active sections back to correct store bucket first
@@ -178,13 +181,24 @@ export const useBuilderStore = create((set, get) => ({
       activePages[currentPageId] = { ...activePages[currentPageId], sections };
     }
 
+    const sanitizeBackground = (bg) => {
+      if (!bg || typeof bg !== 'object') return bg;
+      if (bg.type !== 'video' || !bg.video || typeof bg.video !== 'object') return bg;
+      const url = bg.video.url || '';
+      // Tolak base64 video agar tidak membebani server/DB.
+      if (url.startsWith('data:video') || (url.startsWith('data:') && url.length > 100000)) {
+        return { ...bg, type: 'none', video: { ...bg.video, url: '', pending: false } };
+      }
+      return bg;
+    };
+
     return {
       sections: (activeLanding || []).map(s => ({
         id: s.id,
         type: s.type,
         layout: s.layout,
         styles: s.styles || {},
-        background: s.background || null,
+        background: sanitizeBackground(s.background) || null,
         customTexts: s.customTexts || {},
         customImages: s.customImages || {},
         isLocked: s.isLocked || false,
@@ -193,6 +207,18 @@ export const useBuilderStore = create((set, get) => ({
       })),
       pages: activePages,
     };
+  },
+
+  // Cek cepat sebelum save/publish: masih ada video yang belum selesai upload?
+  hasPendingVideoUpload: () => {
+    const { sections } = get();
+    return (sections || []).some(s =>
+      s.background?.type === 'video' && (
+        s.background?.video?.pending ||
+        (s.background?.video?.url || '').startsWith('blob:') ||
+        (s.background?.video?.url || '').startsWith('data:video')
+      )
+    );
   },
 
   loadSections: (sectionsData, pagesData = {}) => {

@@ -308,6 +308,10 @@ export default function Builder() {
    * silent=true → tidak tampilkan toast (untuk auto-save).
    */
   const saveDraftTemplate = useCallback(async ({ name, bannerFile = null, silent = false } = {}) => {
+    if (useBuilderStore.getState().hasPendingVideoUpload?.()) {
+      if (!silent) toast.error('Selesaikan upload video background dulu (tunggu 100% / batalkan) sebelum menyimpan.', 'Video Belum Selesai');
+      return false;
+    }
     const currentDraftId = activeDraftTemplateId || Number(sessionStorage.getItem('draft_template_id')) || null;
     const templateName = name || activeDraftTemplateName || sessionStorage.getItem('draft_template_name') || 'Draft Template';
 
@@ -484,6 +488,10 @@ export default function Builder() {
 
   const handleSave = async () => {
     try {
+      if (useBuilderStore.getState().hasPendingVideoUpload?.()) {
+        toast.error('Selesaikan upload video background dulu (tunggu 100% / batalkan) sebelum menyimpan.', 'Video Belum Selesai');
+        return;
+      }
       setIsSaving(true);
       const currentDraftId = activeDraftTemplateId || Number(sessionStorage.getItem('draft_template_id')) || null;
 
@@ -523,6 +531,10 @@ export default function Builder() {
 
   const handleConfirmPublish = async (domainConfig) => {
     try {
+      if (useBuilderStore.getState().hasPendingVideoUpload?.()) {
+        toast.error('Selesaikan upload video background dulu (tunggu 100% / batalkan) sebelum publish.', 'Video Belum Selesai');
+        return;
+      }
       setIsPublishing(true);
       const draftJson = useBuilderStore.getState().serializeDraftJson();
 

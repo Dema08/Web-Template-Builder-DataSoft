@@ -47,6 +47,14 @@ import {
 import { toast } from '@store';
 import NavbarEditor from '../sections/NavbarEditor';
 import ButtonInspector from './ButtonInspector';
+import {
+  validateVideoFile,
+  createVideoPreview,
+  revokePreview,
+  captureVideoPoster,
+  uploadVideoAsset,
+  formatBytes,
+} from '../../utils/videoUpload';
 
 const FONT_FAMILIES = [
   { value: 'Inter', label: 'Inter' },
@@ -117,12 +125,27 @@ export default function RightInspector() {
   const inspectorImgInputRef = useRef(null);
   const inspectorVidInputRef = useRef(null);
   const buttonFileInputRef = useRef(null);
+  const videoAbortRef = useRef(null);
 
   // Inspector Section Background state
   const [selectedImgCategory, setSelectedImgCategory] = useState('all');
   const [searchImgQuery, setSearchImgQuery] = useState('');
   const [isDraggingImage, setIsDraggingImage] = useState(false);
   const [isDraggingVideo, setIsDraggingVideo] = useState(false);
+  // Upload video ringan: preview blob instan + progress streaming (tanpa base64)
+  const [videoUploadPct, setVideoUploadPct] = useState(0);
+  const [isUploadingVideo, setIsUploadingVideo] = useState(false);
+  const [videoPreviewUrl, setVideoPreviewUrl] = useState('');
+  const [videoPreviewName, setVideoPreviewName] = useState('');
+  const [videoPoster, setVideoPoster] = useState('');
+
+  // Bersihkan upload saat unmount agar tidak bocor memori / request gantung
+  useEffect(() => {
+    const abortRef = videoAbortRef;
+    return () => {
+      if (abortRef.current) { try { abortRef.current.abort(); } catch (_) {} }
+    };
+  }, []);
 
   const selectedSection = sections.find(s => s.id === selectedSectionId);
 
@@ -463,34 +486,116 @@ export default function RightInspector() {
     reader.readAsDataURL(file);
   };
 
-  // Handle local video file upload live
-  const handleVideoUpload = (file) => {
+  // Handle local video file upload — RINGAN (tanpa base64 50MB)
+  // 1) Preview instan via blob URL (tanpa baca seluruh file ke memori)
+  // 2) Upload streaming multipart ke server dengan progress + bisa cancel
+  // 3) Yang disimpan = URL file statis (/storage/websites/videos/xxx.mp4),
+  //    diputar browser via HTTP Range (progressive streaming), kualitas 100% terjaga.
+  const handleVideoUpload = async (file) => {
     if (!file) return;
-    if (!file.type.startsWith('video/')) {
-      toast.error('Please upload a video file (MP4, WebM)', 'Invalid File');
+    const check = validateVideoFile(file);
+    if (!check.ok) {
+      if (check.message.includes('Format')) toast.error(check.message, 'Invalid File');
+      else toast.error(check.message, 'File Too Large');
       return;
     }
-    if (file.size > 50 * 1024 * 1024) {
-      toast.error('Video size should be less than 50MB for optimal performance', 'File Too Large');
+    if (isUploadingVideo) {
+      toast.info('Tunggu upload video sebelumnya selesai / batalkan dulu.', 'Upload Berjalan');
       return;
     }
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const dataUrl = event.target.result;
+    // Batalkan upload sebelumnya bila ada
+    if (videoAbortRef.current) {
+      try { videoAbortRef.current.abort(); } catch (_) {}
+    }
+    revokePreview(videoPreviewUrl);
+    const controller = new AbortController();
+    videoAbortRef.current = controller;
+
+    const blobUrl = createVideoPreview(file);
+    setVideoPreviewUrl(blobUrl);
+    setVideoPreviewName(file.name);
+    setVideoUploadPct(0);
+    setIsUploadingVideo(true);
+
+    // Preview INSTAN di canvas (blob lokal, ringan) — langsung terlihat tanpa nunggu upload
+    applyLiveBackground(curr => ({
+      ...curr,
+      type: 'video',
+      video: { ...curr.video, url: blobUrl, fileName: file.name, pending: true }
+    }));
+
+    // Poster ringan (1 frame JPEG kecil) agar thumbnail tidak perlu memutar video 50MB
+    captureVideoPoster(file).then((poster) => {
+      if (poster) {
+        setVideoPoster(poster);
+        applyLiveBackground(curr => {
+          // Jangan timpa bila user sudah ganti ke URL lain
+          if (!curr.video?.url || curr.video.url === blobUrl || curr.video.pending) {
+            return { ...curr, video: { ...curr.video, poster } };
+          }
+          return curr;
+        });
+      }
+    });
+
+    try {
+      const result = await uploadVideoAsset(file, {
+        onProgress: (pct) => setVideoUploadPct(pct),
+        signal: controller.signal,
+      });
+      // Ganti blob sementara -> URL statis server (string pendek, hemat DB + server)
       applyLiveBackground(curr => ({
         ...curr,
         type: 'video',
-        video: { ...curr.video, url: dataUrl, fileName: file.name }
+        video: {
+          ...curr.video,
+          url: result.url,
+          fileName: file.name,
+          size: result.size || file.size,
+          poster: videoPoster || curr.video?.poster || '',
+          pending: false,
+        }
       }));
       addUpload({
         name: file.name,
-        url: dataUrl,
-        size: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
+        url: result.url,
+        size: formatBytes(result.size || file.size),
         type: 'video'
       });
-      toast.success(`Video "${file.name}" applied as background!`, 'Background Video');
-    };
-    reader.readAsDataURL(file);
+      toast.success(`Video "${file.name}" terupload & siap streaming ringan!`, 'Background Video');
+    } catch (err) {
+      const aborted = err?.name === 'CanceledError' || err?.name === 'AbortError' || err?.code === 'ERR_CANCELED';
+      if (aborted) {
+        toast.info('Upload video dibatalkan.', 'Upload Dibatalkan');
+      } else {
+        const msg = err?.response?.data?.message || err?.message || 'Gagal mengupload video.';
+        toast.error(msg, 'Upload Gagal');
+      }
+      // Tetap tampilkan preview blob agar user bisa coba lagi; tandai pending agar tidak tersimpan permanen tanpa sadar
+      applyLiveBackground(curr => ({
+        ...curr,
+        type: 'video',
+        video: { ...curr.video, url: blobUrl, fileName: file.name, pending: true }
+      }));
+      return;
+    } finally {
+      setIsUploadingVideo(false);
+      // Blob hanya dibutuhkan selama upload; setelah sukses URL server yang dipakai -> bebaskan memori
+      const currentUrl = useBuilderStore.getState().sections
+        ?.find(s => s.id === selectedSectionId)?.background?.video?.url;
+      if (currentUrl && currentUrl !== blobUrl) {
+        revokePreview(blobUrl);
+        setVideoPreviewUrl('');
+        setVideoPreviewName('');
+      }
+      if (inspectorVidInputRef.current) inspectorVidInputRef.current.value = '';
+    }
+  };
+
+  const handleCancelVideoUpload = () => {
+    if (videoAbortRef.current) {
+      try { videoAbortRef.current.abort(); } catch (_) {}
+    }
   };
 
   // Filtered background images
@@ -1011,7 +1116,7 @@ export default function RightInspector() {
                 </h4>
               </div>
 
-              {/* Upload Video Dropzone & Button */}
+              {/* Upload Video Dropzone & Button — ringan: preview instan + progress streaming */}
               <div
                 onDragOver={(e) => { e.preventDefault(); setIsDraggingVideo(true); }}
                 onDragLeave={() => setIsDraggingVideo(false)}
@@ -1020,7 +1125,7 @@ export default function RightInspector() {
                   setIsDraggingVideo(false);
                   handleVideoUpload(e.dataTransfer.files?.[0]);
                 }}
-                onClick={() => inspectorVidInputRef.current?.click()}
+                onClick={() => { if (!isUploadingVideo) inspectorVidInputRef.current?.click(); }}
                 className={`border-2 border-dashed rounded-xl p-3.5 text-center cursor-pointer transition-all ${
                   isDraggingVideo
                     ? 'border-indigo-600 bg-indigo-50/70 scale-[1.01]'
@@ -1031,12 +1136,67 @@ export default function RightInspector() {
                   <Video className="h-4 w-4" />
                 </div>
                 <p className="text-xs font-bold text-slate-700">
-                  Upload Video from Device
+                  {isUploadingVideo ? `Mengupload ${videoUploadPct}% — preview langsung tampil` : 'Upload Video from Device'}
                 </p>
                 <p className="text-[10px] text-slate-400">
-                  Drag & drop MP4 / WebM (up to 50MB)
+                  Drag & drop MP4 (H.264) / WebM hingga 50MB — kualitas asli terjaga, streaming ringan
                 </p>
+                {isUploadingVideo && (
+                  <div className="mt-2 text-left" onClick={(e) => e.stopPropagation()}>
+                    <div className="h-1.5 rounded-full bg-slate-200 overflow-hidden">
+                      <div className="h-full bg-indigo-600 transition-all" style={{ width: `${videoUploadPct}%` }} />
+                    </div>
+                    <div className="mt-1.5 flex items-center justify-between">
+                      <span className="text-[10px] font-bold text-indigo-700 truncate max-w-[70%]">{videoPreviewName || 'video.mp4'}</span>
+                      <button
+                        type="button"
+                        onClick={handleCancelVideoUpload}
+                        className="text-[10px] font-extrabold text-rose-600 hover:text-rose-700 underline"
+                      >
+                        Batalkan
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
+
+              {/* Preview ringan: poster + video preload metadata (tidak autoplay penuh di inspector) */}
+              {(bgConfig.video?.url || videoPoster) && (
+                <div className="rounded-xl overflow-hidden border border-slate-200 bg-slate-950 relative">
+                  {bgConfig.video?.pending && (
+                    <div className="absolute top-1.5 left-1.5 z-10 px-2 py-0.5 rounded-full bg-amber-500 text-white text-[9px] font-extrabold shadow">
+                      {isUploadingVideo ? `Uploading ${videoUploadPct}%` : 'Preview lokal — belum tersimpan di server'}
+                    </div>
+                  )}
+                  {!bgConfig.video?.pending && bgConfig.video?.url && !bgConfig.video.url.startsWith('blob:') && !bgConfig.video.url.startsWith('data:') && (
+                    <div className="absolute top-1.5 left-1.5 z-10 px-2 py-0.5 rounded-full bg-emerald-500 text-white text-[9px] font-extrabold shadow">
+                      Tersimpan di server — streaming ringan
+                    </div>
+                  )}
+                  <video
+                    key={bgConfig.video?.url || 'novideo'}
+                    src={bgConfig.video?.url}
+                    poster={bgConfig.video?.poster || videoPoster || undefined}
+                    className="w-full aspect-video object-cover"
+                    preload="metadata"
+                    playsInline
+                    muted
+                    loop
+                    controls={false}
+                    onMouseEnter={(e) => { try { e.currentTarget.play()?.catch(() => {}); } catch (_) {} }}
+                    onMouseLeave={(e) => { try { e.currentTarget.pause(); } catch (_) {} }}
+                  />
+                  <p className="px-2 py-1 text-[9px] font-mono text-slate-400 truncate bg-slate-950">
+                    Hover untuk preview • {(bgConfig.video?.url || '').startsWith('blob:') ? 'preview lokal (belum upload selesai)' : (bgConfig.video?.url || '').slice(0, 80)}
+                  </p>
+                </div>
+              )}
+
+              <p className="text-[10px] leading-relaxed text-slate-500 bg-indigo-50/60 border border-indigo-100 rounded-xl px-2.5 py-2">
+                💡 <b>Tips ringan & tajam:</b> MP4 H.264 720p–1080p, ≤50MB. Video disimpan sebagai file statis
+                lalu diputar via <b>streaming progresif</b> (tidak di-download sekaligus). Hindari base64 —
+                otomatis ditolak saat save agar database tidak jebol.
+              </p>
 
               {/* Direct Video URL Input */}
               <div>

@@ -11,5 +11,6 @@ export { default as CustomDropdown } from './CustomDropdown';
 export { default as StatusBadge } from './StatusBadge';
 export { default as PageLoader } from './PageLoader';
 export { default as ConfirmModal } from './ConfirmModal';
+export { default as CreateSiteChoiceModal } from './CreateSiteChoiceModal';
 export { default as PublishDomainModal } from './PublishDomainModal';
 

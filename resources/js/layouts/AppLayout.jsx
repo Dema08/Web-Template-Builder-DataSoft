@@ -25,7 +25,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@hooks';
 import { ROUTES } from '@constants';
-import { Spinner, PageLoader } from '@shared/components/ui';
+import { Spinner, PageLoader, CreateSiteChoiceModal } from '@shared/components/ui';
 import { useSettingsStore } from '@store';
 import { Suspense } from 'react';
 
@@ -34,6 +34,7 @@ export default function AppLayout() {
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isChoiceOpen, setIsChoiceOpen] = useState(false);
     const location = useLocation();
 
     const isAdmin = user?.role === 'admin';
@@ -134,17 +135,30 @@ export default function AppLayout() {
                         })}
                     </nav>
 
-                    {/* Sidebar Bottom Action Buttons */}
+                    {/* Sidebar Bottom Action Buttons — non-admin tampilkan pilihan template/blank */}
                     <div className="space-y-3 px-4 pb-6 pt-2 border-t border-[rgb(var(--color-border-soft))]">
-                        <Link
-                            to={ROUTES.ONBOARDING}
-                            className={`flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-3 text-xs font-extrabold text-white transition hover:bg-indigo-700 shadow-md shadow-indigo-600/20 ${
-                                isSidebarCollapsed ? 'px-2' : ''
-                            }`}
-                        >
-                            <Sparkles className="h-4 w-4 shrink-0" />
-                            {!isSidebarCollapsed && <span>Create New Site</span>}
-                        </Link>
+                        {!isAdmin ? (
+                            <button
+                                type="button"
+                                onClick={() => setIsChoiceOpen(true)}
+                                className={`flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-3 text-xs font-extrabold text-white transition hover:bg-indigo-700 shadow-md shadow-indigo-600/20 cursor-pointer ${
+                                    isSidebarCollapsed ? 'px-2' : ''
+                                }`}
+                            >
+                                <Sparkles className="h-4 w-4 shrink-0" />
+                                {!isSidebarCollapsed && <span>Create New Site</span>}
+                            </button>
+                        ) : (
+                            <Link
+                                to={ROUTES.ONBOARDING}
+                                className={`flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-3 text-xs font-extrabold text-white transition hover:bg-indigo-700 shadow-md shadow-indigo-600/20 ${
+                                    isSidebarCollapsed ? 'px-2' : ''
+                                }`}
+                            >
+                                <Sparkles className="h-4 w-4 shrink-0" />
+                                {!isSidebarCollapsed && <span>Create New Site</span>}
+                            </Link>
+                        )}
 
                         <button
                             type="button"
@@ -220,16 +234,30 @@ export default function AppLayout() {
                                 })}
                             </nav>
 
-                            {/* Mobile Bottom Actions */}
+                            {/* Mobile Bottom Actions — user tampilkan pilihan template/blank */}
                             <div className="space-y-2 pt-3 border-t border-[rgb(var(--color-border-soft))]">
-                                <Link
-                                    to={ROUTES.ONBOARDING}
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-3 text-xs font-extrabold text-white shadow-md shadow-indigo-600/20"
-                                >
-                                    <Sparkles className="h-4 w-4" />
-                                    <span>Create New Site</span>
-                                </Link>
+                                {!isAdmin ? (
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setIsMobileMenuOpen(false);
+                                            setIsChoiceOpen(true);
+                                        }}
+                                        className="flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-3 text-xs font-extrabold text-white shadow-md shadow-indigo-600/20 cursor-pointer"
+                                    >
+                                        <Sparkles className="h-4 w-4" />
+                                        <span>Create New Site</span>
+                                    </button>
+                                ) : (
+                                    <Link
+                                        to={ROUTES.ONBOARDING}
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                        className="flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-3 text-xs font-extrabold text-white shadow-md shadow-indigo-600/20"
+                                    >
+                                        <Sparkles className="h-4 w-4" />
+                                        <span>Create New Site</span>
+                                    </Link>
+                                )}
 
                                 <button
                                     type="button"
@@ -407,6 +435,8 @@ export default function AppLayout() {
                     </div>
                 </main>
             </div>
+            {/* Global pilihan buat website (dipakai sidebar desktop + mobile user) */}
+            <CreateSiteChoiceModal isOpen={isChoiceOpen} onClose={() => setIsChoiceOpen(false)} />
         </div>
     );
 }

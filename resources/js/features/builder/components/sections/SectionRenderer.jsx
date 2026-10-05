@@ -8,6 +8,7 @@ import { getLayoutDefaults } from '../../engine/layoutDefaults';
 import EditableComponent from '../editing/EditableComponent';
 import SnapGrid from '../canvas/SnapGrid';
 import BuilderErrorBoundary from '../common/BuilderErrorBoundary';
+import BackgroundVideo from './BackgroundVideo';
 import { Palette, Trash2, ArrowUp, ArrowDown, Copy } from 'lucide-react';
 import { toast } from '@store';
 
@@ -317,15 +318,11 @@ export default function SectionRenderer({ section, isSelected, onClick, isPrevie
 
     return (
       <div ref={sectionRef} id={section.id} className="relative w-full overflow-hidden" style={getSectionStyle()}>
-        {/* Background Video if applicable */}
+        {/* Background Video hemat resource (streaming progresif + lazy-play) */}
         {section.background?.type === 'video' && section.background.video?.url && (
-          <video
+          <BackgroundVideo
+            video={section.background.video}
             className="absolute inset-0 w-full h-full object-cover pointer-events-none z-0"
-            src={section.background.video.url}
-            autoPlay={section.background.video.autoplay ?? true}
-            loop={section.background.video.loop ?? true}
-            muted={section.background.video.muted ?? true}
-            playsInline
           />
         )}
         {/* Background Overlay if configured */}
@@ -464,15 +461,11 @@ export default function SectionRenderer({ section, isSelected, onClick, isPrevie
       }`}
       style={getSectionStyle()}
     >
-      {/* Background Video if applicable */}
+      {/* Background Video hemat resource (streaming progresif + lazy-play) */}
       {section.background?.type === 'video' && section.background.video?.url && (
-        <video
+        <BackgroundVideo
+          video={section.background.video}
           className="absolute inset-0 w-full h-full object-cover pointer-events-none z-0"
-          src={section.background.video.url}
-          autoPlay={section.background.video.autoplay ?? true}
-          loop={section.background.video.loop ?? true}
-          muted={section.background.video.muted ?? true}
-          playsInline
         />
       )}
       {/* Background Overlay if configured */}

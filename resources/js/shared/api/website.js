@@ -86,15 +86,30 @@ const websiteApi = {
 
     /**
      * Upload a media asset (image/video) for the website.
+     * Streaming multipart — ringan untuk video 50MB, kualitas terjaga
+     * (tanpa base64, tanpa re-encode). Mendukung progress + cancel.
      * @param {File} file
+     * @param {{ onProgress?: (pct:number)=>void, signal?: AbortSignal, kind?: string }} opts
      */
-    async uploadAsset(file) {
+    async uploadAsset(file, opts = {}) {
         const formData = new FormData();
         formData.append('file', file);
+        if (opts.kind) formData.append('kind', opts.kind);
 
         const { data } = await http.post('/website/assets', formData, {
             headers: { 'Content-Type': 'multipart/form-data' },
+            signal: opts.signal,
+            onUploadProgress: opts.onProgress
+                ? (evt) => {
+                    const total = evt.total || file.size || 1;
+                    opts.onProgress(Math.min(99, Math.round((evt.loaded / total) * 100)));
+                }
+                : undefined,
+            timeout: 10 * 60 * 1000,
+            maxBodyLength: Infinity,
+            maxContentLength: Infinity,
         });
+        if (opts.onProgress) opts.onProgress(100);
         return data.data;
     },
 

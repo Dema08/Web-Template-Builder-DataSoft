@@ -22,6 +22,12 @@ return [
         'allowed_mime_types' => ['image/jpeg', 'image/png', 'image/webp'],
         'max_size_mb' => 5,
         'max_size_bytes' => 5 * 1024 * 1024,
+        // Video background: kualitas terjaga (tanpa re-encode), server tetap ringan
+        // karena file disimpan statis + di-streaming via HTTP Range Requests.
+        'allowed_video_extensions' => ['mp4', 'webm', 'ogg'],
+        'allowed_video_mime_types' => ['video/mp4', 'video/webm', 'video/ogg'],
+        'max_video_size_mb' => 50,
+        'max_video_size_bytes' => 50 * 1024 * 1024,
         'disk' => 'websites',
     ],
 

@@ -1,9 +1,11 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Sparkles, Globe } from 'lucide-react';
-import { Card } from '@shared/components/ui';
+import { Card, CreateSiteChoiceModal } from '@shared/components/ui';
 import { ROUTES } from '@constants';
 
 export default function EmptyWebsiteCard() {
+    const [isChoiceOpen, setIsChoiceOpen] = useState(false);
     return (
         <Card className="overflow-hidden p-8 lg:p-10">
             <div className="grid gap-8 lg:grid-cols-[1fr_0.9fr] lg:items-center">
@@ -20,13 +22,15 @@ export default function EmptyWebsiteCard() {
                     </p>
 
                     <div className="mt-6 flex flex-wrap gap-3">
-                        <Link
-                            to={ROUTES.BUILDER}
-                            className="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-indigo-700 shadow-md shadow-indigo-600/20"
+                        <button
+                            type="button"
+                            onClick={() => setIsChoiceOpen(true)}
+                            className="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-indigo-700 shadow-md shadow-indigo-600/20 cursor-pointer"
                         >
                             <Globe className="h-4 w-4" />
                             Create Website
-                        </Link>
+                        </button>
+                        <CreateSiteChoiceModal isOpen={isChoiceOpen} onClose={() => setIsChoiceOpen(false)} />
                         <Link
                             to={ROUTES.PROFILE}
                             className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-bold text-slate-700 transition hover:bg-slate-50"

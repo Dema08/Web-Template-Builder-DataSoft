@@ -28,6 +28,14 @@ import {
   Sparkle
 } from 'lucide-react';
 import { toast } from '@store';
+import {
+  validateVideoFile,
+  createVideoPreview,
+  revokePreview,
+  captureVideoPoster,
+  uploadVideoAsset,
+  formatBytes,
+} from '../../utils/videoUpload';
 
 export default function BackgroundEditorModal() {
   const { isOpen, closeEditor, backgroundConfig, updateConfig, resetConfig, currentSection, setBackground } = useBackgroundStore();
@@ -39,6 +47,15 @@ export default function BackgroundEditorModal() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isDraggingFile, setIsDraggingFile] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  // Upload video ringan: progress streaming + cancel (tanpa base64)
+  const [videoUploadPct, setVideoUploadPct] = useState(0);
+  const [isUploadingVideo, setIsUploadingVideo] = useState(false);
+  const [videoFileName, setVideoFileName] = useState('');
+  const videoAbortRef = useRef(null);
+
+  useEffect(() => () => {
+    if (videoAbortRef.current) { try { videoAbortRef.current.abort(); } catch (_) {} }
+  }, []);
 
   const imageInputRef = useRef(null);
   const videoInputRef = useRef(null);
@@ -55,6 +72,15 @@ export default function BackgroundEditorModal() {
 
   const handleApply = () => {
     if (!currentSection) return;
+
+    // Jangan apply/save saat video masih uploading — blob lokal tidak valid permanen.
+    if (
+      backgroundConfig.type === 'video' &&
+      (isUploadingVideo || backgroundConfig.video?.pending || (backgroundConfig.video?.url || '').startsWith('blob:'))
+    ) {
+      toast.error('Tunggu upload video selesai dulu — preview masih lokal & belum tersimpan di server.', 'Video Belum Selesai');
+      return;
+    }
 
     // 1. Simpan ke backgroundStore
     setBackground(currentSection, backgroundConfig);
@@ -115,48 +141,80 @@ export default function BackgroundEditorModal() {
     reader.readAsDataURL(file);
   };
 
-  // Handle local Video file upload
-  const handleVideoFileUpload = (e) => {
+  // Handle local Video file upload — RINGAN (tanpa base64 50MB)
+  // Preview instan via blob URL + upload streaming ke server.
+  // Yang disimpan = URL file statis, kualitas 100% terjaga.
+  const handleVideoFileUpload = async (e) => {
     const file = e.target.files?.[0];
+    if (videoInputRef.current) videoInputRef.current.value = '';
     if (!file) return;
 
-    if (!file.type.startsWith('video/')) {
-      toast.error('Please upload a valid video file (MP4, WebM, OGG)', 'Invalid File');
+    const check = validateVideoFile(file);
+    if (!check.ok) {
+      if (check.message.includes('Format')) toast.error(check.message, 'Invalid File');
+      else toast.error(check.message, 'File Too Large');
       return;
     }
-
-    if (file.size > 50 * 1024 * 1024) {
-      toast.error('Video size should be less than 50MB for optimal web performance', 'File Too Large');
+    if (isUploadingVideo) {
+      toast.info('Tunggu upload sebelumnya selesai.', 'Upload Berjalan');
       return;
     }
+    if (videoAbortRef.current) { try { videoAbortRef.current.abort(); } catch (_) {} }
+    const controller = new AbortController();
+    videoAbortRef.current = controller;
 
+    // Preview INSTAN (blob lokal, tanpa base64) — langsung terlihat
+    const blobUrl = createVideoPreview(file);
+    setVideoFileName(file.name);
+    setVideoUploadPct(0);
+    setIsUploadingVideo(true);
     setIsUploading(true);
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const dataUrl = event.target.result;
+    updateConfig({
+      type: 'video',
+      video: { ...backgroundConfig.video, url: blobUrl, fileName: file.name, pending: true },
+    });
+    captureVideoPoster(file).then((poster) => {
+      if (poster) updateConfig({ video: { ...useBackgroundStore.getState().backgroundConfig.video, poster } });
+    });
+
+    try {
+      const result = await uploadVideoAsset(file, {
+        onProgress: (pct) => setVideoUploadPct(pct),
+        signal: controller.signal,
+      });
       updateConfig({
         type: 'video',
         video: {
-          ...backgroundConfig.video,
-          url: dataUrl,
+          ...useBackgroundStore.getState().backgroundConfig.video,
+          url: result.url,
           fileName: file.name,
-        }
+          size: result.size || file.size,
+          pending: false,
+        },
       });
-      // Save to media store
       addUpload({
         name: file.name,
-        url: dataUrl,
-        size: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
-        type: 'video'
+        url: result.url,
+        size: formatBytes(result.size || file.size),
+        type: 'video',
       });
+      toast.success(`Video "${file.name}" terupload! Streaming ringan, kualitas terjaga.`, 'Video Uploaded');
+    } catch (err) {
+      const aborted = err?.name === 'CanceledError' || err?.name === 'AbortError' || err?.code === 'ERR_CANCELED';
+      toast.error(
+        aborted ? 'Upload video dibatalkan.' : (err?.response?.data?.message || err?.message || 'Gagal mengupload video.'),
+        'Upload Video'
+      );
+    } finally {
+      setIsUploadingVideo(false);
       setIsUploading(false);
-      toast.success(`Video "${file.name}" uploaded successfully!`, 'Video Uploaded');
-    };
-    reader.onerror = () => {
-      setIsUploading(false);
-      toast.error('Failed to read video file', 'Upload Error');
-    };
-    reader.readAsDataURL(file);
+      const doneUrl = useBackgroundStore.getState().backgroundConfig?.video?.url;
+      if (doneUrl && doneUrl !== blobUrl) revokePreview(blobUrl);
+    }
+  };
+
+  const handleCancelModalVideoUpload = () => {
+    if (videoAbortRef.current) { try { videoAbortRef.current.abort(); } catch (_) {} }
   };
 
   // Drop handlers for drag & drop zone
@@ -262,15 +320,17 @@ export default function BackgroundEditorModal() {
             className="relative w-full h-24 rounded-2xl overflow-hidden border border-slate-700 shadow-inner flex items-center justify-center text-center p-4 transition-all duration-300"
             style={getPreviewStyle()}
           >
-            {/* Video preview in banner */}
+            {/* Video preview in banner — ringan: preload metadata + poster, tanpa autoplay paksa di editor */}
             {backgroundConfig.type === 'video' && backgroundConfig.video?.url && (
               <video
                 className="absolute inset-0 w-full h-full object-cover pointer-events-none"
                 src={backgroundConfig.video.url}
-                autoPlay={backgroundConfig.video.autoplay ?? true}
+                poster={backgroundConfig.video.poster || undefined}
+                preload="metadata"
                 loop={backgroundConfig.video.loop ?? true}
-                muted={backgroundConfig.video.muted ?? true}
+                muted
                 playsInline
+                disablePictureInPicture
               />
             )}
 
@@ -776,7 +836,7 @@ export default function BackgroundEditorModal() {
                   onDragOver={(e) => { e.preventDefault(); setIsDraggingFile(true); }}
                   onDragLeave={() => setIsDraggingFile(false)}
                   onDrop={(e) => handleFileDrop(e, 'video')}
-                  onClick={() => videoInputRef.current?.click()}
+                  onClick={() => { if (!isUploadingVideo) videoInputRef.current?.click(); }}
                   className={`border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition-all ${
                     isDraggingFile
                       ? 'border-indigo-600 bg-indigo-50/50 scale-[1.01]'
@@ -794,11 +854,28 @@ export default function BackgroundEditorModal() {
                     <Video className="h-6 w-6" />
                   </div>
                   <p className="text-xs font-bold text-slate-700">
-                    {isUploading ? 'Uploading video file...' : 'Click to select or drag & drop video MP4/WebM'}
+                    {isUploadingVideo ? `Mengupload ${videoUploadPct}% — preview langsung tampil` : 'Click to select or drag & drop video MP4/WebM'}
                   </p>
                   <p className="text-[11px] text-slate-500 mt-0.5">
-                    Videos automatically loop and mute for smooth background playback
+                    MP4 (H.264) / WebM hingga 50MB — kualitas asli terjaga, diputar via streaming ringan
                   </p>
+                  {isUploadingVideo && (
+                    <div className="mt-3 text-left" onClick={(e) => e.stopPropagation()}>
+                      <div className="h-2 rounded-full bg-slate-200 overflow-hidden">
+                        <div className="h-full bg-indigo-600 transition-all" style={{ width: `${videoUploadPct}%` }} />
+                      </div>
+                      <div className="mt-2 flex items-center justify-between gap-2">
+                        <span className="text-[11px] font-bold text-indigo-700 truncate">{videoFileName || 'video.mp4'}</span>
+                        <button
+                          type="button"
+                          onClick={handleCancelModalVideoUpload}
+                          className="text-[11px] font-extrabold text-rose-600 hover:text-rose-700 underline shrink-0"
+                        >
+                          Batalkan
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Direct Video URL Input */}
