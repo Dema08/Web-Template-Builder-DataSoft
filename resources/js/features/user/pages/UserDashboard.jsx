@@ -53,6 +53,8 @@ export default function UserDashboard() {
     const { websites, published_websites = [], selected_website_id, analytics, isLoading, refetch } = useDashboard(params);
     const { brand_name } = useSettingsStore();
 
+    const publishedOnlyWebsites = (websites || []).filter((site) => site.is_published);
+
     if (isLoading) {
         return (
             <div className="flex h-[50vh] items-center justify-center">
@@ -84,13 +86,13 @@ export default function UserDashboard() {
                 </Link>
             </div>
 
-            {/* All Websites Section */}
+            {/* Published Websites Section */}
             <div>
                 <div className="flex items-center justify-between mb-4">
                     <div>
                         <h2 className="text-lg font-extrabold text-[rgb(var(--color-text-primary))]">Website Saya</h2>
                         <p className="text-xs text-[rgb(var(--color-text-secondary))] mt-0.5">
-                            Semua website yang terdaftar di akun Anda.
+                            Daftar website Anda yang telah berhasil dipublikasikan.
                         </p>
                     </div>
                     <Link
@@ -101,25 +103,24 @@ export default function UserDashboard() {
                     </Link>
                 </div>
 
-                {!websites || websites.length === 0 ? (
+                {publishedOnlyWebsites.length === 0 ? (
                     <Card className="p-8 flex flex-col items-center justify-center text-center gap-3">
                         <Globe className="h-10 w-10 text-[rgb(var(--color-text-tertiary))] opacity-30" />
-                        <p className="text-sm font-bold text-[rgb(var(--color-text-secondary))]">Belum ada website</p>
+                        <p className="text-sm font-bold text-[rgb(var(--color-text-secondary))]">Belum ada website terpublikasi</p>
                         <p className="text-xs text-[rgb(var(--color-text-tertiary))]">
-                            Buat website pertama Anda dengan memilih template.
+                            Publikasikan website Anda melalui builder agar tampil di dashboard ini.
                         </p>
                         <Link
-                            to={ROUTES.ONBOARDING}
+                            to={ROUTES.WEBSITES}
                             className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold hover:bg-indigo-700 transition mt-1"
                         >
                             <Sparkles className="h-3.5 w-3.5" />
-                            Buat Website Baru
+                            Kelola Website
                         </Link>
                     </Card>
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {websites.map((site) => {
-                            const isPublished = site.is_published;
+                        {publishedOnlyWebsites.map((site) => {
                             const slug = site.subdomain || 'my-website';
                             const publicPath = site.url_path || `/p/${encodeURIComponent(slug)}`;
                             return (
@@ -165,31 +166,27 @@ export default function UserDashboard() {
                                                 <span className="truncate">{publicPath}</span>
                                             </a>
                                         </div>
-                                        <StatusBadge status={isPublished ? 'published' : 'draft'} />
+                                        <StatusBadge status="published" />
                                     </div>
 
                                     <div className="flex items-center gap-1.5 text-[10px] text-[rgb(var(--color-text-tertiary))]">
-                                        {isPublished
-                                            ? <CheckCircle2 className="h-3 w-3 text-emerald-500 shrink-0" />
-                                            : <Clock className="h-3 w-3 shrink-0" />}
-                                        {isPublished ? 'Published' : 'Draft'}
+                                        <CheckCircle2 className="h-3 w-3 text-emerald-500 shrink-0" />
+                                        Published
                                         {site.template && (
                                             <span className="ml-auto truncate">• {site.template}</span>
                                         )}
                                     </div>
 
                                     <div className="flex items-center gap-2 pt-2 border-t border-[rgb(var(--color-border))]">
-                                        {isPublished && (
-                                            <a
-                                                href={publicPath}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="p-1.5 text-[rgb(var(--color-text-secondary))] hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition border border-[rgb(var(--color-border))]"
-                                                title="Lihat Website"
-                                            >
-                                                <ExternalLink className="h-3.5 w-3.5" />
-                                            </a>
-                                        )}
+                                        <a
+                                            href={publicPath}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="p-1.5 text-[rgb(var(--color-text-secondary))] hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition border border-[rgb(var(--color-border))]"
+                                            title="Lihat Website"
+                                        >
+                                            <ExternalLink className="h-3.5 w-3.5" />
+                                        </a>
                                         <Link
                                             to={`${ROUTES.BUILDER}?website_id=${site.id}`}
                                             className="flex-1 inline-flex items-center justify-center gap-1.5 py-1.5 px-3 bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-bold rounded-lg transition"
