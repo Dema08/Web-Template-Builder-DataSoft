@@ -201,7 +201,9 @@ export default function RightInspector() {
   const applyBackgroundToSection = (sectionId, updater) => {
     if (!sectionId) return;
     const target = useBuilderStore.getState().sections.find(s => s.id === sectionId);
-    const current = buildFullBackground(target?.background || bgConfig);
+    if (!target) return;
+
+    const current = target.background || {};
     const newConfig = typeof updater === 'function' ? updater(current) : { ...current, ...updater };
     updateSectionBackground(sectionId, newConfig);
   };
@@ -1078,6 +1080,7 @@ export default function RightInspector() {
               <div className="space-y-2 pt-3 border-t border-slate-200">
                 <label className="text-[11px] font-bold text-slate-600">Video Background (upload server)</label>
                 <VideoBackgroundUploader
+                  key={selectedSectionId}
                   websiteId={new URLSearchParams(window.location.search).get('website_id')}
                   sectionId={selectedSectionId}
                   initialVideoUrl={bgConfig.video?.uploadedUrl || null}

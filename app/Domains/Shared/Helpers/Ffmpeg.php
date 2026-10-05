@@ -44,7 +44,8 @@ class Ffmpeg
             return false;
         }
 
-        return self::ffmpeg() !== null;
+        $resolved = self::ffmpeg();
+        return $resolved !== null && $resolved !== PHP_BINARY && stripos(basename($resolved), 'php') === false;
     }
 
     /**
@@ -53,7 +54,7 @@ class Ffmpeg
     public static function version(): ?string
     {
         $binary = self::ffmpeg();
-        if ($binary === null || ! function_exists('shell_exec')) {
+        if ($binary === null || $binary === PHP_BINARY || stripos(basename($binary), 'php') !== false || ! function_exists('shell_exec')) {
             return null;
         }
 
@@ -95,6 +96,20 @@ class Ffmpeg
             foreach (glob('C:\\laragon\\bin\\'.$name.'*\\bin') ?: [] as $globDir) {
                 $dirs[] = $globDir;
             }
+
+            // WinGet Packages glob support (e.g. Gyan.FFmpeg installed via winget)
+            $localAppData = (string) getenv('LOCALAPPDATA');
+            if ($localAppData !== '') {
+                foreach (glob($localAppData.'\\Microsoft\\WinGet\\Packages\\*FFmpeg*\\*\\bin') ?: [] as $globDir) {
+                    $dirs[] = $globDir;
+                }
+            }
+            $userProfile = (string) getenv('USERPROFILE');
+            if ($userProfile !== '') {
+                foreach (glob($userProfile.'\\AppData\\Local\\Microsoft\\WinGet\\Packages\\*FFmpeg*\\*\\bin') ?: [] as $globDir) {
+                    $dirs[] = $globDir;
+                }
+            }
         } else {
             $dirs = ['/usr/bin', '/usr/local/bin', '/opt/homebrew/bin', '/snap/bin'];
         }
@@ -112,22 +127,25 @@ class Ffmpeg
      */
     private static function binary(string $name): ?string
     {
-        $override = (string) (config('chunk-upload.ffmpeg.'.$name.'_binary') ?? '');
-        if ($override !== '' && is_file($override)) {
+        // 1. Env override (kalau di-set dan bukan PHP binary)
+        $override = env(strtoupper($name).'_BINARY') ?? config('chunk-upload.ffmpeg.'.$name.'_binary');
+        if ($override && is_string($override) && $override !== '' && $override !== PHP_BINARY && stripos(basename($override), 'php') === false && is_file($override)) {
             @chmod($override, 0755);
 
             return $override;
         }
 
-        $bundled = storage_path('app/bin/'.$name);
-        if (is_file($bundled) && self::isRunnable($bundled)) {
+        // 2. Bundled di storage/app/bin
+        $bundled = storage_path('app/bin/'.$name.(PHP_OS_FAMILY === 'Windows' ? '.exe' : ''));
+        if (is_file($bundled) && self::isRunnable($bundled) && $bundled !== PHP_BINARY && stripos(basename($bundled), 'php') === false) {
             @chmod($bundled, 0755);
 
             return $bundled;
         }
 
+        // 3. Candidate paths
         foreach (self::candidatePaths($name) as $candidate) {
-            if (is_file($candidate) && self::isRunnable($candidate)) {
+            if (is_file($candidate) && self::isRunnable($candidate) && $candidate !== PHP_BINARY && stripos(basename($candidate), 'php') === false) {
                 return $candidate;
             }
         }
@@ -148,7 +166,11 @@ class Ffmpeg
 
         $path = trim(strtok($path, PHP_EOL) ?: '', "\"' \t\r\n");
 
-        return ($path !== '' && is_file($path)) ? $path : null;
+        if ($path !== '' && is_file($path) && $path !== PHP_BINARY && stripos(basename($path), 'php') === false) {
+            return $path;
+        }
+
+        return null;
     }
 
     /**

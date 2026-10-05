@@ -31,32 +31,34 @@ const cloneComponentWithNewIds = (comp) => {
 
 // Helper: bersihkan blob:/data: URL agar tidak pernah masuk draft/published_json.
 // Blob hanya untuk preview lokal sementara — yang disimpan harus URL server.
-const sanitizeServerUrl = (url) => {
-  if (!url || typeof url !== 'string') return url ?? null;
-  if (url.startsWith('blob:') || url.startsWith('data:')) return null;
-  return url;
-};
-
 const sanitizeBackgroundUrls = (bg) => {
-  if (!bg || typeof bg !== 'object') return bg ?? null;
-  const clean = { ...bg };
-  if (clean.video && typeof clean.video === 'object') {
-    const videoUrl = sanitizeServerUrl(clean.video.url);
-    clean.video = {
-      ...clean.video,
-      url: videoUrl ?? sanitizeServerUrl(clean.video.uploadedUrl),
-      uploadedUrl: sanitizeServerUrl(clean.video.uploadedUrl),
-      poster: sanitizeServerUrl(clean.video.poster),
+  if (!bg || typeof bg !== 'object') return bg;
+
+  const sanitize = (url) => {
+    if (!url || typeof url !== 'string') return null;
+    if (url.startsWith('blob:')) return null;
+    if (url.startsWith('data:')) return null;
+    return url;  // ← apapun selain blob/data, kembalikan as-is
+  };
+
+  const result = { ...bg };
+
+  if (bg.video) {
+    result.video = {
+      ...bg.video,
+      url: sanitize(bg.video.url) || sanitize(bg.video.uploadedUrl),
+      uploadedUrl: sanitize(bg.video.uploadedUrl),
+      poster: sanitize(bg.video.poster),
     };
   }
-  if (clean.image && typeof clean.image === 'object') {
-    clean.image = {
-      ...clean.image,
-      url: sanitizeServerUrl(clean.image.url),
-      uploadedUrl: sanitizeServerUrl(clean.image.uploadedUrl),
+  if (bg.image) {
+    result.image = {
+      ...bg.image,
+      url: sanitize(bg.image.url) || sanitize(bg.image.uploadedUrl),
+      uploadedUrl: sanitize(bg.image.uploadedUrl),
     };
   }
-  return clean;
+  return result;
 };
 
 export const useBuilderStore = create((set, get) => ({
