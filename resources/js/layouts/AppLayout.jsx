@@ -347,11 +347,29 @@ export default function AppLayout() {
                                 </span>
                             </div>
 
-                            {/* Desktop Breadcrumb */}
-                            <nav className="hidden items-center gap-1.5 text-xs text-[rgb(var(--color-text-tertiary))] sm:flex">
-                                <Home className="h-3.5 w-3.5" />
-                                <span>/{location.pathname.split('/').filter(Boolean).join(' / ')}</span>
-                            </nav>
+                            {/* Desktop Page Title Indicator */}
+                            {(() => {
+                                const activePage = sidebarItems.find(item =>
+                                    item.to === location.pathname ||
+                                    (item.to !== '/' && location.pathname.startsWith(item.to))
+                                ) || sidebarItems.find(item => item.to === '/');
+                                const PageIcon = activePage?.icon ?? Home;
+                                return (
+                                    <div className="hidden sm:flex items-center gap-2.5">
+                                        <div className="flex items-center justify-center h-8 w-8 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-900/50">
+                                            <PageIcon className="h-4 w-4" />
+                                        </div>
+                                        <div>
+                                            <p className="text-sm font-extrabold text-[rgb(var(--color-text-primary))] leading-tight">
+                                                {activePage?.label ?? 'Halaman'}
+                                            </p>
+                                            <p className="text-[10px] text-[rgb(var(--color-text-tertiary))] font-medium leading-tight">
+                                                /{location.pathname.split('/').filter(Boolean).join(' / ')}
+                                            </p>
+                                        </div>
+                                    </div>
+                                );
+                            })()}
                         </div>
 
                         {/* Top Right Actions */}
