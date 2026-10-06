@@ -959,11 +959,30 @@ function TemplateSection() {
                                             className="w-full h-full object-cover group-hover:scale-105 transition duration-700" />
 
                                         {/* Overlay on hover */}
-                                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center gap-2"
+                                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center gap-2 px-3"
                                             style={{ background: 'rgba(15,23,42,0.65)', backdropFilter: 'blur(3px)' }}>
-                                            <span className="px-4 py-2 bg-white text-slate-900 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-lg hover:bg-slate-50 transition">
-                                                <Eye className="h-3.5 w-3.5 text-indigo-600" /> Lihat Detail & Pratinjau
-                                            </span>
+                                            <button
+                                                type="button"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    window.open(`/preview/template/${tpl.id}`, '_blank');
+                                                }}
+                                                className="px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-lg transition transform hover:scale-105 active:scale-95 cursor-pointer"
+                                                title="Lihat Pratinjau Langsung Template"
+                                            >
+                                                <Eye className="h-3.5 w-3.5" /> Pratinjau
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setSelectedModalTemplate(tpl);
+                                                }}
+                                                className="px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-900 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-lg transition transform hover:scale-105 active:scale-95 cursor-pointer"
+                                                title="Lihat Informasi Detail Template"
+                                            >
+                                                Detail
+                                            </button>
                                         </div>
 
                                         {/* Category Badge */}
