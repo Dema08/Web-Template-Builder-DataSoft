@@ -334,7 +334,7 @@ export default function AdminTemplateBuilder() {
           ...(thumbUrl ? { thumbnail: thumbUrl } : {}),
           draft_json: draftJson,
           published_json: draftJson,
-          status: 'dipublikasikan',
+          status: 'published',
         };
         if (!templateId) {
           const response = await templateApi.create(payload);
@@ -348,7 +348,7 @@ export default function AdminTemplateBuilder() {
               await templateApi.uploadThumbnail(newId, fd);
             }
           }
-          useBuilderStore.getState().setStatus('dipublikasikan');
+          useBuilderStore.getState().setStatus('published');
           try { clearLocalDraft(newId); } catch { /* abaikan */ }
           toast.success('Template created and published successfully!', 'Berhasil');
           // Kembali otomatis ke halaman Manage Template setelah publish
@@ -361,7 +361,7 @@ export default function AdminTemplateBuilder() {
             fd.append('thumbnail', thumbFile);
             await templateApi.uploadThumbnail(templateId, fd);
           }
-          useBuilderStore.getState().setStatus('dipublikasikan');
+          useBuilderStore.getState().setStatus('published');
           try { clearLocalDraft(templateId); } catch { /* abaikan */ }
           toast.success('Template published successfully!', 'Berhasil');
           // Kembali otomatis ke halaman Manage Template setelah publish

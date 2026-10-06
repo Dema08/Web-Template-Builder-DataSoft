@@ -382,12 +382,12 @@ export default function AdminWebsites() {
                                                     onClick={() =>
                                                         updateStatusMutation.mutate({
                                                             id: site.id,
-                                                            status: site.status === 'dipublikasikan' ? 'draft' : 'dipublikasikan',
+                                                            status: site.status === 'published' ? 'suspended' : 'published',
                                                         })
                                                     }
                                                     className="px-2.5 py-1.5 bg-[rgb(var(--color-surface-alt))] hover:bg-indigo-50 dark:hover:bg-indigo-950/40 text-[rgb(var(--color-text-primary))] hover:text-indigo-600 border border-[rgb(var(--color-border))] rounded-xl text-xs font-bold transition disabled:opacity-50"
                                                 >
-                                                    {site.status === 'dipublikasikan' ? 'Batal Publikasi' : 'Publish'}
+                                                    {site.status === 'published' ? 'Batal Publikasi' : 'Publish'}
                                                 </button>
 
                                                 {/* Delete Button */}
