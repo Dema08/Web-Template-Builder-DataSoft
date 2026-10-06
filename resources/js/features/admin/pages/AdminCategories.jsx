@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Trash2, Edit2, Shield, Search, X, Eye, EyeOff, FileText, ChevronUp, ChevronDown } from 'lucide-react';
+import { Plus, Trash2, Edit2, Shield, Search, X, Eye, EyeOff, FileText } from 'lucide-react';
 import { Card, ConfirmModal } from '@shared/components/ui';
 import { toast } from '@store';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -190,28 +190,7 @@ export default function AdminCategories() {
   };
 
 
-  const moveSortOrder = (index, direction) => {
-    const newCategories = [...categories];
-    const newIndex = index + direction;
 
-    if (newIndex < 0 || newIndex >= newCategories.length) return;
-
-    [newCategories[index], newCategories[newIndex]] = [newCategories[newIndex], newCategories[index]];
-
-    const updates = newCategories.map((cat, idx) => ({
-      id: cat.id,
-      sort_order: idx,
-    }));
-
-    Promise.all(
-      updates.map((update) =>
-        categoryService.update(update.id, { ...newCategories.find(c => c.id === update.id), sort_order: update.sort_order })
-      )
-    ).then(() => {
-      queryClient.invalidateQueries(['admin', 'categories']);
-      toast.success('Urutan berhasil diperbarui', 'Berhasil');
-    });
-  };
 
   const toggleExpandCategory = (categoryId) => {
     if (expandedCategory === categoryId) {
@@ -344,7 +323,6 @@ export default function AdminCategories() {
                   <th className="px-4 py-3.5 text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider w-16">ID</th>
                   <th className="px-4 py-3.5 text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Nama</th>
                   <th className="px-4 py-3.5 text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Slug</th>
-                  <th className="px-4 py-3.5 text-center text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider w-28">Urutan</th>
                   <th className="px-4 py-3.5 text-center text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider w-28">Status</th>
                   <th className="px-4 py-3.5 text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider w-32">Dibuat Pada</th>
                   <th className="px-4 py-3.5 text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider w-32">Diperbarui Pada</th>
@@ -352,7 +330,7 @@ export default function AdminCategories() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-[rgb(var(--color-border))]">
-                {filteredCategories.map((cat, index) => (
+                {filteredCategories.map((cat) => (
                   <tr key={cat.id} className="hover:bg-[rgb(var(--color-surface-alt))]/80 transition group">
                     {/* ID */}
                     <td className="px-4 py-4 whitespace-nowrap text-xs font-mono font-bold text-[rgb(var(--color-text-secondary))]">
@@ -371,31 +349,6 @@ export default function AdminCategories() {
                       <span className="font-mono text-xs text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md">
                         {cat.slug}
                       </span>
-                    </td>
-
-                    {/* Urutan */}
-                    <td className="px-4 py-4 whitespace-nowrap text-center">
-                      <div className="inline-flex items-center justify-center gap-1">
-                        <button
-                          onClick={() => moveSortOrder(index, -1)}
-                          disabled={index === 0}
-                          className="p-1 text-[rgb(var(--color-text-tertiary))] hover:text-indigo-600 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
-                          title="Pindah ke Atas"
-                        >
-                          <ChevronUp className="h-4 w-4" />
-                        </button>
-                        <span className="text-xs font-bold text-[rgb(var(--color-text-primary))] min-w-[20px] text-center">
-                          {cat.sort_order}
-                        </span>
-                        <button
-                          onClick={() => moveSortOrder(index, 1)}
-                          disabled={index === filteredCategories.length - 1}
-                          className="p-1 text-[rgb(var(--color-text-tertiary))] hover:text-indigo-600 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
-                          title="Pindah ke Bawah"
-                        >
-                          <ChevronDown className="h-4 w-4" />
-                        </button>
-                      </div>
                     </td>
 
                     {/* Status */}
@@ -502,29 +455,16 @@ export default function AdminCategories() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Urutan</label>
-                  <input
-                    type="number"
-                    min="0"
-                    value={formData.sort_order}
-                    onChange={(e) => setFormData({ ...formData, sort_order: parseInt(e.target.value) || 0 })}
-                    className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Status</label>
-                  <select
-                    value={formData.is_active ? 'true' : 'false'}
-                    onChange={(e) => setFormData({ ...formData, is_active: e.target.value === 'true' })}
-                    className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600"
-                  >
-                    <option value="true">Aktif</option>
-                    <option value="false">Nonaktif</option>
-                  </select>
-                </div>
+              <div>
+                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Status</label>
+                <select
+                  value={formData.is_active ? 'true' : 'false'}
+                  onChange={(e) => setFormData({ ...formData, is_active: e.target.value === 'true' })}
+                  className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600"
+                >
+                  <option value="true">Aktif</option>
+                  <option value="false">Nonaktif</option>
+                </select>
               </div>
 
               <div className="flex justify-end gap-2 pt-4 border-t border-[rgb(var(--color-border))]">
@@ -613,29 +553,16 @@ export default function AdminCategories() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Urutan</label>
-                  <input
-                    type="number"
-                    min="0"
-                    value={templateForm.sort_order}
-                    onChange={(e) => setTemplateForm({ ...templateForm, sort_order: parseInt(e.target.value) || 0 })}
-                    className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Status</label>
-                  <select
-                    value={templateForm.is_active ? 'true' : 'false'}
-                    onChange={(e) => setTemplateForm({ ...templateForm, is_active: e.target.value === 'true' })}
-                    className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600"
-                  >
-                    <option value="true">Aktif</option>
-                    <option value="false">Nonaktif</option>
-                  </select>
-                </div>
+              <div>
+                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Status</label>
+                <select
+                  value={templateForm.is_active ? 'true' : 'false'}
+                  onChange={(e) => setTemplateForm({ ...templateForm, is_active: e.target.value === 'true' })}
+                  className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600"
+                >
+                  <option value="true">Aktif</option>
+                  <option value="false">Nonaktif</option>
+                </select>
               </div>
 
               <div className="flex justify-end gap-2 pt-4 border-t border-[rgb(var(--color-border))]">
