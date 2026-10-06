@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Trash2, Edit2, Shield, Search, X, ChevronUp, ChevronDown, Eye, EyeOff, FileText } from 'lucide-react';
+import { Plus, Trash2, Edit2, Shield, Search, X, Eye, EyeOff, FileText } from 'lucide-react';
 import { Card, ConfirmModal } from '@shared/components/ui';
 import { toast } from '@store';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -21,7 +21,6 @@ export default function AdminCategories() {
   const [formData, setFormData] = useState({
     name: '',
     slug: '',
-    sort_order: 0,
     is_active: true,
   });
 
@@ -30,7 +29,6 @@ export default function AdminCategories() {
     slug: '',
     description: '',
     thumbnail: '',
-    sort_order: 0,
     is_active: true,
   });
 
@@ -134,7 +132,6 @@ export default function AdminCategories() {
     setFormData({
       name: '',
       slug: '',
-      sort_order: 0,
       is_active: true,
     });
   };
@@ -145,7 +142,6 @@ export default function AdminCategories() {
       slug: '',
       description: '',
       thumbnail: '',
-      sort_order: 0,
       is_active: true,
     });
   };
@@ -164,7 +160,6 @@ export default function AdminCategories() {
     setFormData({
       name: category.name,
       slug: category.slug,
-      sort_order: category.sort_order || 0,
       is_active: category.is_active,
     });
     setIsAddOpen(true);
@@ -193,6 +188,7 @@ export default function AdminCategories() {
       slug: name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''),
     });
   };
+
 
   const moveSortOrder = (index, direction) => {
     const newCategories = [...categories];
@@ -240,7 +236,6 @@ export default function AdminCategories() {
       slug: template.slug,
       description: template.description || '',
       thumbnail: template.thumbnail || '',
-      sort_order: template.sort_order || 0,
       is_active: template.is_active,
     });
     setShowTemplateModal(true);
@@ -357,7 +352,7 @@ export default function AdminCategories() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-[rgb(var(--color-border))]">
-                {filteredCategories.map((cat, index) => (
+                {filteredCategories.map((cat) => (
                   <tr key={cat.id} className="hover:bg-[rgb(var(--color-surface-alt))]/80 transition group">
                     {/* ID */}
                     <td className="px-4 py-4 whitespace-nowrap text-xs font-mono font-bold text-[rgb(var(--color-text-secondary))]">
@@ -506,6 +501,8 @@ export default function AdminCategories() {
                   className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 font-mono"
                 />
               </div>
+                />
+              </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -519,6 +516,16 @@ export default function AdminCategories() {
                   />
                 </div>
 
+              <div>
+                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Status</label>
+                <select
+                  value={formData.is_active ? 'true' : 'false'}
+                  onChange={(e) => setFormData({ ...formData, is_active: e.target.value === 'true' })}
+                  className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600"
+                >
+                  <option value="true">Active</option>
+                  <option value="false">Inactive</option>
+                </select>
                 <div>
                   <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Status</label>
                   <select
@@ -617,6 +624,8 @@ export default function AdminCategories() {
                   className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] placeholder-[rgb(var(--color-text-tertiary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600"
                 />
               </div>
+                />
+              </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -630,6 +639,16 @@ export default function AdminCategories() {
                   />
                 </div>
 
+              <div>
+                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Status</label>
+                <select
+                  value={templateForm.is_active ? 'true' : 'false'}
+                  onChange={(e) => setTemplateForm({ ...templateForm, is_active: e.target.value === 'true' })}
+                  className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600"
+                >
+                  <option value="true">Active</option>
+                  <option value="false">Inactive</option>
+                </select>
                 <div>
                   <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Status</label>
                   <select

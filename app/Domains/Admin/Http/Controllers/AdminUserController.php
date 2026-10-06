@@ -59,6 +59,46 @@ class AdminUserController extends BaseController
         );
     }
 
+    public function deactivate(Request $request, User $user): JsonResponse
+    {
+        if ($request->user()->id === $user->id) {
+            return $this->error('Anda tidak dapat me-nonaktifkan akun admin Anda sendiri.', 400);
+        }
+
+        $validated = $request->validate([
+            'alasan' => ['required', 'string', 'min:3', 'max:1000'],
+        ], [
+            'alasan.required' => 'Alasan penonaktifan wajib diisi oleh admin.',
+            'alasan.min' => 'Alasan penonaktifan minimal 3 karakter.',
+        ]);
+
+        $user->update([
+            'is_active' => false,
+            'alasan_penonaktifan' => $validated['alasan'],
+        ]);
+
+        // Revoke active login tokens immediately
+        $user->tokens()->delete();
+
+        return $this->success(
+            new UserResource($user),
+            "Akun user {$user->name} berhasil dinonaktifkan."
+        );
+    }
+
+    public function activate(Request $request, User $user): JsonResponse
+    {
+        $user->update([
+            'is_active' => true,
+            'alasan_penonaktifan' => null,
+        ]);
+
+        return $this->success(
+            new UserResource($user),
+            "Akun user {$user->name} berhasil diaktifkan kembali."
+        );
+    }
+
     public function destroy(Request $request, User $user): JsonResponse
     {
         if ($request->user()->id === $user->id) {

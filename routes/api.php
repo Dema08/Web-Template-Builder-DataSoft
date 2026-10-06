@@ -61,6 +61,8 @@ Route::prefix('v1')->group(function (): void {
         Route::patch('/users/{user}/approve', [App\Domains\Admin\Http\Controllers\AdminUserController::class, 'approveUser']);
         Route::patch('/users/{user}/role', [App\Domains\Admin\Http\Controllers\AdminUserController::class, 'updateRole']);
         Route::patch('/users/{user}/plan', [App\Domains\Pricelist\Http\Controllers\AdminPricelistController::class, 'updateUserPlan']);
+        Route::patch('/users/{user}/deactivate', [App\Domains\Admin\Http\Controllers\AdminUserController::class, 'deactivate']);
+        Route::patch('/users/{user}/activate', [App\Domains\Admin\Http\Controllers\AdminUserController::class, 'activate']);
         Route::delete('/users/{user}', [App\Domains\Admin\Http\Controllers\AdminUserController::class, 'destroy']);
         Route::apiResource('pricelists', App\Domains\Pricelist\Http\Controllers\AdminPricelistController::class);
         Route::patch('/pricelists/{pricelist}/default', [App\Domains\Pricelist\Http\Controllers\AdminPricelistController::class, 'setDefault']);

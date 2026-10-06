@@ -64,7 +64,7 @@ export default function AdminAnalytics() {
             iconBg: 'bg-blue-50 text-blue-600 dark:bg-blue-950/40 dark:text-blue-400',
         },
         {
-            label: 'Website Terpublikasi',
+            label: 'Terpublikasi',
             value: stats?.active_deployments !== undefined ? stats.active_deployments.toLocaleString() : '-',
             subtext: `Dari total ${stats?.total_websites || 0} website dibuat`,
             icon: Globe,
