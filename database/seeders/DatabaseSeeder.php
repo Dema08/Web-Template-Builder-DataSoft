@@ -63,7 +63,10 @@ class DatabaseSeeder extends Seeder
         // ── 4. Industry categories ───────────────────────────────────────
         $this->call(CategorySeeder::class);
 
-        // ── 5. Default Promo Code ───────────────────────────────────────
+        // ── 5. Official Published Starter Templates (30 templates) ───────
+        $this->call(TemplateSeeder::class);
+
+        // ── 6. Default Promo Code ───────────────────────────────────────
         \App\Domains\Pricelist\Models\PromoCode::firstOrCreate(
             ['code' => 'FREE2026'],
             [
