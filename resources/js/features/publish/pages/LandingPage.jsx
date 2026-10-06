@@ -1094,12 +1094,7 @@ function TemplateSection() {
                             {/* Pratinjau Langsung Action — accessible without login */}
                             <button
                                 type="button"
-                                onClick={() => {
-                                    const previewUrl = selectedModalTemplate.is_fallback
-                                        ? `/preview/template`
-                                        : `/admin/templates/builder/${selectedModalTemplate.id}/preview`;
-                                    window.open(previewUrl, '_blank');
-                                }}
+                                onClick={() => window.open(`/preview/template/${selectedModalTemplate.id}`, '_blank')}
                                 className="w-full sm:flex-1 py-3 px-5 rounded-2xl bg-white hover:bg-slate-100 text-slate-800 border border-slate-200 font-bold text-xs shadow-sm flex items-center justify-center gap-2 transition hover:scale-[1.02] active:scale-95"
                             >
                                 <Eye className="h-4 w-4 text-indigo-600" />
