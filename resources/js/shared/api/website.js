@@ -149,8 +149,10 @@ const websiteApi = {
     /**
      * Delete a website (admin).
      */
-    async adminDelete(id) {
-        const { data } = await http.delete(`/admin/websites/${id}`);
+    async adminDelete(id, reason) {
+        const { data } = await http.delete(`/admin/websites/${id}`, {
+            data: { reason },
+        });
         return data.data;
     },
 };

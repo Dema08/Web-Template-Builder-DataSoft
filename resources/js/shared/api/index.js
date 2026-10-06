@@ -10,3 +10,4 @@ export { default as categoryApi } from './category';
 export { default as templateApi } from './template';
 export { default as pricelistApi } from './pricelist';
 export { default as billingApi } from './billing';
+export { default as notificationApi } from './notification';

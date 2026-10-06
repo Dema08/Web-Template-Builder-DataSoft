@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { NavLink, Outlet, Link, useLocation } from 'react-router-dom';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
     Search,
     Bell,
@@ -22,20 +23,50 @@ import {
     LayoutTemplate,
     Menu,
     X,
+    Trash2,
+    CheckCheck,
+    Info,
 } from 'lucide-react';
 import { useAuth } from '@hooks';
 import { ROUTES } from '@constants';
 import { Spinner, PageLoader, CreateSiteChoiceModal } from '@shared/components/ui';
+import { notificationApi } from '@shared/api';
 import { useSettingsStore } from '@store';
 import { Suspense } from 'react';
 
 export default function AppLayout() {
     const { user, logout, isLoggingOut } = useAuth();
     const [userMenuOpen, setUserMenuOpen] = useState(false);
+    const [notifOpen, setNotifOpen] = useState(false);
     const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isChoiceOpen, setIsChoiceOpen] = useState(false);
     const location = useLocation();
+    const queryClient = useQueryClient();
+
+    const { data: notifData } = useQuery({
+        queryKey: ['user-notifications'],
+        queryFn: () => notificationApi.getNotifications(),
+        enabled: !!user,
+        refetchInterval: 30 * 1000,
+    });
+
+    const notifications = notifData?.notifications ?? [];
+    const unreadCount = notifData?.unread_count ?? 0;
+
+    const markAllReadMutation = useMutation({
+        mutationFn: () => notificationApi.markAllAsRead(),
+        onSuccess: () => {
+            queryClient.invalidateQueries(['user-notifications']);
+        },
+    });
+
+    const markReadMutation = useMutation({
+        mutationFn: (id) => notificationApi.markAsRead(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries(['user-notifications']);
+        },
+    });
 
     const isAdmin = user?.role === 'admin';
     const firstName = user?.name?.split(' ')[0] || 'User';
@@ -335,14 +366,105 @@ export default function AppLayout() {
                                 />
                             </div>
 
-                            <button
-                                type="button"
-                                className="relative rounded-full border border-[rgb(var(--color-border))] p-2.5 text-[rgb(var(--color-text-secondary))] hover:text-[rgb(var(--color-text-primary))] hover:bg-[rgb(var(--color-surface-alt))] transition"
-                                aria-label="Notifikasi"
-                            >
-                                <Bell className="h-4 w-4" />
-                                <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-indigo-600 ring-2 ring-[rgb(var(--color-surface))]" />
-                            </button>
+                            {/* Notification Dropdown Button & Container */}
+                            <div className="relative">
+                                <button
+                                    type="button"
+                                    onClick={() => setNotifOpen(!notifOpen)}
+                                    className="relative rounded-full border border-[rgb(var(--color-border))] p-2.5 text-[rgb(var(--color-text-secondary))] hover:text-[rgb(var(--color-text-primary))] hover:bg-[rgb(var(--color-surface-alt))] transition focus:outline-none"
+                                    aria-label="Notifikasi"
+                                >
+                                    <Bell className="h-4 w-4" />
+                                    {unreadCount > 0 && (
+                                        <span className="absolute -top-1 -right-1 flex h-4 min-w-[16px] px-1 items-center justify-center rounded-full bg-red-600 text-[10px] font-extrabold text-white ring-2 ring-[rgb(var(--color-surface))] animate-pulse">
+                                            {unreadCount > 9 ? '9+' : unreadCount}
+                                        </span>
+                                    )}
+                                </button>
+
+                                {notifOpen && (
+                                    <div
+                                        className="absolute right-0 mt-2 w-80 sm:w-96 rounded-2xl bg-[rgb(var(--color-surface))] shadow-2xl border border-[rgb(var(--color-border))] py-3 z-50 overflow-hidden text-xs ds-animate-scale-in"
+                                        onMouseLeave={() => setNotifOpen(false)}
+                                    >
+                                        <div className="px-4 pb-2.5 border-b border-[rgb(var(--color-border))] flex items-center justify-between">
+                                            <div className="flex items-center gap-2">
+                                                <Bell className="h-4 w-4 text-indigo-600" />
+                                                <span className="font-extrabold text-[rgb(var(--color-text-primary))] text-sm">Notifikasi</span>
+                                                {unreadCount > 0 && (
+                                                    <span className="px-2 py-0.5 rounded-full bg-red-100 text-red-700 font-extrabold text-[10px]">
+                                                        {unreadCount} Baru
+                                                    </span>
+                                                )}
+                                            </div>
+                                            {unreadCount > 0 && (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => markAllReadMutation.mutate()}
+                                                    disabled={markAllReadMutation.isPending}
+                                                    className="text-[11px] font-bold text-indigo-600 hover:text-indigo-800 transition flex items-center gap-1 cursor-pointer"
+                                                >
+                                                    <CheckCheck className="h-3.5 w-3.5" />
+                                                    Tandai dibaca
+                                                </button>
+                                            )}
+                                        </div>
+
+                                        <div className="max-h-80 overflow-y-auto divide-y divide-[rgb(var(--color-border-soft))] ds-scrollbar-thin">
+                                            {notifications.length === 0 ? (
+                                                <div className="p-6 text-center text-[rgb(var(--color-text-tertiary))]">
+                                                    <Bell className="h-8 w-8 mx-auto mb-2 opacity-30 text-indigo-500" />
+                                                    <p className="font-medium text-xs">Belum ada notifikasi baru</p>
+                                                </div>
+                                            ) : (
+                                                notifications.map((notif) => (
+                                                    <div
+                                                        key={notif.id}
+                                                        onClick={() => {
+                                                            if (!notif.dibaca) {
+                                                                markReadMutation.mutate(notif.id);
+                                                            }
+                                                        }}
+                                                        className={`p-3.5 transition cursor-pointer flex gap-3 ${
+                                                            !notif.dibaca
+                                                                ? 'bg-indigo-50/50 dark:bg-indigo-950/20 hover:bg-indigo-50 dark:hover:bg-indigo-950/40'
+                                                                : 'hover:bg-[rgb(var(--color-surface-alt))]'
+                                                        }`}
+                                                    >
+                                                        <div className="mt-0.5 shrink-0">
+                                                            {notif.tipe === 'website_deleted' ? (
+                                                                <div className="p-2 rounded-xl bg-red-100 dark:bg-red-950/50 text-red-600 dark:text-red-400">
+                                                                    <Trash2 className="h-4 w-4" />
+                                                                </div>
+                                                            ) : (
+                                                                <div className="p-2 rounded-xl bg-indigo-100 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400">
+                                                                    <Info className="h-4 w-4" />
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                        <div className="flex-1 space-y-1">
+                                                            <div className="flex items-center justify-between">
+                                                                <p className={`font-bold ${!notif.dibaca ? 'text-indigo-950 dark:text-indigo-200' : 'text-[rgb(var(--color-text-primary))]'}`}>
+                                                                    {notif.judul}
+                                                                </p>
+                                                                {!notif.dibaca && (
+                                                                    <span className="h-2 w-2 rounded-full bg-indigo-600 shrink-0" />
+                                                                )}
+                                                            </div>
+                                                            <p className="text-[11px] text-[rgb(var(--color-text-secondary))] whitespace-pre-line leading-relaxed">
+                                                                {notif.pesan}
+                                                            </p>
+                                                            <p className="text-[10px] text-[rgb(var(--color-text-tertiary))] font-medium pt-0.5">
+                                                                {notif.created_at_formatted}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                ))
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
 
                             {/* Profile Dropdown */}
                             <div className="relative">

@@ -2,6 +2,7 @@
 
 namespace App\Domains\Admin\Http\Controllers;
 
+use App\Domains\Notification\Models\Notification;
 use App\Domains\Shared\Http\Controllers\BaseController;
 use App\Domains\Website\Models\Website;
 use Illuminate\Http\JsonResponse;
@@ -43,8 +44,12 @@ class AdminWebsiteController extends BaseController
             });
         }
 
+        // Draft websites are hidden from admin view by default.
+        // Admin should only see published and suspended websites.
+        $query->where('status', '!=', 'draft');
+
         if ($status = $request->get('status')) {
-            if ($status !== 'all') {
+            if ($status !== 'all' && $status !== 'draft') {
                 $query->where('status', $status);
             }
         }
@@ -105,10 +110,9 @@ class AdminWebsiteController extends BaseController
             'data'  => $items,
             'total' => $websites->total(),
             'stats' => [
-                'total'      => Website::count(),
-                'published'  => Website::where('status', 'published')->count(),
-                'draft'      => Website::where('status', 'draft')->count(),
-                'suspended'  => Website::where('status', 'suspended')->count(),
+                'total'     => Website::where('status', '!=', 'draft')->count(),
+                'published' => Website::where('status', 'published')->count(),
+                'suspended' => Website::where('status', 'suspended')->count(),
             ],
         ], 'Websites retrieved successfully');
     }
@@ -173,12 +177,33 @@ class AdminWebsiteController extends BaseController
 
 
     /**
-     * Delete a website permanently.
+     * Delete a website permanently and send notification to website owner.
      */
-    public function destroy(Website $website): JsonResponse
+    public function destroy(Request $request, Website $website): JsonResponse
     {
+        $validated = $request->validate([
+            'reason' => 'required|string|min:3|max:1000',
+        ], [
+            'reason.required' => 'Alasan penghapusan website wajib diisi.',
+            'reason.min'      => 'Alasan penghapusan minimal 3 karakter.',
+        ]);
+
+        $owner = $website->user;
+        $websiteName = $website->name;
+        $domain = $website->url_subdomain ?: $website->slug;
+
+        if ($owner) {
+            Notification::create([
+                'user_id' => $owner->id,
+                'judul'   => 'Website Dihapus oleh Admin',
+                'pesan'   => "Website \"{$websiteName}\" ({$domain}) telah dihapus oleh Admin.\nAlasan penghapusan: " . $validated['reason'],
+                'tipe'    => 'website_deleted',
+                'dibaca'  => false,
+            ]);
+        }
+
         $website->delete();
 
-        return $this->success(null, 'Website deleted successfully');
+        return $this->success(null, 'Website berhasil dihapus dan notifikasi telah dikirim ke pemilik website.');
     }
 }

@@ -67,6 +67,7 @@ export default function AdminWebsites() {
     const [searchQuery, setSearchQuery] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
     const [deleteConfirm, setDeleteConfirm] = useState(null);
+    const [deleteReason, setDeleteReason] = useState('');
     const [detailModal, setDetailModal] = useState(null);
     const queryClient = useQueryClient();
 
@@ -95,12 +96,13 @@ export default function AdminWebsites() {
     });
 
     const deleteMutation = useMutation({
-        mutationFn: (id) => websiteApi.adminDelete(id),
+        mutationFn: ({ id, reason }) => websiteApi.adminDelete(id, reason),
         onSuccess: () => {
             queryClient.invalidateQueries(['admin-websites']);
             queryClient.invalidateQueries([['dashboard', 'admin']]);
-            toast.success('Website berhasil dihapus', 'Berhasil');
+            toast.success('Website berhasil dihapus dan notifikasi dikirim', 'Berhasil');
             setDeleteConfirm(null);
+            setDeleteReason('');
             setDetailModal(null);
         },
         onError: (err) => {
@@ -111,7 +113,6 @@ export default function AdminWebsites() {
     const statCards = [
         { label: 'Total Situs Dihosting', value: statsFromApi.total ?? 0, color: 'text-[rgb(var(--color-text-primary))]' },
         { label: 'Situs Terpublikasi', value: statsFromApi.published ?? 0, color: 'text-emerald-600 dark:text-emerald-400' },
-        { label: 'Situs Draf', value: statsFromApi.draft ?? 0, color: 'text-amber-600 dark:text-amber-400' },
         { label: 'Situs Ditangguhkan', value: statsFromApi.suspended ?? 0, color: 'text-rose-600 dark:text-rose-400' },
     ];
 
@@ -140,7 +141,7 @@ export default function AdminWebsites() {
             </div>
 
             {/* KPI Stats */}
-            <div className="grid grid-cols-1 sm:grid-cols-4 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                 {statCards.map((card) => (
                     <Card key={card.label} className="p-5">
                         <p className="text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">{card.label}</p>
@@ -178,7 +179,7 @@ export default function AdminWebsites() {
 
                         {/* Status Filter */}
                         <div className="flex items-center gap-2 bg-[rgb(var(--color-surface-alt))] p-1 rounded-xl border border-[rgb(var(--color-border))]">
-                            {['all', 'dipublikasikan', 'draft', 'suspended'].map((st) => (
+                            {['all', 'published', 'suspended'].map((st) => (
                                 <button
                                     key={st}
                                     type="button"
@@ -189,7 +190,7 @@ export default function AdminWebsites() {
                                             : 'text-[rgb(var(--color-text-secondary))] hover:text-[rgb(var(--color-text-primary))]'
                                     }`}
                                 >
-                                    {st}
+                                    {st === 'all' ? 'Semua' : st === 'published' ? 'Terpublikasi' : 'Ditangguhkan'}
                                 </button>
                             ))}
                         </div>
@@ -547,7 +548,7 @@ export default function AdminWebsites() {
             {/* Delete Confirmation Modal */}
             {deleteConfirm && (
                 <div className="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-                    <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 space-y-5">
+                    <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 space-y-4">
                         <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
                             <div className="p-3 bg-red-50 text-red-600 rounded-2xl shrink-0">
                                 <AlertTriangle className="h-6 w-6" />
@@ -568,10 +569,32 @@ export default function AdminWebsites() {
                             </p>
                         </div>
 
-                        <div className="flex items-center justify-end gap-3 pt-2">
+                        {/* Input Alasan Penghapusan */}
+                        <div className="space-y-1.5">
+                            <label className="text-xs font-bold text-slate-700 block">
+                                Alasan / Keterangan Penghapusan <span className="text-red-500">*</span>
+                            </label>
+                            <textarea
+                                rows={3}
+                                value={deleteReason}
+                                onChange={(e) => setDeleteReason(e.target.value)}
+                                placeholder="Masukkan alasan penghapusan (misal: Pelanggaran konten, instruksi pemilik, dll)..."
+                                className="w-full p-3 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-500 text-slate-900 placeholder:text-slate-400 transition"
+                            />
+                            {!deleteReason.trim() && (
+                                <p className="text-[11px] text-amber-600 font-semibold">
+                                    * Admin wajib memberi alasan sebelum menghapus website.
+                                </p>
+                            )}
+                        </div>
+
+                        <div className="flex items-center justify-end gap-3 pt-2 border-t border-slate-100">
                             <button
                                 type="button"
-                                onClick={() => setDeleteConfirm(null)}
+                                onClick={() => {
+                                    setDeleteConfirm(null);
+                                    setDeleteReason('');
+                                }}
                                 disabled={deleteMutation.isPending}
                                 className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl transition disabled:opacity-50"
                             >
@@ -579,9 +602,9 @@ export default function AdminWebsites() {
                             </button>
                             <button
                                 type="button"
-                                disabled={deleteMutation.isPending}
-                                onClick={() => deleteMutation.mutate(deleteConfirm.id)}
-                                className="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white text-xs font-extrabold rounded-xl shadow-md shadow-red-600/20 transition flex items-center gap-2 disabled:opacity-50"
+                                disabled={deleteMutation.isPending || !deleteReason.trim()}
+                                onClick={() => deleteMutation.mutate({ id: deleteConfirm.id, reason: deleteReason })}
+                                className="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white text-xs font-extrabold rounded-xl shadow-md shadow-red-600/20 transition flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 {deleteMutation.isPending ? (
                                     <><Loader2 className="h-4 w-4 animate-spin" /> Menghapus...</>

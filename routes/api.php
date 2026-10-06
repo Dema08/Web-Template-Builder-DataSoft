@@ -121,6 +121,13 @@ Route::prefix('v1')->group(function (): void {
 
     // Authenticated application endpoints (protected by maintenance mode)
     Route::middleware(['auth:sanctum', 'session.timeout', 'maintenance'])->group(function (): void {
+        // User notifications
+        Route::prefix('notifications')->group(function (): void {
+            Route::get('/', [App\Domains\Notification\Http\Controllers\NotificationController::class, 'index']);
+            Route::patch('/read-all', [App\Domains\Notification\Http\Controllers\NotificationController::class, 'markAllAsRead']);
+            Route::patch('/{id}/read', [App\Domains\Notification\Http\Controllers\NotificationController::class, 'markAsRead']);
+        });
+
         Route::prefix('user')->group(function (): void {
             Route::get('/profile', [App\Domains\User\Http\Controllers\UserController::class, 'profile']);
             Route::put('/profile', [App\Domains\User\Http\Controllers\UserController::class, 'updateProfile']);
