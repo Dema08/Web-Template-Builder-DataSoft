@@ -33,7 +33,7 @@ class DashboardService extends BaseService
         return Cache::remember($cacheKey, 5, function () use ($user, $range, $startDateParam, $endDateParam, $forceAdmin) {
             // Admin-specific dashboard metrics (only for admin endpoints or explicit forceAdmin)
             if ($forceAdmin || request()->is('api/v1/admin/*') || request()->is('api/admin/*') || request()->is('admin/*')) {
-                $totalWebsites = Website::count();
+                $totalWebsites = Website::where('status', 'published')->count();
                 $totalUsers = User::count();
                 $totalViews = \Illuminate\Support\Facades\Schema::hasTable('website_view') ? \DB::table('website_view')->count() : 0;
                 $publishedTemplatesCount = \App\Domains\Template\Models\Template::where('status', 'published')
@@ -48,6 +48,7 @@ class DashboardService extends BaseService
                 $websitesFormatted = Website::select([
                     'id', 'user_id', 'category_id', 'template_id', 'name', 'slug', 'status', 'published_at', 'created_at', 'updated_at'
                 ])
+                ->where('status', 'published')
                 ->with(['user', 'template'])
                 ->orderByDesc('created_at')
                 ->limit(10)
