@@ -20,6 +20,7 @@ export default function AdminUsers() {
 
     const [userToDelete, setUserToDelete] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [deleteConfirmText, setDeleteConfirmText] = useState('');
 
     // Deactivate Modal State
     const [userToDeactivate, setUserToDeactivate] = useState(null);
@@ -165,6 +166,7 @@ export default function AdminUsers() {
             toast.success(data?.message || 'Akun user berhasil dihapus dari sistem.', 'User Deleted');
             setIsDeleteModalOpen(false);
             setUserToDelete(null);
+            setDeleteConfirmText('');
         },
         onError: (error) => {
             const msg = error?.response?.data?.message || 'Gagal menghapus user.';
@@ -198,11 +200,14 @@ export default function AdminUsers() {
 
     const handleDeleteUser = (user) => {
         setUserToDelete(user);
+        setDeleteConfirmText('');
         setIsDeleteModalOpen(true);
     };
 
-    const handleConfirmDeleteUser = () => {
+    const handleConfirmDeleteUser = (e) => {
+        e.preventDefault();
         if (!userToDelete) return;
+        if (deleteConfirmText !== 'Hapus Akun') return;
         deleteUserMutation.mutate(userToDelete.id);
     };
 
@@ -597,25 +602,40 @@ export default function AdminUsers() {
                 }
             />
 
-            {/* Custom Confirm Modal: Hapus Akun User */}
-            <ConfirmModal
-                isOpen={isDeleteModalOpen}
-                onClose={() => {
-                    setIsDeleteModalOpen(false);
-                    setUserToDelete(null);
-                }}
-                onConfirm={handleConfirmDeleteUser}
-                title="Hapus Akun User"
-                description="Tindakan ini tidak dapat dibatalkan. Seluruh data akun pengguna ini akan dihapus secara permanen dari sistem."
-                variant="danger"
-                icon={Trash2}
-                confirmText="Ya, Hapus Permanen"
-                cancelText="Batal"
-                isLoading={deleteUserMutation.isPending}
-                details={
-                    userToDelete && (
-                        <div className="flex items-center gap-3">
-                            <div className="h-10 w-10 rounded-full bg-red-600 text-white font-extrabold flex items-center justify-center shrink-0 shadow-sm">
+            {/* Custom Delete Modal: Hapus Akun User (requires typing "Hapus Akun") */}
+            {isDeleteModalOpen && userToDelete && (
+                <div className="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-xs flex items-center justify-center p-4">
+                    <div className="bg-[rgb(var(--color-surface))] rounded-3xl max-w-md w-full p-6 shadow-2xl border border-red-200 dark:border-red-900/50 space-y-5 animate-in fade-in zoom-in-95 duration-150">
+                        {/* Header */}
+                        <div className="flex items-center justify-between border-b border-[rgb(var(--color-border))] pb-3">
+                            <div className="flex items-center gap-2">
+                                <div className="h-8 w-8 rounded-xl bg-red-100 dark:bg-red-950/40 flex items-center justify-center">
+                                    <Trash2 className="h-4 w-4 text-red-600 dark:text-red-400" />
+                                </div>
+                                <h3 className="text-base font-extrabold text-[rgb(var(--color-text-primary))]">Hapus Akun Permanen</h3>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setIsDeleteModalOpen(false);
+                                    setUserToDelete(null);
+                                    setDeleteConfirmText('');
+                                }}
+                                className="text-[rgb(var(--color-text-tertiary))] hover:text-[rgb(var(--color-text-primary))] p-1 rounded-lg hover:bg-[rgb(var(--color-surface-alt))] transition cursor-pointer"
+                            >
+                                <X className="h-5 w-5" />
+                            </button>
+                        </div>
+
+                        {/* Danger notice */}
+                        <div className="p-3 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-2xl text-xs text-red-800 dark:text-red-200 flex items-start gap-2.5">
+                            <Trash2 className="h-4 w-4 text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
+                            <span>Tindakan ini <strong>tidak dapat dibatalkan</strong>. Seluruh data akun, website, dan histori pembayaran pengguna ini akan <strong>dihapus secara permanen</strong> dari sistem.</span>
+                        </div>
+
+                        {/* User info */}
+                        <div className="p-3 bg-[rgb(var(--color-surface-alt))] rounded-2xl border border-[rgb(var(--color-border))] flex items-center gap-3">
+                            <div className="h-10 w-10 rounded-full bg-red-600 text-white font-extrabold flex items-center justify-center shrink-0 shadow-sm text-xs">
                                 {userToDelete.avatar ? (
                                     <img src={userToDelete.avatar} alt={userToDelete.name} className="h-full w-full rounded-full object-cover" />
                                 ) : (
@@ -627,9 +647,80 @@ export default function AdminUsers() {
                                 <p className="text-xs text-[rgb(var(--color-text-secondary))]">{userToDelete.email}</p>
                             </div>
                         </div>
-                    )
-                }
-            />
+
+                        {/* Confirmation input */}
+                        <form onSubmit={handleConfirmDeleteUser} className="space-y-4">
+                            <div>
+                                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">
+                                    Ketik{' '}
+                                    <code className="px-1.5 py-0.5 rounded-md bg-red-100 dark:bg-red-950/50 text-red-700 dark:text-red-300 font-mono text-[11px] select-none">
+                                        Hapus Akun
+                                    </code>
+                                    {' '}untuk konfirmasi
+                                </label>
+                                <input
+                                    type="text"
+                                    autoComplete="off"
+                                    placeholder="Hapus Akun"
+                                    value={deleteConfirmText}
+                                    onChange={(e) => setDeleteConfirmText(e.target.value)}
+                                    className={`w-full px-3.5 py-2.5 rounded-xl border text-sm font-mono transition focus:outline-none focus:ring-2 ${
+                                        deleteConfirmText === 'Hapus Akun'
+                                            ? 'border-red-400 bg-red-50 dark:bg-red-950/20 text-red-700 dark:text-red-300 focus:ring-red-500/20 focus:border-red-500'
+                                            : deleteConfirmText.length > 0
+                                                ? 'border-orange-300 bg-orange-50 dark:bg-orange-950/10 text-[rgb(var(--color-text-primary))] focus:ring-orange-400/20 focus:border-orange-400'
+                                                : 'border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface-alt))] text-[rgb(var(--color-text-primary))] focus:ring-red-500/10 focus:border-red-400'
+                                    }`}
+                                />
+                                <div className="mt-1.5 flex items-center gap-1.5">
+                                    {deleteConfirmText.length > 0 && deleteConfirmText !== 'Hapus Akun' && (
+                                        <p className="text-[10px] font-semibold text-orange-500">
+                                            ✗ Teks tidak cocok — ketik persis: <span className="font-mono">Hapus Akun</span>
+                                        </p>
+                                    )}
+                                    {deleteConfirmText === 'Hapus Akun' && (
+                                        <p className="text-[10px] font-semibold text-red-500 flex items-center gap-1">
+                                            <Check className="h-3 w-3" /> Konfirmasi valid — akun siap dihapus
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+
+                            <div className="pt-2 flex items-center justify-end gap-3 border-t border-[rgb(var(--color-border))]">
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setIsDeleteModalOpen(false);
+                                        setUserToDelete(null);
+                                        setDeleteConfirmText('');
+                                    }}
+                                    className="px-4 py-2 text-xs font-bold text-[rgb(var(--color-text-secondary))] hover:bg-[rgb(var(--color-surface-alt))] rounded-xl transition cursor-pointer"
+                                >
+                                    Batal
+                                </button>
+                                <button
+                                    type="submit"
+                                    disabled={deleteConfirmText !== 'Hapus Akun' || deleteUserMutation.isPending}
+                                    className={`px-5 py-2 text-xs font-bold text-white rounded-xl shadow-md transition flex items-center gap-1.5 ${
+                                        deleteConfirmText === 'Hapus Akun' && !deleteUserMutation.isPending
+                                            ? 'bg-red-600 hover:bg-red-700 shadow-red-600/25 cursor-pointer'
+                                            : 'bg-red-300 dark:bg-red-900/40 shadow-none cursor-not-allowed opacity-60'
+                                    }`}
+                                >
+                                    {deleteUserMutation.isPending ? (
+                                        <span>Menghapus...</span>
+                                    ) : (
+                                        <>
+                                            <Trash2 className="h-4 w-4" />
+                                            <span>Hapus Permanen</span>
+                                        </>
+                                    )}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
 
             {/* Activate Confirm Modal */}
             <ConfirmModal
