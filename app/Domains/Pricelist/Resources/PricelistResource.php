@@ -24,9 +24,19 @@ class PricelistResource extends JsonResource
         $plan = $this->resource;
 
         $hargaFloat = (float) $plan->harga;
+        $diskonPersen = (int) ($plan->diskon_persen ?? 0);
+        $hargaSetelahDiskon = $hargaFloat;
+        if ($diskonPersen > 0 && $hargaFloat > 0) {
+            $hargaSetelahDiskon = max(0, $hargaFloat * (1 - ($diskonPersen / 100)));
+        }
+
         $formattedPrice = $hargaFloat == 0
             ? 'Gratis'
             : 'Rp ' . number_format($hargaFloat, 0, ',', '.');
+
+        $formattedDiscountedPrice = $hargaSetelahDiskon == 0
+            ? 'Gratis'
+            : 'Rp ' . number_format($hargaSetelahDiskon, 0, ',', '.');
 
         return [
             'id' => $plan->id,
@@ -35,7 +45,13 @@ class PricelistResource extends JsonResource
             'nama' => $plan->nama,
             'harga' => (float) $plan->harga,
             'price' => (float) $plan->harga,
+            'diskon_persen' => $diskonPersen,
+            'discount_percent' => $diskonPersen,
+            'harga_setelah_diskon' => (float) $hargaSetelahDiskon,
+            'discounted_price' => (float) $hargaSetelahDiskon,
             'formatted_price' => $formattedPrice,
+            'formatted_discounted_price' => $formattedDiscountedPrice,
+            'has_discount' => $diskonPersen > 0,
             'period' => $plan->periode,
             'periode' => $plan->periode,
             'deskripsi' => $plan->deskripsi,

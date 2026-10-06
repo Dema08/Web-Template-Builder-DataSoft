@@ -22,6 +22,7 @@ class Pricelist extends Model
         'slug',
         'nama',
         'harga',
+        'diskon_persen',
         'deskripsi',
         'periode',
         'maks_domain',
@@ -37,6 +38,7 @@ class Pricelist extends Model
 
     protected $casts = [
         'harga' => 'decimal:2',
+        'diskon_persen' => 'integer',
         'maks_domain' => 'integer',
         'maks_starter_template' => 'integer',
         'bisa_upload_website' => 'boolean',

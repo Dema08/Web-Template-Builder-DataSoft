@@ -71,6 +71,7 @@ Route::prefix('v1')->group(function (): void {
         // Admin Promo Code Management
         Route::get('/promo-codes', [App\Domains\Pricelist\Http\Controllers\AdminPromoCodeController::class, 'index']);
         Route::post('/promo-codes', [App\Domains\Pricelist\Http\Controllers\AdminPromoCodeController::class, 'store']);
+        Route::put('/promo-codes/{promoCode}', [App\Domains\Pricelist\Http\Controllers\AdminPromoCodeController::class, 'update']);
         Route::patch('/promo-codes/{promoCode}/toggle', [App\Domains\Pricelist\Http\Controllers\AdminPromoCodeController::class, 'toggle']);
         Route::delete('/promo-codes/{promoCode}', [App\Domains\Pricelist\Http\Controllers\AdminPromoCodeController::class, 'destroy']);
         Route::apiResource('categories', App\Domains\Admin\Http\Controllers\AdminCategoryController::class);
