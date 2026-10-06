@@ -70,7 +70,7 @@ function getCategoryMeta(catName, index) {
 /* ─────────────────────────────────────────────────────────
    NAVBAR
 ───────────────────────────────────────────────────────── */
-function GalleryNavbar() {
+function GalleryNavbar({ isAuthenticated, user }) {
     const [scrolled, setScrolled] = useState(false);
     useEffect(() => {
         const fn = () => setScrolled(window.scrollY > 10);
@@ -105,11 +105,21 @@ function GalleryNavbar() {
                         </div>
                     </div>
                     <div className="flex items-center gap-3">
-                        <Link to={ROUTES.LOGIN}
-                              className="text-sm font-bold text-slate-700 hover:text-purple-600 transition px-3 py-2">Masuk</Link>
-                        <Link to={ROUTES.REGISTER}
-                              className="text-sm font-bold text-white px-5 py-2 rounded-full shadow-md hover:shadow-lg transition-all"
-                              style={{ background: 'linear-gradient(135deg,#7c3aed,#4f46e5)' }}>Mulai Membangun</Link>
+                        {isAuthenticated ? (
+                            <Link to={user?.role === 'admin' || user?.role === 'superadmin' ? ROUTES.ADMIN_DASHBOARD : ROUTES.DASHBOARD}
+                                  className="text-sm font-bold text-white px-5 py-2 rounded-full shadow-md hover:shadow-lg transition-all"
+                                  style={{ background: 'linear-gradient(135deg,#7c3aed,#4f46e5)' }}>
+                                {user?.role === 'admin' || user?.role === 'superadmin' ? 'Dashboard Admin' : 'Dashboard User'}
+                            </Link>
+                        ) : (
+                            <>
+                                <Link to={ROUTES.LOGIN}
+                                      className="text-sm font-bold text-slate-700 hover:text-purple-600 transition px-3 py-2">Masuk</Link>
+                                <Link to={ROUTES.REGISTER}
+                                      className="text-sm font-bold text-white px-5 py-2 rounded-full shadow-md hover:shadow-lg transition-all"
+                                      style={{ background: 'linear-gradient(135deg,#7c3aed,#4f46e5)' }}>Mulai Membangun</Link>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>
@@ -417,7 +427,7 @@ export default function TemplateGalleryPage() {
 
     return (
         <div className="min-h-screen bg-slate-50 font-sans" style={{ fontFamily: "'Inter', sans-serif" }}>
-            <GalleryNavbar />
+            <GalleryNavbar isAuthenticated={isAuthenticated} user={user} />
 
             {/* ── CANVA HERO BANNER ── */}
             <section className="pt-24 pb-10 relative overflow-hidden"

@@ -156,7 +156,7 @@ const TRUSTED_LOGOS = ['Korporat', 'UKM', 'Startup', 'Pendidikan', 'Organisasi',
 /* ─────────────────────────────────────────────────────────
    COMPONENTS
 ───────────────────────────────────────────────────────── */
-function Navbar({ onDemo }) {
+function Navbar({ onDemo, isAuthenticated, user }) {
     const [scrolled, setScrolled] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -217,15 +217,25 @@ function Navbar({ onDemo }) {
                     {/* CTA buttons */}
                     <div className="hidden md:flex items-center gap-2">
                         <LanguageSelector variant="landing" showLabel={false} />
-                        <Link to={ROUTES.LOGIN}
-                            className="text-sm font-bold text-slate-700 hover:text-indigo-600 transition px-3 py-2">
-                            Masuk
-                        </Link>
-                        <Link to={ROUTES.REGISTER}
-                            className="text-sm font-bold text-white px-5 py-2.5 rounded-xl shadow-md hover:shadow-lg hover:scale-105 transition-all"
-                            style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
-                            Mulai Membangun
-                        </Link>
+                        {isAuthenticated ? (
+                            <Link to={user?.role === 'admin' || user?.role === 'superadmin' ? ROUTES.ADMIN_DASHBOARD : ROUTES.DASHBOARD}
+                                className="text-sm font-bold text-white px-5 py-2.5 rounded-xl shadow-md hover:shadow-lg hover:scale-105 transition-all"
+                                style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
+                                {user?.role === 'admin' || user?.role === 'superadmin' ? 'Dashboard Admin' : 'Dashboard User'}
+                            </Link>
+                        ) : (
+                            <>
+                                <Link to={ROUTES.LOGIN}
+                                    className="text-sm font-bold text-slate-700 hover:text-indigo-600 transition px-3 py-2">
+                                    Masuk
+                                </Link>
+                                <Link to={ROUTES.REGISTER}
+                                    className="text-sm font-bold text-white px-5 py-2.5 rounded-xl shadow-md hover:shadow-lg hover:scale-105 transition-all"
+                                    style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
+                                    Mulai Membangun
+                                </Link>
+                            </>
+                        )}
                     </div>
 
                     {/* Mobile toggle + language */}
@@ -1153,7 +1163,7 @@ export default function LandingPage({ liveContent }) {
     const [landingContent, setLandingContent] = useState(liveContent || DEFAULT_LANDING_CONTENT);
     const [pricingPlans, setPricingPlans] = useState(null);
     const [publicStats, setPublicStats] = useState(null);
-
+    const { isAuthenticated, user } = useAuthStore();
     useEffect(() => {
         if (liveContent) {
             setLandingContent({ ...DEFAULT_LANDING_CONTENT, ...liveContent });
@@ -1204,7 +1214,7 @@ export default function LandingPage({ liveContent }) {
 
     return (
         <div className="min-h-screen bg-white font-sans" style={{ fontFamily: "'Inter', sans-serif" }}>
-            <Navbar onDemo={() => setDemoOpen(true)} />
+            <Navbar onDemo={() => setDemoOpen(true)} isAuthenticated={isAuthenticated} user={user} />
 
             {/* ════════════════════════════════════════════════════
                 HERO SECTION
