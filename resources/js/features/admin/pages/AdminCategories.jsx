@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Trash2, Edit2, Shield, Search, X, Eye, EyeOff, FileText } from 'lucide-react';
+import { Plus, Trash2, Edit2, Shield, Search, X, Eye, EyeOff, FileText, ChevronUp, ChevronDown } from 'lucide-react';
 import { Card, ConfirmModal } from '@shared/components/ui';
 import { toast } from '@store';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -352,7 +352,7 @@ export default function AdminCategories() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-[rgb(var(--color-border))]">
-                {filteredCategories.map((cat) => (
+                {filteredCategories.map((cat, index) => (
                   <tr key={cat.id} className="hover:bg-[rgb(var(--color-surface-alt))]/80 transition group">
                     {/* ID */}
                     <td className="px-4 py-4 whitespace-nowrap text-xs font-mono font-bold text-[rgb(var(--color-text-secondary))]">
