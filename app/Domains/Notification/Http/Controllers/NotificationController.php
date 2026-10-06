@@ -3,11 +3,11 @@
 namespace App\Domains\Notification\Http\Controllers;
 
 use App\Domains\Notification\Models\Notification;
-use App\Domains\Shared\Http\Controllers\ApiController;
+use App\Domains\Shared\Http\Controllers\BaseController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class NotificationController extends ApiController
+class NotificationController extends BaseController
 {
     /**
      * Get user notifications with unread count.
