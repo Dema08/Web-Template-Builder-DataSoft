@@ -50,12 +50,17 @@ export default function AdminPricelist() {
 
     // Promo Code State
     const [isPromoModalOpen, setIsPromoModalOpen] = useState(false);
-    const [promoFormData, setPromoFormData] = useState({
+    const [editingPromo, setEditingPromo] = useState(null);
+    const defaultPromoForm = {
         code: '',
         description: '',
-        discount_type: 'free',
+        discount_type: 'percentage',
+        discount_value: '',
+        applicable_plans: [],
         max_uses: '',
-    });
+        expires_at: '',
+    };
+    const [promoFormData, setPromoFormData] = useState(defaultPromoForm);
     const [promoToDelete, setPromoToDelete] = useState(null);
     const [isDeletePromoModalOpen, setIsDeletePromoModalOpen] = useState(false);
 
@@ -65,6 +70,7 @@ export default function AdminPricelist() {
         nama: '',
         slug: '',
         harga: 0,
+        diskon_persen: 0,
         deskripsi: '',
         periode: 'bulan',
         maks_domain: 0,
@@ -114,17 +120,22 @@ export default function AdminPricelist() {
     // Promo Code Mutations
     const savePromoMutation = useMutation({
         mutationFn: async (payload) => {
+            if (editingPromo) {
+                const { data } = await http.put(`/admin/promo-codes/${editingPromo.id}`, payload);
+                return data;
+            }
             const { data } = await http.post('/admin/promo-codes', payload);
             return data;
         },
         onSuccess: (data) => {
             queryClient.invalidateQueries(['admin-promo-codes']);
-            toast.success(data?.message || 'Kode promo berhasil dibuat!', 'Berhasil');
+            toast.success(data?.message || (editingPromo ? 'Kode promo berhasil diperbarui!' : 'Kode promo berhasil dibuat!'), 'Berhasil');
             setIsPromoModalOpen(false);
-            setPromoFormData({ code: '', description: '', discount_type: 'free', max_uses: '' });
+            setEditingPromo(null);
+            setPromoFormData(defaultPromoForm);
         },
         onError: (error) => {
-            const msg = error?.response?.data?.message || 'Gagal membuat kode promo.';
+            const msg = error?.response?.data?.message || 'Gagal menyimpan kode promo.';
             toast.error(msg, 'Error Kode Promo');
         },
     });
@@ -260,6 +271,7 @@ export default function AdminPricelist() {
             nama: '',
             slug: '',
             harga: 0,
+            diskon_persen: 0,
             deskripsi: '',
             periode: 'bulan',
             maks_domain: 0,
@@ -275,12 +287,45 @@ export default function AdminPricelist() {
         setIsPlanModalOpen(true);
     };
 
+    const handleOpenEditPromo = (promo) => {
+        setEditingPromo(promo);
+        setPromoFormData({
+            code: promo.code || '',
+            description: promo.description || '',
+            discount_type: promo.discount_type || 'percentage',
+            discount_value: promo.discount_value != null ? String(promo.discount_value) : '',
+            applicable_plans: Array.isArray(promo.applicable_plans) ? promo.applicable_plans : [],
+            max_uses: promo.max_uses != null ? String(promo.max_uses) : '',
+            expires_at: promo.expires_at ? promo.expires_at.slice(0, 10) : '',
+        });
+        setIsPromoModalOpen(true);
+    };
+
+    const handleClosePromoModal = () => {
+        setIsPromoModalOpen(false);
+        setEditingPromo(null);
+        setPromoFormData(defaultPromoForm);
+    };
+
+    const toggleApplicablePlan = (planId) => {
+        setPromoFormData((prev) => {
+            const already = prev.applicable_plans.includes(planId);
+            return {
+                ...prev,
+                applicable_plans: already
+                    ? prev.applicable_plans.filter((id) => id !== planId)
+                    : [...prev.applicable_plans, planId],
+            };
+        });
+    };
+
     const handleOpenEditModal = (plan) => {
         setEditingPlan(plan);
         setFormData({
             nama: plan.nama || plan.name || '',
             slug: plan.slug || '',
             harga: plan.price ?? plan.harga ?? 0,
+            diskon_persen: plan.diskon_persen ?? plan.discount_percent ?? 0,
             deskripsi: plan.description || plan.deskripsi || '',
             periode: plan.period || plan.periode || 'bulan',
             maks_domain: plan.max_domains ?? plan.maks_domain ?? 0,
@@ -585,10 +630,24 @@ export default function AdminPricelist() {
 
                                             {/* Plan Title & Price */}
                                             <h3 className="text-xl font-extrabold text-[rgb(var(--color-text-primary))]">{plan.name || plan.nama}</h3>
-                                            <div className="mt-2 flex items-baseline gap-1">
-                                                <span className="text-2xl font-black text-indigo-600 dark:text-indigo-400">
-                                                    {plan.formatted_price}
-                                                </span>
+                                            <div className="mt-2 flex items-baseline gap-1 flex-wrap">
+                                                {plan.has_discount ? (
+                                                    <>
+                                                        <span className="text-2xl font-black text-emerald-600 dark:text-emerald-400">
+                                                            {plan.formatted_discounted_price}
+                                                        </span>
+                                                        <span className="text-sm font-bold text-slate-400 line-through">
+                                                            {plan.formatted_price}
+                                                        </span>
+                                                        <span className="px-1.5 py-0.5 bg-red-100 dark:bg-red-950/60 text-red-600 dark:text-red-400 text-[10px] font-black rounded-md">
+                                                            -{plan.discount_percent}%
+                                                        </span>
+                                                    </>
+                                                ) : (
+                                                    <span className="text-2xl font-black text-indigo-600 dark:text-indigo-400">
+                                                        {plan.formatted_price}
+                                                    </span>
+                                                )}
                                                 {plan.price > 0 && (
                                                     <span className="text-xs font-semibold text-[rgb(var(--color-text-tertiary))]">/{plan.period || 'bulan'}</span>
                                                 )}
@@ -743,12 +802,24 @@ export default function AdminPricelist() {
 
                         <Card className="p-5 flex items-center gap-4">
                             <div className="h-12 w-12 rounded-2xl bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 flex items-center justify-center shrink-0">
-                                <Sparkles className="h-6 w-6" />
+                                <Percent className="h-6 w-6" />
                             </div>
                             <div>
-                                <p className="text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Efek Kode Promo</p>
-                                <p className="text-sm font-extrabold text-[rgb(var(--color-text-primary))]">
-                                    Paket 20k &rarr; <span className="text-emerald-600 font-black">FREE (Rp 0)</span>
+                                <p className="text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Diskon Paling Tinggi</p>
+                                <p className="text-xl font-black text-[rgb(var(--color-text-primary))]">
+                                    {promoCodes && promoCodes.length > 0
+                                        ? (() => {
+                                            const maxPromo = promoCodes.reduce((max, p) => {
+                                                const val = p.discount_type === 'free' ? 100 : parseFloat(p.discount_value || 0);
+                                                const maxVal = max.discount_type === 'free' ? 100 : parseFloat(max.discount_value || 0);
+                                                return val > maxVal ? p : max;
+                                            }, promoCodes[0]);
+                                            return maxPromo.discount_type === 'free'
+                                                ? <span className="text-emerald-600">FREE (100%)</span>
+                                                : <span className="text-red-500">{maxPromo.discount_value}%</span>;
+                                        })()
+                                        : <span className="text-slate-400 text-sm">-</span>
+                                    }
                                 </p>
                             </div>
                         </Card>
@@ -763,7 +834,7 @@ export default function AdminPricelist() {
                             </h2>
                             <button
                                 type="button"
-                                onClick={() => setIsPromoModalOpen(true)}
+                                onClick={() => { setEditingPromo(null); setPromoFormData(defaultPromoForm); setIsPromoModalOpen(true); }}
                                 className="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-xs cursor-pointer"
                             >
                                 <Plus className="h-3.5 w-3.5" />
@@ -788,7 +859,7 @@ export default function AdminPricelist() {
                                         <tr className="border-b border-[rgb(var(--color-border))] text-[rgb(var(--color-text-tertiary))] uppercase text-[10px] tracking-wider">
                                             <th className="py-3 px-4">Kode Promo</th>
                                             <th className="py-3 px-4">Deskripsi</th>
-                                            <th className="py-3 px-4">Tipe / Efek Diskon</th>
+                                            <th className="py-3 px-4">Diskon &amp; Target Paket</th>
                                             <th className="py-3 px-4">Penggunaan</th>
                                             <th className="py-3 px-4 text-center">Status</th>
                                             <th className="py-3 px-4 text-right">Aksi</th>
@@ -817,9 +888,35 @@ export default function AdminPricelist() {
                                                     {promo.description || '-'}
                                                 </td>
                                                 <td className="py-3 px-4">
-                                                    <span className="px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 font-extrabold text-[10px] inline-flex items-center gap-1">
-                                                        <Sparkles className="h-3 w-3" /> Paket 20k &rarr; FREE
-                                                    </span>
+                                                    <div className="space-y-1.5">
+                                                        {promo.discount_type === 'free' ? (
+                                                            <span className="px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 font-extrabold text-[10px] inline-flex items-center gap-1">
+                                                                <Sparkles className="h-3 w-3" /> FREE (100% OFF)
+                                                            </span>
+                                                        ) : promo.discount_type === 'percentage' ? (
+                                                            <span className="px-2.5 py-1 rounded-full bg-red-100 dark:bg-red-950/60 text-red-700 dark:text-red-300 font-extrabold text-[10px] inline-flex items-center gap-1">
+                                                                <Percent className="h-3 w-3" /> {promo.discount_value}% OFF
+                                                            </span>
+                                                        ) : (
+                                                            <span className="px-2.5 py-1 rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 font-extrabold text-[10px] inline-flex items-center gap-1">
+                                                                <Tag className="h-3 w-3" /> Rp {Number(promo.discount_value || 0).toLocaleString('id-ID')} OFF
+                                                            </span>
+                                                        )}
+                                                        {Array.isArray(promo.applicable_plans) && promo.applicable_plans.length > 0 ? (
+                                                            <div className="flex flex-wrap gap-1">
+                                                                {promo.applicable_plans.map((planId) => {
+                                                                    const plan = pricelists?.find((p) => p.id === planId);
+                                                                    return plan ? (
+                                                                        <span key={planId} className="px-1.5 py-0.5 rounded bg-indigo-100 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 text-[9px] font-bold">
+                                                                            {plan.name || plan.nama}
+                                                                        </span>
+                                                                    ) : null;
+                                                                })}
+                                                            </div>
+                                                        ) : (
+                                                            <span className="text-[9px] text-[rgb(var(--color-text-tertiary))] font-medium">Semua Paket</span>
+                                                        )}
+                                                    </div>
                                                 </td>
                                                 <td className="py-3 px-4 text-[rgb(var(--color-text-secondary))]">
                                                     <span className="font-bold text-[rgb(var(--color-text-primary))]">{promo.used_count || 0}</span>
@@ -841,17 +938,27 @@ export default function AdminPricelist() {
                                                     </button>
                                                 </td>
                                                 <td className="py-3 px-4 text-right">
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => {
-                                                            setPromoToDelete(promo);
-                                                            setIsDeletePromoModalOpen(true);
-                                                        }}
-                                                        className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 rounded-lg transition cursor-pointer"
-                                                        title="Hapus Kode Promo"
-                                                    >
-                                                        <Trash2 className="h-4 w-4" />
-                                                    </button>
+                                                    <div className="flex items-center justify-end gap-1">
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => handleOpenEditPromo(promo)}
+                                                            className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 rounded-lg transition cursor-pointer"
+                                                            title="Edit Kode Promo"
+                                                        >
+                                                            <Edit2 className="h-4 w-4" />
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => {
+                                                                setPromoToDelete(promo);
+                                                                setIsDeletePromoModalOpen(true);
+                                                            }}
+                                                            className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/40 rounded-lg transition cursor-pointer"
+                                                            title="Hapus Kode Promo"
+                                                        >
+                                                            <Trash2 className="h-4 w-4" />
+                                                        </button>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         ))}
@@ -933,6 +1040,28 @@ export default function AdminPricelist() {
                                             onChange={(e) => setFormData({ ...formData, harga: parseFloat(e.target.value) || 0 })}
                                             className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))]"
                                         />
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5 flex items-center gap-1.5">
+                                            <Percent className="h-3.5 w-3.5 text-red-500" />
+                                            Diskon Paket (%)
+                                        </label>
+                                        <input
+                                            type="number"
+                                            min="0"
+                                            max="100"
+                                            step="1"
+                                            value={formData.diskon_persen}
+                                            onChange={(e) => setFormData({ ...formData, diskon_persen: parseInt(e.target.value) || 0 })}
+                                            className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))]"
+                                        />
+                                        {formData.diskon_persen > 0 && formData.harga > 0 && (
+                                            <p className="mt-1 text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">
+                                                Harga setelah diskon: Rp {Math.round(formData.harga * (1 - formData.diskon_persen / 100)).toLocaleString('id-ID')}
+                                            </p>
+                                        )}
+                                        <p className="mt-1 text-[10px] text-[rgb(var(--color-text-tertiary))]">Isi 0 untuk tidak ada diskon. Maksimal 100%.</p>
                                     </div>
 
                                     <div>
@@ -1260,18 +1389,20 @@ export default function AdminPricelist() {
                 }
             />
 
-            {/* Modal Tambah Kode Promo Baru */}
+            {/* Modal Tambah / Edit Kode Promo */}
             {isPromoModalOpen && (
                 <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
-                    <div className="bg-[rgb(var(--color-surface))] rounded-3xl max-w-md w-full p-6 shadow-2xl border border-[rgb(var(--color-border))] animate-in fade-in zoom-in-95 duration-150">
-                        <div className="flex items-center justify-between border-b border-[rgb(var(--color-border))] pb-3 mb-4">
+                    <div className="bg-[rgb(var(--color-surface))] rounded-3xl max-w-lg w-full p-6 shadow-2xl border border-[rgb(var(--color-border))] animate-in fade-in zoom-in-95 duration-150 flex flex-col max-h-[90vh]">
+                        <div className="flex items-center justify-between border-b border-[rgb(var(--color-border))] pb-3 mb-4 shrink-0">
                             <div className="flex items-center gap-2">
                                 <Tag className="h-5 w-5 text-indigo-600" />
-                                <h3 className="text-lg font-extrabold text-[rgb(var(--color-text-primary))]">Tambah Kode Promo Baru</h3>
+                                <h3 className="text-lg font-extrabold text-[rgb(var(--color-text-primary))]">
+                                    {editingPromo ? 'Edit Kode Promo' : 'Tambah Kode Promo Baru'}
+                                </h3>
                             </div>
                             <button
                                 type="button"
-                                onClick={() => setIsPromoModalOpen(false)}
+                                onClick={handleClosePromoModal}
                                 className="p-1 text-slate-400 hover:text-slate-600 rounded-lg cursor-pointer"
                             >
                                 <X className="h-4 w-4" />
@@ -1285,22 +1416,30 @@ export default function AdminPricelist() {
                                     toast.error('Kode promo wajib diisi.', 'Form Tidak Lengkap');
                                     return;
                                 }
+                                if (promoFormData.discount_type !== 'free' && !promoFormData.discount_value) {
+                                    toast.error('Nilai diskon wajib diisi.', 'Form Tidak Lengkap');
+                                    return;
+                                }
                                 savePromoMutation.mutate({
                                     code: promoFormData.code,
                                     description: promoFormData.description,
-                                    discount_type: 'free',
+                                    discount_type: promoFormData.discount_type,
+                                    discount_value: promoFormData.discount_type === 'free' ? 100 : (parseFloat(promoFormData.discount_value) || 0),
+                                    applicable_plans: promoFormData.applicable_plans.length > 0 ? promoFormData.applicable_plans : null,
                                     max_uses: promoFormData.max_uses ? parseInt(promoFormData.max_uses, 10) : null,
+                                    expires_at: promoFormData.expires_at || null,
                                 });
                             }}
-                            className="space-y-4"
+                            className="overflow-y-auto flex-1 min-h-0 space-y-4 ds-scrollbar-thin pr-1"
                         >
+                            {/* Kode Promo */}
                             <div>
                                 <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1">
                                     Kode Promo <span className="text-red-500">*</span>
                                 </label>
                                 <input
                                     type="text"
-                                    placeholder="Contoh: FREE2026, DATAFREE"
+                                    placeholder="Contoh: DISKON50, DATAFREE"
                                     value={promoFormData.code}
                                     onChange={(e) => setPromoFormData({ ...promoFormData, code: e.target.value.toUpperCase() })}
                                     className="w-full px-3.5 py-2 rounded-xl border border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface-alt))] text-xs font-mono uppercase focus:outline-none focus:ring-2 focus:ring-indigo-500/20 text-[rgb(var(--color-text-primary))]"
@@ -1309,44 +1448,114 @@ export default function AdminPricelist() {
                                 <p className="text-[10px] text-slate-400 mt-1">Otomatis diubah menjadi huruf kapital.</p>
                             </div>
 
+                            {/* Deskripsi */}
                             <div>
-                                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1">
-                                    Deskripsi Singkat
-                                </label>
+                                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1">Deskripsi Singkat</label>
                                 <input
                                     type="text"
-                                    placeholder="Contoh: Promo Spesial Pendaftaran Gratis Starter 20k"
+                                    placeholder="Contoh: Promo Spesial Hari Kemerdekaan"
                                     value={promoFormData.description}
                                     onChange={(e) => setPromoFormData({ ...promoFormData, description: e.target.value })}
                                     className="w-full px-3.5 py-2 rounded-xl border border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface-alt))] text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 text-[rgb(var(--color-text-primary))]"
                                 />
                             </div>
 
-                            <div>
-                                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1">
-                                    Batas Maksimal Penggunaan (Opsional)
-                                </label>
-                                <input
-                                    type="number"
-                                    min="1"
-                                    placeholder="Biarkan kosong untuk penggunaan tanpa batas (unlimited)"
-                                    value={promoFormData.max_uses}
-                                    onChange={(e) => setPromoFormData({ ...promoFormData, max_uses: e.target.value })}
-                                    className="w-full px-3.5 py-2 rounded-xl border border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface-alt))] text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 text-[rgb(var(--color-text-primary))]"
-                                />
-                            </div>
-
-                            <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-xl text-[11px] text-emerald-800 dark:text-emerald-300 font-medium flex items-start gap-2">
-                                <Sparkles className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
+                            {/* Tipe & Nilai Diskon */}
+                            <div className="grid grid-cols-2 gap-3">
                                 <div>
-                                    <span className="font-bold">Efek Otomatis:</span> Saat user menggunakan kode ini pada halaman registrasi, harga paket termurah (Rp 20.000) akan ada animasi tercoret menjadi <strong>FREE (Rp 0)</strong>.
+                                    <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1">
+                                        Tipe Diskon <span className="text-red-500">*</span>
+                                    </label>
+                                    <select
+                                        value={promoFormData.discount_type}
+                                        onChange={(e) => setPromoFormData({ ...promoFormData, discount_type: e.target.value, discount_value: '' })}
+                                        className="w-full px-3 py-2 rounded-xl border border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface-alt))] text-xs text-[rgb(var(--color-text-primary))]"
+                                    >
+                                        <option value="percentage">Persentase (%)</option>
+                                        <option value="free">FREE (100% Gratis)</option>
+                                        <option value="fixed">Potongan Tetap (Rp)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1">
+                                        {promoFormData.discount_type === 'percentage' ? 'Nilai (%)' : promoFormData.discount_type === 'fixed' ? 'Potongan (Rp)' : 'Nilai'}
+                                        {promoFormData.discount_type !== 'free' && <span className="text-red-500"> *</span>}
+                                    </label>
+                                    <input
+                                        type="number"
+                                        min="0"
+                                        max={promoFormData.discount_type === 'percentage' ? 100 : undefined}
+                                        step={promoFormData.discount_type === 'percentage' ? '1' : '1000'}
+                                        placeholder={promoFormData.discount_type === 'free' ? 'Otomatis 100%' : promoFormData.discount_type === 'percentage' ? '0-100' : 'Contoh: 10000'}
+                                        disabled={promoFormData.discount_type === 'free'}
+                                        value={promoFormData.discount_type === 'free' ? '' : promoFormData.discount_value}
+                                        onChange={(e) => setPromoFormData({ ...promoFormData, discount_value: e.target.value })}
+                                        className="w-full px-3 py-2 rounded-xl border border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface-alt))] text-xs text-[rgb(var(--color-text-primary))] disabled:opacity-50"
+                                    />
                                 </div>
                             </div>
 
-                            <div className="flex items-center justify-end gap-2 pt-2">
+                            {/* Target Paket */}
+                            <div>
+                                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-2">
+                                    Target Paket Harga
+                                    <span className="ml-1.5 text-[10px] text-[rgb(var(--color-text-tertiary))] font-normal">(Biarkan kosong = berlaku untuk semua paket)</span>
+                                </label>
+                                <div className="grid grid-cols-2 gap-2">
+                                    {pricelists?.map((plan) => (
+                                        <label
+                                            key={plan.id}
+                                            className={`flex items-center gap-2.5 p-2.5 rounded-xl border cursor-pointer transition ${
+                                                promoFormData.applicable_plans.includes(plan.id)
+                                                    ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-950/40'
+                                                    : 'border-[rgb(var(--color-border))] hover:border-indigo-300 bg-[rgb(var(--color-surface-alt))]'
+                                            }`}
+                                        >
+                                            <input
+                                                type="checkbox"
+                                                checked={promoFormData.applicable_plans.includes(plan.id)}
+                                                onChange={() => toggleApplicablePlan(plan.id)}
+                                                className="accent-indigo-600 h-3.5 w-3.5 shrink-0"
+                                            />
+                                            <div className="min-w-0">
+                                                <p className="text-xs font-bold text-[rgb(var(--color-text-primary))] truncate">{plan.name || plan.nama}</p>
+                                                <p className="text-[10px] text-[rgb(var(--color-text-tertiary))]">
+                                                    {plan.has_discount ? plan.formatted_discounted_price : plan.formatted_price}
+                                                </p>
+                                            </div>
+                                        </label>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Maks Penggunaan + Tanggal Kadaluarsa */}
+                            <div className="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1">Maks Penggunaan</label>
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        placeholder="Kosong = Unlimited"
+                                        value={promoFormData.max_uses}
+                                        onChange={(e) => setPromoFormData({ ...promoFormData, max_uses: e.target.value })}
+                                        className="w-full px-3 py-2 rounded-xl border border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface-alt))] text-xs text-[rgb(var(--color-text-primary))]"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1">Kadaluarsa (Opsional)</label>
+                                    <input
+                                        type="date"
+                                        value={promoFormData.expires_at}
+                                        onChange={(e) => setPromoFormData({ ...promoFormData, expires_at: e.target.value })}
+                                        className="w-full px-3 py-2 rounded-xl border border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface-alt))] text-xs text-[rgb(var(--color-text-primary))]"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="flex items-center justify-end gap-2 pt-3 border-t border-[rgb(var(--color-border))]">
                                 <button
                                     type="button"
-                                    onClick={() => setIsPromoModalOpen(false)}
+                                    onClick={handleClosePromoModal}
                                     className="px-4 py-2 text-xs font-bold rounded-xl border border-[rgb(var(--color-border))] text-[rgb(var(--color-text-secondary))] hover:bg-[rgb(var(--color-surface-alt))] cursor-pointer"
                                 >
                                     Batal
@@ -1357,7 +1566,7 @@ export default function AdminPricelist() {
                                     className="px-4 py-2 text-xs font-extrabold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-md shadow-indigo-600/20 transition flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
                                 >
                                     {savePromoMutation.isPending ? <Spinner size="sm" /> : <Check className="h-4 w-4" />}
-                                    <span>Simpan Kode Promo</span>
+                                    <span>{editingPromo ? 'Perbarui Kode Promo' : 'Simpan Kode Promo'}</span>
                                 </button>
                             </div>
                         </form>

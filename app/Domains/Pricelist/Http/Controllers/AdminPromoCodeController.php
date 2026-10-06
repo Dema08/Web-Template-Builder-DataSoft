@@ -28,18 +28,20 @@ class AdminPromoCodeController extends BaseController
     public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'code'           => 'required|string|max:50|unique:promo_codes,code',
-            'description'    => 'nullable|string|max:255',
-            'discount_type'  => 'nullable|string|in:free,percentage,fixed',
-            'discount_value' => 'nullable|numeric|min:0',
-            'max_uses'       => 'nullable|integer|min:1',
-            'is_active'      => 'nullable|boolean',
-            'expires_at'     => 'nullable|date',
+            'code'              => 'required|string|max:50|unique:promo_codes,code',
+            'description'       => 'nullable|string|max:255',
+            'discount_type'     => 'nullable|string|in:free,percentage,fixed',
+            'discount_value'    => 'nullable|numeric|min:0|max:100',
+            'applicable_plans'  => 'nullable|array',
+            'applicable_plans.*'=> 'integer|exists:paket_harga,id',
+            'max_uses'          => 'nullable|integer|min:1',
+            'is_active'         => 'nullable|boolean',
+            'expires_at'        => 'nullable|date',
         ]);
 
-        $validated['code'] = strtoupper(trim($validated['code']));
-        $validated['discount_type'] = $validated['discount_type'] ?? 'free';
-        $validated['is_active'] = $validated['is_active'] ?? true;
+        $validated['code']          = strtoupper(trim($validated['code']));
+        $validated['discount_type'] = $validated['discount_type'] ?? 'percentage';
+        $validated['is_active']     = $validated['is_active'] ?? true;
 
         $promoCode = PromoCode::create($validated);
 
@@ -47,6 +49,32 @@ class AdminPromoCodeController extends BaseController
             $promoCode,
             "Kode promo '{$promoCode->code}' berhasil dibuat.",
             201
+        );
+    }
+
+    /**
+     * Update a promo code (Admin).
+     */
+    public function update(Request $request, PromoCode $promoCode): JsonResponse
+    {
+        $validated = $request->validate([
+            'code'              => 'required|string|max:50|unique:promo_codes,code,' . $promoCode->id,
+            'description'       => 'nullable|string|max:255',
+            'discount_type'     => 'nullable|string|in:free,percentage,fixed',
+            'discount_value'    => 'nullable|numeric|min:0|max:100',
+            'applicable_plans'  => 'nullable|array',
+            'applicable_plans.*'=> 'integer|exists:paket_harga,id',
+            'max_uses'          => 'nullable|integer|min:1',
+            'is_active'         => 'nullable|boolean',
+            'expires_at'        => 'nullable|date',
+        ]);
+
+        $validated['code'] = strtoupper(trim($validated['code']));
+        $promoCode->update($validated);
+
+        return $this->success(
+            $promoCode->fresh(),
+            "Kode promo '{$promoCode->code}' berhasil diperbarui."
         );
     }
 

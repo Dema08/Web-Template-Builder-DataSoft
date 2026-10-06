@@ -38,6 +38,7 @@ class AdminPricelistController extends BaseController
             'nama' => 'required|string|max:255',
             'slug' => 'nullable|string|max:255|unique:paket_harga,slug',
             'harga' => 'required|numeric|min:0',
+            'diskon_persen' => 'nullable|integer|min:0|max:100',
             'deskripsi' => 'nullable|string',
             'periode' => 'required|string|max:50',
             'maks_domain' => 'required|integer', // -1 for unlimited, 0 for none
@@ -76,6 +77,7 @@ class AdminPricelistController extends BaseController
             'nama' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:paket_harga,slug,' . $pricelist->id,
             'harga' => 'required|numeric|min:0',
+            'diskon_persen' => 'nullable|integer|min:0|max:100',
             'deskripsi' => 'nullable|string',
             'periode' => 'required|string|max:50',
             'maks_domain' => 'required|integer',

@@ -16,6 +16,7 @@ class PromoCode extends Model
         'description',
         'discount_type',
         'discount_value',
+        'applicable_plans',
         'max_uses',
         'used_count',
         'is_active',
@@ -23,11 +24,12 @@ class PromoCode extends Model
     ];
 
     protected $casts = [
-        'discount_value' => 'decimal:2',
-        'max_uses'       => 'integer',
-        'used_count'     => 'integer',
-        'is_active'      => 'boolean',
-        'expires_at'     => 'datetime',
+        'discount_value'   => 'decimal:2',
+        'applicable_plans' => 'array',
+        'max_uses'         => 'integer',
+        'used_count'       => 'integer',
+        'is_active'        => 'boolean',
+        'expires_at'       => 'datetime',
     ];
 
     /**
