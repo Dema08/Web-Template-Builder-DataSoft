@@ -288,6 +288,7 @@ jobs:
 
               \$commands = [
                   'migrate' => ['--force' => true],
+                  'db:seed' => ['--class' => 'Database\\Seeders\\TemplateSeeder', '--force' => true],
                   'config:clear' => [],
                   'cache:clear' => [],
               ];
