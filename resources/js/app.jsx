@@ -76,7 +76,7 @@ class ErrorBoundary extends Component {
                                 onClick={() => window.location.href = '/'}
                                 className="flex-1 py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-sm transition"
                             >
-                                Back to Dashboard
+                                Kembali ke Dasbor
                             </button>
                         </div>
                     </div>

@@ -53,8 +53,8 @@ export default function Wizard() {
                             {brand_badge || 'DS'}
                         </div>
                         <div>
-                            <h1 className="text-sm font-extrabold text-slate-900">{brand_name} — Create Your Website</h1>
-                            <p className="text-xs text-slate-500">Let's get you started</p>
+                            <h1 className="text-sm font-extrabold text-slate-900">{brand_name} — Buat Website Anda</h1>
+                            <p className="text-xs text-slate-500">Mari mulai langkah pertama</p>
                         </div>
                     </div>
                     <button
@@ -62,7 +62,7 @@ export default function Wizard() {
                         onClick={() => navigate(-1)}
                         className="text-xs font-bold text-slate-600 hover:text-slate-900 transition"
                     >
-                        Cancel
+                        Batal
                     </button>
                 </div>
             </header>

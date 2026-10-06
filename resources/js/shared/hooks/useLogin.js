@@ -20,7 +20,7 @@ export function useLogin() {
         mutationFn: (credentials) => authApi.login(credentials),
         onSuccess: (session, variables) => {
             setSession(session, variables?.remember);
-            toast.success(`Selamat datang kembali, ${session.user?.name?.split(' ')[0] || 'there'}!`, 'Signed in');
+            toast.success(`Selamat datang kembali, ${session.user?.name?.split(' ')[0] || 'Anda'}!`, 'Berhasil masuk');
 
             // Load full admin settings so the entire UI updates instantly
             settingsApi.getSettings().then((settings) => {
@@ -33,7 +33,7 @@ export function useLogin() {
             navigate(targetRoute, { replace: true });
         },
         onError: (error) => {
-            toast.error(error?.response?.data?.message || 'Unable to sign in. Please try again.', 'Sign in failed');
+            toast.error(error?.response?.data?.message || 'Tidak dapat masuk. Silakan coba lagi.', 'Gagal masuk');
         },
     });
 }

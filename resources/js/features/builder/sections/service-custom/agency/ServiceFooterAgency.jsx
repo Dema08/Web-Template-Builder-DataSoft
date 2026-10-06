@@ -76,7 +76,7 @@ export default function ServiceFooterAgency({ components = [], sectionId = null 
           {renderLayoutComponents(copyComps, sectionId)}
           <div className="flex items-center gap-6 text-xs text-slate-500">
             <span className="hover:text-slate-300 cursor-pointer">Kebijakan Privasi</span>
-            <span className="hover:text-slate-300 cursor-pointer">Terms of Service</span>
+            <span className="hover:text-slate-300 cursor-pointer">Syarat Layanan</span>
             <span className="hover:text-slate-300 cursor-pointer">Cookie Settings</span>
           </div>
         </div>

@@ -91,7 +91,7 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
     }
 
     if (!activeLanding || activeLanding.length === 0) {
-      toast.error('Canvas is empty. Please add sections or load a template before previewing.', 'Preview Error');
+      toast.error('Kanvas kosong. Tambahkan bagian atau muat template sebelum pratinjau.', 'Galat Pratinjau');
       return;
     }
 
@@ -126,7 +126,7 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
     const previewUrl = `${basePreviewUrl}?viewport=${activeViewport}`;
 
     window.open(previewUrl, '_blank');
-    toast.success(`Live website preview opened in new tab (${activeViewport})`, 'Preview Mode');
+    toast.success(`Pratinjau website live dibuka di tab baru (${activeViewport})`, 'Mode Pratinjau');
   };
 
   const handleSave = async () => {
@@ -175,7 +175,7 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
         <button
           onClick={onBack}
           className="p-2 hover:bg-slate-100 rounded-lg transition text-slate-600 hover:text-slate-900"
-          title="Back to templates"
+          title="Kembali ke template"
         >
           <ArrowLeft className="h-5 w-5" />
         </button>
@@ -186,14 +186,14 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
           className={`p-2 rounded-lg transition flex items-center gap-1 font-bold ${
             isLeftPanelOpen ? 'bg-indigo-50 text-indigo-600' : 'hover:bg-slate-100 text-slate-600'
           }`}
-          title="Toggle Navigation & Component Layers Panel"
+          title="Buka/tutup panel navigasi & lapisan komponen"
         >
           <PanelLeft className="h-4 w-4" />
           <span className="hidden xl:inline text-[11px]">Layers</span>
         </button>
 
         <div className="hidden sm:block">
-          <h1 className="text-xs sm:text-sm font-bold text-slate-900 leading-tight">Template Builder</h1>
+          <h1 className="text-xs sm:text-sm font-bold text-slate-900 leading-tight">Builder Template</h1>
           <p className="text-[10px] text-slate-500 leading-none">
             Status: <span className="font-bold capitalize">{status}</span>
           </p>
@@ -232,7 +232,7 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
                 ? 'bg-indigo-600 text-white shadow-xs'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
             }`}
-            title="Select Mode — Safe text editing & selection"
+            title="Mode Pilih — Edit teks & seleksi aman"
           >
             <MousePointer className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">Select</span>
@@ -244,7 +244,7 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
                 ? 'bg-indigo-600 text-white shadow-xs'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
             }`}
-            title="Drag Mode — Move section & component position"
+            title="Mode Seret — Pindah posisi bagian & komponen"
           >
             <Move className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">Drag</span>
@@ -256,7 +256,7 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
                 ? 'bg-indigo-600 text-white shadow-xs'
                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
             }`}
-            title="Resize Mode — Resize width & height handles"
+            title="Mode Ukuran — Ubah lebar & tinggi"
           >
             <Maximize2 className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">Resize</span>
@@ -271,7 +271,7 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
               ? 'bg-indigo-50 border-indigo-200 text-indigo-700 shadow-xs'
               : 'bg-slate-50 border-slate-200 text-slate-500 hover:bg-slate-100'
           }`}
-          title={snapEnabled ? 'Snap to Grid (10px) is ON' : 'Snap to Grid is OFF'}
+          title={snapEnabled ? 'Snap ke Grid (10px) AKTIF' : 'Snap ke Grid MATI'}
         >
           <Grid className={`h-3.5 w-3.5 ${snapEnabled ? 'text-indigo-600 animate-pulse' : 'text-slate-400'}`} />
           <span className="hidden sm:inline">Snap: {snapEnabled ? '10px' : 'Off'}</span>
@@ -285,9 +285,9 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
               if (secId) groupComponents(secId, selectedLayers);
             }}
             className="flex items-center gap-1 px-3 py-1.5 bg-indigo-600 text-white rounded-xl text-xs font-bold shadow-sm hover:bg-indigo-700 transition"
-            title="Group selected components"
+            title="Kelompokkan komponen terpilih"
           >
-            <span>Group ({selectedLayers.length})</span>
+            <span>Kelompok ({selectedLayers.length})</span>
           </button>
         )}
 
@@ -323,7 +323,7 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
               />
               <div className="absolute top-full mt-1.5 left-0 bg-white border border-slate-200/90 rounded-2xl shadow-2xl py-1.5 z-50 min-w-[170px] ds-animate-scale-in">
                 <div className="px-3 py-1 text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">
-                  Device Viewport
+                  Tampilan Perangkat
                 </div>
                 {devices.map(device => (
                   <button
@@ -353,9 +353,9 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
                 >
                   <div className="flex items-center gap-2">
                     <ExternalLink className="h-4 w-4 shrink-0 text-indigo-600" />
-                    <span>Preview in New Tab ({deviceView})</span>
+                    <span>Pratinjau di Tab Baru ({deviceView})</span>
                   </div>
-                  <span className="text-[10px] bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded font-extrabold">NEW TAB</span>
+                  <span className="text-[10px] bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded font-extrabold">TAB BARU</span>
                 </button>
               </div>
             </>
@@ -373,7 +373,7 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
               setShowZoomMenu(false);
             }}
             className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50/80 hover:bg-indigo-100 rounded-xl transition border border-indigo-200 text-indigo-700 font-extrabold shadow-xs"
-            title="Switch between Landing Page and Subpages to edit on canvas"
+            title="Beralih antara Halaman Landing dan Subhalaman untuk diedit di kanvas"
           >
             <span className="text-xs">
               {currentPageId === 'landing' ? 'Landing Page' : (pages[currentPageId]?.name || 'Subpage')}
@@ -386,19 +386,19 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
               <div className="fixed inset-0 z-40" onClick={() => setShowPageMenu(false)} />
               <div className="absolute top-full mt-1.5 left-0 bg-white border border-slate-200/90 rounded-2xl shadow-2xl py-1.5 z-50 min-w-[200px]">
                 <div className="px-3 py-1 text-[10px] font-extrabold text-slate-400 uppercase tracking-wider">
-                  Pages and Subpages
+                  Halaman dan Subhalaman
                 </div>
                 <button
                   onClick={() => {
                     switchPage('landing');
                     setShowPageMenu(false);
-                    toast.success('Switched to Landing Page', 'Page');
+                    toast.success('Beralih ke Halaman Landing', 'Page');
                   }}
                   className={`w-full flex items-center justify-between px-3 py-2 text-xs font-bold transition ${
                     currentPageId === 'landing' ? 'text-indigo-600 bg-indigo-50/70' : 'text-slate-700 hover:bg-slate-50'
                   }`}
                 >
-                  <span>Landing Page (Main)</span>
+                  <span>Halaman Landing (Utama)</span>
                   {currentPageId === 'landing' && <Check className="h-3.5 w-3.5 text-indigo-600" />}
                 </button>
 
@@ -408,7 +408,7 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
                     onClick={() => {
                       switchPage(p.id);
                       setShowPageMenu(false);
-                      toast.success('Switched page', 'Page');
+                      toast.success('Halaman diganti', 'Page');
                     }}
                     className={`w-full flex items-center justify-between px-3 py-2 text-xs font-bold transition ${
                       currentPageId === p.id ? 'text-indigo-600 bg-indigo-50/70' : 'text-slate-700 hover:bg-slate-50'
@@ -428,7 +428,7 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
                   className="w-full flex items-center gap-1.5 px-3 py-2 text-xs font-extrabold text-indigo-600 hover:bg-indigo-50 transition"
                 >
                   <Plus className="h-3.5 w-3.5" />
-                  <span>+ Create New Subpage</span>
+                  <span>+ Buat Subhalaman Baru</span>
                 </button>
               </div>
             </>
@@ -478,10 +478,10 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
         <button
           onClick={handleOpenPreview}
           className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg transition font-extrabold border border-indigo-200/80 text-xs shadow-2xs hover:shadow-xs"
-          title="Open professional live website preview in a new tab"
+          title="Buka pratinjau live website profesional di tab baru"
         >
           <ExternalLink className="h-3.5 w-3.5" />
-          <span className="hidden sm:inline">Preview Mode</span>
+          <span className="hidden sm:inline">Mode Pratinjau</span>
         </button>
 
         {/* Right Inspector Toggle Button */}
@@ -490,7 +490,7 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
           className={`p-2 rounded-lg transition flex items-center gap-1 font-bold ${
             isRightPanelOpen ? 'bg-indigo-50 text-indigo-600' : 'hover:bg-slate-100 text-slate-600'
           }`}
-          title="Toggle Properties & Inspector Panel"
+          title="Buka/tutup panel properti & inspektor"
         >
           <PanelRight className="h-4 w-4" />
           <span className="hidden xl:inline text-[11px]">Inspector</span>
@@ -525,7 +525,7 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
             title="Simpan sebagai template baru (Private/Publik)"
           >
             <BookmarkPlus className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">Save as Template</span>
+            <span className="hidden sm:inline">Simpan sebagai Template</span>
           </button>
         )}
 
@@ -556,7 +556,7 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
       {showNewPageModal && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-100 space-y-4">
-            <h3 className="text-sm font-extrabold text-slate-900">Create New Subpage</h3>
+            <h3 className="text-sm font-extrabold text-slate-900">Buat Subhalaman Baru</h3>
             <p className="text-xs text-slate-500">
               Buat halaman baru terpisah dari landing page (misal: Detail Produk, Kontak Lengkap, dll).
             </p>
@@ -579,13 +579,13 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
                 type="button"
                 onClick={() => {
                   if (!newPageNameInput.trim()) {
-                    toast.error('Nama halaman wajib diisi', 'Error');
+                    toast.error('Nama halaman wajib diisi', 'Galat');
                     return;
                   }
                   addSubPage(newPageNameInput.trim());
                   setNewPageNameInput('');
                   setShowNewPageModal(false);
-                  toast.success('Halaman baru berhasil dibuat dan dimuat di canvas!', 'Success');
+                  toast.success('Halaman baru berhasil dibuat dan dimuat di canvas!', 'Berhasil');
                 }}
                 className="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-extrabold shadow-sm"
               >

@@ -175,7 +175,7 @@ export default function Login({ onSwitchToRegister }) {
                         {/* Password Field */}
                         <div className="group">
                             <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                                Password
+                                Kata Sandi
                             </label>
                             <div className="relative">
                                 <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-indigo-600 transition-colors" />
@@ -256,7 +256,7 @@ export default function Login({ onSwitchToRegister }) {
                                 }}
                                 className="font-bold text-indigo-600 hover:text-indigo-700 transition-colors hover:underline cursor-pointer"
                             >
-                                Register
+                                Daftar
                             </Link>
                         </div>
                     </form>
@@ -284,12 +284,12 @@ export default function Login({ onSwitchToRegister }) {
                 <div className="relative z-10 my-auto py-6 space-y-5">
                     <div>
                         <h2 className="text-3xl lg:text-4xl font-black leading-tight text-white mb-3 tracking-tight">
-                            Build the future <br />
+                            Bangun masa depan <br />
                             <span className="text-blue-200 drop-shadow-md">bersama Microdata.</span>
                         </h2>
 
                         <p className="text-xs lg:text-sm text-blue-100/90 leading-relaxed max-w-sm font-medium">
-                            Join thousands of organizations using Microdata to create stunning digital experiences with precision.
+                            Bergabunglah dengan ribuan organisasi yang memakai Microdata untuk menciptakan pengalaman digital yang memukau dengan presisi.
                         </p>
                     </div>
 
@@ -325,7 +325,7 @@ export default function Login({ onSwitchToRegister }) {
                         </div>
                         <div className="text-base font-black text-white tracking-tight">99.9%</div>
                         <div className="text-[9px] font-extrabold text-blue-200/90 tracking-wider uppercase mt-0.5">
-                            Uptime
+                            Waktu Aktif
                         </div>
                     </div>
                     <div className="flex flex-col items-center text-center group cursor-pointer">
@@ -334,7 +334,7 @@ export default function Login({ onSwitchToRegister }) {
                         </div>
                         <div className="text-base font-black text-white tracking-tight">24/7</div>
                         <div className="text-[9px] font-extrabold text-blue-200/90 tracking-wider uppercase mt-0.5">
-                            Support
+                            Dukungan
                         </div>
                     </div>
                 </div>

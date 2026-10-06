@@ -80,7 +80,7 @@ export default function SaveDraftModal({
                                 Simpan sebagai Draft
                             </h3>
                             <p className="text-xs text-slate-500 mt-0.5">
-                                Template akan tersimpan di "Template Saya" dengan status <strong>Draft</strong> dan visibilitas <strong>Private</strong>.
+                                Template akan tersimpan di "Template Saya" dengan status <strong>Draf</strong> dan visibilitas <strong>Private</strong>.
                             </p>
                         </div>
                     </div>

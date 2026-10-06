@@ -49,16 +49,16 @@ export default function SlugInput() {
     };
 
     const getStatusText = () => {
-        if (slugStatus === 'checking') return 'Checking availability...';
-        if (slugStatus === 'available') return '✓ Available';
-        if (slugStatus === 'unavailable') return '✗ Unavailable';
+        if (slugStatus === 'checking') return 'Memeriksa ketersediaan...';
+        if (slugStatus === 'available') return '✓ Tersedia';
+        if (slugStatus === 'unavailable') return '✗ Tidak tersedia';
         return '';
     };
 
     return (
         <div className="space-y-2">
             <label className="block text-sm font-bold text-slate-700">
-                Website URL Slug
+                Slug URL Website
             </label>
             <div className="relative">
                 <div className="flex items-center">
@@ -79,7 +79,7 @@ export default function SlugInput() {
                 </div>
                 <div className="flex items-center justify-between mt-2">
                     <p className="text-xs text-slate-500">
-                        Your website will be available at: <span className="font-mono font-bold text-slate-700">{localSlug || 'your-slug'}.datasoft.id</span>
+                        Website Anda akan tersedia di: <span className="font-mono font-bold text-slate-700">{localSlug || 'slug-anda'}.datasoft.id</span>
                     </p>
                     {slugStatus && slugStatus !== 'idle' && (
                         <span className={`text-xs font-bold ${getStatusColor()}`}>
@@ -90,7 +90,7 @@ export default function SlugInput() {
             </div>
             {slugStatus === 'unavailable' && (
                 <p className="text-xs text-red-600 font-medium">
-                    This slug is already taken. Please try another one.
+                    Slug ini sudah dipakai. Silakan coba yang lain.
                 </p>
             )}
         </div>

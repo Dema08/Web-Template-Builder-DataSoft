@@ -125,7 +125,7 @@ export default function AdminPricelist() {
         },
         onError: (error) => {
             const msg = error?.response?.data?.message || 'Gagal membuat kode promo.';
-            toast.error(msg, 'Error Kode Promo');
+            toast.error(msg, 'Galat Kode Promo');
         },
     });
 
@@ -140,7 +140,7 @@ export default function AdminPricelist() {
         },
         onError: (error) => {
             const msg = error?.response?.data?.message || 'Gagal mengubah status kode promo.';
-            toast.error(msg, 'Error Toggle');
+            toast.error(msg, 'Galat Ubah Status');
         },
     });
 
@@ -157,7 +157,7 @@ export default function AdminPricelist() {
         },
         onError: (error) => {
             const msg = error?.response?.data?.message || 'Gagal menghapus kode promo.';
-            toast.error(msg, 'Error Hapus');
+            toast.error(msg, 'Galat Hapus');
         },
     });
 
@@ -197,7 +197,7 @@ export default function AdminPricelist() {
         },
         onError: (error) => {
             const msg = error?.response?.data?.message || 'Gagal menghapus paket harga.';
-            toast.error(msg, 'Error Hapus');
+            toast.error(msg, 'Galat Hapus');
         },
     });
 
@@ -208,14 +208,14 @@ export default function AdminPricelist() {
         },
         onSuccess: (data) => {
             queryClient.invalidateQueries(['admin-pricelists']);
-            toast.success(data?.message || 'Paket default berhasil diperbarui.', 'Set Default');
+            toast.success(data?.message || 'Paket default berhasil diperbarui.', 'Jadikan Bawaan');
             setIsSetDefaultModalOpen(false);
             setPlanToSetDefault(null);
         },
 
         onError: (error) => {
             const msg = error?.response?.data?.message || 'Gagal mengubah paket default.';
-            toast.error(msg, 'Error Default');
+            toast.error(msg, 'Galat Bawaan');
         },
     });
 
@@ -232,7 +232,7 @@ export default function AdminPricelist() {
         },
         onError: (error) => {
             const msg = error?.response?.data?.message || 'Gagal mengubah status favorit.';
-            toast.error(msg, 'Error Favorit');
+            toast.error(msg, 'Galat Favorit');
         },
     });
 
@@ -249,7 +249,7 @@ export default function AdminPricelist() {
         },
         onError: (error) => {
             const msg = error?.response?.data?.message || 'Gagal memperbarui paket user.';
-            toast.error(msg, 'Error Assign');
+            toast.error(msg, 'Galat Penetapan');
         },
     });
 
@@ -389,7 +389,7 @@ export default function AdminPricelist() {
                 <div>
                     <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 text-xs font-bold mb-2">
                         <CreditCard className="h-3.5 w-3.5" />
-                        <span>Pricelist & Promo Management</span>
+                        <span>Manajemen Harga & Promo</span>
                     </div>
                     <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">
                         {activeTab === 'pricelists' ? 'Manajemen Paket Harga' : 'Kelola Kode Promo'}
@@ -539,8 +539,8 @@ export default function AdminPricelist() {
                                 const isDefault = plan.is_default;
                                 const isPopular = Boolean(plan.is_popular);
                                 const isFree = plan.slug === 'free' || plan.price === 0;
-                                const maxDomainsLabel = plan.max_domains === -1 ? 'Unlimited' : plan.max_domains === 0 ? '0 (Subdomain)' : `${plan.max_domains} Domain`;
-                                const maxTemplatesLabel = plan.max_starter_templates === -1 ? 'Unlimited' : plan.max_starter_templates === 0 ? 'Blank Template Only' : `${plan.max_starter_templates} Starter Templates`;
+                                const maxDomainsLabel = plan.max_domains === -1 ? 'Tanpa batas' : plan.max_domains === 0 ? '0 (Subdomain)' : `${plan.max_domains} Domain`;
+                                const maxTemplatesLabel = plan.max_starter_templates === -1 ? 'Unlimited' : plan.max_starter_templates === 0 ? 'Hanya Template Kosong' : `${plan.max_starter_templates} Starter Templates`;
 
                                 return (
                                     <div
@@ -553,11 +553,11 @@ export default function AdminPricelist() {
                                                 : 'border-[rgb(var(--color-border))] hover:border-indigo-300'
                                         }`}
                                     >
-                                        {/* Favorite "Most Popular" ribbon */}
+                                        {/* Favorite "Paling Populer" ribbon */}
                                         {isPopular && (
                                             <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10">
                                                 <span className="bg-gradient-to-r from-amber-400 to-orange-400 text-amber-950 text-[10px] font-black px-3 py-1 rounded-full shadow-md flex items-center gap-1 whitespace-nowrap">
-                                                    <Star className="h-3 w-3 fill-amber-900 text-amber-900" /> ✦ Favorit — Most Popular
+                                                    <Star className="h-3 w-3 fill-amber-900 text-amber-900" /> ✦ Favorit — Paling Populer
                                                 </span>
                                             </div>
                                         )}
@@ -664,7 +664,7 @@ export default function AdminPricelist() {
                                                             ? 'text-amber-500 bg-amber-50 dark:bg-amber-950/30 hover:bg-amber-100'
                                                             : 'text-[rgb(var(--color-text-tertiary))] hover:text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-950/30'
                                                     }`}
-                                                    title={isPopular ? 'Hapus dari Favorit (Most Popular)' : 'Tandai sebagai Favorit (Most Popular)'}
+                                                    title={isPopular ? 'Hapus dari Favorit (Paling Populer)' : 'Tandai sebagai Favorit (Paling Populer)'}
                                                 >
                                                     <Star className={`h-4 w-4 ${isPopular ? 'fill-amber-400 text-amber-400' : ''}`} />
                                                 </button>
@@ -952,7 +952,7 @@ export default function AdminPricelist() {
 
                                     <div>
                                         <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">
-                                            Batas Custom Domain (-1 = Unlimited, 0 = Subdomain Saja)
+                                            Batas Domain Kustom (-1 = Tanpa batas, 0 = Subdomain Saja)
                                         </label>
                                         <input
                                             type="number"
@@ -961,12 +961,12 @@ export default function AdminPricelist() {
                                             onChange={(e) => setFormData({ ...formData, maks_domain: parseInt(e.target.value) || 0 })}
                                             className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))]"
                                         />
-                                        <p className="mt-1 text-[10px] text-[rgb(var(--color-text-tertiary))]">Isi -1 untuk unlimited domain, 0 untuk subdomain saja.</p>
+                                        <p className="mt-1 text-[10px] text-[rgb(var(--color-text-tertiary))]">Isi -1 untuk domain tanpa batas, 0 untuk subdomain saja.</p>
                                     </div>
 
                                     <div>
                                         <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">
-                                            Batas Starter Template (-1 = Unlimited, 0 = Blank Saja)
+                                            Batas Starter Template (-1 = Tanpa batas, 0 = Kosong Saja)
                                         </label>
                                         <input
                                             type="number"
@@ -975,7 +975,7 @@ export default function AdminPricelist() {
                                             onChange={(e) => setFormData({ ...formData, maks_starter_template: parseInt(e.target.value) || 0 })}
                                             className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))]"
                                         />
-                                        <p className="mt-1 text-[10px] text-[rgb(var(--color-text-tertiary))]">Isi -1 untuk unlimited starter templates, 0 hanya blank template.</p>
+                                        <p className="mt-1 text-[10px] text-[rgb(var(--color-text-tertiary))]">Isi -1 untuk template starter tanpa batas, 0 hanya template kosong.</p>
                                     </div>
                                 </div>
 
@@ -1005,7 +1005,7 @@ export default function AdminPricelist() {
                                     </label>
 
                                     <label className="flex items-center justify-between cursor-pointer">
-                                        <span className="text-xs font-bold text-[rgb(var(--color-text-primary))]">Izin Hubungkan Custom Domain</span>
+                                        <span className="text-xs font-bold text-[rgb(var(--color-text-primary))]">Izin Hubungkan Domain Kustom</span>
                                         <input
                                             type="checkbox"
                                             checked={formData.bisa_custom_domain}
@@ -1036,7 +1036,7 @@ export default function AdminPricelist() {
 
                                     <label className="flex items-center justify-between cursor-pointer sm:col-span-2 pt-2 border-t border-[rgb(var(--color-border))]">
                                         <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5">
-                                            <Sparkles className="h-4 w-4 text-amber-500" /> Tandai Sebagai Paket Terpopuler (Most Popular Highlight)
+                                            <Sparkles className="h-4 w-4 text-amber-500" /> Tandai Sebagai Paket Terpopuler (Paling Populer Highlight)
                                         </span>
                                         <input
                                             type="checkbox"
@@ -1242,8 +1242,8 @@ export default function AdminPricelist() {
                 title={planToToggleFavorite?.is_popular ? 'Hapus dari Favorit' : 'Tandai sebagai Favorit'}
                 description={
                     planToToggleFavorite?.is_popular
-                        ? 'Hapus tanda "Most Popular" dari paket ini? Tampilan di Landing Page dan Billing akan kembali normal.'
-                        : 'Tandai paket ini sebagai "Most Popular"? Badge Favorit akan muncul di Landing Page dan Billing Page sebagai paket unggulan.'
+                        ? 'Hapus tanda "Paling Populer" dari paket ini? Tampilan di Landing Page dan Billing akan kembali normal.'
+                        : 'Tandai paket ini sebagai "Paling Populer"? Badge Favorit akan muncul di Landing Page dan Billing Page sebagai paket unggulan.'
                 }
                 variant={planToToggleFavorite?.is_popular ? 'warning' : 'info'}
                 icon={Star}
@@ -1329,7 +1329,7 @@ export default function AdminPricelist() {
                                 <input
                                     type="number"
                                     min="1"
-                                    placeholder="Biarkan kosong untuk penggunaan tanpa batas (unlimited)"
+                                    placeholder="Biarkan kosong untuk penggunaan tanpa batas"
                                     value={promoFormData.max_uses}
                                     onChange={(e) => setPromoFormData({ ...promoFormData, max_uses: e.target.value })}
                                     className="w-full px-3.5 py-2 rounded-xl border border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface-alt))] text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500/20 text-[rgb(var(--color-text-primary))]"

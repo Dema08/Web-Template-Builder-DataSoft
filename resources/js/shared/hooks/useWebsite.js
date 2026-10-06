@@ -50,10 +50,10 @@ export function useWebsite() {
             setWebsite(published);
             queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.WEBSITE] });
             queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.DASHBOARD] });
-            toast.success('Website published successfully.', 'Publish complete');
+            toast.success('Website berhasil dipublikasikan.', 'Publikasi selesai');
         },
         onError: (error) => {
-            toast.error(error?.response?.data?.message || 'Unable to publish website.', 'Publish failed');
+            toast.error(error?.response?.data?.message || 'Tidak dapat mempublikasikan website.', 'Publikasi gagal');
         },
         onSettled: () => setPublishing(false),
     });

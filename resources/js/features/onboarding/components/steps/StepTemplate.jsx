@@ -20,8 +20,8 @@ export default function StepTemplate() {
     return (
         <div className="max-w-7xl mx-auto">
             <div className="mb-8">
-                <h2 className="text-2xl font-extrabold text-slate-900 mb-2">Choose Your Template</h2>
-                <p className="text-sm text-slate-500">Select a design template for your website.</p>
+                <h2 className="text-2xl font-extrabold text-slate-900 mb-2">Pilih Template Anda</h2>
+                <p className="text-sm text-slate-500">Pilih template desain untuk website Anda.</p>
             </div>
 
             {isLoading && (
@@ -31,8 +31,8 @@ export default function StepTemplate() {
             )}
 
             {isError && (
-                <Alert variant="error" title="Failed to load templates">
-                    {error?.message || 'Please try again later.'}
+                <Alert variant="error" title="Gagal memuat template">
+                    {error?.message || 'Silakan coba lagi nanti.'}
                 </Alert>
             )}
 

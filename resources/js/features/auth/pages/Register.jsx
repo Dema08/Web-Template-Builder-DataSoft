@@ -360,7 +360,7 @@ export default function Register({ onSwitchToLogin }) {
                     <div className="hidden md:flex md:w-1/2 relative p-8 flex-col justify-between text-white overflow-hidden bg-gradient-to-br from-[#059669] via-[#0d9488] to-[#4f46e5]">
                         <div className="relative z-10 my-auto py-4">
                             <h2 className="text-3xl font-extrabold leading-tight text-white mb-2 tracking-tight">
-                                Build the future <br />
+                                Bangun masa depan <br />
                                 bersama Microdata.
                             </h2>
                             <p className="text-xs text-emerald-100/90 leading-relaxed font-normal">
@@ -414,8 +414,8 @@ export default function Register({ onSwitchToLogin }) {
                     <div className="hidden md:flex md:w-1/2 relative p-8 flex-col justify-between text-white overflow-hidden bg-gradient-to-br from-[#059669] via-[#0d9488] to-[#4f46e5]">
                         <div className="relative z-10 my-auto py-4">
                             <h2 className="text-3xl font-extrabold leading-tight text-white mb-2 tracking-tight">
-                                Welcome aboard! <br />
-                                Plan Active.
+                                Selamat bergabung! <br />
+                                Paket Aktif.
                             </h2>
                             <p className="text-xs text-emerald-100/90 leading-relaxed font-normal">
                                 Paket langganan Anda sudah aktif sepenuhnya. Silakan login untuk mulai membuat website.
@@ -473,8 +473,8 @@ export default function Register({ onSwitchToLogin }) {
                 <div className="hidden md:flex md:w-1/2 relative p-8 flex-col justify-between text-white overflow-hidden bg-gradient-to-br from-[#3b82f6] via-[#4f46e5] to-[#6d28d9]">
                     <div className="relative z-10 my-auto py-4">
                         <h2 className="text-3xl font-extrabold leading-tight text-white mb-2 tracking-tight">
-                            Instant Auto Approval <br />
-                            on Payment.
+                            Persetujuan Otomatis Instan <br />
+                            saat Pembayaran.
                         </h2>
                         <p className="text-xs text-blue-100/90 leading-relaxed font-normal">
                             Sistem secara otomatis mendeteksi pembayaran Midtrans dan langsung mengaktifkan akun Anda.
@@ -515,9 +515,9 @@ export default function Register({ onSwitchToLogin }) {
 
                     {/* Heading */}
                     <div className="mt-3 mb-3">
-                        <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">Create Account</h1>
+                        <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">Buat Akun</h1>
                         <p className="text-xs text-slate-500 font-medium">
-                            Join and start building your company profile website
+                            Gabung dan mulai bangun website profil perusahaan Anda
                         </p>
                     </div>
 
@@ -536,7 +536,7 @@ export default function Register({ onSwitchToLogin }) {
                         {/* Name Field */}
                         <div className="group">
                             <label className="block text-[11px] font-semibold text-slate-700 mb-0.5">
-                                Full Name
+                                Nama Lengkap
                             </label>
                             <div className="relative">
                                 <User className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 group-focus-within:text-indigo-600 transition-colors" />
@@ -595,7 +595,7 @@ export default function Register({ onSwitchToLogin }) {
                             {/* Password Field */}
                             <div className="group">
                                 <label className="block text-[11px] font-semibold text-slate-700 mb-0.5">
-                                    Password
+                                    Kata Sandi
                                 </label>
                                 <div className="relative">
                                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 group-focus-within:text-indigo-600 transition-colors" />
@@ -629,7 +629,7 @@ export default function Register({ onSwitchToLogin }) {
                             {/* Confirm Password Field */}
                             <div className="group">
                                 <label className="block text-[11px] font-semibold text-slate-700 mb-0.5">
-                                    Confirm Password
+                                    Konfirmasi Kata Sandi
                                 </label>
                                 <div className="relative">
                                     <ShieldCheck className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 group-focus-within:text-indigo-600 transition-colors" />
@@ -759,7 +759,7 @@ export default function Register({ onSwitchToLogin }) {
                                     const isFree = plan.harga === 0 || plan.price === 0;
                                     const priceNum = plan.harga ?? plan.price ?? 0;
                                     const formattedPrice = isFree
-                                        ? 'Free'
+                                        ? 'Gratis'
                                         : `Rp ${Number(priceNum).toLocaleString('id-ID').replace(/,/g, '.')}`;
 
                                     return (
@@ -774,7 +774,7 @@ export default function Register({ onSwitchToLogin }) {
                                         >
                                             {plan.is_popular && (
                                                 <span className="absolute -top-1.5 right-2 bg-amber-400 text-amber-950 text-[8px] font-black uppercase px-1.5 py-0.2 rounded-full shadow-2xs">
-                                                    POPULAR
+                                                    POPULER
                                                 </span>
                                             )}
 
@@ -840,7 +840,7 @@ export default function Register({ onSwitchToLogin }) {
                                 <>
                                     <span>
                                         {isSelectedFree
-                                            ? 'Register Account (Free)'
+                                            ? 'Daftar Akun (Gratis)'
                                             : `Lanjut Pembayaran (${selectedPlan ? (selectedPlan.harga === 0 ? 'Free' : `Rp ${(selectedPlan.harga ?? selectedPlan.price).toLocaleString('id-ID')}`) : ''})`}
                                     </span>
                                     <ArrowRight className="h-3.5 w-3.5" />
@@ -861,7 +861,7 @@ export default function Register({ onSwitchToLogin }) {
                                 }}
                                 className="font-bold text-indigo-600 hover:text-indigo-700 transition-colors hover:underline cursor-pointer"
                             >
-                                Sign in
+                                Masuk
                             </Link>
                         </div>
                     </form>
@@ -886,7 +886,7 @@ export default function Register({ onSwitchToLogin }) {
                 <div className="relative z-10 my-auto py-4 space-y-3">
                     <div>
                         <h2 className="text-2xl lg:text-3xl font-black leading-tight text-white mb-2 tracking-tight">
-                            Build the future <br />
+                            Bangun masa depan <br />
                             <span className="text-blue-200 drop-shadow-md">bersama Microdata.</span>
                         </h2>
 
@@ -899,7 +899,7 @@ export default function Register({ onSwitchToLogin }) {
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                                <span className="text-[10px] font-bold text-white tracking-wide">Instant Auto-Approval on Payment</span>
+                                <span className="text-[10px] font-bold text-white tracking-wide">Persetujuan Otomatis Instan saat Pembayaran</span>
                             </div>
                             <span className="text-[8px] font-extrabold px-1.5 py-0.2 rounded bg-white/20 text-blue-100 uppercase">Midtrans</span>
                         </div>
@@ -922,7 +922,7 @@ export default function Register({ onSwitchToLogin }) {
                         </div>
                         <div className="text-xs font-black text-white tracking-tight">99.9%</div>
                         <div className="text-[8px] font-extrabold text-blue-200/90 tracking-wider uppercase">
-                            Uptime
+                            Waktu Aktif
                         </div>
                     </div>
                     <div className="flex flex-col items-center text-center">
@@ -931,7 +931,7 @@ export default function Register({ onSwitchToLogin }) {
                         </div>
                         <div className="text-xs font-black text-white tracking-tight">24/7</div>
                         <div className="text-[8px] font-extrabold text-blue-200/90 tracking-wider uppercase">
-                            Support
+                            Dukungan
                         </div>
                     </div>
                 </div>

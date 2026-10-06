@@ -195,7 +195,7 @@ export default function UserDashboard() {
                                             className="flex-1 inline-flex items-center justify-center gap-1.5 py-1.5 px-3 bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-bold rounded-lg transition"
                                         >
                                             <Edit3 className="h-3 w-3" />
-                                            Edit Builder
+                                            Ubah di Builder
                                         </Link>
                                     </div>
                                 </Card>
@@ -213,11 +213,11 @@ export default function UserDashboard() {
                             <div className="flex items-center gap-2">
                                 <Activity className="h-5 w-5 text-indigo-600" />
                                 <h2 className="text-lg font-extrabold text-[rgb(var(--color-text-primary))]">
-                                    Website Visitor Analytics
+                                    Analitik Pengunjung Website
                                 </h2>
                             </div>
                             <p className="text-xs text-[rgb(var(--color-text-secondary))] mt-0.5">
-                                Track and analyze views for your published company profile website.
+                                Pantau dan analisis kunjungan website profil perusahaan Anda yang terpublikasi.
                             </p>
                         </div>
 
@@ -252,15 +252,15 @@ export default function UserDashboard() {
                                         value={startDate}
                                         onChange={(e) => setStartDate(e.target.value)}
                                         className="px-3 py-1.5 bg-[rgb(var(--color-surface))] border border-[rgb(var(--color-border))] rounded-xl text-xs font-semibold text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                                        title="Start Date"
+                                        title="Tanggal Mulai"
                                     />
-                                    <span className="text-xs text-[rgb(var(--color-text-secondary))] font-bold">to</span>
+                                    <span className="text-xs text-[rgb(var(--color-text-secondary))] font-bold">s/d</span>
                                     <input
                                         type="date"
                                         value={endDate}
                                         onChange={(e) => setEndDate(e.target.value)}
                                         className="px-3 py-1.5 bg-[rgb(var(--color-surface))] border border-[rgb(var(--color-border))] rounded-xl text-xs font-semibold text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                                        title="End Date"
+                                        title="Tanggal Selesai"
                                     />
                                 </div>
                             )}
@@ -270,16 +270,16 @@ export default function UserDashboard() {
                                     onChange={(e) => setRange(e.target.value)}
                                     className="appearance-none pl-3 pr-8 py-1.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs font-bold text-[rgb(var(--color-text-primary))] hover:bg-[rgb(var(--color-surface))] transition focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer"
                                 >
-                                    <option value="7days">Last 7 Days</option>
-                                    <option value="30days">Last 30 Days</option>
-                                    <option value="last_month">Last Month</option>
-                                    <option value="custom">Custom Range...</option>
+                                    <option value="7days">7 Hari Terakhir</option>
+                                    <option value="30days">30 Hari Terakhir</option>
+                                    <option value="last_month">Bulan Lalu</option>
+                                    <option value="custom">Rentang Kustom...</option>
                                 </select>
                                 <ChevronRight className="h-3.5 w-3.5 text-[rgb(var(--color-text-secondary))] absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none rotate-90" />
                             </div>
                             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-bold self-start sm:self-auto shrink-0">
                                 <span className="h-1.5 w-1.5 rounded-full bg-indigo-600 animate-pulse"></span>
-                                Live Traffic
+                                Trafik Live
                             </span>
                         </div>
                     </div>
@@ -289,10 +289,10 @@ export default function UserDashboard() {
                         <div className="p-4 bg-[rgb(var(--color-surface-alt))] rounded-xl flex items-center justify-between">
                             <div>
                                 <p className="text-[10px] font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">
-                                    {range === '7days' && 'Total Page Views (7d)'}
-                                    {range === '30days' && 'Total Page Views (30d)'}
-                                    {range === 'last_month' && 'Total Page Views (Last Month)'}
-                                    {range === 'custom' && 'Total Page Views (Custom)'}
+                                    {range === '7days' && 'Total Tayangan Halaman (7 hari)'}
+                                    {range === '30days' && 'Total Tayangan Halaman (30 hari)'}
+                                    {range === 'last_month' && 'Total Tayangan Halaman (Bulan Lalu)'}
+                                    {range === 'custom' && 'Total Tayangan Halaman (Kustom)'}
                                 </p>
                                 <p className="text-2xl font-extrabold text-[rgb(var(--color-text-primary))] mt-1">
                                     {analytics?.total_views?.toLocaleString() || 0}
@@ -305,10 +305,10 @@ export default function UserDashboard() {
                         <div className="p-4 bg-[rgb(var(--color-surface-alt))] rounded-xl flex items-center justify-between">
                             <div>
                                 <p className="text-[10px] font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">
-                                    {range === '7days' && 'Unique Visitors (7d)'}
-                                    {range === '30days' && 'Unique Visitors (30d)'}
-                                    {range === 'last_month' && 'Unique Visitors (Last Month)'}
-                                    {range === 'custom' && 'Unique Visitors (Custom)'}
+                                    {range === '7days' && 'Pengunjung Unik (7 hari)'}
+                                    {range === '30days' && 'Pengunjung Unik (30 hari)'}
+                                    {range === 'last_month' && 'Pengunjung Unik (Bulan Lalu)'}
+                                    {range === 'custom' && 'Pengunjung Unik (Kustom)'}
                                 </p>
                                 <p className="text-2xl font-extrabold text-[rgb(var(--color-text-primary))] mt-1">
                                     {analytics?.unique_visitors?.toLocaleString() || 0}
@@ -335,10 +335,10 @@ export default function UserDashboard() {
                             <div className="space-y-2">
                                 <div className="flex items-center justify-between">
                                     <p className="text-xs font-bold text-[rgb(var(--color-text-secondary))]">
-                                        {range === '7days' && 'Views in the Last 7 Days'}
-                                        {range === '30days' && 'Views in the Last 30 Days'}
-                                        {range === 'last_month' && 'Views in the Last Month'}
-                                        {range === 'custom' && 'Views in the Selected Range'}
+                                        {range === '7days' && 'Kunjungan 7 Hari Terakhir'}
+                                        {range === '30days' && 'Kunjungan 30 Hari Terakhir'}
+                                        {range === 'last_month' && 'Kunjungan Bulan Lalu'}
+                                        {range === 'custom' && 'Kunjungan Rentang Terpilih'}
                                     </p>
                                     {!isSmallRange && (
                                         <span className="text-[10px] text-[rgb(var(--color-text-tertiary))] font-medium italic select-none">
@@ -429,7 +429,7 @@ export default function UserDashboard() {
                                             {!hasAnyViews && (
                                                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
                                                     <Eye className="h-8 w-8 text-[rgb(var(--color-text-tertiary))] opacity-30 mb-2" />
-                                                    <p className="text-xs text-[rgb(var(--color-text-tertiary))] font-medium">No visitors in this period</p>
+                                                    <p className="text-xs text-[rgb(var(--color-text-tertiary))] font-medium">Tidak ada pengunjung pada periode ini</p>
                                                 </div>
                                             )}
                                         </div>

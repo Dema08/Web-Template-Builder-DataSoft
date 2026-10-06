@@ -30,7 +30,7 @@ export default function QuickActionCard({ quickActions = [] }) {
                         <div className="text-base font-extrabold text-slate-900 group-hover:text-indigo-600 transition">{action.label}</div>
                         <p className="mt-1 text-xs text-slate-500 font-medium">{action.description}</p>
                         <div className="mt-4 inline-flex items-center gap-2 text-xs font-bold text-indigo-600">
-                            <span>Open</span> <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" />
+                            <span>Buka</span> <ArrowRight className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" />
                         </div>
                     </a>
                 ))}

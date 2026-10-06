@@ -20,11 +20,11 @@ export function useSettings() {
         onSuccess: (settings) => {
             loadSettings(settings);
             queryClient.invalidateQueries({ queryKey: ['settings'] });
-            toast.success('Settings updated successfully', 'Success');
+            toast.success('Pengaturan berhasil diperbarui', 'Berhasil');
         },
         onError: (error) => {
-            const message = error?.response?.data?.message || 'Failed to update settings';
-            toast.error(message, 'Error');
+            const message = error?.response?.data?.message || 'Gagal memperbarui pengaturan';
+            toast.error(message, 'Galat');
         },
     });
 
@@ -34,11 +34,11 @@ export function useSettings() {
         onSuccess: (response) => {
             updateSetting('logo_path', response?.logo_path ?? null);
             queryClient.invalidateQueries({ queryKey: ['settings'] });
-            toast.success('Logo uploaded successfully', 'Success');
+            toast.success('Logo berhasil diunggah', 'Berhasil');
         },
         onError: (error) => {
-            const message = error?.response?.data?.message || 'Failed to upload logo';
-            toast.error(message, 'Error');
+            const message = error?.response?.data?.message || 'Gagal mengunggah logo';
+            toast.error(message, 'Galat');
         },
     });
 
@@ -48,11 +48,11 @@ export function useSettings() {
         onSuccess: (response) => {
             updateSetting('logo_path', null);
             queryClient.invalidateQueries({ queryKey: ['settings'] });
-            toast.success('Logo removed successfully', 'Success');
+            toast.success('Logo berhasil dihapus', 'Berhasil');
         },
         onError: (error) => {
-            const message = error?.response?.data?.message || 'Failed to remove logo';
-            toast.error(message, 'Error');
+            const message = error?.response?.data?.message || 'Gagal menghapus logo';
+            toast.error(message, 'Galat');
         },
     });
 

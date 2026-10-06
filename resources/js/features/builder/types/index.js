@@ -6,7 +6,7 @@ export const DeviceView = {
 
 export const BuilderStatus = {
   DRAFT: 'draft',
-  PUBLISHED: 'published',
+  PUBLISHED: 'dipublikasikan',
   ARCHIVED: 'archived',
 };
 

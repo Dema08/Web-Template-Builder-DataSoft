@@ -95,7 +95,7 @@ export function useCreateWebsite() {
                 website: website,
             });
 
-            toast.success('Website created successfully! Redirecting to builder...', 'Success');
+            toast.success('Website berhasil dibuat! Mengalihkan ke builder...', 'Berhasil');
             reset();
 
             setTimeout(() => {
@@ -103,7 +103,7 @@ export function useCreateWebsite() {
             }, 1500);
         },
         onError: (error) => {
-            toast.error(error.response?.data?.message || 'Failed to create website.', 'Error');
+            toast.error(error.response?.data?.message || 'Gagal membuat website.', 'Galat');
         },
         onSettled: () => {
             setIsSubmitting(false);

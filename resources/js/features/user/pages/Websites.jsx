@@ -114,11 +114,11 @@ export default function Websites() {
         try {
             await websiteApi.deleteWebsite(siteToDelete.id);
             await refetch();
-            toast.success(`Website "${siteToDelete.name}" deleted.`, 'Website Deleted');
+            toast.success(`Website "${siteToDelete.name}" dihapus.`, 'Website Dihapus');
             setIsDeleteModalOpen(false);
             setSiteToDelete(null);
         } catch (error) {
-            toast.error(error.response?.data?.message || 'Gagal menghapus website.', 'Error');
+            toast.error(error.response?.data?.message || 'Gagal menghapus website.', 'Galat');
         }
     };
 
@@ -174,7 +174,7 @@ export default function Websites() {
 
             {quota && (
                 <div className="rounded-xl border border-indigo-100 bg-indigo-50 px-4 py-3 text-sm text-indigo-900">
-                    Website published: <strong>{quota.current} / {quota.unlimited ? 'Unlimited' : quota.max}</strong>
+                    Website terpublikasi: <strong>{quota.current} / {quota.unlimited ? 'Tanpa batas' : quota.max}</strong>
                     <span className="text-indigo-700"> (Paket {quota.package})</span>
                 </div>
             )}
@@ -223,7 +223,7 @@ export default function Websites() {
                                 type="button"
                                 onClick={() => openThumbnailModal(site)}
                                 className="absolute top-3 right-3 flex items-center gap-1.5 rounded-full bg-white/90 px-2.5 py-1.5 text-[10px] font-semibold text-slate-700 shadow-sm backdrop-blur-sm transition hover:bg-white"
-                                title="Upload thumbnail"
+                                title="Unggah thumbnail"
                             >
                                 <Camera className="h-3.5 w-3.5" />
                                 <span>{site.thumbnail && site.thumbnail !== 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop&q=80' ? 'Ubah' : 'Add'}</span>
@@ -258,7 +258,7 @@ export default function Websites() {
                                         <Clock className="h-3 w-3" /> {site.updatedAt}
                                     </span>
                                     <span className="flex items-center gap-1 font-semibold text-indigo-600">
-                                        <Eye className="h-3 w-3" /> {site.monthlyViewsCount.toLocaleString('id-ID')} views
+                                        <Eye className="h-3 w-3" /> {site.monthlyViewsCount.toLocaleString('id-ID')} kunjungan
                                     </span>
                                 </p>
                             </div>
@@ -270,7 +270,7 @@ export default function Websites() {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="p-2 text-[rgb(var(--color-text-secondary))] hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition border border-[rgb(var(--color-border))]"
-                                    title="View Live Site"
+                                    title="Lihat Situs Live"
                                 >
                                     <ExternalLink className="h-4 w-4" />
                                 </a>
@@ -280,14 +280,14 @@ export default function Websites() {
                                     className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-3 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition shadow-xs"
                                 >
                                     <Edit3 className="h-3.5 w-3.5" />
-                                    <span>Edit Builder</span>
+                                    <span>Ubah di Builder</span>
                                 </Link>
 
                                 <button
                                     type="button"
                                     onClick={() => handleDeleteWebsite(site.id, site.name)}
                                     className="p-2 text-[rgb(var(--color-text-tertiary))] hover:text-red-600 hover:bg-red-50 rounded-xl transition border border-[rgb(var(--color-border))]"
-                                    title="Delete Website"
+                                    title="Hapus Website"
                                 >
                                     <Trash2 className="h-4 w-4" />
                                 </button>

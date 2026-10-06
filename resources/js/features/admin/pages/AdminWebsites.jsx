@@ -32,7 +32,7 @@ import UploadThumbnailButton from '@shared/components/UploadThumbnailButton';
 
 function getStatusConfig(status) {
     switch (status) {
-        case 'published':
+        case 'dipublikasikan':
             return {
                 label: 'Published',
                 icon: CheckCircle2,
@@ -90,7 +90,7 @@ export default function AdminWebsites() {
             toast.success('Status website berhasil diperbarui', 'Berhasil');
         },
         onError: (err) => {
-            toast.error(err?.response?.data?.message ?? 'Gagal memperbarui status', 'Error');
+            toast.error(err?.response?.data?.message ?? 'Gagal memperbarui status', 'Galat');
         },
     });
 
@@ -104,7 +104,7 @@ export default function AdminWebsites() {
             setDetailModal(null);
         },
         onError: (err) => {
-            toast.error(err?.response?.data?.message ?? 'Gagal menghapus website', 'Error');
+            toast.error(err?.response?.data?.message ?? 'Gagal menghapus website', 'Galat');
         },
     });
 
@@ -135,7 +135,7 @@ export default function AdminWebsites() {
                     className="flex items-center gap-2 px-4 py-2.5 bg-[rgb(var(--color-surface))] border border-[rgb(var(--color-border))] rounded-xl text-xs font-bold text-[rgb(var(--color-text-primary))] hover:bg-[rgb(var(--color-surface-alt))] transition shadow-xs"
                 >
                     <RefreshCw className="h-4 w-4" />
-                    Refresh Data
+                    Muat Ulang Data
                 </button>
             </div>
 
@@ -178,7 +178,7 @@ export default function AdminWebsites() {
 
                         {/* Status Filter */}
                         <div className="flex items-center gap-2 bg-[rgb(var(--color-surface-alt))] p-1 rounded-xl border border-[rgb(var(--color-border))]">
-                            {['all', 'published', 'draft', 'suspended'].map((st) => (
+                            {['all', 'dipublikasikan', 'draft', 'suspended'].map((st) => (
                                 <button
                                     key={st}
                                     type="button"
@@ -205,7 +205,7 @@ export default function AdminWebsites() {
                                 <th className="py-4 px-4">Identitas Publisher (Pemilik)</th>
                                 <th className="py-4 px-4">Template & Kategori</th>
                                 <th className="py-4 px-4">Status & Tgl Publish</th>
-                                <th className="py-4 px-4">Views</th>
+                                <th className="py-4 px-4">Kunjungan</th>
                                 <th className="py-4 px-4 text-right">Aksi Admin</th>
                             </tr>
                         </thead>
@@ -222,7 +222,7 @@ export default function AdminWebsites() {
                                 <tr>
                                     <td colSpan={6} className="py-12 text-center">
                                         <AlertTriangle className="h-6 w-6 text-rose-500 mx-auto mb-2" />
-                                        <p className="text-xs text-rose-600">Gagal memuat data. Coba refresh halaman.</p>
+                                        <p className="text-xs text-rose-600">Gagal memuat data. Coba muat ulang halaman.</p>
                                     </td>
                                 </tr>
                             )}
@@ -266,7 +266,7 @@ export default function AdminWebsites() {
                                                         </p>
                                                         {site.domain_type === 'custom' && (
                                                             <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-purple-100 text-purple-700 dark:bg-purple-950/40 dark:text-purple-300 border border-purple-300/50 shrink-0">
-                                                                Custom Domain
+                                                                Domain Kustom
                                                             </span>
                                                         )}
                                                     </div>
@@ -336,7 +336,7 @@ export default function AdminWebsites() {
                                                     </p>
                                                 ) : (
                                                     <p className="text-[10px] text-[rgb(var(--color-text-tertiary))] font-semibold">
-                                                        Belum Dipublish
+                                                        Belum Dipublikasi
                                                     </p>
                                                 )}
                                             </div>
@@ -381,12 +381,12 @@ export default function AdminWebsites() {
                                                     onClick={() =>
                                                         updateStatusMutation.mutate({
                                                             id: site.id,
-                                                            status: site.status === 'published' ? 'draft' : 'published',
+                                                            status: site.status === 'dipublikasikan' ? 'draft' : 'dipublikasikan',
                                                         })
                                                     }
                                                     className="px-2.5 py-1.5 bg-[rgb(var(--color-surface-alt))] hover:bg-indigo-50 dark:hover:bg-indigo-950/40 text-[rgb(var(--color-text-primary))] hover:text-indigo-600 border border-[rgb(var(--color-border))] rounded-xl text-xs font-bold transition disabled:opacity-50"
                                                 >
-                                                    {site.status === 'published' ? 'Batal Publikasi' : 'Publish'}
+                                                    {site.status === 'dipublikasikan' ? 'Batal Publikasi' : 'Publish'}
                                                 </button>
 
                                                 {/* Delete Button */}
@@ -460,13 +460,13 @@ export default function AdminWebsites() {
                                         </p>
                                     </div>
                                     <div>
-                                        <p className="text-[10px] text-[rgb(var(--color-text-tertiary))] font-bold">Role & Paket Langganan</p>
+                                        <p className="text-[10px] text-[rgb(var(--color-text-tertiary))] font-bold">Peran & Paket Langganan</p>
                                         <div className="flex items-center gap-1.5 mt-0.5">
                                             <span className="px-2 py-0.5 rounded text-[10px] font-extrabold bg-indigo-100 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300">
                                                 {detailModal.owner?.role?.toUpperCase() ?? 'USER'}
                                             </span>
                                             <span className="px-2 py-0.5 rounded text-[10px] font-extrabold bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300">
-                                                {detailModal.owner?.plan ?? 'Free Tier'}
+                                                {detailModal.owner?.plan ?? 'Tingkat Gratis'}
                                             </span>
                                         </div>
                                     </div>
@@ -508,10 +508,10 @@ export default function AdminWebsites() {
                                         <p className="font-semibold text-[rgb(var(--color-text-primary))]">{detailModal.template?.name}</p>
                                     </div>
                                     <div>
-                                        <p className="text-[10px] text-[rgb(var(--color-text-tertiary))] font-bold">Tanggal Dipublikasi</p>
+                                        <p className="text-[10px] text-[rgb(var(--color-text-tertiary))] font-bold">Tanggal Publikasi</p>
                                         <p className="font-semibold text-[rgb(var(--color-text-primary))] flex items-center gap-1">
                                             <Calendar className="h-3 w-3 text-indigo-500" />
-                                            {detailModal.published_at_formatted ?? 'Belum Dipublish'}
+                                            {detailModal.published_at_formatted ?? 'Belum Dipublikasi'}
                                         </p>
                                     </div>
                                 </div>

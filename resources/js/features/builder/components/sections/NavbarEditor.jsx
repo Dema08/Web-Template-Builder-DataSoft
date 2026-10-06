@@ -94,7 +94,7 @@ export default function NavbarEditor({ sectionId, section }) {
   const handleLogoFileUpload = (file) => {
     if (!file) return;
     if (!file.type.startsWith('image/')) {
-      toast.error('File harus berupa gambar (PNG, JPG, WEBP, SVG)', 'Invalid File');
+      toast.error('File harus berupa gambar (PNG, JPG, WEBP, SVG)', 'File Tidak Valid');
       return;
     }
 

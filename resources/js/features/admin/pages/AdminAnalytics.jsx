@@ -306,7 +306,7 @@ export default function AdminAnalytics() {
                                                 {/* Tooltip on hover */}
                                                 <div className="absolute -top-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-slate-900 text-white text-[10px] font-bold px-2 py-1 rounded-lg shadow-xl transition-all whitespace-nowrap z-30 pointer-events-none flex flex-col items-center">
                                                     <span>{item.month || item.label}</span>
-                                                    <span className="text-indigo-300 font-extrabold">{views.toLocaleString()} visits ({item.unique_visitors ?? 0} unique)</span>
+                                                    <span className="text-indigo-300 font-extrabold">{views.toLocaleString()} kunjungan ({item.unique_visitors ?? 0} unik)</span>
                                                 </div>
                                             </div>
                                         </div>

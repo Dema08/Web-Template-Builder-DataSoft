@@ -525,17 +525,17 @@ function EmptyStateContent() {
         <Layers className="h-8 w-8" />
       </div>
       <h2 className="text-xl font-extrabold text-slate-900 mb-1">
-        No Sections Found in Template
+        Tidak Ada Bagian dalam Template
       </h2>
       <p className="text-xs text-slate-500 max-w-md mb-6">
-        Add sections or generate a starter template in the Microdata Builder tab to view live preview here.
+        Tambahkan bagian atau buat template awal di tab Microdata Builder untuk melihat pratinjau live di sini.
       </p>
       <button
         type="button"
         onClick={() => window.close()}
         className="px-5 py-2.5 bg-indigo-600 text-white text-xs font-bold rounded-xl shadow-md hover:bg-indigo-700 transition"
       >
-        Return to Builder
+        Kembali ke Builder
       </button>
     </div>
   );

@@ -60,7 +60,7 @@ export default function BillingPage() {
 
             // Free plan: no Midtrans payment needed
             if (isFreeResponse) {
-                toast.success('Paket Free berhasil diaktifkan!', 'Paket Diperbarui');
+                toast.success('Paket Gratis berhasil diaktifkan!', 'Paket Diperbarui');
                 queryClient.invalidateQueries([QUERY_KEYS.BILLING_CURRENT]);
                 queryClient.invalidateQueries([QUERY_KEYS.BILLING_HISTORY]);
                 queryClient.invalidateQueries([QUERY_KEYS.USER]);
@@ -163,7 +163,7 @@ export default function BillingPage() {
                     <span>Tagihan & Langganan</span>
                 </div>
                 <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">
-                    Billing & Langganan Paket
+                    Tagihan & Langganan Paket
                 </h1>
                 <p className="text-sm text-[rgb(var(--color-text-secondary))] mt-1">
                     Kelola paket langganan aktif, lakukan upgrade secara otomatis via Midtrans Payment Gateway, dan lihat riwayat invoice.
@@ -183,7 +183,7 @@ export default function BillingPage() {
                             </span>
                             {subscription?.is_active && (
                                 <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-black uppercase tracking-wider">
-                                    Active
+                                    Aktif
                                 </span>
                             )}
                         </div>
@@ -239,16 +239,16 @@ export default function BillingPage() {
                             const isFree = plan.harga === 0 || plan.price === 0;
 
                             const formattedPrice = isFree
-                                ? 'Free'
+                                ? 'Gratis'
                                 : `Rp ${Number(plan.harga ?? plan.price).toLocaleString('id-ID').replace(/,/g, '.')}`;
 
                             const maxDomainsLabel = plan.max_domains === -1 || plan.maks_domain === -1
-                                ? 'Unlimited Domain'
-                                : (plan.max_domains === 0 || plan.maks_domain === 0 ? '0 (Subdomain)' : `${plan.max_domains ?? plan.maks_domain} Custom Domain`);
+                                ? 'Domain Tanpa Batas'
+                                : (plan.max_domains === 0 || plan.maks_domain === 0 ? '0 (Subdomain)' : `${plan.max_domains ?? plan.maks_domain} Domain Kustom`);
 
                             const maxTemplatesLabel = plan.max_starter_templates === -1 || plan.maks_starter_template === -1
-                                ? 'Unlimited Templates'
-                                : (plan.max_starter_templates === 0 || plan.maks_starter_template === 0 ? 'Blank Template Only' : `${plan.max_starter_templates ?? plan.maks_starter_template} Starter Templates`);
+                                ? 'Template Tanpa Batas'
+                                : (plan.max_starter_templates === 0 || plan.maks_starter_template === 0 ? 'Hanya Template Kosong' : `${plan.max_starter_templates ?? plan.maks_starter_template} Template Starter`);
 
                             const canUpload = Boolean(plan.can_upload_website ?? plan.bisa_upload_website);
                             const features = plan.features ?? plan.fitur ?? [];
@@ -294,21 +294,21 @@ export default function BillingPage() {
                                         <div className="space-y-2 text-xs mb-6">
                                             <div className="flex items-center justify-between p-2 rounded-xl bg-[rgb(var(--color-surface-alt))]">
                                                 <span className="text-[rgb(var(--color-text-secondary))] font-medium flex items-center gap-1.5">
-                                                    <Globe className="h-3.5 w-3.5 text-indigo-500" /> Custom Domain
+                                                    <Globe className="h-3.5 w-3.5 text-indigo-500" /> Domain Kustom
                                                 </span>
                                                 <span className="font-extrabold text-[rgb(var(--color-text-primary))] text-[11px]">{maxDomainsLabel}</span>
                                             </div>
 
                                             <div className="flex items-center justify-between p-2 rounded-xl bg-[rgb(var(--color-surface-alt))]">
                                                 <span className="text-[rgb(var(--color-text-secondary))] font-medium flex items-center gap-1.5">
-                                                    <Layers className="h-3.5 w-3.5 text-indigo-500" /> Templates
+                                                    <Layers className="h-3.5 w-3.5 text-indigo-500" /> Template
                                                 </span>
                                                 <span className="font-extrabold text-[rgb(var(--color-text-primary))] text-[11px]">{maxTemplatesLabel}</span>
                                             </div>
 
                                             <div className="flex items-center justify-between p-2 rounded-xl bg-[rgb(var(--color-surface-alt))]">
                                                 <span className="text-[rgb(var(--color-text-secondary))] font-medium flex items-center gap-1.5">
-                                                    <UploadCloud className="h-3.5 w-3.5 text-indigo-500" /> Upload HTML
+                                                    <UploadCloud className="h-3.5 w-3.5 text-indigo-500" /> Unggah HTML
                                                 </span>
                                                 {canUpload ? (
                                                     <span className="text-emerald-600 dark:text-emerald-400 font-extrabold text-[11px]">Ya</span>
@@ -352,7 +352,7 @@ export default function BillingPage() {
                                         ) : isCurrent ? (
                                             <span>Paket Aktif Saat Ini</span>
                                         ) : (
-                                            <span>{isFree ? 'Pilih Paket Free' : `Bayar & Upgrade (${formattedPrice})`}</span>
+                                            <span>{isFree ? 'Pilih Paket Gratis' : `Bayar & Upgrade (${formattedPrice})`}</span>
                                         )}
                                     </button>
                                 </div>

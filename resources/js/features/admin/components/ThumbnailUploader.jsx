@@ -187,7 +187,7 @@ export default function ThumbnailUploader({
                         />
                     </div>
                     <div className="flex-1">
-                        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Preview</p>
+                        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Pratinjau</p>
                         <p className="text-[10px] text-slate-400 mt-0.5 break-all line-clamp-2">
                             {localFile ? localFile.name : value}
                         </p>

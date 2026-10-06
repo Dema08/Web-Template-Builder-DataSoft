@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Under Maintenance — Microdata</title>
+    <title>Sistem Dalam Pemeliharaan — Microdata</title>
     <link rel="icon" type="image/png" href="/images/microdata-emblem.png">
     <link rel="shortcut icon" href="/images/microdata-emblem.png">
     <link rel="apple-touch-icon" href="/images/microdata-emblem.png">
@@ -64,10 +64,10 @@
                         </div>
 
                         <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">
-                            System Under<br>Maintenance
+                            Sistem Dalam<br>Pemeliharaan
                         </h1>
                         <p class="text-xs sm:text-sm text-slate-500 mt-2 font-medium leading-relaxed">
-                            We're currently performing system upgrades to serve you better. Please check back later.
+                            Saat ini kami melakukan peningkatan sistem agar dapat melayani Anda lebih baik. Silakan kembali lagi nanti.
                         </p>
                     </div>
 
@@ -95,7 +95,7 @@
                         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
                         </svg>
-                        Login Administrator
+                        Masuk Administrator
                         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
                         </svg>
@@ -104,7 +104,7 @@
 
                 <!-- Footer note -->
                 <p class="mt-6 text-center text-xs text-slate-400 font-medium">
-                    © 2026 PT Microdata Solusindo. All rights reserved.
+                    © 2026 PT Microdata Solusindo. Hak cipta dilindungi.
                 </p>
             </div>
 
@@ -170,10 +170,10 @@
                     </div>
 
                     <h2 class="text-3xl font-extrabold leading-tight text-white mb-3 tracking-tight">
-                        Scheduled<br>Maintenance.
+                        Terjadwal<br>Pemeliharaan.
                     </h2>
                     <p class="text-xs text-blue-100 leading-relaxed max-w-xs font-normal" style="opacity:0.9;">
-                        Our team is working hard to improve the platform. We'll be back shortly with new features and improvements.
+                        Tim kami bekerja keras meningkatkan platform. Kami segera kembali dengan fitur dan peningkatan baru.
                     </p>
                 </div>
 
@@ -188,7 +188,7 @@
                             </svg>
                         </div>
                         <div class="text-base font-extrabold text-white tracking-tight">1.2M+</div>
-                        <div class="text-[9px] font-bold uppercase tracking-wider mt-0.5" style="color: rgba(191,219,254,0.8);">Sites Built</div>
+                        <div class="text-[9px] font-bold uppercase tracking-wider mt-0.5" style="color: rgba(191,219,254,0.8);">Website Dibuat</div>
                     </div>
                     <div class="flex flex-col items-center text-center">
                         <div class="w-8 h-8 rounded-lg flex items-center justify-center mb-2"
@@ -198,7 +198,7 @@
                             </svg>
                         </div>
                         <div class="text-base font-extrabold text-white tracking-tight">99.9%</div>
-                        <div class="text-[9px] font-bold uppercase tracking-wider mt-0.5" style="color: rgba(191,219,254,0.8);">Uptime</div>
+                        <div class="text-[9px] font-bold uppercase tracking-wider mt-0.5" style="color: rgba(191,219,254,0.8);">Waktu Aktif</div>
                     </div>
                     <div class="flex flex-col items-center text-center">
                         <div class="w-8 h-8 rounded-lg flex items-center justify-center mb-2"
@@ -208,7 +208,7 @@
                             </svg>
                         </div>
                         <div class="text-base font-extrabold text-white tracking-tight">24/7</div>
-                        <div class="text-[9px] font-bold uppercase tracking-wider mt-0.5" style="color: rgba(191,219,254,0.8);">Support</div>
+                        <div class="text-[9px] font-bold uppercase tracking-wider mt-0.5" style="color: rgba(191,219,254,0.8);">Dukungan</div>
                     </div>
                 </div>
             </div>

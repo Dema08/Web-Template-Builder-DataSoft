@@ -36,7 +36,7 @@ export default function MediaPanel() {
 
     const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/svg+xml', 'image/webp'];
     if (!allowedTypes.includes(file.type)) {
-      toast.error('Supported formats: PNG, JPG, JPEG, SVG, WEBP', 'Invalid File');
+      toast.error('Supported formats: PNG, JPG, JPEG, SVG, WEBP', 'File Tidak Valid');
       return;
     }
 
@@ -49,7 +49,7 @@ export default function MediaPanel() {
         size: formatFileSize(file.size),
         type: 'image',
       });
-      toast.success(`Uploaded ${file.name}`, 'Success');
+      toast.success(`Uploaded ${file.name}`, 'Berhasil');
       applyImageToComponent(dataUrl, file.name);
     };
     reader.readAsDataURL(file);

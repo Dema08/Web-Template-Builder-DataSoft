@@ -53,12 +53,12 @@ export default function AdminCategories() {
     mutationFn: categoryService.create,
     onSuccess: () => {
       queryClient.invalidateQueries(['admin', 'categories']);
-      toast.success('Kategori berhasil dibuat', 'Success');
+      toast.success('Kategori berhasil dibuat', 'Berhasil');
       setIsAddOpen(false);
       resetForm();
     },
     onError: () => {
-      toast.error('Gagal membuat kategori', 'Error');
+      toast.error('Gagal membuat kategori', 'Galat');
     },
   });
 
@@ -66,12 +66,12 @@ export default function AdminCategories() {
     mutationFn: ({ id, data }) => categoryService.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries(['admin', 'categories']);
-      toast.success('Kategori berhasil diperbarui', 'Success');
+      toast.success('Kategori berhasil diperbarui', 'Berhasil');
       setEditingCategory(null);
       resetForm();
     },
     onError: () => {
-      toast.error('Gagal memperbarui kategori', 'Error');
+      toast.error('Gagal memperbarui kategori', 'Galat');
     },
   });
 
@@ -79,12 +79,12 @@ export default function AdminCategories() {
     mutationFn: categoryService.delete,
     onSuccess: () => {
       queryClient.invalidateQueries(['admin', 'categories']);
-      toast.success('Kategori berhasil dihapus', 'Success');
+      toast.success('Kategori berhasil dihapus', 'Berhasil');
       setIsDeleteModalOpen(false);
       setCategoryToDelete(null);
     },
     onError: () => {
-      toast.error('Gagal menghapus kategori', 'Error');
+      toast.error('Gagal menghapus kategori', 'Galat');
     },
   });
 
@@ -93,12 +93,12 @@ export default function AdminCategories() {
     onSuccess: () => {
       queryClient.invalidateQueries(['admin', 'templates']);
       queryClient.invalidateQueries(['admin', 'categories']);
-      toast.success('Template berhasil dibuat', 'Success');
+      toast.success('Template berhasil dibuat', 'Berhasil');
       setShowTemplateModal(false);
       resetTemplateForm();
     },
     onError: () => {
-      toast.error('Gagal membuat template', 'Error');
+      toast.error('Gagal membuat template', 'Galat');
     },
   });
 
@@ -106,13 +106,13 @@ export default function AdminCategories() {
     mutationFn: ({ id, data }) => categoryService.updateTemplate(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries(['admin', 'templates']);
-      toast.success('Template berhasil diperbarui', 'Success');
+      toast.success('Template berhasil diperbarui', 'Berhasil');
       setShowTemplateModal(false);
       setEditingTemplate(null);
       resetTemplateForm();
     },
     onError: () => {
-      toast.error('Gagal memperbarui template', 'Error');
+      toast.error('Gagal memperbarui template', 'Galat');
     },
   });
 
@@ -121,10 +121,10 @@ export default function AdminCategories() {
     onSuccess: () => {
       queryClient.invalidateQueries(['admin', 'templates']);
       queryClient.invalidateQueries(['admin', 'categories']);
-      toast.success('Template berhasil dihapus', 'Success');
+      toast.success('Template berhasil dihapus', 'Berhasil');
     },
     onError: () => {
-      toast.error('Gagal menghapus template', 'Error');
+      toast.error('Gagal menghapus template', 'Galat');
     },
   });
 
@@ -209,7 +209,7 @@ export default function AdminCategories() {
       )
     ).then(() => {
       queryClient.invalidateQueries(['admin', 'categories']);
-      toast.success('Urutan berhasil diperbarui', 'Success');
+      toast.success('Urutan berhasil diperbarui', 'Berhasil');
     });
   };
 
@@ -282,7 +282,7 @@ export default function AdminCategories() {
     return (
       <div className="p-6 sm:p-8 max-w-7xl mx-auto">
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl">
-          Failed to load categories. Please try again later.
+          Gagal memuat kategori. Silakan coba lagi nanti.
         </div>
       </div>
     );
@@ -409,7 +409,7 @@ export default function AdminCategories() {
                         }`}
                       >
                         {cat.is_active ? <Eye className="h-3 w-3" /> : <EyeOff className="h-3 w-3" />}
-                        {cat.is_active ? 'Active' : 'Inactive'}
+                        {cat.is_active ? 'Aktif' : 'Nonaktif'}
                       </button>
                     </td>
 
@@ -484,7 +484,7 @@ export default function AdminCategories() {
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Logistik & Transportasi"
+                  placeholder="cth: Logistik & Transportasi"
                   value={formData.name}
                   onChange={(e) => handleNameChange(e.target.value)}
                   className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] placeholder-[rgb(var(--color-text-tertiary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600"
@@ -495,12 +495,10 @@ export default function AdminCategories() {
                 <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Slug</label>
                 <input
                   type="text"
-                  placeholder="auto-generated-from-name"
+                  placeholder="otomatis-dari-nama"
                   value={formData.slug}
                   onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
                   className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 font-mono"
-                />
-              </div>
                 />
               </div>
 
@@ -516,16 +514,6 @@ export default function AdminCategories() {
                   />
                 </div>
 
-              <div>
-                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Status</label>
-                <select
-                  value={formData.is_active ? 'true' : 'false'}
-                  onChange={(e) => setFormData({ ...formData, is_active: e.target.value === 'true' })}
-                  className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600"
-                >
-                  <option value="true">Active</option>
-                  <option value="false">Inactive</option>
-                </select>
                 <div>
                   <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Status</label>
                   <select
@@ -534,7 +522,7 @@ export default function AdminCategories() {
                     className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600"
                   >
                     <option value="true">Aktif</option>
-                    <option value="false">Inactive</option>
+                    <option value="false">Nonaktif</option>
                   </select>
                 </div>
               </div>
@@ -596,7 +584,7 @@ export default function AdminCategories() {
                 <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Slug</label>
                 <input
                   type="text"
-                  placeholder="auto-generated-from-name"
+                  placeholder="otomatis-dari-nama"
                   value={templateForm.slug}
                   onChange={(e) => setTemplateForm({ ...templateForm, slug: e.target.value })}
                   className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] placeholder-[rgb(var(--color-text-tertiary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 font-mono"
@@ -604,7 +592,7 @@ export default function AdminCategories() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Description</label>
+                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Deskripsi</label>
                 <textarea
                   rows="3"
                   placeholder="Deskripsi template..."
@@ -624,8 +612,6 @@ export default function AdminCategories() {
                   className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] placeholder-[rgb(var(--color-text-tertiary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600"
                 />
               </div>
-                />
-              </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -639,16 +625,6 @@ export default function AdminCategories() {
                   />
                 </div>
 
-              <div>
-                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Status</label>
-                <select
-                  value={templateForm.is_active ? 'true' : 'false'}
-                  onChange={(e) => setTemplateForm({ ...templateForm, is_active: e.target.value === 'true' })}
-                  className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600"
-                >
-                  <option value="true">Active</option>
-                  <option value="false">Inactive</option>
-                </select>
                 <div>
                   <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Status</label>
                   <select
@@ -657,7 +633,7 @@ export default function AdminCategories() {
                     className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600"
                   >
                     <option value="true">Aktif</option>
-                    <option value="false">Inactive</option>
+                    <option value="false">Nonaktif</option>
                   </select>
                 </div>
               </div>

@@ -12,13 +12,13 @@ export default function EmptyWebsiteCard() {
                 <div className="space-y-5">
                     <div className="inline-flex items-center gap-2 rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700">
                         <Sparkles className="h-3.5 w-3.5" />
-                        Empty website state
+                        Status website kosong
                     </div>
                     <h2 className="text-3xl font-extrabold text-slate-900 lg:text-4xl tracking-tight">
-                        You have not created a website yet.
+                        Anda belum membuat website.
                     </h2>
                     <p className="mt-2 max-w-md text-sm text-slate-500 lg:text-base">
-                        Start building your company profile, publish a polished landing page, and manage everything from one dashboard.
+                        Mulai bangun profil perusahaan Anda, publikasikan landing page yang rapi, dan kelola semuanya dari satu dasbor.
                     </p>
 
                     <div className="mt-6 flex flex-wrap gap-3">
@@ -28,14 +28,14 @@ export default function EmptyWebsiteCard() {
                             className="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-indigo-700 shadow-md shadow-indigo-600/20 cursor-pointer"
                         >
                             <Globe className="h-4 w-4" />
-                            Create Website
+                            Buat Website
                         </button>
                         <CreateSiteChoiceModal isOpen={isChoiceOpen} onClose={() => setIsChoiceOpen(false)} />
                         <Link
                             to={ROUTES.PROFILE}
                             className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-bold text-slate-700 transition hover:bg-slate-50"
                         >
-                            View Profile
+                            Lihat Profil
                         </Link>
                     </div>
                 </div>

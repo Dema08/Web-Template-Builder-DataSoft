@@ -12,7 +12,7 @@ export default function TemplatePreviewModal() {
             <div className="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl">
                 <div className="flex items-center justify-between p-6 border-b border-slate-100">
                     <div>
-                        <h2 className="text-lg font-extrabold text-slate-900">Template Preview</h2>
+                        <h2 className="text-lg font-extrabold text-slate-900">Pratinjau Template</h2>
                         <p className="text-xs text-slate-500 mt-1">{templatePreview.name}</p>
                     </div>
                     <button
@@ -36,7 +36,7 @@ export default function TemplatePreviewModal() {
                     )}
                     {templatePreview.preview_data && (
                         <div className="mt-4 p-4 bg-slate-50 rounded-xl">
-                            <h3 className="text-xs font-bold text-slate-700 mb-2">Preview Data</h3>
+                            <h3 className="text-xs font-bold text-slate-700 mb-2">Data Pratinjau</h3>
                             <pre className="text-xs text-slate-600 overflow-x-auto">
                                 {JSON.stringify(templatePreview.preview_data, null, 2)}
                             </pre>

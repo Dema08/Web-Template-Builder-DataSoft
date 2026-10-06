@@ -378,7 +378,7 @@ export default function Builder() {
       if (!silent) {
         toast.error(
           err.response?.data?.message || 'Gagal menyimpan draft template.',
-          'Error'
+          'Galat'
         );
       } else {
         console.warn('[AutoSave] Failed to auto-save draft template:', err);
@@ -437,7 +437,7 @@ export default function Builder() {
       setIsTemplateUpdateChoiceOpen(false);
       toast.success(`Template "${activeDraftTemplateName || 'Template'}" berhasil diperbarui.`, 'Template Diperbarui');
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Gagal memperbarui template.', 'Error');
+      toast.error(err.response?.data?.message || 'Gagal memperbarui template.', 'Galat');
     } finally {
       setIsSaving(false);
     }
@@ -468,7 +468,7 @@ export default function Builder() {
       setIsPublishModalOpen(true);
       toast.success('Website draft berhasil dibuat. Tentukan subdomain untuk melanjutkan publish.', 'Siap Dipublish');
     } catch (err) {
-      toast.error(err.response?.data?.message || err.message || 'Gagal membuat website dari template.', 'Error');
+      toast.error(err.response?.data?.message || err.message || 'Gagal membuat website dari template.', 'Galat');
     } finally {
       setIsSaving(false);
     }
@@ -512,7 +512,7 @@ export default function Builder() {
         toast.success('Perubahan website berhasil disimpan!', 'Disimpan');
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Gagal menyimpan perubahan.', 'Error');
+      toast.error(err.response?.data?.message || 'Gagal menyimpan perubahan.', 'Galat');
     } finally {
       setIsSaving(false);
     }
@@ -574,7 +574,7 @@ export default function Builder() {
 
       toast.success('Website berhasil dipublish. URL publik sudah siap disalin.', 'Publish Berhasil');
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Gagal mempublish website.', 'Error');
+      toast.error(err.response?.data?.message || 'Gagal mempublish website.', 'Galat');
     } finally {
       setIsPublishing(false);
     }
@@ -611,7 +611,7 @@ export default function Builder() {
         'Template Disimpan'
       );
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Gagal menyimpan template.', 'Error');
+      toast.error(err.response?.data?.message || 'Gagal menyimpan template.', 'Galat');
     } finally {
       setIsSavingTemplate(false);
     }
@@ -689,7 +689,7 @@ export default function Builder() {
         initialSlug={websiteInfo?.slug || ''}
         initialCustomDomain={websiteInfo?.settings?.custom_domain || ''}
         initialDomainType={websiteInfo?.settings?.domain_type || 'subdomain'}
-        initialIsPublished={websiteInfo?.status === 'published'}
+        initialIsPublished={websiteInfo?.status === 'dipublikasikan'}
         isPublishing={isPublishing}
         publishResult={publishResult}
       />

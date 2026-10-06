@@ -140,7 +140,7 @@ export default function LanguageSelector({ variant = 'settings', showLabel = tru
             {showLabel && !isLanding && (
                 <label className="block text-xs font-extrabold text-[rgb(var(--color-text-primary))] mb-2 flex items-center gap-1.5">
                     <Globe className="h-3.5 w-3.5 text-[rgb(var(--color-text-tertiary))]" />
-                    {isSettings ? 'Application Language' : 'Language'}
+                    {isSettings ? 'Bahasa Aplikasi' : 'Bahasa'}
                 </label>
             )}
 
@@ -166,7 +166,7 @@ export default function LanguageSelector({ variant = 'settings', showLabel = tru
                         ${isCompact ? 'py-2 px-3' : 'py-3 px-4'}
                     `
                     }
-                    aria-label="Select language"
+                    aria-label="Pilih bahasa"
                     aria-expanded={isOpen}
                     aria-haspopup="listbox"
                     title={`Language: ${selectedLang.name}`}
@@ -211,7 +211,7 @@ export default function LanguageSelector({ variant = 'settings', showLabel = tru
                                 : 'absolute z-50 w-full mt-2 bg-[rgb(var(--color-surface))] border border-[rgb(var(--color-border))] rounded-xl shadow-xl py-2 ds-animate-scale-in max-h-80 overflow-y-auto ds-scrollbar-thin'
                         }
                         role="listbox"
-                        aria-label="Language options"
+                        aria-label="Pilihan bahasa"
                     >
                         {LANGUAGES.map((language) => {
                             const isSelected = language.code === selectedLanguage;

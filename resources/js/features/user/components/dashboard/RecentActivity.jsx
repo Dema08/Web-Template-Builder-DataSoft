@@ -6,8 +6,8 @@ export default function RecentActivity({ activities = [] }) {
         <Card className="p-6">
             <div className="mb-6 flex items-center justify-between gap-3">
                 <div>
-                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Recent Activity</p>
-                    <h2 className="text-2xl font-extrabold text-slate-900 mt-1 tracking-tight">Latest activity</h2>
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Aktivitas Terbaru</p>
+                    <h2 className="text-2xl font-extrabold text-slate-900 mt-1 tracking-tight">Aktivitas terkini</h2>
                 </div>
                 <div className="rounded-full bg-slate-100 p-2.5 text-slate-500">
                     <Activity className="h-4 w-4" />
@@ -22,7 +22,7 @@ export default function RecentActivity({ activities = [] }) {
                             <div className="text-sm font-extrabold text-slate-900">{activity.action}</div>
                             <div className="text-xs text-slate-500 mt-0.5">{activity.description}</div>
                         </div>
-                        <div className="whitespace-nowrap text-[10px] font-bold text-slate-400">{activity.created_at || 'Recently'}</div>
+                        <div className="whitespace-nowrap text-[10px] font-bold text-slate-400">{activity.created_at || 'Baru saja'}</div>
                     </div>
                 ))}
             </div>

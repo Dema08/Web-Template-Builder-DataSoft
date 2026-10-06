@@ -25,12 +25,12 @@ export default function WelcomeCard({ user, website }) {
 
                 <div className="grid w-full max-w-sm grid-cols-2 gap-3">
                     <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100">
-                        <div className="text-[10px] uppercase tracking-[0.22em] font-bold text-slate-400">Role</div>
+                        <div className="text-[10px] uppercase tracking-[0.22em] font-bold text-slate-400">Peran</div>
                         <div className="mt-2 text-lg font-extrabold text-slate-900">{user?.role || 'User'}</div>
                     </div>
                     <div className="rounded-2xl bg-slate-50 p-4 border border-slate-100">
                         <div className="text-[10px] uppercase tracking-[0.22em] font-bold text-slate-400">Status</div>
-                        <div className="mt-2 text-lg font-extrabold text-slate-900">{hasWebsite ? 'Active' : 'Draft'}</div>
+                        <div className="mt-2 text-lg font-extrabold text-slate-900">{hasWebsite ? 'Aktif' : 'Draf'}</div>
                     </div>
                 </div>
             </div>
@@ -38,7 +38,7 @@ export default function WelcomeCard({ user, website }) {
             {hasWebsite && (
                 <div className="mt-5 flex items-center gap-3 text-xs text-slate-600">
                     <Globe className="h-3.5 w-3.5 text-indigo-600" />
-                    <span className="font-medium">Live site ready — make your edits now.</span>
+                    <span className="font-medium">Situs live siap — silakan ubah sekarang.</span>
                 </div>
             )}
         </Card>

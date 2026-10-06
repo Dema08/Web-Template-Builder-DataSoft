@@ -34,7 +34,7 @@ export default function UploadsPanel() {
         size: formatFileSize(file.size),
         type: file.type.includes('svg') ? 'svg' : 'image',
       });
-      toast.success(`Uploaded ${file.name}`, 'Success');
+      toast.success(`Uploaded ${file.name}`, 'Berhasil');
       applyImageToComponent(dataUrl, file.name);
     };
     reader.readAsDataURL(file);

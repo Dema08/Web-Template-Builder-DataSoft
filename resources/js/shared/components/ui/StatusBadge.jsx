@@ -22,9 +22,9 @@ export default function StatusBadge({ status, className = '' }) {
                 }`}
             />
             {normalized === 'published'
-                ? 'Published'
+                ? 'Dipublikasikan'
                 : normalized === 'draft'
-                ? 'Draft'
+                ? 'Draf'
                 : normalized.charAt(0).toUpperCase() + normalized.slice(1)}
         </span>
     );

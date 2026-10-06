@@ -52,7 +52,7 @@ export default function Footer03({ components = [], sectionId = null }) {
               </div>
             </div>
             <div className="flex flex-col gap-3">
-              <p className="text-[11px] font-black tracking-[0.25em] text-slate-400 select-none">GET STARTED</p>
+              <p className="text-[11px] font-black tracking-[0.25em] text-slate-400 select-none">MULAI</p>
               {renderLayoutComponents(ctaComps, sectionId)}
             </div>
           </div>

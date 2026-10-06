@@ -17,7 +17,7 @@ export default function Products12({ components = [], sectionId = null }) {
         { id: 'prod12-c1-title', type: 'heading', props: { content: 'Cloud Core', level: 'h3', fontSize: '18px', fontWeight: '800', color: '#ffffff', margin: '16px 0 0 0', padding: '0 18px' } },
         { id: 'prod12-c1-price', type: 'heading', props: { content: 'Rp 45jt/thn', level: 'h4', fontSize: '18px', fontWeight: '800', color: '#38bdf8', margin: '4px 0 0 0', padding: '0 18px' } },
         { id: 'prod12-c1-desc', type: 'text', props: { content: 'Multi-region, auto-failover.', fontSize: '13px', color: '#94a3b8', margin: '6px 0 14px 0', padding: '0 18px' } },
-        { id: 'prod12-c1-btn', type: 'button', props: { label: 'Request Demo', href: '#demo', variant: 'ghost', size: 'small', background: 'transparent', color: '#38bdf8' } },
+        { id: 'prod12-c1-btn', type: 'button', props: { label: 'Minta Demo', href: '#demo', variant: 'ghost', size: 'small', background: 'transparent', color: '#38bdf8' } },
       ],
     },
     {
@@ -27,7 +27,7 @@ export default function Products12({ components = [], sectionId = null }) {
         { id: 'prod12-c2-title', type: 'heading', props: { content: 'Secure Vault', level: 'h3', fontSize: '18px', fontWeight: '800', color: '#ffffff', margin: '16px 0 0 0', padding: '0 18px' } },
         { id: 'prod12-c2-price', type: 'heading', props: { content: 'Rp 28jt/thn', level: 'h4', fontSize: '18px', fontWeight: '800', color: '#38bdf8', margin: '4px 0 0 0', padding: '0 18px' } },
         { id: 'prod12-c2-desc', type: 'text', props: { content: 'Enkripsi HSM, SOC2 ready.', fontSize: '13px', color: '#94a3b8', margin: '6px 0 14px 0', padding: '0 18px' } },
-        { id: 'prod12-c2-btn', type: 'button', props: { label: 'Request Demo', href: '#demo', variant: 'ghost', size: 'small', background: 'transparent', color: '#38bdf8' } },
+        { id: 'prod12-c2-btn', type: 'button', props: { label: 'Minta Demo', href: '#demo', variant: 'ghost', size: 'small', background: 'transparent', color: '#38bdf8' } },
       ],
     },
   ];

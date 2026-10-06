@@ -464,7 +464,7 @@ export default function RightInspector() {
   const handleImageUpload = (file) => {
     if (!file) return;
     if (!file.type.startsWith('image/')) {
-      toast.error('Please upload an image file (PNG, JPG, WEBP, SVG)', 'Invalid File');
+      toast.error('Please upload an image file (PNG, JPG, WEBP, SVG)', 'File Tidak Valid');
       return;
     }
     const reader = new FileReader();
@@ -495,7 +495,7 @@ export default function RightInspector() {
     if (!file) return;
     const check = validateVideoFile(file);
     if (!check.ok) {
-      if (check.message.includes('Format')) toast.error(check.message, 'Invalid File');
+      if (check.message.includes('Format')) toast.error(check.message, 'File Tidak Valid');
       else toast.error(check.message, 'File Too Large');
       return;
     }
@@ -4142,7 +4142,7 @@ function ImageInspector({ activeTab, formValues, handleChange, setActiveTab, add
     const file = e.target.files?.[0];
     if (!file) return;
     if (!file.type.startsWith('image/')) {
-      toast.error('Please upload an image file (PNG, JPG, WEBP, SVG)', 'Invalid File');
+      toast.error('Please upload an image file (PNG, JPG, WEBP, SVG)', 'File Tidak Valid');
       return;
     }
     const reader = new FileReader();

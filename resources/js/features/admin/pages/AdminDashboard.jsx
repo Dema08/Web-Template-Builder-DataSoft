@@ -87,7 +87,7 @@ export default function AdminDashboard() {
                 <div>
                     <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 text-xs font-bold mb-2 border border-indigo-200/50 dark:border-indigo-900/50">
                         <Shield className="h-3.5 w-3.5" />
-                        <span>{brand_name} Admin Dashboard</span>
+                        <span>Dasbor Admin {brand_name}</span>
                     </div>
                     <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">Ringkasan Sistem</h1>
                     <p className="text-sm text-[rgb(var(--color-text-secondary))] mt-1">
@@ -111,7 +111,7 @@ export default function AdminDashboard() {
                         className="flex items-center gap-2 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-extrabold transition shadow-md shadow-indigo-600/20"
                     >
                         <Sparkles className="h-4 w-4" />
-                        <span>Template Builder</span>
+                        <span>Builder Template</span>
                     </button>
                 </div>
             </div>
@@ -183,7 +183,7 @@ export default function AdminDashboard() {
                                     </div>
                                 </div>
                                 <span className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold shrink-0 ${site.is_published ? 'bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300' : 'bg-amber-100 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300'}`}>
-                                    {site.is_published ? 'Published' : 'Draft'}
+                                    {site.is_published ? 'Dipublikasikan' : 'Draf'}
                                 </span>
                             </div>
                         ))}

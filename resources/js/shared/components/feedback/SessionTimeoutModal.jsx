@@ -52,7 +52,7 @@ export default function SessionTimeoutModal() {
                             Sesi Akan Berakhir
                         </h3>
                         <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-                            Session Expiring Soon
+                            Sesi Segera Berakhir
                         </p>
                     </div>
                 </div>

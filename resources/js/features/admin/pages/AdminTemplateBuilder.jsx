@@ -160,7 +160,7 @@ export default function AdminTemplateBuilder() {
   // Step 1 -> Step 2
   const handleIndustrySelect = () => {
     if (!selectedCategoryId) {
-      toast.error('Please select an industry category', 'Error');
+      toast.error('Please select an industry category', 'Galat');
       return;
     }
 
@@ -172,7 +172,7 @@ export default function AdminTemplateBuilder() {
       setModalStep(2);
       setShowIndustryModal(true);
     } else {
-      toast.error('Category not found', 'Error');
+      toast.error('Category not found', 'Galat');
     }
   };
 
@@ -181,7 +181,7 @@ export default function AdminTemplateBuilder() {
     setTemplateMode(mode);
 
     if (mode === 'blank') {
-      toast.success('Blank canvas created', 'Success');
+      toast.success('Blank canvas created', 'Berhasil');
       setShowIndustryModal(false);
     } else if (mode === 'starter') {
       // Advance to Step 3: Starter Template Picker
@@ -237,7 +237,7 @@ export default function AdminTemplateBuilder() {
     // Auto-set template name
     setTemplateName(starterTpl.name);
 
-    toast.success(`Starter template "${starterTpl.name}" loaded with complete structure & demo content`, 'Success');
+    toast.success(`Starter template "${starterTpl.name}" loaded with complete structure & demo content`, 'Berhasil');
     setShowIndustryModal(false);
     setModalStep(1);
   };
@@ -309,7 +309,7 @@ export default function AdminTemplateBuilder() {
         let savedId = templateId;
         if (templateId) {
           await templateApi.update(templateId, payload);
-          toast.success('Template saved as draft', 'Success');
+          toast.success('Template saved as draft', 'Berhasil');
         } else {
           const response = await templateApi.create(payload);
           savedId = response.data?.data?.id || response.data?.id;
@@ -318,7 +318,7 @@ export default function AdminTemplateBuilder() {
             clearLocalDraft(null); // clear /create local draft
             navigate(`/admin/templates/builder/${savedId}`, { replace: true });
           }
-          toast.success('Template draft created successfully', 'Success');
+          toast.success('Template draft created successfully', 'Berhasil');
         }
         // Upload thumbnail file if picked
         if (thumbFile && savedId) {
@@ -334,7 +334,7 @@ export default function AdminTemplateBuilder() {
           ...(thumbUrl ? { thumbnail: thumbUrl } : {}),
           draft_json: draftJson,
           published_json: draftJson,
-          status: 'published',
+          status: 'dipublikasikan',
         };
         if (!templateId) {
           const response = await templateApi.create(payload);
@@ -348,9 +348,9 @@ export default function AdminTemplateBuilder() {
               await templateApi.uploadThumbnail(newId, fd);
             }
           }
-          useBuilderStore.getState().setStatus('published');
+          useBuilderStore.getState().setStatus('dipublikasikan');
           try { clearLocalDraft(newId); } catch { /* abaikan */ }
-          toast.success('Template created and published successfully!', 'Success');
+          toast.success('Template created and published successfully!', 'Berhasil');
           // Kembali otomatis ke halaman Manage Template setelah publish
           navigate('/admin/templates', { replace: true });
         } else {
@@ -361,9 +361,9 @@ export default function AdminTemplateBuilder() {
             fd.append('thumbnail', thumbFile);
             await templateApi.uploadThumbnail(templateId, fd);
           }
-          useBuilderStore.getState().setStatus('published');
+          useBuilderStore.getState().setStatus('dipublikasikan');
           try { clearLocalDraft(templateId); } catch { /* abaikan */ }
-          toast.success('Template published successfully!', 'Success');
+          toast.success('Template published successfully!', 'Berhasil');
           // Kembali otomatis ke halaman Manage Template setelah publish
           navigate('/admin/templates', { replace: true });
         }
@@ -372,7 +372,7 @@ export default function AdminTemplateBuilder() {
       setShowSaveModal(false);
       setSaveThumbnailFile(null);
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to save template', 'Error');
+      toast.error(error.response?.data?.message || 'Failed to save template', 'Galat');
     } finally {
       setIsSavingModal(false);
     }
@@ -675,7 +675,7 @@ export default function AdminTemplateBuilder() {
                               className="px-3 py-1.5 bg-white/90 backdrop-blur-md text-slate-900 text-xs font-bold rounded-lg flex items-center gap-1.5 hover:bg-white transition"
                             >
                               <Eye className="h-3.5 w-3.5 text-indigo-600" />
-                              <span>Preview</span>
+                              <span>Pratinjau</span>
                             </button>
                           </div>
                         </div>

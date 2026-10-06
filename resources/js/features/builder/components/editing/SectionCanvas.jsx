@@ -281,13 +281,13 @@ export default function SectionCanvas() {
               <div className="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto mb-4 shadow-xs">
                 <Layers className="h-7 w-7" />
               </div>
-              <h3 className="text-base font-extrabold text-slate-800 mb-1">Canvas is Empty</h3>
+              <h3 className="text-base font-extrabold text-slate-800 mb-1">Kanvas Kosong</h3>
               <p className="text-xs text-slate-500 max-w-sm mx-auto mb-5">
-                Drag and drop sections or components from the sidebar, or pick a starter template to start building.
+                Seret dan letakkan bagian atau komponen dari bilah sisi, atau pilih template awal untuk mulai membangun.
               </p>
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-indigo-50 text-indigo-700 text-xs font-bold rounded-xl border border-indigo-100">
                 <Plus className="h-4 w-4" />
-                <span>Drag items from the left panel onto here</span>
+                <span>Seret item dari panel kiri ke sini</span>
               </div>
             </div>
           )}

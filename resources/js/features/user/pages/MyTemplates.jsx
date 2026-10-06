@@ -119,7 +119,7 @@ export default function MyTemplates() {
             queryClient.invalidateQueries(['my-templates']);
             queryClient.invalidateQueries(['user-templates']);
         } catch (err) {
-            toast.error(err.response?.data?.message || 'Gagal mengubah visibilitas template.', 'Error');
+            toast.error(err.response?.data?.message || 'Gagal mengubah visibilitas template.', 'Galat');
         }
     };
 
@@ -132,7 +132,7 @@ export default function MyTemplates() {
             queryClient.invalidateQueries(['my-templates']);
             queryClient.invalidateQueries(['user-templates']);
         } catch (err) {
-            toast.error(err.response?.data?.message || 'Gagal menghapus template.', 'Error');
+            toast.error(err.response?.data?.message || 'Gagal menghapus template.', 'Galat');
         }
     };
 
@@ -231,7 +231,7 @@ export default function MyTemplates() {
 
                 <div className="p-5 rounded-2xl bg-white border border-[rgb(var(--color-border))] shadow-xs flex items-center justify-between">
                     <div>
-                        <p className="text-xs font-bold text-[rgb(var(--color-text-secondary))] uppercase tracking-wider">Draft</p>
+                        <p className="text-xs font-bold text-[rgb(var(--color-text-secondary))] uppercase tracking-wider">Draf</p>
                         <p className="text-2xl font-black text-amber-600 mt-1">{draftCount}</p>
                     </div>
                     <div className="p-3 rounded-xl bg-amber-50 text-amber-600">
@@ -433,7 +433,7 @@ function UserTemplateItemCard({ tpl, onPreview, onEdit, onUse, onToggleVisibilit
                         className="px-3.5 py-2.5 bg-white text-slate-900 font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-lg hover:bg-slate-50 transition active:scale-95 cursor-pointer"
                         title="Pratinjau Langsung"
                     >
-                        <ExternalLink className="h-3.5 w-3.5" /> Preview
+                        <ExternalLink className="h-3.5 w-3.5" /> Pratinjau
                     </button>
                     <button
                         type="button"
@@ -441,7 +441,7 @@ function UserTemplateItemCard({ tpl, onPreview, onEdit, onUse, onToggleVisibilit
                         className="px-3.5 py-2.5 bg-indigo-600 text-white font-extrabold rounded-xl text-xs flex items-center gap-1.5 shadow-lg hover:bg-indigo-700 transition active:scale-95 cursor-pointer"
                         title="Sunting di Builder"
                     >
-                        <Wand2 className="h-3.5 w-3.5" /> Edit Builder
+                        <Wand2 className="h-3.5 w-3.5" /> Ubah di Builder
                     </button>
                     <button
                         type="button"
@@ -483,7 +483,7 @@ function UserTemplateItemCard({ tpl, onPreview, onEdit, onUse, onToggleVisibilit
                         }`}
                     >
                         {isPublic ? <Globe className="h-3.5 w-3.5 text-emerald-600" /> : <Lock className="h-3.5 w-3.5 text-slate-600" />}
-                        <span>{isPublic ? 'Publik' : 'Private'}</span>
+                        <span>{isPublic ? 'Publik' : 'Privat'}</span>
                     </button>
 
                     <div className="flex items-center gap-1.5">

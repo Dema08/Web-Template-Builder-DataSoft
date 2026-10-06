@@ -64,7 +64,7 @@ export default function AdminUsers() {
         },
         onError: (error) => {
             const msg = error?.response?.data?.message || 'Gagal menyetujui akun user.';
-            toast.error(msg, 'Error Approve');
+            toast.error(msg, 'Galat Persetujuan');
         },
     });
 
@@ -76,13 +76,13 @@ export default function AdminUsers() {
         },
         onSuccess: (data) => {
             queryClient.invalidateQueries(['admin-users']);
-            toast.success(data?.message || 'Role user berhasil diperbarui!', 'Role Changed');
+            toast.success(data?.message || 'Peran pengguna berhasil diperbarui!', 'Peran Diubah');
             setIsEditModalOpen(false);
             setSelectedUser(null);
         },
         onError: (error) => {
             const msg = error?.response?.data?.message || 'Gagal memperbarui role user.';
-            toast.error(msg, 'Error Update Role');
+            toast.error(msg, 'Galat Ubah Peran');
         },
     });
 
@@ -107,13 +107,13 @@ export default function AdminUsers() {
                 useAuthStore.getState().setUser({ ...currentUser, ...updatedUser });
             }
 
-            toast.success(res?.message || 'Paket user berhasil diperbarui!', 'Paket Changed');
+            toast.success(res?.message || 'Paket pengguna berhasil diperbarui!', 'Paket Diubah');
             setIsPlanModalOpen(false);
             setSelectedUser(null);
         },
         onError: (error) => {
             const msg = error?.response?.data?.message || 'Gagal memperbarui paket user.';
-            toast.error(msg, 'Error Update Plan');
+            toast.error(msg, 'Galat Ubah Paket');
         },
     });
 
@@ -163,14 +163,14 @@ export default function AdminUsers() {
         },
         onSuccess: (data) => {
             queryClient.invalidateQueries(['admin-users']);
-            toast.success(data?.message || 'Akun user berhasil dihapus dari sistem.', 'User Deleted');
+            toast.success(data?.message || 'Akun pengguna berhasil dihapus dari sistem.', 'Pengguna Dihapus');
             setIsDeleteModalOpen(false);
             setUserToDelete(null);
             setDeleteConfirmText('');
         },
         onError: (error) => {
             const msg = error?.response?.data?.message || 'Gagal menghapus user.';
-            toast.error(msg, 'Error Delete User');
+            toast.error(msg, 'Galat Hapus Pengguna');
         },
     });
 
@@ -276,11 +276,11 @@ export default function AdminUsers() {
                 <div>
                     <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 text-xs font-bold mb-2">
                         <Shield className="h-3.5 w-3.5" />
-                        <span>User Management</span>
+                        <span>Manajemen Pengguna</span>
                     </div>
-                    <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">Registered Users</h1>
+                    <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">Pengguna Terdaftar</h1>
                     <p className="text-sm text-[rgb(var(--color-text-secondary))] mt-1">
-                        Manage platform registered users, assign roles, approve pending accounts, and manage user subscription plans.
+                        Kelola pengguna terdaftar, tetapkan peran, setujui akun menunggu, dan kelola paket langganan pengguna.
                     </p>
                 </div>
 
@@ -313,7 +313,7 @@ export default function AdminUsers() {
                         <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[rgb(var(--color-text-tertiary))]" />
                         <input
                             type="text"
-                            placeholder="Search by name or email..."
+                            placeholder="Cari berdasarkan nama atau email..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                             className="w-full pl-10 pr-4 py-2 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] placeholder-[rgb(var(--color-text-tertiary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600"
@@ -355,8 +355,8 @@ export default function AdminUsers() {
                     </div>
                 ) : isError ? (
                     <div className="p-8">
-                        <Alert variant="error" title="Failed to load users">
-                            Unable to retrieve user list. Please make sure you have administrator privileges.
+                        <Alert variant="error" title="Gagal memuat pengguna">
+                            Tidak dapat mengambil daftar pengguna. Pastikan Anda memiliki hak administrator.
                         </Alert>
                     </div>
                 ) : (
@@ -364,9 +364,9 @@ export default function AdminUsers() {
                         <table className="w-full text-left border-collapse">
                             <thead>
                                 <tr className="border-b border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface-alt))] text-[11px] font-extrabold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">
-                                    <th className="py-3.5 px-6">User</th>
+                                    <th className="py-3.5 px-6">Pengguna</th>
                                     <th className="py-3.5 px-6">Email</th>
-                                    <th className="py-3.5 px-6">Role</th>
+                                    <th className="py-3.5 px-6">Peran</th>
                                     <th className="py-3.5 px-6">Paket Harga</th>
                                     <th className="py-3.5 px-6">Status Akun</th>
                                     <th className="py-3.5 px-6">Dibuat Pada</th>
@@ -441,7 +441,7 @@ export default function AdminUsers() {
                                                         ? <ShieldCheck className="h-3.5 w-3.5 text-indigo-600 dark:text-indigo-400" />
                                                         : <Users className="h-3.5 w-3.5 text-[rgb(var(--color-text-tertiary))]" />
                                                     }
-                                                    {isAdmin ? 'Administrator' : 'User'}
+                                                    {isAdmin ? 'Administrator' : 'Pengguna'}
                                                 </span>
                                             </td>
 
@@ -897,17 +897,17 @@ export default function AdminUsers() {
                             </div>
 
                             <div>
-                                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Pilih Role User</label>
+                                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Pilih Peran Pengguna</label>
                                 <select
                                     value={selectedRole}
                                     onChange={(e) => setSelectedRole(e.target.value)}
                                     className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 font-semibold"
                                 >
-                                    <option value="user">User (Pengguna Biasa)</option>
+                                    <option value="user">Pengguna (Biasa)</option>
                                     <option value="admin">Admin (Administrator Sistem)</option>
                                 </select>
                                 <p className="mt-1 text-[10px] text-[rgb(var(--color-text-tertiary))]">
-                                    Pilih &apos;Admin&apos; untuk memberikan akses administrator penuh.
+                                    Pilih 'Admin' untuk memberikan akses administrator penuh.
                                 </p>
                             </div>
 
@@ -929,7 +929,7 @@ export default function AdminUsers() {
                                     ) : (
                                         <>
                                             <Check className="h-4 w-4" />
-                                            <span>Simpan Role</span>
+                                            <span>Simpan Peran</span>
                                         </>
                                     )}
                                 </button>
@@ -984,7 +984,7 @@ export default function AdminUsers() {
                                 >
                                     {pricelists?.map((p) => (
                                         <option key={p.id} value={p.id}>
-                                            {p.name || p.nama} ({p.formatted_price}) — {p.max_domains === -1 ? 'Unlimited Domain' : `${p.max_domains} Domain`}
+                                            {p.name || p.nama} ({p.formatted_price}) — {p.max_domains === -1 ? 'Domain Tanpa Batas' : `${p.max_domains} Domain`}
                                         </option>
                                     ))}
                                 </select>

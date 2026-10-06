@@ -40,7 +40,7 @@ export default function UpgradeModal() {
           </button>
           <div className="flex items-center gap-2 mb-2">
             <Crown className="h-5 w-5" />
-            <span className="text-xs font-extrabold uppercase tracking-widest opacity-90">Upgrade Required</span>
+            <span className="text-xs font-extrabold uppercase tracking-widest opacity-90">Perlu Upgrade</span>
           </div>
           <h3 className="text-xl font-extrabold leading-tight">{modalData.title}</h3>
           <p className="text-sm text-white/85 mt-1.5 leading-relaxed">Template ini memerlukan paket berlangganan. Silakan upgrade untuk mengaksesnya.</p>

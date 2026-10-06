@@ -33,8 +33,8 @@ const ICON_OPTIONS = [
 
 const DEFAULT_FEATURES = [
     {
-        title: 'Drag & Drop Builder',
-        desc: 'Visual editing experience like Canva — no coding required. Build stunning sections with precision.',
+        title: 'Builder Seret & Letakkan',
+        desc: 'Pengalaman mengedit visual seperti Canva — tanpa perlu coding. Bangun bagian website yang memukau dengan presisi.',
         accent: 'blue',
         icon: 'MousePointer2',
     },
@@ -46,7 +46,7 @@ const DEFAULT_FEATURES = [
     },
     {
         title: 'Publikasi Satu Klik',
-        desc: 'Launch your website instantly to a custom domain or subdomain — zero deployment knowledge needed.',
+        desc: 'Luncurkan website Anda seketika ke domain atau subdomain kustom — tanpa perlu pengetahuan deployment.',
         accent: 'violet',
         icon: 'Rocket',
     },
@@ -74,38 +74,38 @@ const DEFAULT_STEPS = [
     { title: 'Pilih Template', desc: 'Jelajahi template desain profesional di semua kategori bisnis.', icon: 'Layout' },
     { title: 'Sesuaikan Konten', desc: 'Ubah teks, gambar, warna, bagian, dan branding secara visual dan real-time.', icon: 'Palette' },
     { title: 'Pratinjau Website', desc: 'Periksa tampilan responsif di desktop, tablet, dan ponsel.', icon: 'Eye' },
-    { title: 'Publikasikan Online', desc: 'Luncurkan seketika dengan satu klik — go live in seconds, not days.', icon: 'Rocket' },
+    { title: 'Publikasikan Online', desc: 'Luncurkan seketika dengan satu klik — tayang dalam hitungan detik, bukan hari.', icon: 'Rocket' },
 ];
 
 const DEFAULT_PRICING = [
     {
-        name: 'Starter', price: 'Free', period: '',
+        name: 'Starter', price: 'Gratis', period: '',
         desc: 'Cocok untuk proyek pribadi dan menjelajahi platform.',
-        features: ['1 Website', '10 Pages', 'Microdata Subdomain', 'Basic Templates', 'Community Support'],
+        features: ['1 Website', '10 Pages', 'Subdomain Microdata', 'Template Dasar', 'Dukungan Komunitas'],
         cta: 'Mulai Gratis', highlight: false,
     },
     {
         name: 'Growth', price: 'Rp 79K', period: '/bulan',
         desc: 'Untuk individu dan freelancer yang memulai perjalanan online.',
-        features: ['3 Websites', '50 Pages', 'Custom Domain', 'Premium Templates', 'Email Support', 'Pengelola Media'],
+        features: ['3 Websites', '50 Pages', 'Domain Kustom', 'Template Premium', 'Dukungan Email', 'Pengelola Media'],
         cta: 'Mulai Growth', highlight: false,
     },
     {
         name: 'Professional', price: 'Rp 149K', period: '/bulan',
         desc: 'Untuk bisnis berkembang yang siap meningkatkan kehadiran online.',
-        features: ['5 Websites', 'Unlimited Pages', 'Custom Domain', 'All Premium Templates', 'Pengelola Media', 'Analytics Dashboard', 'Priority Support'],
+        features: ['5 Websites', 'Halaman Tanpa Batas', 'Domain Kustom', 'Semua Template Premium', 'Pengelola Media', 'Dasbor Analitik', 'Dukungan Prioritas'],
         cta: 'Mulai Profesional', highlight: true,
     },
     {
         name: 'Agency', price: 'Rp 349K', period: '/bulan',
         desc: 'Untuk agensi yang mengelola banyak klien dan proyek sekaligus.',
-        features: ['20 Websites', 'Unlimited Pages', 'Client Management', 'White Label Option', 'API Access', 'Team Collaboration', '24/7 Priority Support'],
+        features: ['20 Websites', 'Halaman Tanpa Batas', 'Manajemen Klien', 'Opsi White Label', 'Akses API', 'Kolaborasi Tim', 'Dukungan Prioritas 24/7'],
         cta: 'Mulai Agensi', highlight: false,
     },
     {
         name: 'Enterprise', price: 'Custom', period: '',
-        desc: 'For large organizations needing full customization and control.',
-        features: ['Unlimited Websites', 'White Label Option', 'API Access', 'Dedicated Manager', 'SSO Integration', 'SLA 99.9%', '24/7 Phone Support'],
+        desc: 'Untuk organisasi besar yang butuh kustomisasi dan kontrol penuh.',
+        features: ['Website Tanpa Batas', 'Opsi White Label', 'Akses API', 'Manajer Khusus', 'Integrasi SSO', 'SLA 99.9%', 'Dukungan Telepon 24/7'],
         cta: 'Hubungi Penjualan', highlight: false,
     },
 ];
@@ -116,11 +116,11 @@ const DEFAULT_LANDING_CONTENT = {
     hero_subtitle: 'Dengan Hosting Satu Klik',
     hero_desc: 'Buat, sesuaikan, dan publikasikan website memukau memakai builder seret & letakkan tanpa menulis satu baris pun kode.',
     hero_cta_primary: 'Mulai Membangun Gratis',
-    hero_cta_secondary: 'Watch Live Demo',
+    hero_cta_secondary: 'Tonton Demo Langsung',
     
-    features_badge: 'Platform Features',
+    features_badge: 'Fitur Platform',
     features_title: 'Semua yang Dibutuhkan untuk Meluncurkan Website Lebih Cepat',
-    features_subtitle: 'Semua alat yang dibutuhkan bisnis to create a stunning web presence — in one platform.',
+    features_subtitle: 'Semua alat yang dibutuhkan bisnis untuk menciptakan kehadiran web yang memukau — dalam satu platform.',
     features_list: DEFAULT_FEATURES,
     
     steps_badge: 'Cara Kerja',
@@ -130,7 +130,7 @@ const DEFAULT_LANDING_CONTENT = {
     stats_title: 'Terpercaya dalam Skala Besar',
     stats_subtitle: 'Angka yang berbicara dengan sendirinya.',
     
-    pricing_badge: 'Pricing',
+    pricing_badge: 'Harga',
     pricing_title: 'Harga Sederhana dan Transparan',
     pricing_subtitle: 'Geser ke kiri/kanan atau ketuk tab untuk memutar roda harga 3D.',
     pricing_list: DEFAULT_PRICING,
@@ -143,7 +143,7 @@ const DEFAULT_LANDING_CONTENT = {
     // Footer
     footer_brand_name: 'Microdata',
     footer_brand_tagline: 'Studio',
-    footer_desc: 'Build, customize, and publish professional websites without coding.',
+    footer_desc: 'Bangun, sesuaikan, dan publikasikan website profesional tanpa coding.',
     footer_email: 'hello@Microdata.id',
     footer_social_twitter: '#',
     footer_social_github: '#',
@@ -188,7 +188,7 @@ export default function AdminLandingEditor() {
                         pricing_list: parsed.pricing_list || DEFAULT_PRICING,
                         footer_brand_name: parsed.footer_brand_name || 'Microdata',
                         footer_brand_tagline: parsed.footer_brand_tagline || 'Studio',
-                        footer_desc: parsed.footer_desc || 'Build, customize, and publish professional websites without coding.',
+                        footer_desc: parsed.footer_desc || 'Bangun, sesuaikan, dan publikasikan website profesional tanpa coding.',
                         footer_email: parsed.footer_email || 'hello@Microdata.id',
                         footer_social_twitter: parsed.footer_social_twitter || '#',
                         footer_social_github: parsed.footer_social_github || '#',

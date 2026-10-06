@@ -371,7 +371,7 @@ export default function PublishDomainModal({
                         )}
                     </div>
 
-                    {/* Domain Choice 2: Domain Sendiri / Custom Domain */}
+                    {/* Domain Choice 2: Domain Sendiri / Domain Kustom */}
                     {publishAction === 'update' && <div
                         onClick={handleSelectCustomDomain}
                         className={`p-4 rounded-2xl border-2 transition-all relative ${
@@ -396,7 +396,7 @@ export default function PublishDomainModal({
                                 <div>
                                     <div className="flex items-center gap-2">
                                         <span className={`text-sm font-extrabold ${!canUseCustomDomain ? 'text-slate-500' : 'text-slate-900'}`}>
-                                            Domain Sendiri (Custom Domain)
+                                            Domain Sendiri (Domain Kustom)
                                         </span>
                                         {!canUseCustomDomain ? (
                                             <span className="px-2 py-0.5 rounded-md bg-amber-100 text-amber-800 text-[10px] font-extrabold flex items-center gap-1">
@@ -436,7 +436,7 @@ export default function PublishDomainModal({
                                         onClose();
                                         openUpgradeModal({
                                             title: 'Upgrade ke Paket Starter / Unlimited',
-                                            message: 'Buka fitur Domain Sendiri (Custom Domain) untuk memberikan kesan profesional pada bisnis Anda.',
+                                            message: 'Buka fitur Domain Sendiri (Domain Kustom) untuk memberikan kesan profesional pada bisnis Anda.',
                                             targetPlan: 'starter',
                                         });
                                     }}
@@ -475,7 +475,7 @@ export default function PublishDomainModal({
                                 ? 'bg-indigo-50 border-indigo-100 text-indigo-800'
                                 : 'bg-amber-50 border-amber-200 text-amber-900'
                         }`}>
-                            Kuota paket <strong>{quota.package}</strong>: {quota.current} / {quota.unlimited ? 'Unlimited' : quota.max} website published.
+                            Kuota paket <strong>{quota.package}</strong>: {quota.current} / {quota.unlimited ? 'Tanpa batas' : quota.max} website published.
                             {(!quota.can_publish || (publishAction === 'new' && !quota.unlimited && quota.current >= quota.max)) && (
                                 <p className="mt-1 font-semibold" title="Limit paket tercapai">
                                     Limit paket tercapai. Batal Publikasi website lain atau upgrade paket untuk melanjutkan.

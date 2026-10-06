@@ -21,8 +21,8 @@ export default function StepCategory() {
     return (
         <div className="max-w-6xl mx-auto">
             <div className="mb-8">
-                <h2 className="text-2xl font-extrabold text-slate-900 mb-2">Choose Your Category</h2>
-                <p className="text-sm text-slate-500">Select the industry that best fits your business.</p>
+                <h2 className="text-2xl font-extrabold text-slate-900 mb-2">Pilih Kategori Anda</h2>
+                <p className="text-sm text-slate-500">Pilih industri yang paling sesuai dengan bisnis Anda.</p>
             </div>
 
             {isLoading && (
@@ -32,8 +32,8 @@ export default function StepCategory() {
             )}
 
             {isError && (
-                <Alert variant="error" title="Failed to load categories">
-                    {error?.message || 'Please try again later.'}
+                <Alert variant="error" title="Gagal memuat kategori">
+                    {error?.message || 'Silakan coba lagi nanti.'}
                 </Alert>
             )}
 
@@ -48,7 +48,7 @@ export default function StepCategory() {
                     {selectedCategory && (
                         <div className="mt-8 flex items-center justify-between p-4 bg-indigo-50 rounded-xl border border-indigo-100">
                             <div>
-                                <p className="text-xs font-bold text-indigo-700">Selected Category</p>
+                                <p className="text-xs font-bold text-indigo-700">Kategori Terpilih</p>
                                 <p className="text-sm font-extrabold text-indigo-900">{selectedCategory.name}</p>
                             </div>
                             <button
@@ -56,7 +56,7 @@ export default function StepCategory() {
                                 onClick={handleContinue}
                                 className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-xl transition"
                             >
-                                Continue
+                                Lanjutkan
                             </button>
                         </div>
                     )}

@@ -109,7 +109,7 @@ function GalleryNavbar() {
                               className="text-sm font-bold text-slate-700 hover:text-purple-600 transition px-3 py-2">Masuk</Link>
                         <Link to={ROUTES.REGISTER}
                               className="text-sm font-bold text-white px-5 py-2 rounded-full shadow-md hover:shadow-lg transition-all"
-                              style={{ background: 'linear-gradient(135deg,#7c3aed,#4f46e5)' }}>Start Building</Link>
+                              style={{ background: 'linear-gradient(135deg,#7c3aed,#4f46e5)' }}>Mulai Membangun</Link>
                     </div>
                 </div>
             </div>
@@ -325,13 +325,13 @@ function TemplateModal({ tpl, onClose, onEdit }) {
                     </div>
                     <div className="grid grid-cols-2 gap-4 pt-3 border-t border-slate-100">
                         <div className="bg-slate-50 p-3 rounded-2xl border border-slate-100">
-                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Kategori Industry</span>
+                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Kategori Industri</span>
                             <span className="text-xs font-extrabold text-slate-800 mt-0.5 block">
                                 {tpl.industry_category?.name || 'Umum / Corporate'}
                             </span>
                         </div>
                         <div className="bg-slate-50 p-3 rounded-2xl border border-slate-100">
-                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Versi Engine</span>
+                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Versi Mesin</span>
                             <span className="text-xs font-extrabold text-slate-800 mt-0.5 block">v{tpl.version || '1.0.0'}</span>
                         </div>
                     </div>

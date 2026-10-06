@@ -90,12 +90,12 @@ export default function AdminSettings() {
             console.log('Maintenance mode updated successfully:', data);
             queryClient.invalidateQueries({ queryKey: ['system', 'maintenance'] });
             queryClient.invalidateQueries({ queryKey: ['settings'] });
-            toast.success(data.message || 'Maintenance mode updated successfully', 'Success');
+            toast.success(data.message || 'Mode pemeliharaan berhasil diperbarui', 'Berhasil');
         },
         onError: (error) => {
             console.error('Failed to update maintenance mode:', error);
-            const message = error?.response?.data?.message || 'Failed to update maintenance mode';
-            toast.error(message, 'Error');
+            const message = error?.response?.data?.message || 'Gagal memperbarui mode pemeliharaan';
+            toast.error(message, 'Galat');
         },
     });
 
@@ -117,7 +117,7 @@ export default function AdminSettings() {
         if (!file) return;
 
         if (!file.type.startsWith('image/')) {
-            toast.error('Please upload a valid image file (PNG, JPG, SVG).', 'Invalid File');
+            toast.error('Silakan unggah file gambar yang valid (PNG, JPG, SVG).', 'File Tidak Valid');
             return;
         }
 
@@ -139,7 +139,7 @@ export default function AdminSettings() {
     const handleSaveBrand = async (e) => {
         e.preventDefault();
         if (!localBrandName.trim()) {
-            toast.error('Brand name cannot be empty.', 'Validation Error');
+            toast.error('Nama brand tidak boleh kosong.', 'Galat Validasi');
             return;
         }
 
@@ -153,7 +153,7 @@ export default function AdminSettings() {
 
             const updated = await updateSettingsAsync(payload);
             setSettings(updated);
-            toast.success('Brand settings updated successfully', 'Success');
+            toast.success('Pengaturan brand berhasil diperbarui', 'Berhasil');
         } catch (error) {
             // Error is handled in mutation
         }
@@ -170,7 +170,7 @@ export default function AdminSettings() {
         setLocalBrandColor('#2563eb');
         setLocalPlanLabel('Premium Plan');
         setLogoPreview(null);
-        toast.info('Brand identity reset to Microdata defaults.', 'Brand Reset');
+        toast.info('Identitas brand dikembalikan ke bawaan Microdata.', 'Brand Direset');
         setIsResetModalOpen(false);
     };
 
@@ -202,8 +202,8 @@ export default function AdminSettings() {
             toast.success('Platform system configuration updated successfully!', 'Pengaturan Sistem Saved');
         } catch (error) {
             console.error('Failed to save system settings:', error);
-            const message = error?.response?.data?.message || error?.message || 'Failed to save system settings';
-            toast.error(message, 'Error');
+            const message = error?.response?.data?.message || error?.message || 'Gagal menyimpan pengaturan sistem';
+            toast.error(message, 'Galat');
         }
     };
 
@@ -217,7 +217,7 @@ export default function AdminSettings() {
                 </div>
                 <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">Pengaturan Sistem</h1>
                 <p className="text-sm text-[rgb(var(--color-text-secondary))] mt-1">
-                    Configure platform brand identity, theme appearance, registration controls, and system limits.
+                    Atur identitas brand platform, tema tampilan, kontrol pendaftaran, dan batas sistem.
                 </p>
             </div>
 
@@ -240,14 +240,14 @@ export default function AdminSettings() {
                 <div className="flex items-center justify-between border-b border-[rgb(var(--color-border))] pb-4">
                     <h2 className="text-base font-extrabold text-[rgb(var(--color-text-primary))] flex items-center gap-2">
                         {darkMode ? <Moon className="h-4 w-4 text-blue-600" /> : <Sun className="h-4 w-4 text-blue-600" />}
-                        Appearance & Theme Mode
+                        Tampilan & Mode Tema
                     </h2>
                 </div>
 
                 <div className="flex items-center justify-between py-2">
                     <div>
                         <p className="text-sm font-bold text-[rgb(var(--color-text-primary))]">Dark Mode (Mode Gelap)</p>
-                        <p className="text-xs text-[rgb(var(--color-text-secondary))] mt-0.5">Switch between light mode and dark mode across admin & user dashboards.</p>
+                        <p className="text-xs text-[rgb(var(--color-text-secondary))] mt-0.5">Beralih antara mode terang dan gelap di dasbor admin & pengguna.</p>
                     </div>
                     <label className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none cursor-pointer">
                         <input
@@ -272,7 +272,7 @@ export default function AdminSettings() {
                 <div className="flex items-center justify-between border-b border-[rgb(var(--color-border))] pb-4">
                     <h2 className="text-base font-extrabold text-[rgb(var(--color-text-primary))] flex items-center gap-2">
                         <Palette className="h-4 w-4 text-blue-600" />
-                        Brand Identity
+                        Identitas Brand
                     </h2>
                     <button
                         type="button"
@@ -280,7 +280,7 @@ export default function AdminSettings() {
                         className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-[rgb(var(--color-text-secondary))] hover:text-[rgb(var(--color-text-primary))] hover:bg-[rgb(var(--color-surface-alt))] rounded-lg transition"
                     >
                         <RefreshCw className="h-3.5 w-3.5" />
-                        Reset to Default
+                        Kembalikan ke Bawaan
                     </button>
                 </div>
 
@@ -431,7 +431,7 @@ export default function AdminSettings() {
                             <Upload className="h-6 w-6" />
                             <div className="text-center">
                                 <p className="text-xs font-extrabold">Klik untuk mengunggah gambar logo</p>
-                                <p className="text-[10px] mt-0.5">PNG, JPG, SVG — recommended 48×48px or larger</p>
+                                <p className="text-[10px] mt-0.5">PNG, JPG, SVG — disarankan 48×48px atau lebih besar</p>
                             </div>
                         </button>
                     )}
@@ -542,7 +542,7 @@ export default function AdminSettings() {
                         className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-extrabold rounded-xl text-xs shadow-md shadow-blue-600/20 transition disabled:opacity-50"
                     >
                         <Save className="h-4 w-4" />
-                        <span>{updateMaintenanceMutation.isPending || isUpdating ? 'Menyimpan...' : 'Save Settings'}</span>
+                        <span>{updateMaintenanceMutation.isPending || isUpdating ? 'Menyimpan...' : 'Simpan Pengaturan'}</span>
                     </button>
                 </div>
                 </form>

@@ -115,7 +115,7 @@ export default function Templates() {
             id: tpl.id,
             title: tpl.name,
             category: tpl.industry_category_id || tpl.category_id,
-            badge: tpl.is_featured ? 'Featured' : 'Published',
+            badge: tpl.is_featured ? 'Unggulan' : 'Dipublikasikan',
             description: tpl.description || '',
             image: getTemplateImage(tpl),
             features: [],
@@ -195,7 +195,7 @@ export default function Templates() {
             queryClient.invalidateQueries(['my-templates']);
             queryClient.invalidateQueries(['user-templates']);
         } catch (err) {
-            toast.error(err.response?.data?.message || 'Gagal mengubah visibilitas template.', 'Error');
+            toast.error(err.response?.data?.message || 'Gagal mengubah visibilitas template.', 'Galat');
         }
     };
 
@@ -208,7 +208,7 @@ export default function Templates() {
             queryClient.invalidateQueries(['my-templates']);
             queryClient.invalidateQueries(['user-templates']);
         } catch (err) {
-            toast.error(err.response?.data?.message || 'Gagal menghapus template.', 'Error');
+            toast.error(err.response?.data?.message || 'Gagal menghapus template.', 'Galat');
         }
     };
 
@@ -263,10 +263,10 @@ export default function Templates() {
                 <div>
                     <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-100 text-indigo-900 text-xs font-bold mb-2 dark:bg-indigo-900/40 dark:text-indigo-100">
                         <Sparkles className="h-3.5 w-3.5" />
-                        <span>Microdata Template Library</span>
+                        <span>Microdata Pustaka Template</span>
                     </div>
                     <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">
-                        Template Gallery
+                        Galeri Template
                     </h1>
                     <p className="text-sm text-[rgb(var(--color-text-secondary))] mt-1">
                         Pilih template profesional Microdata atau buat & kelola template karya Anda sendiri.
@@ -443,7 +443,7 @@ function MyTemplateCard({ tpl, onEdit, onToggleVisibility, onDelete, onPreview }
                         onClick={() => onEdit(tpl)}
                         className="px-4 py-2.5 bg-indigo-600 text-white font-extrabold rounded-xl text-xs flex items-center gap-1.5 shadow-lg hover:bg-indigo-700 transition active:scale-95 cursor-pointer"
                     >
-                        <Wand2 className="h-3.5 w-3.5" /> Edit di Builder
+                        <Wand2 className="h-3.5 w-3.5" /> Ubah di Builder
                     </button>
                 </div>
             </div>
@@ -610,7 +610,7 @@ function TemplateCard({ tpl, onPreview, onUseTemplate, usingId }) {
                         variant="primary"
                     >
                         {locked ? <Lock className="h-3.5 w-3.5" /> : <Wand2 className="h-3.5 w-3.5" />}
-                        <span>{busy ? 'Memeriksa...' : locked ? 'Preview Only / Upgrade' : 'Gunakan Template'}</span>
+                        <span>{busy ? 'Memeriksa...' : locked ? 'Pratinjau Saja / Tingkatkan' : 'Gunakan Template'}</span>
                     </Button>
                 </div>
             </div>
@@ -664,7 +664,7 @@ function TemplateDetailModal({ tpl, onClose, onPreview, onUseTemplate }) {
                     ) : (
                         <div className="w-full h-64 flex flex-col items-center justify-center text-slate-400">
                             <Layout className="h-10 w-10 mb-2 opacity-30" />
-                            <span className="text-sm font-medium">No preview image available</span>
+                            <span className="text-sm font-medium">Tidak ada gambar pratinjau</span>
                         </div>
                     )}
                 </div>
@@ -673,10 +673,10 @@ function TemplateDetailModal({ tpl, onClose, onPreview, onUseTemplate }) {
                 <div className="flex items-center justify-between pt-2">
                     <div className="flex items-center gap-4 text-xs font-bold text-[rgb(var(--color-text-primary))]">
                         <span className="flex items-center gap-1">
-                            <Laptop className="h-4 w-4 text-indigo-600" /> Desktop Ready
+                            <Laptop className="h-4 w-4 text-indigo-600" /> Siap Desktop
                         </span>
                         <span className="flex items-center gap-1">
-                            <Smartphone className="h-4 w-4 text-indigo-600" /> Mobile Responsive
+                            <Smartphone className="h-4 w-4 text-indigo-600" /> Responsif Seluler
                         </span>
                     </div>
 
@@ -687,7 +687,7 @@ function TemplateDetailModal({ tpl, onClose, onPreview, onUseTemplate }) {
                             className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-100 border border-slate-200 transition cursor-pointer"
                         >
                             <ExternalLink className="h-3.5 w-3.5" />
-                            Preview
+                            Pratinjau
                         </button>
                         <Button
                             onClick={() => { onClose(); onUseTemplate(tpl); }}
@@ -696,7 +696,7 @@ function TemplateDetailModal({ tpl, onClose, onPreview, onUseTemplate }) {
                             className={`text-xs flex items-center gap-1.5 cursor-pointer ${locked ? '!bg-amber-500 hover:!bg-amber-600' : ''}`}
                         >
                             {locked ? <Lock className="h-3.5 w-3.5" /> : <Wand2 className="h-3.5 w-3.5" />}
-                            <span>{locked ? 'Preview Only / Upgrade' : 'Gunakan Template Ini'}</span>
+                            <span>{locked ? 'Pratinjau Saja / Tingkatkan' : 'Gunakan Template Ini'}</span>
                         </Button>
                     </div>
                 </div>

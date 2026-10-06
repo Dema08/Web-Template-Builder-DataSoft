@@ -94,7 +94,7 @@ export default function BackgroundEditorModal() {
 
   const handleReset = () => {
     resetConfig();
-    toast.info('Background reset to default', 'Background Editor');
+    toast.info('Latar dikembalikan ke bawaan', 'Background Editor');
   };
 
   // Handle local Image file upload
@@ -103,7 +103,7 @@ export default function BackgroundEditorModal() {
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {
-      toast.error('Please upload a valid image file (PNG, JPG, WEBP, SVG)', 'Invalid File');
+      toast.error('Please upload a valid image file (PNG, JPG, WEBP, SVG)', 'File Tidak Valid');
       return;
     }
 
@@ -151,7 +151,7 @@ export default function BackgroundEditorModal() {
 
     const check = validateVideoFile(file);
     if (!check.ok) {
-      if (check.message.includes('Format')) toast.error(check.message, 'Invalid File');
+      if (check.message.includes('Format')) toast.error(check.message, 'File Tidak Valid');
       else toast.error(check.message, 'File Too Large');
       return;
     }

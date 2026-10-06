@@ -61,10 +61,10 @@ function TemplateCardThumbnail({ template }) {
 }
 
 const STATUS_OPTIONS = [
-    { value: '', label: 'All Status' },
-    { value: 'draft', label: 'Draft' },
-    { value: 'published', label: 'Published' },
-    { value: 'disabled', label: 'Disabled' },
+    { value: '', label: 'Semua Status' },
+    { value: 'draft', label: 'Draf' },
+    { value: 'published', label: 'Dipublikasikan' },
+    { value: 'disabled', label: 'Dinonaktifkan' },
 ];
 
 export default function AdminTemplates() {
@@ -170,11 +170,11 @@ export default function AdminTemplates() {
         onSuccess: () => {
             queryClient.invalidateQueries(['admin-templates']);
             queryClient.invalidateQueries(['admin-categories']);
-            toast.success('Template berhasil dibuat', 'Success');
+            toast.success('Template berhasil dibuat', 'Berhasil');
             handleCloseModal();
         },
         onError: (error) => {
-            toast.error(error.response?.data?.message || 'Gagal membuat template', 'Error');
+            toast.error(error.response?.data?.message || 'Gagal membuat template', 'Galat');
         },
     });
 
@@ -192,11 +192,11 @@ export default function AdminTemplates() {
         onSuccess: () => {
             queryClient.invalidateQueries(['admin-templates']);
             queryClient.invalidateQueries(['admin-categories']);
-            toast.success('Template berhasil diperbarui', 'Success');
+            toast.success('Template berhasil diperbarui', 'Berhasil');
             handleCloseModal();
         },
         onError: (error) => {
-            toast.error(error.response?.data?.message || 'Gagal memperbarui template', 'Error');
+            toast.error(error.response?.data?.message || 'Gagal memperbarui template', 'Galat');
         },
     });
 
@@ -206,12 +206,12 @@ export default function AdminTemplates() {
             queryClient.invalidateQueries(['admin-templates']);
             queryClient.invalidateQueries(['admin-all-templates']);
             queryClient.invalidateQueries(['admin-categories']);
-            toast.success('Template berhasil dihapus', 'Success');
+            toast.success('Template berhasil dihapus', 'Berhasil');
             setActionDropdown(null);
             setDeleteConfirmTemplate(null);
         },
         onError: (error) => {
-            toast.error(error.response?.data?.message || 'Gagal menghapus template', 'Error');
+            toast.error(error.response?.data?.message || 'Gagal menghapus template', 'Galat');
         },
     });
 
@@ -229,7 +229,7 @@ export default function AdminTemplates() {
         onSuccess: () => {
             queryClient.invalidateQueries(['admin-templates']);
             queryClient.invalidateQueries(['admin-categories']);
-            toast.success('Template published successfully', 'Success');
+            toast.success('Template berhasil dipublikasikan', 'Berhasil');
             setActionDropdown(null);
         },
     });
@@ -239,7 +239,7 @@ export default function AdminTemplates() {
         onSuccess: () => {
             queryClient.invalidateQueries(['admin-templates']);
             queryClient.invalidateQueries(['admin-categories']);
-            toast.success('Template archived successfully', 'Success');
+            toast.success('Template berhasil diarsipkan', 'Berhasil');
             setActionDropdown(null);
         },
     });
@@ -249,7 +249,7 @@ export default function AdminTemplates() {
         onSuccess: () => {
             queryClient.invalidateQueries(['admin-templates']);
             queryClient.invalidateQueries(['admin-categories']);
-            toast.success('Template duplicated successfully', 'Success');
+            toast.success('Template berhasil diduplikasi', 'Berhasil');
             setActionDropdown(null);
         },
     });
@@ -397,16 +397,16 @@ export default function AdminTemplates() {
             queryClient.invalidateQueries(['admin-templates']);
             queryClient.invalidateQueries(['admin-categories']);
             const labels = {
-                published: 'published',
-                draft: 'moved to draft',
-                disabled: 'disabled',
+                published: 'dipublikasikan',
+                draft: 'dipindah ke draf',
+                disabled: 'dinonaktifkan',
             };
-            toast.success(`Template status updated to ${labels[variables.status] || variables.status}`, 'Success');
+            toast.success(`Status template diubah menjadi ${labels[variables.status] || variables.status}`, 'Berhasil');
             setActionDropdown(null);
         },
         onError: (error) => {
             if (error.message !== 'Deskripsi dan thumbnail wajib diisi') {
-                toast.error(error.response?.data?.message || 'Gagal memperbarui template status', 'Error');
+                toast.error(error.response?.data?.message || 'Gagal memperbarui status template', 'Galat');
             }
         },
     });
@@ -624,9 +624,9 @@ export default function AdminTemplates() {
                                                                 <div className="p-1.5 rounded-lg bg-indigo-50 text-indigo-600 group-hover/item:bg-white/20 group-hover/item:text-white transition-colors">
                                                                     <Layout className="h-3.5 w-3.5" />
                                                                 </div>
-                                                                <span>Open in Builder</span>
+                                                                <span>Buka di Builder</span>
                                                             </div>
-                                                            <span className="text-[10px] opacity-0 group-hover/item:opacity-100 font-semibold transition-opacity">Edit →</span>
+                                                            <span className="text-[10px] opacity-0 group-hover/item:opacity-100 font-semibold transition-opacity">Ubah →</span>
                                                         </button>
 
                                                         <button
@@ -648,7 +648,7 @@ export default function AdminTemplates() {
                                                             <div className="p-1.5 rounded-lg bg-slate-100 text-slate-600 group-hover/item:bg-slate-200 transition-colors">
                                                                 <Copy className="h-3.5 w-3.5" />
                                                             </div>
-                                                            <span>Duplicate</span>
+                                                            <span>Duplikat</span>
                                                         </button>
                                                     </div>
 
@@ -718,7 +718,7 @@ export default function AdminTemplates() {
                                                                 <div className="p-1.5 rounded-lg bg-rose-50 text-rose-600 group-hover/item:bg-white/20 group-hover/item:text-white transition-colors">
                                                                     <Trash2 className="h-3.5 w-3.5" />
                                                                 </div>
-                                                                <span>Delete Template</span>
+                                                                <span>Hapus Template</span>
                                                             </div>
                                                         </button>
                                                     </div>
@@ -753,7 +753,7 @@ export default function AdminTemplates() {
                         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-xs font-bold text-slate-700 mb-1.5">Template Code</label>
+                                    <label className="block text-xs font-bold text-slate-700 mb-1.5">Kode Template</label>
                                     <input
                                         type="text"
                                         {...register('code')}
@@ -763,7 +763,7 @@ export default function AdminTemplates() {
                                 </div>
 
                                 <div>
-                                    <label className="block text-xs font-bold text-slate-700 mb-1.5">Version</label>
+                                    <label className="block text-xs font-bold text-slate-700 mb-1.5">Versi</label>
                                     <input
                                         type="text"
                                         {...register('version')}
@@ -839,9 +839,9 @@ export default function AdminTemplates() {
                                         {...register('status')}
                                         className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 ds-input"
                                     >
-                                        <option value="draft">Draft</option>
-                                        <option value="published">Published</option>
-                                        <option value="disabled">Disabled</option>
+                                        <option value="draft">Draf</option>
+                                        <option value="published">Dipublikasikan</option>
+                                        <option value="disabled">Dinonaktifkan</option>
                                     </select>
                                 </div>
                             </div>
@@ -887,7 +887,7 @@ export default function AdminTemplates() {
                 <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
                     <div className="bg-white rounded-3xl max-w-4xl w-full p-6 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto">
                         <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
-                            <h3 className="text-base font-extrabold text-slate-900">Template Preview</h3>
+                            <h3 className="text-base font-extrabold text-slate-900">Pratinjau Template</h3>
                             <button
                                 type="button"
                                 onClick={() => setPreviewTemplate(null)}
@@ -912,7 +912,7 @@ export default function AdminTemplates() {
                                     <p className="text-sm font-bold text-slate-900">{previewTemplate.name}</p>
                                 </div>
                                 <div>
-                                    <h4 className="text-xs font-bold text-slate-500 uppercase mb-1">Code</h4>
+                                    <h4 className="text-xs font-bold text-slate-500 uppercase mb-1">Kode</h4>
                                     <p className="text-sm font-mono text-slate-900">{previewTemplate.code}</p>
                                 </div>
                                 <div>
@@ -922,21 +922,21 @@ export default function AdminTemplates() {
                                     </span>
                                 </div>
                                 <div>
-                                    <h4 className="text-xs font-bold text-slate-500 uppercase mb-1">Category</h4>
+                                    <h4 className="text-xs font-bold text-slate-500 uppercase mb-1">Kategori</h4>
                                     <p className="text-sm text-slate-900">{previewTemplate.industry_category?.name || 'N/A'}</p>
                                 </div>
                             </div>
 
                             {previewTemplate.description && (
                                 <div>
-                                    <h4 className="text-xs font-bold text-slate-500 uppercase mb-1">Description</h4>
+                                    <h4 className="text-xs font-bold text-slate-500 uppercase mb-1">Deskripsi</h4>
                                     <p className="text-sm text-slate-700">{previewTemplate.description}</p>
                                 </div>
                             )}
 
                             {previewTemplate.draft_json && (
                                 <div>
-                                    <h4 className="text-xs font-bold text-slate-500 uppercase mb-2">Draft JSON Structure</h4>
+                                    <h4 className="text-xs font-bold text-slate-500 uppercase mb-2">Struktur JSON Draf</h4>
                                     <pre className="bg-slate-50 p-4 rounded-xl text-xs overflow-x-auto border border-slate-200">
                                         {JSON.stringify(previewTemplate.draft_json, null, 2)}
                                     </pre>

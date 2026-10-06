@@ -2,11 +2,11 @@ import { Check } from 'lucide-react';
 import { useOnboardingStore } from '@features/onboarding/stores/onboardingStore';
 
 const steps = [
-    { label: 'Company Info', description: 'Basic information' },
-    { label: 'Category', description: 'Choose industry' },
-    { label: 'Template', description: 'Select design' },
-    { label: 'Website URL', description: 'Custom domain' },
-    { label: 'Review', description: 'Confirm details' },
+    { label: 'Info Perusahaan', description: 'Informasi dasar' },
+    { label: 'Kategori', description: 'Pilih industri' },
+    { label: 'Template', description: 'Pilih desain' },
+    { label: 'URL Website', description: 'Domain kustom' },
+    { label: 'Tinjau', description: 'Konfirmasi detail' },
 ];
 
 export default function ProgressStepper() {

@@ -39379,7 +39379,7 @@ export const LAYOUT_DEFAULTS = {
           "id": "prod12-c1-btn",
           "type": "button",
           "props": {
-            "label": "Request Demo",
+            "label": "Minta Demo",
             "href": "#demo",
             "variant": "ghost",
             "size": "small",
@@ -39444,7 +39444,7 @@ export const LAYOUT_DEFAULTS = {
           "id": "prod12-c2-btn",
           "type": "button",
           "props": {
-            "label": "Request Demo",
+            "label": "Minta Demo",
             "href": "#demo",
             "variant": "ghost",
             "size": "small",
