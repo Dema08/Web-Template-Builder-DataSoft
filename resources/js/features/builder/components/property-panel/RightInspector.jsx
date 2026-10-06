@@ -4173,7 +4173,7 @@ function ImageInspector({ activeTab, formValues, handleChange, setActiveTab, add
       {/* 1. CONTENT TAB */}
       {(activeTab === 'content' || activeTab === 'all') && (
         <div className="space-y-4">
-          {/* Live Preview Card */}
+          {/* Pratinjau Langsung Card */}
           <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-xs font-extrabold text-slate-800 uppercase tracking-wider">Image Preview</span>

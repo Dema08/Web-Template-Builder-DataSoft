@@ -103,7 +103,7 @@ export default function SaveDraftModal({
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
-                    {/* Template Name */}
+                    {/* Nama Template */}
                     <div>
                         <label className="block text-xs font-bold text-slate-700 mb-1.5">
                             Nama Draft Template <span className="text-rose-500">*</span>

@@ -85,7 +85,7 @@ export default function OrgFooterDigital({ components = [], sectionId = null }) 
           </div>
           <div className="flex items-center gap-6">
             <a href="#code-of-conduct" className="hover:text-cyan-400 transition-colors">Code of Conduct</a>
-            <a href="#privacy" className="hover:text-cyan-400 transition-colors">Privacy Policy</a>
+            <a href="#privacy" className="hover:text-cyan-400 transition-colors">Kebijakan Privasi</a>
             <a href="#github" className="hover:text-cyan-400 transition-colors">GitHub Organization</a>
           </div>
         </div>

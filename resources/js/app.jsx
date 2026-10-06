@@ -54,9 +54,9 @@ class ErrorBoundary extends Component {
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
                             </svg>
                         </div>
-                        <h2 className="text-lg font-bold text-slate-900 mb-2">Something went wrong</h2>
+                        <h2 className="text-lg font-bold text-slate-900 mb-2">Terjadi kesalahan</h2>
                         <p className="text-sm text-slate-500 mb-6">
-                            An unexpected error occurred in Microdata. The error has been logged. Please try refreshing the page.
+                            Terjadi kesalahan tak terduga di Microdata. Kesalahan telah dicatat. Silakan muat ulang halaman.
                         </p>
                         {this.state.error?.message && (
                             <p className="text-xs text-slate-400 bg-slate-50 rounded-xl p-3 mb-6 font-mono text-left break-all">
@@ -69,7 +69,7 @@ class ErrorBoundary extends Component {
                                 onClick={() => window.location.reload()}
                                 className="flex-1 py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-sm shadow-md shadow-blue-600/20 transition"
                             >
-                                Try Again
+                                Coba Lagi
                             </button>
                             <button
                                 type="button"
@@ -142,15 +142,15 @@ function App() {
         const initGoogleTranslate = async () => {
             try {
                 // Google Translate reads the googtrans cookie in "source/target"
-                // format (e.g. "/en/id"). A bare "/id" is ignored, so always
+                // format (e.g. "/id/en"). A bare "/en" is ignored, so always
                 // write the full pair here — BEFORE the widget script loads.
-                const savedLanguage = localStorage.getItem('preferred_language') || 'en';
+                const savedLanguage = localStorage.getItem('preferred_language') || 'id';
                 const target = savedLanguage.includes('-') || savedLanguage.length <= 5
                     ? savedLanguage
-                    : 'en';
-                document.cookie = `googtrans=/en/${target}; path=/`;
+                    : 'id';
+                document.cookie = `googtrans=/id/${target}; path=/`;
                 try {
-                    document.cookie = `googtrans=/en/${target}; path=/; domain=.${window.location.hostname}`;
+                    document.cookie = `googtrans=/id/${target}; path=/; domain=.${window.location.hostname}`;
                 } catch {
                     /* ignore — host-only cookie above is enough (localhost/IP) */
                 }

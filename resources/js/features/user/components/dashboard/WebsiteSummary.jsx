@@ -50,7 +50,7 @@ export default function WebsiteSummary({ website }) {
 
             <div className="mt-5 flex flex-wrap items-center gap-4 text-xs text-slate-600">
                 <span className="inline-flex items-center gap-2">
-                    <Edit3 className="h-4 w-4 text-indigo-600" /> Edit website
+                    <Edit3 className="h-4 w-4 text-indigo-600" /> Ubah website
                 </span>
                 <span className="inline-flex items-center gap-2">
                     <BarChart3 className="h-4 w-4 text-indigo-600" /> Analytics dashboard

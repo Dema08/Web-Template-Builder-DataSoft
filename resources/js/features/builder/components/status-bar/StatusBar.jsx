@@ -34,7 +34,7 @@ export default function StatusBar() {
         {isSaving ? (
           <span className="flex items-center gap-1.5 text-xs text-slate-400">
             <Save className="h-3 w-3 animate-pulse" />
-            Auto Saving...
+            Auto Menyimpan...
           </span>
         ) : (
           <span className="flex items-center gap-1.5 text-xs text-emerald-400">

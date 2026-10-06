@@ -15,7 +15,7 @@ export default function Footer01({ components = [], sectionId = null }) {
     { id: 'link-journal', type: 'button', props: { label: 'Journal', href: '#journal', variant: 'ghost', size: 'small', background: 'transparent', color: '#475569' } },
     { id: 'link-contact', type: 'button', props: { label: 'Contact', href: '#contact', variant: 'ghost', size: 'small', background: 'transparent', color: '#475569' } },
     { id: 'cta-book', type: 'button', props: { label: 'Book a Call →', href: '#contact', variant: 'primary', size: 'small', radius: 'full', background: '#0f172a', color: '#ffffff' } },
-    { id: 'copy-1', type: 'text', props: { content: '© 2026 Lumière Studio. All rights reserved.', fontSize: '12px', color: '#94a3b8', align: 'center', margin: '0' } },
+    { id: 'copy-1', type: 'text', props: { content: '© 2026 Lumière Studio. Hak cipta dilindungi.', fontSize: '12px', color: '#94a3b8', align: 'center', margin: '0' } },
   ];
 
   const layoutComponents = components.length > 0 ? components : defaultComponents;

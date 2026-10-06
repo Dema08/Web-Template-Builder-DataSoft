@@ -65,7 +65,7 @@ export default function Login({ onSwitchToRegister }) {
             {/* Left Column — Form with stagger entrance */}
             <div className="w-full md:w-1/2 p-8 sm:p-12 flex flex-col justify-between bg-white ds-animate-fade-up">
                 <div>
-                    {/* Brand Logo & Back to Landing Page */}
+                    {/* Logo Brand & Back to Landing Page */}
                     <div className="flex items-center justify-between">
                         <BrandLogo />
                         <Link
@@ -79,9 +79,9 @@ export default function Login({ onSwitchToRegister }) {
 
                     {/* Heading */}
                     <div className="mt-8 mb-6">
-                        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Welcome Back</h1>
+                        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Selamat Datang Kembali</h1>
                         <p className="text-xs sm:text-sm text-slate-500 mt-1.5 font-medium">
-                            Sign in to continue to your dashboard
+                            Masuk untuk melanjutkan ke dasbor Anda.
                         </p>
                     </div>
 
@@ -104,7 +104,7 @@ export default function Login({ onSwitchToRegister }) {
                     {login.isError && (
                         <div className="mb-4 ds-animate-fade-in">
                             <Alert variant="error" title="Gagal Login">
-                                {login.error?.response?.data?.message || 'Please check your credentials and try again.'}
+                                {login.error?.response?.data?.message || 'Periksa kredensial Anda dan coba lagi.'}
                             </Alert>
                         </div>
                     )}
@@ -114,7 +114,7 @@ export default function Login({ onSwitchToRegister }) {
                         {/* Email Field */}
                         <div className="group">
                             <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                                Email Address
+                                Alamat Email
                             </label>
                             <div className="relative">
                                 <User className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-indigo-600 transition-colors" />
@@ -128,10 +128,10 @@ export default function Login({ onSwitchToRegister }) {
                                             : 'border-slate-200 focus:border-indigo-600'
                                     }`}
                                     {...register('email', {
-                                        required: 'Email is required',
+                                        required: 'Email wajib diisi',
                                         pattern: {
                                             value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                                            message: 'Enter a valid email address',
+                                            message: 'Masukkan alamat email yang valid',
                                         },
                                     })}
                                 />
@@ -158,8 +158,8 @@ export default function Login({ onSwitchToRegister }) {
                                             : 'border-slate-200 focus:border-indigo-600'
                                     }`}
                                     {...register('password', {
-                                        required: 'Password is required',
-                                        minLength: { value: 8, message: 'Password must be at least 8 characters' },
+                                        required: 'Kata sandi wajib diisi',
+                                        minLength: { value: 8, message: 'Kata sandi minimal 8 karakter' },
                                     })}
                                 />
                                 <button
@@ -175,7 +175,7 @@ export default function Login({ onSwitchToRegister }) {
                             )}
                         </div>
 
-                        {/* Remember Me + Forgot Password Row */}
+                        {/* Ingat Saya + Forgot Password Row */}
                         <div className="flex items-center justify-between pt-1">
                             <div className="flex items-center">
                                 <input
@@ -185,14 +185,14 @@ export default function Login({ onSwitchToRegister }) {
                                     {...register('remember')}
                                 />
                                 <label htmlFor="remember" className="ml-2 block text-xs font-medium text-slate-600 select-none cursor-pointer">
-                                    Remember Me
+                                    Ingat Saya
                                 </label>
                             </div>
                             <Link
                                 to={ROUTES.FORGOT_PASSWORD}
                                 className="text-xs font-semibold text-indigo-600 hover:text-indigo-700 transition-colors hover:underline"
                             >
-                                Forgot Password?
+                                Lupa Kata Sandi?
                             </Link>
                         </div>
 
@@ -206,7 +206,7 @@ export default function Login({ onSwitchToRegister }) {
                                 <Spinner size="sm" />
                             ) : (
                                 <>
-                                    <span>Login</span>
+                                    <span>Masuk</span>
                                     <ArrowRight className="h-4 w-4" />
                                 </>
                             )}
@@ -214,7 +214,7 @@ export default function Login({ onSwitchToRegister }) {
 
                         {/* Footer Link */}
                         <div className="pt-4 text-center text-xs text-slate-500 font-medium">
-                            Don't have an account?{' '}
+                            Belum punya akun?{' '}
                             <Link
                                 to={ROUTES.REGISTER}
                                 onClick={(e) => {
@@ -254,7 +254,7 @@ export default function Login({ onSwitchToRegister }) {
                     <div>
                         <h2 className="text-3xl lg:text-4xl font-black leading-tight text-white mb-3 tracking-tight">
                             Build the future <br />
-                            <span className="text-blue-200 drop-shadow-md">with Microdata.</span>
+                            <span className="text-blue-200 drop-shadow-md">bersama Microdata.</span>
                         </h2>
 
                         <p className="text-xs lg:text-sm text-blue-100/90 leading-relaxed max-w-sm font-medium">
@@ -267,9 +267,9 @@ export default function Login({ onSwitchToRegister }) {
                         <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center gap-2">
                                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
-                                <span className="text-[11px] font-bold text-white tracking-wide">Live Builder Engine</span>
+                                <span className="text-[11px] font-bold text-white tracking-wide">Mesin Builder Langsung</span>
                             </div>
-                            <span className="text-[9px] font-extrabold px-2 py-0.5 rounded-md bg-white/20 text-blue-100 uppercase tracking-wider">Active</span>
+                            <span className="text-[9px] font-extrabold px-2 py-0.5 rounded-md bg-white/20 text-blue-100 uppercase tracking-wider">Aktif</span>
                         </div>
                         <div className="h-1.5 bg-white/20 rounded-full overflow-hidden">
                             <div className="h-full bg-emerald-400 rounded-full ds-animate-shimmer" style={{ width: '85%' }} />
@@ -285,7 +285,7 @@ export default function Login({ onSwitchToRegister }) {
                         </div>
                         <div className="text-base font-black text-white tracking-tight">1.2M+</div>
                         <div className="text-[9px] font-extrabold text-blue-200/90 tracking-wider uppercase mt-0.5">
-                            Sites Built
+                            Website Dibuat
                         </div>
                     </div>
                     <div className="flex flex-col items-center text-center group cursor-pointer">

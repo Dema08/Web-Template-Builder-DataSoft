@@ -59,7 +59,7 @@ export default function Services10({ components = [], sectionId = null }) {
             placeholder="Search web design, plumbing, legal advice…"
             className="flex-1 bg-transparent outline-none text-sm"
           />
-          <span className="bg-slate-900 text-white text-sm font-bold rounded-full px-6 py-2.5 select-none">Search</span>
+          <span className="bg-slate-900 text-white text-sm font-bold rounded-full px-6 py-2.5 select-none">Cari</span>
         </div>
         <div className="flex flex-wrap justify-center gap-2 mt-4" onClick={(e) => e.stopPropagation()}>
           {['All', 'Design', 'Development', 'Marketing', 'Legal'].map(c => (

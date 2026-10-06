@@ -46,27 +46,27 @@ export default function AppLayout() {
 
     const sidebarItems = isAdmin
         ? [
-              { label: 'Home', icon: Home, to: ROUTES.HOME },
-              { label: 'Dashboard', icon: LayoutGrid, to: ROUTES.ADMIN_DASHBOARD },
-              { label: 'Analytics', icon: BarChart3, to: ROUTES.ADMIN_ANALYTICS },
-              { label: 'All Websites', icon: Globe, to: ROUTES.ADMIN_WEBSITES },
-              { label: 'Manage Templates', icon: FileText, to: ROUTES.ADMIN_TEMPLATES },
-              { label: 'Categories', icon: Layers, to: ROUTES.ADMIN_CATEGORIES },
-              { label: 'User Management', icon: Users, to: ROUTES.ADMIN_USERS },
-              { label: 'Pricelist Management', icon: CreditCard, to: ROUTES.ADMIN_PRICELIST },
+              { label: 'Beranda', icon: Home, to: ROUTES.HOME },
+              { label: 'Dasbor', icon: LayoutGrid, to: ROUTES.ADMIN_DASHBOARD },
+              { label: 'Analitik', icon: BarChart3, to: ROUTES.ADMIN_ANALYTICS },
+              { label: 'Semua Website', icon: Globe, to: ROUTES.ADMIN_WEBSITES },
+              { label: 'Kelola Template', icon: FileText, to: ROUTES.ADMIN_TEMPLATES },
+              { label: 'Kategori', icon: Layers, to: ROUTES.ADMIN_CATEGORIES },
+              { label: 'Manajemen Pengguna', icon: Users, to: ROUTES.ADMIN_USERS },
+              { label: 'Manajemen Harga', icon: CreditCard, to: ROUTES.ADMIN_PRICELIST },
               { label: 'Laporan Transaksi', icon: DollarSign, to: ROUTES.ADMIN_TRANSACTIONS },
-              { label: 'Edit Landing Page', icon: Sparkles, to: ROUTES.ADMIN_LANDING },
-              { label: 'Maintenance & Settings', icon: SettingsIcon, to: ROUTES.ADMIN_SETTINGS },
+              { label: 'Ubah Halaman Utama', icon: Sparkles, to: ROUTES.ADMIN_LANDING },
+              { label: 'Pemeliharaan & Pengaturan', icon: SettingsIcon, to: ROUTES.ADMIN_SETTINGS },
           ]
         : [
-              { label: 'Home', icon: Home, to: ROUTES.HOME },
-              { label: 'Dashboard', icon: LayoutGrid, to: ROUTES.DASHBOARD },
-              { label: 'Websites', icon: Globe, to: ROUTES.WEBSITES },
-              { label: 'Templates', icon: FileText, to: ROUTES.TEMPLATES },
+              { label: 'Beranda', icon: Home, to: ROUTES.HOME },
+              { label: 'Dasbor', icon: LayoutGrid, to: ROUTES.DASHBOARD },
+              { label: 'Website', icon: Globe, to: ROUTES.WEBSITES },
+              { label: 'Template', icon: FileText, to: ROUTES.TEMPLATES },
               { label: 'Template Saya', icon: LayoutTemplate, to: ROUTES.MY_TEMPLATES },
-              { label: 'Billing & Langganan', icon: CreditCard, to: ROUTES.BILLING },
-              { label: 'Profile', icon: UserCircle2, to: ROUTES.PROFILE },
-              { label: 'Settings', icon: SettingsIcon, to: ROUTES.SETTINGS },
+              { label: 'Tagihan & Langganan', icon: CreditCard, to: ROUTES.BILLING },
+              { label: 'Profil', icon: UserCircle2, to: ROUTES.PROFILE },
+              { label: 'Pengaturan', icon: SettingsIcon, to: ROUTES.SETTINGS },
           ];
 
     return (
@@ -106,7 +106,7 @@ export default function AppLayout() {
                                     className="text-[10px] font-bold uppercase tracking-[0.18em]"
                                     style={{ color: brand_color }}
                                 >
-                                    {isAdmin ? 'Admin Panel' : plan_label}
+                                    {isAdmin ? 'Panel Admin' : plan_label}
                                 </div>
                             </div>
                         )}
@@ -146,7 +146,7 @@ export default function AppLayout() {
                                 }`}
                             >
                                 <Sparkles className="h-4 w-4 shrink-0" />
-                                {!isSidebarCollapsed && <span>Create New Site</span>}
+                                {!isSidebarCollapsed && <span>Buat Website Baru</span>}
                             </button>
                         ) : (
                             <Link
@@ -156,7 +156,7 @@ export default function AppLayout() {
                                 }`}
                             >
                                 <Sparkles className="h-4 w-4 shrink-0" />
-                                {!isSidebarCollapsed && <span>Create New Site</span>}
+                                {!isSidebarCollapsed && <span>Buat Website Baru</span>}
                             </Link>
                         )}
 
@@ -169,7 +169,7 @@ export default function AppLayout() {
                             }`}
                         >
                             {isLoggingOut ? <Spinner size="sm" /> : <LogOut className="h-4 w-4 shrink-0 text-red-500" />}
-                            {!isSidebarCollapsed && <span>{isLoggingOut ? 'Logging out...' : 'Logout'}</span>}
+                            {!isSidebarCollapsed && <span>{isLoggingOut ? 'Sedang keluar...' : 'Keluar'}</span>}
                         </button>
                     </div>
                 </aside>
@@ -199,7 +199,7 @@ export default function AppLayout() {
                                             className="text-[10px] font-bold uppercase tracking-wider"
                                             style={{ color: brand_color || '#2563eb' }}
                                         >
-                                            {isAdmin ? 'Admin Panel' : plan_label}
+                                            {isAdmin ? 'Panel Admin' : plan_label}
                                         </div>
                                     </div>
                                 </div>
@@ -246,7 +246,7 @@ export default function AppLayout() {
                                         className="flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-3 text-xs font-extrabold text-white shadow-md shadow-indigo-600/20 cursor-pointer"
                                     >
                                         <Sparkles className="h-4 w-4" />
-                                        <span>Create New Site</span>
+                                        <span>Buat Website Baru</span>
                                     </button>
                                 ) : (
                                     <Link
@@ -255,7 +255,7 @@ export default function AppLayout() {
                                         className="flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 px-4 py-3 text-xs font-extrabold text-white shadow-md shadow-indigo-600/20"
                                     >
                                         <Sparkles className="h-4 w-4" />
-                                        <span>Create New Site</span>
+                                        <span>Buat Website Baru</span>
                                     </Link>
                                 )}
 
@@ -269,7 +269,7 @@ export default function AppLayout() {
                                     className="flex w-full items-center justify-center gap-2 rounded-xl border border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface))] px-4 py-2.5 text-xs font-bold text-red-600"
                                 >
                                     <LogOut className="h-4 w-4" />
-                                    <span>{isLoggingOut ? 'Logging out...' : 'Logout'}</span>
+                                    <span>{isLoggingOut ? 'Sedang keluar...' : 'Keluar'}</span>
                                 </button>
                             </div>
                         </aside>
@@ -284,7 +284,7 @@ export default function AppLayout() {
                             {/* Mobile Hamburger Drawer Button */}
                             <button
                                 type="button"
-                                aria-label="Open mobile menu"
+                                aria-label="Buka menu seluler"
                                 onClick={() => setIsMobileMenuOpen(true)}
                                 className="lg:hidden rounded-xl border border-[rgb(var(--color-border))] p-2.5 text-[rgb(var(--color-text-secondary))] hover:text-indigo-600 hover:border-indigo-300 transition"
                             >
@@ -294,7 +294,7 @@ export default function AppLayout() {
                             {/* Desktop Collapse Toggle */}
                             <button
                                 type="button"
-                                aria-label={isSidebarCollapsed ? 'Show sidebar' : 'Hide sidebar'}
+                                aria-label={isSidebarCollapsed ? 'Tampilkan bilah sisi' : 'Sembunyikan bilah sisi'}
                                 onClick={() => setIsSidebarCollapsed((value) => !value)}
                                 className="hidden lg:flex rounded-full border border-[rgb(var(--color-border))] p-2 text-[rgb(var(--color-text-secondary))] transition hover:border-indigo-300 hover:text-indigo-600"
                             >
@@ -330,7 +330,7 @@ export default function AppLayout() {
                                 <Search className="h-4 w-4 text-[rgb(var(--color-text-tertiary))] shrink-0" />
                                 <input
                                     type="text"
-                                    placeholder="Search or type..."
+                                    placeholder="Cari atau ketik..."
                                     className="w-full bg-transparent border-0 p-0 text-xs text-[rgb(var(--color-text-primary))] focus:outline-none placeholder:text-[rgb(var(--color-text-tertiary))]"
                                 />
                             </div>
@@ -338,7 +338,7 @@ export default function AppLayout() {
                             <button
                                 type="button"
                                 className="relative rounded-full border border-[rgb(var(--color-border))] p-2.5 text-[rgb(var(--color-text-secondary))] hover:text-[rgb(var(--color-text-primary))] hover:bg-[rgb(var(--color-surface-alt))] transition"
-                                aria-label="Notifications"
+                                aria-label="Notifikasi"
                             >
                                 <Bell className="h-4 w-4" />
                                 <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-indigo-600 ring-2 ring-[rgb(var(--color-surface))]" />
@@ -388,7 +388,7 @@ export default function AppLayout() {
                                             className="flex items-center gap-2.5 px-4 py-2.5 text-xs font-bold text-[rgb(var(--color-text-primary))] hover:bg-[rgb(var(--color-surface-alt))] transition"
                                         >
                                             <UserCircle2 className="h-4 w-4 text-[rgb(var(--color-text-tertiary))]" />
-                                            Profile Settings
+                                            Pengaturan Profil
                                         </Link>
 
                                         <button
@@ -401,7 +401,7 @@ export default function AppLayout() {
                                             className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs font-bold text-red-600 hover:bg-red-50 transition border-t border-[rgb(var(--color-border))] disabled:opacity-50"
                                         >
                                             {isLoggingOut ? <Spinner size="sm" /> : <LogOut className="h-4 w-4 text-red-500" />}
-                                            <span>{isLoggingOut ? 'Logging out...' : 'Logout'}</span>
+                                            <span>{isLoggingOut ? 'Sedang keluar...' : 'Keluar'}</span>
                                         </button>
                                     </div>
                                 )}
@@ -422,14 +422,14 @@ export default function AppLayout() {
                             <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 text-center sm:text-left">
                                 <span className="font-extrabold text-[rgb(var(--color-text-primary))]">{brand_name || 'Microdata'} Profile Builder</span>
                                 <span className="hidden sm:inline">•</span>
-                                <span>© 2026 PT Microdata. All rights reserved.</span>
+                                <span>© 2026 PT Microdata. Hak cipta dilindungi.</span>
                             </div>
                             <a
                                 href="#privacy"
                                 onClick={(e) => e.preventDefault()}
                                 className="hover:text-[rgb(var(--color-text-primary))] underline font-semibold transition-colors"
                             >
-                                Privacy Policy
+                                Kebijakan Privasi
                             </a>
                         </footer>
                     </div>

@@ -9,7 +9,7 @@ export default function ServiceFooterAgency({ components = [], sectionId = null 
   const defaultComponents = [
     { id: 'ftr-ag-brand', type: 'heading', props: { content: 'NEXUS.STUDIO', level: 'h3', fontSize: '24px', fontWeight: '900', color: '#ffffff', letterSpacing: '-0.02em' } },
     { id: 'ftr-ag-tagline', type: 'paragraph', props: { content: 'Boutique Creative & Digital Innovation Agency yang mendefinisikan standar visual dan pengalaman masa depan.', fontSize: '14px', color: '#94a3b8' } },
-    { id: 'ftr-ag-copy', type: 'paragraph', props: { content: '© 2026 Nexus Studio Inc. All rights reserved. Designed for market leaders.', fontSize: '13px', color: '#64748b' } },
+    { id: 'ftr-ag-copy', type: 'paragraph', props: { content: '© 2026 Nexus Studio Inc. Hak cipta dilindungi. Designed for market leaders.', fontSize: '13px', color: '#64748b' } },
     { id: 'ftr-ag-lnk1', type: 'button', props: { label: 'Brand Identity', href: '#services', variant: 'ghost', size: 'small', background: 'transparent', color: '#cbd5e1' } },
     { id: 'ftr-ag-lnk2', type: 'button', props: { label: 'UI/UX Design', href: '#services', variant: 'ghost', size: 'small', background: 'transparent', color: '#cbd5e1' } },
     { id: 'ftr-ag-lnk3', type: 'button', props: { label: 'Web & Mobile Dev', href: '#services', variant: 'ghost', size: 'small', background: 'transparent', color: '#cbd5e1' } },
@@ -75,7 +75,7 @@ export default function ServiceFooterAgency({ components = [], sectionId = null 
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           {renderLayoutComponents(copyComps, sectionId)}
           <div className="flex items-center gap-6 text-xs text-slate-500">
-            <span className="hover:text-slate-300 cursor-pointer">Privacy Policy</span>
+            <span className="hover:text-slate-300 cursor-pointer">Kebijakan Privasi</span>
             <span className="hover:text-slate-300 cursor-pointer">Terms of Service</span>
             <span className="hover:text-slate-300 cursor-pointer">Cookie Settings</span>
           </div>

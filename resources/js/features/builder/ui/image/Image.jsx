@@ -153,7 +153,7 @@ export default function Image({
           className="p-1.5 bg-slate-950/85 hover:bg-indigo-600 text-white rounded-lg shadow-lg border border-white/20 backdrop-blur-md transition-colors cursor-pointer text-xs flex items-center gap-1 font-bold"
         >
           <SlidersHorizontal className="w-3.5 h-3.5" />
-          <span className="text-[10px]">Edit</span>
+          <span className="text-[10px]">Ubah</span>
         </button>
       </div>
 

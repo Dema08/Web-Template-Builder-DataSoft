@@ -42,7 +42,7 @@ export function useSettings() {
         },
     });
 
-    // --- Remove logo image (DELETE /admin/settings/logo) ---
+    // --- Hapus logo image (DELETE /admin/settings/logo) ---
     const removeLogoMutation = useMutation({
         mutationFn: () => settingsApi.removeLogo(),
         onSuccess: (response) => {

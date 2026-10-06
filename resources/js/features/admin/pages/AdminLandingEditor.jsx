@@ -23,7 +23,7 @@ const ICON_OPTIONS = [
     { name: 'Shield', label: 'Shield', icon: Shield },
     { name: 'Globe', label: 'Globe', icon: Globe },
     { name: 'Zap', label: 'Speed', icon: Zap },
-    { name: 'Users', label: 'Users', icon: Users },
+    { name: 'Pengguna', label: 'Pengguna', icon: Users },
     { name: 'Headphones', label: 'Support', icon: Headphones },
     { name: 'Code2', label: 'Code', icon: Code2 },
     { name: 'Lock', label: 'Security', icon: Lock },
@@ -39,106 +39,106 @@ const DEFAULT_FEATURES = [
         icon: 'MousePointer2',
     },
     {
-        title: 'Professional Templates',
-        desc: 'Curated templates for Corporate, Logistics, Manufacturing, Education, Cooperatives, and Startups.',
+        title: 'Template Profesional',
+        desc: 'Template pilihan untuk Korporat, Logistik, Manufaktur, Pendidikan, Koperasi, dan Startup.',
         accent: 'indigo',
         icon: 'Layout',
     },
     {
-        title: 'One Click Publish',
+        title: 'Publikasi Satu Klik',
         desc: 'Launch your website instantly to a custom domain or subdomain — zero deployment knowledge needed.',
         accent: 'violet',
         icon: 'Rocket',
     },
     {
-        title: 'Responsive Design',
-        desc: 'Every template is automatically optimized for Desktop, Tablet, and Mobile screens.',
+        title: 'Desain Responsif',
+        desc: 'Setiap template otomatis dioptimalkan untuk layar Desktop, Tablet, dan Ponsel.',
         accent: 'sky',
         icon: 'Monitor',
     },
     {
-        title: 'Theme Customizer',
-        desc: 'Change colors, fonts, spacing, and layouts instantly with real-time live preview updates.',
+        title: 'Penyesuai Tema',
+        desc: 'Ubah warna, font, jarak, dan tata letak seketika dengan pratinjau langsung.',
         accent: 'pink',
         icon: 'Palette',
     },
     {
-        title: 'Media Manager',
-        desc: 'Upload and manage images, videos, logos, and documents in an organized media library.',
+        title: 'Pengelola Media',
+        desc: 'Unggah dan kelola gambar, video, logo, dan dokumen dalam galeri media yang rapi.',
         accent: 'amber',
         icon: 'Image',
     },
 ];
 
 const DEFAULT_STEPS = [
-    { title: 'Choose Template', desc: 'Browse professionally designed templates across all business categories.', icon: 'Layout' },
-    { title: 'Customize Content', desc: 'Edit text, images, colors, sections, and branding visually in real time.', icon: 'Palette' },
-    { title: 'Preview Website', desc: 'Check responsiveness across desktop, tablet, and mobile devices.', icon: 'Eye' },
-    { title: 'Publish Online', desc: 'Launch instantly with one click — go live in seconds, not days.', icon: 'Rocket' },
+    { title: 'Pilih Template', desc: 'Jelajahi template desain profesional di semua kategori bisnis.', icon: 'Layout' },
+    { title: 'Sesuaikan Konten', desc: 'Ubah teks, gambar, warna, bagian, dan branding secara visual dan real-time.', icon: 'Palette' },
+    { title: 'Pratinjau Website', desc: 'Periksa tampilan responsif di desktop, tablet, dan ponsel.', icon: 'Eye' },
+    { title: 'Publikasikan Online', desc: 'Luncurkan seketika dengan satu klik — go live in seconds, not days.', icon: 'Rocket' },
 ];
 
 const DEFAULT_PRICING = [
     {
         name: 'Starter', price: 'Free', period: '',
-        desc: 'Perfect for personal projects and exploring the platform.',
+        desc: 'Cocok untuk proyek pribadi dan menjelajahi platform.',
         features: ['1 Website', '10 Pages', 'Microdata Subdomain', 'Basic Templates', 'Community Support'],
-        cta: 'Get Started Free', highlight: false,
+        cta: 'Mulai Gratis', highlight: false,
     },
     {
         name: 'Growth', price: 'Rp 79K', period: '/bulan',
-        desc: 'For individuals and freelancers starting their online journey.',
-        features: ['3 Websites', '50 Pages', 'Custom Domain', 'Premium Templates', 'Email Support', 'Media Manager'],
-        cta: 'Start Growth', highlight: false,
+        desc: 'Untuk individu dan freelancer yang memulai perjalanan online.',
+        features: ['3 Websites', '50 Pages', 'Custom Domain', 'Premium Templates', 'Email Support', 'Pengelola Media'],
+        cta: 'Mulai Growth', highlight: false,
     },
     {
         name: 'Professional', price: 'Rp 149K', period: '/bulan',
-        desc: 'For growing businesses ready to scale their online presence.',
-        features: ['5 Websites', 'Unlimited Pages', 'Custom Domain', 'All Premium Templates', 'Media Manager', 'Analytics Dashboard', 'Priority Support'],
-        cta: 'Start Professional', highlight: true,
+        desc: 'Untuk bisnis berkembang yang siap meningkatkan kehadiran online.',
+        features: ['5 Websites', 'Unlimited Pages', 'Custom Domain', 'All Premium Templates', 'Pengelola Media', 'Analytics Dashboard', 'Priority Support'],
+        cta: 'Mulai Profesional', highlight: true,
     },
     {
         name: 'Agency', price: 'Rp 349K', period: '/bulan',
-        desc: 'For agencies managing multiple clients and projects at scale.',
+        desc: 'Untuk agensi yang mengelola banyak klien dan proyek sekaligus.',
         features: ['20 Websites', 'Unlimited Pages', 'Client Management', 'White Label Option', 'API Access', 'Team Collaboration', '24/7 Priority Support'],
-        cta: 'Start Agency', highlight: false,
+        cta: 'Mulai Agensi', highlight: false,
     },
     {
         name: 'Enterprise', price: 'Custom', period: '',
         desc: 'For large organizations needing full customization and control.',
         features: ['Unlimited Websites', 'White Label Option', 'API Access', 'Dedicated Manager', 'SSO Integration', 'SLA 99.9%', '24/7 Phone Support'],
-        cta: 'Contact Sales', highlight: false,
+        cta: 'Hubungi Penjualan', highlight: false,
     },
 ];
 
 const DEFAULT_LANDING_CONTENT = {
     hero_badge: 'Microdata Website Builder 2.0',
-    hero_title: 'Build Professional Websites',
-    hero_subtitle: 'With One-Click Hosting',
-    hero_desc: 'Create, customize, and publish stunning websites using a visual drag-and-drop builder without writing a single line of code.',
-    hero_cta_primary: 'Start Building Free',
+    hero_title: 'Bangun Website Profesional',
+    hero_subtitle: 'Dengan Hosting Satu Klik',
+    hero_desc: 'Buat, sesuaikan, dan publikasikan website memukau memakai builder seret & letakkan tanpa menulis satu baris pun kode.',
+    hero_cta_primary: 'Mulai Membangun Gratis',
     hero_cta_secondary: 'Watch Live Demo',
     
     features_badge: 'Platform Features',
-    features_title: 'Everything Needed to Launch Websites Faster',
-    features_subtitle: 'All the tools a business needs to create a stunning web presence — in one platform.',
+    features_title: 'Semua yang Dibutuhkan untuk Meluncurkan Website Lebih Cepat',
+    features_subtitle: 'Semua alat yang dibutuhkan bisnis to create a stunning web presence — in one platform.',
     features_list: DEFAULT_FEATURES,
     
-    steps_badge: 'How It Works',
-    steps_title: 'Build and Publish in 4 Easy Steps',
+    steps_badge: 'Cara Kerja',
+    steps_title: 'Bangun dan Publikasikan dalam 4 Langkah Mudah',
     steps_list: DEFAULT_STEPS,
     
-    stats_title: 'Trusted at Scale',
-    stats_subtitle: 'Numbers that speak for themselves.',
+    stats_title: 'Terpercaya dalam Skala Besar',
+    stats_subtitle: 'Angka yang berbicara dengan sendirinya.',
     
     pricing_badge: 'Pricing',
-    pricing_title: 'Simple, Transparent Pricing',
-    pricing_subtitle: 'Drag left/right or tap a tab to rotate 3D pricing wheel.',
+    pricing_title: 'Harga Sederhana dan Transparan',
+    pricing_subtitle: 'Geser ke kiri/kanan atau ketuk tab untuk memutar roda harga 3D.',
     pricing_list: DEFAULT_PRICING,
 
-    cta_badge: 'Get Started Today',
-    cta_title: 'Start Building Your Website Today',
-    cta_desc: 'Launch professional websites faster with Microdata Website Builder. No credit card required.',
-    cta_button_text: 'Start Building Free',
+    cta_badge: 'Mulai Hari Ini',
+    cta_title: 'Mulai Bangun Website Anda Hari Ini',
+    cta_desc: 'Luncurkan website profesional lebih cepat dengan Microdata Website Builder. Tanpa kartu kredit.',
+    cta_button_text: 'Mulai Membangun Gratis',
 
     // Footer
     footer_brand_name: 'Microdata',
@@ -149,7 +149,7 @@ const DEFAULT_LANDING_CONTENT = {
     footer_social_github: '#',
     footer_social_linkedin: '#',
     footer_social_instagram: '#',
-    footer_copyright: '© 2026 PT Microdata Solusindo. All rights reserved.',
+    footer_copyright: '© 2026 PT Microdata Solusindo. Hak cipta dilindungi.',
 };
 
 const ACCENT_COLORS = [
@@ -194,7 +194,7 @@ export default function AdminLandingEditor() {
                         footer_social_github: parsed.footer_social_github || '#',
                         footer_social_linkedin: parsed.footer_social_linkedin || '#',
                         footer_social_instagram: parsed.footer_social_instagram || '#',
-                        footer_copyright: parsed.footer_copyright || '© 2026 PT Microdata Solusindo. All rights reserved.',
+                        footer_copyright: parsed.footer_copyright || '© 2026 PT Microdata Solusindo. Hak cipta dilindungi.',
                     });
                 }
             })
@@ -444,7 +444,7 @@ export default function AdminLandingEditor() {
                                     type="text"
                                     value={content.hero_title}
                                     onChange={(e) => handleChange('hero_title', e.target.value)}
-                                    placeholder="Misal: Build Professional Websites"
+                                    placeholder="Misal: Bangun Website Profesional"
                                     className="w-full px-4 py-3 rounded-xl border border-slate-200 text-xs font-medium focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 transition outline-none"
                                 />
                             </div>
@@ -457,7 +457,7 @@ export default function AdminLandingEditor() {
                                     type="text"
                                     value={content.hero_subtitle}
                                     onChange={(e) => handleChange('hero_subtitle', e.target.value)}
-                                    placeholder="Misal: With One-Click Hosting"
+                                    placeholder="Misal: Dengan Hosting Satu Klik"
                                     className="w-full px-4 py-3 rounded-xl border border-slate-200 text-xs font-medium focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 transition outline-none"
                                 />
                             </div>
@@ -470,7 +470,7 @@ export default function AdminLandingEditor() {
                                     type="text"
                                     value={content.hero_cta_primary}
                                     onChange={(e) => handleChange('hero_cta_primary', e.target.value)}
-                                    placeholder="Misal: Start Building Free"
+                                    placeholder="Misal: Mulai Membangun Gratis"
                                     className="w-full px-4 py-3 rounded-xl border border-slate-200 text-xs font-medium focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 transition outline-none"
                                 />
                             </div>
@@ -690,7 +690,7 @@ export default function AdminLandingEditor() {
                                 </label>
                                 <input
                                     type="text"
-                                    value={content.steps_badge || 'How It Works'}
+                                    value={content.steps_badge || 'Cara Kerja'}
                                     onChange={(e) => handleChange('steps_badge', e.target.value)}
                                     className="w-full px-4 py-2.5 bg-white rounded-xl border border-slate-200 text-xs font-medium focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 transition outline-none"
                                 />
@@ -702,7 +702,7 @@ export default function AdminLandingEditor() {
                                 </label>
                                 <input
                                     type="text"
-                                    value={content.steps_title || 'Build and Publish in 4 Easy Steps'}
+                                    value={content.steps_title || 'Bangun dan Publikasikan dalam 4 Langkah Mudah'}
                                     onChange={(e) => handleChange('steps_title', e.target.value)}
                                     className="w-full px-4 py-2.5 bg-white rounded-xl border border-slate-200 text-xs font-medium focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 transition outline-none"
                                 />
@@ -859,7 +859,7 @@ export default function AdminLandingEditor() {
                                 </label>
                                 <input
                                     type="text"
-                                    value={content.pricing_title || 'Simple, Transparent Pricing'}
+                                    value={content.pricing_title || 'Harga Sederhana dan Transparan'}
                                     onChange={(e) => handleChange('pricing_title', e.target.value)}
                                     className="w-full px-4 py-2.5 bg-white rounded-xl border border-slate-200 text-xs font-medium focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 transition outline-none"
                                 />
@@ -871,7 +871,7 @@ export default function AdminLandingEditor() {
                                 </label>
                                 <input
                                     type="text"
-                                    value={content.pricing_subtitle || 'Drag left/right or tap a tab to rotate 3D pricing wheel.'}
+                                    value={content.pricing_subtitle || 'Geser ke kiri/kanan atau ketuk tab untuk memutar roda harga 3D.'}
                                     onChange={(e) => handleChange('pricing_subtitle', e.target.value)}
                                     className="w-full px-4 py-2.5 bg-white rounded-xl border border-slate-200 text-xs font-medium focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 transition outline-none"
                                 />
@@ -1062,7 +1062,7 @@ export default function AdminLandingEditor() {
                                         type="text"
                                         value={content.footer_copyright || ''}
                                         onChange={(e) => handleChange('footer_copyright', e.target.value)}
-                                        placeholder="Misal: © 2026 PT Microdata Solusindo. All rights reserved."
+                                        placeholder="Misal: © 2026 PT Microdata Solusindo. Hak cipta dilindungi."
                                         className="w-full px-4 py-3 bg-white rounded-xl border border-slate-200 text-xs font-medium text-slate-600 focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 transition outline-none"
                                     />
                                     <p className="text-[10px] text-slate-400 mt-1">Muncul di bagian paling bawah footer.</p>

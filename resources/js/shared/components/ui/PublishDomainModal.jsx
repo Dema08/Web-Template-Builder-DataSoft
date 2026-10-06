@@ -478,7 +478,7 @@ export default function PublishDomainModal({
                             Kuota paket <strong>{quota.package}</strong>: {quota.current} / {quota.unlimited ? 'Unlimited' : quota.max} website published.
                             {(!quota.can_publish || (publishAction === 'new' && !quota.unlimited && quota.current >= quota.max)) && (
                                 <p className="mt-1 font-semibold" title="Limit paket tercapai">
-                                    Limit paket tercapai. Unpublish website lain atau upgrade paket untuk melanjutkan.
+                                    Limit paket tercapai. Batal Publikasi website lain atau upgrade paket untuk melanjutkan.
                                 </p>
                             )}
                         </div>

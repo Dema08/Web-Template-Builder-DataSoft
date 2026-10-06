@@ -1,0 +1,401 @@
+AdminAnalytics.jsx:60: Total Kunjungan Bulanan
+AdminAnalytics.jsx:74: Beban CPU Server
+AdminAnalytics.jsx:81: Penggunaan Penyimpanan
+AdminAnalytics.jsx:109: Real-Time System Intelligence
+AdminAnalytics.jsx:161: PHP Environment
+AdminAnalytics.jsx:170: RAM Memory Load
+AdminAnalytics.jsx:179: Waktu Server VPS
+AdminAnalytics.jsx:184: Auto-refresh setiap 30 detik
+AdminAnalytics.jsx:249: Total Tayangan
+AdminAnalytics.jsx:255: Pengunjung Unik
+AdminAnalytics.jsx:261: Rata-rata / Periode
+AdminAnalytics.jsx:267: Bulan/Hari Puncak
+AdminAnalytics.jsx:333: Top 5
+AdminCategories.jsx:58: Category created successfully', 'Success
+AdminCategories.jsx:63: Failed to create category', 'Error
+AdminCategories.jsx:71: Category updated successfully', 'Success
+AdminCategories.jsx:76: Failed to update category', 'Error
+AdminCategories.jsx:84: Category deleted successfully', 'Success
+AdminCategories.jsx:89: Failed to delete category', 'Error
+AdminCategories.jsx:103: Failed to create template', 'Error
+AdminCategories.jsx:117: Failed to update template', 'Error
+AdminCategories.jsx:129: Failed to delete template', 'Error
+AdminCategories.jsx:216: Sort order updated', 'Success
+AdminCategories.jsx:303: Category Taxonomy
+AdminCategories.jsx:305: Industry Categories
+AdminCategories.jsx:321: Add Category
+AdminCategories.jsx:332: Search by category name or slug...
+AdminCategories.jsx:341: Loading categories...
+AdminCategories.jsx:343: No categories found matching search.
+AdminCategories.jsx:352: Sort Order
+AdminCategories.jsx:354: Created At
+AdminCategories.jsx:355: Updated At
+AdminCategories.jsx:388: Move Up
+AdminCategories.jsx:399: Move Down
+AdminCategories.jsx:441: Manage Templates
+AdminCategories.jsx:448: Edit Category
+AdminCategories.jsx:456: Delete Category
+AdminCategories.jsx:476: Edit Category
+AdminCategories.jsx:488: Category Name *
+AdminCategories.jsx:512: Sort Order
+AdminCategories.jsx:611: Thumbnail URL
+AdminCategories.jsx:623: Sort Order
+AdminDashboard.jsx:46: Total Terdaftar
+AdminDashboard.jsx:57: Lalu Lintas Pengunjung
+AdminDashboard.jsx:224: Baru saja
+AdminLandingEditor.jsx:42: Professional Templates
+AdminLandingEditor.jsx:43: Curated templates for Corporate, Logistics, Manufacturing, Education, Cooperatives, and Startups.
+AdminLandingEditor.jsx:48: One Click Publish
+AdminLandingEditor.jsx:54: Responsive Design
+AdminLandingEditor.jsx:55: Every template is automatically optimized for Desktop, Tablet, and Mobile screens.
+AdminLandingEditor.jsx:60: Theme Customizer
+AdminLandingEditor.jsx:61: Change colors, fonts, spacing, and layouts instantly with real-time live preview updates.
+AdminLandingEditor.jsx:66: Media Manager
+AdminLandingEditor.jsx:67: Upload and manage images, videos, logos, and documents in an organized media library.
+AdminLandingEditor.jsx:75: Sesuaikan Konten
+AdminLandingEditor.jsx:77: Publikasikan Online
+AdminLandingEditor.jsx:84: Microdata Subdomain', 'Basic Templates', 'Community Support
+AdminLandingEditor.jsx:90: Custom Domain', 'Premium Templates', 'Email Support', 'Media Manager
+AdminLandingEditor.jsx:96: Unlimited Pages', 'Custom Domain', 'All Premium Templates', 'Media Manager', 'Analytics Dashboard', 'Priority Support
+AdminLandingEditor.jsx:102: Unlimited Pages', 'Client Management', 'White Label Option', 'API Access', 'Team Collaboration', '24/7 Priority Support
+AdminLandingEditor.jsx:107: For large organizations needing full customization and control.
+AdminLandingEditor.jsx:108: Unlimited Websites', 'White Label Option', 'API Access', 'Dedicated Manager', 'SSO Integration',
+AdminLandingEditor.jsx:109: Contact Sales
+AdminLandingEditor.jsx:115: Build Professional Websites
+AdminLandingEditor.jsx:116: With One-Click Hosting
+AdminLandingEditor.jsx:117: Create, customize, and publish stunning websites using a visual drag-and-drop builder without writing a single line of c
+AdminLandingEditor.jsx:122: Everything Needed to Launch Websites Faster
+AdminLandingEditor.jsx:126: How It Works
+AdminLandingEditor.jsx:130: Terpercaya dalam Skala Besar
+AdminLandingEditor.jsx:135: Drag left/right or tap a tab to rotate 3D pricing wheel.
+AdminLandingEditor.jsx:146: Build, customize, and publish professional websites without coding.
+AdminLandingEditor.jsx:191: Build, customize, and publish professional websites without coding.
+AdminLandingEditor.jsx:221: Fitur Baru
+AdminLandingEditor.jsx:235: Minimal harus ada 1 kartu fitur.
+AdminLandingEditor.jsx:240: Kartu fitur dihapus.
+AdminLandingEditor.jsx:252: Langkah Baru
+AdminLandingEditor.jsx:253: Penjelasan singkat mengenai langkah ini.
+AdminLandingEditor.jsx:265: Minimal harus ada 1 langkah.
+AdminLandingEditor.jsx:270: Langkah dihapus.
+AdminLandingEditor.jsx:287: Paket Baru
+AdminLandingEditor.jsx:288: Rp 99K
+AdminLandingEditor.jsx:309: Paket harga dihapus.
+AdminLandingEditor.jsx:354: Landing Page Content Studio
+AdminLandingEditor.jsx:372: Reset Default
+AdminLandingEditor.jsx:421: Konfigurasi Hero Section
+AdminLandingEditor.jsx:486: Tuliskan penjelasan singkat mengenai produk...
+AdminLandingEditor.jsx:508: Tambah Kartu Fitur
+AdminLandingEditor.jsx:620: Judul Fitur
+AdminLandingEditor.jsx:633: Deskripsi penjelasan fitur...
+AdminLandingEditor.jsx:672: Kelola Section Cara Kerja (Steps)
+AdminLandingEditor.jsx:681: Tambah Langkah Baru
+AdminLandingEditor.jsx:693: How It Works
+AdminLandingEditor.jsx:781: Judul Langkah
+AdminLandingEditor.jsx:794: Deskripsi penjelasan singkat...
+AdminLandingEditor.jsx:811: Kelola Header Section Pricing
+AdminLandingEditor.jsx:819: Buka Pricelist Management Database
+AdminLandingEditor.jsx:830: Pricelist Management
+AdminLandingEditor.jsx:874: Drag left/right or tap a tab to rotate 3D pricing wheel.
+AdminLandingEditor.jsx:887: Konfigurasi Section Statistik
+AdminLandingEditor.jsx:888: Poin angka statistik pencapaian platform.
+AdminLandingEditor.jsx:923: Konfigurasi Banner Call to Action (CTA)
+AdminLandingEditor.jsx:924: Banner ajakan bergabung pada bagian bawah landing page.
+AdminLandingEditor.jsx:983: 🦶 Kelola Footer Landing Page
+AdminLandingEditor.jsx:1007: Tampil di logo footer kiri atas (maks. 2 huruf jadi initial).
+AdminLandingEditor.jsx:1020: Teks kecil berwarna indigo di bawah nama brand.
+AdminLandingEditor.jsx:1055: Ditampilkan sebagai link mailto: di footer brand.
+AdminLandingEditor.jsx:1068: Muncul di bagian paling bawah footer.
+AdminLandingEditor.jsx:1079: Isi URL lengkap. Jika dikosongkan atau diisi '#', ikon sosial media tersebut tidak akan ditampilkan.
+AdminLandingEditor.jsx:1082: Twitter / X
+AdminLandingEditor.jsx:1105: Preview Footer (Simulasi)
+AdminLandingEditor.jsx:1150: Live Interactive Landing Page Preview
+AdminLandingEditor.jsx:1226: Reset Konten Landing Page
+AdminLandingEditor.jsx:1230: Ya, Reset Konten
+AdminPricelist.jsx:128: Error Kode Promo
+AdminPricelist.jsx:143: Error Toggle
+AdminPricelist.jsx:154: Kode promo berhasil dihapus.', 'Dihapus
+AdminPricelist.jsx:194: Paket harga berhasil dihapus.', 'Dihapus
+AdminPricelist.jsx:211: Paket default berhasil diperbarui.', 'Set Default
+AdminPricelist.jsx:218: Error Default
+AdminPricelist.jsx:235: Error Favorit
+AdminPricelist.jsx:247: Paket Diperbarui
+AdminPricelist.jsx:252: Error Assign
+AdminPricelist.jsx:392: Pricelist & Promo Management
+AdminPricelist.jsx:413: Atur Paket User
+AdminPricelist.jsx:432: Tambah Kode Promo
+AdminPricelist.jsx:476: Total Paket
+AdminPricelist.jsx:496: Paket Default
+AdminPricelist.jsx:508: Total User
+AdminPricelist.jsx:519: Informasi Batasan Paket:
+AdminPricelist.jsx:556: Most Popular
+AdminPricelist.jsx:641: Fitur Paket:
+AdminPricelist.jsx:691: Edit Paket
+AdminPricelist.jsx:727: Total Kode Promo
+AdminPricelist.jsx:749: Efek Kode Promo
+AdminPricelist.jsx:751: FREE (Rp 0)
+AdminPricelist.jsx:770: Tambah Kode Promo
+AdminPricelist.jsx:781: Belum Ada Kode Promo
+AdminPricelist.jsx:789: Kode Promo
+AdminPricelist.jsx:791: Tipe / Efek Diskon
+AdminPricelist.jsx:810: Salin Kode
+AdminPricelist.jsx:947: Bulan (Monthly)
+AdminPricelist.jsx:948: Tahun (Yearly)
+AdminPricelist.jsx:949: Selamanya (Forever / Lifetime)
+AdminPricelist.jsx:1008: Izin Hubungkan Custom Domain
+AdminPricelist.jsx:1053: Daftar Fitur (Point Tampilan)
+AdminPricelist.jsx:1142: Akses Admin (Unlimited)
+AdminPricelist.jsx:1217: Jadikan Paket Default System
+AdminPricelist.jsx:1221: Ya, Set Default
+AdminPricelist.jsx:1270: Tambah Kode Promo Baru
+AdminPricelist.jsx:1285: Kode promo wajib diisi.', 'Form Tidak Lengkap
+AdminPricelist.jsx:1309: Otomatis diubah menjadi huruf kapital.
+AdminPricelist.jsx:1342: Efek Otomatis:
+AdminSettings.jsx:68: Premium Plan
+AdminSettings.jsx:93: Maintenance mode updated successfully', 'Success
+AdminSettings.jsx:120: Please upload a valid image file (PNG, JPG, SVG).', 'Invalid File
+AdminSettings.jsx:142: Brand name cannot be empty.', 'Validation Error
+AdminSettings.jsx:156: Brand settings updated successfully', 'Success
+AdminSettings.jsx:171: Premium Plan
+AdminSettings.jsx:173: Brand identity reset to Microdata defaults.', 'Brand Reset
+AdminSettings.jsx:202: System Settings Saved
+AdminSettings.jsx:216: Global Administration
+AdminSettings.jsx:218: System Settings
+AdminSettings.jsx:249: Dark Mode (Mode Gelap)
+AdminSettings.jsx:250: Switch between light mode and dark mode across admin & user dashboards.
+AdminSettings.jsx:289: Live Preview
+AdminSettings.jsx:294: Brand Logo
+AdminSettings.jsx:318: Premium Plan
+AdminSettings.jsx:338: Appears in sidebar, navbar, and footer.
+AdminSettings.jsx:354: Shown inside the colored logo box if no image logo.
+AdminSettings.jsx:369: Text shown below brand name in sidebar header.
+AdminSettings.jsx:389: Used for logo box, active nav items, and buttons.
+AdminSettings.jsx:403: Logo Preview
+AdminSettings.jsx:412: Custom logo uploaded
+AdminSettings.jsx:413: This replaces the text badge box in navbar and sidebar.
+AdminSettings.jsx:420: Remove logo
+AdminSettings.jsx:433: Click to upload logo image
+AdminSettings.jsx:434: PNG, JPG, SVG — recommended 48×48px or larger
+AdminSettings.jsx:493: Aktifkan Maintenance Mode
+AdminSettings.jsx:518: Aktifkan atau nonaktifkan form registrasi di
+AdminSettings.jsx:559: Production Mode
+AdminSettings.jsx:572: SB-Mid-server-xxxxxxxxxxxx / Mid-server-xxxxxxxxxxxx
+AdminSettings.jsx:588: SB-Mid-client-xxxxxxxxxxxx / Mid-client-xxxxxxxxxxxx
+AdminSettings.jsx:598: Gunakan Midtrans Production Mode
+AdminSettings.jsx:630: Reset Identitas Brand
+AdminSettings.jsx:634: Ya, Reset Brand
+AdminTemplateBuilder.jsx:163: Please select an industry category', 'Error
+AdminTemplateBuilder.jsx:175: Category not found', 'Error
+AdminTemplateBuilder.jsx:184: Blank canvas created', 'Success
+AdminTemplateBuilder.jsx:290: Please select an industry category for this template.', 'Category Required
+AdminTemplateBuilder.jsx:375: Failed to save template', 'Error
+AdminTemplateBuilder.jsx:404: Loading template...
+AdminTemplateBuilder.jsx:418: ⚠️ Warning
+AdminTemplateBuilder.jsx:493: Intelligent Starter Generator 2026
+AdminTemplateBuilder.jsx:509: Select Industry Category
+AdminTemplateBuilder.jsx:513: Choose an industry...
+AdminTemplateBuilder.jsx:531: Canvas Section Renderer
+AdminTemplateBuilder.jsx:569: Choose Generation Mode
+AdminTemplateBuilder.jsx:611: Instant Site
+AdminTemplateBuilder.jsx:627: Blank Canvas
+AdminTemplateBuilder.jsx:753: Included Page Sections:
+AdminTemplateBuilder.jsx:808: Konfirmasi publikasi template setelah update
+AdminTemplateBuilder.jsx:809: Lengkapi informasi wajib sebelum menyimpan
+AdminTemplateBuilder.jsx:850: Tuliskan deskripsi singkat tentang template ini...
+AdminTemplateBuilder.jsx:861: URL atau file thumbnail wajib diisi
+AdminTemplateBuilder.jsx:884: Deskripsi template wajib diisi.
+AdminTemplateBuilder.jsx:900: Deskripsi template wajib diisi.
+AdminTemplateBuilder.jsx:921: Deskripsi template wajib diisi.
+AdminTemplateBuilder.jsx:931: Publish Sekarang
+AdminTemplateBuilder.jsx:948: Ya, Tinggalkan
+AdminTemplatePreview.jsx:326: Desktop View (Full Width)
+AdminTemplatePreview.jsx:339: Tablet View (768px)
+AdminTemplatePreview.jsx:352: Mobile View (375px)
+AdminTemplatePreview.jsx:367: Zoom Scale
+AdminTemplatePreview.jsx:399: Refresh Live Data Sync
+AdminTemplatePreview.jsx:408: Close Live Preview
+AdminTemplatePreview.jsx:419: Subpage Preview
+AdminTemplatePreview.jsx:420: Viewing Page:
+AdminTemplatePreview.jsx:499: 🔒 https://
+AdminTemplates.jsx:104: Failed to change template status to draft
+AdminTemplates.jsx:177: Failed to create template', 'Error
+AdminTemplates.jsx:199: Failed to update template', 'Error
+AdminTemplates.jsx:214: Failed to delete template', 'Error
+AdminTemplates.jsx:371: Data Tidak Lengkap
+AdminTemplates.jsx:373: Description and thumbnail required
+AdminTemplates.jsx:408: Description and thumbnail required
+AdminTemplates.jsx:409: Failed to update template status', 'Error
+AdminTemplates.jsx:433: System Templates
+AdminTemplates.jsx:459: Search templates by name, code, or description...
+AdminTemplates.jsx:471: All Categories
+AdminTemplates.jsx:583: Live Preview in New Tab
+AdminTemplates.jsx:629: Edit →
+AdminTemplates.jsx:640: Edit Details
+AdminTemplates.jsx:671: Publish (Aktifkan)
+AdminTemplates.jsx:686: Set to Draft
+AdminTemplates.jsx:701: Disable (Sembunyikan)
+AdminTemplates.jsx:760: Auto-generated if empty
+AdminTemplates.jsx:792: Auto-generated from name
+AdminTemplates.jsx:800: Deskripsi template wajib diisi
+AdminTemplates.jsx:802: Deskripsi singkat template ini...
+AdminTemplates.jsx:827: Sort Order
+AdminTemplates.jsx:857: PRO / Premium
+AdminTemplates.jsx:939: Draft JSON Structure
+AdminTransactions.jsx:46: Admin Revenue & Transactions
+AdminTransactions.jsx:73: Total Revenue (Paid)
+AdminTransactions.jsx:85: Transaksi Sukses
+AdminTransactions.jsx:146: PAID (Terbayar)
+AdminTransactions.jsx:147: PENDING (Menunggu)
+AdminTransactions.jsx:148: EXPIRED (Kedaluwarsa)
+AdminTransactions.jsx:150: CANCELLED (Dibatalkan)
+AdminTransactions.jsx:151: REFUNDED (Dikembalikan)
+AdminTransactions.jsx:168: Tidak Ada Transaksi Ditemukan
+AdminTransactions.jsx:177: Invoice / Order
+AdminTransactions.jsx:179: Paket Target
+AdminTransactions.jsx:183: Waktu Dibuat
+AdminUsers.jsx:50: Akun Disetujui
+AdminUsers.jsx:56: Error Approve
+AdminUsers.jsx:68: Role Changed
+AdminUsers.jsx:74: Error Update Role
+AdminUsers.jsx:99: Paket Changed
+AdminUsers.jsx:105: Error Update Plan
+AdminUsers.jsx:123: Error Delete User
+AdminUsers.jsx:193: User Management
+AdminUsers.jsx:195: Registered Users
+AdminUsers.jsx:220: Search by name or email...
+AdminUsers.jsx:259: Failed to load users
+AdminUsers.jsx:273: Created At
+AdminUsers.jsx:380: Ganti Paket Langganan User
+AdminUsers.jsx:390: Edit Role User
+AdminUsers.jsx:424: Setujui Akun User
+AdminUsers.jsx:428: Ya, Setujui Akun
+AdminUsers.jsx:491: Edit Role Akun
+AdminUsers.jsx:563: Ganti Paket Langganan
+AdminUsers.jsx:588: Akun ini adalah
+AdminUsers.jsx:601: Unlimited Domain
+AdminWebsites.jsx:112: Total Hosted Sites
+AdminWebsites.jsx:113: Situs Terpublikasi
+AdminWebsites.jsx:114: Draft Sites
+AdminWebsites.jsx:115: Suspended Sites
+AdminWebsites.jsx:127: All Published & User Websites
+AdminWebsites.jsx:205: Identitas Publisher (Pemilik)
+AdminWebsites.jsx:209: Aksi Admin
+AdminWebsites.jsx:255: Thumbnail website berhasil diperbarui.', 'Berhasil
+AdminWebsites.jsx:299: Unknown User
+AdminWebsites.jsx:445: Nama Lengkap
+AdminWebsites.jsx:456: No. Telepon / HP
+AdminWebsites.jsx:463: Role & Paket Langganan
+AdminWebsites.jsx:469: Free Tier
+AdminWebsites.jsx:488: Slug URL
+AdminWebsites.jsx:511: Tanggal Dipublikasi
+AdminWebsites.jsx:514: Belum Dipublish
+ForgotPassword.jsx:50: Terjadi kesalahan. Silakan coba lagi.
+ForgotPassword.jsx:72: Lupa Password?
+ForgotPassword.jsx:113: Email wajib diisi
+ForgotPassword.jsx:136: Kirim Kode OTP
+ForgotPassword.jsx:166: DATASOFT STUDIO
+Login.jsx:107: Please check your credentials and try again.
+Login.jsx:131: Email wajib diisi
+Login.jsx:161: Kata sandi wajib diisi
+Login.jsx:162: Kata sandi minimal 8 karakter
+Login.jsx:248: MICRODATA STUDIO 2.0
+Login.jsx:257: with Microdata.
+Register.jsx:119: Masukkan kode promo terlebih dahulu.', 'Kode Promo Kosong
+Register.jsx:130: Promo Berhasil
+Register.jsx:133: Kode promo tidak valid.', 'Promo Tidak Valid
+Register.jsx:137: Promo Tidak Valid
+Register.jsx:156: Promo Berhasil
+Register.jsx:159: Kode promo tidak valid.', 'Promo Tidak Valid
+Register.jsx:163: Promo Tidak Valid
+Register.jsx:172: Kode promo dibatalkan.', 'Promo Dibatalkan
+Register.jsx:246: Pembayaran Sukses
+Register.jsx:254: Pembayaran sedang diproses. Silakan selesaikan pembayaran.', 'Menunggu Pembayaran
+Register.jsx:270: Popup pembayaran ditutup. Silakan selesaikan pembayaran.', 'Pembayaran Dibatalkan
+Register.jsx:306: Registrasi Berhasil
+Register.jsx:346: Pendaftaran Berhasil!
+Register.jsx:348: langsung aktif
+Register.jsx:355: Login Sekarang
+Register.jsx:396: Order ID:
+Register.jsx:401: DISETUJUI (APPROVED)
+Register.jsx:436: Menunggu Pembayaran
+Register.jsx:444: Order ID:
+Register.jsx:461: Bayar Sekarang (Midtrans)
+Register.jsx:512: Halaman Login
+Register.jsx:518: Create Account
+Register.jsx:546: Jane Doe
+Register.jsx:553: Nama wajib diisi
+Register.jsx:554: Minimal 2 karakter
+Register.jsx:580: Email wajib diisi
+Register.jsx:583: Format email tidak valid
+Register.jsx:605: Min 8 karakter
+Register.jsx:612: Password wajib diisi
+Register.jsx:613: Minimal 8 karakter
+Register.jsx:639: Ulangi password
+Register.jsx:646: Konfirmasi wajib
+Register.jsx:647: Password tidak cocok
+Register.jsx:732: aktif! Paket termurah (20k) menjadi
+Register.jsx:819: Upload Web:
+Register.jsx:843: Register Account (Free)
+Register.jsx:882: MICRODATA STUDIO 2.0
+Register.jsx:890: with Microdata.
+Register.jsx:902: Instant Auto-Approval on Payment
+ResetPassword.jsx:70: Terjadi kesalahan. Silakan coba lagi.
+ResetPassword.jsx:92: Reset Password
+ResetPassword.jsx:132: Password baru wajib diisi
+ResetPassword.jsx:135: Password minimal 8 karakter
+ResetPassword.jsx:168: Konfirmasi password wajib diisi
+ResetPassword.jsx:170: Konfirmasi password tidak cocok
+ResetPassword.jsx:196: Reset Password
+ResetPassword.jsx:226: DATASOFT STUDIO
+VerifyOtp.jsx:54: Kode OTP tidak valid.
+VerifyOtp.jsx:64: Terjadi kesalahan. Silakan coba lagi.
+VerifyOtp.jsx:93: Verifikasi OTP
+VerifyOtp.jsx:134: Kode OTP wajib diisi
+VerifyOtp.jsx:137: Kode OTP harus 6 digit angka
+VerifyOtp.jsx:160: Verifikasi OTP
+VerifyOtp.jsx:190: DATASOFT STUDIO
+BillingPage.jsx:63: Paket Diperbarui
+BillingPage.jsx:110: Pembayaran Sukses
+BillingPage.jsx:122: Menunggu Pembayaran
+BillingPage.jsx:143: Checkout Error
+BillingPage.jsx:163: Billing & Subscriptions
+BillingPage.jsx:213: Upgrade Paket
+BillingPage.jsx:246: Unlimited Domain
+BillingPage.jsx:250: Unlimited Templates
+BillingPage.jsx:350: Memproses Snap...
+BillingPage.jsx:393: Belum Ada Riwayat Transaksi
+BillingPage.jsx:403: Order ID
+BillingPage.jsx:404: Paket Target
+BillingPage.jsx:511: Failed to load Midtrans Snap JS
+LandingPage.jsx:22: Cara Kerja
+LandingPage.jsx:45: Publikasi Satu Klik
+LandingPage.jsx:53: Desain Responsif
+LandingPage.jsx:61: Penyesuai Tema
+LandingPage.jsx:69: Pengelola Media
+LandingPage.jsx:81: Institusi Pendidikan
+LandingPage.jsx:82: Startup & SaaS
+LandingPage.jsx:83: Organization & NGO
+LandingPage.jsx:88: Sesuaikan Konten
+LandingPage.jsx:90: Publikasikan Online
+LandingPage.jsx:102: Ahmad Rizki
+LandingPage.jsx:105: Maju Bersama Corp
+LandingPage.jsx:108: Sari Dewi
+LandingPage.jsx:110: The template library is incredible. Professional designs that perfectly match our educational institution brand.
+LandingPage.jsx:114: Budi Santoso
+LandingPage.jsx:116: From zero to published in under 2 hours. The drag and drop builder is as intuitive as Canva. Absolutely love it.
+LandingPage.jsx:143: Unlimited Pages', 'Client Management', 'White Label Option', 'API Access', 'Team Collaboration', '24/7 Priority Support
+LandingPage.jsx:148: For large organizations needing full customization and control.
+LandingPage.jsx:149: Unlimited Websites', 'White Label Option', 'API Access', 'Dedicated Manager', 'SSO Integration',
+LandingPage.jsx:306: Publish ✓
+LandingPage.jsx:382: Color Palette
+LandingPage.jsx:390: Font Family
+LandingPage.jsx:391: Inter (Google)
+LandingPage.jsx:394: Container Gap
+LandingPage.jsx:430: +2.4K Live Visitors
+LandingPage.jsx:431: Real-time Analytics
+LandingPage.jsx:441: Component Based
+LandingPage.jsx:458: Websites Dipublish
+LandingPage.jsx:459: Total Member
+LandingPage.jsx:460: Total Pengunjung
+LandingPage.jsx:636: = 768 && w
+LandingPage.jsx:729: Drag left/right or tap a tab to rotate 3D pricing wheel.
+TOTAL=502

@@ -15,7 +15,7 @@ export default function Footer03({ components = [], sectionId = null }) {
     { id: 'link-docs', type: 'button', props: { label: 'Docs', href: '#docs', variant: 'ghost', size: 'small', background: 'transparent', color: '#475569' } },
     { id: 'link-blog', type: 'button', props: { label: 'Blog', href: '#blog', variant: 'ghost', size: 'small', background: 'transparent', color: '#475569' } },
     { id: 'cta-trial', type: 'button', props: { label: 'Start Free →', href: '#trial', variant: 'primary', size: 'small', radius: 'full', background: '#6366f1', color: '#ffffff' } },
-    { id: 'copy-3', type: 'text', props: { content: '© 2026 Aurora Inc. All rights reserved.', fontSize: '12px', color: '#94a3b8', align: 'center', margin: '0' } },
+    { id: 'copy-3', type: 'text', props: { content: '© 2026 Aurora Inc. Hak cipta dilindungi.', fontSize: '12px', color: '#94a3b8', align: 'center', margin: '0' } },
   ];
 
   const layoutComponents = components.length > 0 ? components : defaultComponents;

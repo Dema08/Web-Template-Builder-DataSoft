@@ -39,7 +39,7 @@ export default function Footer17({ components = [], sectionId = null }) {
             placeholder="Search sneakers, laptops, furniture…  ( tekan / )"
             className="flex-1 bg-transparent outline-none text-sm"
           />
-          <span className="bg-slate-900 text-white text-xs font-bold rounded-full px-5 py-2.5 select-none">Search</span>
+          <span className="bg-slate-900 text-white text-xs font-bold rounded-full px-5 py-2.5 select-none">Cari</span>
         </div>
         <div className="grid md:grid-cols-[1.4fr_1fr_1fr_auto] gap-8 items-start">
           <div>

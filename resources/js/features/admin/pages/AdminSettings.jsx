@@ -199,7 +199,7 @@ export default function AdminSettings() {
             console.log('Updating maintenance mode via dedicated endpoint:', maintenanceMode);
             await updateMaintenanceMutation.mutateAsync(maintenanceMode);
 
-            toast.success('Platform system configuration updated successfully!', 'System Settings Saved');
+            toast.success('Platform system configuration updated successfully!', 'Pengaturan Sistem Saved');
         } catch (error) {
             console.error('Failed to save system settings:', error);
             const message = error?.response?.data?.message || error?.message || 'Failed to save system settings';
@@ -213,9 +213,9 @@ export default function AdminSettings() {
             <div>
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 text-xs font-bold mb-2">
                     <Shield className="h-3.5 w-3.5" />
-                    <span>Global Administration</span>
+                    <span>Administrasi Global</span>
                 </div>
-                <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">System Settings</h1>
+                <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">Pengaturan Sistem</h1>
                 <p className="text-sm text-[rgb(var(--color-text-secondary))] mt-1">
                     Configure platform brand identity, theme appearance, registration controls, and system limits.
                 </p>
@@ -284,14 +284,14 @@ export default function AdminSettings() {
                     </button>
                 </div>
 
-                {/* Live Preview */}
+                {/* Pratinjau Langsung */}
                 <div className="rounded-2xl bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] p-5">
-                    <p className="text-[10px] font-extrabold text-[rgb(var(--color-text-tertiary))] uppercase tracking-widest mb-3">Live Preview</p>
+                    <p className="text-[10px] font-extrabold text-[rgb(var(--color-text-tertiary))] uppercase tracking-widest mb-3">Pratinjau Langsung</p>
                     <div className="flex items-center gap-3">
                         {logoPreview ? (
                             <img
                                 src={logoPreview}
-                                alt="Brand Logo"
+                                alt="Logo Brand"
                                 className="h-10 w-10 rounded-xl object-contain shadow-sm border border-[rgb(var(--color-border))]"
                                 onError={(e) => {
                                     if (!e.target.src.includes('/images/')) {
@@ -335,7 +335,7 @@ export default function AdminSettings() {
                             placeholder="e.g. Microdata"
                             className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] placeholder-[rgb(var(--color-text-tertiary))] focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 transition font-semibold"
                         />
-                        <p className="mt-1 text-[10px] text-[rgb(var(--color-text-tertiary))]">Appears in sidebar, navbar, and footer.</p>
+                        <p className="mt-1 text-[10px] text-[rgb(var(--color-text-tertiary))]">Tampil di bilah sisi, bilah atas, dan footer.</p>
                     </div>
 
                     {/* Logo Badge Text */}
@@ -351,7 +351,7 @@ export default function AdminSettings() {
                             maxLength={4}
                             className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] placeholder-[rgb(var(--color-text-tertiary))] focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 transition font-semibold tracking-widest uppercase"
                         />
-                        <p className="mt-1 text-[10px] text-[rgb(var(--color-text-tertiary))]">Shown inside the colored logo box if no image logo.</p>
+                        <p className="mt-1 text-[10px] text-[rgb(var(--color-text-tertiary))]">Ditampilkan di dalam kotak logo berwarna jika tanpa logo gambar.</p>
                     </div>
 
                     {/* Plan/Role Label */}
@@ -366,7 +366,7 @@ export default function AdminSettings() {
                             placeholder="e.g. Premium Plan"
                             className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] placeholder-[rgb(var(--color-text-tertiary))] focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 transition font-semibold"
                         />
-                        <p className="mt-1 text-[10px] text-[rgb(var(--color-text-tertiary))]">Text shown below brand name in sidebar header.</p>
+                        <p className="mt-1 text-[10px] text-[rgb(var(--color-text-tertiary))]">Teks di bawah nama brand pada kepala bilah sisi.</p>
                     </div>
 
                     {/* Brand Color */}
@@ -386,7 +386,7 @@ export default function AdminSettings() {
                                 className="w-full h-10 rounded-xl border border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface-alt))] cursor-pointer"
                             />
                         </div>
-                        <p className="mt-1 text-[10px] text-[rgb(var(--color-text-tertiary))]">Used for logo box, active nav items, and buttons.</p>
+                        <p className="mt-1 text-[10px] text-[rgb(var(--color-text-tertiary))]">Dipakai untuk kotak logo, menu aktif, dan tombol.</p>
                     </div>
                 </div>
 
@@ -400,7 +400,7 @@ export default function AdminSettings() {
                         <div className="flex items-center gap-4 p-4 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-2xl">
                             <img
                                 src={logoPreview}
-                                alt="Logo Preview"
+                                alt="Pratinjau Logo"
                                 className="h-16 w-16 rounded-xl object-contain border border-[rgb(var(--color-border))] bg-[rgb(var(--color-surface))] p-1 shadow-xs"
                                 onError={(e) => {
                                     if (!e.target.src.includes('/images/')) {
@@ -409,15 +409,15 @@ export default function AdminSettings() {
                                 }}
                             />
                             <div className="flex-1">
-                                <p className="text-xs font-extrabold text-[rgb(var(--color-text-primary))]">Custom logo uploaded</p>
-                                <p className="text-[10px] text-[rgb(var(--color-text-tertiary))] mt-0.5">This replaces the text badge box in navbar and sidebar.</p>
+                                <p className="text-xs font-extrabold text-[rgb(var(--color-text-primary))]">Logo kustom terunggah</p>
+                                <p className="text-[10px] text-[rgb(var(--color-text-tertiary))] mt-0.5">Ini menggantikan kotak badge teks di navbar dan bilah sisi.</p>
                             </div>
                             <button
                                 type="button"
                                 onClick={handleRemoveLogo}
                                 disabled={isRemovingLogo}
                                 className="p-2 text-[rgb(var(--color-text-tertiary))] hover:text-red-600 hover:bg-red-50 rounded-xl transition disabled:opacity-50"
-                                title="Remove logo"
+                                title="Hapus logo"
                             >
                                 {isRemovingLogo ? <Spinner size="sm" /> : <X className="h-4 w-4" />}
                             </button>
@@ -430,7 +430,7 @@ export default function AdminSettings() {
                         >
                             <Upload className="h-6 w-6" />
                             <div className="text-center">
-                                <p className="text-xs font-extrabold">Click to upload logo image</p>
+                                <p className="text-xs font-extrabold">Klik untuk mengunggah gambar logo</p>
                                 <p className="text-[10px] mt-0.5">PNG, JPG, SVG — recommended 48×48px or larger</p>
                             </div>
                         </button>
@@ -453,7 +453,7 @@ export default function AdminSettings() {
                         className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold rounded-xl text-xs shadow-md shadow-blue-600/20 transition disabled:opacity-50"
                     >
                         <Save className="h-4 w-4" />
-                        <span>{isUpdating ? 'Saving...' : 'Apply Brand Changes'}</span>
+                        <span>{isUpdating ? 'Menyimpan...' : 'Terapkan Perubahan Brand'}</span>
                     </button>
                 </div>
                 </form>
@@ -542,7 +542,7 @@ export default function AdminSettings() {
                         className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-extrabold rounded-xl text-xs shadow-md shadow-blue-600/20 transition disabled:opacity-50"
                     >
                         <Save className="h-4 w-4" />
-                        <span>{updateMaintenanceMutation.isPending || isUpdating ? 'Saving...' : 'Save Settings'}</span>
+                        <span>{updateMaintenanceMutation.isPending || isUpdating ? 'Menyimpan...' : 'Save Settings'}</span>
                     </button>
                 </div>
                 </form>
@@ -616,7 +616,7 @@ export default function AdminSettings() {
                         className="flex items-center gap-2 px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold rounded-xl text-xs shadow-md shadow-indigo-600/20 transition disabled:opacity-50 cursor-pointer"
                     >
                         <Save className="h-4 w-4" />
-                        <span>{isUpdating ? 'Saving...' : 'Simpan Kunci API Midtrans'}</span>
+                        <span>{isUpdating ? 'Menyimpan...' : 'Simpan Kunci API Midtrans'}</span>
                     </button>
                 </div>
                 </form>

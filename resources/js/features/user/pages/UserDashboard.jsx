@@ -72,10 +72,10 @@ export default function UserDashboard() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                     <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">
-                        Welcome back, {firstName}
+                        Selamat datang kembali, {firstName}
                     </h1>
                     <p className="text-sm text-[rgb(var(--color-text-secondary))] mt-1">
-                        Here's what's happening with your websites today.
+                        Berikut ringkasan website Anda hari ini.
                     </p>
                 </div>
                 <button
@@ -84,7 +84,7 @@ export default function UserDashboard() {
                     className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-xl text-xs font-bold hover:bg-blue-700 transition shadow-md shadow-blue-600/20 cursor-pointer"
                 >
                     <Sparkles className="h-4 w-4" />
-                    Create New Site
+                    Buat Website Baru
                 </button>
                 <CreateSiteChoiceModal isOpen={isChoiceOpen} onClose={() => setIsChoiceOpen(false)} />
             </div>
@@ -462,39 +462,39 @@ export default function UserDashboard() {
 
                 </Card>
 
-            {/* Quick Actions & Templates */}
+            {/* Aksi Cepat & Templates */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Quick Actions */}
+                {/* Aksi Cepat */}
                 <Card className="p-6">
-                    <h3 className="text-sm font-extrabold text-[rgb(var(--color-text-primary))] mb-4">Quick Actions</h3>
+                    <h3 className="text-sm font-extrabold text-[rgb(var(--color-text-primary))] mb-4">Aksi Cepat</h3>
                     <div className="space-y-3">
                         <Link to={ROUTES.BUILDER} className="flex items-center gap-3 p-3 bg-[rgb(var(--color-surface-alt))] rounded-xl hover:bg-indigo-50 transition">
                             <Globe className="h-5 w-5 text-indigo-600" />
                             <div>
-                                <p className="text-xs font-bold text-[rgb(var(--color-text-primary))]">Edit Website</p>
-                                <p className="text-[10px] text-[rgb(var(--color-text-secondary))]">Open in builder</p>
+                                <p className="text-xs font-bold text-[rgb(var(--color-text-primary))]">Ubah Website</p>
+                                <p className="text-[10px] text-[rgb(var(--color-text-secondary))]">Buka di builder</p>
                             </div>
                         </Link>
                         <Link to={ROUTES.TEMPLATES} className="flex items-center gap-3 p-3 bg-[rgb(var(--color-surface-alt))] rounded-xl hover:bg-indigo-50 transition">
                             <Activity className="h-5 w-5 text-indigo-600" />
                             <div>
-                                <p className="text-xs font-bold text-[rgb(var(--color-text-primary))]">Browse Templates</p>
-                                <p className="text-[10px] text-[rgb(var(--color-text-secondary))]">Find a new design</p>
+                                <p className="text-xs font-bold text-[rgb(var(--color-text-primary))]">Lihat Template</p>
+                                <p className="text-[10px] text-[rgb(var(--color-text-secondary))]">Temukan desain baru</p>
                             </div>
                         </Link>
                     </div>
                 </Card>
 
-                {/* Template Recommendations */}
+                {/* Rekomendasi Template */}
                 <Card className="p-6 lg:col-span-2">
-                    <h3 className="text-sm font-extrabold text-[rgb(var(--color-text-primary))] mb-4">Recommended Templates</h3>
+                    <h3 className="text-sm font-extrabold text-[rgb(var(--color-text-primary))] mb-4">Rekomendasi Template</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         {templateCards.map((template) => (
                             <div key={template.title} className={`p-4 rounded-xl bg-gradient-to-br ${template.accent} border border-[rgb(var(--color-border))]`}>
                                 <p className="text-xs font-bold text-[rgb(var(--color-text-primary))]">{template.title}</p>
                                 <p className="text-[10px] text-[rgb(var(--color-text-secondary))] mt-1">{template.subtitle}</p>
                                 <Link to={ROUTES.TEMPLATES} className="inline-flex items-center gap-1 mt-3 text-[10px] font-bold text-indigo-600 hover:text-indigo-700">
-                                    Use template <ArrowRight className="h-3 w-3" />
+                                    Gunakan template <ArrowRight className="h-3 w-3" />
                                 </Link>
                             </div>
                         ))}

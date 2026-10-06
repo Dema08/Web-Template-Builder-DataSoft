@@ -36,7 +36,7 @@ export default function ServiceFooterConsulting({ components = [], sectionId = n
         { id: 'cfc2-b5', type: 'button', props: { label: 'Karir di Advanta', href: '#', variant: 'ghost', size: 'small', color: '#64748b' } },
       ],
     },
-    { id: 'cft-copy', type: 'text', props: { content: '© 2026 Advanta Partners. Management Consulting & Strategic Advisory. All rights reserved.', fontSize: '12px', color: '#475569', align: 'center' } },
+    { id: 'cft-copy', type: 'text', props: { content: '© 2026 Advanta Partners. Management Consulting & Strategic Advisory. Hak cipta dilindungi.', fontSize: '12px', color: '#475569', align: 'center' } },
   ];
 
   const layoutComponents = components.length > 0 ? components : defaultComponents;

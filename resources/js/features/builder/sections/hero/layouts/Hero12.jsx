@@ -11,7 +11,7 @@ export default function Hero12({ components = [], sectionId = null }) {
     { id: 'heading-12', type: 'heading', props: { content: 'Infrastructure that never sleeps', level: 'h1', fontSize: '52px', fontWeight: '900', color: '#ffffff', align: 'left', margin: '0 0 16px 0' } },
     { id: 'text-12', type: 'text', props: { content: 'Global edge network across 40 regions. Deploy in seconds, scale to millions — sleep easy.', fontSize: '17px', color: '#94a3b8', align: 'left', margin: '0 0 26px 0' } },
     { id: 'btn-trial', type: 'button', props: { label: 'Start Free Trial →', href: '#trial', variant: 'primary', size: 'large', radius: 'lg', background: '#ffffff', color: '#0f172a' } },
-    { id: 'img-12', type: 'image', props: { src: '', alt: 'Dashboard', width: '100%', height: '400px', objectFit: 'cover', borderRadius: '16px' } },
+    { id: 'img-12', type: 'image', props: { src: '', alt: 'Dasbor', width: '100%', height: '400px', objectFit: 'cover', borderRadius: '16px' } },
   ];
 
   const layoutComponents = components.length > 0 ? components : defaultComponents;

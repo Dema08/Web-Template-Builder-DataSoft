@@ -87,7 +87,7 @@ export default function KeyboardShortcuts() {
         }
       }
       // Delete = Remove
-      if (e.key === 'Delete' || e.key === 'Backspace') {
+      if (e.key === 'Hapus' || e.key === 'Backspace') {
         if (selectedSectionId && selectedComponentId) {
           if (isSelectedComponentLocked()) return; // refuse if locked
           e.preventDefault();

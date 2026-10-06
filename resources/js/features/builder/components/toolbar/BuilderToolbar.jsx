@@ -474,7 +474,7 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
 
       {/* Right side - Right Panel Toggle & Save / Publish */}
       <div className="flex items-center gap-1.5 shrink-0">
-        {/* Live Preview Mode Button */}
+        {/* Pratinjau Langsung Mode Button */}
         <button
           onClick={handleOpenPreview}
           className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg transition font-extrabold border border-indigo-200/80 text-xs shadow-2xs hover:shadow-xs"
@@ -537,7 +537,7 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
             title="Simpan perubahan & konfirmasi publish template"
           >
             <Send className="h-3.5 w-3.5" />
-            <span>Update</span>
+            <span>Perbarui</span>
           </button>
         ) : (
           <button
@@ -547,7 +547,7 @@ export default function BuilderToolbar({ onBack, onSave, onPublish, onUpdate, is
             title="Publish template baru"
           >
             <Send className="h-3.5 w-3.5" />
-            <span>Publish</span>
+            <span>Publikasikan</span>
           </button>
         )}
       </div>

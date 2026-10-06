@@ -27,7 +27,7 @@ export default function StepCategory() {
 
             {isLoading && (
                 <div className="flex items-center justify-center py-20">
-                    <div className="text-sm text-slate-500">Loading categories...</div>
+                    <div className="text-sm text-slate-500">Memuat kategori...</div>
                 </div>
             )}
 

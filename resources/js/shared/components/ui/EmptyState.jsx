@@ -3,7 +3,7 @@ import { Inbox } from 'lucide-react';
 /**
  * EmptyState — shown when a list/panel has no data.
  */
-export default function EmptyState({ title = 'Nothing here yet', description, action, className = '' }) {
+export default function EmptyState({ title = 'Belum ada data', description, action, className = '' }) {
     return (
         <div className={`flex flex-col items-center justify-center text-center py-16 px-6 ds-card ${className}`}>
             <span className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-slate-50 text-indigo-300 mb-4">

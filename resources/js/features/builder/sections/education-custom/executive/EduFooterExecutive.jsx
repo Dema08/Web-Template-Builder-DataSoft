@@ -9,7 +9,7 @@ export default function EduFooterExecutive({ components = [], sectionId = null }
   const defaultComponents = [
     { id: 'ftr-ex-brand', type: 'heading', props: { content: 'APEX LEADERSHIP INSTITUTE', level: 'h3', fontSize: '20px', fontWeight: '800', color: '#ffffff', letterSpacing: '0.06em' } },
     { id: 'ftr-ex-tagline', type: 'paragraph', props: { content: 'Lembaga Pengembangan Eksekutif & Sertifikasi Manajemen Global. Membangun pemimpin tangguh untuk masa depan korporasi Indonesia.', fontSize: '13px', color: '#94a3b8' } },
-    { id: 'ftr-ex-copy', type: 'paragraph', props: { content: '© 2026 Apex Leadership & Corporate Institute. All rights reserved.', fontSize: '12px', color: '#64748b' } },
+    { id: 'ftr-ex-copy', type: 'paragraph', props: { content: '© 2026 Apex Leadership & Corporate Institute. Hak cipta dilindungi.', fontSize: '12px', color: '#64748b' } },
     { id: 'ftr-ex-lnk1', type: 'button', props: { label: 'Board Leadership & GCG', href: '#programs', variant: 'ghost', size: 'small', background: 'transparent', color: '#cbd5e1' } },
     { id: 'ftr-ex-lnk2', type: 'button', props: { label: 'Project Management (PMP)', href: '#programs', variant: 'ghost', size: 'small', background: 'transparent', color: '#cbd5e1' } },
     { id: 'ftr-ex-lnk3', type: 'button', props: { label: 'Digital Transformation Track', href: '#programs', variant: 'ghost', size: 'small', background: 'transparent', color: '#cbd5e1' } },

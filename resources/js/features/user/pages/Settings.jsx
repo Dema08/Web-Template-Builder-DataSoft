@@ -27,9 +27,9 @@ export default function Settings() {
         try {
             // Simulate an async save
             await new Promise((resolve) => setTimeout(resolve, 1000));
-            toast.success('Your settings have been saved successfully!', 'Settings Saved');
+            toast.success('Pengaturan Anda berhasil disimpan!', 'Pengaturan Disimpan');
         } catch (error) {
-            toast.error('Unable to save settings. Please try again.', 'Save Error');
+            toast.error('Tidak dapat menyimpan pengaturan. Silakan coba lagi.', 'Gagal Menyimpan');
         } finally {
             setIsSaving(false);
         }
@@ -41,11 +41,11 @@ export default function Settings() {
             <div>
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-100 text-indigo-900 text-xs font-bold mb-2 dark:bg-indigo-900/40 dark:text-indigo-100">
                     <Shield className="h-3.5 w-3.5" />
-                    <span>Account Settings</span>
+                    <span>Pengaturan Akun</span>
                 </div>
-                <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">Settings</h1>
+                <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">Pengaturan</h1>
                 <p className="text-sm text-[rgb(var(--color-text-secondary))] mt-1">
-                    Manage your account preferences and notification controls.
+                    Kelola preferensi akun dan kontrol notifikasi Anda.
                 </p>
             </div>
 
@@ -53,13 +53,13 @@ export default function Settings() {
                 {/* Preferences Section */}
                 <Card className="p-6 sm:p-8 space-y-6">
                     <h2 className="text-base font-extrabold text-[rgb(var(--color-text-primary))] flex items-center gap-2">
-                        <Bell className="h-4 w-4 text-indigo-600" /> Notifications
+                        <Bell className="h-4 w-4 text-indigo-600" /> Notifikasi
                     </h2>
 
                     <div className="flex items-center justify-between py-4 border-b border-[rgb(var(--color-border))]">
                         <div>
-                            <p className="text-sm font-bold text-[rgb(var(--color-text-primary))]">Email Notifications</p>
-                            <p className="text-xs text-[rgb(var(--color-text-secondary))] mt-0.5">Receive weekly activity and update notifications by email.</p>
+                            <p className="text-sm font-bold text-[rgb(var(--color-text-primary))]">Email Notifikasi</p>
+                            <p className="text-xs text-[rgb(var(--color-text-secondary))] mt-0.5">Terima notifikasi aktivitas dan pembaruan mingguan melalui email.</p>
                         </div>
                         <label className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none cursor-pointer">
                             <input
@@ -81,7 +81,7 @@ export default function Settings() {
             {/* Language Section */}
             <Card className="p-6 sm:p-8 space-y-6">
                 <h2 className="text-base font-extrabold text-[rgb(var(--color-text-primary))] flex items-center gap-2">
-                    <Globe className="h-4 w-4 text-indigo-600" /> Language
+                    <Globe className="h-4 w-4 text-indigo-600" /> Bahasa
                 </h2>
 
                 <div className="max-w-md">
@@ -92,13 +92,13 @@ export default function Settings() {
             {/* Appearance Section */}
             <Card className="p-6 sm:p-8 space-y-6">
                 <h2 className="text-base font-extrabold text-[rgb(var(--color-text-primary))] flex items-center gap-2">
-                    {darkMode ? <Moon className="h-4 w-4 text-indigo-600" /> : <Sun className="h-4 w-4 text-indigo-600" />} Appearance
+                    {darkMode ? <Moon className="h-4 w-4 text-indigo-600" /> : <Sun className="h-4 w-4 text-indigo-600" />} Tampilan
                 </h2>
 
                     <div className="flex items-center justify-between py-2">
                         <div>
-                            <p className="text-sm font-bold text-[rgb(var(--color-text-primary))]">Dark Mode</p>
-                            <p className="text-xs text-[rgb(var(--color-text-secondary))] mt-0.5">Switch between light and dark theme</p>
+                            <p className="text-sm font-bold text-[rgb(var(--color-text-primary))]">Mode Gelap</p>
+                            <p className="text-xs text-[rgb(var(--color-text-secondary))] mt-0.5">Beralih antara tema terang dan gelap</p>
                         </div>
                         <label className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none cursor-pointer">
                             <input
@@ -123,12 +123,12 @@ export default function Settings() {
                         {isSaving ? (
                             <>
                                 <Spinner size="sm" />
-                                <span>Saving...</span>
+                                <span>Menyimpan...</span>
                             </>
                         ) : (
                             <>
                                 <Save className="h-4 w-4" />
-                                <span>Save Settings</span>
+                                <span>Simpan Pengaturan</span>
                             </>
                         )}
                     </Button>

@@ -91,7 +91,7 @@ export default function MyTemplates() {
             sessionStorage.setItem('draft_template_id', String(tpl.id));
             sessionStorage.setItem('draft_template_name', tpl.name);
         } catch (_) { /* ignore */ }
-        toast.success(`Membuka template "${tpl.name}" untuk diedit di Builder...`, 'Edit Template');
+        toast.success(`Membuka template "${tpl.name}" untuk diedit di Builder...`, 'Ubah Template');
         navigate(ROUTES.BUILDER);
     };
 
@@ -431,7 +431,7 @@ function UserTemplateItemCard({ tpl, onPreview, onEdit, onUse, onToggleVisibilit
                         type="button"
                         onClick={() => onPreview(tpl)}
                         className="px-3.5 py-2.5 bg-white text-slate-900 font-bold rounded-xl text-xs flex items-center gap-1.5 shadow-lg hover:bg-slate-50 transition active:scale-95 cursor-pointer"
-                        title="Live Preview"
+                        title="Pratinjau Langsung"
                     >
                         <ExternalLink className="h-3.5 w-3.5" /> Preview
                     </button>

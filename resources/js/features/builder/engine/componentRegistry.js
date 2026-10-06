@@ -18,7 +18,7 @@ export const COMPONENT_REGISTRY = {
       },
       fontFamily: {
         type: 'select',
-        label: 'Font Family',
+        label: 'Jenis Font',
         default: 'sans-serif',
         options: ['sans-serif', 'serif', 'monospace'],
       },
@@ -89,7 +89,7 @@ export const COMPONENT_REGISTRY = {
       },
       fontFamily: {
         type: 'select',
-        label: 'Font Family',
+        label: 'Jenis Font',
         default: 'sans-serif',
         options: ['sans-serif', 'serif', 'monospace'],
       },

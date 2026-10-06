@@ -108,7 +108,7 @@ export default function LanguageSelector({ variant = 'settings', showLabel = tru
             console.error('Failed to change language:', error);
             // Revert to saved language on error
             setSelectedLanguage(getSavedLanguage());
-            toast?.error?.('Failed to change language. Please try again.', 'Translation Error');
+            toast?.error?.('Gagal mengganti bahasa. Coba lagi.', 'Galat Terjemahan');
         } finally {
             setIsChanging(false);
         }
@@ -264,7 +264,7 @@ export default function LanguageSelector({ variant = 'settings', showLabel = tru
                                     className="w-full flex items-center gap-3 px-4 py-2.5 text-left text-xs font-medium text-red-600 hover:bg-red-50 transition-all duration-150 focus:outline-none focus:bg-red-50"
                                 >
                                     <span className="text-sm">↩️</span>
-                                    <span>Reset to English (Default)</span>
+                                    <span>Kembali ke B. Indonesia (Bawaan)</span>
                                 </button>
                             </>
                         )}
@@ -275,7 +275,7 @@ export default function LanguageSelector({ variant = 'settings', showLabel = tru
             {/* Help text for settings variant */}
             {isSettings && (
                 <p className="text-[10px] text-[rgb(var(--color-text-tertiary))] leading-relaxed">
-                    Choose the language used for the application interface. The translation is applied automatically using Google Translate.
+                    Pilih bahasa tampilan aplikasi. Terjemahan diterapkan otomatis dengan Google Translate.
                 </p>
             )}
 
@@ -283,7 +283,7 @@ export default function LanguageSelector({ variant = 'settings', showLabel = tru
             {isChanging && !isLanding && (
                 <div className="flex items-center gap-2 text-[10px] text-blue-600 font-semibold">
                     <div className="h-3 w-3 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
-                    <span>Changing language...</span>
+                    <span>Mengganti bahasa...</span>
                 </div>
             )}
         </div>

@@ -17,7 +17,7 @@ export const STOCK_GALLERY = [
 ];
 
 export const STOCK_LOGOS = [
-  { id: 'logo-1', name: 'Brand Logo Minimal', category: 'Logo', url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300&auto=format&fit=crop&q=80' },
+  { id: 'logo-1', name: 'Logo Brand Minimal', category: 'Logo', url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300&auto=format&fit=crop&q=80' },
   { id: 'logo-2', name: 'Tech Sphere Emblem', category: 'Logo', url: 'https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?w=300&auto=format&fit=crop&q=80' },
   { id: 'logo-3', name: 'Abstract Gradient Wave', category: 'Logo', url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300&auto=format&fit=crop&q=80' },
 ];

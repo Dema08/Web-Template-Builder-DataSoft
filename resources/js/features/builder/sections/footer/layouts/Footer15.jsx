@@ -11,7 +11,7 @@ export default function Footer15({ components = [], sectionId = null }) {
     { id: 'brand-15', type: 'heading', props: { content: 'Iris ✦', level: 'h3', fontSize: '22px', fontWeight: '900', color: '#ffffff', align: 'left', margin: '0 0 12px 0' } },
     { id: 'desc-15', type: 'text', props: { content: 'Design at the speed of thought. Colors, type & layout in seconds.', fontSize: '14px', color: '#ddd6fe', align: 'left', margin: '0 0 20px 0' } },
     { id: 'link-canvas', type: 'button', props: { label: 'Canvas', href: '#canvas', variant: 'ghost', size: 'small', background: 'transparent', color: '#e9d5ff' } },
-    { id: 'link-templates', type: 'button', props: { label: 'Templates', href: '#templates', variant: 'ghost', size: 'small', background: 'transparent', color: '#e9d5ff' } },
+    { id: 'link-templates', type: 'button', props: { label: 'Template', href: '#templates', variant: 'ghost', size: 'small', background: 'transparent', color: '#e9d5ff' } },
     { id: 'link-pricing', type: 'button', props: { label: 'Pricing', href: '#pricing', variant: 'ghost', size: 'small', background: 'transparent', color: '#e9d5ff' } },
     { id: 'cta-try', type: 'button', props: { label: 'Try Iris Free ✦', href: '#try', variant: 'primary', size: 'small', radius: 'full', background: '#ffffff', color: '#6d28d9' } },
     { id: 'copy-15', type: 'text', props: { content: '© 2026 Iris Labs. Joined by 40,000 designers.', fontSize: '12px', color: '#c4b5fd', align: 'center', margin: '0' } },

@@ -62,7 +62,7 @@ export default function HoldingFooterIndustrial({ components = [], sectionId = n
         <div className="pt-8 border-t border-slate-900 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-400">
           <div>
             {texts.length > 1 ? renderLayoutComponents(texts.slice(1, 2), sectionId) : (
-              <p>© 2026 Sovereign Industrial Group Tbk. All rights reserved.</p>
+              <p>© 2026 Sovereign Industrial Group Tbk. Hak cipta dilindungi.</p>
             )}
           </div>
           <div className="flex items-center gap-6">

@@ -160,7 +160,7 @@ export default function BillingPage() {
             <div>
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 text-xs font-bold mb-2">
                     <CreditCard className="h-3.5 w-3.5" />
-                    <span>Billing & Subscriptions</span>
+                    <span>Tagihan & Langganan</span>
                 </div>
                 <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">
                     Billing & Langganan Paket
@@ -508,7 +508,7 @@ function loadMidtransSnapScript(snapJsUrl, clientKey, callback) {
             if (callback) callback();
         };
         script.onerror = () => {
-            console.error('Failed to load Midtrans Snap JS');
+            console.error('Gagal memuat Midtrans Snap JS');
         };
         document.body.appendChild(script);
     } else {

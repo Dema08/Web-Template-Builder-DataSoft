@@ -57,7 +57,7 @@ export default function NavbarEditor({ sectionId, section }) {
         type: 'image',
         props: {
           src: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&q=80',
-          alt: 'Brand Logo',
+          alt: 'Logo Brand',
           width: '140px',
           height: 'auto',
           objectFit: 'contain',
@@ -110,7 +110,7 @@ export default function NavbarEditor({ sectionId, section }) {
           type: 'image',
           props: {
             src: dataUrl,
-            alt: file.name || 'Brand Logo',
+            alt: file.name || 'Logo Brand',
             width: '140px',
             height: 'auto',
             objectFit: 'contain',

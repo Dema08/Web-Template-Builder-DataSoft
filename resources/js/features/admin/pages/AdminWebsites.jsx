@@ -109,10 +109,10 @@ export default function AdminWebsites() {
     });
 
     const statCards = [
-        { label: 'Total Hosted Sites', value: statsFromApi.total ?? 0, color: 'text-[rgb(var(--color-text-primary))]' },
-        { label: 'Published Sites', value: statsFromApi.published ?? 0, color: 'text-emerald-600 dark:text-emerald-400' },
-        { label: 'Draft Sites', value: statsFromApi.draft ?? 0, color: 'text-amber-600 dark:text-amber-400' },
-        { label: 'Suspended Sites', value: statsFromApi.suspended ?? 0, color: 'text-rose-600 dark:text-rose-400' },
+        { label: 'Total Situs Dihosting', value: statsFromApi.total ?? 0, color: 'text-[rgb(var(--color-text-primary))]' },
+        { label: 'Situs Terpublikasi', value: statsFromApi.published ?? 0, color: 'text-emerald-600 dark:text-emerald-400' },
+        { label: 'Situs Draf', value: statsFromApi.draft ?? 0, color: 'text-amber-600 dark:text-amber-400' },
+        { label: 'Situs Ditangguhkan', value: statsFromApi.suspended ?? 0, color: 'text-rose-600 dark:text-rose-400' },
     ];
 
     return (
@@ -122,9 +122,9 @@ export default function AdminWebsites() {
                 <div>
                     <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 text-xs font-bold mb-2">
                         <Shield className="h-3.5 w-3.5" />
-                        <span>Platform Administration</span>
+                        <span>Administrasi Platform</span>
                     </div>
-                    <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">All Published & User Websites</h1>
+                    <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">Semua Website Terpublikasi & Pengguna</h1>
                     <p className="text-sm text-[rgb(var(--color-text-secondary))] mt-1">
                         Daftar seluruh website yang dipublikasikan oleh user beserta identitas pemilik, domain, dan template.
                     </p>
@@ -296,7 +296,7 @@ export default function AdminWebsites() {
                                                 <div className="min-w-0">
                                                     <div className="flex items-center gap-1.5">
                                                         <p className="font-extrabold text-[rgb(var(--color-text-primary))] truncate max-w-[160px]" title={site.owner?.name}>
-                                                            {site.owner?.name ?? 'Unknown User'}
+                                                            {site.owner?.name ?? 'Pengguna Tidak Diketahui'}
                                                         </p>
                                                         <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 shrink-0">
                                                             {site.owner?.plan ?? 'Free'}
@@ -386,7 +386,7 @@ export default function AdminWebsites() {
                                                     }
                                                     className="px-2.5 py-1.5 bg-[rgb(var(--color-surface-alt))] hover:bg-indigo-50 dark:hover:bg-indigo-950/40 text-[rgb(var(--color-text-primary))] hover:text-indigo-600 border border-[rgb(var(--color-border))] rounded-xl text-xs font-bold transition disabled:opacity-50"
                                                 >
-                                                    {site.status === 'published' ? 'Unpublish' : 'Publish'}
+                                                    {site.status === 'published' ? 'Batal Publikasi' : 'Publish'}
                                                 </button>
 
                                                 {/* Delete Button */}

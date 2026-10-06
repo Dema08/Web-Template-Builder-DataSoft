@@ -370,7 +370,7 @@ export default {
           type: 'card',
           props: { background: '#020617', border: '1px solid rgba(14, 165, 233, 0.3)', radius: 'xl', padding: '28px' },
           childrenComponents: [
-            { id: 'ec2-icon', type: 'icon', props: { name: 'Users', size: 28, color: '#38bdf8' } },
+            { id: 'ec2-icon', type: 'icon', props: { name: 'Pengguna', size: 28, color: '#38bdf8' } },
             { id: 'ec2-badge', type: 'badge', props: { content: 'Social Pillar', background: 'rgba(14, 165, 233, 0.1)', color: '#38bdf8', size: 'small' } },
             { id: 'ec2-heading', type: 'heading', props: { content: '120.000+ Penerima Manfaat CSR', level: 'h3', fontSize: '20px', fontWeight: '700', color: '#ffffff' } },
             { id: 'ec2-text', type: 'text', props: { content: 'Program beasiswa vokasi sains Maritim, pemberdayaan 1.200 UMKM mitra petani, dan akses air bersih pedesaan lingkar tambang.', fontSize: '14px', color: '#94a3b8' } },

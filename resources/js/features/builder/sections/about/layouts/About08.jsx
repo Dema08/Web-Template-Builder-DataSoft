@@ -23,7 +23,7 @@ export default function About08({ components = [], sectionId = null }) {
           <div className="flex flex-wrap gap-3 mt-1">{renderLayoutComponents(layoutComponents.filter(c => c.type === 'button'), sectionId)}</div>
         </div>
         <div className="grid grid-cols-2 gap-4 select-none pointer-events-none">
-          {[['12', 'Humans'], ['90+', 'Launches'], ['6yr', 'Loud'], ['0', 'Templates']].map(([v, l]) => (
+          {[['12', 'Humans'], ['90+', 'Launches'], ['6yr', 'Loud'], ['0', 'Template']].map(([v, l]) => (
             <div key={l} className="bg-white border-[3px] border-black rounded-2xl p-5 shadow-[5px_5px_0_#000] text-center">
               <p className="text-3xl font-black">{v}</p>
               <p className="text-xs font-bold uppercase tracking-widest">{l}</p>

@@ -392,7 +392,7 @@ export default {
         {
           id: 'ftr-wl-copy',
           type: 'text',
-          props: { content: '© 2026 PT Sekar Arum Nusantara. All rights reserved.', fontSize: '12px', color: '#6ee7b7' },
+          props: { content: '© 2026 PT Sekar Arum Nusantara. Hak cipta dilindungi.', fontSize: '12px', color: '#6ee7b7' },
         },
         {
           id: 'ftr-wl-lnk1',

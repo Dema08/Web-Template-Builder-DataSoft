@@ -9,7 +9,7 @@ export default function Products11({ components = [], sectionId = null }) {
     { id: 'prod11-badge', type: 'badge', props: { content: '✦ Iris Playground', background: '#ffffff', color: '#7c3aed' } },
     { id: 'prod11-heading', type: 'heading', props: { content: 'Templates yang hidup', level: 'h2', fontSize: '42px', fontWeight: '900', color: '#ffffff', align: 'center', margin: '0 0 12px 0' } },
     { id: 'prod11-text', type: 'text', props: { content: '40.000 desainer pakai setiap hari.', fontSize: '15px', color: '#ddd6fe', align: 'center', margin: '0 0 20px 0' } },
-    { id: 'prod11-cta', type: 'button', props: { label: 'Browse Templates →', href: '#templates', variant: 'primary', size: 'medium', radius: 'full', background: '#ffffff', color: '#6d28d9' } },
+    { id: 'prod11-cta', type: 'button', props: { label: 'Lihat Template →', href: '#templates', variant: 'primary', size: 'medium', radius: 'full', background: '#ffffff', color: '#6d28d9' } },
     {
       id: 'prod11-card-1', type: 'card',
       props: { variant: 'product', background: '#ffffff', borderRadius: '24px', shadow: 'lg', borderWidth: '0', borderColor: '#ffffff', hoverEffect: 'lift', padding: '0' },

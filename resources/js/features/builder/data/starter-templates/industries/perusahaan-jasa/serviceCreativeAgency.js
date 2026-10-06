@@ -496,7 +496,7 @@ export default {
         {
           id: 'ftr-ag-copy',
           type: 'text',
-          props: { content: '© 2026 Nexus Studio Inc. All rights reserved. Designed for market leaders.', fontSize: '13px', color: '#64748b' },
+          props: { content: '© 2026 Nexus Studio Inc. Hak cipta dilindungi. Designed for market leaders.', fontSize: '13px', color: '#64748b' },
         },
         {
           id: 'ftr-ag-lnk1',

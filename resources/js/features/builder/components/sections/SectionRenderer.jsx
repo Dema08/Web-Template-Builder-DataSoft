@@ -563,7 +563,7 @@ export default function SectionRenderer({ section, isSelected, onClick, isPrevie
               e.stopPropagation();
               const state = useBuilderStore.getState();
               state.removeSection(section.id);
-              toast.success('Section deleted', 'Delete');
+              toast.success('Section deleted', 'Hapus');
             }}
             className="p-1 hover:bg-red-500/20 rounded text-red-400 hover:text-red-300 transition"
             title="Delete Section"

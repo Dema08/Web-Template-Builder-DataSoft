@@ -403,7 +403,7 @@ export default {
         {
           id: 'ftr-ex-copy',
           type: 'text',
-          props: { content: '© 2026 Apex Leadership & Corporate Institute. All rights reserved.', fontSize: '12px', color: '#64748b' },
+          props: { content: '© 2026 Apex Leadership & Corporate Institute. Hak cipta dilindungi.', fontSize: '12px', color: '#64748b' },
         },
         {
           id: 'ftr-ex-lnk1',

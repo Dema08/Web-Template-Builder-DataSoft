@@ -418,7 +418,7 @@ export default {
         {
           id: 'ftr-bt-copy',
           type: 'text',
-          props: { content: '© 2026 CodeSphere Academy Inc. All rights reserved.', fontSize: '12px', color: '#64748b' },
+          props: { content: '© 2026 CodeSphere Academy Inc. Hak cipta dilindungi.', fontSize: '12px', color: '#64748b' },
         },
         {
           id: 'ftr-bt-lnk1',

@@ -723,7 +723,7 @@ export default function AdminTemplateBuilder() {
         </div>
       )}
 
-      {/* Full Live Preview Modal */}
+      {/* Full Pratinjau Langsung Modal */}
       {previewTemplateItem && (
         <div className="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-md flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl max-w-3xl w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">

@@ -270,8 +270,8 @@ export default function AdminUsers() {
                                     <th className="py-3.5 px-6">Role</th>
                                     <th className="py-3.5 px-6">Paket Harga</th>
                                     <th className="py-3.5 px-6">Status Akun</th>
-                                    <th className="py-3.5 px-6">Created At</th>
-                                    <th className="py-3.5 px-6 text-right">Actions</th>
+                                    <th className="py-3.5 px-6">Dibuat Pada</th>
+                                    <th className="py-3.5 px-6 text-right">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-[rgb(var(--color-border))] text-xs">

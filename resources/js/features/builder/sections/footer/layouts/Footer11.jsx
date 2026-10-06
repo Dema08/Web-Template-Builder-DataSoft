@@ -14,7 +14,7 @@ export default function Footer11({ components = [], sectionId = null }) {
     { id: 'link-editions', type: 'button', props: { label: 'Editions', href: '#editions', variant: 'ghost', size: 'small', background: 'transparent', color: '#44403c' } },
     { id: 'link-about', type: 'button', props: { label: 'About', href: '#about', variant: 'ghost', size: 'small', background: 'transparent', color: '#44403c' } },
     { id: 'cta-subscribe', type: 'button', props: { label: 'Subscribe →', href: '#subscribe', variant: 'primary', size: 'small', radius: 'none', background: '#1c1917', color: '#fafaf9' } },
-    { id: 'copy-11', type: 'text', props: { content: '© 2026 Monocle Press. All rights reserved.', fontSize: '12px', color: '#78716c', align: 'center', margin: '0' } },
+    { id: 'copy-11', type: 'text', props: { content: '© 2026 Monocle Press. Hak cipta dilindungi.', fontSize: '12px', color: '#78716c', align: 'center', margin: '0' } },
   ];
   const layoutComponents = components.length > 0 ? components : defaultComponents;
   const brandComps = layoutComponents.filter(c => c.type === 'heading' || c.type === 'image');

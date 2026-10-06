@@ -85,7 +85,7 @@ export default function VerifyOtp() {
             {/* Left Column — Form */}
             <div className="w-full md:w-1/2 p-8 sm:p-11 flex flex-col justify-between bg-white">
                 <div>
-                    {/* Brand Logo */}
+                    {/* Logo Brand */}
                     <BrandLogo />
 
                     {/* Heading */}
@@ -195,7 +195,7 @@ export default function VerifyOtp() {
                 <div className="relative z-10 my-auto py-6">
                     <h2 className="text-3xl lg:text-4xl font-extrabold leading-tight text-white mb-3 tracking-tight">
                         Build the future <br />
-                        with Microdata.
+                        bersama Microdata.
                     </h2>
 
                     <p className="text-xs lg:text-sm text-blue-100/90 leading-relaxed max-w-sm font-normal">
@@ -211,7 +211,7 @@ export default function VerifyOtp() {
                         </div>
                         <div className="text-base font-extrabold text-white tracking-tight">1.2M+</div>
                         <div className="text-[9px] font-bold text-blue-100/80 tracking-wider uppercase mt-0.5">
-                            Sites Built
+                            Website Dibuat
                         </div>
                     </div>
                     <div className="flex flex-col items-center text-center">

@@ -64,7 +64,7 @@ export default function ForgotPassword() {
             {/* Left Column — Form */}
             <div className="w-full md:w-1/2 p-8 sm:p-11 flex flex-col justify-between bg-white">
                 <div>
-                    {/* Brand Logo */}
+                    {/* Logo Brand */}
                     <BrandLogo />
 
                     {/* Heading */}
@@ -96,7 +96,7 @@ export default function ForgotPassword() {
                         {/* Email Field */}
                         <div>
                             <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                                Email Address
+                                Alamat Email
                             </label>
                             <div className="relative">
                                 <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
@@ -110,10 +110,10 @@ export default function ForgotPassword() {
                                             : 'border-slate-200 focus:border-blue-600'
                                     }`}
                                     {...register('email', {
-                                        required: 'Email is required',
+                                        required: 'Email wajib diisi',
                                         pattern: {
                                             value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                                            message: 'Enter a valid email address',
+                                            message: 'Masukkan alamat email yang valid',
                                         },
                                     })}
                                 />
@@ -171,7 +171,7 @@ export default function ForgotPassword() {
                 <div className="relative z-10 my-auto py-6">
                     <h2 className="text-3xl lg:text-4xl font-extrabold leading-tight text-white mb-3 tracking-tight">
                         Build the future <br />
-                        with Microdata.
+                        bersama Microdata.
                     </h2>
 
                     <p className="text-xs lg:text-sm text-blue-100/90 leading-relaxed max-w-sm font-normal">
@@ -187,7 +187,7 @@ export default function ForgotPassword() {
                         </div>
                         <div className="text-base font-extrabold text-white tracking-tight">1.2M+</div>
                         <div className="text-[9px] font-bold text-blue-100/80 tracking-wider uppercase mt-0.5">
-                            Sites Built
+                            Website Dibuat
                         </div>
                     </div>
                     <div className="flex flex-col items-center text-center">

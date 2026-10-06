@@ -43,7 +43,7 @@ export default function AdminTransactions() {
                 <div>
                     <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 text-xs font-bold mb-2">
                         <DollarSign className="h-3.5 w-3.5" />
-                        <span>Admin Revenue & Transactions</span>
+                        <span>Pendapatan & Transaksi Admin</span>
                     </div>
                     <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">
                         Laporan Transaksi & Pendapatan
@@ -70,7 +70,7 @@ export default function AdminTransactions() {
                         <TrendingUp className="h-6 w-6" />
                     </div>
                     <div>
-                        <p className="text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Total Revenue (Paid)</p>
+                        <p className="text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Total Pendapatan (Terbayar)</p>
                         <p className="text-2xl font-black text-emerald-600 dark:text-emerald-400">
                             {metrics?.formatted_total_revenue || 'Rp 0'}
                         </p>

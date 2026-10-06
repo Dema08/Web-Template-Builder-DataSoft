@@ -23,7 +23,7 @@ export default function AdminAnalytics() {
             setAnalytics(data?.data ?? data);
             setError(null);
         } catch (err) {
-            console.error('Failed to fetch admin analytics:', err);
+            console.error('Gagal memuat analitik admin:', err);
             setError('Gagal memuat data analitik server.');
         } finally {
             setIsLoading(false);
@@ -106,9 +106,9 @@ export default function AdminAnalytics() {
                 <div>
                     <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 text-xs font-bold mb-2">
                         <Shield className="h-3.5 w-3.5" />
-                        <span>Real-Time System Intelligence</span>
+                        <span>Kecerdasan Sistem Real-Time</span>
                     </div>
-                    <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">Platform & Server Analytics</h1>
+                    <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">Analitik Platform & Server</h1>
                     <p className="text-sm text-[rgb(var(--color-text-secondary))] mt-1">
                         Monitoring performa server VPS, penggunaan resource, dan grafik trafik pengunjung secara real-time.
                     </p>
@@ -123,7 +123,7 @@ export default function AdminAnalytics() {
                         className="gap-2 text-xs font-bold"
                     >
                         <RefreshCw className={`h-3.5 w-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
-                        <span>{isRefreshing ? 'Memperbarui...' : 'Refresh Realtime'}</span>
+                        <span>{isRefreshing ? 'Memperbarui...' : 'Muat Ulang Real-Time'}</span>
                     </Button>
                 </div>
             </div>
@@ -158,7 +158,7 @@ export default function AdminAnalytics() {
                 <Card className="p-5 space-y-3">
                     <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 font-bold text-xs uppercase tracking-wider">
                         <Cpu className="h-4 w-4" />
-                        <span>PHP Environment</span>
+                        <span>Lingkungan PHP</span>
                     </div>
                     <p className="text-2xl font-extrabold text-[rgb(var(--color-text-primary))]">PHP v{serverStats?.php_version || '8.3'}</p>
                     <p className="text-xs text-[rgb(var(--color-text-secondary))]">Framework: Laravel v{serverStats?.laravel_version}</p>
@@ -167,7 +167,7 @@ export default function AdminAnalytics() {
                 <Card className="p-5 space-y-3">
                     <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-bold text-xs uppercase tracking-wider">
                         <HardDrive className="h-4 w-4" />
-                        <span>RAM Memory Load</span>
+                        <span>Beban Memori RAM</span>
                     </div>
                     <p className="text-2xl font-extrabold text-[rgb(var(--color-text-primary))]">{serverStats?.memory_usage || 'Optimal'}</p>
                     <p className="text-xs text-[rgb(var(--color-text-secondary))]">Status Server: Online & Normal</p>
@@ -248,7 +248,7 @@ export default function AdminAnalytics() {
                         <div className="p-3 rounded-xl bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] min-w-0">
                             <span className="text-[10px] font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider block truncate">Total Tayangan</span>
                             <span className="text-base font-extrabold text-indigo-600 dark:text-indigo-400 block truncate">
-                                {(trafficSummary.total_views ?? 0).toLocaleString()} <span className="text-[10px] font-normal text-slate-500">hits</span>
+                                {(trafficSummary.total_views ?? 0).toLocaleString()} <span className="text-[10px] font-normal text-slate-500">kunjungan</span>
                             </span>
                         </div>
                         <div className="p-3 rounded-xl bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] min-w-0">
@@ -260,7 +260,7 @@ export default function AdminAnalytics() {
                         <div className="p-3 rounded-xl bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] min-w-0">
                             <span className="text-[10px] font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider block truncate">Rata-rata / Periode</span>
                             <span className="text-base font-extrabold text-purple-600 dark:text-purple-400 block truncate">
-                                {(trafficSummary.avg_views ?? 0).toLocaleString()} <span className="text-[10px] font-normal text-slate-500">views</span>
+                                {(trafficSummary.avg_views ?? 0).toLocaleString()} <span className="text-[10px] font-normal text-slate-500">tayangan</span>
                             </span>
                         </div>
                         <div className="p-3 rounded-xl bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] min-w-0">
@@ -330,7 +330,7 @@ export default function AdminAnalytics() {
                 <Card className="p-6 space-y-4">
                     <div className="flex items-center justify-between">
                         <h2 className="text-base font-extrabold text-[rgb(var(--color-text-primary))]">Website Trafik Tertinggi</h2>
-                        <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400">Top 5</span>
+                        <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400">5 Teratas</span>
                     </div>
 
                     {topWebsites.length === 0 ? (
@@ -352,7 +352,7 @@ export default function AdminAnalytics() {
                                         <span className="text-xs font-extrabold text-indigo-600 dark:text-indigo-400 block">
                                             {site.views.toLocaleString()}
                                         </span>
-                                        <span className="text-[10px] text-[rgb(var(--color-text-tertiary))]">hits</span>
+                                        <span className="text-[10px] text-[rgb(var(--color-text-tertiary))]">kunjungan</span>
                                     </div>
                                 </div>
                             ))}

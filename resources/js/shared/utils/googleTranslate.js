@@ -13,17 +13,17 @@ const LANGUAGE_MAP = {
 };
 
 const LANGUAGES = [
-    { code: 'id', name: 'Indonesian', flag: '🇮🇩' },
-    { code: 'en', name: 'English', flag: '🇺🇸' },
-    { code: 'ja', name: 'Japanese', flag: '🇯🇵' },
-    { code: 'ko', name: 'Korean', flag: '🇰🇷' },
-    { code: 'zh-CN', name: 'Chinese (Simplified)', flag: '🇨🇳' },
-    { code: 'fr', name: 'French', flag: '🇫🇷' },
-    { code: 'de', name: 'German', flag: '🇩🇪' },
-    { code: 'es', name: 'Spanish', flag: '🇪🇸' },
+    { code: 'id', name: 'Bahasa Indonesia', flag: '🇮🇩' },
+    { code: 'en', name: 'Inggris', flag: '🇺🇸' },
+    { code: 'ja', name: 'Jepang', flag: '🇯🇵' },
+    { code: 'ko', name: 'Korea', flag: '🇰🇷' },
+    { code: 'zh-CN', name: 'Tionghoa (Sederhana)', flag: '🇨🇳' },
+    { code: 'fr', name: 'Prancis', flag: '🇫🇷' },
+    { code: 'de', name: 'Jerman', flag: '🇩🇪' },
+    { code: 'es', name: 'Spanyol', flag: '🇪🇸' },
 ];
 
-const DEFAULT_LANGUAGE = 'en';
+const DEFAULT_LANGUAGE = 'id';
 const STORAGE_KEY = 'preferred_language';
 
 let isInitialized = false;
@@ -104,7 +104,7 @@ const loadGoogleTranslateScript = () => {
                     // Avoid double-initialization when callback fires twice
                     if (!gtElement.dataset.gtInit) {
                         new window.google.translate.TranslateElement({
-                            pageLanguage: 'en',
+                            pageLanguage: 'id',
                             includedLanguages: 'id,en,ja,ko,zh-CN,fr,de,es',
                             layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
                             autoDisplay: false,
@@ -192,11 +192,11 @@ export const getCookieLanguage = () => {
     return null;
 };
 
-// Write the googtrans cookie in the format Google Translate actually reads: "/en/<target>"
+// Write the googtrans cookie in the format Google Translate actually reads: "/id/<target>"
 const setGoogtransCookie = (languageCode) => {
     const lang = LANGUAGE_MAP[languageCode] || DEFAULT_LANGUAGE;
-    // Google Translate expects "source/target", e.g. "/en/id". A bare "/id" is ignored.
-    const cookieValue = `/en/${lang}`;
+    // Google Translate expects "source/target", e.g. "/id/en". A bare "/en" is ignored.
+    const cookieValue = `/id/${lang}`;
     const host = window.location.hostname;
     // Host-only cookie (works on localhost & all hosts)
     document.cookie = `googtrans=${cookieValue}; path=/`;
@@ -328,10 +328,10 @@ export const resetGoogleTranslate = async () => {
     if (typeof window === 'undefined') return false;
 
     try {
-        // Clear cookie (all variants) + restore default "/en/en" pair
+        // Clear cookie (all variants) + restore default "/id/id" pair
         clearGoogtransCookie();
         try {
-            document.cookie = 'googtrans=/en/en; path=/';
+            document.cookie = 'googtrans=/id/id; path=/';
         } catch {
             /* ignore */
         }

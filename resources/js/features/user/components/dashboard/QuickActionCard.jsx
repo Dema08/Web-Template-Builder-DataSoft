@@ -12,9 +12,9 @@ export default function QuickActionCard({ quickActions = [] }) {
     return (
         <Card className="p-6">
             <div className="mb-6">
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Quick Actions</p>
-                <h2 className="text-2xl font-extrabold text-slate-900 mt-1 tracking-tight">Launch faster</h2>
-                <p className="text-xs text-slate-500 mt-1.5">Common tasks to publish & optimize your site</p>
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Aksi Cepat</p>
+                <h2 className="text-2xl font-extrabold text-slate-900 mt-1 tracking-tight">Luncurkan lebih cepat</h2>
+                <p className="text-xs text-slate-500 mt-1.5">Tugas umum untuk mempublikasi & mengoptimalkan situs Anda</p>
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">

@@ -55,12 +55,12 @@ export default function AdminCategories() {
     mutationFn: categoryService.create,
     onSuccess: () => {
       queryClient.invalidateQueries(['admin', 'categories']);
-      toast.success('Category created successfully', 'Success');
+      toast.success('Kategori berhasil dibuat', 'Success');
       setIsAddOpen(false);
       resetForm();
     },
     onError: () => {
-      toast.error('Failed to create category', 'Error');
+      toast.error('Gagal membuat kategori', 'Error');
     },
   });
 
@@ -68,12 +68,12 @@ export default function AdminCategories() {
     mutationFn: ({ id, data }) => categoryService.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries(['admin', 'categories']);
-      toast.success('Category updated successfully', 'Success');
+      toast.success('Kategori berhasil diperbarui', 'Success');
       setEditingCategory(null);
       resetForm();
     },
     onError: () => {
-      toast.error('Failed to update category', 'Error');
+      toast.error('Gagal memperbarui kategori', 'Error');
     },
   });
 
@@ -81,12 +81,12 @@ export default function AdminCategories() {
     mutationFn: categoryService.delete,
     onSuccess: () => {
       queryClient.invalidateQueries(['admin', 'categories']);
-      toast.success('Category deleted successfully', 'Success');
+      toast.success('Kategori berhasil dihapus', 'Success');
       setIsDeleteModalOpen(false);
       setCategoryToDelete(null);
     },
     onError: () => {
-      toast.error('Failed to delete category', 'Error');
+      toast.error('Gagal menghapus kategori', 'Error');
     },
   });
 
@@ -95,12 +95,12 @@ export default function AdminCategories() {
     onSuccess: () => {
       queryClient.invalidateQueries(['admin', 'templates']);
       queryClient.invalidateQueries(['admin', 'categories']);
-      toast.success('Template created successfully', 'Success');
+      toast.success('Template berhasil dibuat', 'Success');
       setShowTemplateModal(false);
       resetTemplateForm();
     },
     onError: () => {
-      toast.error('Failed to create template', 'Error');
+      toast.error('Gagal membuat template', 'Error');
     },
   });
 
@@ -108,13 +108,13 @@ export default function AdminCategories() {
     mutationFn: ({ id, data }) => categoryService.updateTemplate(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries(['admin', 'templates']);
-      toast.success('Template updated successfully', 'Success');
+      toast.success('Template berhasil diperbarui', 'Success');
       setShowTemplateModal(false);
       setEditingTemplate(null);
       resetTemplateForm();
     },
     onError: () => {
-      toast.error('Failed to update template', 'Error');
+      toast.error('Gagal memperbarui template', 'Error');
     },
   });
 
@@ -123,10 +123,10 @@ export default function AdminCategories() {
     onSuccess: () => {
       queryClient.invalidateQueries(['admin', 'templates']);
       queryClient.invalidateQueries(['admin', 'categories']);
-      toast.success('Template deleted successfully', 'Success');
+      toast.success('Template berhasil dihapus', 'Success');
     },
     onError: () => {
-      toast.error('Failed to delete template', 'Error');
+      toast.error('Gagal menghapus template', 'Error');
     },
   });
 
@@ -213,7 +213,7 @@ export default function AdminCategories() {
       )
     ).then(() => {
       queryClient.invalidateQueries(['admin', 'categories']);
-      toast.success('Sort order updated', 'Success');
+      toast.success('Urutan berhasil diperbarui', 'Success');
     });
   };
 
@@ -300,11 +300,11 @@ export default function AdminCategories() {
         <div>
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 text-xs font-bold mb-2">
             <Shield className="h-3.5 w-3.5" />
-            <span>Category Taxonomy</span>
+            <span>Taksonomi Kategori</span>
           </div>
-          <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">Industry Categories</h1>
+          <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">Kategori Industri</h1>
           <p className="text-sm text-[rgb(var(--color-text-secondary))] mt-1">
-            Manage industry categories and website starter taxonomies.
+            Kelola kategori industri dan taksonomi starter website.
           </p>
         </div>
 
@@ -318,7 +318,7 @@ export default function AdminCategories() {
           className="flex items-center justify-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-sm shadow-md transition-all cursor-pointer"
         >
           <Plus className="h-4 w-4 stroke-[3]" />
-          <span>Add Category</span>
+          <span>Tambah Kategori</span>
         </button>
       </div>
 
@@ -329,7 +329,7 @@ export default function AdminCategories() {
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[rgb(var(--color-text-tertiary))]" />
             <input
               type="text"
-              placeholder="Search by category name or slug..."
+              placeholder="Cari berdasarkan nama kategori atau slug..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-sm text-[rgb(var(--color-text-primary))] placeholder-[rgb(var(--color-text-tertiary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600"
@@ -338,22 +338,22 @@ export default function AdminCategories() {
         </div>
 
         {isLoading ? (
-          <div className="p-8 text-center text-[rgb(var(--color-text-secondary))]">Loading categories...</div>
+          <div className="p-8 text-center text-[rgb(var(--color-text-secondary))]">Memuat kategori...</div>
         ) : filteredCategories.length === 0 ? (
-          <div className="p-8 text-center text-[rgb(var(--color-text-secondary))]">No categories found matching search.</div>
+          <div className="p-8 text-center text-[rgb(var(--color-text-secondary))]">Tidak ada kategori yang cocok dengan pencarian.</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead className="bg-[rgb(var(--color-surface-alt))] border-b border-[rgb(var(--color-border))]">
                 <tr>
                   <th className="px-4 py-3.5 text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider w-16">ID</th>
-                  <th className="px-4 py-3.5 text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Name</th>
+                  <th className="px-4 py-3.5 text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Nama</th>
                   <th className="px-4 py-3.5 text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Slug</th>
-                  <th className="px-4 py-3.5 text-center text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider w-28">Sort Order</th>
+                  <th className="px-4 py-3.5 text-center text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider w-28">Urutan</th>
                   <th className="px-4 py-3.5 text-center text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider w-28">Status</th>
-                  <th className="px-4 py-3.5 text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider w-32">Created At</th>
-                  <th className="px-4 py-3.5 text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider w-32">Updated At</th>
-                  <th className="px-4 py-3.5 text-right text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider w-32">Actions</th>
+                  <th className="px-4 py-3.5 text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider w-32">Dibuat Pada</th>
+                  <th className="px-4 py-3.5 text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider w-32">Diperbarui Pada</th>
+                  <th className="px-4 py-3.5 text-right text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider w-32">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[rgb(var(--color-border))]">
@@ -378,14 +378,14 @@ export default function AdminCategories() {
                       </span>
                     </td>
 
-                    {/* Sort Order */}
+                    {/* Urutan */}
                     <td className="px-4 py-4 whitespace-nowrap text-center">
                       <div className="inline-flex items-center justify-center gap-1">
                         <button
                           onClick={() => moveSortOrder(index, -1)}
                           disabled={index === 0}
                           className="p-1 text-[rgb(var(--color-text-tertiary))] hover:text-indigo-600 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
-                          title="Move Up"
+                          title="Pindah ke Atas"
                         >
                           <ChevronUp className="h-4 w-4" />
                         </button>
@@ -396,7 +396,7 @@ export default function AdminCategories() {
                           onClick={() => moveSortOrder(index, 1)}
                           disabled={index === filteredCategories.length - 1}
                           className="p-1 text-[rgb(var(--color-text-tertiary))] hover:text-indigo-600 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
-                          title="Move Down"
+                          title="Pindah ke Bawah"
                         >
                           <ChevronDown className="h-4 w-4" />
                         </button>
@@ -418,12 +418,12 @@ export default function AdminCategories() {
                       </button>
                     </td>
 
-                    {/* Created At */}
+                    {/* Dibuat Pada */}
                     <td className="px-4 py-4 whitespace-nowrap text-xs text-[rgb(var(--color-text-secondary))]">
                       {formatDate(cat.created_at)}
                     </td>
 
-                    {/* Updated At */}
+                    {/* Diperbarui Pada */}
                     <td className="px-4 py-4 whitespace-nowrap text-xs text-[rgb(var(--color-text-secondary))]">
                       {formatDate(cat.updated_at)}
                     </td>
@@ -438,14 +438,14 @@ export default function AdminCategories() {
                               ? 'text-indigo-600 bg-indigo-50 dark:bg-indigo-950/40'
                               : 'text-[rgb(var(--color-text-tertiary))] hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/30'
                           }`}
-                          title="Manage Templates"
+                          title="Kelola Template"
                         >
                           <FileText className="h-4 w-4" />
                         </button>
                         <button
                           onClick={() => handleEdit(cat)}
                           className="p-2 text-[rgb(var(--color-text-tertiary))] hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 rounded-lg transition cursor-pointer"
-                          title="Edit Category"
+                          title="Ubah Kategori"
                         >
                           <Edit2 className="h-4 w-4" />
                         </button>
@@ -453,7 +453,7 @@ export default function AdminCategories() {
                           onClick={() => handleDelete(cat.id, cat.name)}
                           disabled={deleteMutation.isPending}
                           className="p-2 text-[rgb(var(--color-text-tertiary))] hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition disabled:opacity-50 cursor-pointer"
-                          title="Delete Category"
+                          title="Hapus Kategori"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
@@ -473,7 +473,7 @@ export default function AdminCategories() {
           <div className="bg-[rgb(var(--color-surface))] rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-5 border border-[rgb(var(--color-border))] animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between border-b border-[rgb(var(--color-border))] pb-3">
               <h3 className="text-base font-extrabold text-[rgb(var(--color-text-primary))]">
-                {editingCategory ? 'Edit Category' : 'Add New Category'}
+                {editingCategory ? 'Ubah Kategori' : 'Tambah Kategori Baru'}
               </h3>
               <button
                 onClick={handleClose}
@@ -485,7 +485,7 @@ export default function AdminCategories() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Category Name *</label>
+                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Nama Kategori *</label>
                 <input
                   type="text"
                   required
@@ -509,7 +509,7 @@ export default function AdminCategories() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Sort Order</label>
+                  <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Urutan</label>
                   <input
                     type="number"
                     min="0"
@@ -526,7 +526,7 @@ export default function AdminCategories() {
                     onChange={(e) => setFormData({ ...formData, is_active: e.target.value === 'true' })}
                     className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600"
                   >
-                    <option value="true">Active</option>
+                    <option value="true">Aktif</option>
                     <option value="false">Inactive</option>
                   </select>
                 </div>
@@ -545,7 +545,7 @@ export default function AdminCategories() {
                   disabled={createMutation.isPending || updateMutation.isPending}
                   className="px-5 py-2 text-xs font-extrabold bg-indigo-600 text-white rounded-xl shadow-md shadow-indigo-600/20 hover:bg-indigo-700 transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
-                  {editingCategory ? 'Update Category' : 'Save Category'}
+                  {editingCategory ? 'Perbarui Kategori' : 'Simpan Kategori'}
                 </button>
               </div>
             </form>
@@ -559,7 +559,7 @@ export default function AdminCategories() {
           <div className="bg-[rgb(var(--color-surface))] rounded-3xl max-w-2xl w-full p-6 shadow-2xl space-y-4 border border-[rgb(var(--color-border))] animate-in fade-in zoom-in-95 duration-150 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-[rgb(var(--color-border))] pb-3">
               <h3 className="text-base font-extrabold text-[rgb(var(--color-text-primary))]">
-                {editingTemplate ? 'Edit Template' : 'Add New Template'}
+                {editingTemplate ? 'Ubah Template' : 'Tambah Template Baru'}
               </h3>
               <button
                 onClick={() => {
@@ -574,7 +574,7 @@ export default function AdminCategories() {
             </div>
             <form onSubmit={handleTemplateSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Template Name *</label>
+                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Nama Template *</label>
                 <input
                   type="text"
                   required
@@ -600,7 +600,7 @@ export default function AdminCategories() {
                 <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Description</label>
                 <textarea
                   rows="3"
-                  placeholder="Template description..."
+                  placeholder="Deskripsi template..."
                   value={templateForm.description}
                   onChange={(e) => setTemplateForm({ ...templateForm, description: e.target.value })}
                   className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] placeholder-[rgb(var(--color-text-tertiary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 resize-none"
@@ -608,7 +608,7 @@ export default function AdminCategories() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Thumbnail URL</label>
+                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">URL Thumbnail</label>
                 <input
                   type="text"
                   placeholder="https://example.com/thumbnail.jpg"
@@ -620,7 +620,7 @@ export default function AdminCategories() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Sort Order</label>
+                  <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Urutan</label>
                   <input
                     type="number"
                     min="0"
@@ -637,7 +637,7 @@ export default function AdminCategories() {
                     onChange={(e) => setTemplateForm({ ...templateForm, is_active: e.target.value === 'true' })}
                     className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600"
                   >
-                    <option value="true">Active</option>
+                    <option value="true">Aktif</option>
                     <option value="false">Inactive</option>
                   </select>
                 </div>
@@ -660,14 +660,14 @@ export default function AdminCategories() {
                   disabled={createTemplateMutation.isPending || updateTemplateMutation.isPending}
                   className="px-5 py-2 text-xs font-extrabold bg-indigo-600 text-white rounded-xl shadow-md shadow-indigo-600/20 hover:bg-indigo-700 transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
-                  {editingTemplate ? 'Update Template' : 'Save Template'}
+                  {editingTemplate ? 'Perbarui Template' : 'Simpan Template'}
                 </button>
               </div>
             </form>
           </div>
         </div>
       )}
-      {/* Delete Category Confirm Modal */}
+      {/* Hapus Kategori Confirm Modal */}
       <ConfirmModal
         isOpen={isDeleteModalOpen}
         onClose={() => {

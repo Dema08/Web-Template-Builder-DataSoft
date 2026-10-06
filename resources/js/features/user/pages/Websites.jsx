@@ -140,7 +140,7 @@ export default function Websites() {
                         <Globe className="h-6 w-6 stroke-[2]" />
                     </div>
                     <div>
-                        <p className="text-xs font-semibold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Total Websites</p>
+                        <p className="text-xs font-semibold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Total Website</p>
                         <p className="text-2xl font-extrabold text-[rgb(var(--color-text-primary))] mt-1">{websitesList.length}</p>
                     </div>
                 </Card>
@@ -150,7 +150,7 @@ export default function Websites() {
                         <CheckCircle2 className="h-6 w-6 stroke-[2]" />
                     </div>
                     <div>
-                        <p className="text-xs font-semibold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Published Sites</p>
+                        <p className="text-xs font-semibold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Situs Terpublikasi</p>
                         <p className="text-2xl font-extrabold text-[rgb(var(--color-text-primary))] mt-1">
                             {websitesList.filter((w) => w.status === 'Published').length}
                         </p>
@@ -162,7 +162,7 @@ export default function Websites() {
                         <Eye className="h-6 w-6 stroke-[2]" />
                     </div>
                     <div>
-                        <p className="text-xs font-semibold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Total Monthly Views</p>
+                        <p className="text-xs font-semibold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Total Kunjungan Bulanan</p>
                         <p className="text-2xl font-extrabold text-[rgb(var(--color-text-primary))] mt-1">
                             {totalMonthlyViews >= 10000
                                 ? `${(totalMonthlyViews / 1000).toFixed(1)}k`
@@ -189,7 +189,7 @@ export default function Websites() {
                             type="text"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="Search websites by name or domain..."
+                            placeholder="Cari website berdasarkan nama atau domain..."
                             className="w-full h-[52px] pl-12 pr-4 bg-[rgb(var(--color-surface-alt))] border-2 border-[rgb(var(--color-border))] rounded-xl text-sm text-[rgb(var(--color-text-primary))] placeholder:text-[rgb(var(--color-text-tertiary))] focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 focus:bg-white transition-all"
                         />
                     </div>
@@ -226,7 +226,7 @@ export default function Websites() {
                                 title="Upload thumbnail"
                             >
                                 <Camera className="h-3.5 w-3.5" />
-                                <span>{site.thumbnail && site.thumbnail !== 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop&q=80' ? 'Edit' : 'Add'}</span>
+                                <span>{site.thumbnail && site.thumbnail !== 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop&q=80' ? 'Ubah' : 'Add'}</span>
                             </button>
                             <div className="absolute top-3 left-3">
                                 <StatusBadge status={site.status === 'Published' ? 'published' : 'draft'} />
@@ -309,7 +309,7 @@ export default function Websites() {
                                 type="button"
                                 onClick={closeThumbnailModal}
                                 className="rounded-full p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-700"
-                                aria-label="Close"
+                                aria-label="Tutup"
                             >
                                 <X className="h-4 w-4" />
                             </button>

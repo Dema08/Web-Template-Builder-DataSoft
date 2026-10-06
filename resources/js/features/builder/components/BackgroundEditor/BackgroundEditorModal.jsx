@@ -297,7 +297,7 @@ export default function BackgroundEditorModal() {
             <button
               onClick={closeEditor}
               className="p-2 text-slate-400 hover:text-slate-700 rounded-xl hover:bg-slate-100 transition"
-              aria-label="Close"
+              aria-label="Tutup"
             >
               <X className="h-5 w-5" />
             </button>
@@ -309,7 +309,7 @@ export default function BackgroundEditorModal() {
           <div className="flex items-center justify-between mb-2">
             <span className="text-[11px] font-bold text-slate-400 flex items-center gap-1.5">
               <Eye className="h-3.5 w-3.5 text-indigo-400" />
-              Live Preview
+              Pratinjau Langsung
             </span>
             <span className="text-[10px] text-slate-500 font-mono">
               Mode: {backgroundConfig.type.toUpperCase()}
@@ -480,7 +480,7 @@ export default function BackgroundEditorModal() {
                     </div>
                   </div>
 
-                  {/* Quick Color Palette Presets */}
+                  {/* Quick Palet Warna Presets */}
                   <div>
                     <label className="block text-xs font-bold text-slate-700 mb-2">Popular Color Swatches</label>
                     <div className="flex flex-wrap gap-2">

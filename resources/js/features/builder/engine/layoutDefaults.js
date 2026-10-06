@@ -19239,7 +19239,7 @@ export const LAYOUT_DEFAULTS = {
       "id": "copy-1",
       "type": "text",
       "props": {
-        "content": "© 2026 Lumière Studio. All rights reserved.",
+        "content": "© 2026 Lumière Studio. Hak cipta dilindungi.",
         "fontSize": "12px",
         "color": "#94a3b8",
         "align": "center",
@@ -19424,7 +19424,7 @@ export const LAYOUT_DEFAULTS = {
       "id": "copy-3",
       "type": "text",
       "props": {
-        "content": "© 2026 Aurora Inc. All rights reserved.",
+        "content": "© 2026 Aurora Inc. Hak cipta dilindungi.",
         "fontSize": "12px",
         "color": "#94a3b8",
         "align": "center",
@@ -20124,7 +20124,7 @@ export const LAYOUT_DEFAULTS = {
       "id": "copy-11",
       "type": "text",
       "props": {
-        "content": "© 2026 Monocle Press. All rights reserved.",
+        "content": "© 2026 Monocle Press. Hak cipta dilindungi.",
         "fontSize": "12px",
         "color": "#78716c",
         "align": "center",
@@ -20444,7 +20444,7 @@ export const LAYOUT_DEFAULTS = {
       "id": "link-templates",
       "type": "button",
       "props": {
-        "label": "Templates",
+        "label": "Template",
         "href": "#templates",
         "variant": "ghost",
         "size": "small",
@@ -26069,7 +26069,7 @@ export const LAYOUT_DEFAULTS = {
       "id": "btn-primary",
       "type": "button",
       "props": {
-        "label": "Start Building Free →",
+        "label": "Mulai Membangun Gratis →",
         "href": "#start",
         "variant": "primary",
         "size": "large",
@@ -26690,7 +26690,7 @@ export const LAYOUT_DEFAULTS = {
       "type": "image",
       "props": {
         "src": "",
-        "alt": "Dashboard",
+        "alt": "Dasbor",
         "width": "100%",
         "height": "400px",
         "objectFit": "cover",
@@ -39066,7 +39066,7 @@ export const LAYOUT_DEFAULTS = {
       "id": "prod11-cta",
       "type": "button",
       "props": {
-        "label": "Browse Templates →",
+        "label": "Lihat Template →",
         "href": "#templates",
         "variant": "primary",
         "size": "medium",

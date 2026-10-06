@@ -361,7 +361,7 @@ export default function Register({ onSwitchToLogin }) {
                         <div className="relative z-10 my-auto py-4">
                             <h2 className="text-3xl font-extrabold leading-tight text-white mb-2 tracking-tight">
                                 Build the future <br />
-                                with Microdata.
+                                bersama Microdata.
                             </h2>
                             <p className="text-xs text-emerald-100/90 leading-relaxed font-normal">
                                 Bangun website impian Anda menggunakan platform pembuatan website tercepat dan paling fleksibel.
@@ -495,7 +495,7 @@ export default function Register({ onSwitchToLogin }) {
             {/* Left Column — Form Container */}
             <div className="w-full md:w-1/2 p-8 sm:p-10 flex flex-col justify-between bg-white overflow-y-auto min-h-0">
                 <div>
-                    {/* Brand Logo & Back to Login */}
+                    {/* Logo Brand & Back to Login */}
                     <div className="flex items-center justify-between">
                         <BrandLogo />
                         <Link
@@ -563,7 +563,7 @@ export default function Register({ onSwitchToLogin }) {
                         {/* Email Field */}
                         <div className="group">
                             <label className="block text-[11px] font-semibold text-slate-700 mb-0.5">
-                                Email Address
+                                Alamat Email
                             </label>
                             <div className="relative">
                                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400 group-focus-within:text-indigo-600 transition-colors" />
@@ -887,7 +887,7 @@ export default function Register({ onSwitchToLogin }) {
                     <div>
                         <h2 className="text-2xl lg:text-3xl font-black leading-tight text-white mb-2 tracking-tight">
                             Build the future <br />
-                            <span className="text-blue-200 drop-shadow-md">with Microdata.</span>
+                            <span className="text-blue-200 drop-shadow-md">bersama Microdata.</span>
                         </h2>
 
                         <p className="text-xs text-blue-100/90 leading-relaxed font-medium">
@@ -913,7 +913,7 @@ export default function Register({ onSwitchToLogin }) {
                         </div>
                         <div className="text-xs font-black text-white tracking-tight">1.2M+</div>
                         <div className="text-[8px] font-extrabold text-blue-200/90 tracking-wider uppercase">
-                            Sites Built
+                            Website Dibuat
                         </div>
                     </div>
                     <div className="flex flex-col items-center text-center">

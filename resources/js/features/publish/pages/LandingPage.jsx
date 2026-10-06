@@ -17,57 +17,57 @@ import { getTemplateImage, handleImageError } from '@utils/templateHelpers';
    CONSTANTS
 ───────────────────────────────────────────────────────── */
 const NAV_LINKS = [
-    { label: 'Features', target: 'features' },
-    { label: 'Templates', target: 'templates' },
-    { label: 'How It Works', target: 'how-it-works' },
-    { label: 'Pricing', target: 'pricing' },
+    { label: 'Fitur', target: 'features' },
+    { label: 'Template', target: 'templates' },
+    { label: 'Cara Kerja', target: 'how-it-works' },
+    { label: 'Harga', target: 'pricing' },
 ];
 
 const FEATURES = [
     {
         icon: MousePointer2,
-        title: 'Drag & Drop Builder',
-        desc: 'Visual editing experience like Canva — no coding required. Build stunning sections with precision.',
+        title: 'Builder Seret & Letakkan',
+        desc: 'Pengalaman mengedit visual seperti Canva — tanpa perlu coding. Bangun bagian website yang memukau dengan presisi.',
         color: 'from-blue-500 to-indigo-600',
         bg: 'bg-blue-50',
         accent: 'text-blue-600',
     },
     {
         icon: Layout,
-        title: 'Professional Templates',
-        desc: 'Curated templates for Corporate, Logistics, Manufacturing, Education, Cooperatives, and Startups.',
+        title: 'Template Profesional',
+        desc: 'Template pilihan untuk Korporat, Logistik, Manufaktur, Pendidikan, Koperasi, dan Startup.',
         color: 'from-indigo-500 to-purple-600',
         bg: 'bg-indigo-50',
         accent: 'text-indigo-600',
     },
     {
         icon: Rocket,
-        title: 'One Click Publish',
-        desc: 'Launch your website instantly to a custom domain or subdomain — zero deployment knowledge needed.',
+        title: 'Publikasi Satu Klik',
+        desc: 'Luncurkan website Anda seketika ke domain atau subdomain kustom — tanpa perlu pengetahuan deployment.',
         color: 'from-violet-500 to-purple-600',
         bg: 'bg-violet-50',
         accent: 'text-violet-600',
     },
     {
         icon: Monitor,
-        title: 'Responsive Design',
-        desc: 'Every template is automatically optimized for Desktop, Tablet, and Mobile screens.',
+        title: 'Desain Responsif',
+        desc: 'Setiap template otomatis dioptimalkan untuk layar Desktop, Tablet, dan Ponsel.',
         color: 'from-sky-500 to-blue-600',
         bg: 'bg-sky-50',
         accent: 'text-sky-600',
     },
     {
         icon: Palette,
-        title: 'Theme Customizer',
-        desc: 'Change colors, fonts, spacing, and layouts instantly with real-time live preview updates.',
+        title: 'Penyesuai Tema',
+        desc: 'Ubah warna, font, jarak, dan tata letak seketika dengan pratinjau langsung.',
         color: 'from-pink-500 to-rose-600',
         bg: 'bg-pink-50',
         accent: 'text-pink-600',
     },
     {
         icon: Image,
-        title: 'Media Manager',
-        desc: 'Upload and manage images, videos, logos, and documents in an organized media library.',
+        title: 'Pengelola Media',
+        desc: 'Unggah dan kelola gambar, video, logo, dan dokumen dalam galeri media yang rapi.',
         color: 'from-amber-500 to-orange-600',
         bg: 'bg-amber-50',
         accent: 'text-amber-600',
@@ -75,26 +75,26 @@ const FEATURES = [
 ];
 
 const TEMPLATES = [
-    { title: 'Corporate Business', tag: 'Popular', color: 'from-blue-500 to-indigo-600', img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&auto=format&fit=crop&q=80' },
-    { title: 'Logistics Company', tag: 'New', color: 'from-slate-500 to-slate-700', img: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=600&auto=format&fit=crop&q=80' },
-    { title: 'Manufacturing', tag: 'Enterprise', color: 'from-orange-500 to-red-600', img: 'https://images.unsplash.com/photo-1565043666747-69f6646db940?w=600&auto=format&fit=crop&q=80' },
-    { title: 'Educational Institution', tag: 'Featured', color: 'from-emerald-500 to-teal-600', img: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&auto=format&fit=crop&q=80' },
+    { title: 'Bisnis Korporat', tag: 'Populer', color: 'from-blue-500 to-indigo-600', img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&auto=format&fit=crop&q=80' },
+    { title: 'Perusahaan Logistik', tag: 'Baru', color: 'from-slate-500 to-slate-700', img: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=600&auto=format&fit=crop&q=80' },
+    { title: 'Manufaktur', tag: 'Perusahaan', color: 'from-orange-500 to-red-600', img: 'https://images.unsplash.com/photo-1565043666747-69f6646db940?w=600&auto=format&fit=crop&q=80' },
+    { title: 'Institusi Pendidikan', tag: 'Unggulan', color: 'from-emerald-500 to-teal-600', img: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&auto=format&fit=crop&q=80' },
     { title: 'Startup & SaaS', tag: 'Hot', color: 'from-violet-500 to-purple-700', img: 'https://images.unsplash.com/photo-1551434678-e076c223a692?w=600&auto=format&fit=crop&q=80' },
     { title: 'Organization & NGO', tag: 'Pro', color: 'from-cyan-500 to-blue-600', img: 'https://images.unsplash.com/photo-1593113598332-cd288d649433?w=600&auto=format&fit=crop&q=80' },
 ];
 
 const STEPS = [
-    { num: '01', icon: Layout, title: 'Choose Template', desc: 'Browse professionally designed templates across all business categories.' },
-    { num: '02', icon: Palette, title: 'Customize Content', desc: 'Edit text, images, colors, sections, and branding visually in real time.' },
-    { num: '03', icon: Eye, title: 'Preview Website', desc: 'Check responsiveness across desktop, tablet, and mobile devices.' },
-    { num: '04', icon: Rocket, title: 'Publish Online', desc: 'Launch instantly with one click — go live in seconds, not days.' },
+    { num: '01', icon: Layout, title: 'Pilih Template', desc: 'Jelajahi template desain profesional di semua kategori bisnis.' },
+    { num: '02', icon: Palette, title: 'Sesuaikan Konten', desc: 'Ubah teks, gambar, warna, bagian, dan branding secara visual dan real-time.' },
+    { num: '03', icon: Eye, title: 'Pratinjau Website', desc: 'Periksa tampilan responsif di desktop, tablet, dan ponsel.' },
+    { num: '04', icon: Rocket, title: 'Publikasikan Online', desc: 'Luncurkan seketika dengan satu klik — go live in seconds, not days.' },
 ];
 
 const STATS = [
-    { value: '1.2M+', label: 'Websites Created', icon: Globe },
-    { value: '99.9%', label: 'Platform Uptime', icon: Shield },
-    { value: '10K+', label: 'Active Users', icon: Users },
-    { value: '24/7', label: 'Expert Support', icon: Headphones },
+    { value: '1.2M+', label: 'Website Dibuat', icon: Globe },
+    { value: '99.9%', label: 'Waktu Aktif Platform', icon: Shield },
+    { value: '10K+', label: 'Pengguna Aktif', icon: Users },
+    { value: '24/7', label: 'Dukungan Ahli', icon: Headphones },
 ];
 
 const TESTIMONIALS = [
@@ -107,13 +107,13 @@ const TESTIMONIALS = [
     {
         name: 'Sari Dewi', role: 'Marketing Director, EduNusantara',
         avatar: 'https://ui-avatars.com/api/?name=Sari+Dewi&background=7c3aed&color=fff&size=64',
-        review: 'The template library is incredible. Professional designs that perfectly match our educational institution brand.',
+        review: 'Pustaka templatenya luar biasa. Desain profesional yang sangat cocok dengan brand institusi pendidikan kami.',
         rating: 5, company: 'EduNusantara',
     },
     {
         name: 'Budi Santoso', role: 'Operations Manager, LogisTrans',
         avatar: 'https://ui-avatars.com/api/?name=Budi+Santoso&background=0ea5e9&color=fff&size=64',
-        review: 'From zero to published in under 2 hours. The drag and drop builder is as intuitive as Canva. Absolutely love it.',
+        review: 'Dari nol hingga publikasi kurang dari 2 jam. Builder seret & letakkannya seintuitif Canva. Sangat suka.',
         rating: 5, company: 'LogisTrans Indonesia',
     },
 ];
@@ -121,33 +121,33 @@ const TESTIMONIALS = [
 const PRICING = [
     {
         name: 'Starter', price: 'Free', period: '',
-        desc: 'Perfect for personal projects and exploring the platform.',
-        features: ['1 Website', '10 Pages', 'Microdata Subdomain', 'Basic Templates', 'Community Support'],
-        cta: 'Get Started Free', highlight: false,
+        desc: 'Cocok untuk proyek pribadi dan menjelajahi platform.',
+        features: ['1 Website', '10 Pages', 'Microdata Subdomain', 'Basic Template', 'Community Support'],
+        cta: 'Mulai Gratis', highlight: false,
     },
     {
         name: 'Growth', price: 'Rp 79K', period: '/bulan',
-        desc: 'For individuals and freelancers starting their online journey.',
-        features: ['3 Websites', '50 Pages', 'Custom Domain', 'Premium Templates', 'Email Support', 'Media Manager'],
-        cta: 'Start Growth', highlight: false,
+        desc: 'Untuk individu dan freelancer yang memulai perjalanan online.',
+        features: ['3 Websites', '50 Pages', 'Custom Domain', 'Premium Template', 'Email Support', 'Pengelola Media'],
+        cta: 'Mulai Growth', highlight: false,
     },
     {
         name: 'Professional', price: 'Rp 149K', period: '/bulan',
-        desc: 'For growing businesses ready to scale their online presence.',
-        features: ['5 Websites', 'Unlimited Pages', 'Custom Domain', 'All Premium Templates', 'Media Manager', 'Analytics Dashboard', 'Priority Support'],
-        cta: 'Start Professional', highlight: true,
+        desc: 'Untuk bisnis berkembang yang siap meningkatkan kehadiran online.',
+        features: ['5 Websites', 'Unlimited Pages', 'Custom Domain', 'Semua Premium Template', 'Pengelola Media', 'Analytics Dashboard', 'Priority Support'],
+        cta: 'Mulai Profesional', highlight: true,
     },
     {
         name: 'Agency', price: 'Rp 349K', period: '/bulan',
-        desc: 'For agencies managing multiple clients and projects at scale.',
+        desc: 'Untuk agensi yang mengelola banyak klien dan proyek sekaligus.',
         features: ['20 Websites', 'Unlimited Pages', 'Client Management', 'White Label Option', 'API Access', 'Team Collaboration', '24/7 Priority Support'],
-        cta: 'Start Agency', highlight: false,
+        cta: 'Mulai Agensi', highlight: false,
     },
     {
         name: 'Enterprise', price: 'Custom', period: '',
         desc: 'For large organizations needing full customization and control.',
         features: ['Unlimited Websites', 'White Label Option', 'API Access', 'Dedicated Manager', 'SSO Integration', 'SLA 99.9%', '24/7 Phone Support'],
-        cta: 'Contact Sales', highlight: false,
+        cta: 'Kontak Sales', highlight: false,
     },
 ];
 
@@ -224,7 +224,7 @@ function Navbar({ onDemo }) {
                         <Link to={ROUTES.REGISTER}
                             className="text-sm font-bold text-white px-5 py-2.5 rounded-xl shadow-md hover:shadow-lg hover:scale-105 transition-all"
                             style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
-                            Start Building
+                            Mulai Membangun
                         </Link>
                     </div>
 
@@ -252,11 +252,11 @@ function Navbar({ onDemo }) {
                             </a>
                         ))}
                         <div className="pt-2 border-t border-slate-100 flex flex-col gap-2">
-                            <Link to={ROUTES.LOGIN} className="text-center text-sm font-bold text-slate-700 py-2">Login</Link>
+                            <Link to={ROUTES.LOGIN} className="text-center text-sm font-bold text-slate-700 py-2">Masuk</Link>
                             <Link to={ROUTES.REGISTER}
                                 className="text-center text-sm font-bold text-white py-2.5 rounded-xl"
                                 style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
-                                Start Building Free
+                                Mulai Membangun Gratis
                             </Link>
                         </div>
                     </div>
@@ -269,7 +269,7 @@ function Navbar({ onDemo }) {
 /* ── Animated Dashboard Illustration ── */
 function DashboardIllustration() {
     const [activeSec, setActiveSec] = useState(0);
-    const sectionsList = ['Hero Banner', 'Nav Bar', 'Feature Grid', 'Testimonials', 'Footer', 'About Us', 'Contact'];
+    const sectionsList = ['Hero Banner', 'Nav Bar', 'Feature Grid', 'Testimonials', 'Footer', 'Tentang Kami', 'Kontak'];
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -301,7 +301,7 @@ function DashboardIllustration() {
                         </span>
                     </div>
                     <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-bold text-slate-400 px-2 py-1 bg-slate-800 rounded-md">Save</span>
+                        <span className="text-[10px] font-bold text-slate-400 px-2 py-1 bg-slate-800 rounded-md">Simpan</span>
                         <span className="text-[10px] font-bold text-white px-2.5 py-1 rounded-md ds-animate-pulse-glow"
                             style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>Publish ✓</span>
                     </div>
@@ -350,7 +350,7 @@ function DashboardIllustration() {
                                     <div className="h-2.5 bg-white/95 rounded-full w-28 ds-animate-shimmer shadow-xs" />
                                     <div className="h-1.5 bg-white/60 rounded-full w-40" />
                                 </div>
-                                <div className="h-6 px-3 bg-white rounded-lg text-[9px] font-extrabold text-indigo-600 flex items-center shadow-md hover:scale-105 transition relative z-10 shrink-0">Get Started</div>
+                                <div className="h-6 px-3 bg-white rounded-lg text-[9px] font-extrabold text-indigo-600 flex items-center shadow-md hover:scale-105 transition relative z-10 shrink-0">Mulai Sekarang</div>
                             </div>
                             {/* Feature grid */}
                             <div className={`grid grid-cols-3 gap-2 p-2.5 transition-all duration-500 ${activeSec === 2 ? 'ring-2 ring-indigo-500 bg-indigo-50/60' : ''}`}>
@@ -379,7 +379,7 @@ function DashboardIllustration() {
                             <p className="text-[9px] font-black text-slate-400 uppercase tracking-wider">Properties</p>
                             <div className="space-y-2">
                                 <div>
-                                    <p className="text-[9px] text-slate-500 mb-1 font-semibold">Color Palette</p>
+                                    <p className="text-[9px] text-slate-500 mb-1 font-semibold">Palet Warna</p>
                                     <div className="flex gap-1">
                                         {['#4f46e5', '#2563eb', '#7c3aed', '#0ea5e9', '#10b981'].map(c => (
                                             <div key={c} className="w-4 h-4 rounded-full cursor-pointer border border-slate-200 shadow-xs hover:scale-125 transition-transform" style={{ background: c }} />
@@ -387,11 +387,11 @@ function DashboardIllustration() {
                                     </div>
                                 </div>
                                 <div>
-                                    <p className="text-[9px] text-slate-500 mb-1 font-semibold">Font Family</p>
+                                    <p className="text-[9px] text-slate-500 mb-1 font-semibold">Jenis Font</p>
                                     <div className="h-5 bg-indigo-50/80 border border-indigo-200/80 rounded-md text-[9px] px-2 flex items-center text-indigo-700 font-bold shadow-2xs">Inter (Google)</div>
                                 </div>
                                 <div>
-                                    <p className="text-[9px] text-slate-500 mb-1 font-semibold">Container Gap</p>
+                                    <p className="text-[9px] text-slate-500 mb-1 font-semibold">Jarak Kontainer</p>
                                     <div className="grid grid-cols-2 gap-1">
                                         <div className="h-4 bg-slate-100 rounded text-[9px] text-center text-slate-600 flex items-center justify-center font-mono font-semibold">40px</div>
                                         <div className="h-4 bg-slate-100 rounded text-[9px] text-center text-slate-600 flex items-center justify-center font-mono font-semibold">24px</div>
@@ -428,7 +428,7 @@ function DashboardIllustration() {
                 </div>
                 <div>
                     <p className="text-[10px] font-extrabold text-slate-900">+2.4K Live Visitors</p>
-                    <p className="text-[9px] text-slate-500 font-semibold">Real-time Analytics</p>
+                    <p className="text-[9px] text-slate-500 font-semibold">Analitik Real-time</p>
                 </div>
             </div>
 
@@ -437,8 +437,8 @@ function DashboardIllustration() {
                     <img src="/images/microdata-emblem.png" alt="Microdata" className="h-4 w-4 object-contain filter brightness-0 invert" />
                 </div>
                 <div>
-                    <p className="text-[10px] font-extrabold text-slate-900">120+ Templates</p>
-                    <p className="text-[9px] text-slate-500">Component Based</p>
+                    <p className="text-[10px] font-extrabold text-slate-900">120+ Template</p>
+                    <p className="text-[9px] text-slate-500">Berbasis Komponen</p>
                 </div>
             </div>
         </div>
@@ -565,7 +565,7 @@ function StatsSection({ publicStats }) {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                 <div className="text-center mb-12">
                     <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-                        Trusted at Scale
+                        Terpercaya dalam Skala Besar
                     </h2>
                     <p className="text-slate-400 mt-2 font-medium">Statistik real-time platform Microdata Website Builder.</p>
                 </div>
@@ -720,13 +720,13 @@ function PricingSection({ pricingList, pricingMeta }) {
                             className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold mb-3 border"
                             style={{ background: 'rgba(79,70,229,0.06)', borderColor: 'rgba(79,70,229,0.18)', color: '#4f46e5' }}
                         >
-                            <Award className="h-3 w-3" /> {pricingMeta?.badge || 'Pricing'}
+                            <Award className="h-3 w-3" /> {pricingMeta?.badge || 'Harga'}
                         </div>
                         <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-                            {pricingMeta?.title || 'Simple, Transparent Pricing'}
+                            {pricingMeta?.title || 'Harga Sederhana dan Transparan'}
                         </h2>
                         <p className="mt-2 text-slate-500 font-medium text-sm">
-                            {pricingMeta?.subtitle || 'Drag left/right or tap a tab to rotate 3D pricing wheel.'}
+                            {pricingMeta?.subtitle || 'Geser ke kiri/kanan atau ketuk tab untuk memutar roda harga 3D.'}
                         </p>
 
                         {/* Quick Plan Switcher Buttons */}
@@ -817,7 +817,7 @@ function PricingSection({ pricingList, pricingMeta }) {
                                         {p.highlight && (
                                             <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-20">
                                                 <span className="bg-amber-400 text-amber-950 text-[10px] font-extrabold px-3 py-1 rounded-full shadow-md animate-bounce" style={{ animationDuration: '2.5s' }}>
-                                                    ✦ Most Popular
+                                                    ✦ Paling Populer
                                                 </span>
                                             </div>
                                         )}
@@ -866,10 +866,10 @@ function PricingSection({ pricingList, pricingMeta }) {
 /* ─────────────────────────────────────────────────────────
    PUBLIC TEMPLATE SHOWCASE SECTION & MODAL
 ───────────────────────────────────────────────────────── */
-function TemplatesSection() {
+function TemplateSection() {
     const navigate = useNavigate();
     const { isAuthenticated, user } = useAuthStore();
-    const [publishedTemplates, setPublishedTemplates] = useState([]);
+    const [publishedTemplate, setPublishedTemplate] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [selectedModalTemplate, setSelectedModalTemplate] = useState(null);
 
@@ -891,7 +891,7 @@ function TemplatesSection() {
                 if (!isMounted) return;
                 const items = res.data?.data ?? res.data ?? [];
                 if (Array.isArray(items) && items.length > 0) {
-                    setPublishedTemplates(items);
+                    setPublishedTemplate(items);
                 }
             })
             .catch((err) => {
@@ -903,7 +903,7 @@ function TemplatesSection() {
         return () => { isMounted = false; };
     }, []);
 
-    const displayTemplates = publishedTemplates;
+    const displayTemplate = publishedTemplate;
 
     return (
         <section id="templates" className="py-20 sm:py-28 bg-slate-50 relative">
@@ -914,7 +914,7 @@ function TemplatesSection() {
                         <Layout className="h-3 w-3" /> Template Library
                     </div>
                     <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-                        Published System Templates<br />Ready to Launch
+                        Published System Template<br />Ready to Launch
                     </h2>
                     <p className="text-sm text-slate-500 mt-2 font-medium">
                         Pilih template terbaik yang telah diterbitkan untuk kebutuhan website bisnis Anda.
@@ -925,7 +925,7 @@ function TemplatesSection() {
                     <div className="flex items-center justify-center py-20">
                         <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
                     </div>
-                ) : displayTemplates.length === 0 ? (
+                ) : displayTemplate.length === 0 ? (
                     <div className="text-center py-16 bg-white rounded-3xl border border-slate-200 p-8 space-y-3">
                         <Layout className="h-10 w-10 text-slate-300 mx-auto" />
                         <p className="font-extrabold text-slate-800 text-base">Belum Ada Template Dipublikasikan</p>
@@ -933,7 +933,7 @@ function TemplatesSection() {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {displayTemplates.slice(0, 6).map((tpl) => {
+                        {displayTemplate.slice(0, 6).map((tpl) => {
                             const categoryName = tpl.industry_category?.name || 'General';
                             const imageUrl = getTemplateImage(tpl);
 
@@ -991,7 +991,7 @@ function TemplatesSection() {
                     </div>
                 )}
 
-                {/* Browse All CTA */}
+                {/* Browse Semua CTA */}
                 {!isLoading && (
                     <div className="mt-10 text-center">
                         <Link
@@ -1081,7 +1081,7 @@ function TemplatesSection() {
 
                         {/* Modal Footer Actions */}
                         <div className="p-5 bg-slate-50 border-t border-slate-100 flex flex-col sm:flex-row items-center gap-3 shrink-0">
-                            {/* Live Preview Action — accessible without login */}
+                            {/* Pratinjau Langsung Action — accessible without login */}
                             <button
                                 type="button"
                                 onClick={() => {
@@ -1093,7 +1093,7 @@ function TemplatesSection() {
                                 className="w-full sm:flex-1 py-3 px-5 rounded-2xl bg-white hover:bg-slate-100 text-slate-800 border border-slate-200 font-bold text-xs shadow-sm flex items-center justify-center gap-2 transition hover:scale-[1.02] active:scale-95"
                             >
                                 <Eye className="h-4 w-4 text-indigo-600" />
-                                <span>Live Preview</span>
+                                <span>Pratinjau Langsung</span>
                             </button>
 
                             {/* Edit Action — requires login if unauthenticated */}
@@ -1104,7 +1104,7 @@ function TemplatesSection() {
                                 style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}
                             >
                                 <Edit2 className="h-4 w-4" />
-                                <span>{isAuthenticated ? 'Edit Template' : 'Edit Template (Login)'}</span>
+                                <span>{isAuthenticated ? 'Ubah Template' : 'Ubah Template (Login)'}</span>
                             </button>
                         </div>
 
@@ -1120,21 +1120,21 @@ function TemplatesSection() {
 ───────────────────────────────────────────────────────── */
 const DEFAULT_LANDING_CONTENT = {
     hero_badge: 'Microdata Website Builder 2.0',
-    hero_title: 'Build Professional Websites',
-    hero_subtitle: 'With One-Click Hosting',
-    hero_desc: 'Create, customize, and publish stunning websites using a visual drag-and-drop builder without writing a single line of code.',
-    hero_cta_primary: 'Start Building Free',
-    hero_cta_secondary: 'Watch Live Demo',
+    hero_title: 'Bangun Website Profesional',
+    hero_subtitle: 'Dengan Hosting Satu Klik',
+    hero_desc: 'Buat, sesuaikan, dan publikasikan website memukau memakai builder seret & letakkan tanpa menulis satu baris pun kode.',
+    hero_cta_primary: 'Mulai Membangun Gratis',
+    hero_cta_secondary: 'Watch Demo Langsung',
     features_badge: 'Platform Features',
-    features_title: 'Everything Needed to Launch Websites Faster',
-    features_subtitle: 'All the tools a business needs to create a stunning web presence — in one platform.',
-    steps_title: 'Build and Publish in 4 Easy Steps',
-    stats_title: 'Trusted at Scale',
-    stats_subtitle: 'Numbers that speak for themselves.',
-    cta_badge: 'Get Started Today',
-    cta_title: 'Start Building Your Website Today',
-    cta_desc: 'Launch professional websites faster with Microdata Website Builder. No credit card required.',
-    cta_button_text: 'Start Building Free',
+    features_title: 'Semua yang Dibutuhkan untuk Meluncurkan Website Lebih Cepat',
+    features_subtitle: 'Semua alat yang dibutuhkan bisnis to create a stunning web presence — in one platform.',
+    steps_title: 'Bangun dan Publikasikan dalam 4 Langkah Mudah',
+    stats_title: 'Terpercaya dalam Skala Besar',
+    stats_subtitle: 'Angka yang berbicara dengan sendirinya.',
+    cta_badge: 'Mulai Hari Ini',
+    cta_title: 'Mulai Bangun Website Anda Hari Ini',
+    cta_desc: 'Launch professional websites faster with Microdata Website Builder. Tanpa kartu kredit.',
+    cta_button_text: 'Mulai Membangun Gratis',
     // Footer
     footer_brand_name: 'Microdata',
     footer_brand_tagline: 'Studio',
@@ -1144,7 +1144,7 @@ const DEFAULT_LANDING_CONTENT = {
     footer_social_github: '#',
     footer_social_linkedin: '#',
     footer_social_instagram: '#',
-    footer_copyright: '© 2026 PT Microdata Solusindo. All rights reserved.',
+    footer_copyright: '© 2026 PT Microdata Solusindo. Hak cipta dilindungi.',
 };
 
 export default function LandingPage({ liveContent }) {
@@ -1263,7 +1263,7 @@ export default function LandingPage({ liveContent }) {
 
                             {/* Trust text */}
                             <p className="mt-6 text-sm text-slate-400 font-medium">
-                                ✦ Trusted by <span className="font-bold text-slate-700">10,000+</span> businesses and organizations nationwide
+                                ✦ Dipercaya oleh <span className="font-bold text-slate-700">10,000+</span> bisnis dan organisasi di seluruh Indonesia
                             </p>
 
                             {/* Trusted logos infinite marquee */}
@@ -1360,10 +1360,10 @@ export default function LandingPage({ liveContent }) {
                     <div className="text-center mb-14">
                         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold mb-4 border"
                             style={{ background: 'rgba(79,70,229,0.06)', borderColor: 'rgba(79,70,229,0.18)', color: '#4f46e5' }}>
-                            <Clock className="h-3 w-3 animate-spin" style={{ animationDuration: '10s' }} /> {landingContent.steps_badge || 'How It Works'}
+                            <Clock className="h-3 w-3 animate-spin" style={{ animationDuration: '10s' }} /> {landingContent.steps_badge || 'Cara Kerja'}
                         </div>
                         <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-                            {landingContent.steps_title || 'Build and Publish in 4 Easy Steps'}
+                            {landingContent.steps_title || 'Bangun dan Publikasikan dalam 4 Langkah Mudah'}
                         </h2>
                     </div>
 
@@ -1416,7 +1416,7 @@ export default function LandingPage({ liveContent }) {
             {/* ════════════════════════════════════════════════════
                 TEMPLATE SHOWCASE
             ════════════════════════════════════════════════════ */}
-            <TemplatesSection />
+            <TemplateSection />
 
             {/* ════════════════════════════════════════════════════
                 STATS (Dark with Animated Counter & Parallax)
@@ -1538,7 +1538,7 @@ export default function LandingPage({ liveContent }) {
                                     ))
                                 )}
                             </div>
-                            {/* Contact Email */}
+                            {/* Kontak Email */}
                             {landingContent.footer_email && (
                                 <a href={`mailto:${landingContent.footer_email}`}
                                     className="mt-4 inline-flex items-center gap-1.5 text-xs text-indigo-400 hover:text-indigo-300 transition">
@@ -1551,10 +1551,10 @@ export default function LandingPage({ liveContent }) {
                         </div>
 
                         {[
-                            { title: 'Product', links: ['Features', 'Templates', 'Builder', 'Pricing', 'Changelog'] },
-                            { title: 'Templates', links: ['Corporate', 'Logistics', 'Education', 'Startup', 'Organization'] },
-                            { title: 'Resources', links: ['Documentation', 'Blog', 'Support', 'API Reference', 'Status'] },
-                            { title: 'Company', links: ['About', 'Careers', 'Privacy Policy', 'Terms of Service', 'Contact'] },
+                            { title: 'Produk', links: ['Features', 'Template', 'Builder', 'Pricing', 'Changelog'] },
+                            { title: 'Template', links: ['Corporate', 'Logistics', 'Education', 'Startup', 'Organization'] },
+                            { title: 'Sumber Daya', links: ['Dokumentasi', 'Blog', 'Support', 'Referensi API', 'Status'] },
+                            { title: 'Perusahaan', links: ['About', 'Karier', 'Kebijakan Privasi', 'Terms of Service', 'Kontak'] },
                         ].map(col => (
                             <div key={col.title}>
                                 <p className="text-xs font-extrabold text-white uppercase tracking-wider mb-4">{col.title}</p>
@@ -1573,10 +1573,10 @@ export default function LandingPage({ liveContent }) {
 
                     <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
                         <p className="text-xs text-slate-500">
-                            {landingContent.footer_copyright || '© 2026 PT Microdata Solusindo. All rights reserved.'}
+                            {landingContent.footer_copyright || '© 2026 PT Microdata Solusindo. Hak cipta dilindungi.'}
                         </p>
                         <div className="flex gap-4">
-                            <a href="#" className="text-xs text-slate-500 hover:text-white transition">Privacy Policy</a>
+                            <a href="#" className="text-xs text-slate-500 hover:text-white transition">Kebijakan Privasi</a>
                             <a href="#" className="text-xs text-slate-500 hover:text-white transition">Terms of Service</a>
                         </div>
                     </div>

@@ -89,7 +89,7 @@ export default function AdminDashboard() {
                         <Shield className="h-3.5 w-3.5" />
                         <span>{brand_name} Admin Dashboard</span>
                     </div>
-                    <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">System Overview</h1>
+                    <h1 className="text-3xl font-extrabold text-[rgb(var(--color-text-primary))] tracking-tight">Ringkasan Sistem</h1>
                     <p className="text-sm text-[rgb(var(--color-text-secondary))] mt-1">
                         Selamat datang kembali, <span className="font-bold text-indigo-600 dark:text-indigo-400">{firstName}</span>. Berikut ringkasan performa dan aktivitas ekosistem platform.
                     </p>
@@ -103,7 +103,7 @@ export default function AdminDashboard() {
                         className="flex items-center gap-2 px-4 py-2.5 bg-[rgb(var(--color-surface))] border border-[rgb(var(--color-border))] rounded-xl text-xs font-bold text-[rgb(var(--color-text-primary))] hover:bg-[rgb(var(--color-surface-alt))] transition shadow-xs disabled:opacity-50"
                     >
                         <RefreshCw className={`h-4 w-4 ${isRefetching ? 'animate-spin text-indigo-600' : ''}`} />
-                        <span>{isRefetching ? 'Memperbarui...' : 'Refresh Data'}</span>
+                        <span>{isRefetching ? 'Memperbarui...' : 'Muat Ulang Data'}</span>
                     </button>
                     <button
                         type="button"
@@ -141,9 +141,9 @@ export default function AdminDashboard() {
                 ))}
             </div>
 
-            {/* Recent Websites & Activity Grid */}
+            {/* Website Terbaru & Activity Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Recent Websites */}
+                {/* Website Terbaru */}
                 <Card className="p-6">
                     <div className="flex items-center justify-between mb-4 pb-3 border-b border-[rgb(var(--color-border))]">
                         <div className="flex items-center gap-2">
@@ -203,7 +203,7 @@ export default function AdminDashboard() {
                             <h3 className="text-sm font-extrabold text-[rgb(var(--color-text-primary))]">Aktivitas Sistem Terbaru</h3>
                         </div>
                         <span className="text-[10px] font-bold bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-200/50">
-                            Live Events
+                            Acara Langsung
                         </span>
                     </div>
 

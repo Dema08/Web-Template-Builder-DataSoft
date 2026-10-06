@@ -9,7 +9,7 @@ export default function UmkmFooterWellness({ components = [], sectionId = null }
   const defaultComponents = [
     { id: 'ftr-wl-brand', type: 'heading', props: { content: 'SEKAR ARUM BOTANICALS', level: 'h3', fontSize: '20px', fontWeight: '800', color: '#ecfdf5', letterSpacing: '0.08em' } },
     { id: 'ftr-wl-tagline', type: 'paragraph', props: { content: 'Perawatan kulit alami berbasis kearifan botani herbal Indonesia. Menghidupkan kembali rahasia kecantikan tradisional yang teruji secara sains.', fontSize: '13px', color: '#a7f3d0' } },
-    { id: 'ftr-wl-copy', type: 'paragraph', props: { content: '© 2026 PT Sekar Arum Nusantara. All rights reserved.', fontSize: '12px', color: '#6ee7b7' } },
+    { id: 'ftr-wl-copy', type: 'paragraph', props: { content: '© 2026 PT Sekar Arum Nusantara. Hak cipta dilindungi.', fontSize: '12px', color: '#6ee7b7' } },
     { id: 'ftr-wl-lnk1', type: 'button', props: { label: 'Face Oils & Serums', href: '#products', variant: 'ghost', size: 'small', background: 'transparent', color: '#a7f3d0' } },
     { id: 'ftr-wl-lnk2', type: 'button', props: { label: 'Body Care & Soaps', href: '#products', variant: 'ghost', size: 'small', background: 'transparent', color: '#a7f3d0' } },
     { id: 'ftr-wl-lnk3', type: 'button', props: { label: 'Aromatherapy Mists', href: '#products', variant: 'ghost', size: 'small', background: 'transparent', color: '#a7f3d0' } },

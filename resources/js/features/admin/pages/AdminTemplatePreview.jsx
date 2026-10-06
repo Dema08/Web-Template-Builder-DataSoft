@@ -405,7 +405,7 @@ export default function AdminTemplatePreview() {
             type="button"
             onClick={handleClose}
             className="p-1.5 bg-red-500/20 hover:bg-red-500/30 text-red-300 rounded-lg transition"
-            title="Close Live Preview"
+            title="Close Pratinjau Langsung"
           >
             <X className="h-4 w-4" />
           </button>

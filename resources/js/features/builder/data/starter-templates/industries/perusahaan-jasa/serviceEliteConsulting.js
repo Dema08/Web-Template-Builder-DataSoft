@@ -461,7 +461,7 @@ export default {
         {
           id: 'ftr-copy',
           type: 'text',
-          props: { content: '© 2026 Aurelius & Partners Advisory Ltd. All rights reserved. Strict confidentiality guaranteed.', fontSize: '12px', color: '#64748b' },
+          props: { content: '© 2026 Aurelius & Partners Advisory Ltd. Hak cipta dilindungi. Strict confidentiality guaranteed.', fontSize: '12px', color: '#64748b' },
         },
         {
           id: 'ftr-link1',

@@ -9,7 +9,7 @@ export default function EduFooterBootcamp({ components = [], sectionId = null })
   const defaultComponents = [
     { id: 'ftr-bt-brand', type: 'heading', props: { content: 'CODESPHERE.ACADEMY', level: 'h3', fontSize: '20px', fontWeight: '900', color: '#ffffff', letterSpacing: '0.02em' } },
     { id: 'ftr-bt-tagline', type: 'paragraph', props: { content: 'Akselerator Karir Teknologi Terdepan. Menjembatani talenta non-IT dan profesional menuju karir software engineer kelas dunia.', fontSize: '13px', color: '#94a3b8' } },
-    { id: 'ftr-bt-copy', type: 'paragraph', props: { content: '© 2026 CodeSphere Academy Inc. All rights reserved.', fontSize: '12px', color: '#64748b' } },
+    { id: 'ftr-bt-copy', type: 'paragraph', props: { content: '© 2026 CodeSphere Academy Inc. Hak cipta dilindungi.', fontSize: '12px', color: '#64748b' } },
     { id: 'ftr-bt-lnk1', type: 'button', props: { label: 'Fullstack Web Engineering', href: '#tracks', variant: 'ghost', size: 'small', background: 'transparent', color: '#cbd5e1' } },
     { id: 'ftr-bt-lnk2', type: 'button', props: { label: 'Applied AI & LLM Systems', href: '#tracks', variant: 'ghost', size: 'small', background: 'transparent', color: '#cbd5e1' } },
     { id: 'ftr-bt-lnk3', type: 'button', props: { label: 'Data Science & MLOps', href: '#tracks', variant: 'ghost', size: 'small', background: 'transparent', color: '#cbd5e1' } },

@@ -106,7 +106,7 @@ function GalleryNavbar() {
                     </div>
                     <div className="flex items-center gap-3">
                         <Link to={ROUTES.LOGIN}
-                              className="text-sm font-bold text-slate-700 hover:text-purple-600 transition px-3 py-2">Login</Link>
+                              className="text-sm font-bold text-slate-700 hover:text-purple-600 transition px-3 py-2">Masuk</Link>
                         <Link to={ROUTES.REGISTER}
                               className="text-sm font-bold text-white px-5 py-2 rounded-full shadow-md hover:shadow-lg transition-all"
                               style={{ background: 'linear-gradient(135deg,#7c3aed,#4f46e5)' }}>Start Building</Link>
@@ -341,13 +341,13 @@ function TemplateModal({ tpl, onClose, onEdit }) {
                     <button type="button"
                             onClick={() => window.open(tpl.is_fallback ? `/preview/template` : `/admin/templates/builder/${tpl.id}/preview`, '_blank')}
                             className="w-full sm:flex-1 py-3 px-5 rounded-2xl bg-white hover:bg-slate-100 text-slate-800 border border-slate-200 font-bold text-xs shadow-sm flex items-center justify-center gap-2 transition hover:scale-[1.02]">
-                        <Eye className="h-4 w-4 text-purple-600" /> Live Preview
+                        <Eye className="h-4 w-4 text-purple-600" /> Pratinjau Langsung
                     </button>
                     <button type="button" onClick={() => onEdit(tpl)}
                             className="w-full sm:flex-1 py-3 px-5 rounded-2xl text-white font-bold text-xs shadow-lg shadow-purple-600/25 flex items-center justify-center gap-2 transition hover:scale-[1.02]"
                             style={{ background: 'linear-gradient(135deg,#7c3aed,#4f46e5)' }}>
                         <Edit2 className="h-4 w-4" />
-                        {isAuthenticated ? 'Edit Template' : 'Edit Template (Login)'}
+                        {isAuthenticated ? 'Ubah Template' : 'Ubah Template (Login)'}
                     </button>
                 </div>
             </div>

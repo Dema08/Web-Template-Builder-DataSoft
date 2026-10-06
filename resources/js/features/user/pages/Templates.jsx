@@ -177,7 +177,7 @@ export default function Templates() {
             sessionStorage.setItem('pending_template_id', String(tpl.id));
             sessionStorage.setItem('pending_template_name', tpl.name);
         } catch (_) { /* ignore */ }
-        toast.success(`Membuka template "${tpl.name}" untuk diedit di Builder...`, 'Edit Template');
+        toast.success(`Membuka template "${tpl.name}" untuk diedit di Builder...`, 'Ubah Template');
         navigate(ROUTES.BUILDER);
     };
 
@@ -480,7 +480,7 @@ function MyTemplateCard({ tpl, onEdit, onToggleVisibility, onDelete, onPreview }
                             type="button"
                             onClick={() => onEdit(tpl)}
                             className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-xl transition cursor-pointer"
-                            title="Edit Template di Builder"
+                            title="Ubah Template di Builder"
                         >
                             <Wand2 className="h-4 w-4" />
                         </button>
