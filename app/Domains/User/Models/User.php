@@ -41,6 +41,8 @@ class User extends Authenticatable
         'avatar',
         'peran',
         'disetujui',
+        'is_active',
+        'alasan_penonaktifan',
         'paket_harga_id',
     ];
 
@@ -63,6 +65,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'peran' => UserRole::class,
         'disetujui' => 'boolean',
+        'is_active' => 'boolean',
         'paket_harga_id' => 'integer',
     ];
 

@@ -43,6 +43,8 @@ class UserResource extends JsonResource
             'avatar'      => $avatar,
             'role'        => $user->peran?->value ?? 'user',
             'is_approved' => (bool) $user->disetujui,
+            'is_active'   => (bool) ($user->is_active ?? true),
+            'alasan_penonaktifan' => $user->alasan_penonaktifan,
             'plan'        => new \App\Domains\Pricelist\Resources\PricelistResource($effectivePlan),
             'created_at'  => $user->created_at?->toISOString(),
         ];

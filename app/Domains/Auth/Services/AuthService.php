@@ -113,6 +113,17 @@ class AuthService extends BaseService
             );
         }
 
+        // Check if account has been deactivated by admin
+        if (isset($user->is_active) && $user->is_active === false) {
+            $alasan = $user->alasan_penonaktifan
+                ? "Alasan: {$user->alasan_penonaktifan}"
+                : 'Hubungi administrator untuk informasi lebih lanjut.';
+            throw new DomainException(
+                "Akun Anda telah dinonaktifkan oleh administrator. {$alasan}",
+                403
+            );
+        }
+
         if (! $user->disetujui) {
             $pendingTx = $user->transactions()
                 ->where('status', \App\Domains\Billing\Enums\TransactionStatus::Pending)

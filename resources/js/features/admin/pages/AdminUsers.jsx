@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Users, Search, Shield, ShieldCheck, Edit2, Trash2, X, Check, UserCheck, Clock, CreditCard } from 'lucide-react';
+import { Users, Search, Shield, ShieldCheck, Edit2, Trash2, X, Check, UserCheck, Clock, CreditCard, UserX, UserPlus } from 'lucide-react';
 import { http } from '@api';
 import { Spinner, Alert, Card, ConfirmModal } from '@shared/components/ui';
 import { toast, useAuthStore } from '@store';
@@ -12,7 +12,7 @@ export default function AdminUsers() {
     const [selectedPlanId, setSelectedPlanId] = useState('');
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isPlanModalOpen, setIsPlanModalOpen] = useState(false);
-    const [filterStatus, setFilterStatus] = useState('all'); // 'all' | 'pending' | 'approved'
+    const [filterStatus, setFilterStatus] = useState('all'); // 'all' | 'pending' | 'approved' | 'inactive'
 
     // Confirmation Modals State
     const [userToApprove, setUserToApprove] = useState(null);
@@ -20,6 +20,16 @@ export default function AdminUsers() {
 
     const [userToDelete, setUserToDelete] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+    // Deactivate Modal State
+    const [userToDeactivate, setUserToDeactivate] = useState(null);
+    const [isDeactivateModalOpen, setIsDeactivateModalOpen] = useState(false);
+    const [alasanPenonaktifan, setAlasanPenonaktifan] = useState('');
+    const [alasanError, setAlasanError] = useState('');
+
+    // Activate Confirmation State
+    const [userToActivate, setUserToActivate] = useState(null);
+    const [isActivateModalOpen, setIsActivateModalOpen] = useState(false);
 
     const queryClient = useQueryClient();
 
@@ -106,6 +116,44 @@ export default function AdminUsers() {
         },
     });
 
+    // Mutation to deactivate user
+    const deactivateUserMutation = useMutation({
+        mutationFn: async ({ userId, alasan }) => {
+            const { data } = await http.patch(`/admin/users/${userId}/deactivate`, { alasan });
+            return data;
+        },
+        onSuccess: (data) => {
+            queryClient.invalidateQueries(['admin-users']);
+            toast.success(data?.message || 'Akun user berhasil dinonaktifkan.', 'Akun Dinonaktifkan');
+            setIsDeactivateModalOpen(false);
+            setUserToDeactivate(null);
+            setAlasanPenonaktifan('');
+            setAlasanError('');
+        },
+        onError: (error) => {
+            const msg = error?.response?.data?.message || error?.response?.data?.errors?.alasan?.[0] || 'Gagal menonaktifkan akun user.';
+            toast.error(msg, 'Error Nonaktifkan');
+        },
+    });
+
+    // Mutation to activate user
+    const activateUserMutation = useMutation({
+        mutationFn: async (userId) => {
+            const { data } = await http.patch(`/admin/users/${userId}/activate`);
+            return data;
+        },
+        onSuccess: (data) => {
+            queryClient.invalidateQueries(['admin-users']);
+            toast.success(data?.message || 'Akun user berhasil diaktifkan kembali.', 'Akun Diaktifkan');
+            setIsActivateModalOpen(false);
+            setUserToActivate(null);
+        },
+        onError: (error) => {
+            const msg = error?.response?.data?.message || 'Gagal mengaktifkan akun user.';
+            toast.error(msg, 'Error Aktifkan');
+        },
+    });
+
     // Mutation to delete user
     const deleteUserMutation = useMutation({
         mutationFn: async (userId) => {
@@ -168,7 +216,39 @@ export default function AdminUsers() {
         approveUserMutation.mutate(userToApprove.id);
     };
 
+    const handleOpenDeactivate = (user) => {
+        setUserToDeactivate(user);
+        setAlasanPenonaktifan('');
+        setAlasanError('');
+        setIsDeactivateModalOpen(true);
+    };
+
+    const handleConfirmDeactivate = (e) => {
+        e.preventDefault();
+        if (!alasanPenonaktifan.trim()) {
+            setAlasanError('Alasan penonaktifan wajib diisi.');
+            return;
+        }
+        if (alasanPenonaktifan.trim().length < 3) {
+            setAlasanError('Alasan minimal 3 karakter.');
+            return;
+        }
+        setAlasanError('');
+        deactivateUserMutation.mutate({ userId: userToDeactivate.id, alasan: alasanPenonaktifan.trim() });
+    };
+
+    const handleOpenActivate = (user) => {
+        setUserToActivate(user);
+        setIsActivateModalOpen(true);
+    };
+
+    const handleConfirmActivate = () => {
+        if (!userToActivate) return;
+        activateUserMutation.mutate(userToActivate.id);
+    };
+
     const pendingCount = users?.filter((u) => !u.is_approved).length || 0;
+    const inactiveCount = users?.filter((u) => u.is_active === false).length || 0;
 
     const filteredUsers = users?.filter((u) => {
         const matchSearch =
@@ -178,7 +258,8 @@ export default function AdminUsers() {
         const matchStatus =
             filterStatus === 'all' ||
             (filterStatus === 'pending' && !u.is_approved) ||
-            (filterStatus === 'approved' && u.is_approved);
+            (filterStatus === 'approved' && u.is_approved) ||
+            (filterStatus === 'inactive' && u.is_active === false);
 
         return matchSearch && matchStatus;
     });
@@ -198,15 +279,25 @@ export default function AdminUsers() {
                     </p>
                 </div>
 
-                {/* Pending approval badge */}
-                {pendingCount > 0 && (
-                    <div className="flex items-center gap-2.5 px-4 py-2.5 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/80 rounded-2xl shadow-xs">
-                        <Clock className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0" />
-                        <span className="text-sm font-bold text-amber-800 dark:text-amber-300">
-                            {pendingCount} akun menunggu persetujuan
-                        </span>
-                    </div>
-                )}
+                {/* Badge group */}
+                <div className="flex items-center gap-2 flex-wrap">
+                    {pendingCount > 0 && (
+                        <div className="flex items-center gap-2.5 px-4 py-2.5 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/80 rounded-2xl shadow-xs">
+                            <Clock className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0" />
+                            <span className="text-sm font-bold text-amber-800 dark:text-amber-300">
+                                {pendingCount} menunggu persetujuan
+                            </span>
+                        </div>
+                    )}
+                    {inactiveCount > 0 && (
+                        <div className="flex items-center gap-2.5 px-4 py-2.5 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800/80 rounded-2xl shadow-xs">
+                            <UserX className="h-4 w-4 text-red-600 dark:text-red-400 shrink-0" />
+                            <span className="text-sm font-bold text-red-800 dark:text-red-300">
+                                {inactiveCount} akun nonaktif
+                            </span>
+                        </div>
+                    )}
+                </div>
             </div>
 
             {/* Content Table Card */}
@@ -229,6 +320,7 @@ export default function AdminUsers() {
                             { key: 'all', label: 'Semua' },
                             { key: 'pending', label: `Menunggu${pendingCount > 0 ? ` (${pendingCount})` : ''}` },
                             { key: 'approved', label: 'Disetujui' },
+                            { key: 'inactive', label: `Nonaktif${inactiveCount > 0 ? ` (${inactiveCount})` : ''}` },
                         ].map((tab) => (
                             <button
                                 key={tab.key}
@@ -237,7 +329,9 @@ export default function AdminUsers() {
                                     filterStatus === tab.key
                                         ? tab.key === 'pending'
                                             ? 'bg-amber-100 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300'
-                                            : 'bg-indigo-100 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300'
+                                            : tab.key === 'inactive'
+                                                ? 'bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-300'
+                                                : 'bg-indigo-100 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300'
                                         : 'text-[rgb(var(--color-text-secondary))] hover:bg-[rgb(var(--color-surface-alt))]'
                                 }`}
                             >
@@ -284,24 +378,51 @@ export default function AdminUsers() {
                                 ) : filteredUsers?.map((u) => {
                                     const isAdmin = u.role === 'admin';
                                     const isPending = !u.is_approved;
+                                    const isInactive = u.is_active === false;
                                     const planName = u.plan?.name || u.plan?.nama || 'Free';
                                     const isFreePlan = u.plan?.slug === 'free' || u.plan?.price === 0;
 
                                     return (
                                         <tr
                                             key={u.id}
-                                            className={`hover:bg-[rgb(var(--color-surface-alt))]/80 transition ${isPending ? 'bg-amber-50/30 dark:bg-amber-950/10' : ''}`}
+                                            className={`hover:bg-[rgb(var(--color-surface-alt))]/80 transition ${
+                                                isInactive
+                                                    ? 'bg-red-50/30 dark:bg-red-950/10'
+                                                    : isPending
+                                                        ? 'bg-amber-50/30 dark:bg-amber-950/10'
+                                                        : ''
+                                            }`}
                                         >
                                             <td className="py-4 px-6">
                                                 <div className="flex items-center gap-3">
-                                                    <div className={`h-9 w-9 rounded-full font-bold text-xs flex items-center justify-center ${isPending ? 'bg-amber-500 text-white' : 'bg-indigo-600 text-white'}`}>
+                                                    <div className={`h-9 w-9 rounded-full font-bold text-xs flex items-center justify-center relative ${
+                                                        isInactive
+                                                            ? 'bg-slate-400 text-white'
+                                                            : isPending
+                                                                ? 'bg-amber-500 text-white'
+                                                                : 'bg-indigo-600 text-white'
+                                                    }`}>
                                                         {u.avatar ? (
-                                                            <img src={u.avatar} alt={u.name} className="h-full w-full rounded-full object-cover" />
+                                                            <img src={u.avatar} alt={u.name} className={`h-full w-full rounded-full object-cover ${isInactive ? 'opacity-50 grayscale' : ''}`} />
                                                         ) : (
                                                             u.name?.slice(0, 2).toUpperCase()
                                                         )}
+                                                        {isInactive && (
+                                                            <span className="absolute -bottom-0.5 -right-0.5 h-4 w-4 bg-red-500 rounded-full flex items-center justify-center shadow">
+                                                                <UserX className="h-2.5 w-2.5 text-white" />
+                                                            </span>
+                                                        )}
                                                     </div>
-                                                    <span className="font-bold text-[rgb(var(--color-text-primary))] text-sm">{u.name}</span>
+                                                    <div>
+                                                        <span className={`font-bold text-sm ${isInactive ? 'text-[rgb(var(--color-text-tertiary))] line-through' : 'text-[rgb(var(--color-text-primary))]'}`}>
+                                                            {u.name}
+                                                        </span>
+                                                        {isInactive && u.alasan_penonaktifan && (
+                                                            <p className="text-[10px] text-red-500 dark:text-red-400 font-medium mt-0.5 max-w-[180px] truncate" title={u.alasan_penonaktifan}>
+                                                                {u.alasan_penonaktifan}
+                                                            </p>
+                                                        )}
+                                                    </div>
                                                 </div>
                                             </td>
                                             <td className="py-4 px-6 font-medium text-[rgb(var(--color-text-secondary))]">{u.email}</td>
@@ -339,7 +460,12 @@ export default function AdminUsers() {
                                             </td>
 
                                             <td className="py-4 px-6">
-                                                {isPending ? (
+                                                {isInactive ? (
+                                                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-red-100 dark:bg-red-950/40 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-800">
+                                                        <UserX className="h-3.5 w-3.5" />
+                                                        Dinonaktifkan
+                                                    </span>
+                                                ) : isPending ? (
                                                     <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-100 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
                                                         <Clock className="h-3.5 w-3.5" />
                                                         Menunggu Persetujuan
@@ -359,7 +485,7 @@ export default function AdminUsers() {
                                             <td className="py-4 px-6 text-right">
                                                 <div className="flex items-center justify-end gap-1.5">
                                                     {/* Approve — Prominent Button for Pending Users */}
-                                                    {isPending && (
+                                                    {isPending && !isInactive && (
                                                         <button
                                                             type="button"
                                                             onClick={() => handleApprove(u)}
@@ -369,6 +495,30 @@ export default function AdminUsers() {
                                                         >
                                                             <UserCheck className="h-3.5 w-3.5 stroke-[2.5]" />
                                                             <span>Setujui</span>
+                                                        </button>
+                                                    )}
+
+                                                    {/* Activate / Deactivate toggle */}
+                                                    {isInactive ? (
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => handleOpenActivate(u)}
+                                                            disabled={activateUserMutation.isPending}
+                                                            className="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 text-white rounded-xl font-bold text-xs shadow-sm transition flex items-center gap-1.5 hover:scale-105 active:scale-95 disabled:opacity-50 cursor-pointer"
+                                                            title="Aktifkan Kembali Akun"
+                                                        >
+                                                            <UserPlus className="h-3.5 w-3.5 stroke-[2.5]" />
+                                                            <span>Aktifkan</span>
+                                                        </button>
+                                                    ) : (
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => handleOpenDeactivate(u)}
+                                                            disabled={deactivateUserMutation.isPending}
+                                                            className="p-2 text-orange-600 dark:text-orange-400 hover:text-orange-700 bg-orange-50 dark:bg-orange-950/30 hover:bg-orange-100 dark:hover:bg-orange-900/50 rounded-xl transition cursor-pointer disabled:opacity-50"
+                                                            title="Nonaktifkan Akun User"
+                                                        >
+                                                            <UserX className="h-4 w-4" />
                                                         </button>
                                                     )}
 
@@ -481,6 +631,151 @@ export default function AdminUsers() {
                 }
             />
 
+            {/* Activate Confirm Modal */}
+            <ConfirmModal
+                isOpen={isActivateModalOpen}
+                onClose={() => {
+                    setIsActivateModalOpen(false);
+                    setUserToActivate(null);
+                }}
+                onConfirm={handleConfirmActivate}
+                title="Aktifkan Kembali Akun"
+                description="Akun user ini akan diaktifkan kembali dan dapat login serta menggunakan platform seperti biasa."
+                variant="success"
+                icon={UserPlus}
+                confirmText="Ya, Aktifkan Kembali"
+                cancelText="Batal"
+                isLoading={activateUserMutation.isPending}
+                details={
+                    userToActivate && (
+                        <div className="flex items-center gap-3">
+                            <div className="h-10 w-10 rounded-full bg-emerald-600 text-white font-extrabold flex items-center justify-center shrink-0 shadow-sm">
+                                {userToActivate.avatar ? (
+                                    <img src={userToActivate.avatar} alt={userToActivate.name} className="h-full w-full rounded-full object-cover" />
+                                ) : (
+                                    userToActivate.name?.slice(0, 2).toUpperCase()
+                                )}
+                            </div>
+                            <div>
+                                <p className="font-extrabold text-[rgb(var(--color-text-primary))] text-sm">{userToActivate.name}</p>
+                                <p className="text-xs text-[rgb(var(--color-text-secondary))]">{userToActivate.email}</p>
+                                {userToActivate.alasan_penonaktifan && (
+                                    <p className="text-[10px] text-red-500 mt-0.5">Alasan nonaktif: {userToActivate.alasan_penonaktifan}</p>
+                                )}
+                            </div>
+                        </div>
+                    )
+                }
+            />
+
+            {/* Deactivate Modal — with required reason textarea */}
+            {isDeactivateModalOpen && userToDeactivate && (
+                <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+                    <div className="bg-[rgb(var(--color-surface))] rounded-3xl max-w-md w-full p-6 shadow-2xl border border-[rgb(var(--color-border))] space-y-5 animate-in fade-in zoom-in-95 duration-150">
+                        {/* Header */}
+                        <div className="flex items-center justify-between border-b border-[rgb(var(--color-border))] pb-3">
+                            <div className="flex items-center gap-2">
+                                <div className="h-8 w-8 rounded-xl bg-orange-100 dark:bg-orange-950/40 flex items-center justify-center">
+                                    <UserX className="h-4 w-4 text-orange-600 dark:text-orange-400" />
+                                </div>
+                                <h3 className="text-base font-extrabold text-[rgb(var(--color-text-primary))]">Nonaktifkan Akun User</h3>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setIsDeactivateModalOpen(false);
+                                    setUserToDeactivate(null);
+                                    setAlasanPenonaktifan('');
+                                    setAlasanError('');
+                                }}
+                                className="text-[rgb(var(--color-text-tertiary))] hover:text-[rgb(var(--color-text-primary))] p-1 rounded-lg hover:bg-[rgb(var(--color-surface-alt))] transition cursor-pointer"
+                            >
+                                <X className="h-5 w-5" />
+                            </button>
+                        </div>
+
+                        {/* Warning notice */}
+                        <div className="p-3 bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-800 rounded-2xl text-xs text-orange-800 dark:text-orange-200 flex items-start gap-2.5">
+                            <UserX className="h-4 w-4 text-orange-600 dark:text-orange-400 shrink-0 mt-0.5" />
+                            <span>Akun akan langsung diblokir dari login. User akan melihat pesan <strong>alasan</strong> yang Anda masukkan saat mencoba login.</span>
+                        </div>
+
+                        {/* User info */}
+                        <div className="p-3 bg-[rgb(var(--color-surface-alt))] rounded-2xl border border-[rgb(var(--color-border))] flex items-center gap-3">
+                            <div className="h-9 w-9 rounded-full bg-slate-500 text-white font-extrabold flex items-center justify-center shrink-0 text-xs">
+                                {userToDeactivate.avatar ? (
+                                    <img src={userToDeactivate.avatar} alt={userToDeactivate.name} className="h-full w-full rounded-full object-cover grayscale" />
+                                ) : (
+                                    userToDeactivate.name?.slice(0, 2).toUpperCase()
+                                )}
+                            </div>
+                            <div>
+                                <p className="text-sm font-bold text-[rgb(var(--color-text-primary))]">{userToDeactivate.name}</p>
+                                <p className="text-xs text-[rgb(var(--color-text-secondary))]">{userToDeactivate.email}</p>
+                            </div>
+                        </div>
+
+                        {/* Reason Form */}
+                        <form onSubmit={handleConfirmDeactivate} className="space-y-4">
+                            <div>
+                                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">
+                                    Alasan Penonaktifan <span className="text-red-500">*</span>
+                                </label>
+                                <textarea
+                                    rows={4}
+                                    placeholder="Contoh: Pelanggaran ketentuan layanan platform, aktivitas mencurigakan..."
+                                    value={alasanPenonaktifan}
+                                    onChange={(e) => {
+                                        setAlasanPenonaktifan(e.target.value);
+                                        if (e.target.value.trim().length >= 3) setAlasanError('');
+                                    }}
+                                    className={`w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border rounded-xl text-xs text-[rgb(var(--color-text-primary))] placeholder-[rgb(var(--color-text-tertiary))] focus:outline-none focus:ring-2 resize-none transition ${
+                                        alasanError
+                                            ? 'border-red-400 focus:ring-red-500/20 focus:border-red-500'
+                                            : 'border-[rgb(var(--color-border))] focus:ring-orange-600/20 focus:border-orange-500'
+                                    }`}
+                                />
+                                {alasanError && (
+                                    <p className="mt-1 text-[10px] font-semibold text-red-500">{alasanError}</p>
+                                )}
+                                <p className="mt-1 text-[10px] text-[rgb(var(--color-text-tertiary))]">
+                                    Alasan ini akan ditampilkan kepada user saat mereka mencoba login.
+                                </p>
+                            </div>
+
+                            <div className="pt-2 flex items-center justify-end gap-3 border-t border-[rgb(var(--color-border))]">
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setIsDeactivateModalOpen(false);
+                                        setUserToDeactivate(null);
+                                        setAlasanPenonaktifan('');
+                                        setAlasanError('');
+                                    }}
+                                    className="px-4 py-2 text-xs font-bold text-[rgb(var(--color-text-secondary))] hover:bg-[rgb(var(--color-surface-alt))] rounded-xl transition cursor-pointer"
+                                >
+                                    Batal
+                                </button>
+                                <button
+                                    type="submit"
+                                    disabled={deactivateUserMutation.isPending}
+                                    className="px-5 py-2 text-xs font-bold bg-orange-500 hover:bg-orange-600 text-white rounded-xl shadow-md shadow-orange-500/20 transition flex items-center gap-1.5 disabled:opacity-50 cursor-pointer"
+                                >
+                                    {deactivateUserMutation.isPending ? (
+                                        <span>Menonaktifkan...</span>
+                                    ) : (
+                                        <>
+                                            <UserX className="h-4 w-4" />
+                                            <span>Nonaktifkan Akun</span>
+                                        </>
+                                    )}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+
             {/* Edit Role Modal */}
             {isEditModalOpen && selectedUser && (
                 <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
@@ -501,7 +796,7 @@ export default function AdminUsers() {
 
                         <form onSubmit={handleSaveRole} className="space-y-4">
                             <div className="p-3 bg-[rgb(var(--color-surface-alt))] rounded-2xl border border-[rgb(var(--color-border))] flex items-center gap-3">
-                                <div className="h-9 w-9 rounded-full bg-indigo-600 text-white font-extrabold flex items-center justify-center shrink-0">
+                                <div className="h-9 w-9 rounded-full bg-indigo-600 text-white font-extrabold flex items-center justify-center shrink-0 text-xs">
                                     {selectedUser.name?.slice(0, 2).toUpperCase()}
                                 </div>
                                 <div>
@@ -573,7 +868,7 @@ export default function AdminUsers() {
 
                         <form onSubmit={handleSavePlan} className="space-y-4">
                             <div className="p-3 bg-[rgb(var(--color-surface-alt))] rounded-2xl border border-[rgb(var(--color-border))] flex items-center gap-3">
-                                <div className="h-9 w-9 rounded-full bg-emerald-600 text-white font-extrabold flex items-center justify-center shrink-0">
+                                <div className="h-9 w-9 rounded-full bg-emerald-600 text-white font-extrabold flex items-center justify-center shrink-0 text-xs">
                                     {selectedUser.name?.slice(0, 2).toUpperCase()}
                                 </div>
                                 <div>

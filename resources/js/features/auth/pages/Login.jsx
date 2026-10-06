@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useLocation } from 'react-router-dom';
-import { Eye, EyeOff, Sparkles, User, Lock, ArrowRight, ArrowLeft, Layers, ShieldCheck, Headphones } from 'lucide-react';
+import { Eye, EyeOff, Sparkles, User, Lock, ArrowRight, ArrowLeft, Layers, ShieldCheck, Headphones, UserX } from 'lucide-react';
 import { Spinner, Alert, BrandLogo } from '@shared/components/ui';
 import { useLogin } from '@hooks';
 import { ROUTES } from '@constants';
@@ -101,13 +101,37 @@ export default function Login({ onSwitchToRegister }) {
                         </div>
                     )}
 
-                    {login.isError && (
-                        <div className="mb-4 ds-animate-fade-in">
-                            <Alert variant="error" title="Gagal Login">
-                                {login.error?.response?.data?.message || 'Please check your credentials and try again.'}
-                            </Alert>
-                        </div>
-                    )}
+                    {login.isError && (() => {
+                        const status = login.error?.response?.status;
+                        const message = login.error?.response?.data?.message || 'Please check your credentials and try again.';
+                        const isDeactivated = status === 403 && message.toLowerCase().includes('dinonaktifkan');
+
+                        if (isDeactivated) {
+                            return (
+                                <div className="mb-4 ds-animate-fade-in">
+                                    <div className="rounded-2xl border border-red-200 bg-red-50 p-4 shadow-sm">
+                                        <div className="flex items-start gap-3">
+                                            <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-red-100">
+                                                <UserX className="h-4 w-4 text-red-600" />
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <p className="text-sm font-extrabold text-red-700">Akun Dinonaktifkan oleh Admin</p>
+                                                <p className="mt-1 text-xs text-red-600 leading-relaxed whitespace-pre-line">{message}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        }
+
+                        return (
+                            <div className="mb-4 ds-animate-fade-in">
+                                <Alert variant="error" title="Gagal Login">
+                                    {message}
+                                </Alert>
+                            </div>
+                        );
+                    })()}
 
                     {/* Form */}
                     <form onSubmit={handleSubmit(onSubmit)} method="post" className="space-y-4" noValidate>
