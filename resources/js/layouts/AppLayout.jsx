@@ -363,9 +363,6 @@ export default function AppLayout() {
                                             <p className="text-sm font-extrabold text-[rgb(var(--color-text-primary))] leading-tight">
                                                 {activePage?.label ?? 'Halaman'}
                                             </p>
-                                            <p className="text-[10px] text-[rgb(var(--color-text-tertiary))] font-medium leading-tight">
-                                                /{location.pathname.split('/').filter(Boolean).join(' / ')}
-                                            </p>
                                         </div>
                                     </div>
                                 );
