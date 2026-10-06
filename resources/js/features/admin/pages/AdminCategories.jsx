@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus, Trash2, Edit2, Shield, Search, X, ChevronUp, ChevronDown, Eye, EyeOff, FileText } from 'lucide-react';
+import { Plus, Trash2, Edit2, Shield, Search, X, Eye, EyeOff, FileText } from 'lucide-react';
 import { Card, ConfirmModal } from '@shared/components/ui';
 import { toast } from '@store';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -21,7 +21,6 @@ export default function AdminCategories() {
   const [formData, setFormData] = useState({
     name: '',
     slug: '',
-    sort_order: 0,
     is_active: true,
   });
 
@@ -30,7 +29,6 @@ export default function AdminCategories() {
     slug: '',
     description: '',
     thumbnail: '',
-    sort_order: 0,
     is_active: true,
   });
 
@@ -134,7 +132,6 @@ export default function AdminCategories() {
     setFormData({
       name: '',
       slug: '',
-      sort_order: 0,
       is_active: true,
     });
   };
@@ -145,7 +142,6 @@ export default function AdminCategories() {
       slug: '',
       description: '',
       thumbnail: '',
-      sort_order: 0,
       is_active: true,
     });
   };
@@ -164,7 +160,6 @@ export default function AdminCategories() {
     setFormData({
       name: category.name,
       slug: category.slug,
-      sort_order: category.sort_order || 0,
       is_active: category.is_active,
     });
     setIsAddOpen(true);
@@ -194,28 +189,7 @@ export default function AdminCategories() {
     });
   };
 
-  const moveSortOrder = (index, direction) => {
-    const newCategories = [...categories];
-    const newIndex = index + direction;
 
-    if (newIndex < 0 || newIndex >= newCategories.length) return;
-
-    [newCategories[index], newCategories[newIndex]] = [newCategories[newIndex], newCategories[index]];
-
-    const updates = newCategories.map((cat, idx) => ({
-      id: cat.id,
-      sort_order: idx,
-    }));
-
-    Promise.all(
-      updates.map((update) =>
-        categoryService.update(update.id, { ...newCategories.find(c => c.id === update.id), sort_order: update.sort_order })
-      )
-    ).then(() => {
-      queryClient.invalidateQueries(['admin', 'categories']);
-      toast.success('Sort order updated', 'Success');
-    });
-  };
 
   const toggleExpandCategory = (categoryId) => {
     if (expandedCategory === categoryId) {
@@ -240,7 +214,6 @@ export default function AdminCategories() {
       slug: template.slug,
       description: template.description || '',
       thumbnail: template.thumbnail || '',
-      sort_order: template.sort_order || 0,
       is_active: template.is_active,
     });
     setShowTemplateModal(true);
@@ -349,7 +322,6 @@ export default function AdminCategories() {
                   <th className="px-4 py-3.5 text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider w-16">ID</th>
                   <th className="px-4 py-3.5 text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Name</th>
                   <th className="px-4 py-3.5 text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider">Slug</th>
-                  <th className="px-4 py-3.5 text-center text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider w-28">Sort Order</th>
                   <th className="px-4 py-3.5 text-center text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider w-28">Status</th>
                   <th className="px-4 py-3.5 text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider w-32">Created At</th>
                   <th className="px-4 py-3.5 text-xs font-bold text-[rgb(var(--color-text-tertiary))] uppercase tracking-wider w-32">Updated At</th>
@@ -357,7 +329,7 @@ export default function AdminCategories() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-[rgb(var(--color-border))]">
-                {filteredCategories.map((cat, index) => (
+                {filteredCategories.map((cat) => (
                   <tr key={cat.id} className="hover:bg-[rgb(var(--color-surface-alt))]/80 transition group">
                     {/* ID */}
                     <td className="px-4 py-4 whitespace-nowrap text-xs font-mono font-bold text-[rgb(var(--color-text-secondary))]">
@@ -376,31 +348,6 @@ export default function AdminCategories() {
                       <span className="font-mono text-xs text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md">
                         {cat.slug}
                       </span>
-                    </td>
-
-                    {/* Sort Order */}
-                    <td className="px-4 py-4 whitespace-nowrap text-center">
-                      <div className="inline-flex items-center justify-center gap-1">
-                        <button
-                          onClick={() => moveSortOrder(index, -1)}
-                          disabled={index === 0}
-                          className="p-1 text-[rgb(var(--color-text-tertiary))] hover:text-indigo-600 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
-                          title="Move Up"
-                        >
-                          <ChevronUp className="h-4 w-4" />
-                        </button>
-                        <span className="text-xs font-bold text-[rgb(var(--color-text-primary))] min-w-[20px] text-center">
-                          {cat.sort_order}
-                        </span>
-                        <button
-                          onClick={() => moveSortOrder(index, 1)}
-                          disabled={index === filteredCategories.length - 1}
-                          className="p-1 text-[rgb(var(--color-text-tertiary))] hover:text-indigo-600 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
-                          title="Move Down"
-                        >
-                          <ChevronDown className="h-4 w-4" />
-                        </button>
-                      </div>
                     </td>
 
                     {/* Status */}
@@ -507,29 +454,16 @@ export default function AdminCategories() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Sort Order</label>
-                  <input
-                    type="number"
-                    min="0"
-                    value={formData.sort_order}
-                    onChange={(e) => setFormData({ ...formData, sort_order: parseInt(e.target.value) || 0 })}
-                    className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Status</label>
-                  <select
-                    value={formData.is_active ? 'true' : 'false'}
-                    onChange={(e) => setFormData({ ...formData, is_active: e.target.value === 'true' })}
-                    className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600"
-                  >
-                    <option value="true">Active</option>
-                    <option value="false">Inactive</option>
-                  </select>
-                </div>
+              <div>
+                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Status</label>
+                <select
+                  value={formData.is_active ? 'true' : 'false'}
+                  onChange={(e) => setFormData({ ...formData, is_active: e.target.value === 'true' })}
+                  className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600"
+                >
+                  <option value="true">Active</option>
+                  <option value="false">Inactive</option>
+                </select>
               </div>
 
               <div className="flex justify-end gap-2 pt-4 border-t border-[rgb(var(--color-border))]">
@@ -618,29 +552,16 @@ export default function AdminCategories() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Sort Order</label>
-                  <input
-                    type="number"
-                    min="0"
-                    value={templateForm.sort_order}
-                    onChange={(e) => setTemplateForm({ ...templateForm, sort_order: parseInt(e.target.value) || 0 })}
-                    className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Status</label>
-                  <select
-                    value={templateForm.is_active ? 'true' : 'false'}
-                    onChange={(e) => setTemplateForm({ ...templateForm, is_active: e.target.value === 'true' })}
-                    className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600"
-                  >
-                    <option value="true">Active</option>
-                    <option value="false">Inactive</option>
-                  </select>
-                </div>
+              <div>
+                <label className="block text-xs font-bold text-[rgb(var(--color-text-primary))] mb-1.5">Status</label>
+                <select
+                  value={templateForm.is_active ? 'true' : 'false'}
+                  onChange={(e) => setTemplateForm({ ...templateForm, is_active: e.target.value === 'true' })}
+                  className="w-full px-3.5 py-2.5 bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl text-xs text-[rgb(var(--color-text-primary))] focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600"
+                >
+                  <option value="true">Active</option>
+                  <option value="false">Inactive</option>
+                </select>
               </div>
 
               <div className="flex justify-end gap-2 pt-4 border-t border-[rgb(var(--color-border))]">
