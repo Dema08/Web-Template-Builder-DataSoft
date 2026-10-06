@@ -82,8 +82,14 @@ export default function OrgNavDigital({ components = [], sectionId = null }) {
       {/* Mobile Menu */}
       {mobileOpen && (
         <div className="lg:hidden px-4 pb-4 pt-2 bg-[#090920] border-t border-cyan-500/20 space-y-3">
-          <div className="flex flex-col gap-2">{renderLayoutComponents(menuComps, sectionId)}</div>
-          <div className="pt-2 border-t border-indigo-900">{renderLayoutComponents(ctaComps, sectionId)}</div>
+          <div className="flex flex-col gap-2 [&_a]:w-full [&_button]:w-full [&_a]:justify-start [&_button]:justify-start">
+            {renderLayoutComponents(menuComps, sectionId)}
+          </div>
+          {ctaComps.length > 0 && (
+            <div className="pt-2 border-t border-indigo-900 sm:hidden [&_a]:w-full [&_button]:w-full [&_a]:justify-center [&_button]:justify-center">
+              {renderLayoutComponents(ctaComps, sectionId)}
+            </div>
+          )}
         </div>
       )}
     </header>

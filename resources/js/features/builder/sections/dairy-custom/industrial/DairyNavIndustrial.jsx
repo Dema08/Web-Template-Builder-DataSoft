@@ -4,7 +4,7 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 /**
  * DairyNavIndustrial
- * Industrial Dairy Supply Chain & Tanker Fleet Navigation with Live Supply Status
+ * B2B Industrial Dairy Supply Chain & Feed Mill Hub Navigation
  */
 export default function DairyNavIndustrial({ components = [], sectionId = null }) {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -18,23 +18,22 @@ export default function DairyNavIndustrial({ components = [], sectionId = null }
   ];
 
   const lc = components.length > 0 ? components : defaultComponents;
-  const brandC = lc.filter(c => c.id === 'ind-brand');
-  const badgeC = lc.filter(c => c.id === 'ind-status-badge');
-  const btn1 = lc.filter(c => c.id === 'ind-rfq-btn');
-  const btn2 = lc.filter(c => c.id === 'ind-portal-btn');
+  const brandC = lc.filter(c => c.type === 'heading' || c.type === 'image' || c.id === 'ind-brand');
+  const badgeC = lc.filter(c => c.type === 'badge' || c.id === 'ind-status-badge');
+  const buttonComps = lc.filter(c => c.type === 'button');
 
   return (
-    <header className="sticky top-0 z-50 bg-[#071318]/95 backdrop-blur-md border-b border-emerald-900/40 shadow-xl">
+    <header className="sticky top-0 z-50 bg-[#051410]/95 backdrop-blur-md border-b border-emerald-900/50 shadow-xl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20 gap-4">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-emerald-600/30 shrink-0">
-              A
+              ⚡
             </div>
             <div>
               {renderLayoutComponents(brandC, sectionId)}
               <span className="text-[11px] font-semibold text-emerald-400 tracking-wider uppercase block">
-                B2B Industrial Dairy & Feed Mill Ecosystem
+                Industrial Dairy & Feed Mill Network
               </span>
             </div>
           </div>
@@ -45,15 +44,15 @@ export default function DairyNavIndustrial({ components = [], sectionId = null }
 
           {/* Desktop buttons */}
           <div className="hidden md:flex items-center gap-3">
-            <div>{renderLayoutComponents(btn1, sectionId)}</div>
-            <div>{renderLayoutComponents(btn2, sectionId)}</div>
+            {renderLayoutComponents(buttonComps, sectionId)}
           </div>
 
           {/* Mobile hamburger button */}
           <div className="flex md:hidden items-center">
             <button
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className="p-2.5 rounded-xl bg-slate-800/80 border border-slate-700 text-slate-200 hover:text-white focus:outline-none transition shadow-sm"
+              type="button"
+              onClick={() => setMobileOpen(v => !v)}
+              className="p-2.5 rounded-xl bg-emerald-950/80 border border-emerald-800/60 text-emerald-200 hover:text-white focus:outline-none transition shadow-sm cursor-pointer"
               aria-label="Toggle Menu"
               aria-expanded={mobileOpen}
             >
@@ -71,15 +70,14 @@ export default function DairyNavIndustrial({ components = [], sectionId = null }
 
       {/* Mobile dropdown drawer */}
       {mobileOpen && (
-        <div className="md:hidden border-t border-emerald-900/40 bg-[#071318]/98 px-4 py-5 backdrop-blur-2xl shadow-2xl space-y-3">
+        <div className="md:hidden border-t border-emerald-900/40 bg-[#051410]/98 px-4 py-5 backdrop-blur-2xl shadow-2xl space-y-3">
           {badgeC.length > 0 && (
             <div className="pb-3 border-b border-emerald-900/50">
               {renderLayoutComponents(badgeC, sectionId)}
             </div>
           )}
           <div className="flex flex-col gap-2.5 pt-1 [&_a]:w-full [&_button]:w-full [&_a]:justify-center [&_button]:justify-center">
-            {renderLayoutComponents(btn1, sectionId)}
-            {renderLayoutComponents(btn2, sectionId)}
+            {renderLayoutComponents(buttonComps, sectionId)}
           </div>
         </div>
       )}

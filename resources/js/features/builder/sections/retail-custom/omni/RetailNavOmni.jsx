@@ -20,8 +20,7 @@ export default function RetailNavOmni({ components = [], sectionId = null }) {
   const lc = components.length > 0 ? components : defaultComponents;
   const brandC = lc.filter(c => c.id === 'omni-brand');
   const badgeC = lc.filter(c => c.id === 'omni-deal-badge');
-  const btn1 = lc.filter(c => c.id === 'omni-collect-btn');
-  const btn2 = lc.filter(c => c.id === 'omni-app-btn');
+  const buttonComps = lc.filter(c => c.type === 'button');
 
   return (
     <header className="sticky top-0 z-50 bg-[#16060c]/95 backdrop-blur-md border-b border-rose-900/40 shadow-xl">
@@ -44,10 +43,7 @@ export default function RetailNavOmni({ components = [], sectionId = null }) {
           </div>
 
           {/* Desktop buttons */}
-          <div className="hidden md:flex items-center gap-3">
-            <div>{renderLayoutComponents(btn1, sectionId)}</div>
-            <div>{renderLayoutComponents(btn2, sectionId)}</div>
-          </div>
+          <div className="hidden md:flex items-center gap-3">{renderLayoutComponents(buttonComps, sectionId)}</div>
 
           {/* Mobile hamburger button */}
           <div className="flex md:hidden items-center">
@@ -78,8 +74,7 @@ export default function RetailNavOmni({ components = [], sectionId = null }) {
             </div>
           )}
           <div className="flex flex-col gap-2.5 pt-1 [&_a]:w-full [&_button]:w-full [&_a]:justify-center [&_button]:justify-center">
-            {renderLayoutComponents(btn1, sectionId)}
-            {renderLayoutComponents(btn2, sectionId)}
+            {renderLayoutComponents(buttonComps, sectionId)}
           </div>
         </div>
       )}

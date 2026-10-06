@@ -63,13 +63,19 @@ export default function Navbar18({ components = [], sectionId = null }) {
           </div>
         </div>
         <div
-          className={`xl:hidden overflow-hidden transition-all duration-500 ${open ? 'max-h-80 opacity-100 mt-3' : 'max-h-0 opacity-0'}`}
+          className={`xl:hidden overflow-hidden transition-all duration-500 ${open ? 'max-h-[500px] opacity-100 mt-3' : 'max-h-0 opacity-0'}`}
           aria-hidden={!open}
           inert={!open}
         >
-          <div className="flex flex-col gap-1 bg-white/5 border border-white/10 rounded-2xl p-2">
-            {renderLayoutComponents(menuComps, sectionId)}
-            {renderLayoutComponents(ctaComps, sectionId)}
+          <div className="flex flex-col gap-2 bg-white/5 border border-white/10 rounded-2xl p-3">
+            <div className="flex flex-col gap-1.5 [&_a]:w-full [&_button]:w-full [&_a]:justify-start [&_button]:justify-start">
+              {renderLayoutComponents(menuComps, sectionId)}
+            </div>
+            {ctaComps.length > 0 && (
+              <div className="pt-2 border-t border-white/10 [&_a]:w-full [&_button]:w-full [&_a]:justify-center [&_button]:justify-center">
+                {renderLayoutComponents(ctaComps, sectionId)}
+              </div>
+            )}
           </div>
         </div>
       </nav>

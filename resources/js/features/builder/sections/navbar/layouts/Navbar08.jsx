@@ -54,13 +54,19 @@ export default function Navbar08({ components = [], sectionId = null }) {
         </div>
       </div>
       <div
-        className={`md:hidden overflow-hidden transition-all duration-300 ${open ? 'max-h-72 opacity-100 mt-3' : 'max-h-0 opacity-0'}`}
+        className={`md:hidden overflow-hidden transition-all duration-300 ${open ? 'max-h-[500px] opacity-100 mt-3' : 'max-h-0 opacity-0'}`}
         aria-hidden={!open}
         inert={!open}
       >
-        <div className="bg-white border-[3px] border-black rounded-2xl shadow-[4px_4px_0_#000] p-2 flex flex-col gap-1">
-          {renderLayoutComponents(menuComps, sectionId)}
-          {renderLayoutComponents(ctaComps, sectionId)}
+        <div className="bg-white border-[3px] border-black rounded-2xl shadow-[4px_4px_0_#000] p-3 flex flex-col gap-2">
+          <div className="flex flex-col gap-1.5 [&_a]:w-full [&_button]:w-full [&_a]:justify-start [&_button]:justify-start">
+            {renderLayoutComponents(menuComps, sectionId)}
+          </div>
+          {ctaComps.length > 0 && (
+            <div className="pt-2 border-t-2 border-black [&_a]:w-full [&_button]:w-full [&_a]:justify-center [&_button]:justify-center">
+              {renderLayoutComponents(ctaComps, sectionId)}
+            </div>
+          )}
         </div>
       </div>
     </nav>

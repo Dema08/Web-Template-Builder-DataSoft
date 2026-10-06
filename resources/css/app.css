@@ -1643,3 +1643,67 @@ html.public-html-body {
     box-shadow: none !important;
 }
 
+/* ============================================================
+ * Responsive Canvas & Viewport Preview Container Emulation
+ * Allows device view switchers (mobile / tablet) to properly toggle
+ * responsive Tailwind classes inside iframe-less desktop containers.
+ * ========================================================= */
+
+.builder-canvas-mobile,
+.preview-viewport-mobile {
+  /* Hide desktop-only elements inside mobile container */
+  .hidden.sm\:flex,
+  .hidden.sm\:block,
+  .hidden.sm\:inline-block,
+  .hidden.sm\:grid,
+  .hidden.md\:flex,
+  .hidden.md\:block,
+  .hidden.md\:inline-block,
+  .hidden.md\:grid,
+  .hidden.lg\:flex,
+  .hidden.lg\:block,
+  .hidden.lg\:inline-block,
+  .hidden.lg\:grid,
+  .hidden.xl\:flex,
+  .hidden.xl\:block,
+  .hidden.xl\:inline-block,
+  .hidden.xl\:grid,
+  .sm\:flex.hidden,
+  .md\:flex.hidden,
+  .lg\:flex.hidden,
+  .xl\:flex.hidden,
+  .sm\:block.hidden,
+  .md\:block.hidden,
+  .lg\:block.hidden,
+  .xl\:block.hidden {
+    display: none !important;
+  }
+
+  /* Show mobile-only elements inside mobile container */
+  .sm\:hidden,
+  .md\:hidden,
+  .lg\:hidden,
+  .xl\:hidden {
+    display: block !important;
+  }
+
+  .flex.sm\:hidden,
+  .flex.md\:hidden,
+  .flex.lg\:hidden,
+  .flex.xl\:hidden,
+  .sm\:hidden.flex,
+  .md\:hidden.flex,
+  .lg\:hidden.flex,
+  .xl\:hidden.flex {
+    display: flex !important;
+  }
+
+  .grid.sm\:hidden,
+  .grid.md\:hidden,
+  .grid.lg\:hidden,
+  .grid.xl\:hidden {
+    display: grid !important;
+  }
+}
+
+

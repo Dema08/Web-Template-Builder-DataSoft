@@ -70,9 +70,15 @@ export default function Navbar13({ components = [], sectionId = null }) {
       </nav>
 
       {mobileOpen && (
-        <div className="sm:hidden max-w-6xl mx-auto mt-2 p-3 rounded-2xl bg-white border border-slate-200 flex flex-wrap justify-center gap-2 shadow-lg">
-          {renderLayoutComponents(dockComps, sectionId)}
-          {renderLayoutComponents(ctaComps, sectionId)}
+        <div className="sm:hidden max-w-6xl mx-auto mt-2 p-3 rounded-2xl bg-white border border-slate-200 flex flex-col gap-2 shadow-lg">
+          <div className="flex flex-col gap-1.5 [&_a]:w-full [&_button]:w-full [&_a]:justify-start [&_button]:justify-start">
+            {renderLayoutComponents(dockComps, sectionId)}
+          </div>
+          {ctaComps.length > 0 && (
+            <div className="pt-2 border-t border-slate-100 [&_a]:w-full [&_button]:w-full [&_a]:justify-center [&_button]:justify-center">
+              {renderLayoutComponents(ctaComps, sectionId)}
+            </div>
+          )}
         </div>
       )}
 

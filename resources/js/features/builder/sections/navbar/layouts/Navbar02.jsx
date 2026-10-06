@@ -62,10 +62,14 @@ export default function Navbar02({ components = [], sectionId = null }) {
       </div>
       {mobileOpen && (
         <div className="lg:hidden mt-4 pt-4 border-t border-white/10 flex flex-col gap-2">
-          {renderLayoutComponents(menuComps, sectionId)}
-          <div className="pt-2 sm:hidden border-t border-white/10">
-            {renderLayoutComponents(ctaComps, sectionId)}
+          <div className="flex flex-col gap-1.5 [&_a]:w-full [&_button]:w-full [&_a]:justify-start [&_button]:justify-start">
+            {renderLayoutComponents(menuComps, sectionId)}
           </div>
+          {ctaComps.length > 0 && (
+            <div className="pt-2 sm:hidden border-t border-white/10 [&_a]:w-full [&_button]:w-full [&_a]:justify-center [&_button]:justify-center">
+              {renderLayoutComponents(ctaComps, sectionId)}
+            </div>
+          )}
         </div>
       )}
       <div className="h-px mt-4 bg-gradient-to-r from-transparent via-amber-200/50 to-transparent" />

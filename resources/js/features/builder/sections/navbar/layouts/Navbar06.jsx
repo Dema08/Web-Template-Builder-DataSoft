@@ -61,8 +61,8 @@ export default function Navbar06({ components = [], sectionId = null }) {
           {open ? '✕' : '☰'}
         </button>
       </div>
-      <div className={`md:hidden overflow-hidden transition-all duration-500 ${open ? 'max-h-64 opacity-100 mt-3' : 'max-h-0 opacity-0'}`}>
-        <div className="flex flex-col gap-1 bg-white border border-pink-100 rounded-2xl p-2">
+      <div className={`md:hidden overflow-hidden transition-all duration-500 ${open ? 'max-h-[500px] opacity-100 mt-3' : 'max-h-0 opacity-0'}`}>
+        <div className="flex flex-col gap-1.5 bg-white border border-pink-100 rounded-2xl p-3 [&_a]:w-full [&_button]:w-full [&_a]:justify-start [&_button]:justify-start">
           {renderLayoutComponents(allMenu, sectionId)}
         </div>
       </div>

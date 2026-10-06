@@ -64,8 +64,14 @@ export default function Navbar11({ components = [], sectionId = null }) {
 
       {mobileOpen && (
         <div className="lg:hidden mt-2 pt-3 border-t border-stone-300 flex flex-col gap-2 pb-2">
-          {renderLayoutComponents(menuComps, sectionId)}
-          {renderLayoutComponents(ctaComps, sectionId)}
+          <div className="flex flex-col gap-1.5 [&_a]:w-full [&_button]:w-full [&_a]:justify-start [&_button]:justify-start">
+            {renderLayoutComponents(menuComps, sectionId)}
+          </div>
+          {ctaComps.length > 0 && (
+            <div className="pt-2 border-t border-stone-300 [&_a]:w-full [&_button]:w-full [&_a]:justify-center [&_button]:justify-center">
+              {renderLayoutComponents(ctaComps, sectionId)}
+            </div>
+          )}
         </div>
       )}
     </nav>

@@ -308,12 +308,12 @@ export default function AdminTemplatePreview() {
 
   const getViewportContainerStyle = () => {
     if (viewport === 'tablet') {
-      return 'w-[768px] max-w-[calc(100vw-2rem)] mx-auto bg-white shadow-2xl rounded-2xl border border-slate-700/80 overflow-hidden transition-all duration-300 ease-in-out';
+      return 'w-[768px] max-w-[calc(100vw-2rem)] mx-auto bg-white shadow-2xl rounded-2xl border border-slate-700/80 overflow-hidden transition-all duration-300 ease-in-out preview-viewport-tablet builder-canvas-tablet';
     }
     if (viewport === 'mobile') {
-      return 'w-[375px] max-w-[calc(100vw-2rem)] mx-auto bg-white shadow-2xl rounded-[32px] border-[6px] border-slate-800 overflow-hidden transition-all duration-300 ease-in-out';
+      return 'w-[375px] max-w-[calc(100vw-2rem)] mx-auto bg-white shadow-2xl rounded-[32px] border-[6px] border-slate-800 overflow-hidden transition-all duration-300 ease-in-out preview-viewport-mobile builder-canvas-mobile';
     }
-    return 'w-full max-w-[1536px] mx-auto bg-white rounded-2xl shadow-2xl border border-slate-800/80 overflow-hidden transition-all duration-300 ease-in-out';
+    return 'w-full max-w-[1536px] mx-auto bg-white rounded-2xl shadow-2xl border border-slate-800/80 overflow-hidden transition-all duration-300 ease-in-out preview-viewport-desktop builder-canvas-desktop';
   };
 
   const getActiveSections = () => {

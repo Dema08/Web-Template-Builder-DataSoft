@@ -22,13 +22,10 @@ export default function KopNavAgri({ components = [], sectionId = null }) {
   ];
 
   const lc = components.length > 0 ? components : defaultComponents;
-  const logo = lc.filter(c => c.id === 'agri-nav-logo');
-  const badge = lc.filter(c => c.id === 'agri-nav-badge');
-  const nav1 = lc.filter(c => c.id === 'agri-nav-1');
-  const nav2 = lc.filter(c => c.id === 'agri-nav-2');
-  const nav3 = lc.filter(c => c.id === 'agri-nav-3');
-  const nav4 = lc.filter(c => c.id === 'agri-nav-4');
-  const cta = lc.filter(c => c.id === 'agri-nav-cta');
+  const logo = lc.filter(c => c.type === 'heading' || c.type === 'image' || c.id === 'agri-nav-logo');
+  const badge = lc.filter(c => c.type === 'badge' || c.id === 'agri-nav-badge');
+  const menuComps = lc.filter(c => c.type === 'button' && !String(c.id || '').includes('cta'));
+  const ctaComps = lc.filter(c => c.type === 'button' && String(c.id || '').includes('cta'));
 
   return (
     <header className="sticky top-0 z-50 w-full bg-[#1c1206]/95 backdrop-blur-md border-b border-amber-600/30 text-amber-50 shadow-xl">
@@ -57,24 +54,22 @@ export default function KopNavAgri({ components = [], sectionId = null }) {
 
         {/* Desktop Navigation Links */}
         <nav className="hidden lg:flex items-center gap-1 font-medium text-sm">
-          {renderLayoutComponents(nav1, sectionId)}
-          {renderLayoutComponents(nav2, sectionId)}
-          {renderLayoutComponents(nav3, sectionId)}
-          {renderLayoutComponents(nav4, sectionId)}
+          {renderLayoutComponents(menuComps, sectionId)}
         </nav>
 
         {/* Desktop CTA */}
         <div className="hidden sm:flex items-center gap-3">
-          {renderLayoutComponents(cta, sectionId)}
+          {renderLayoutComponents(ctaComps, sectionId)}
         </div>
 
         {/* Mobile Hamburger Button */}
         <div className="flex lg:hidden items-center gap-2">
           <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="p-2.5 rounded-xl bg-amber-950/80 border border-amber-800/60 text-amber-200 hover:text-white focus:outline-none transition shadow-sm"
+            type="button"
+            onClick={() => setMobileOpen(v => !v)}
+            className="p-2.5 rounded-xl bg-amber-950/80 border border-amber-800/60 text-amber-200 hover:text-white focus:outline-none transition shadow-sm cursor-pointer"
             aria-label="Toggle Menu"
-              aria-expanded={mobileOpen}
+            aria-expanded={mobileOpen}
           >
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               {mobileOpen ? (
@@ -96,14 +91,13 @@ export default function KopNavAgri({ components = [], sectionId = null }) {
             </div>
           )}
           <div className="flex flex-col gap-2 [&_a]:w-full [&_button]:w-full [&_a]:justify-start [&_button]:justify-start">
-            {renderLayoutComponents(nav1, sectionId)}
-            {renderLayoutComponents(nav2, sectionId)}
-            {renderLayoutComponents(nav3, sectionId)}
-            {renderLayoutComponents(nav4, sectionId)}
+            {renderLayoutComponents(menuComps, sectionId)}
           </div>
-          <div className="pt-2 border-t border-amber-900/40 [&_a]:w-full [&_button]:w-full [&_a]:justify-center [&_button]:justify-center">
-            {renderLayoutComponents(cta, sectionId)}
-          </div>
+          {ctaComps.length > 0 && (
+            <div className="pt-2 border-t border-amber-900/40 [&_a]:w-full [&_button]:w-full [&_a]:justify-center [&_button]:justify-center">
+              {renderLayoutComponents(ctaComps, sectionId)}
+            </div>
+          )}
         </div>
       )}
     </header>

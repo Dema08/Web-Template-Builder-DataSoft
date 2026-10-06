@@ -20,8 +20,7 @@ export default function RetailNavWholesale({ components = [], sectionId = null }
   const lc = components.length > 0 ? components : defaultComponents;
   const brandC = lc.filter(c => c.id === 'wh-brand');
   const badgeC = lc.filter(c => c.id === 'wh-status-badge');
-  const btn1 = lc.filter(c => c.id === 'wh-contact-btn');
-  const btn2 = lc.filter(c => c.id === 'wh-portal-btn');
+  const buttonComps = lc.filter(c => c.type === 'button');
 
   return (
     <header className="sticky top-0 z-50 bg-[#0b1329]/95 backdrop-blur-md border-b border-blue-900/50 shadow-xl">
@@ -44,10 +43,7 @@ export default function RetailNavWholesale({ components = [], sectionId = null }
           </div>
 
           {/* Desktop buttons */}
-          <div className="hidden md:flex items-center gap-3">
-            <div>{renderLayoutComponents(btn1, sectionId)}</div>
-            <div>{renderLayoutComponents(btn2, sectionId)}</div>
-          </div>
+          <div className="hidden md:flex items-center gap-3">{renderLayoutComponents(buttonComps, sectionId)}</div>
 
           {/* Mobile hamburger button */}
           <div className="flex md:hidden items-center">
@@ -78,8 +74,7 @@ export default function RetailNavWholesale({ components = [], sectionId = null }
             </div>
           )}
           <div className="flex flex-col gap-2.5 pt-1 [&_a]:w-full [&_button]:w-full [&_a]:justify-center [&_button]:justify-center">
-            {renderLayoutComponents(btn1, sectionId)}
-            {renderLayoutComponents(btn2, sectionId)}
+            {renderLayoutComponents(buttonComps, sectionId)}
           </div>
         </div>
       )}

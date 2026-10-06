@@ -11,12 +11,12 @@ export default function BuilderCanvas({ children }) {
   const getCanvasConfig = () => {
     switch (deviceView) {
       case 'mobile':
-        return 'max-w-[375px] builder-canvas-mobile';
+        return 'max-w-[375px] builder-canvas-mobile preview-viewport-mobile';
       case 'tablet':
-        return 'max-w-[768px] builder-canvas-tablet';
+        return 'max-w-[768px] builder-canvas-tablet preview-viewport-tablet';
       case 'desktop':
       default:
-        return 'max-w-6xl builder-canvas-desktop';
+        return 'max-w-6xl builder-canvas-desktop preview-viewport-desktop';
     }
   };
 

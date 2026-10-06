@@ -62,9 +62,15 @@ export default function Navbar15({ components = [], sectionId = null }) {
       </div>
       {mobileOpen && (
         <div className="md:hidden mt-3 rounded-2xl border border-slate-200 bg-white p-3 shadow-lg flex flex-col gap-2">
-          {renderLayoutComponents(menuComps, sectionId)}
-          {renderLayoutComponents(ctaComps, sectionId)}
-          <p className="text-xs text-slate-400 select-none">hello@iris-studio.id</p>
+          <div className="flex flex-col gap-1.5 [&_a]:w-full [&_button]:w-full [&_a]:justify-start [&_button]:justify-start">
+            {renderLayoutComponents(menuComps, sectionId)}
+          </div>
+          {ctaComps.length > 0 && (
+            <div className="pt-2 border-t border-slate-100 [&_a]:w-full [&_button]:w-full [&_a]:justify-center [&_button]:justify-center">
+              {renderLayoutComponents(ctaComps, sectionId)}
+            </div>
+          )}
+          <p className="text-xs text-slate-400 select-none text-center">hello@iris-studio.id</p>
         </div>
       )}
     </nav>
