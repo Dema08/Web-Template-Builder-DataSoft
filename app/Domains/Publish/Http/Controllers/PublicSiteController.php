@@ -138,7 +138,13 @@ class PublicSiteController extends BaseController
         $template = \App\Domains\Template\Models\Template::where('status', 'published')
             ->publiclyVisible()
             ->with('industryCategory')
-            ->where('id', $id)
+            ->where(function ($q) use ($id) {
+                if (is_numeric($id)) {
+                    $q->where('id', (int) $id)->orWhere('slug', $id);
+                } else {
+                    $q->where('slug', $id)->orWhere('id', $id);
+                }
+            })
             ->first();
 
         if (!$template) {

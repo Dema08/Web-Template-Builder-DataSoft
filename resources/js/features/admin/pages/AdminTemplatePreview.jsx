@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useBuilderStore } from '@builder/stores/builderStore';
 import SectionRenderer from '@builder/components/sections/SectionRenderer';
@@ -13,10 +13,70 @@ import {
   Layers,
   ZoomIn,
   Check,
+  Loader2,
 } from 'lucide-react';
+
+/**
+ * Helper to extract sections, pages, templateName, and industry from various payload shapes
+ */
+const parseTemplatePayload = (raw) => {
+  if (!raw) return { sections: [], pages: {}, name: '', industry: '' };
+  const data = raw.data?.data ?? raw.data ?? raw;
+
+  const name = data.name || data.templateName || '';
+  const industry = data.industry_category?.name || data.industryCategory?.name || data.industryName || data.industrySlug || '';
+
+  let pubJson = data.published_json;
+  if (typeof pubJson === 'string') {
+    try { pubJson = JSON.parse(pubJson); } catch (e) { /* ignore */ }
+  }
+
+  let draftJson = data.draft_json;
+  if (typeof draftJson === 'string') {
+    try { draftJson = JSON.parse(draftJson); } catch (e) { /* ignore */ }
+  }
+
+  let sections = [];
+  let pages = {};
+
+  // 1. Try published_json first
+  if (pubJson) {
+    if (Array.isArray(pubJson.sections) && pubJson.sections.length > 0) {
+      sections = pubJson.sections;
+    } else if (Array.isArray(pubJson) && pubJson.length > 0) {
+      sections = pubJson;
+    }
+    if (pubJson.pages && typeof pubJson.pages === 'object' && !Array.isArray(pubJson.pages)) {
+      pages = pubJson.pages;
+    }
+  }
+
+  // 2. Fallback to draft_json
+  if (sections.length === 0 && draftJson) {
+    if (Array.isArray(draftJson.sections) && draftJson.sections.length > 0) {
+      sections = draftJson.sections;
+    } else if (Array.isArray(draftJson) && draftJson.length > 0) {
+      sections = draftJson;
+    }
+    if (draftJson.pages && typeof draftJson.pages === 'object' && !Array.isArray(draftJson.pages)) {
+      pages = draftJson.pages;
+    }
+  }
+
+  // 3. Fallback to direct sections property
+  if (sections.length === 0 && Array.isArray(data.sections)) {
+    sections = data.sections;
+    if (data.pages && typeof data.pages === 'object' && !Array.isArray(data.pages)) {
+      pages = data.pages;
+    }
+  }
+
+  return { sections, pages, name, industry };
+};
 
 export default function AdminTemplatePreview() {
   const { id, slug } = useParams();
+  const templateParam = id || slug || null;
   const navigate = useNavigate();
 
   const getInitialViewport = () => {
@@ -44,6 +104,7 @@ export default function AdminTemplatePreview() {
   const userPickedViewportRef = useRef(false);
   const [zoom, setZoom] = useState(100); // 100 | 90 | 80 | 75
   const [showZoomMenu, setShowZoomMenu] = useState(false);
+  const [isLoading, setIsLoading] = useState(!!templateParam);
   const [lastUpdated, setLastUpdated] = useState(Date.now());
 
   const {
@@ -82,8 +143,8 @@ export default function AdminTemplatePreview() {
   const lastDataHashRef = useRef('');
 
   // Apply template sections only when data has genuinely changed to prevent infinite re-render loops
-  const applyDataIfChanged = (sectionsData, pagesData = {}, name = null, industry = null) => {
-    if (!sectionsData || !Array.isArray(sectionsData) || sectionsData.length === 0) return;
+  const applyDataIfChanged = useCallback((sectionsData, pagesData = {}, name = null, industry = null) => {
+    if (!sectionsData || !Array.isArray(sectionsData)) return;
     const hash = JSON.stringify({
       sections: sectionsData,
       pages: pagesData,
@@ -97,70 +158,78 @@ export default function AdminTemplatePreview() {
     if (name) setTemplateName(name);
     if (industry && setIndustry) setIndustry(null, industry, '', false);
     setLastUpdated(Date.now());
-  };
+  }, [loadSections, setTemplateName, setIndustry]);
 
-  // 1. Force isPreviewMode = true on mount, clear selections, and load preview (localStorage first, then API fallback)
+  // Fetch template data for a specific template ID/slug
+  const fetchTemplateData = useCallback(async (targetId) => {
+    setIsLoading(true);
+    try {
+      let res;
+      try {
+        res = await templateApi.getPublicById(targetId);
+      } catch (err) {
+        // Fallback to admin/auth endpoint if template is a draft or previewed by admin
+        res = await templateApi.getById(targetId);
+      }
+
+      const { sections: s, pages: p, name: n, industry: ind } = parseTemplatePayload(res);
+      if (s.length > 0) {
+        applyDataIfChanged(s, p, n, ind);
+      } else {
+        // Clear sections if template genuinely has none
+        loadSections([], {});
+        if (n) setTemplateName(n);
+      }
+    } catch (err) {
+      console.error('Failed to fetch template for preview:', err);
+      // Fallback: check if local storage has matching template data
+      try {
+        const raw = localStorage.getItem('template_builder_preview_data');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed.templateId && String(parsed.templateId) === String(targetId)) {
+            const { sections: s, pages: p, name: n, industry: ind } = parseTemplatePayload(parsed);
+            if (s.length > 0) applyDataIfChanged(s, p, n, ind);
+          }
+        }
+      } catch (e) { /* ignore */ }
+    } finally {
+      setIsLoading(false);
+    }
+  }, [applyDataIfChanged, loadSections, setTemplateName]);
+
+  // 1. Force isPreviewMode = true on mount, clear selections, and load preview
   useEffect(() => {
     setIsPreviewMode(true);
     if (selectComponent) selectComponent(null);
     if (selectSection) selectSection(null);
 
-    let loaded = false;
-
-    // Synchronously / immediately load cached preview state from builder
-    try {
-      const rawData = localStorage.getItem('template_builder_preview_data');
-      if (rawData) {
-        const parsed = JSON.parse(rawData);
-        if (parsed.sections && Array.isArray(parsed.sections) && parsed.sections.length > 0) {
+    if (templateParam) {
+      fetchTemplateData(templateParam);
+    } else {
+      // Direct builder preview without specific ID
+      try {
+        const rawData = localStorage.getItem('template_builder_preview_data');
+        if (rawData) {
+          const parsed = JSON.parse(rawData);
           syncViewportFromPayload(parsed);
-          applyDataIfChanged(parsed.sections, parsed.pages || {}, parsed.templateName, parsed.industrySlug);
-          loaded = true;
-        } else {
-          syncViewportFromPayload(parsed);
-        }
-      }
-    } catch (err) {
-      console.error('Failed to parse preview storage data:', err);
-    }
-
-    // 2. If not loaded from localStorage and template ID parameter exists in URL, fetch from API
-    if (!loaded && id) {
-      const applyTemplateData = (res) => {
-        const data = res.data?.data ?? res.data;
-        if (data) {
-          const pubSections = data.published_json?.sections;
-          const draftSections = data.draft_json?.sections;
-          const pubPages = data.published_json?.pages;
-          const draftPages = data.draft_json?.pages;
-          const sectionsData = (pubSections && Array.isArray(pubSections) && pubSections.length > 0)
-            ? pubSections
-            : ((draftSections && Array.isArray(draftSections) && draftSections.length > 0) ? draftSections : []);
-          const pagesData = pubPages || draftPages || {};
-
-          if (sectionsData.length > 0) {
-            applyDataIfChanged(sectionsData, pagesData, data.name);
+          const { sections: s, pages: p, name: n, industry: ind } = parseTemplatePayload(parsed);
+          if (s.length > 0) {
+            applyDataIfChanged(s, p, n, ind);
           }
         }
-      };
-
-      templateApi.getPublicById(id)
-        .then(applyTemplateData)
-        .catch(() => {
-          templateApi.getById(id)
-            .then(applyTemplateData)
-            .catch(() => {
-              // already loaded from storage or fallback
-            });
-        });
+      } catch (err) {
+        console.error('Failed to parse preview storage data:', err);
+      }
+      setIsLoading(false);
     }
 
     return () => {
       setIsPreviewMode(false);
     };
-  }, [id]);
+  }, [templateParam, fetchTemplateData, applyDataIfChanged, selectComponent, selectSection, setIsPreviewMode]);
 
-  // 3. Realtime Live Synchronization via BroadcastChannel + Storage Event Listener
+  // 2. Realtime Live Synchronization via BroadcastChannel + Storage Event Listener
   useEffect(() => {
     let channel = null;
 
@@ -168,9 +237,15 @@ export default function AdminTemplatePreview() {
       try {
         channel = new BroadcastChannel('datasoft_builder_sync');
         channel.onmessage = (event) => {
+          if (!event.data) return;
+          // If viewing a specific template ID, only accept sync messages for that template
+          if (templateParam && event.data.templateId && String(event.data.templateId) !== String(templateParam)) {
+            return;
+          }
           syncViewportFromPayload(event.data);
-          if (event.data && event.data.sections && event.data.sections.length > 0) {
-            applyDataIfChanged(event.data.sections, event.data.pages || {}, event.data.templateName, event.data.industrySlug);
+          const { sections: s, pages: p, name: n, industry: ind } = parseTemplatePayload(event.data);
+          if (s.length > 0) {
+            applyDataIfChanged(s, p, n, ind);
           }
         };
       } catch (e) {
@@ -182,9 +257,13 @@ export default function AdminTemplatePreview() {
       if (e.key === 'template_builder_preview_data' && e.newValue) {
         try {
           const parsed = JSON.parse(e.newValue);
+          if (templateParam && parsed.templateId && String(parsed.templateId) !== String(templateParam)) {
+            return;
+          }
           syncViewportFromPayload(parsed);
-          if (parsed.sections && parsed.sections.length > 0) {
-            applyDataIfChanged(parsed.sections, parsed.pages || {}, parsed.templateName, parsed.industrySlug);
+          const { sections: s, pages: p, name: n, industry: ind } = parseTemplatePayload(parsed);
+          if (s.length > 0) {
+            applyDataIfChanged(s, p, n, ind);
           }
         } catch (err) {
           // ignore
@@ -198,19 +277,24 @@ export default function AdminTemplatePreview() {
       if (channel) channel.close();
       window.removeEventListener('storage', handleStorageChange);
     };
-  }, []);
+  }, [templateParam, applyDataIfChanged]);
 
-  const loadDraftFromStorage = () => {
-    try {
-      const rawData = localStorage.getItem('template_builder_preview_data');
-      if (rawData) {
-        const parsed = JSON.parse(rawData);
-        if (parsed.sections && Array.isArray(parsed.sections) && parsed.sections.length > 0) {
-          applyDataIfChanged(parsed.sections, parsed.pages || {}, parsed.templateName, parsed.industrySlug);
+  const handleRefresh = () => {
+    if (templateParam) {
+      fetchTemplateData(templateParam);
+    } else {
+      try {
+        const rawData = localStorage.getItem('template_builder_preview_data');
+        if (rawData) {
+          const parsed = JSON.parse(rawData);
+          const { sections: s, pages: p, name: n, industry: ind } = parseTemplatePayload(parsed);
+          if (s.length > 0) {
+            applyDataIfChanged(s, p, n, ind);
+          }
         }
+      } catch (err) {
+        console.error('Failed to parse preview storage data:', err);
       }
-    } catch (err) {
-      console.error('Failed to parse preview storage data:', err);
     }
   };
 
@@ -240,6 +324,22 @@ export default function AdminTemplatePreview() {
   };
 
   const renderActiveSections = () => {
+    if (isLoading) {
+      return (
+        <div className="flex flex-col items-center justify-center py-36 px-4 text-center bg-white min-h-[500px]">
+          <div className="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center mb-4 border border-indigo-100 shadow-sm">
+            <Loader2 className="h-6 w-6 text-indigo-600 animate-spin" />
+          </div>
+          <h3 className="text-base font-extrabold text-slate-900 mb-1">
+            Memuat Pratinjau Template...
+          </h3>
+          <p className="text-xs text-slate-500 max-w-xs">
+            Menyiapkan tata letak responsif dan komponen visual template.
+          </p>
+        </div>
+      );
+    }
+
     const activeSections = getActiveSections();
     if (activeSections && activeSections.length > 0) {
       return activeSections.map((section) => (
@@ -394,7 +494,7 @@ export default function AdminTemplatePreview() {
 
           <button
             type="button"
-            onClick={loadDraftFromStorage}
+            onClick={handleRefresh}
             className="p-1.5 bg-slate-800/80 hover:bg-slate-800 text-slate-300 hover:text-white rounded-lg border border-slate-700/60 transition"
             title="Refresh Live Data Sync"
           >
