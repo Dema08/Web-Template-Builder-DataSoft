@@ -57,33 +57,36 @@ export default function Login({ onSwitchToRegister }) {
 
     return (
         <div
-            className="w-full h-full rounded-[32px] overflow-hidden flex flex-col md:flex-row relative bg-white/95 backdrop-blur-xl"
+            className="w-full h-full rounded-2xl sm:rounded-[32px] overflow-hidden flex flex-col md:flex-row relative bg-white/95 backdrop-blur-xl"
             style={{
                 boxShadow: '0 30px 90px rgba(15, 23, 42, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.4)',
             }}
         >
             {/* Left Column — Form with stagger entrance */}
-            <div className="w-full md:w-1/2 p-8 sm:p-12 flex flex-col justify-between bg-white ds-animate-fade-up">
+            <div className="w-full md:w-1/2 p-5 sm:p-8 md:p-12 flex flex-col justify-between bg-white ds-animate-fade-up">
                 <div>
                     {/* Logo Brand & Back to Landing Page */}
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between gap-2">
                         <BrandLogo />
                         <Link
                             to="/"
-                            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-100/90 hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 text-xs font-bold transition-all duration-200 border border-slate-200/70 shadow-2xs hover:shadow-xs group hover:scale-[1.02] active:scale-95"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100/90 hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 text-xs font-bold transition-all duration-200 border border-slate-200/70 shadow-2xs hover:shadow-xs group hover:scale-[1.02] active:scale-95 shrink-0"
+                            title="Kembali ke Beranda"
                         >
-                            <ArrowLeft className="h-3.5 w-3.5 group-hover:-translate-x-1 transition-transform duration-200" />
-                            <span>Kembali ke Beranda</span>
+                            <ArrowLeft className="h-3.5 w-3.5 group-hover:-translate-x-1 transition-transform duration-200 shrink-0" />
+                            <span className="hidden sm:inline">Kembali ke Beranda</span>
+                            <span className="sm:hidden text-[11px]">Beranda</span>
                         </Link>
                     </div>
 
                     {/* Heading */}
-                    <div className="mt-8 mb-6">
-                        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Selamat Datang Kembali</h1>
-                        <p className="text-xs sm:text-sm text-slate-500 mt-1.5 font-medium">
+                    <div className="mt-6 sm:mt-8 mb-4 sm:mb-6">
+                        <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">Selamat Datang Kembali</h1>
+                        <p className="text-xs sm:text-sm text-slate-500 mt-1 sm:mt-1.5 font-medium">
                             Masuk untuk melanjutkan ke dasbor Anda.
                         </p>
                     </div>
+
 
                     {maintenanceNotice && (
                         <div className="mb-4 ds-animate-fade-in">

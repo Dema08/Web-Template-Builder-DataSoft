@@ -59,7 +59,7 @@ export default function AuthPage() {
     };
 
     return (
-        <div className="ds-auth-flip-stage w-full py-4">
+        <div className="ds-auth-flip-stage w-full py-2 sm:py-4">
             <div
                 ref={containerRef}
                 className={`ds-auth-flip-card ${isFlipped ? 'is-flipped' : ''}`}
@@ -78,3 +78,4 @@ export default function AuthPage() {
         </div>
     );
 }
+

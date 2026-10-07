@@ -47,26 +47,27 @@ export default function BrandLogo({ className = '', showName = true, badgeSize =
     };
 
     return (
-        <div className={`flex items-center gap-2.5 ${className}`}>
+        <div className={`flex items-center gap-2 sm:gap-2.5 min-w-0 ${className}`}>
             {!showBadge ? (
                 <img
                     src={effectiveSrc}
                     alt={currentBrandName}
-                    className={`${badgeClass} w-auto object-contain transition-transform duration-200 hover:scale-105`}
+                    className={`${badgeClass} w-auto object-contain transition-transform duration-200 hover:scale-105 shrink-0`}
                     onError={handleError}
                 />
             ) : (
                 <div
-                    className={`${badgeClass} w-9 rounded-xl flex items-center justify-center text-white font-black tracking-tighter shadow-md`}
+                    className={`${badgeClass} w-8 sm:w-9 rounded-xl flex items-center justify-center text-white font-black tracking-tighter shadow-md shrink-0`}
                     style={{ backgroundColor: brand_color || '#2563eb' }}
                 >
                     {brand_badge || 'MD'}
                 </div>
             )}
             {showName && (
-                <span className="text-xl font-black text-slate-900 tracking-tight">{currentBrandName}</span>
+                <span className="text-lg sm:text-xl font-black text-slate-900 tracking-tight truncate">{currentBrandName}</span>
             )}
         </div>
     );
 }
+
 

@@ -55,25 +55,37 @@ export default function ForgotPassword() {
 
     return (
         <div
-            className="max-w-[960px] w-full rounded-[28px] overflow-hidden flex flex-col md:flex-row min-h-[560px] relative z-10 transition-all duration-300 bg-white"
+            className="max-w-[960px] w-full rounded-2xl sm:rounded-[28px] overflow-hidden flex flex-col md:flex-row min-h-0 md:min-h-[560px] relative z-10 transition-all duration-300 bg-white"
             style={{
                 boxShadow: '0 25px 70px rgba(30, 41, 59, 0.18)',
                 border: '1px solid rgba(255, 255, 255, 0.9)',
             }}
         >
             {/* Left Column — Form */}
-            <div className="w-full md:w-1/2 p-8 sm:p-11 flex flex-col justify-between bg-white">
+            <div className="w-full md:w-1/2 p-5 sm:p-8 md:p-11 flex flex-col justify-between bg-white">
                 <div>
                     {/* Logo Brand */}
-                    <BrandLogo />
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                        <BrandLogo />
+                        <Link
+                            to={ROUTES.LOGIN}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100/90 hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 text-xs font-bold transition-all duration-200 border border-slate-200/70 hover:scale-[1.02] active:scale-95 shrink-0"
+                            title="Halaman Login"
+                        >
+                            <ArrowLeft className="h-3.5 w-3.5 shrink-0" />
+                            <span className="hidden sm:inline">Halaman Login</span>
+                            <span className="sm:hidden text-[11px]">Login</span>
+                        </Link>
+                    </div>
 
                     {/* Heading */}
-                    <div className="mt-8 mb-6">
-                        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Lupa Password?</h1>
-                        <p className="text-xs sm:text-sm text-slate-500 mt-1.5 font-medium">
+                    <div className="mt-6 sm:mt-8 mb-4 sm:mb-6">
+                        <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">Lupa Password?</h1>
+                        <p className="text-xs sm:text-sm text-slate-500 mt-1 sm:mt-1.5 font-medium">
                             Masukkan email Anda dan kami akan mengirimkan kode OTP untuk mereset password.
                         </p>
                     </div>
+
 
                     {error && (
                         <div className="mb-4">

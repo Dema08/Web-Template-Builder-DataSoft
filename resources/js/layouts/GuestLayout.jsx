@@ -2,7 +2,7 @@ import { Outlet } from 'react-router-dom';
 
 export default function GuestLayout() {
     return (
-        <div className="min-h-screen w-full flex items-center justify-center p-4 sm:p-6 lg:p-8 antialiased selection:bg-indigo-500 selection:text-white relative overflow-hidden bg-slate-100">
+        <div className="min-h-screen w-full flex items-center justify-center p-3 sm:p-6 lg:p-8 antialiased selection:bg-indigo-500 selection:text-white relative overflow-x-hidden bg-slate-100">
 
             {/* ── Layer 1: Background Image ── */}
             <div
@@ -27,4 +27,5 @@ export default function GuestLayout() {
         </div>
     );
 }
+
 

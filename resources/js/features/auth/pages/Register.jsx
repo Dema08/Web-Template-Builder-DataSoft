@@ -487,16 +487,16 @@ export default function Register({ onSwitchToLogin }) {
 
     return (
         <div
-            className="w-full h-full rounded-[32px] overflow-hidden flex flex-col md:flex-row relative bg-white/95 backdrop-blur-xl"
+            className="w-full h-full rounded-2xl sm:rounded-[32px] overflow-hidden flex flex-col md:flex-row relative bg-white/95 backdrop-blur-xl"
             style={{
                 boxShadow: '0 30px 90px rgba(15, 23, 42, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.4)',
             }}
         >
             {/* Left Column — Form Container */}
-            <div className="w-full md:w-1/2 p-8 sm:p-10 flex flex-col justify-between bg-white overflow-y-auto min-h-0">
+            <div className="w-full md:w-1/2 p-5 sm:p-8 md:p-10 flex flex-col justify-between bg-white overflow-y-auto min-h-0">
                 <div>
                     {/* Logo Brand & Back to Login */}
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between gap-2">
                         <BrandLogo />
                         <Link
                             to={ROUTES.LOGIN}
@@ -506,10 +506,12 @@ export default function Register({ onSwitchToLogin }) {
                                     onSwitchToLogin();
                                 }
                             }}
-                            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-100/90 hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 text-xs font-bold transition-all duration-200 border border-slate-200/70 hover:scale-[1.02] active:scale-95"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100/90 hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 text-xs font-bold transition-all duration-200 border border-slate-200/70 hover:scale-[1.02] active:scale-95 shrink-0"
+                            title="Halaman Login"
                         >
-                            <ArrowLeft className="h-3.5 w-3.5" />
-                            <span>Halaman Login</span>
+                            <ArrowLeft className="h-3.5 w-3.5 shrink-0" />
+                            <span className="hidden sm:inline">Halaman Login</span>
+                            <span className="sm:hidden text-[11px]">Login</span>
                         </Link>
                     </div>
 
@@ -520,6 +522,7 @@ export default function Register({ onSwitchToLogin }) {
                             Gabung dan mulai bangun website profil perusahaan Anda
                         </p>
                     </div>
+
 
                     {doRegister.isError && (
                         <div className="mb-2.5 ds-animate-fade-in">
