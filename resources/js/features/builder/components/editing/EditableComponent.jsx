@@ -546,11 +546,10 @@ export default function EditableComponent({
         <div
           data-drag-handle="true"
           onPointerDown={handleDragStart}
-          className="absolute -top-3.5 left-2 z-30 bg-gradient-to-r from-indigo-600 via-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white px-2.5 py-0.5 rounded-full text-[10px] font-extrabold shadow-md shadow-indigo-600/30 cursor-grab active:cursor-grabbing flex items-center gap-1.5 transition-all select-none touch-none active:scale-95 ring-2 ring-white/50"
-          title="Seret untuk memindahkan elemen secara bebas"
+          className="absolute -top-3.5 left-2 z-30 bg-indigo-600 hover:bg-indigo-700 text-white p-1 rounded-md shadow-md cursor-grab active:cursor-grabbing flex items-center justify-center transition-transform select-none"
+          title="Geser / Pindahkan posisi"
         >
-          <Move className="h-3 w-3" />
-          <span>Pindahkan</span>
+          <Move className="h-3.5 w-3.5" />
         </div>
       )}
 
