@@ -3,6 +3,8 @@ import {
   DndContext,
   DragOverlay,
   PointerSensor,
+  MouseSensor,
+  TouchSensor,
   KeyboardSensor,
   useSensor,
   useSensors,
@@ -46,11 +48,22 @@ function customCollisionDetection(args) {
 export default function DndBuilderProvider({ children }) {
   const dnd = useBuilderDnd();
 
-  // Sensors with constraint to prevent accidental drag on normal clicks
+  // Sensors with constraint to prevent accidental drag on normal clicks & mobile touch scroll
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 5, // 5px movement required to initiate drag
+        distance: 5, // 5px movement required to initiate drag on pointer
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 150, // 150ms press-and-hold so normal page scroll on mobile is smooth
+        tolerance: 6, // 6px movement tolerance during the delay
+      },
+    }),
+    useSensor(MouseSensor, {
+      activationConstraint: {
+        distance: 4,
       },
     }),
     useSensor(KeyboardSensor, {

@@ -54,9 +54,12 @@ export const useBuilderStore = create((set, get) => ({
   isPreviewMode: false,
   isSaving: false,
   builderMode: 'select', // 'select' | 'drag' | 'resize'
-  isLeftPanelOpen: true,
-  isRightPanelOpen: true,
+  isLeftPanelOpen: typeof window !== 'undefined' ? window.innerWidth >= 1024 : true,
+  isRightPanelOpen: typeof window !== 'undefined' ? window.innerWidth >= 1024 : true,
+  leftPanelTab: 'layers', // 'layouts' | 'sections' | 'components' | 'media' | 'icons' | 'uploads' | 'layers'
+  targetInsertionIndex: null, // null or number (for inserting sections between specific sections)
   snapEnabled: true, // STEP B: Snap to Grid state
+  mobileDrawerTab: null, // null | 'add' | 'layouts' | 'sections' | 'components' | 'media' | 'icons' | 'uploads' | 'layers' | 'pages' | 'inspector' | 'styles'
 
   // Actions
   setBuilderMode: (builderMode) => set({ builderMode }),
@@ -66,6 +69,10 @@ export const useBuilderStore = create((set, get) => ({
   toggleRightPanel: () => set(state => ({ isRightPanelOpen: !state.isRightPanelOpen })),
   setLeftPanelOpen: (isOpen) => set({ isLeftPanelOpen: isOpen }),
   setRightPanelOpen: (isOpen) => set({ isRightPanelOpen: isOpen }),
+  setLeftPanelTab: (tab) => set({ leftPanelTab: tab, isLeftPanelOpen: true }),
+  setTargetInsertionIndex: (index) => set({ targetInsertionIndex: index }),
+  openMobileDrawer: (tab = 'add') => set({ mobileDrawerTab: tab }),
+  closeMobileDrawer: () => set({ mobileDrawerTab: null }),
 
   toggleLockComponent: (sectionId, componentId) => {
     const { sections, saveToHistory } = get();
@@ -386,7 +393,7 @@ export const useBuilderStore = create((set, get) => ({
   },
 
   addSection: (sectionType, layout = null) => {
-    get().insertSectionAt(sectionType, layout, -1);
+    return get().insertSectionAt(sectionType, layout, -1);
   },
 
   insertSectionAt: (sectionType, layout = null, targetIndex = -1) => {
@@ -430,6 +437,7 @@ export const useBuilderStore = create((set, get) => ({
     const updatedSections = newSections.map((s, i) => ({ ...s, order: i }));
 
     set({ sections: updatedSections, selectedSectionId: newSection.id, selectedComponentId: null });
+    return newSection.id;
   },
 
   removeSection: (sectionId) => {
@@ -954,11 +962,12 @@ export const useBuilderStore = create((set, get) => ({
   // selectedComponentId so that Property Panel / inspector components can
   // correctly locate the selected component via the section → component tree.
   selectComponent: (componentId, sectionId) => {
+    const isDesktop = typeof window !== 'undefined' && window.innerWidth >= 1024;
     set((state) => ({
       selectedComponentId: componentId,
       selectedSectionId: sectionId !== undefined ? sectionId : state.selectedSectionId,
       selectedProperty: null,
-      isRightPanelOpen: true,
+      isRightPanelOpen: isDesktop ? true : false,
     }));
   },
 
@@ -1078,6 +1087,73 @@ export const useBuilderStore = create((set, get) => ({
     const reordered = newSections.map((s, i) => ({ ...s, order: i }));
 
     set({ sections: reordered, selectedSectionId: clonedSection.id });
+  },
+
+  moveSectionUp: (sectionId) => {
+    const { sections, saveToHistory } = get();
+    const idx = sections.findIndex(s => s.id === sectionId);
+    if (idx <= 0) return;
+    saveToHistory();
+    const newSections = [...sections];
+    const [sec] = newSections.splice(idx, 1);
+    newSections.splice(idx - 1, 0, sec);
+    const reordered = newSections.map((s, i) => ({ ...s, order: i }));
+    set({ sections: reordered, selectedSectionId: sectionId });
+  },
+
+  moveSectionDown: (sectionId) => {
+    const { sections, saveToHistory } = get();
+    const idx = sections.findIndex(s => s.id === sectionId);
+    if (idx === -1 || idx >= sections.length - 1) return;
+    saveToHistory();
+    const newSections = [...sections];
+    const [sec] = newSections.splice(idx, 1);
+    newSections.splice(idx + 1, 0, sec);
+    const reordered = newSections.map((s, i) => ({ ...s, order: i }));
+    set({ sections: reordered, selectedSectionId: sectionId });
+  },
+
+  duplicateComponent: (sectionId, componentId) => {
+    const { sections, saveToHistory } = get();
+    saveToHistory();
+
+    let clonedComp = null;
+    const duplicateInTree = (comps) => {
+      const result = [];
+      for (const c of comps) {
+        let updatedC = c;
+        if (Array.isArray(c.childrenComponents) && c.childrenComponents.length > 0) {
+          updatedC = { ...c, childrenComponents: duplicateInTree(c.childrenComponents) };
+        }
+        result.push(updatedC);
+        if (c.id === componentId) {
+          clonedComp = cloneComponentWithNewIds(c);
+          result.push(clonedComp);
+        }
+      }
+      return result;
+    };
+
+    const newSections = sections.map(s => {
+      if (s.id === sectionId) {
+        return { ...s, components: duplicateInTree(s.components || []) };
+      }
+      return s;
+    });
+
+    set({
+      sections: newSections,
+      selectedComponentId: clonedComp ? clonedComp.id : null,
+      selectedSectionId: sectionId,
+    });
+  },
+
+  moveComponentUp: (sectionId, componentId) => {
+    get().sendBackward(sectionId, componentId);
+  },
+
+  moveComponentDown: (sectionId, componentId) => {
+    get().bringForward(sectionId, componentId);
   },
 
   bringForward: (sectionId, componentId) => {
@@ -1344,8 +1420,8 @@ export const useBuilderStore = create((set, get) => ({
       isPreviewMode: false,
       isSaving: false,
       builderMode: 'select',
-      isLeftPanelOpen: true,
-      isRightPanelOpen: true,
+      isLeftPanelOpen: typeof window !== 'undefined' ? window.innerWidth >= 1024 : true,
+      isRightPanelOpen: typeof window !== 'undefined' ? window.innerWidth >= 1024 : true,
     });
   },
 }));

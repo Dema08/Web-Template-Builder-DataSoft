@@ -9,7 +9,6 @@ import EditableComponent from '../editing/EditableComponent';
 import SnapGrid from '../canvas/SnapGrid';
 import BuilderErrorBoundary from '../common/BuilderErrorBoundary';
 import BackgroundVideo from './BackgroundVideo';
-import { Palette, Trash2, ArrowUp, ArrowDown, Copy } from 'lucide-react';
 import { toast } from '@store';
 
 // Convert layout ID like "hero-01" to component name "Hero01"
@@ -195,9 +194,11 @@ export default function SectionRenderer({ section, isSelected, onClick, isPrevie
     e.stopPropagation();
     e.preventDefault();
 
-    // 📐 Open Right Inspector and select section so user sees properties panel
+    // 📐 Select section so user sees properties panel
     selectSection(section.id);
-    setRightPanelOpen(true);
+    if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
+      setRightPanelOpen(true);
+    }
 
     textEl.contentEditable = 'true';
     textEl.suppressContentEditableWarning = true;
@@ -362,7 +363,9 @@ export default function SectionRenderer({ section, isSelected, onClick, isPrevie
         const compId = compEl.getAttribute('data-component-id');
         const secId = compEl.getAttribute('data-section-id') || section.id;
         selectComponent(compId, secId);
-        setRightPanelOpen(true);
+        if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
+          setRightPanelOpen(true);
+        }
         return;
       }
 
@@ -401,7 +404,9 @@ export default function SectionRenderer({ section, isSelected, onClick, isPrevie
           }
         }, 30);
       }
-      setRightPanelOpen(true);
+      if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
+        setRightPanelOpen(true);
+      }
       return;
     }
 
@@ -486,92 +491,6 @@ export default function SectionRenderer({ section, isSelected, onClick, isPrevie
           {renderExtraSectionComponents()}
         </BuilderErrorBoundary>
       </div>
-
-      {/* Section Quick Floating Action Toolbar */}
-      {isSectionSelected && (
-        <div className="absolute top-2 right-2 z-40 bg-slate-900/90 backdrop-blur-md text-white px-2.5 py-1.5 rounded-xl shadow-2xl flex items-center gap-1.5 border border-slate-700 pointer-events-auto">
-          <span className="text-[11px] font-extrabold mr-1 text-indigo-300">{config?.label || section.type}</span>
-          
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              selectSection(section.id);
-              setRightPanelOpen(true);
-            }}
-            className="p-1 hover:bg-indigo-600 rounded text-slate-300 hover:text-white transition flex items-center gap-1 text-[10px] font-bold px-2 bg-indigo-500/20"
-            title="Configure Background in Inspector"
-          >
-            <Palette className="h-3 w-3" />
-            <span>Background</span>
-          </button>
-
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              const state = useBuilderStore.getState();
-              const idx = state.sections.findIndex(s => s.id === section.id);
-              if (idx > 0) {
-                const newSections = [...state.sections];
-                const temp = newSections[idx];
-                newSections[idx] = newSections[idx - 1];
-                newSections[idx - 1] = temp;
-                state.reorderSections(newSections.map((s, i) => ({ ...s, order: i })));
-                toast.success('Section moved up', 'Reorder');
-              }
-            }}
-            className="p-1 hover:bg-slate-800 rounded text-slate-300 hover:text-white transition"
-            title="Move Section Up"
-          >
-            <ArrowUp className="h-3.5 w-3.5" />
-          </button>
-
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              const state = useBuilderStore.getState();
-              const idx = state.sections.findIndex(s => s.id === section.id);
-              if (idx < state.sections.length - 1) {
-                const newSections = [...state.sections];
-                const temp = newSections[idx];
-                newSections[idx] = newSections[idx + 1];
-                newSections[idx + 1] = temp;
-                state.reorderSections(newSections.map((s, i) => ({ ...s, order: i })));
-                toast.success('Section moved down', 'Reorder');
-              }
-            }}
-            className="p-1 hover:bg-slate-800 rounded text-slate-300 hover:text-white transition"
-            title="Move Section Down"
-          >
-            <ArrowDown className="h-3.5 w-3.5" />
-          </button>
-
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              const state = useBuilderStore.getState();
-              state.duplicateSection(section.id);
-              toast.success('Section duplicated successfully', 'Duplicate');
-            }}
-            className="p-1 hover:bg-slate-800 rounded text-slate-300 hover:text-white transition"
-            title="Duplicate Section"
-          >
-            <Copy className="h-3.5 w-3.5" />
-          </button>
-
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              const state = useBuilderStore.getState();
-              state.removeSection(section.id);
-              toast.success('Section deleted', 'Hapus');
-            }}
-            className="p-1 hover:bg-red-500/20 rounded text-red-400 hover:text-red-300 transition"
-            title="Delete Section"
-          >
-            <Trash2 className="h-3.5 w-3.5" />
-          </button>
-        </div>
-      )}
     </div>
   );
 }

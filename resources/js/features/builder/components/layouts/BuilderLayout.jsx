@@ -1,5 +1,7 @@
 import { useBuilderStore } from '../../stores/builderStore';
 import { X } from 'lucide-react';
+import CanvaMobileBottomBar from '../mobile/CanvaMobileBottomBar';
+import CanvaMobileDrawer from '../mobile/CanvaMobileDrawer';
 
 export default function BuilderLayout({
   children,
@@ -8,19 +10,28 @@ export default function BuilderLayout({
   rightPanel,
   statusBar,
 }) {
-  const { isLeftPanelOpen, isRightPanelOpen, setLeftPanelOpen, setRightPanelOpen, currentPageId, pages, switchPage } = useBuilderStore();
+  const {
+    isLeftPanelOpen,
+    isRightPanelOpen,
+    setLeftPanelOpen,
+    setRightPanelOpen,
+    currentPageId,
+    pages,
+    switchPage,
+    isPreviewMode,
+  } = useBuilderStore();
 
   return (
-    <div className="h-screen flex flex-col bg-slate-100 overflow-hidden font-sans selection:bg-indigo-600 selection:text-white">
+    <div className="h-screen flex flex-col bg-slate-100 overflow-hidden font-sans selection:bg-indigo-600 selection:text-white relative">
       {/* Top Toolbar */}
       {toolbar && (
-        <div className="h-14 bg-white border-b border-slate-200 flex items-center px-3 sm:px-4 z-30 shrink-0 shadow-xs relative">
+        <div className="h-14 bg-white border-b border-slate-200 flex items-center px-2 sm:px-4 z-30 shrink-0 shadow-xs relative">
           {toolbar}
         </div>
       )}
 
       <div className="flex-1 flex overflow-hidden relative">
-        {/* Mobile/Tablet Backdrop Overlay for Left Panel */}
+        {/* Mobile/Tablet Backdrop Overlay for Left Panel (when explicitly opened in sidebar mode) */}
         {leftPanel && isLeftPanelOpen && (
           <div
             className="lg:hidden fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-40 transition-opacity"
@@ -32,8 +43,8 @@ export default function BuilderLayout({
         {leftPanel && isLeftPanelOpen && (
           <div className="fixed lg:relative inset-y-0 left-0 z-40 lg:z-10 w-72 sm:w-80 lg:w-72 bg-white border-r border-slate-200 flex flex-col shrink-0 shadow-2xl lg:shadow-none transition-all duration-300">
             {/* Close button for Mobile/Tablet overlay header */}
-            <div className="lg:hidden flex items-center justify-between px-4 py-2 border-b border-slate-100 bg-slate-50">
-              <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">Navigation & Components</span>
+            <div className="lg:hidden flex items-center justify-between px-4 py-2.5 border-b border-slate-100 bg-slate-50">
+              <span className="text-xs font-extrabold text-slate-700 uppercase tracking-wider">Navigation & Components</span>
               <button
                 onClick={() => setLeftPanelOpen(false)}
                 className="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-200 transition"
@@ -47,22 +58,23 @@ export default function BuilderLayout({
           </div>
         )}
 
-        {/* Center Canvas Workspace */}
-        <div className="flex-1 overflow-hidden flex flex-col bg-slate-200/70 min-w-0">
+        {/* Center Canvas Workspace (with bottom padding for Canva mobile bar) */}
+        <div className="flex-1 overflow-hidden flex flex-col bg-slate-200/70 min-w-0 pb-16 lg:pb-0">
           {/* Subpage editing banner */}
           {currentPageId !== 'landing' && (
-            <div className="bg-indigo-900 text-white px-4 py-2 flex items-center justify-between shrink-0 shadow-md z-20">
-              <div className="flex items-center gap-2 text-xs">
-                <span className="px-2 py-0.5 bg-indigo-700 rounded-md font-extrabold uppercase text-[10px] tracking-wider">Subpage Mode</span>
-                <span>Sedang mengedit halaman: <strong className="underline decoration-indigo-400 font-bold">{pages[currentPageId]?.name || currentPageId}</strong></span>
+            <div className="bg-indigo-900 text-white px-3 sm:px-4 py-2 flex items-center justify-between shrink-0 shadow-md z-20 gap-2">
+              <div className="flex items-center gap-2 text-xs truncate">
+                <span className="px-2 py-0.5 bg-indigo-700 rounded-md font-extrabold uppercase text-[10px] tracking-wider shrink-0">Subpage</span>
+                <span className="truncate">Halaman: <strong className="underline decoration-indigo-400 font-bold">{pages[currentPageId]?.name || currentPageId}</strong></span>
               </div>
               <button
                 type="button"
                 onClick={() => switchPage('landing')}
-                className="flex items-center gap-2 px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-extrabold shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 active:scale-95"
+                className="flex items-center gap-1.5 px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-extrabold shadow-sm shrink-0 transition-all duration-200 active:scale-95"
               >
                 <span>⬅️</span>
-                <span>Kembali ke Landing Page</span>
+                <span className="hidden sm:inline">Kembali ke Landing Page</span>
+                <span className="sm:hidden">Landing</span>
               </button>
             </div>
           )}
@@ -81,8 +93,8 @@ export default function BuilderLayout({
         {rightPanel && isRightPanelOpen && (
           <div className="fixed lg:relative inset-y-0 right-0 z-40 lg:z-10 w-80 sm:w-96 lg:w-80 bg-white border-l border-slate-200 overflow-y-auto shrink-0 shadow-2xl lg:shadow-none transition-all duration-300">
             {/* Close button for Mobile/Tablet overlay header */}
-            <div className="lg:hidden flex items-center justify-between px-4 py-2 border-b border-slate-100 bg-slate-50">
-              <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">Properties & Inspector</span>
+            <div className="lg:hidden flex items-center justify-between px-4 py-2.5 border-b border-slate-100 bg-slate-50">
+              <span className="text-xs font-extrabold text-slate-700 uppercase tracking-wider">Properties & Inspector</span>
               <button
                 onClick={() => setRightPanelOpen(false)}
                 className="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-200 transition"
@@ -95,12 +107,18 @@ export default function BuilderLayout({
         )}
       </div>
 
-      {/* Bottom Status Bar */}
-      {statusBar && (
-        <div className="h-8 bg-slate-900 text-white flex items-center px-4 text-xs shrink-0 z-30">
+      {/* Bottom Status Bar (Desktop only, hidden on mobile to maximize canvas viewport) */}
+      {statusBar && !isPreviewMode && (
+        <div className="hidden lg:flex h-8 bg-slate-900 text-white items-center px-4 text-xs shrink-0 z-30">
           {statusBar}
         </div>
       )}
+
+      {/* Canva Mobile Bottom Navigation & Action Bar (Mobile/Tablet Only) */}
+      <CanvaMobileBottomBar />
+
+      {/* Canva Mobile Slide-up Bottom Sheet & Drawer (Mobile/Tablet Only) */}
+      <CanvaMobileDrawer />
     </div>
   );
 }
