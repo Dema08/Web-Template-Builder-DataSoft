@@ -1,8 +1,7 @@
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useEffect } from 'react';
 import {
   DndContext,
   DragOverlay,
-  PointerSensor,
   MouseSensor,
   TouchSensor,
   KeyboardSensor,
@@ -29,47 +28,67 @@ export function useBuilderDndContext() {
  * 3. Closest center (for sortable lists)
  */
 function customCollisionDetection(args) {
-  // 1. First check if pointer is directly inside a drop zone
   const pointerCollisions = pointerWithin(args);
   if (pointerCollisions.length > 0) {
     return pointerCollisions;
   }
 
-  // 2. Fall back to rect intersection
   const rectCollisions = rectIntersection(args);
   if (rectCollisions.length > 0) {
     return rectCollisions;
   }
 
-  // 3. Fall back to closest center
   return closestCenter(args);
 }
 
 export default function DndBuilderProvider({ children }) {
   const dnd = useBuilderDnd();
 
-  // Sensors with constraint to prevent accidental drag on normal clicks & mobile touch scroll
+  // Sensors with optimized mobile touch constraints:
+  // - MouseSensor: 5px drag distance for desktop mouse
+  // - TouchSensor: 200ms press-and-hold delay + 6px tolerance so normal page scrolling is smooth and uninhibited
   const sensors = useSensors(
-    useSensor(PointerSensor, {
+    useSensor(MouseSensor, {
       activationConstraint: {
-        distance: 5, // 5px movement required to initiate drag on pointer
+        distance: 5,
       },
     }),
     useSensor(TouchSensor, {
       activationConstraint: {
-        delay: 150, // 150ms press-and-hold so normal page scroll on mobile is smooth
-        tolerance: 6, // 6px movement tolerance during the delay
-      },
-    }),
-    useSensor(MouseSensor, {
-      activationConstraint: {
-        distance: 4,
+        delay: 200, // 200ms hold required before drag initiates
+        tolerance: 6, // 6px movement tolerance while holding
       },
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
+
+  // Lock mobile page scrolling while a drag is actively underway
+  useEffect(() => {
+    if (dnd.activeDragItem) {
+      const originalTouchAction = document.body.style.touchAction;
+      const originalUserSelect = document.body.style.userSelect;
+
+      document.body.style.touchAction = 'none';
+      document.body.style.userSelect = 'none';
+
+      const preventTouchMove = (e) => {
+        // Prevent background scrolling while dragging an item
+        if (e.cancelable) {
+          e.preventDefault();
+        }
+      };
+
+      window.addEventListener('touchmove', preventTouchMove, { passive: false });
+
+      return () => {
+        document.body.style.touchAction = originalTouchAction;
+        document.body.style.userSelect = originalUserSelect;
+        window.removeEventListener('touchmove', preventTouchMove);
+      };
+    }
+  }, [dnd.activeDragItem]);
 
   return (
     <BuilderDndContext.Provider value={dnd}>

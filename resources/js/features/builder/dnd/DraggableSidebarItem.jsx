@@ -62,7 +62,7 @@ export default function DraggableSidebarItem({
       {...attributes}
       draggable={!disabled}
       onDragStart={handleNativeDragStart}
-      className={`touch-manipulation select-none transition-all duration-150 ${
+      className={`touch-none select-none transition-all duration-150 ${
         isDragging ? 'opacity-40 scale-95 ring-2 ring-indigo-400 rounded-xl' : 'cursor-grab active:cursor-grabbing'
       } ${className}`}
       {...rest}

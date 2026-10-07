@@ -160,7 +160,7 @@ function SortableSection({ section, index, isSelected, onSelect }) {
             <div
               {...attributes}
               {...listeners}
-              className="flex items-center gap-1 cursor-grab active:cursor-grabbing px-1.5 py-0.5 hover:bg-white/10 rounded-lg"
+              className="flex items-center gap-1 cursor-grab active:cursor-grabbing px-1.5 py-0.5 hover:bg-white/10 rounded-lg touch-none"
               title="Seret untuk memindahkan posisi bagian"
             >
               <GripVertical className="h-3.5 w-3.5 text-indigo-400" />
