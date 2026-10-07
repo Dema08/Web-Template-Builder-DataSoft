@@ -1,3 +1,4 @@
+import FooterSupportBadge from '@builder/sections/footer/FooterSupportBadge';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 /**
@@ -77,7 +78,9 @@ export default function UmkmFooterWellness({ components = [], sectionId = null }
             BPOM Certified • Halal MUI • 100% Eco-Harvested in Indonesia
           </div>
         </div>
+        <FooterSupportBadge className="text-emerald-400/70" />
       </div>
     </footer>
   );
 }
+
