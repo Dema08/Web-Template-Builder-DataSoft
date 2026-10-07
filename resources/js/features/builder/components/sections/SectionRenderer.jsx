@@ -374,8 +374,21 @@ export default function SectionRenderer({ section, isSelected, onClick, isPrevie
   const handleSectionClick = (e) => {
     if (isPreviewMode) return;
     const target = e.target;
-    const imgEl = target?.closest('img');
+    if (!target) return;
 
+    // 1. Direct component container check
+    const compEl = target.closest('[data-component-id]');
+    if (compEl) {
+      e.stopPropagation();
+      const compId = compEl.getAttribute('data-component-id');
+      const secId = compEl.getAttribute('data-section-id') || section.id;
+      selectComponent(compId, secId);
+      setRightPanelOpen(true);
+      return;
+    }
+
+    // 2. Image element check
+    const imgEl = target.closest('img');
     if (imgEl) {
       e.stopPropagation();
       const compEl = imgEl.closest('[data-component-id]');
@@ -391,7 +404,7 @@ export default function SectionRenderer({ section, isSelected, onClick, isPrevie
 
       let imageKey = imgEl.getAttribute('data-image-key');
       if (!imageKey) {
-        const allImgs = Array.from(sectionRef.current.querySelectorAll('img'));
+        const allImgs = Array.from(sectionRef.current ? sectionRef.current.querySelectorAll('img') : []);
         const idx = allImgs.indexOf(imgEl);
         imageKey = `img_${idx}_${(imgEl.alt || 'img').substring(0, 8).replace(/[^a-zA-Z0-9]/g, '')}`;
         imgEl.setAttribute('data-image-key', imageKey);
@@ -428,6 +441,70 @@ export default function SectionRenderer({ section, isSelected, onClick, isPrevie
         setRightPanelOpen(true);
       }
       return;
+    }
+
+    // 3. Text & Interactive element check (headings, paragraphs, spans, links, list items, buttons)
+    const textEl = target.closest('p, span, h1, h2, h3, h4, h5, h6, b, strong, small, label, td, th, li, a, button');
+    if (textEl && !textEl.closest('[data-non-editable="true"]') && !textEl.closest('[data-microdata-support="true"]')) {
+      const initialText = (textEl.innerText || textEl.textContent || '').trim();
+      if (initialText.length > 0) {
+        e.stopPropagation();
+
+        let textKey = textEl.getAttribute('data-text-key');
+        if (!textKey) {
+          const allElements = Array.from(sectionRef.current ? sectionRef.current.querySelectorAll('*') : []);
+          const idx = allElements.indexOf(textEl);
+          textKey = `t_${idx}_${initialText.substring(0, 10).replace(/[^a-zA-Z0-9]/g, '')}`;
+          textEl.setAttribute('data-text-key', textKey);
+        }
+
+        const storeState = useBuilderStore.getState();
+        const currentSec = storeState.sections.find(s => s.id === section.id);
+        const existingComp = (currentSec?.components || []).find(c =>
+          c.id === `sec-txt-${section.id}-${textKey}` ||
+          c.props?.textKey === textKey ||
+          c.props?.content === initialText ||
+          c.props?.label === initialText ||
+          c.props?.text === initialText
+        );
+
+        if (existingComp) {
+          selectComponent(existingComp.id, section.id);
+          setRightPanelOpen(true);
+          return;
+        } else {
+          const isHeading = /^H[1-6]$/i.test(textEl.tagName);
+          const isButton = textEl.tagName === 'BUTTON' || textEl.tagName === 'A';
+          const compType = isHeading ? 'heading' : (isButton ? 'button' : 'text');
+          const compId = `sec-txt-${section.id}-${textKey}`;
+
+          const computedStyle = typeof window !== 'undefined' ? window.getComputedStyle(textEl) : {};
+          const newProps = {
+            content: initialText,
+            text: initialText,
+            label: initialText,
+            textKey: textKey,
+            fontFamily: computedStyle.fontFamily || 'sans-serif',
+            fontSize: computedStyle.fontSize || '14px',
+            fontWeight: computedStyle.fontWeight || '400',
+            color: computedStyle.color || '#ffffff',
+            align: computedStyle.textAlign || 'left',
+            ...(isHeading ? { level: textEl.tagName.toLowerCase() } : {}),
+            ...(isButton ? { href: textEl.getAttribute('href') || '#', variant: 'ghost' } : {}),
+          };
+
+          storeState.insertComponentAt(section.id, compType, -1, null, newProps);
+          setTimeout(() => {
+            const updatedSec = useBuilderStore.getState().sections.find(s => s.id === section.id);
+            const createdComp = updatedSec?.components?.find(c => c.props?.textKey === textKey || c.props?.content === initialText) || updatedSec?.components?.slice(-1)[0];
+            if (createdComp) {
+              useBuilderStore.getState().selectComponent(createdComp.id, section.id);
+            }
+          }, 30);
+          setRightPanelOpen(true);
+          return;
+        }
+      }
     }
 
     e.stopPropagation();

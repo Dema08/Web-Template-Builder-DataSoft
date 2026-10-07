@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import {
     Sparkles, ArrowRight, Play, Check, Star, Zap, Globe, Layout,
     Palette, Image, Monitor, Smartphone, Tablet, MousePointer2,
-    Shield, Layers, ChevronRight, Menu, X, TrendingUp,
+    Shield, Layers, ChevronLeft, ChevronRight, Menu, X, TrendingUp,
     Users, BarChart3, Clock, Quote, CheckCircle2, Rocket,
     Eye, Code2, Headphones, Award, Edit2, Loader2, Lock,
 } from 'lucide-react';
@@ -709,7 +709,7 @@ function PricingSection({ pricingList, pricingMeta }) {
 
     const handleTouchMove = (e) => {
         const dx = e.touches[0].clientX - touchStartXRef.current;
-        const sensitivity = 0.008;
+        const sensitivity = isMobile ? 0.012 : 0.008;
         targetAngleRef.current = touchStartAngleRef.current + dx * sensitivity;
     };
 
@@ -718,12 +718,23 @@ function PricingSection({ pricingList, pricingMeta }) {
         targetAngleRef.current = Math.round(targetAngleRef.current / step) * step;
     };
 
-    // Carousel Radius — wider for multiple cards
-    const radius = isMobile ? 0 : isTablet ? 240 : 320;
+    const rotateNext = () => {
+        const step = (2 * Math.PI) / plans.length;
+        targetAngleRef.current -= step;
+    };
+
+    const rotatePrev = () => {
+        const step = (2 * Math.PI) / plans.length;
+        targetAngleRef.current += step;
+    };
+
+    // Carousel Radius — tuned for 3D wheel rotation across mobile, tablet & desktop
+    const radius = isMobile ? 150 : isTablet ? 240 : 320;
+    const zDepth = isMobile ? 65 : 90;
 
     return (
         <section id="pricing" className="py-20 sm:py-28 bg-slate-50 overflow-hidden">
-            <div className="ds-carousel-stage" style={{ position: 'relative', height: 'auto', minHeight: '600px' }}>
+            <div className="ds-carousel-stage" style={{ position: 'relative', height: 'auto', minHeight: isMobile ? '520px' : '600px' }}>
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
                     <div className="text-center mb-8">
                         <div
@@ -758,7 +769,7 @@ function PricingSection({ pricingList, pricingMeta }) {
                         </div>
                     </div>
 
-                    {/* Tight 3D Rotating Carousel Stage */}
+                    {/* 3D Rotating Carousel Stage (Supports Mobile Touch Swipe & Desktop Mouse Drag) */}
                     <div
                         ref={stageRef}
                         className="pricing-group mx-auto"
@@ -775,39 +786,29 @@ function PricingSection({ pricingList, pricingMeta }) {
                             let cardStyle = {};
                             let depthClass = 'is-inactive-card';
 
-                            if (!isMobile) {
-                                const cardAngle = rotationAngle + (i * 2 * Math.PI) / plans.length;
-                                const x = Math.sin(cardAngle) * radius;
-                                const z = (Math.cos(cardAngle) - 1) * 90;
-                                const rotateY = (cardAngle * 180) / Math.PI;
+                            const cardAngle = rotationAngle + (i * 2 * Math.PI) / plans.length;
+                            const x = Math.sin(cardAngle) * radius;
+                            const z = (Math.cos(cardAngle) - 1) * zDepth;
+                            const rotateY = (cardAngle * 180) / Math.PI;
 
-                                const cosVal = Math.cos(cardAngle);
-                                const norm = (cosVal + 1) / 2;
+                            const cosVal = Math.cos(cardAngle);
+                            const norm = (cosVal + 1) / 2;
 
-                                const cardScale = 0.7 + 0.3 * norm;
-                                const cardOpacity = 0.4 + 0.6 * norm;
-                                const cardBlur = (1 - norm) * 2.0;
-                                const zIdx = Math.round(norm * 100);
+                            const cardScale = isMobile ? (0.82 + 0.18 * norm) : (0.7 + 0.3 * norm);
+                            const cardOpacity = isMobile ? (0.45 + 0.55 * norm) : (0.4 + 0.6 * norm);
+                            const cardBlur = (1 - norm) * (isMobile ? 1.0 : 2.0);
+                            const zIdx = Math.round(norm * 100);
 
-                                if (norm > 0.85) {
-                                    depthClass = 'is-active-card';
-                                }
-
-                                cardStyle = {
-                                    transform: `translateX(${x.toFixed(1)}px) translateZ(${z.toFixed(1)}px) rotateY(${rotateY.toFixed(1)}deg) scale(${cardScale.toFixed(2)})`,
-                                    opacity: cardOpacity.toFixed(2),
-                                    filter: cardBlur > 0.1 ? `blur(${cardBlur.toFixed(1)}px)` : 'none',
-                                    zIndex: zIdx,
-                                };
-                            } else {
-                                const isActive = activeIndex === i;
-                                cardStyle = {
-                                    display: isActive ? 'block' : 'none',
-                                    opacity: 1,
-                                    transform: 'scale(1)',
-                                };
+                            if (norm > 0.82) {
                                 depthClass = 'is-active-card';
                             }
+
+                            cardStyle = {
+                                transform: `translateX(${x.toFixed(1)}px) translateZ(${z.toFixed(1)}px) rotateY(${rotateY.toFixed(1)}deg) scale(${cardScale.toFixed(2)})`,
+                                opacity: cardOpacity.toFixed(2),
+                                filter: cardBlur > 0.1 ? `blur(${cardBlur.toFixed(1)}px)` : 'none',
+                                zIndex: zIdx,
+                            };
 
                             return (
                                 <div
@@ -816,7 +817,7 @@ function PricingSection({ pricingList, pricingMeta }) {
                                     style={cardStyle}
                                 >
                                     <div
-                                        className={`rounded-2xl p-7 border flex flex-col relative transition-all duration-300 h-full ${p.highlight
+                                        className={`rounded-2xl p-6 sm:p-7 border flex flex-col relative transition-all duration-300 h-full ${p.highlight
                                                 ? 'text-white shadow-2xl z-10 ds-animate-pulse-glow'
                                                 : 'bg-white border-slate-100 shadow-sm'
                                             }`}
@@ -837,8 +838,8 @@ function PricingSection({ pricingList, pricingMeta }) {
                                                 {p.name}
                                             </p>
                                             <div className="flex items-baseline gap-1 mb-2">
-                                                <span className={`text-4xl font-extrabold ${p.highlight ? 'text-white' : 'text-slate-900'}`}>{p.price}</span>
-                                                <span className={`text-sm font-medium ${p.highlight ? 'text-blue-200' : 'text-slate-400'}`}>{p.period}</span>
+                                                <span className={`text-3xl sm:text-4xl font-extrabold ${p.highlight ? 'text-white' : 'text-slate-900'}`}>{p.price}</span>
+                                                <span className={`text-xs sm:text-sm font-medium ${p.highlight ? 'text-blue-200' : 'text-slate-400'}`}>{p.period}</span>
                                             </div>
                                             <p className={`text-xs ${p.highlight ? 'text-blue-100' : 'text-slate-500'}`}>{p.desc}</p>
                                         </div>
@@ -866,6 +867,29 @@ function PricingSection({ pricingList, pricingMeta }) {
                                 </div>
                             );
                         })}
+                    </div>
+
+                    {/* Mobile Navigation Arrows & Swipe Counter */}
+                    <div className="flex sm:hidden items-center justify-center gap-4 mt-8 z-30 relative">
+                        <button
+                            type="button"
+                            onClick={rotatePrev}
+                            className="w-10 h-10 rounded-full bg-white border border-slate-200 text-slate-700 flex items-center justify-center shadow-md active:scale-95 transition cursor-pointer"
+                            aria-label="Plan Sebelumnya"
+                        >
+                            <ChevronLeft className="h-5 w-5" />
+                        </button>
+                        <span className="text-xs font-extrabold text-slate-600 bg-white/90 px-3.5 py-1.5 rounded-full border border-slate-200 shadow-2xs">
+                            {activeIndex + 1} / {plans.length}
+                        </span>
+                        <button
+                            type="button"
+                            onClick={rotateNext}
+                            className="w-10 h-10 rounded-full bg-white border border-slate-200 text-slate-700 flex items-center justify-center shadow-md active:scale-95 transition cursor-pointer"
+                            aria-label="Plan Berikutnya"
+                        >
+                            <ChevronRight className="h-5 w-5" />
+                        </button>
                     </div>
                 </div>
             </div>
