@@ -1706,4 +1706,31 @@ html.public-html-body {
   }
 }
 
+/* ============================================================
+ * Canva-Style Fluid Drag & Drop and Mobile Touch Scroll Lock
+ * ========================================================= */
+body.builder-dragging-active,
+body.builder-dragging-active * {
+  touch-action: none !important;
+  -webkit-user-drag: none !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  overscroll-behavior: contain !important;
+}
+
+.canva-drag-overlay {
+  will-change: transform;
+  transform-origin: center center;
+  pointer-events: none !important;
+  z-index: 99999 !important;
+}
+
+[data-drag-handle] {
+  touch-action: none !important;
+  -webkit-user-drag: none !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+}
+
+
 

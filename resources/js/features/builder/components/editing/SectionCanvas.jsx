@@ -150,22 +150,23 @@ function SortableSection({ section, index, isSelected, onSelect }) {
         {/* Canva-style Single Section Action Badge Tab (Top-Left Docked) */}
         {!isPreviewMode && (
           <div
-            className={`hidden lg:flex absolute top-2 left-3 z-30 px-2 py-1 bg-slate-900/90 hover:bg-slate-950 backdrop-blur-md text-white rounded-xl text-[11px] font-bold shadow-xl border border-slate-700/80 items-center gap-1 transition-all duration-200 ${
+            className={`flex absolute top-2 left-3 z-30 px-2 py-1 bg-slate-900/95 backdrop-blur-md text-white rounded-xl text-[11px] font-bold shadow-xl border border-slate-700/80 items-center gap-1 transition-all duration-200 ${
               isDragMode || isSelected
                 ? 'opacity-100 translate-y-0 pointer-events-auto'
-                : 'opacity-0 -translate-y-1 group-hover/section:opacity-100 group-hover/section:translate-y-0 pointer-events-none group-hover/section:pointer-events-auto'
+                : 'opacity-0 -translate-y-1 lg:group-hover/section:opacity-100 lg:group-hover/section:translate-y-0 pointer-events-none lg:group-hover/section:pointer-events-auto'
             }`}
           >
             {/* Drag Handle */}
             <div
               {...attributes}
               {...listeners}
-              className="flex items-center gap-1 cursor-grab active:cursor-grabbing px-1.5 py-0.5 hover:bg-white/10 rounded-lg touch-none"
+              className="flex items-center gap-1 cursor-grab active:cursor-grabbing px-1.5 py-0.5 hover:bg-white/10 rounded-lg touch-none select-none"
               title="Seret untuk memindahkan posisi bagian"
             >
               <GripVertical className="h-3.5 w-3.5 text-indigo-400" />
               <span className="text-[10px] font-extrabold uppercase tracking-wide text-slate-200">{section.type}</span>
             </div>
+
 
             <div className="w-px h-3 bg-slate-700 mx-0.5" />
 

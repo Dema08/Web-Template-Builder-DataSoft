@@ -44,19 +44,19 @@ function customCollisionDetection(args) {
 export default function DndBuilderProvider({ children }) {
   const dnd = useBuilderDnd();
 
-  // Sensors with optimized mobile touch constraints:
-  // - MouseSensor: 5px drag distance for desktop mouse
-  // - TouchSensor: 200ms press-and-hold delay + 6px tolerance so normal page scrolling is smooth and uninhibited
+  // Sensors with ultra-fluid Canva-like touch constraints:
+  // - MouseSensor: 4px drag distance for desktop mouse
+  // - TouchSensor: 100ms hold delay + 8px tolerance for immediate, fluid drag on mobile without accidental triggers
   const sensors = useSensors(
     useSensor(MouseSensor, {
       activationConstraint: {
-        distance: 5,
+        distance: 4,
       },
     }),
     useSensor(TouchSensor, {
       activationConstraint: {
-        delay: 200, // 200ms hold required before drag initiates
-        tolerance: 6, // 6px movement tolerance while holding
+        delay: 100, // Fast 100ms response like Canva
+        tolerance: 8, // 8px tolerance before cancelling hold
       },
     }),
     useSensor(KeyboardSensor, {
@@ -64,28 +64,41 @@ export default function DndBuilderProvider({ children }) {
     })
   );
 
-  // Lock mobile page scrolling while a drag is actively underway
+  // 100% Mobile Page & Viewport Scroll Lock while Drag is Active
   useEffect(() => {
     if (dnd.activeDragItem) {
+      const originalBodyOverflow = document.body.style.overflow;
+      const originalHtmlOverflow = document.documentElement.style.overflow;
       const originalTouchAction = document.body.style.touchAction;
       const originalUserSelect = document.body.style.userSelect;
+      const originalOverscroll = document.body.style.overscrollBehavior;
 
+      document.body.classList.add('builder-dragging-active');
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
       document.body.style.touchAction = 'none';
+      document.body.style.overscrollBehavior = 'none';
       document.body.style.userSelect = 'none';
 
       const preventTouchMove = (e) => {
-        // Prevent background scrolling while dragging an item
         if (e.cancelable) {
           e.preventDefault();
         }
       };
 
-      window.addEventListener('touchmove', preventTouchMove, { passive: false });
+      // Intercept and prevent any native touch gestures during active drag
+      window.addEventListener('touchmove', preventTouchMove, { passive: false, capture: true });
+      window.addEventListener('wheel', preventTouchMove, { passive: false, capture: true });
 
       return () => {
+        document.body.classList.remove('builder-dragging-active');
+        document.body.style.overflow = originalBodyOverflow;
+        document.documentElement.style.overflow = originalHtmlOverflow;
         document.body.style.touchAction = originalTouchAction;
+        document.body.style.overscrollBehavior = originalOverscroll;
         document.body.style.userSelect = originalUserSelect;
-        window.removeEventListener('touchmove', preventTouchMove);
+        window.removeEventListener('touchmove', preventTouchMove, { capture: true });
+        window.removeEventListener('wheel', preventTouchMove, { capture: true });
       };
     }
   }, [dnd.activeDragItem]);
@@ -99,21 +112,18 @@ export default function DndBuilderProvider({ children }) {
         onDragOver={dnd.handleDragOver}
         onDragEnd={dnd.handleDragEnd}
         onDragCancel={dnd.handleDragCancel}
-        autoScroll={{
-          threshold: {
-            x: 0.1,
-            y: 0.15,
-          },
-          acceleration: 15,
-        }}
+        autoScroll={false}
       >
         {children}
 
-        {/* Global Drag Overlay (Canva-like Floating Preview) */}
-        <DragOverlay dropAnimation={{
-          duration: 250,
-          easing: 'cubic-bezier(0.18, 0.67, 0.6, 1.22)',
-        }}>
+        {/* Global Canva-like Floating Drag Overlay */}
+        <DragOverlay
+          dropAnimation={{
+            duration: 200,
+            easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
+          }}
+          className="canva-drag-overlay"
+        >
           {dnd.activeDragItem ? (
             <DragOverlayRenderer activeDragItem={dnd.activeDragItem} />
           ) : null}
@@ -122,3 +132,4 @@ export default function DndBuilderProvider({ children }) {
     </BuilderDndContext.Provider>
   );
 }
+

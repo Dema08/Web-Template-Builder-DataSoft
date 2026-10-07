@@ -258,6 +258,16 @@ export default function EditableComponent({
     const section = storeState.sections.find(s => s.id === sectionId);
     const allComps = section ? section.components : [];
 
+    const preventTouchMove = (touchEvent) => {
+      if (touchEvent.cancelable) {
+        touchEvent.preventDefault();
+      }
+    };
+
+    // Lock page scrolling while user drags this component on mobile touch
+    window.addEventListener('touchmove', preventTouchMove, { passive: false, capture: true });
+    document.body.classList.add('builder-dragging-active');
+
     // Pointer Move handler running at 60-120fps with direct transform
     const onPointerMove = (moveEvent) => {
       if (!dragRef.current.isDragging) return;
@@ -351,6 +361,8 @@ export default function EditableComponent({
         el.releasePointerCapture(upEvent.pointerId);
       } catch (_err) {}
 
+      window.removeEventListener('touchmove', preventTouchMove, { capture: true });
+      document.body.classList.remove('builder-dragging-active');
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerup', onPointerUp);
     };
@@ -366,6 +378,7 @@ export default function EditableComponent({
     if (builderMode === 'resize') return 'default';
     return 'pointer';
   };
+
 
   // Drag & drop icon replacement from sidebar
   const handleNativeDrop = (e) => {
@@ -431,7 +444,7 @@ export default function EditableComponent({
     'rounded-sm',
     'max-w-full',
     isDraggingLocal
-      ? 'z-50 shadow-2xl ring-2 ring-indigo-500 cursor-grabbing bg-white/95 backdrop-blur-xs'
+      ? 'z-50 shadow-[0_20px_50px_rgba(79,70,229,0.35)] ring-2 ring-indigo-500 cursor-grabbing bg-white/95 backdrop-blur-xs scale-[1.02] transition-transform duration-75 will-change-transform touch-none select-none'
       : isSelected
         ? 'z-20 ring-2 ring-indigo-600 ring-offset-2 shadow-xs'
         : isHovered && builderMode !== 'select'
@@ -457,6 +470,7 @@ export default function EditableComponent({
     boxSizing: 'border-box',
     overflowWrap: 'break-word',
     wordBreak: 'normal',
+    touchAction: (isDraggingLocal || isSelected) ? 'none' : 'auto',
   };
 
   return (
@@ -532,13 +546,14 @@ export default function EditableComponent({
         <div
           data-drag-handle="true"
           onPointerDown={handleDragStart}
-          className="absolute -top-3.5 left-2 z-30 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white px-2 py-0.5 rounded-md text-[10px] font-extrabold shadow-md cursor-grab active:cursor-grabbing flex items-center gap-1 transition-transform select-none"
-          title="Drag to reposition anywhere on the canvas"
+          className="absolute -top-3.5 left-2 z-30 bg-gradient-to-r from-indigo-600 via-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white px-2.5 py-0.5 rounded-full text-[10px] font-extrabold shadow-md shadow-indigo-600/30 cursor-grab active:cursor-grabbing flex items-center gap-1.5 transition-all select-none touch-none active:scale-95 ring-2 ring-white/50"
+          title="Seret untuk memindahkan elemen secara bebas"
         >
           <Move className="h-3 w-3" />
-          <span>Move</span>
+          <span>Pindahkan</span>
         </div>
       )}
+
 
       {children}
     </div>
