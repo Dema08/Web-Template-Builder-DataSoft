@@ -1,3 +1,4 @@
+import FooterSupportBadge from '@builder/sections/footer/FooterSupportBadge';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 /**
@@ -77,6 +78,7 @@ export default function UmkmFooterCraft({ components = [], sectionId = null }) {
             Handcrafted with Pride in Indonesia • Eco-Friendly Textiles
           </div>
         </div>
+        <FooterSupportBadge className="text-stone-500" />
       </div>
     </footer>
   );

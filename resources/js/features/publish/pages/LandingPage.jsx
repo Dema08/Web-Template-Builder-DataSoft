@@ -298,93 +298,93 @@ function DashboardIllustration() {
             <div className="relative bg-white rounded-2xl shadow-2xl border border-slate-200/90 overflow-hidden transition-all duration-700"
                 style={{ boxShadow: '0 25px 60px rgba(79,70,229,0.18)' }}>
                 {/* Toolbar */}
-                <div className="flex items-center gap-2 px-4 py-3 bg-slate-900 border-b border-slate-800 text-white">
-                    <div className="flex gap-1.5">
-                        <div className="w-3 h-3 rounded-full bg-red-500 shadow-xs" />
-                        <div className="w-3 h-3 rounded-full bg-amber-400 shadow-xs" />
-                        <div className="w-3 h-3 rounded-full bg-emerald-400 shadow-xs" />
+                <div className="flex items-center gap-2 px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-900 border-b border-slate-800 text-white">
+                    <div className="flex gap-1.5 shrink-0">
+                        <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-red-500 shadow-xs" />
+                        <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-amber-400 shadow-xs" />
+                        <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-emerald-400 shadow-xs" />
                     </div>
-                    <div className="flex-1 bg-slate-800/90 rounded-lg px-3 py-1 text-[10px] text-slate-300 border border-slate-700/60 mx-4 font-mono flex items-center justify-between shadow-inner">
+                    <div className="flex-1 bg-slate-800/90 rounded-lg px-2.5 py-1 text-[9px] sm:text-[10px] text-slate-300 border border-slate-700/60 mx-2 sm:mx-4 font-mono flex items-center justify-between shadow-inner min-w-0">
                         <span className="truncate">Microdata.io/builder</span>
-                        <span className="flex items-center gap-1.5 text-[9px] text-emerald-400 font-bold shrink-0">
+                        <span className="flex items-center gap-1 text-[8px] sm:text-[9px] text-emerald-400 font-bold shrink-0 ml-1">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" /> LIVE
                         </span>
                     </div>
-                    <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-bold text-slate-400 px-2 py-1 bg-slate-800 rounded-md">Simpan</span>
-                        <span className="text-[10px] font-bold text-white px-2.5 py-1 rounded-md ds-animate-pulse-glow"
+                    <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                        <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 px-1.5 sm:px-2 py-0.5 sm:py-1 bg-slate-800 rounded-md hidden xs:inline-block">Simpan</span>
+                        <span className="text-[9px] sm:text-[10px] font-bold text-white px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md ds-animate-pulse-glow"
                             style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>Publish ✓</span>
                     </div>
                 </div>
 
                 {/* Builder Layout */}
-                <div className="flex" style={{ height: '295px' }}>
-                    {/* Left Sidebar */}
-                    <div className="w-14 bg-slate-950 flex flex-col items-center py-3 gap-3 border-r border-slate-800/60">
+                <div className="flex" style={{ height: '270px' }}>
+                    {/* Left Sidebar Icons */}
+                    <div className="w-10 sm:w-14 bg-slate-950 flex flex-col items-center py-2.5 sm:py-3 gap-2 sm:gap-3 border-r border-slate-800/60 shrink-0">
                         {[Layout, Image, Palette, Layers, Globe].map((Icon, i) => (
-                            <div key={i} className={`w-9 h-9 rounded-xl flex items-center justify-center cursor-pointer transition-all duration-300 ${i === (activeSec % 5) ? 'bg-indigo-600 text-white scale-105 shadow-md shadow-indigo-600/40' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}>
-                                <Icon className="h-4 w-4" />
+                            <div key={i} className={`w-7 h-7 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl flex items-center justify-center cursor-pointer transition-all duration-300 ${i === (activeSec % 5) ? 'bg-indigo-600 text-white scale-105 shadow-md shadow-indigo-600/40' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}>
+                                <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                             </div>
                         ))}
                     </div>
 
-                    {/* Components Panel */}
-                    <div className="w-32 bg-slate-900 p-2 space-y-1.5 overflow-hidden border-r border-slate-800/60">
+                    {/* Components Panel (Hidden on small mobile screens to prevent squishing) */}
+                    <div className="hidden sm:block w-28 lg:w-32 bg-slate-900 p-2 space-y-1.5 overflow-hidden border-r border-slate-800/60 shrink-0">
                         <p className="text-[9px] font-bold text-slate-400 uppercase tracking-wider px-1 mb-2">Sections</p>
                         {sectionsList.map((s, i) => (
-                            <div key={i} className={`px-2.5 py-1.5 rounded-lg text-[10px] font-semibold cursor-pointer transition-all duration-300 ${i === activeSec ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md font-bold translate-x-0.5' : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'}`}>
+                            <div key={i} className={`px-2 py-1 rounded-lg text-[9px] sm:text-[10px] font-semibold cursor-pointer transition-all duration-300 truncate ${i === activeSec ? 'bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow-md font-bold translate-x-0.5' : 'text-slate-400 hover:bg-slate-800 hover:text-slate-200'}`}>
                                 {s}
                             </div>
                         ))}
                     </div>
 
-                    {/* Canvas */}
-                    <div className="flex-1 bg-slate-100/80 relative overflow-hidden flex flex-col">
+                    {/* Canvas Area */}
+                    <div className="flex-1 bg-slate-100/80 relative overflow-hidden flex flex-col min-w-0">
                         {/* Animated Live Cursor moving smoothly to match sections */}
                         <div className="absolute z-30 pointer-events-none ds-animate-cursor" style={{ animationDuration: '21s' }}>
-                            <MousePointer2 className="h-5 w-5 text-indigo-600 fill-indigo-600 drop-shadow-lg" />
-                            <div className="ml-3 -mt-2 bg-indigo-600 text-white text-[8px] font-bold px-2 py-0.5 rounded-full shadow-md whitespace-nowrap">
+                            <MousePointer2 className="h-4 w-4 sm:h-5 sm:w-5 text-indigo-600 fill-indigo-600 drop-shadow-lg" />
+                            <div className="ml-2 -mt-2 bg-indigo-600 text-white text-[7px] sm:text-[8px] font-bold px-1.5 py-0.5 rounded-full shadow-md whitespace-nowrap">
                                 Editing {sectionsList[activeSec]}...
                             </div>
                         </div>
 
-                        {/* Website preview */}
-                        <div className="absolute inset-2 bg-white rounded-xl shadow-sm border border-slate-200/60 overflow-hidden flex flex-col">
-                            {/* Hero */}
-                            <div className={`h-20 flex items-center px-4 gap-2.5 relative overflow-hidden transition-all duration-500 ${activeSec === 0 ? 'ring-2 ring-indigo-500 bg-indigo-50/60' : ''}`}
+                        {/* Website preview canvas */}
+                        <div className="absolute inset-1.5 sm:inset-2 bg-white rounded-lg sm:rounded-xl shadow-xs border border-slate-200/60 overflow-hidden flex flex-col">
+                            {/* Hero preview block */}
+                            <div className={`h-16 sm:h-20 flex items-center px-3 sm:px-4 gap-2 relative overflow-hidden transition-all duration-500 ${activeSec === 0 ? 'ring-2 ring-indigo-500 bg-indigo-50/60' : ''}`}
                                 style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
-                                <div className="w-6 h-6 rounded-lg bg-white/20 flex items-center justify-center relative z-10 p-1 shrink-0 shadow-inner">
+                                <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-md sm:rounded-lg bg-white/20 flex items-center justify-center relative z-10 p-0.5 sm:p-1 shrink-0 shadow-inner">
                                     <img src="/images/microdata-emblem.png" alt="Microdata" className="w-full h-full object-contain filter brightness-0 invert" />
                                 </div>
-                                <div className="flex-1 space-y-1.5 pl-1 relative z-10 overflow-hidden">
-                                    <div className="h-2.5 bg-white/95 rounded-full w-28 ds-animate-shimmer shadow-xs" />
-                                    <div className="h-1.5 bg-white/60 rounded-full w-40" />
+                                <div className="flex-1 space-y-1 pl-0.5 relative z-10 overflow-hidden">
+                                    <div className="h-2 sm:h-2.5 bg-white/95 rounded-full w-20 sm:w-28 ds-animate-shimmer shadow-xs" />
+                                    <div className="h-1 sm:h-1.5 bg-white/60 rounded-full w-28 sm:w-40" />
                                 </div>
-                                <div className="h-6 px-3 bg-white rounded-lg text-[9px] font-extrabold text-indigo-600 flex items-center shadow-md hover:scale-105 transition relative z-10 shrink-0">Mulai Sekarang</div>
+                                <div className="h-5 sm:h-6 px-2 sm:px-3 bg-white rounded-md sm:rounded-lg text-[8px] sm:text-[9px] font-extrabold text-indigo-600 flex items-center shadow-md hover:scale-105 transition relative z-10 shrink-0">Mulai</div>
                             </div>
-                            {/* Feature grid */}
-                            <div className={`grid grid-cols-3 gap-2 p-2.5 transition-all duration-500 ${activeSec === 2 ? 'ring-2 ring-indigo-500 bg-indigo-50/60' : ''}`}>
+                            {/* Feature grid preview */}
+                            <div className={`grid grid-cols-2 sm:grid-cols-3 gap-1.5 sm:gap-2 p-2 transition-all duration-500 ${activeSec === 2 ? 'ring-2 ring-indigo-500 bg-indigo-50/60' : ''}`}>
                                 {[...Array(6)].map((_, i) => (
-                                    <div key={i} className="bg-slate-50 rounded-lg p-2 space-y-1.5 border border-slate-100 shadow-2xs hover:border-indigo-300 transition">
-                                        <div className={`w-4 h-4 rounded-md ${i % 2 === 0 ? 'bg-indigo-500' : 'bg-blue-500'} shadow-xs`} />
-                                        <div className="h-2 bg-slate-200/80 rounded-full w-full" />
+                                    <div key={i} className="bg-slate-50 rounded-md sm:rounded-lg p-1.5 sm:p-2 space-y-1 border border-slate-100 shadow-2xs">
+                                        <div className={`w-3 h-3 sm:w-4 sm:h-4 rounded-xs sm:rounded-md ${i % 2 === 0 ? 'bg-indigo-500' : 'bg-blue-500'} shadow-xs`} />
+                                        <div className="h-1.5 bg-slate-200/80 rounded-full w-full" />
                                         <div className="h-1 bg-slate-100 rounded-full w-3/4" />
                                     </div>
                                 ))}
                             </div>
                         </div>
 
-                        {/* Selection Highlight Box dynamically moving */}
-                        <div className="absolute top-2 left-2 right-2 h-20 border-2 border-dashed border-indigo-500/80 rounded-xl pointer-events-none transition-all duration-500 bg-indigo-500/5 backdrop-blur-[1px]">
-                            <div className="absolute -top-2.5 left-3 bg-gradient-to-r from-indigo-600 to-blue-600 text-white text-[9px] font-extrabold px-2.5 py-0.5 rounded-full shadow-md flex items-center gap-1.5">
-                                <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
+                        {/* Selection Highlight Box */}
+                        <div className="absolute top-1.5 left-1.5 right-1.5 h-16 sm:top-2 sm:left-2 sm:right-2 sm:h-20 border-2 border-dashed border-indigo-500/80 rounded-lg sm:rounded-xl pointer-events-none transition-all duration-500 bg-indigo-500/5 backdrop-blur-[1px]">
+                            <div className="absolute -top-2 left-2 sm:-top-2.5 sm:left-3 bg-gradient-to-r from-indigo-600 to-blue-600 text-white text-[8px] sm:text-[9px] font-extrabold px-2 sm:px-2.5 py-0.5 rounded-full shadow-md flex items-center gap-1 sm:gap-1.5">
+                                <span className="w-1 sm:w-1.5 h-1 sm:h-1.5 rounded-full bg-white animate-ping" />
                                 Active Section: {sectionsList[activeSec]}
                             </div>
                         </div>
                     </div>
 
-                    {/* Right Properties Panel */}
-                    <div className="w-36 bg-white border-l border-slate-200/90 p-2.5 space-y-3 flex flex-col justify-between">
+                    {/* Right Properties Panel (Hidden on screens < md) */}
+                    <div className="hidden md:flex w-36 bg-white border-l border-slate-200/90 p-2.5 space-y-3 flex-col justify-between shrink-0">
                         <div className="space-y-3">
                             <p className="text-[9px] font-black text-slate-400 uppercase tracking-wider">Properties</p>
                             <div className="space-y-2">
@@ -392,7 +392,7 @@ function DashboardIllustration() {
                                     <p className="text-[9px] text-slate-500 mb-1 font-semibold">Palet Warna</p>
                                     <div className="flex gap-1">
                                         {['#4f46e5', '#2563eb', '#7c3aed', '#0ea5e9', '#10b981'].map(c => (
-                                            <div key={c} className="w-4 h-4 rounded-full cursor-pointer border border-slate-200 shadow-xs hover:scale-125 transition-transform" style={{ background: c }} />
+                                            <div key={c} className="w-3.5 h-3.5 rounded-full cursor-pointer border border-slate-200 shadow-xs hover:scale-125 transition-transform" style={{ background: c }} />
                                         ))}
                                     </div>
                                 </div>
@@ -412,43 +412,43 @@ function DashboardIllustration() {
                         <div className="space-y-1.5 pt-2 border-t border-slate-100">
                             <p className="text-[9px] font-black text-slate-400 uppercase tracking-wider">Responsive</p>
                             <div className="flex gap-1.5">
-                                <div className="p-1 bg-indigo-600 text-white rounded-md shadow-xs hover:scale-110 transition"><Monitor className="h-3 w-3" /></div>
-                                <div className="p-1 bg-slate-100 text-slate-400 hover:bg-slate-200 rounded-md transition"><Tablet className="h-3 w-3" /></div>
-                                <div className="p-1 bg-slate-100 text-slate-400 hover:bg-slate-200 rounded-md transition"><Smartphone className="h-3 w-3" /></div>
+                                <div className="p-1 bg-indigo-600 text-white rounded-md shadow-xs"><Monitor className="h-3 w-3" /></div>
+                                <div className="p-1 bg-slate-100 text-slate-400 rounded-md"><Tablet className="h-3 w-3" /></div>
+                                <div className="p-1 bg-slate-100 text-slate-400 rounded-md"><Smartphone className="h-3 w-3" /></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* Floating Drifting Cards with CSS animations and staggered delays */}
-            <div className="absolute -top-4 -right-8 bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-slate-100 px-3.5 py-2.5 flex items-center gap-3 ds-animate-float-slow z-20 hover:scale-105 transition-transform">
-                <div className="w-8 h-8 rounded-xl bg-emerald-500 flex items-center justify-center shadow-md shadow-emerald-500/30">
-                    <CheckCircle2 className="h-4 w-4 text-white animate-bounce" />
+            {/* Floating Drifting Badges - Carefully positioned to avoid mobile overflow */}
+            <div className="absolute -top-3 right-1 sm:-top-4 sm:-right-4 lg:-right-8 bg-white/95 backdrop-blur-md rounded-xl sm:rounded-2xl shadow-xl border border-slate-100 px-2.5 py-1.5 sm:px-3.5 sm:py-2.5 flex items-center gap-2 sm:gap-3 ds-animate-float-slow z-20 hover:scale-105 transition-transform">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-emerald-500 flex items-center justify-center shadow-md shadow-emerald-500/30 shrink-0">
+                    <CheckCircle2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white animate-bounce" />
                 </div>
                 <div>
-                    <p className="text-[10px] font-extrabold text-slate-900">Website Terpublikasi!</p>
-                    <p className="text-[9px] text-slate-500 font-mono">Microdata.io/mybrand</p>
+                    <p className="text-[9px] sm:text-[10px] font-extrabold text-slate-900">Website Terpublikasi!</p>
+                    <p className="text-[8px] sm:text-[9px] text-slate-500 font-mono">Microdata.io/mybrand</p>
                 </div>
             </div>
 
-            <div className="absolute -bottom-4 -left-8 bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-slate-100 px-3.5 py-2.5 flex items-center gap-3 ds-animate-float-reverse z-20 hover:scale-105 transition-transform" style={{ animationDelay: '1.5s' }}>
-                <div className="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center shadow-md shadow-indigo-600/30">
-                    <TrendingUp className="h-4 w-4 text-white" />
+            <div className="absolute -bottom-3 left-1 sm:-bottom-4 sm:-left-4 lg:-left-8 bg-white/95 backdrop-blur-md rounded-xl sm:rounded-2xl shadow-xl border border-slate-100 px-2.5 py-1.5 sm:px-3.5 sm:py-2.5 flex items-center gap-2 sm:gap-3 ds-animate-float-reverse z-20 hover:scale-105 transition-transform" style={{ animationDelay: '1.5s' }}>
+                <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-indigo-600 flex items-center justify-center shadow-md shadow-indigo-600/30 shrink-0">
+                    <TrendingUp className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white" />
                 </div>
                 <div>
-                    <p className="text-[10px] font-extrabold text-slate-900">2,4 rb Pengunjung Live</p>
-                    <p className="text-[9px] text-slate-500 font-semibold">Analitik Real-time</p>
+                    <p className="text-[9px] sm:text-[10px] font-extrabold text-slate-900">2,4 rb Pengunjung Live</p>
+                    <p className="text-[8px] sm:text-[9px] text-slate-500 font-semibold">Analitik Real-time</p>
                 </div>
             </div>
 
-            <div className="absolute top-2/3 -right-12 bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-slate-100 px-3.5 py-2.5 flex items-center gap-3 ds-animate-float-slow z-20 hover:scale-105 transition-transform" style={{ animationDelay: '2s' }}>
-                <div className="w-8 h-8 rounded-xl bg-violet-600 flex items-center justify-center shadow-md shadow-violet-600/30">
-                    <img src="/images/microdata-emblem.png" alt="Microdata" className="h-4 w-4 object-contain filter brightness-0 invert" />
+            <div className="hidden sm:flex absolute top-2/3 -right-4 lg:-right-12 bg-white/95 backdrop-blur-md rounded-xl sm:rounded-2xl shadow-xl border border-slate-100 px-2.5 py-1.5 sm:px-3.5 sm:py-2.5 items-center gap-2 sm:gap-3 ds-animate-float-slow z-20 hover:scale-105 transition-transform" style={{ animationDelay: '2s' }}>
+                <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl bg-violet-600 flex items-center justify-center shadow-md shadow-violet-600/30 shrink-0">
+                    <img src="/images/microdata-emblem.png" alt="Microdata" className="h-3.5 w-3.5 sm:h-4 sm:w-4 object-contain filter brightness-0 invert" />
                 </div>
                 <div>
-                    <p className="text-[10px] font-extrabold text-slate-900">120+ Template</p>
-                    <p className="text-[9px] text-slate-500">Berbasis Komponen</p>
+                    <p className="text-[9px] sm:text-[10px] font-extrabold text-slate-900">120+ Template</p>
+                    <p className="text-[8px] sm:text-[9px] text-slate-500">Berbasis Komponen</p>
                 </div>
             </div>
         </div>
@@ -1233,26 +1233,26 @@ export default function LandingPage({ liveContent }) {
             {/* ════════════════════════════════════════════════════
                 HERO SECTION
             ════════════════════════════════════════════════════ */}
-            <section className="relative overflow-hidden pt-24 pb-20 sm:pt-32 sm:pb-28">
+            <section className="relative overflow-hidden pt-20 pb-14 sm:pt-32 sm:pb-28">
                 {/* Background drifting glowing orbs with distinct non-colliding durations */}
-                <div className="absolute -top-40 -left-40 w-[500px] h-[500px] rounded-full pointer-events-none ds-animate-float-slow opacity-50"
+                <div className="absolute -top-40 -left-40 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] rounded-full pointer-events-none ds-animate-float-slow opacity-50"
                     style={{ background: 'radial-gradient(circle,rgba(79,70,229,0.16) 0%,transparent 70%)', filter: 'blur(80px)' }} />
-                <div className="absolute -top-20 right-0 w-[450px] h-[450px] rounded-full pointer-events-none ds-animate-float-reverse opacity-40"
+                <div className="absolute -top-20 right-0 w-[280px] sm:w-[450px] h-[280px] sm:h-[450px] rounded-full pointer-events-none ds-animate-float-reverse opacity-40"
                     style={{ background: 'radial-gradient(circle,rgba(37,99,235,0.14) 0%,transparent 70%)', filter: 'blur(80px)' }} />
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                    <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+                    <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
                         {/* Left Content */}
-                        <div className="flex-1 text-center lg:text-left">
+                        <div className="flex-1 text-center lg:text-left w-full">
                             {/* Badge */}
-                            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold mb-6 border shadow-sm hover:scale-105 transition-transform cursor-pointer"
+                            <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-bold mb-4 sm:mb-6 border shadow-2xs hover:scale-105 transition-transform cursor-pointer"
                                 style={{ background: 'rgba(79,70,229,0.06)', borderColor: 'rgba(79,70,229,0.18)', color: '#4f46e5' }}>
-                                <img src="/images/microdata-emblem.png" alt="Microdata" className="w-4 h-4 object-contain" />
+                                <img src="/images/microdata-emblem.png" alt="Microdata" className="w-3.5 h-3.5 sm:w-4 sm:h-4 object-contain" />
                                 <span>{landingContent.hero_badge}</span>
                             </div>
 
                             {/* Headline with animated flowing gradient */}
-                            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-[1.1] tracking-tight mb-5">
+                            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-[1.15] sm:leading-[1.1] tracking-tight mb-4 sm:mb-5">
                                 {landingContent.hero_title}<br />
                                 <span className="ds-animate-gradient" style={{
                                     background: 'linear-gradient(135deg, #2563eb, #4f46e5, #7c3aed, #ec4899, #2563eb)',
@@ -1262,39 +1262,39 @@ export default function LandingPage({ liveContent }) {
                                 }}>{landingContent.hero_subtitle}</span>
                             </h1>
 
-                            {/* Sub */}
-                            <p className="text-lg text-slate-500 font-medium leading-relaxed max-w-xl mx-auto lg:mx-0 mb-8">
+                            {/* Subtitle / Description */}
+                            <p className="text-sm sm:text-base lg:text-lg text-slate-500 font-medium leading-relaxed max-w-xl mx-auto lg:mx-0 mb-6 sm:mb-8">
                                 {landingContent.hero_desc}
                             </p>
 
                             {/* CTAs */}
-                            <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
+                            <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start w-full max-w-md mx-auto lg:mx-0">
                                 <Link to={ROUTES.REGISTER}
-                                    className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 text-white font-bold rounded-2xl text-sm shadow-xl transition-all hover:shadow-2xl hover:-translate-y-1 ds-animate-pulse-glow"
+                                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 sm:px-7 py-3.5 text-white font-bold rounded-2xl text-sm shadow-xl transition-all hover:shadow-2xl hover:-translate-y-1 ds-animate-pulse-glow"
                                     style={{ background: 'linear-gradient(135deg,#2563eb,#4f46e5)' }}>
                                     <img src="/images/microdata-emblem.png" alt="Microdata" className="w-4 h-4 object-contain filter brightness-0 invert animate-spin" style={{ animationDuration: '6s' }} />
-                                    {landingContent.hero_cta_primary}
+                                    <span>{landingContent.hero_cta_primary}</span>
                                     <ArrowRight className="h-4 w-4" />
                                 </Link>
-                                <button onClick={() => setDemoOpen(true)}
-                                    className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 font-bold rounded-2xl text-sm border-2 border-slate-200 text-slate-700 hover:border-indigo-400 hover:text-indigo-600 hover:-translate-y-0.5 transition-all bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md">
-                                    <div className="w-6 h-6 rounded-full bg-indigo-50 flex items-center justify-center">
-                                        <img src="/images/microdata-emblem.png" alt="Microdata" className="w-3.5 h-3.5 object-contain" />
+                                <button type="button" onClick={() => setDemoOpen(true)}
+                                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 sm:px-7 py-3.5 font-bold rounded-2xl text-sm border-2 border-slate-200 text-slate-700 hover:border-indigo-400 hover:text-indigo-600 hover:-translate-y-0.5 transition-all bg-white/80 backdrop-blur-sm shadow-2xs hover:shadow-md cursor-pointer">
+                                    <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-indigo-50 flex items-center justify-center shrink-0">
+                                        <img src="/images/microdata-emblem.png" alt="Microdata" className="w-3 h-3 sm:w-3.5 sm:h-3.5 object-contain" />
                                     </div>
-                                    {landingContent.hero_cta_secondary}
+                                    <span>{landingContent.hero_cta_secondary}</span>
                                 </button>
                             </div>
 
                             {/* Trust text */}
-                            <p className="mt-6 text-sm text-slate-400 font-medium">
-                                ✦ Dipercaya oleh <span className="font-bold text-slate-700">10,000+</span> bisnis dan organisasi di seluruh Indonesia
+                            <p className="mt-5 sm:mt-6 text-xs sm:text-sm text-slate-500 font-medium text-center lg:text-left">
+                                ✦ Dipercaya oleh <span className="font-bold text-slate-800">10,000+</span> bisnis & organisasi di seluruh Indonesia
                             </p>
 
                             {/* Trusted logos infinite marquee */}
-                            <div className="mt-4 overflow-hidden max-w-md mx-auto lg:mx-0 relative py-2">
-                                <div className="ds-animate-marquee gap-3">
+                            <div className="mt-4 overflow-hidden max-w-md mx-auto lg:mx-0 relative py-2 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+                                <div className="ds-animate-marquee gap-2.5 sm:gap-3">
                                     {[...TRUSTED_LOGOS, ...TRUSTED_LOGOS, ...TRUSTED_LOGOS].map((l, idx) => (
-                                        <div key={idx} className="px-3 py-1.5 bg-slate-50 border border-slate-200/80 rounded-lg text-[11px] font-extrabold text-slate-600 shadow-2xs hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200 transition-colors shrink-0">
+                                        <div key={idx} className="px-3 py-1.5 bg-slate-50 border border-slate-200/80 rounded-lg text-[10px] sm:text-[11px] font-extrabold text-slate-600 shadow-2xs hover:bg-indigo-50 hover:text-indigo-600 hover:border-indigo-200 transition-colors shrink-0">
                                             {l}
                                         </div>
                                     ))}
@@ -1303,7 +1303,7 @@ export default function LandingPage({ liveContent }) {
                         </div>
 
                         {/* Right: Builder illustration */}
-                        <div className="flex-1 w-full lg:max-w-[600px]">
+                        <div className="flex-1 w-full lg:max-w-[600px] mt-2 lg:mt-0">
                             <DashboardIllustration />
                         </div>
                     </div>

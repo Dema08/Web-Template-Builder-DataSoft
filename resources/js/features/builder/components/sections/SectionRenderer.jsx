@@ -11,6 +11,8 @@ import BuilderErrorBoundary from '../common/BuilderErrorBoundary';
 import BackgroundVideo from './BackgroundVideo';
 import { toast } from '@store';
 
+import FooterSupportBadge from '@builder/sections/footer/FooterSupportBadge';
+
 // Convert layout ID like "hero-01" to component name "Hero01"
 const layoutIdToComponentName = (layoutId) => {
   if (!layoutId) return null;
@@ -40,6 +42,8 @@ export default function SectionRenderer({ section, isSelected, onClick, isPrevie
   const { selectedSectionId, selectSection, selectComponent, isPreviewMode: storePreviewMode, setRightPanelOpen } = useBuilderStore();
   const sectionRef = useRef(null);
 
+  const isFooterSection = section?.type === 'footer' || (section?.layout && section.layout.toLowerCase().includes('footer'));
+
   const isPublicRoute = typeof window !== 'undefined' && (
     window.location.pathname.startsWith('/public') ||
     window.location.pathname.startsWith('/p/') ||
@@ -51,6 +55,22 @@ export default function SectionRenderer({ section, isSelected, onClick, isPrevie
   if (!section) return null;
 
   const isSectionSelected = !isPreviewMode && (selectedSectionId === section.id || isSelected);
+
+  // Auto-hydrate "Support by Microdata" badge at bottom of all footers if not present
+  useEffect(() => {
+    if (isFooterSection && sectionRef.current) {
+      const existingBadge = sectionRef.current.querySelector('[data-microdata-support="true"]');
+      if (!existingBadge) {
+        const innerContainer = sectionRef.current.querySelector('footer') || sectionRef.current.querySelector('.section-renderer-content') || sectionRef.current;
+        const badgeWrapper = document.createElement('div');
+        badgeWrapper.setAttribute('data-non-editable', 'true');
+        badgeWrapper.setAttribute('data-microdata-support', 'true');
+        badgeWrapper.className = 'mt-4 pt-3 pb-2 text-[11px] font-medium opacity-80 select-none pointer-events-none tracking-wide flex items-center justify-center gap-1.5 text-slate-400 dark:text-slate-500 w-full text-center';
+        badgeWrapper.innerHTML = '<span>Support by</span><span class="font-bold tracking-wider text-indigo-500 dark:text-indigo-400">Microdata</span>';
+        innerContainer.appendChild(badgeWrapper);
+      }
+    }
+  }, [isFooterSection, section.id, section.layout]);
 
   // Auto-hydrate components from layout defaults if section components are empty
   useEffect(() => {

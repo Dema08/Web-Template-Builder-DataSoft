@@ -1,3 +1,4 @@
+import FooterSupportBadge from '@builder/sections/footer/FooterSupportBadge';
 import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 
 /**
@@ -77,7 +78,9 @@ export default function UmkmFooterCulinary({ components = [], sectionId = null }
             Halal Certified • 100% Single Origin Indonesia
           </div>
         </div>
+        <FooterSupportBadge className="text-stone-500" />
       </div>
     </footer>
   );
 }
+
