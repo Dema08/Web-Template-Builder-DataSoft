@@ -220,11 +220,16 @@ jobs:
           rm -rf deploy/node_modules
           rm -rf deploy/.git
           rm -rf deploy/.github
+          rm -f deploy/database/seeders/starter_templates_data.json
+          rm -rf deploy/storage/logs/*
+          rm -rf deploy/storage/framework/cache/data/*
+          rm -rf deploy/storage/framework/views/*
+          rm -rf deploy/storage/framework/sessions/*
 
       - name: Create deployment zip
         run: |
           cd deploy
-          zip -r -q ../deploy.zip .
+          zip -r -q -9 ../deploy.zip .
           cd ..
           ls -lh deploy.zip
 
@@ -329,25 +334,45 @@ jobs:
           upload_ftp_file() {
             local file="$1"
             local remote_name="$2"
+            local max_retries=5
+            local count=0
+            local success=0
 
             echo "Uploading ${file} ($(du -h "$file" | cut -f1)) to /webroot/ROOT/${remote_name}"
-            curl \
-              --fail \
-              --show-error \
-              --progress-bar \
-              --ftp-pasv \
-              --disable-epsv \
-              --ftp-skip-pasv-ip \
-              --connect-timeout 30 \
-              --max-time 1200 \
-              --retry 1 \
-              --retry-delay 5 \
-              --retry-max-time 1800 \
-              --user "${FTP_USERNAME}:${FTP_PASSWORD}" \
-              --upload-file "$file" \
-              --write-out "\nTransfer complete: %{size_upload} bytes in %{time_total}s\n" \
-              "ftp://${FTP_SERVER}/webroot/ROOT/${remote_name}"
-            echo "Uploaded ${remote_name}"
+
+            while [ $count -lt $max_retries ]; do
+              count=$((count + 1))
+              echo "FTP Upload Attempt ${count}/${max_retries} for ${remote_name}..."
+
+              if curl \
+                --fail \
+                --show-error \
+                --ftp-pasv \
+                --disable-epsv \
+                --ftp-skip-pasv-ip \
+                --keepalive-time 15 \
+                --connect-timeout 60 \
+                --max-time 1800 \
+                --retry 3 \
+                --retry-delay 5 \
+                --retry-all-errors \
+                --user "${FTP_USERNAME}:${FTP_PASSWORD}" \
+                --upload-file "$file" \
+                --write-out "\nTransfer complete: %{size_upload} bytes in %{time_total}s\n" \
+                "ftp://${FTP_SERVER}/webroot/ROOT/${remote_name}"; then
+                  echo "Successfully uploaded ${remote_name}"
+                  success=1
+                  break
+              else
+                  echo "::warning::Upload attempt ${count} failed for ${remote_name}. Retrying in 10 seconds..."
+                  sleep 10
+              fi
+            done
+
+            if [ $success -ne 1 ]; then
+              echo "::error::FTP upload failed after ${max_retries} attempts for ${remote_name}"
+              exit 1
+            fi
           }
 
           upload_ftp_file deploy.zip deploy.zip
@@ -357,9 +382,9 @@ jobs:
         env:
           DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
         run: |
-          sleep 3
+          sleep 5
           echo "Triggering extraction and migrations..."
-          curl --fail-with-body --show-error --silent --max-time 600 \
+          curl --fail-with-body --show-error --silent --max-time 900 --retry 3 --retry-delay 10 --retry-all-errors \
             --get --data-urlencode "token=${DEPLOY_TOKEN}" \
             "https://web.microdata.co.id/unzip.php"
           echo ""
