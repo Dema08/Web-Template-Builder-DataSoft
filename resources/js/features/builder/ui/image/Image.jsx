@@ -91,7 +91,9 @@ export default function Image({
     e.stopPropagation();
     if (componentId && sectionId) {
       selectComponent(componentId, sectionId);
-      setRightPanelOpen(true);
+      if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
+        setRightPanelOpen(true);
+      }
     }
   };
 
@@ -131,7 +133,6 @@ export default function Image({
             e.stopPropagation();
             if (componentId && sectionId) {
               selectComponent(componentId, sectionId);
-              setRightPanelOpen(true);
             }
             fileInputRef.current?.click();
           }}
@@ -142,12 +143,16 @@ export default function Image({
         </button>
         <button
           type="button"
-          title="Buka Pengaturan Gambar di Right Inspector"
+          title="Buka Pengaturan Gambar"
           onClick={(e) => {
             e.stopPropagation();
             if (componentId && sectionId) {
               selectComponent(componentId, sectionId);
-              setRightPanelOpen(true);
+              if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
+                setRightPanelOpen(true);
+              } else {
+                useBuilderStore.getState().openMobileDrawer('inspector');
+              }
             }
           }}
           className="p-1.5 bg-slate-950/85 hover:bg-indigo-600 text-white rounded-lg shadow-lg border border-white/20 backdrop-blur-md transition-colors cursor-pointer text-xs flex items-center gap-1 font-bold"

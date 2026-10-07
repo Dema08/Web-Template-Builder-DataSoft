@@ -221,14 +221,17 @@ function ComponentLayerNode({
 }
 
 export default function LeftPanel() {
-  const [activeTab, setActiveTab] = useState('layers');
   const [expandedSections, setExpandedSections] = useState({});
   const [layoutPickerSection, setLayoutPickerSection] = useState(null);
   const {
-    addSection, addComponent, industrySlug, sections, selectedSectionId,
+    addSection, insertSectionAt, addComponent, industrySlug, sections, selectedSectionId,
     selectSection, selectComponent, selectedComponentId,
-    toggleLockComponent, toggleLockSection, toggleVisibilityComponent, toggleVisibilitySection
+    toggleLockComponent, toggleLockSection, toggleVisibilityComponent, toggleVisibilitySection,
+    leftPanelTab, setLeftPanelTab, targetInsertionIndex, setTargetInsertionIndex
   } = useBuilderStore();
+
+  const activeTab = leftPanelTab || 'layers';
+  const setActiveTab = (tab) => setLeftPanelTab(tab);
 
   const industryConfig = industrySlug ? getIndustryConfig(industrySlug) : null;
   const availableSections = industryConfig?.sections || [];
@@ -258,9 +261,16 @@ export default function LeftPanel() {
       'contact': 'contact',
       'footer': 'footer',
     };
-    const sectionType = layoutToSection[layoutId];
+    const sectionType = layoutToSection[layoutId] || layoutId.split('-')[0] || 'hero';
     if (sectionType) {
-      addSection(sectionType);
+      if (typeof targetInsertionIndex === 'number' && targetInsertionIndex >= 0) {
+        insertSectionAt(sectionType, layoutId, targetInsertionIndex);
+        setTargetInsertionIndex(null);
+        toast.success(`Bagian ${sectionType} disisipkan pada posisi ${targetInsertionIndex + 1}!`, 'Bagian Ditambahkan');
+      } else {
+        addSection(sectionType, layoutId);
+        toast.success(`Bagian ${sectionType} ditambahkan ke canvas!`, 'Bagian Ditambahkan');
+      }
     }
   };
 
@@ -270,12 +280,20 @@ export default function LeftPanel() {
     // Add to selected section if available
     if (selectedSectionId) {
       addComponent(selectedSectionId, componentId);
-      toast.success(`${label} added to canvas`, 'Component Added');
+      toast.success(`Komponen "${label}" ditambahkan ke canvas!`, 'Komponen Ditambahkan');
     } else if (sections.length > 0) {
       addComponent(sections[0].id, componentId);
-      toast.success(`${label} added to first section`, 'Component Added');
+      toast.success(`Komponen "${label}" ditambahkan ke canvas!`, 'Komponen Ditambahkan');
     } else {
-      toast.info('Please add a section to the canvas first, then add components.', 'No Section Found');
+      // Auto create first section and insert component (Canva behavior)
+      useBuilderStore.getState().insertSectionAt('hero', null, 0);
+      setTimeout(() => {
+        const firstSec = useBuilderStore.getState().sections[0];
+        if (firstSec) {
+          addComponent(firstSec.id, componentId);
+        }
+      }, 30);
+      toast.success(`Bagian baru dibuat & "${label}" ditambahkan ke canvas!`, 'Komponen Ditambahkan');
     }
   };
 

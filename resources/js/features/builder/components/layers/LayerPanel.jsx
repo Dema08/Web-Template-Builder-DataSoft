@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useBuilderStore } from '../../stores/builderStore';
 import LayerItem from './LayerItem';
-import { Layers, Sparkles, ChevronDown, ChevronRight, Layout, Trash2, Copy } from 'lucide-react';
+import { Layers, Sparkles, ChevronUp, ChevronDown, ChevronRight, Layout, Trash2, Copy } from 'lucide-react';
 import { getSectionConfig } from '../../utils/industryConfigs';
 
 export default function LayerPanel() {
@@ -107,17 +107,47 @@ export default function LayerPanel() {
                       {components.length}
                     </span>
 
-                    {/* Quick Section Actions on Hover */}
-                    <div className="hidden group-hover:flex items-center gap-0.5" onClick={(e) => e.stopPropagation()}>
+                    {/* Quick Section Actions */}
+                    <div className="flex items-center gap-0.5" onClick={(e) => e.stopPropagation()}>
+                      {sIdx > 0 && (
+                        <button
+                          onClick={() => {
+                            useBuilderStore.getState().moveSectionUp(section.id);
+                            toast.success('Bagian digeser naik', 'Reorder');
+                          }}
+                          className={`p-1 rounded transition ${isSectionSelected ? 'hover:bg-slate-800 text-white' : 'hover:bg-slate-100 text-slate-500'}`}
+                          title="Geser Naik"
+                        >
+                          <ChevronUp className="h-3.5 w-3.5" />
+                        </button>
+                      )}
+                      {sIdx < sections.length - 1 && (
+                        <button
+                          onClick={() => {
+                            useBuilderStore.getState().moveSectionDown(section.id);
+                            toast.success('Bagian digeser turun', 'Reorder');
+                          }}
+                          className={`p-1 rounded transition ${isSectionSelected ? 'hover:bg-slate-800 text-white' : 'hover:bg-slate-100 text-slate-500'}`}
+                          title="Geser Turun"
+                        >
+                          <ChevronDown className="h-3.5 w-3.5" />
+                        </button>
+                      )}
                       <button
-                        onClick={() => duplicateSection(section.id)}
+                        onClick={() => {
+                          duplicateSection(section.id);
+                          toast.success('Bagian diduplikat', 'Duplikat');
+                        }}
                         className={`p-1 rounded transition ${isSectionSelected ? 'hover:bg-slate-800 text-white' : 'hover:bg-slate-100 text-slate-500'}`}
                         title="Duplicate Section"
                       >
                         <Copy className="h-3.5 w-3.5" />
                       </button>
                       <button
-                        onClick={() => removeSection(section.id)}
+                        onClick={() => {
+                          removeSection(section.id);
+                          toast.success('Bagian dihapus', 'Dihapus');
+                        }}
                         className="p-1 rounded hover:bg-rose-100 text-slate-400 hover:text-rose-600 transition"
                         title="Delete Section"
                       >

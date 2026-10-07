@@ -50,7 +50,17 @@ export default function Builder() {
     setTemplateId,
     selectSection,
     resetBuilder,
+    setLeftPanelOpen,
+    setRightPanelOpen,
   } = useBuilderStore();
+
+  // Ensure left and right panels are closed on initial load for mobile/tablet screens
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+      setLeftPanelOpen(false);
+      setRightPanelOpen(false);
+    }
+  }, [setLeftPanelOpen, setRightPanelOpen]);
 
   // Load template or user website content on mount
   useEffect(() => {

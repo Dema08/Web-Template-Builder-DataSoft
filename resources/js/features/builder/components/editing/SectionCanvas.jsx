@@ -4,7 +4,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { useBuilderStore } from '../../stores/builderStore';
 import SectionRenderer from '../sections/SectionRenderer';
 import { toast } from '@store';
-import { GripVertical, Plus, Sparkles, Layers } from 'lucide-react';
+import { GripVertical, Plus, Sparkles, Layers, ChevronUp, ChevronDown, Copy, Trash2, SlidersHorizontal } from 'lucide-react';
 import DropIndicator from '../../dnd/DropIndicator';
 import { useBuilderDndContext } from '../../dnd/DndBuilderProvider';
 
@@ -14,6 +14,7 @@ import { useBuilderDndContext } from '../../dnd/DndBuilderProvider';
  */
 function SectionInsertionZone({ index }) {
   const dnd = useBuilderDndContext();
+  const { openMobileDrawer, setLeftPanelOpen, setLeftPanelTab, setTargetInsertionIndex } = useBuilderStore();
   const activeDragItem = dnd?.activeDragItem;
   
   const isSectionDragging = 
@@ -32,16 +33,40 @@ function SectionInsertionZone({ index }) {
     disabled: !isSectionDragging,
   });
 
-  if (!isSectionDragging) return null;
+  const handleOpenSectionPicker = () => {
+    setTargetInsertionIndex(index);
+    const isDesktop = typeof window !== 'undefined' && window.innerWidth >= 1024;
+    if (isDesktop) {
+      setLeftPanelTab('layouts');
+      setLeftPanelOpen(true);
+      toast.success(`Pilih layout untuk disisipkan pada posisi ${index + 1}`, 'Tambah Bagian');
+    } else {
+      openMobileDrawer('layouts');
+    }
+  };
 
   return (
     <div
       ref={setNodeRef}
-      className={`transition-all duration-200 py-1.5 px-4 ${
-        isOver ? 'scale-100 opacity-100 py-3' : 'opacity-40 hover:opacity-100'
+      className={`relative transition-all duration-200 py-1 px-4 group/insert-zone ${
+        isOver ? 'scale-100 opacity-100 py-3' : isSectionDragging ? 'opacity-40 hover:opacity-100' : 'opacity-0 hover:opacity-100'
       }`}
     >
-      <DropIndicator active={isOver} label={`Drop Section at Position ${index + 1}`} />
+      {isSectionDragging ? (
+        <DropIndicator active={isOver} label={`Drop Section at Position ${index + 1}`} />
+      ) : (
+        <div className="flex items-center justify-center -my-1">
+          <button
+            type="button"
+            onClick={handleOpenSectionPicker}
+            className="flex items-center gap-1.5 px-3 py-1 bg-white hover:bg-indigo-600 text-slate-500 hover:text-white rounded-full text-[11px] font-bold border border-slate-200 shadow-xs hover:shadow-md transition-all duration-150 transform scale-90 hover:scale-100 active:scale-95"
+            title={`Tambah bagian baru di posisi ${index + 1}`}
+          >
+            <Plus className="h-3.5 w-3.5" />
+            <span>Tambah Bagian</span>
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -51,7 +76,16 @@ function SectionInsertionZone({ index }) {
  * Wraps individual sections on canvas with sortable behavior, Canva-style grip handle, and drop zones.
  */
 function SortableSection({ section, index, isSelected, onSelect }) {
-  const { builderMode, isPreviewMode } = useBuilderStore();
+  const {
+    builderMode,
+    isPreviewMode,
+    sections,
+    moveSectionUp,
+    moveSectionDown,
+    duplicateSection,
+    removeSection,
+    openMobileDrawer,
+  } = useBuilderStore();
   const dnd = useBuilderDndContext();
   const isDragMode = !isPreviewMode && builderMode === 'drag';
 
@@ -113,18 +147,106 @@ function SortableSection({ section, index, isSelected, onSelect }) {
           isOver && isComponentOrMediaDragging ? 'ring-2 ring-dashed ring-indigo-500 bg-indigo-50/10' : ''
         }`}
       >
-        {/* Canva-style Section Move Handle Bar */}
-        {!isPreviewMode && !section.isLocked && (
+        {/* Canva-style Single Section Action Badge Tab (Top-Left Docked) */}
+        {!isPreviewMode && (
           <div
-            {...attributes}
-            {...listeners}
-            className={`absolute -top-3.5 left-1/2 -translate-x-1/2 z-30 px-3 py-1 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white rounded-full text-[11px] font-extrabold shadow-lg shadow-indigo-600/30 cursor-grab active:cursor-grabbing flex items-center gap-1.5 transition-all duration-200 ${
-              isDragMode || isSelected ? 'opacity-100 scale-100' : 'opacity-0 group-hover/section:opacity-100 scale-95 hover:scale-100'
+            className={`flex absolute top-2 left-3 z-30 px-2 py-1 bg-slate-900/95 backdrop-blur-md text-white rounded-xl text-[11px] font-bold shadow-xl border border-slate-700/80 items-center gap-1 transition-all duration-200 ${
+              isDragMode || isSelected
+                ? 'opacity-100 translate-y-0 pointer-events-auto'
+                : 'opacity-0 -translate-y-1 lg:group-hover/section:opacity-100 lg:group-hover/section:translate-y-0 pointer-events-none lg:group-hover/section:pointer-events-auto'
             }`}
-            title="Click & Drag to reorder section position"
           >
-            <GripVertical className="h-3.5 w-3.5 text-indigo-200" />
-            <span>{section.type.toUpperCase()} ({section.layout})</span>
+            {/* Drag Handle */}
+            <div
+              {...attributes}
+              {...listeners}
+              className="flex items-center gap-1 cursor-grab active:cursor-grabbing px-1.5 py-0.5 hover:bg-white/10 rounded-lg touch-none select-none"
+              title="Seret untuk memindahkan posisi bagian"
+            >
+              <GripVertical className="h-3.5 w-3.5 text-indigo-400" />
+              <span className="text-[10px] font-extrabold uppercase tracking-wide text-slate-200">{section.type}</span>
+            </div>
+
+
+            <div className="w-px h-3 bg-slate-700 mx-0.5" />
+
+            {/* Move Up */}
+            {index > 0 && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  moveSectionUp(section.id);
+                  toast.success('Bagian digeser naik', 'Urutan');
+                }}
+                className="p-1 hover:bg-slate-800 rounded-lg transition text-slate-300 hover:text-white"
+                title="Geser Naik"
+              >
+                <ChevronUp className="h-3.5 w-3.5" />
+              </button>
+            )}
+
+            {/* Move Down */}
+            {index < sections.length - 1 && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  moveSectionDown(section.id);
+                  toast.success('Bagian digeser turun', 'Urutan');
+                }}
+                className="p-1 hover:bg-slate-800 rounded-lg transition text-slate-300 hover:text-white"
+                title="Geser Turun"
+              >
+                <ChevronDown className="h-3.5 w-3.5" />
+              </button>
+            )}
+
+            {/* Duplicate */}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                duplicateSection(section.id);
+                toast.success('Bagian diduplikat!', 'Duplikat');
+              }}
+              className="p-1 hover:bg-slate-800 rounded-lg transition text-slate-300 hover:text-white"
+              title="Duplikat Bagian"
+            >
+              <Copy className="h-3.5 w-3.5" />
+            </button>
+
+            {/* Edit Background / Property */}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onSelect(section.id);
+                useBuilderStore.getState().setRightPanelOpen(true);
+              }}
+              className="p-1 hover:bg-indigo-600 rounded-lg transition text-indigo-300 hover:text-white"
+              title="Edit Background & Properti"
+            >
+              <SlidersHorizontal className="h-3.5 w-3.5" />
+            </button>
+
+            {/* Delete */}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (section.isLocked) {
+                  toast.error('Buka kunci bagian sebelum menghapus!', 'Terkunci');
+                  return;
+                }
+                removeSection(section.id);
+                toast.success('Bagian dihapus', 'Hapus');
+              }}
+              className="p-1 hover:bg-rose-500/20 text-rose-400 hover:text-rose-200 rounded-lg transition"
+              title="Hapus Bagian"
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+            </button>
           </div>
         )}
 
