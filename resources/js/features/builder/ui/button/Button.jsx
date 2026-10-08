@@ -98,11 +98,13 @@ export default function Button({
   // Dropdown detection & sub-items resolution
   const isCta = (componentId && String(componentId).toLowerCase().startsWith('cta')) ||
                 (content && typeof content === 'object' && content?.isCta);
-  const isNavbarComp = (componentId && (String(componentId).startsWith('nav-') || String(componentId).startsWith('c-nav-') || String(componentId).startsWith('n-'))) ||
-                        (sectionId && String(sectionId).toLowerCase().includes('nav')) ||
-                        variant === 'ghost';
 
-  const isDropdownActive = hasDropdown !== false && !isCta && (isNavbarComp || (dropdownItems && dropdownItems.length > 0) || (content?.dropdownItems && content.dropdownItems.length > 0) || hasDropdown === true);
+  const isDropdownActive = !isCta && (
+    hasDropdown === true ||
+    (content && typeof content === 'object' && content?.hasDropdown === true) ||
+    (Array.isArray(dropdownItems) && dropdownItems.length > 0 && hasDropdown !== false) ||
+    (content && typeof content === 'object' && Array.isArray(content?.dropdownItems) && content.dropdownItems.length > 0 && hasDropdown !== false)
+  );
 
   const defaultDropdownSubItems = [
     { label: `${cleanLabel} Utama`, href: `#${cleanLabel.toLowerCase().replace(/\s+/g, '-')}-hero`, type: 'section' },

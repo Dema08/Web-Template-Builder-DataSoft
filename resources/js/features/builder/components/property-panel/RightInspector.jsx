@@ -1956,6 +1956,114 @@ export default function RightInspector() {
                   </select>
                 </div>
               </div>
+
+              {/* Fitur Dropdown Navbar Sub-Menu Toggle & Inspector */}
+              <div className="p-3.5 bg-indigo-50/70 border border-indigo-200/80 rounded-2xl space-y-3 mt-3">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-extrabold text-indigo-900 uppercase tracking-wide flex items-center gap-1.5">
+                    <ChevronDown className="h-3.5 w-3.5 text-indigo-600" />
+                    <span>Fitur Dropdown Sub-Menu</span>
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const newHasDropdown = !formValues.hasDropdown;
+                      handleChange('hasDropdown', newHasDropdown);
+                      if (newHasDropdown && (!formValues.dropdownItems || formValues.dropdownItems.length === 0)) {
+                        const btnLabel = formValues.label || formValues.text || 'Menu';
+                        const defaultItems = [
+                          { label: `${btnLabel} Utama`, href: `#${String(btnLabel).toLowerCase().replace(/\s+/g, '-')}-1`, type: 'section' },
+                          { label: `${btnLabel} Detail`, href: `#${String(btnLabel).toLowerCase().replace(/\s+/g, '-')}-2`, type: 'section' },
+                          { label: `${btnLabel} Informasi`, href: `#${String(btnLabel).toLowerCase().replace(/\s+/g, '-')}-3`, type: 'section' },
+                        ];
+                        handleChange('dropdownItems', defaultItems);
+                      }
+                    }}
+                    className={`px-3 py-1 rounded-full text-xs font-bold transition cursor-pointer ${
+                      formValues.hasDropdown
+                        ? 'bg-indigo-600 text-white shadow-xs'
+                        : 'bg-slate-200 text-slate-600 hover:bg-slate-300'
+                    }`}
+                  >
+                    {formValues.hasDropdown ? '✓ Aktif (Ada Dropdown)' : 'Non-aktif (Biasa)'}
+                  </button>
+                </div>
+
+                <p className="text-[10px] text-slate-500 leading-relaxed">
+                  {formValues.hasDropdown
+                    ? 'Dropdown aktif. Tombol ini menampilkan ikon panah dan sub-menu saat di-hover/diklik.'
+                    : 'Aktifkan jika ingin tombol ini memiliki sub-menu dropdown (contoh: Beranda ▾).'}
+                </p>
+
+                {formValues.hasDropdown && (
+                  <div className="p-3 bg-white border border-indigo-100 rounded-xl space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-extrabold text-indigo-900 uppercase tracking-wider">
+                        Kelola Sub-Menu ({(formValues.dropdownItems || []).length})
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const currentItems = formValues.dropdownItems || [];
+                          const nextIdx = currentItems.length + 1;
+                          const updated = [
+                            ...currentItems,
+                            { label: `Sub-Menu ${nextIdx}`, href: `#sub-${nextIdx}`, type: 'section' }
+                          ];
+                          handleChange('dropdownItems', updated);
+                        }}
+                        className="text-[10px] bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-2.5 py-1 rounded-lg transition flex items-center gap-1 cursor-pointer"
+                      >
+                        + Tambah Sub-Menu
+                      </button>
+                    </div>
+
+                    <div className="space-y-2">
+                      {(formValues.dropdownItems || []).map((item, idx) => (
+                        <div key={idx} className="p-2.5 bg-slate-50 border border-slate-200 rounded-lg space-y-1.5">
+                          <div className="flex items-center justify-between gap-1">
+                            <span className="text-[10px] font-bold text-indigo-700">Sub-Menu #{idx + 1}</span>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const currentItems = formValues.dropdownItems || [];
+                                const updated = currentItems.filter((_, i) => i !== idx);
+                                handleChange('dropdownItems', updated);
+                              }}
+                              className="text-slate-400 hover:text-rose-600 p-0.5 rounded transition cursor-pointer"
+                              title="Hapus Sub-Menu"
+                            >
+                              <X className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                          <input
+                            type="text"
+                            value={item.label || ''}
+                            onChange={(e) => {
+                              const currentItems = [...(formValues.dropdownItems || [])];
+                              currentItems[idx] = { ...currentItems[idx], label: e.target.value };
+                              handleChange('dropdownItems', currentItems);
+                            }}
+                            placeholder="Nama Sub-Menu (misal: Overview)"
+                            className="w-full px-2.5 py-1 text-xs bg-white border border-slate-200 rounded-md font-medium text-slate-800"
+                          />
+                          <input
+                            type="text"
+                            value={item.href || ''}
+                            onChange={(e) => {
+                              const currentItems = [...(formValues.dropdownItems || [])];
+                              currentItems[idx] = { ...currentItems[idx], href: e.target.value };
+                              handleChange('dropdownItems', currentItems);
+                            }}
+                            placeholder="Target Link / Anchor (#section-id atau URL)"
+                            className="w-full px-2.5 py-1 text-xs bg-white border border-slate-200 rounded-md font-mono text-slate-600"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
@@ -1985,7 +2093,7 @@ export default function RightInspector() {
                 const mappedTab = PROP_TAB_MAPPING[key] || 'content';
                 if (selectedComponent?.type === 'button') {
                   // For button, hide redundant content properties already shown in Smart CTA Card
-                  if (activeTab === 'content' && ['label', 'href', 'linkType', 'linkTarget', 'icon', 'content'].includes(key)) {
+                  if (activeTab === 'content' && ['label', 'href', 'linkType', 'linkTarget', 'icon', 'content', 'action', 'hasDropdown', 'dropdownItems'].includes(key)) {
                     return false;
                   }
                 }
