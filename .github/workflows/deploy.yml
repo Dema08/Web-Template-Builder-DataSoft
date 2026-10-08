@@ -220,7 +220,6 @@ jobs:
           rm -rf deploy/node_modules
           rm -rf deploy/.git
           rm -rf deploy/.github
-          rm -f deploy/database/seeders/starter_templates_data.json
           rm -rf deploy/storage/logs/*
           rm -rf deploy/storage/framework/cache/data/*
           rm -rf deploy/storage/framework/views/*
