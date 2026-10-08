@@ -147,6 +147,32 @@ const websiteApi = {
     },
 
     /**
+     * Get all subdomain hosting requests (admin).
+     */
+    async adminGetHostingRequests(params = {}) {
+        const { data } = await http.get('/admin/hosting-requests', { params });
+        return data.data;
+    },
+
+    /**
+     * Approve a subdomain hosting request (admin).
+     */
+    async adminApproveHostingRequest(id) {
+        const { data } = await http.post(`/admin/hosting-requests/${id}/approve`);
+        return data.data;
+    },
+
+    /**
+     * Reject a subdomain hosting request (admin).
+     */
+    async adminRejectHostingRequest(id, rejectionReason) {
+        const { data } = await http.post(`/admin/hosting-requests/${id}/reject`, {
+            rejection_reason: rejectionReason,
+        });
+        return data.data;
+    },
+
+    /**
      * Delete a website (admin).
      */
     async adminDelete(id, reason) {

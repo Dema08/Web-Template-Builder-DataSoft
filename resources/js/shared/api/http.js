@@ -46,10 +46,13 @@ http.interceptors.response.use(
 
             // 401 Unauthorized (session expired or token revoked)
             if (response.status === HTTP_STATUS.UNAUTHORIZED) {
-                // Ignore 401s from the login endpoint itself — these are expected
-                // (wrong credentials) and should NOT trigger a session wipe.
+                // Ignore 401s from login or public/preview endpoints — these should NOT trigger a session wipe.
                 const requestUrl = error.config?.url || '';
-                if (requestUrl.includes('/auth/login')) {
+                if (
+                    requestUrl.includes('/auth/login') ||
+                    requestUrl.includes('/public/') ||
+                    requestUrl.includes('/preview/')
+                ) {
                     return Promise.reject(error);
                 }
 

@@ -27,6 +27,7 @@ export const ROUTES = {
     SETTINGS: '/settings',
     ADMIN: '/admin',
     ADMIN_DASHBOARD: '/admin/dashboard',
+    ADMIN_HOSTING_REQUESTS: '/admin/hosting-requests',
     ADMIN_USERS: '/admin/users',
     ADMIN_WEBSITES: '/admin/websites',
     ADMIN_TEMPLATES: '/admin/templates',

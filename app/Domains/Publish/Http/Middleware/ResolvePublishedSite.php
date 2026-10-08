@@ -28,33 +28,42 @@ class ResolvePublishedSite
     public function handle(Request $request, Closure $next): Response
     {
         $host = strtolower($request->getHost());
-        $mainDomain = strtolower((string) config('app.main_domain'));
-        $primaryHost = strtolower((string) config('app.primary_host'));
+        $publishDomain = strtolower((string) config('app.publish_domain', 'web.microdata.co.id'));
+        $primaryHost = strtolower((string) config('app.primary_host', 'web.microdata.co.id'));
+        $mainDomain = strtolower((string) config('app.main_domain', 'microdata.co.id'));
 
-        if ($host === $primaryHost || $host === $mainDomain) {
+        // If accessing main dashboard / landing host
+        if ($host === $primaryHost || $host === $mainDomain || $host === 'localhost' || $host === '127.0.0.1') {
             return $next($request);
         }
 
-        $domainSuffix = '.'.$mainDomain;
-        if (!str_ends_with($host, $domainSuffix)) {
-            return $next($request);
+        $subdomain = null;
+
+        // Check against publish domain (.web.microdata.co.id)
+        $publishSuffix = '.' . $publishDomain;
+        if (str_ends_with($host, $publishSuffix)) {
+            $subdomain = substr($host, 0, -strlen($publishSuffix));
+        } elseif (str_ends_with($host, '.' . $mainDomain)) {
+            $subdomain = substr($host, 0, -strlen('.' . $mainDomain));
+            // In case host is xxx.web (subdomain of mainDomain when mainDomain is microdata.co.id)
+            if (str_ends_with($subdomain, '.web')) {
+                $subdomain = substr($subdomain, 0, -4);
+            }
+        } elseif (str_ends_with($host, '.localhost')) {
+            $subdomain = substr($host, 0, -strlen('.localhost'));
         }
 
-        $subdomain = substr($host, 0, -strlen($domainSuffix));
+        if ($subdomain !== null) {
+            if (
+                str_contains($subdomain, '.')
+                || !preg_match('/^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/', $subdomain)
+                || in_array($subdomain, self::RESERVED_SUBDOMAINS, true)
+            ) {
+                abort(404, 'Subdomain tidak valid.');
+            }
 
-        if (
-            str_contains($subdomain, '.')
-            || !preg_match('/^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/', $subdomain)
-            || in_array($subdomain, self::RESERVED_SUBDOMAINS, true)
-        ) {
-            abort(404);
-        }
-
-        $request->attributes->set('published_slug', $subdomain);
-        $request->attributes->set('published_source', 'subdomain');
-
-        if ($request->isMethod('GET') && $request->path() === '/' && !$request->expectsJson()) {
-            return redirect('/p/'.$subdomain);
+            $request->attributes->set('published_slug', $subdomain);
+            $request->attributes->set('published_source', 'subdomain');
         }
 
         return $next($request);

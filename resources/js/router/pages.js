@@ -11,6 +11,7 @@ export const AdminCategories = lazy(() => import('@features/admin/pages/AdminCat
 export const AdminAnalytics = lazy(() => import('@features/admin/pages/AdminAnalytics'));
 export const AdminSettings = lazy(() => import('@features/admin/pages/AdminSettings'));
 export const AdminLandingEditor = lazy(() => import('@features/admin/pages/AdminLandingEditor'));
+export const AdminHostingRequests = lazy(() => import('@features/admin/pages/AdminHostingRequests'));
 export { default as AdminPricelist } from '@features/admin/pages/AdminPricelist';
 export const AdminTransactions = lazy(() => import('@features/admin/pages/AdminTransactions'));
 

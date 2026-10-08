@@ -18,6 +18,7 @@ import {
             Settings,
             Profile,
             AdminDashboard,
+            AdminHostingRequests,
             AdminUsers,
             AdminWebsites,
             AdminTemplates,
@@ -37,6 +38,17 @@ import {
 import { ProtectedRoute, GuestRoute } from './guards';
 import { ROUTES } from '@constants';
 
+function isSubdomainHost() {
+    if (typeof window === 'undefined') return false;
+    const host = window.location.hostname.toLowerCase();
+    if (host === 'localhost' || host === '127.0.0.1' || host === 'web.microdata.co.id' || host === 'microdata.co.id') {
+        return false;
+    }
+    return host.endsWith('.web.microdata.co.id')
+        || host.endsWith('.localhost')
+        || (host.endsWith('.microdata.co.id') && !host.endsWith('web.microdata.co.id'));
+}
+
 function ScrollToTop() {
     const { pathname } = useLocation();
 
@@ -48,13 +60,15 @@ function ScrollToTop() {
 }
 
 export default function AppRouter() {
+    const isSubdomain = isSubdomainHost();
+
     return (
         <BrowserRouter>
             <ScrollToTop />
             <Suspense fallback={<PageLoader fullScreen />}>
                 <Routes>
-                    {/* Public Landing Page — accessible to everyone */}
-                <Route path="/" element={<LandingPage />} />
+                    {/* Public Landing Page or Subdomain Website Viewer */}
+                <Route path="/" element={isSubdomain ? <PublicSitePage /> : <LandingPage />} />
 
                 {/* Public Site Viewer — renders a user's published website by slug */}
                 <Route path="/public/site" element={<PublicSitePage />} />
@@ -101,6 +115,7 @@ export default function AppRouter() {
                     {/* Dedicated Admin Panel Routes */}
                     <Route path={ROUTES.ADMIN} element={<AdminUsers />} />
                     <Route path={ROUTES.ADMIN_DASHBOARD} element={<AdminDashboard />} />
+                    <Route path={ROUTES.ADMIN_HOSTING_REQUESTS} element={<AdminHostingRequests />} />
                     <Route path={ROUTES.ADMIN_USERS} element={<AdminUsers />} />
                     <Route path={ROUTES.ADMIN_WEBSITES} element={<AdminWebsites />} />
                     <Route path={ROUTES.ADMIN_TEMPLATES} element={<AdminTemplates />} />
