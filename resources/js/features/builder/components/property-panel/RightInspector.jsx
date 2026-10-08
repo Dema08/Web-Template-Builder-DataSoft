@@ -2020,47 +2020,100 @@ export default function RightInspector() {
                     </div>
 
                     <div className="space-y-2">
-                      {(formValues.dropdownItems || []).map((item, idx) => (
-                        <div key={idx} className="p-2.5 bg-slate-50 border border-slate-200 rounded-lg space-y-1.5">
-                          <div className="flex items-center justify-between gap-1">
-                            <span className="text-[10px] font-bold text-indigo-700">Sub-Menu #{idx + 1}</span>
-                            <button
-                              type="button"
-                              onClick={() => {
-                                const currentItems = formValues.dropdownItems || [];
-                                const updated = currentItems.filter((_, i) => i !== idx);
-                                handleChange('dropdownItems', updated);
-                              }}
-                              className="text-slate-400 hover:text-rose-600 p-0.5 rounded transition cursor-pointer"
-                              title="Hapus Sub-Menu"
-                            >
-                              <X className="w-3.5 h-3.5" />
-                            </button>
+                      {(formValues.dropdownItems || []).map((item, idx) => {
+                        const itemLabel = typeof item === 'string' ? item : (item?.label || item?.text || '');
+                        const itemHref = typeof item === 'string' ? item : (item?.href || item?.url || '#');
+
+                        return (
+                          <div key={idx} className="p-2.5 bg-slate-50 border border-slate-200 rounded-lg space-y-2 shadow-2xs">
+                            <div className="flex items-center justify-between gap-1">
+                              <span className="text-[10px] font-extrabold text-indigo-700">Sub-Menu #{idx + 1}</span>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const currentItems = formValues.dropdownItems || [];
+                                  const updated = currentItems.filter((_, i) => i !== idx);
+                                  handleChange('dropdownItems', updated);
+                                }}
+                                className="text-slate-400 hover:text-rose-600 p-0.5 rounded transition cursor-pointer"
+                                title="Hapus Sub-Menu"
+                              >
+                                <X className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+
+                            <div>
+                              <label className="block text-[9px] font-bold text-slate-500 mb-0.5">Nama Label Sub-Menu</label>
+                              <input
+                                type="text"
+                                value={itemLabel}
+                                onChange={(e) => {
+                                  const currentItems = [...(formValues.dropdownItems || [])];
+                                  const curr = typeof currentItems[idx] === 'object' ? currentItems[idx] : { href: itemHref };
+                                  currentItems[idx] = { ...curr, label: e.target.value };
+                                  handleChange('dropdownItems', currentItems);
+                                }}
+                                placeholder="misal: Visi & Misi"
+                                className="w-full px-2.5 py-1 text-xs bg-white border border-slate-200 rounded-md font-medium text-slate-800"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-[9px] font-bold text-slate-500 mb-0.5">Pilih Tujuan Link / Anchor</label>
+                              <select
+                                value={itemHref}
+                                onChange={(e) => {
+                                  const val = e.target.value;
+                                  const currentItems = [...(formValues.dropdownItems || [])];
+                                  const curr = typeof currentItems[idx] === 'object' ? currentItems[idx] : { label: itemLabel };
+                                  const isPg = val.startsWith('/');
+                                  currentItems[idx] = {
+                                    ...curr,
+                                    href: val,
+                                    type: isPg ? 'page' : 'section',
+                                  };
+                                  handleChange('dropdownItems', currentItems);
+                                }}
+                                className="w-full px-2 py-1 text-xs bg-white border border-slate-200 rounded-md font-bold text-slate-700 cursor-pointer"
+                              >
+                                <option value={itemHref}>Current: {itemHref || '-- Pilih Section / Link --'}</option>
+                                <optgroup label="Seksi Halaman (Sections)">
+                                  {(landingSections.length > 0 ? landingSections : sections).map(sec => (
+                                    <option key={sec.id} value={`#${sec.id}`}>
+                                      ⚓ #{sec.id} ({sec.type.toUpperCase()})
+                                    </option>
+                                  ))}
+                                </optgroup>
+                                {Object.values(pages || {}).length > 0 && (
+                                  <optgroup label="Halaman Internal (Pages)">
+                                    {Object.values(pages || {}).map(p => (
+                                      <option key={p.id} value={`/${p.slug || p.id}`}>
+                                        📄 {p.name || p.title} (/{p.slug || p.id})
+                                      </option>
+                                    ))}
+                                  </optgroup>
+                                )}
+                              </select>
+                            </div>
+
+                            <div>
+                              <label className="block text-[9px] font-bold text-slate-500 mb-0.5">Atau Ketik URL / Custom Link</label>
+                              <input
+                                type="text"
+                                value={itemHref}
+                                onChange={(e) => {
+                                  const currentItems = [...(formValues.dropdownItems || [])];
+                                  const curr = typeof currentItems[idx] === 'object' ? currentItems[idx] : { label: itemLabel };
+                                  currentItems[idx] = { ...curr, href: e.target.value };
+                                  handleChange('dropdownItems', currentItems);
+                                }}
+                                placeholder="e.g. #pricing atau https://example.com"
+                                className="w-full px-2.5 py-1 text-xs bg-white border border-slate-200 rounded-md font-mono text-slate-600"
+                              />
+                            </div>
                           </div>
-                          <input
-                            type="text"
-                            value={item.label || ''}
-                            onChange={(e) => {
-                              const currentItems = [...(formValues.dropdownItems || [])];
-                              currentItems[idx] = { ...currentItems[idx], label: e.target.value };
-                              handleChange('dropdownItems', currentItems);
-                            }}
-                            placeholder="Nama Sub-Menu (misal: Overview)"
-                            className="w-full px-2.5 py-1 text-xs bg-white border border-slate-200 rounded-md font-medium text-slate-800"
-                          />
-                          <input
-                            type="text"
-                            value={item.href || ''}
-                            onChange={(e) => {
-                              const currentItems = [...(formValues.dropdownItems || [])];
-                              currentItems[idx] = { ...currentItems[idx], href: e.target.value };
-                              handleChange('dropdownItems', currentItems);
-                            }}
-                            placeholder="Target Link / Anchor (#section-id atau URL)"
-                            className="w-full px-2.5 py-1 text-xs bg-white border border-slate-200 rounded-md font-mono text-slate-600"
-                          />
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
                 )}

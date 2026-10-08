@@ -152,28 +152,62 @@ export default function Button({
     }, 200);
   };
 
+  const getSubItemLabel = (item, idx) => {
+    if (typeof item === 'string') return item;
+    if (typeof item === 'object' && item !== null) {
+      return item.label || item.text || item.title || item.name || `Sub-Menu ${idx + 1}`;
+    }
+    return `Sub-Menu ${idx + 1}`;
+  };
+
+  const getSubItemHref = (item) => {
+    if (typeof item === 'string') {
+      return item.startsWith('#') || item.startsWith('/') || item.startsWith('http') ? item : `#${item}`;
+    }
+    if (typeof item === 'object' && item !== null) {
+      return item.href || item.url || item.value || item.link || '#';
+    }
+    return '#';
+  };
+
   const handleSubItemClick = (e, subItem) => {
+    setDropdownOpen(false);
+    const subHref = getSubItemHref(subItem);
+    const subType = typeof subItem === 'object' ? (subItem?.type || subItem?.actionType || 'section') : 'section';
+
     if (!isPreviewMode) {
       e.preventDefault();
       e.stopPropagation();
-      setDropdownOpen(false);
+      if (subHref.startsWith('#')) {
+        const targetId = subHref.replace(/^#/, '');
+        const el = document.getElementById(targetId) || document.querySelector(`[data-section-id="${targetId}"]`) || (subHref.startsWith('#') ? document.querySelector(subHref) : null);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }
       if (componentId) selectComponent(componentId, sectionId);
       return;
     }
 
-    e.preventDefault();
-    e.stopPropagation();
-    setDropdownOpen(false);
-
-    const val = subItem.href || '#';
-    if (subItem.type === 'page') {
-      if (switchPreviewPage) switchPreviewPage(val);
-    } else if (val.startsWith('#')) {
-      const targetId = val.replace(/^#/, '');
-      const el = document.getElementById(targetId) || document.querySelector(`[data-section-id="${targetId}"]`) || document.querySelector(val);
+    if (subType === 'page') {
+      e.preventDefault();
+      if (subHref && switchPreviewPage) {
+        switchPreviewPage(subHref);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (subHref) {
+        window.location.href = subHref;
+      }
+    } else if (subType === 'whatsapp' || subHref.includes('wa.me')) {
+      e.preventDefault();
+      window.open(subHref, '_blank', 'noopener,noreferrer');
+    } else if (subHref.startsWith('#')) {
+      e.preventDefault();
+      const targetId = subHref.replace(/^#/, '');
+      const el = document.getElementById(targetId) || document.querySelector(`[data-section-id="${targetId}"]`) || (subHref.startsWith('#') ? document.querySelector(subHref) : null);
       if (el) el.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      window.open(val, '_blank', 'noopener,noreferrer');
+    } else if (subHref.startsWith('http://') || subHref.startsWith('https://')) {
+      if (subItem?.target === '_blank') {
+        e.preventDefault();
+        window.open(subHref, '_blank', 'noopener,noreferrer');
+      }
     }
   };
 
@@ -455,7 +489,7 @@ export default function Button({
         {isDropdownActive && (
           <ChevronDown
             className={`w-3.5 h-3.5 shrink-0 transition-transform duration-200 ${
-              dropdownOpen ? 'rotate-180 text-indigo-500' : 'opacity-70 group-hover:opacity-100'
+              dropdownOpen ? 'rotate-180 text-indigo-400' : 'opacity-70 group-hover:opacity-100'
             }`}
           />
         )}
@@ -478,48 +512,56 @@ export default function Button({
     >
       {buttonElement}
 
-      {/* Floating Desktop Dropdown Menu */}
+      {/* Floating Desktop Dropdown Menu Panel */}
       {dropdownOpen && (
-        <div className="hidden lg:block absolute left-0 top-full pt-1.5 z-[100] min-w-[210px] animate-in fade-in slide-in-from-top-2 duration-150">
-          <div className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-slate-200/90 dark:border-slate-800 rounded-2xl p-2 shadow-2xl shadow-slate-900/15 ring-1 ring-black/5 flex flex-col gap-0.5">
-            <div className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider px-3 py-1.5 select-none border-b border-slate-100 dark:border-slate-800/80 mb-1 flex items-center justify-between">
-              <span>{cleanLabel}</span>
-              <span className="text-[9px] bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 px-1.5 py-0.5 rounded-md font-mono">
-                Menu
+        <div className="hidden lg:block absolute left-0 top-full mt-2 z-[9999] min-w-[220px] animate-in fade-in zoom-in-95 duration-200">
+          <div className="bg-slate-900/95 text-slate-100 backdrop-blur-2xl border border-slate-700/80 rounded-2xl p-2 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.6)] ring-1 ring-white/10 flex flex-col gap-1">
+            <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-3.5 py-1.5 select-none border-b border-slate-800/80 mb-0.5 flex items-center justify-between">
+              <span className="truncate max-w-[140px]">{cleanLabel}</span>
+              <span className="text-[9px] bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-1.5 py-0.5 rounded-md font-mono">
+                Sub-Menu
               </span>
             </div>
-            {resolvedDropdownItems.map((subItem, idx) => (
-              <a
-                key={idx}
-                href={subItem.href || '#'}
-                onClick={(e) => handleSubItemClick(e, subItem)}
-                className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50/80 dark:hover:bg-slate-800/80 transition-all group/sub select-none"
-              >
-                <span className="truncate">{subItem.label}</span>
-                <span className="text-[11px] text-slate-400 group-hover/sub:translate-x-0.5 transition-transform">→</span>
-              </a>
-            ))}
+            {resolvedDropdownItems.map((subItem, idx) => {
+              const subLabel = getSubItemLabel(subItem, idx);
+              const subHref = getSubItemHref(subItem);
+              return (
+                <a
+                  key={idx}
+                  href={subHref}
+                  onClick={(e) => handleSubItemClick(e, subItem)}
+                  className="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-200 hover:text-white hover:bg-indigo-600/30 hover:border-indigo-500/40 border border-transparent transition-all group/sub select-none cursor-pointer"
+                >
+                  <span className="truncate">{subLabel}</span>
+                  <span className="text-[11px] text-indigo-400 opacity-70 group-hover/sub:opacity-100 group-hover/sub:translate-x-1 transition-all">→</span>
+                </a>
+              );
+            })}
           </div>
         </div>
       )}
 
       {/* Inline Mobile Expandable Sub-Menu */}
       {dropdownOpen && (
-        <div className="lg:hidden w-full pl-3 pr-1 py-1 flex flex-col gap-1 border-l-2 border-indigo-500/40 my-1 bg-slate-50/80 dark:bg-slate-900/60 rounded-r-xl transition-all">
-          {resolvedDropdownItems.map((subItem, idx) => (
-            <a
-              key={idx}
-              href={subItem.href || '#'}
-              onClick={(e) => handleSubItemClick(e, subItem)}
-              className="py-1.5 px-2.5 text-xs font-medium text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50/50 dark:hover:bg-slate-800/50 rounded-lg transition flex items-center justify-between"
-            >
-              <span className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-indigo-500/70" />
-                <span>{subItem.label}</span>
-              </span>
-              <span className="text-[10px] text-slate-400">↳</span>
-            </a>
-          ))}
+        <div className="lg:hidden w-full pl-3 pr-1 py-1.5 flex flex-col gap-1 border-l-2 border-indigo-500/50 my-1 bg-slate-900/90 text-white rounded-r-xl transition-all shadow-inner">
+          {resolvedDropdownItems.map((subItem, idx) => {
+            const subLabel = getSubItemLabel(subItem, idx);
+            const subHref = getSubItemHref(subItem);
+            return (
+              <a
+                key={idx}
+                href={subHref}
+                onClick={(e) => handleSubItemClick(e, subItem)}
+                className="py-2 px-3 text-xs font-semibold text-slate-200 hover:text-white hover:bg-indigo-600/30 rounded-lg transition flex items-center justify-between cursor-pointer"
+              >
+                <span className="flex items-center gap-2 truncate">
+                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 shrink-0" />
+                  <span className="truncate">{subLabel}</span>
+                </span>
+                <span className="text-[10px] text-indigo-300">↳</span>
+              </a>
+            );
+          })}
         </div>
       )}
     </div>
