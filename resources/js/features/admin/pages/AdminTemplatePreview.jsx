@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useBuilderStore } from '@builder/stores/builderStore';
 import SectionRenderer from '@builder/components/sections/SectionRenderer';
 import { templateApi } from '@api';
+import http from '@shared/api/http';
 import {
   Monitor,
   Tablet,
@@ -168,8 +169,14 @@ export default function AdminTemplatePreview() {
       try {
         res = await templateApi.getPublicById(targetId);
       } catch (err) {
-        // Fallback to admin/auth endpoint if template is a draft or previewed by admin
-        res = await templateApi.getById(targetId);
+        try {
+          // Fallback to admin/auth endpoint if template is a draft or previewed by admin
+          res = await templateApi.getById(targetId);
+        } catch (authErr) {
+          // Fallback to public site preview (if targetId is a website slug)
+          const siteRes = await http.get(`/public/site?slug=${encodeURIComponent(targetId)}&preview=true`);
+          res = siteRes?.data ?? siteRes;
+        }
       }
 
       const { sections: s, pages: p, name: n, industry: ind } = parseTemplatePayload(res);

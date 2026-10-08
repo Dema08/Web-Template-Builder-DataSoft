@@ -23,7 +23,7 @@ class PublicSiteController extends BaseController
     public function showBySlug(Request $request, string $slug)
     {
         $slug = $request->attributes->get('published_slug', $slug);
-        $website = $this->findPublishedWebsite($slug);
+        $website = Website::where('slug', $slug)->first();
 
         abort_unless($website, 404);
 
@@ -34,12 +34,40 @@ class PublicSiteController extends BaseController
     {
         $hostSlug = $request->attributes->get('published_slug');
         $slug = $hostSlug ?? $request->query('slug');
+        $isPreview = $request->boolean('preview') || $request->query('preview') === 'true' || $request->query('preview') === '1';
 
         abort_if(!is_string($slug) || $slug === '', 404);
 
-        $website = $this->findPublishedWebsite($slug);
+        $website = Website::where('slug', $slug)->first();
 
         abort_unless($website, 404);
+
+        $statusStr = is_string($website->status) ? $website->status : ($website->status?->value ?? 'draft');
+
+        // If NOT in preview mode, respect pending and rejected states for public visitors
+        if (!$isPreview) {
+            if ($statusStr === 'pending') {
+                return $this->success([
+                    'status' => 'pending',
+                    'site_name' => $website->name,
+                    'subdomain' => $website->slug,
+                    'requested_at' => $website->requested_at?->toISOString(),
+                ], 'Website is pending admin approval');
+            }
+
+            if ($statusStr === 'rejected') {
+                return $this->success([
+                    'status' => 'rejected',
+                    'site_name' => $website->name,
+                    'subdomain' => $website->slug,
+                    'rejection_reason' => $website->rejection_reason,
+                ], 'Website publication was rejected');
+            }
+
+            if ($statusStr !== 'published') {
+                return $this->error('Website is not published', 404);
+            }
+        }
 
         $brandBadge = Setting::get('brand_badge', 'DS');
         $brandColor = Setting::get('brand_color', '#2563eb');
@@ -47,31 +75,39 @@ class PublicSiteController extends BaseController
 
         $logoUrl = $logoRaw ? Storage::url($logoRaw) : null;
 
-        // Record view/visitor
-        $website->views()->create([
-            'ip_address' => $request->ip(),
-            'user_agent' => $request->userAgent(),
-        ]);
+        // Record view/visitor only for public live visits (not preview mode)
+        if (!$isPreview && $statusStr === 'published') {
+            $website->views()->create([
+                'ip_address' => $request->ip(),
+                'user_agent' => $request->userAgent(),
+            ]);
+        }
 
         $siteName = $website->name;
         $siteSubdomain = $website->slug;
-        $publishedJson = $website->published_json ?? [];
+
+        // Prioritize draft_json when in preview mode, published_json when live
+        $contentJson = $isPreview
+            ? ($website->draft_json ?? $website->published_json ?? [])
+            : ($website->published_json ?? $website->draft_json ?? []);
 
         // Handle both structure formats: { sections: [...] } or direct section array [...]
         $sections = [];
-        if (is_array($publishedJson)) {
-            if (isset($publishedJson['sections']) && is_array($publishedJson['sections'])) {
-                $sections = $publishedJson['sections'];
-            } elseif (isset($publishedJson[0]['type']) || isset($publishedJson[0]['id'])) {
-                $sections = $publishedJson;
+        if (is_array($contentJson)) {
+            if (isset($contentJson['sections']) && is_array($contentJson['sections'])) {
+                $sections = $contentJson['sections'];
+            } elseif (isset($contentJson[0]['type']) || isset($contentJson[0]['id'])) {
+                $sections = $contentJson;
             }
         }
 
-        $html = $publishedJson['html'] ?? '';
-        $css  = $publishedJson['css']  ?? '';
-        $pages = $publishedJson['pages'] ?? [];
+        $html = $contentJson['html'] ?? '';
+        $css  = $contentJson['css']  ?? '';
+        $pages = $contentJson['pages'] ?? [];
 
         return $this->success([
+            'status' => $statusStr,
+            'is_preview' => $isPreview,
             'site_name' => $siteName,
             'subdomain' => $siteSubdomain,
             'brand_badge' => $brandBadge,
@@ -82,19 +118,6 @@ class PublicSiteController extends BaseController
             'html' => $html,
             'css' => $css,
         ], 'Public site data retrieved');
-    }
-
-    private function findPublishedWebsite(string $slug): ?Website
-    {
-        $websiteId = Cache::remember("site:website-id:{$slug}", 300, function () use ($slug): int|string|null {
-            return Website::published()->where('slug', $slug)->value('id');
-        });
-
-        if (!is_int($websiteId) && !is_string($websiteId)) {
-            return null;
-        }
-
-        return Website::published()->whereKey($websiteId)->first();
     }
 
     /**

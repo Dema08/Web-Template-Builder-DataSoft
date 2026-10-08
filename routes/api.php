@@ -101,10 +101,13 @@ Route::prefix('v1')->group(function (): void {
         Route::get('/dashboard-summary', [App\Domains\Admin\Http\Controllers\DashboardController::class, 'index']);
         Route::get('/analytics', [App\Domains\Admin\Http\Controllers\AdminAnalyticsController::class, 'index']);
 
-        // Admin websites & transactions management
+        // Admin websites & hosting requests management
         Route::get('/websites', [App\Domains\Admin\Http\Controllers\AdminWebsiteController::class, 'index']);
         Route::patch('/websites/{website}/status', [App\Domains\Admin\Http\Controllers\AdminWebsiteController::class, 'updateStatus']);
         Route::delete('/websites/{website}', [App\Domains\Admin\Http\Controllers\AdminWebsiteController::class, 'destroy']);
+        Route::get('/hosting-requests', [App\Domains\Admin\Http\Controllers\AdminWebsiteController::class, 'hostingRequests']);
+        Route::post('/hosting-requests/{website}/approve', [App\Domains\Admin\Http\Controllers\AdminWebsiteController::class, 'approveHostingRequest']);
+        Route::post('/hosting-requests/{website}/reject', [App\Domains\Admin\Http\Controllers\AdminWebsiteController::class, 'rejectHostingRequest']);
         Route::get('/transactions', [App\Domains\Billing\Http\Controllers\AdminTransactionController::class, 'index']);
     });
 

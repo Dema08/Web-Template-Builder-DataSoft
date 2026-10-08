@@ -26,6 +26,7 @@ import {
     Trash2,
     CheckCheck,
     Info,
+    Send,
 } from 'lucide-react';
 import { useAuth } from '@hooks';
 import { ROUTES } from '@constants';
@@ -79,6 +80,7 @@ export default function AppLayout() {
         ? [
               { label: 'Beranda', icon: Home, to: ROUTES.HOME },
               { label: 'Dasbor', icon: LayoutGrid, to: ROUTES.ADMIN_DASHBOARD },
+              { label: 'Request Hosting Subdomain', icon: Send, to: ROUTES.ADMIN_HOSTING_REQUESTS },
               { label: 'Analitik', icon: BarChart3, to: ROUTES.ADMIN_ANALYTICS },
               { label: 'Semua Website', icon: Globe, to: ROUTES.ADMIN_WEBSITES },
               { label: 'Kelola Template', icon: FileText, to: ROUTES.ADMIN_TEMPLATES },

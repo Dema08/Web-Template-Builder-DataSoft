@@ -51,10 +51,11 @@ export default function UserDashboard() {
         params.end_date = endDate;
     }
 
-    const { websites, published_websites = [], selected_website_id, analytics, isLoading, refetch } = useDashboard(params);
+    const { websites = [], published_websites = [], selected_website_id, analytics, isLoading, refetch } = useDashboard(params);
     const { brand_name } = useSettingsStore();
 
-    const publishedOnlyWebsites = (websites || []).filter((site) => site.is_published);
+    const userWebsites = Array.isArray(websites) ? websites : [];
+    const publishedOnlyWebsites = userWebsites.filter((site) => site.is_published);
 
     if (isLoading) {
         return (
@@ -89,114 +90,144 @@ export default function UserDashboard() {
                 <CreateSiteChoiceModal isOpen={isChoiceOpen} onClose={() => setIsChoiceOpen(false)} />
             </div>
 
-            {/* Published Websites Section */}
+            {/* User Websites Section */}
             <div>
                 <div className="flex items-center justify-between mb-4">
                     <div>
                         <h2 className="text-lg font-extrabold text-[rgb(var(--color-text-primary))]">Website Saya</h2>
                         <p className="text-xs text-[rgb(var(--color-text-secondary))] mt-0.5">
-                            Daftar website Anda yang telah berhasil dipublikasikan.
+                            Daftar website Anda, status publikasi, dan tautan subdomain.
                         </p>
                     </div>
                     <Link
                         to={ROUTES.WEBSITES}
                         className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 hover:text-indigo-700 transition"
                     >
-                        Lihat Semua <ArrowRight className="h-3.5 w-3.5" />
+                        Kelola Semua ({userWebsites.length}) <ArrowRight className="h-3.5 w-3.5" />
                     </Link>
                 </div>
 
-                {publishedOnlyWebsites.length === 0 ? (
+                {userWebsites.length === 0 ? (
                     <Card className="p-8 flex flex-col items-center justify-center text-center gap-3">
                         <Globe className="h-10 w-10 text-[rgb(var(--color-text-tertiary))] opacity-30" />
-                        <p className="text-sm font-bold text-[rgb(var(--color-text-secondary))]">Belum ada website terpublikasi</p>
+                        <p className="text-sm font-bold text-[rgb(var(--color-text-secondary))]">Belum ada website</p>
                         <p className="text-xs text-[rgb(var(--color-text-tertiary))]">
-                            Publikasikan website Anda melalui builder agar tampil di dashboard ini.
+                            Buat website pertama Anda melalui builder untuk mempublikasikannya ke subdomain.
                         </p>
-                        <Link
-                            to={ROUTES.WEBSITES}
+                        <button
+                            type="button"
+                            onClick={() => setIsChoiceOpen(true)}
                             className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold hover:bg-indigo-700 transition mt-1"
                         >
                             <Sparkles className="h-3.5 w-3.5" />
-                            Kelola Website
-                        </Link>
+                            Buat Website
+                        </button>
                     </Card>
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {publishedOnlyWebsites.map((site) => {
-                            const slug = site.subdomain || 'my-website';
-                            const publicPath = site.url_path || `/p/${encodeURIComponent(slug)}`;
+                        {userWebsites.slice(0, 6).map((site) => {
+                            const slug = site.subdomain || site.slug || 'my-website';
+                            const statusKey = site.status || (site.is_published ? 'published' : 'draft');
+                            const liveUrl = site.url_subdomain || `https://${encodeURIComponent(slug)}.web.microdata.co.id`;
+                            const previewUrl = `/p/${encodeURIComponent(slug)}?preview=true`;
+                            const targetUrl = statusKey === 'published' ? liveUrl : previewUrl;
+
                             return (
                                 <Card
                                     key={site.id}
-                                    className="p-4 flex flex-col gap-3 hover:shadow-md transition-all duration-200 group"
+                                    className="p-4 flex flex-col justify-between gap-3 hover:shadow-md transition-all duration-200 group"
                                 >
-                                    <div className="relative h-28 overflow-hidden rounded-xl bg-gradient-to-br from-indigo-100 via-white to-slate-100">
-                                        {site.thumbnail_url && (
-                                            <img
-                                                src={site.thumbnail_url}
-                                                alt={`${site.name} thumbnail`}
-                                                className="h-full w-full object-cover"
-                                            />
-                                        )}
-                                        <UploadThumbnailButton
-                                            website={site}
-                                            onSuccess={async () => {
-                                                await refetch();
-                                                toast.success('Thumbnail website berhasil diperbarui.', 'Berhasil');
-                                            }}
-                                            className="absolute right-2 top-2 inline-flex items-center justify-center rounded-full bg-white/90 p-2 text-slate-700 shadow-sm transition hover:bg-white disabled:opacity-60"
-                                        >
-                                            <Camera className="h-4 w-4" />
-                                        </UploadThumbnailButton>
-                                    </div>
-                                    <div className="flex items-start justify-between gap-2">
-                                        <div className="flex-1 min-w-0">
-                                            <Link
-                                                to={`${ROUTES.BUILDER}?website_id=${site.id}`}
-                                                className="text-sm font-extrabold text-[rgb(var(--color-text-primary))] truncate hover:text-indigo-600 transition block"
+                                    <div>
+                                        <div className="relative h-28 overflow-hidden rounded-xl bg-gradient-to-br from-indigo-100 via-white to-slate-100">
+                                            {site.thumbnail_url && (
+                                                <img
+                                                    src={site.thumbnail_url}
+                                                    alt={`${site.name} thumbnail`}
+                                                    className="h-full w-full object-cover"
+                                                />
+                                            )}
+                                            <UploadThumbnailButton
+                                                website={site}
+                                                onSuccess={async () => {
+                                                    await refetch();
+                                                    toast.success('Thumbnail website berhasil diperbarui.', 'Berhasil');
+                                                }}
+                                                className="absolute right-2 top-2 inline-flex items-center justify-center rounded-full bg-white/90 p-2 text-slate-700 shadow-sm transition hover:bg-white disabled:opacity-60"
                                             >
-                                                {site.name}
-                                            </Link>
+                                                <Camera className="h-4 w-4" />
+                                            </UploadThumbnailButton>
+                                        </div>
+                                        <div className="flex items-start justify-between gap-2 mt-3">
+                                            <div className="flex-1 min-w-0">
+                                                <Link
+                                                    to={`${ROUTES.BUILDER}?website_id=${site.id}`}
+                                                    className="text-sm font-extrabold text-[rgb(var(--color-text-primary))] truncate hover:text-indigo-600 transition block"
+                                                >
+                                                    {site.name}
+                                                </Link>
+                                                <a
+                                                    href={targetUrl}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="text-[11px] text-indigo-600 font-medium mt-0.5 flex items-center gap-1 truncate hover:text-indigo-700 hover:underline"
+                                                    title={`Buka ${targetUrl} di tab baru`}
+                                                >
+                                                    <Globe className="h-3 w-3 shrink-0" />
+                                                    <span className="truncate">{slug}.web.microdata.co.id</span>
+                                                </a>
+                                            </div>
+                                            <StatusBadge status={statusKey} />
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <div className="flex items-center gap-1.5 text-[10px] text-[rgb(var(--color-text-tertiary))] mb-2">
+                                            {statusKey === 'published' ? (
+                                                <CheckCircle2 className="h-3 w-3 text-emerald-500 shrink-0" />
+                                            ) : statusKey === 'pending' ? (
+                                                <Clock className="h-3 w-3 text-amber-500 shrink-0 animate-pulse" />
+                                            ) : (
+                                                <Globe className="h-3 w-3 text-slate-400 shrink-0" />
+                                            )}
+                                            <span>
+                                                {statusKey === 'published'
+                                                    ? 'Published Live'
+                                                    : statusKey === 'pending'
+                                                    ? 'Menunggu Review Admin'
+                                                    : statusKey === 'rejected'
+                                                    ? 'Publikasi Ditolak'
+                                                    : 'Draf'}
+                                            </span>
+                                            {site.template && (
+                                                <span className="ml-auto truncate">• {site.template}</span>
+                                            )}
+                                        </div>
+
+                                        {statusKey === 'rejected' && site.rejection_reason && (
+                                            <div className="mb-2 p-2 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 rounded-lg text-[11px] text-rose-700 dark:text-rose-300 leading-tight">
+                                                <span className="font-bold">Alasan Ditolak: </span>
+                                                {site.rejection_reason}
+                                            </div>
+                                        )}
+
+                                        <div className="flex items-center gap-2 pt-2 border-t border-[rgb(var(--color-border))]">
                                             <a
-                                                href={publicPath}
+                                                href={targetUrl}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="text-[11px] text-indigo-600 font-medium mt-0.5 flex items-center gap-1 truncate hover:text-indigo-700 hover:underline"
-                                                title={`Buka ${publicPath} di tab baru`}
+                                                className="p-1.5 text-[rgb(var(--color-text-secondary))] hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition border border-[rgb(var(--color-border))]"
+                                                title={statusKey === 'published' ? 'Buka Situs Live' : 'Pratinjau Website'}
                                             >
-                                                <Globe className="h-3 w-3 shrink-0" />
-                                                <span className="truncate">{publicPath}</span>
+                                                <ExternalLink className="h-3.5 w-3.5" />
                                             </a>
+                                            <Link
+                                                to={`${ROUTES.BUILDER}?website_id=${site.id}`}
+                                                className="flex-1 inline-flex items-center justify-center gap-1.5 py-1.5 px-3 bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-bold rounded-lg transition"
+                                            >
+                                                <Edit3 className="h-3 w-3" />
+                                                Ubah di Builder
+                                            </Link>
                                         </div>
-                                        <StatusBadge status="published" />
-                                    </div>
-
-                                    <div className="flex items-center gap-1.5 text-[10px] text-[rgb(var(--color-text-tertiary))]">
-                                        <CheckCircle2 className="h-3 w-3 text-emerald-500 shrink-0" />
-                                        Published
-                                        {site.template && (
-                                            <span className="ml-auto truncate">• {site.template}</span>
-                                        )}
-                                    </div>
-
-                                    <div className="flex items-center gap-2 pt-2 border-t border-[rgb(var(--color-border))]">
-                                        <a
-                                            href={publicPath}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="p-1.5 text-[rgb(var(--color-text-secondary))] hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition border border-[rgb(var(--color-border))]"
-                                            title="Lihat Website"
-                                        >
-                                            <ExternalLink className="h-3.5 w-3.5" />
-                                        </a>
-                                        <Link
-                                            to={`${ROUTES.BUILDER}?website_id=${site.id}`}
-                                            className="flex-1 inline-flex items-center justify-center gap-1.5 py-1.5 px-3 bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] font-bold rounded-lg transition"
-                                        >
-                                            <Edit3 className="h-3 w-3" />
-                                            Ubah di Builder
-                                        </Link>
                                     </div>
                                 </Card>
                             );

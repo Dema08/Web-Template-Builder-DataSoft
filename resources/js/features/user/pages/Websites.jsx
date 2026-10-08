@@ -39,17 +39,28 @@ export default function Websites() {
     const [siteToDelete, setSiteToDelete] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
+    const [rejectionModalData, setRejectionModalData] = useState(null);
+
     const websitesList = useMemo(() => {
         return websites.map((website) => {
             const slug = website.slug || 'my-website';
-            const publicPath = website.url_path || `/p/${encodeURIComponent(slug)}`;
+            const publicUrl = website.url_subdomain || `https://${encodeURIComponent(slug)}.web.microdata.co.id`;
+            const statusKey = website.status || 'draft';
 
             return {
                 id: website.id,
                 name: website.name || 'Website Perusahaan Saya',
-                domain: publicPath,
-                publicPath,
-                status: website.status === 'published' ? 'Published' : 'Draft',
+                domain: publicUrl,
+                publicPath: publicUrl,
+                slug,
+                status: statusKey,
+                isPending: statusKey === 'pending',
+                isPublished: statusKey === 'published',
+                isRejected: statusKey === 'rejected',
+                rejectionReason: website.rejection_reason || null,
+                requestedAt: website.requested_at
+                    ? new Date(website.requested_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+                    : null,
                 updatedAt: website.updated_at
                     ? new Date(website.updated_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })
                     : 'Baru saja',
@@ -229,7 +240,7 @@ export default function Websites() {
                                 <span>{site.thumbnail && site.thumbnail !== 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop&q=80' ? 'Ubah' : 'Add'}</span>
                             </button>
                             <div className="absolute top-3 left-3">
-                                <StatusBadge status={site.status === 'Published' ? 'published' : 'draft'} />
+                                <StatusBadge status={site.status} />
                             </div>
                         </div>
 
@@ -241,36 +252,67 @@ export default function Websites() {
                                         {site.name}
                                     </h3>
                                 </div>
-                                <p className="text-xs text-indigo-600 font-medium mt-1 flex items-center gap-1">
-                                    <Globe className="h-3.5 w-3.5 shrink-0" />
-                                    <a
-                                        href={site.publicPath}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="truncate hover:underline"
-                                        title={`Buka ${site.publicPath} di tab baru`}
-                                    >
-                                        {site.domain}
-                                    </a>
-                                </p>
+
+                                {site.isRejected ? (
+                                    <div className="mt-2 p-2.5 bg-rose-50 border border-rose-200 rounded-xl">
+                                        <div className="flex items-center justify-between text-xs font-bold text-rose-700">
+                                            <span>Publikasi Ditolak</span>
+                                            {site.rejectionReason && (
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setRejectionModalData(site)}
+                                                    className="underline hover:text-rose-900"
+                                                >
+                                                    Lihat Alasan
+                                                </button>
+                                            )}
+                                        </div>
+                                    </div>
+                                ) : site.isPending ? (
+                                    <div className="mt-2 p-2.5 bg-amber-50 border border-amber-200 rounded-xl">
+                                        <div className="flex items-center gap-1.5 text-xs font-semibold text-amber-800">
+                                            <Clock className="h-3.5 w-3.5 animate-pulse text-amber-600 shrink-0" />
+                                            <span className="truncate">Menunggu peninjauan admin</span>
+                                        </div>
+                                        <p className="text-[11px] text-amber-700 mt-1 truncate">
+                                            Diajukan: {site.requestedAt || 'Baru saja'}
+                                        </p>
+                                    </div>
+                                ) : (
+                                    <p className="text-xs text-indigo-600 font-medium mt-1 flex items-center gap-1">
+                                        <Globe className="h-3.5 w-3.5 shrink-0" />
+                                        <a
+                                            href={site.publicPath}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="truncate hover:underline"
+                                            title={`Buka ${site.publicPath} di tab baru`}
+                                        >
+                                            {site.domain}
+                                        </a>
+                                    </p>
+                                )}
+
                                 <p className="text-[11px] text-[rgb(var(--color-text-tertiary))] mt-2 flex items-center justify-between gap-1">
                                     <span className="flex items-center gap-1">
                                         <Clock className="h-3 w-3" /> {site.updatedAt}
                                     </span>
-                                    <span className="flex items-center gap-1 font-semibold text-indigo-600">
-                                        <Eye className="h-3 w-3" /> {site.monthlyViewsCount.toLocaleString('id-ID')} kunjungan
-                                    </span>
+                                    {site.isPublished && (
+                                        <span className="flex items-center gap-1 font-semibold text-indigo-600">
+                                            <Eye className="h-3 w-3" /> {site.monthlyViewsCount.toLocaleString('id-ID')} kunjungan
+                                        </span>
+                                    )}
                                 </p>
                             </div>
 
                             {/* Card Footer Actions */}
                             <div className="pt-3 border-t border-[rgb(var(--color-border))] flex items-center justify-between gap-2">
                                 <a
-                                    href={site.publicPath}
+                                    href={site.isPublished ? site.publicPath : `/p/${site.slug}?preview=true`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="p-2 text-[rgb(var(--color-text-secondary))] hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition border border-[rgb(var(--color-border))]"
-                                    title="Lihat Situs Live"
+                                    title={site.isPublished ? "Lihat Situs Live" : "Pratinjau Website"}
                                 >
                                     <ExternalLink className="h-4 w-4" />
                                 </a>
@@ -388,6 +430,63 @@ export default function Websites() {
                     )
                 }
             />
+
+            {/* Rejection Details Modal */}
+            {rejectionModalData && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 px-4 backdrop-blur-xs">
+                    <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
+                        <div className="flex items-center justify-between gap-3 border-b border-slate-100 pb-4">
+                            <div className="flex items-center gap-3">
+                                <div className="h-10 w-10 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center font-bold">
+                                    !
+                                </div>
+                                <div>
+                                    <h3 className="font-bold text-slate-900 text-base">Alasan Penolakan Publikasi</h3>
+                                    <p className="text-xs text-slate-500">{rejectionModalData.name}</p>
+                                </div>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => setRejectionModalData(null)}
+                                className="rounded-full p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+                            >
+                                <X className="h-4 w-4" />
+                            </button>
+                        </div>
+
+                        <div className="my-5 rounded-xl border border-rose-200 bg-rose-50/70 p-4">
+                            <p className="text-xs font-semibold uppercase tracking-wider text-rose-800 mb-1">
+                                Catatan dari Admin:
+                            </p>
+                            <p className="text-sm text-rose-900 whitespace-pre-wrap leading-relaxed">
+                                {rejectionModalData.rejectionReason || 'Tidak ada catatan spesifik dari administrator.'}
+                            </p>
+                        </div>
+
+                        <p className="text-xs text-slate-500 leading-relaxed">
+                            Anda dapat memperbaiki website di Builder sesuai catatan di atas, kemudian melakukan pengajuan publikasi ulang.
+                        </p>
+
+                        <div className="mt-6 flex items-center justify-end gap-2">
+                            <Link
+                                to={`${ROUTES.BUILDER}?website_id=${rejectionModalData.id}`}
+                                className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl transition"
+                                onClick={() => setRejectionModalData(null)}
+                            >
+                                <Edit3 className="h-3.5 w-3.5" />
+                                <span>Perbaiki di Builder</span>
+                            </Link>
+                            <button
+                                type="button"
+                                onClick={() => setRejectionModalData(null)}
+                                className="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl"
+                            >
+                                Tutup
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

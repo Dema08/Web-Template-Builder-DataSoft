@@ -58,11 +58,13 @@ return [
 
     'primary_host' => env('APP_PRIMARY_HOST', 'web.microdata.co.id'),
 
+    'publish_domain' => env('APP_PUBLISH_DOMAIN', 'web.microdata.co.id'),
+
     'trusted_hosts' => array_filter(array_map(
         'trim',
         explode(',', env(
             'APP_TRUSTED_HOSTS',
-            'web.microdata.co.id,*.microdata.co.id,localhost,127.0.0.1'
+            'web.microdata.co.id,*.web.microdata.co.id,*.microdata.co.id,localhost,*.localhost,127.0.0.1'
         ))
     )),
 

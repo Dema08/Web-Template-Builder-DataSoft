@@ -32,8 +32,8 @@ class DashboardService extends BaseService
 
         return Cache::remember($cacheKey, 5, function () use ($user, $range, $startDateParam, $endDateParam, $forceAdmin) {
             // Admin-specific dashboard metrics (only for admin endpoints or explicit forceAdmin)
-            if ($forceAdmin || request()->is('api/v1/admin/*') || request()->is('api/admin/*') || request()->is('admin/*')) {
-                $totalWebsites = Website::where('status', 'published')->count();
+            if ($forceAdmin || $user->isAdmin() || request()->is('api/v1/admin/*') || request()->is('api/admin/*') || request()->is('admin/*')) {
+                $totalWebsites = Website::count();
                 $totalUsers = User::count();
                 $totalViews = \Illuminate\Support\Facades\Schema::hasTable('website_view') ? \DB::table('website_view')->count() : 0;
                 $publishedTemplatesCount = \App\Domains\Template\Models\Template::where('status', 'published')
@@ -43,28 +43,71 @@ class DashboardService extends BaseService
                     })
                     ->count();
                 $publishedWebsitesCount = Website::where('status', 'published')->count();
+                $pendingRequestsCount = Website::where('status', 'pending')->count();
+                $rejectedRequestsCount = Website::where('status', 'rejected')->count();
                 $draftWebsitesCount = Website::where('status', 'draft')->count();
 
                 $websitesFormatted = Website::select([
                     'id', 'user_id', 'category_id', 'template_id', 'name', 'slug', 'status', 'published_at', 'created_at', 'updated_at'
                 ])
-                ->where('status', 'published')
                 ->with(['user', 'template'])
                 ->orderByDesc('created_at')
                 ->limit(10)
                 ->get()
-                ->map(fn($site) => [
-                    'id' => $site->id,
-                    'name' => $site->name,
-                    'subdomain' => $site->slug,
-                    'is_published' => $site->status === 'published',
-                    'template' => $site->template?->name ?? 'Default Template',
-                    'owner' => [
-                        'name' => $site->user?->name ?? 'Unknown',
-                        'email' => $site->user?->email ?? '',
-                    ],
-                    'created_at' => $site->created_at?->toISOString(),
+                ->map(function($site) {
+                    $status = is_string($site->status) ? $site->status : ($site->status?->value ?? 'draft');
+                    return [
+                        'id' => $site->id,
+                        'name' => $site->name,
+                        'slug' => $site->slug,
+                        'subdomain' => $site->slug,
+                        'subdomain_url' => $site->url_subdomain,
+                        'status' => $status,
+                        'is_published' => $status === 'published',
+                        'is_pending' => $status === 'pending',
+                        'is_rejected' => $status === 'rejected',
+                        'template' => $site->template?->name ?? 'Default Template',
+                        'owner' => [
+                            'name' => $site->user?->name ?? 'Unknown',
+                            'email' => $site->user?->email ?? '',
+                        ],
+                        'created_at' => $site->created_at?->toISOString(),
+                    ];
+                })
+                ->toArray();
+
+                $pendingRequests = Website::select([
+                    'id', 'user_id', 'category_id', 'template_id', 'name', 'slug', 'status', 'thumbnail_path', 'requested_at', 'created_at', 'updated_at'
                 ])
+                ->where('status', 'pending')
+                ->with(['user.pricelist', 'template'])
+                ->orderByDesc('requested_at')
+                ->limit(15)
+                ->get()
+                ->map(function($site) {
+                    $status = is_string($site->status) ? $site->status : ($site->status?->value ?? 'pending');
+                    return [
+                        'id' => $site->id,
+                        'name' => $site->name,
+                        'slug' => $site->slug,
+                        'subdomain' => $site->slug,
+                        'domain' => $site->slug . '.' . config('app.publish_domain', 'web.microdata.co.id'),
+                        'published_url' => $site->url_subdomain,
+                        'subdomain_url' => $site->url_subdomain,
+                        'thumbnail_url' => $site->thumbnail_url,
+                        'status' => $status,
+                        'is_pending' => $status === 'pending',
+                        'template' => $site->template?->name ?? 'Default Template',
+                        'owner' => [
+                            'id' => $site->user?->id,
+                            'name' => $site->user?->name ?? 'Unknown',
+                            'email' => $site->user?->email ?? '',
+                            'plan' => $site->user?->effective_pricelist?->nama ?? 'Free',
+                        ],
+                        'requested_at' => $site->requested_at?->toISOString(),
+                        'requested_at_formatted' => $site->requested_at ? $site->requested_at->format('d M Y, H:i') : null,
+                    ];
+                })
                 ->toArray();
 
                 // Dynamic Recent Activities generated from real system events
@@ -75,6 +118,18 @@ class DashboardService extends BaseService
                         'action' => 'Pengguna Baru Terdaftar',
                         'description' => "{$u->name} ({$u->email}) mendaftar di platform.",
                         'created_at' => $u->created_at?->toISOString(),
+                    ];
+                }
+
+                $recentPendingSites = Website::select([
+                    'id', 'user_id', 'name', 'slug', 'status', 'requested_at'
+                ])->where('status', 'pending')->with('user')->latest('requested_at')->limit(5)->get();
+                foreach ($recentPendingSites as $site) {
+                    $ownerName = $site->user?->name ?? 'Pengguna';
+                    $recentActivities[] = [
+                        'action' => 'Permintaan Hosting Baru',
+                        'description' => "Permintaan hosting subdomain \"{$site->slug}.web.microdata.co.id\" diajukan oleh {$ownerName}.",
+                        'created_at' => $site->requested_at?->toISOString() ?? now()->toISOString(),
                     ];
                 }
 
@@ -110,52 +165,57 @@ class DashboardService extends BaseService
                         'published_templates_count' => $publishedTemplatesCount,
                         'total_websites' => $totalWebsites,
                         'published_count' => $publishedWebsitesCount,
+                        'pending_requests_count' => $pendingRequestsCount,
+                        'rejected_requests_count' => $rejectedRequestsCount,
                         'draft_count' => $draftWebsitesCount,
                     ],
+                    'pending_requests' => $pendingRequests,
                     'websites' => $websitesFormatted,
                     'recentActivity' => array_slice($recentActivities, 0, 10),
                 ];
             }
 
             // Standard user dashboard metrics
-            $userPlan = $user->effective_pricelist;
-            $maxDomains = (int) ($userPlan?->maks_domain ?? 0);
-            $unlimited = $maxDomains === -1;
+            $websites = Website::select([
+                'id', 'user_id', 'category_id', 'template_id', 'name', 'slug', 'thumbnail_path', 'status', 'settings', 'rejection_reason', 'requested_at', 'published_at', 'created_at', 'updated_at'
+            ])
+            ->where('user_id', $user->id)
+            ->with('template')
+            ->orderByDesc('updated_at')
+            ->get();
 
-            $publishedCount = Website::where('user_id', $user->id)
-                ->where('status', 'published')
-                ->count();
-
-            $isQuotaReached = !$user->isAdmin() && !$unlimited && $maxDomains > 0 && $publishedCount >= $maxDomains;
-
-            $websitesQuery = Website::select([
-                'id', 'user_id', 'category_id', 'template_id', 'name', 'slug', 'thumbnail_path', 'status', 'settings', 'published_at', 'created_at', 'updated_at'
-            ])->where('user_id', $user->id)->with('template');
-
-            if ($isQuotaReached) {
-                $websitesQuery->where('status', 'published');
-            }
-
-            $websites = $websitesQuery->get();
             $websitesFormatted = [];
             $totalViews = 0;
             $uniqueVisitors = 0;
             $dailyViews = [];
 
+            $baseDomain = config('app.publish_domain', config('app.primary_host', 'web.microdata.co.id'));
+
             foreach ($websites as $website) {
+                $status = is_string($website->status) ? $website->status : ($website->status?->value ?? 'draft');
                 $websitesFormatted[] = [
                     'id' => $website->id,
                     'name' => $website->name,
                     'subdomain' => $website->slug,
+                    'subdomain_url' => $website->url_subdomain,
                     'thumbnail_url' => $website->thumbnail_url,
-                    'is_published' => $website->status === 'published',
+                    'status' => $status,
+                    'is_published' => $status === 'published',
+                    'is_pending' => $status === 'pending',
+                    'is_rejected' => $status === 'rejected',
+                    'rejection_reason' => $website->rejection_reason,
+                    'requested_at' => $website->requested_at?->toISOString(),
                     'template' => $website->template?->name ?? 'Default Template',
                     'created_at' => $website->created_at?->toISOString(),
+                    'updated_at' => $website->updated_at?->toISOString(),
                 ];
             }
 
             // Only published websites are tracked for visitor analytics
-            $publishedWebsites = $websites->filter(fn($w) => $w->status === 'published');
+            $publishedWebsites = $websites->filter(function($w) {
+                $status = is_string($w->status) ? $w->status : ($w->status?->value ?? 'draft');
+                return $status === 'published';
+            });
             $requestedWebsiteId = request()->query('website_id');
 
             $targetWebsite = null;
@@ -244,13 +304,15 @@ class DashboardService extends BaseService
                 }
             }
 
-            $publishedWebsitesFormatted = $publishedWebsites->map(fn($w) => [
-                'id' => $w->id,
-                'name' => $w->name,
-                'domain' => ($w->settings['domain_type'] ?? '') === 'custom' && !empty($w->settings['custom_domain'])
-                    ? $w->settings['custom_domain']
-                    : ($w->slug . '.' . config('app.main_domain')),
-            ])->values()->all();
+            $publishedWebsitesFormatted = $publishedWebsites->map(function ($w) use ($baseDomain) {
+                return [
+                    'id' => $w->id,
+                    'name' => $w->name,
+                    'domain' => ($w->settings['domain_type'] ?? '') === 'custom' && !empty($w->settings['custom_domain'])
+                        ? $w->settings['custom_domain']
+                        : ($w->slug . '.' . $baseDomain),
+                ];
+            })->values()->all();
 
             return [
                 'user' => [

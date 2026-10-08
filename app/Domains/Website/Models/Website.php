@@ -53,6 +53,10 @@ class Website extends Model
         'favicon',
         'logo',
         'published_at',
+        'requested_at',
+        'rejection_reason',
+        'approved_at',
+        'approved_by',
     ];
 
     protected $casts = [
@@ -60,6 +64,8 @@ class Website extends Model
         'published_json' => 'array',
         'settings' => 'array',
         'published_at' => 'datetime',
+        'requested_at' => 'datetime',
+        'approved_at' => 'datetime',
     ];
 
     public function scopePublished(Builder $query): Builder
@@ -67,9 +73,14 @@ class Website extends Model
         return $query->where('status', 'published');
     }
 
-    public function getUrlPathAttribute(): string
+    public function scopePending(Builder $query): Builder
     {
-        return '/p/'.$this->slug;
+        return $query->where('status', 'pending');
+    }
+
+    public function scopeRejected(Builder $query): Builder
+    {
+        return $query->where('status', 'rejected');
     }
 
     public function getUrlSubdomainAttribute(): ?string
@@ -78,9 +89,14 @@ class Website extends Model
             return null;
         }
 
-        $mainDomain = config('app.main_domain', 'microdata.co.id');
+        $baseDomain = config('app.publish_domain', config('app.primary_host', 'web.microdata.co.id'));
 
-        return "https://{$this->slug}.{$mainDomain}";
+        return "https://{$this->slug}.{$baseDomain}";
+    }
+
+    public function getUrlPathAttribute(): string
+    {
+        return $this->url_subdomain ?: ('/p/'.$this->slug);
     }
 
     public function getThumbnailUrlAttribute(): ?string
@@ -95,6 +111,11 @@ class Website extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function approvedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'approved_by');
     }
 
     public function category(): BelongsTo

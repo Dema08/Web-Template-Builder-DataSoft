@@ -28,7 +28,8 @@ export function useDashboard(params = {}) {
         ...query,
         ...payload,
         stats: payload.stats ?? query.data?.stats,
-        websites: payload.websites ?? query.data?.websites,
-        recentActivity: payload.recentActivity ?? query.data?.recentActivity,
+        websites: payload.websites ?? query.data?.websites ?? [],
+        pending_requests: payload.pending_requests ?? query.data?.pending_requests ?? [],
+        recentActivity: payload.recentActivity ?? query.data?.recentActivity ?? [],
     };
 }

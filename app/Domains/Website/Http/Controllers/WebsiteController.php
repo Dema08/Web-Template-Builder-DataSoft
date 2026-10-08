@@ -25,8 +25,7 @@ class WebsiteController extends BaseController
         $hasViewsTable = \Illuminate\Support\Facades\Schema::hasTable('website_view');
 
         $query = Website::where('user_id', $request->user()->id)
-            ->where('status', 'published')
-            ->orderByDesc('published_at');
+            ->orderByDesc('updated_at');
 
         if ($hasViewsTable) {
             $query->withCount([
@@ -53,13 +52,13 @@ class WebsiteController extends BaseController
         $plan = $user->effective_pricelist;
         $maxDomains = (int) ($plan->maks_domain ?? 0);
         $publishedCount = $user->websites()
-            ->where('status', 'published')
+            ->whereIn('status', ['published', 'pending'])
             ->count();
         $websiteId = $request->query('website_id');
         $selectedSiteIsPublished = $websiteId !== null
             && $user->websites()
                 ->whereKey($websiteId)
-                ->where('status', 'published')
+                ->whereIn('status', ['published', 'pending'])
                 ->exists();
         $unlimited = $maxDomains === -1;
 
@@ -236,14 +235,14 @@ class WebsiteController extends BaseController
 
         $maxDomains = (int) ($plan->maks_domain ?? 0);
         $publishedCount = Website::where('user_id', $user->id)
-            ->where('status', 'published')
+            ->whereIn('status', ['published', 'pending'])
             ->count();
 
         if (
             !$user->isAdmin()
             && $maxDomains !== -1
             && $publishedCount >= $maxDomains
-            && ($isCreatingNew || $sourceWebsite->status !== 'published')
+            && ($isCreatingNew || !in_array($sourceWebsite->status, ['published', 'pending'], true))
         ) {
             return response()->json([
                 'success' => false,
@@ -264,7 +263,10 @@ class WebsiteController extends BaseController
             ], 422);
         }
 
-        $website = DB::transaction(function () use ($sourceWebsite, $isCreatingNew, $slug, $domainType, $customDomain, $draftJson, $user, $validated) {
+        $isAdmin = $user->isAdmin();
+        $targetStatus = $isAdmin ? 'published' : 'pending';
+
+        $website = DB::transaction(function () use ($sourceWebsite, $isCreatingNew, $slug, $domainType, $customDomain, $draftJson, $user, $validated, $targetStatus, $isAdmin) {
             $website = $sourceWebsite;
             $settings = $sourceWebsite->settings ?? [];
 
@@ -283,13 +285,22 @@ class WebsiteController extends BaseController
                 $settings['custom_domain'] = $customDomain;
             }
 
-            $website->fill([
+            $saveData = [
                 'draft_json' => $draftJson,
                 'published_json' => $draftJson,
-                'status' => 'published',
-                'published_at' => now(),
+                'status' => $targetStatus,
+                'requested_at' => now(),
+                'rejection_reason' => null,
                 'settings' => $settings,
-            ]);
+            ];
+
+            if ($isAdmin) {
+                $saveData['published_at'] = now();
+                $saveData['approved_at'] = now();
+                $saveData['approved_by'] = $user->id;
+            }
+
+            $website->fill($saveData);
             $website->save();
 
             if ($domainType === 'subdomain') {
@@ -300,21 +311,41 @@ class WebsiteController extends BaseController
             return $website;
         });
 
+        // Notify admins if requested by regular user
+        if (!$isAdmin) {
+            $adminUsers = \App\Domains\User\Models\User::where('peran', 'admin')->get();
+            $baseDomain = config('app.publish_domain', config('app.primary_host', 'web.microdata.co.id'));
+            foreach ($adminUsers as $admin) {
+                \App\Domains\Notification\Models\Notification::create([
+                    'user_id' => $admin->id,
+                    'judul' => 'Permintaan Hosting Subdomain Baru',
+                    'pesan' => "Pengguna \"{$user->name}\" ({$user->email}) mengajukan publikasi website \"{$website->name}\" pada subdomain {$website->slug}.{$baseDomain}.",
+                    'tipe' => 'website_publish_request',
+                    'dibaca' => false,
+                ]);
+            }
+        }
+
+        $subdomainUrl = $website->url_subdomain;
         $publishedUrl = ($domainType === 'custom' && $customDomain)
             ? (str_starts_with($customDomain, 'http') ? $customDomain : 'https://' . $customDomain)
-            : ($domainType === 'subdomain'
-                ? 'https://' . $website->slug . '.' . config('app.main_domain')
-                : url('/p/' . $website->slug));
+            : $subdomainUrl;
+
+        $responseMessage = $isAdmin
+            ? 'Website berhasil dipublikasikan dan dapat diakses di subdomain.'
+            : 'Permintaan publikasi berhasil dikirim! Website Anda sedang menunggu konfirmasi admin sebelum aktif di subdomain.';
 
         return $this->success([
             'publish_action' => $publishAction,
             'published_url' => $publishedUrl,
-            'path_url' => url('/p/'.rawurlencode($website->slug)),
-            'subdomain_url' => $website->url_subdomain,
+            'subdomain_url' => $subdomainUrl,
+            'path_url' => $subdomainUrl,
+            'status' => $targetStatus,
+            'is_pending' => $targetStatus === 'pending',
             'domain_type' => $domainType,
             'custom_domain' => $customDomain,
             'website' => WebsiteResource::make($website->fresh())->resolve($request),
-        ], 'Website published successfully');
+        ], $responseMessage);
     }
 
     public function uploadThumbnail(UploadThumbnailRequest $request, int $websiteId): JsonResponse

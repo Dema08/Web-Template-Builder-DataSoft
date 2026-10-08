@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Globe, Lock, ArrowUpRight, Sparkles, X, Loader2, CheckCircle2, Copy, CircleAlert } from 'lucide-react';
+import { Globe, Lock, ArrowUpRight, Sparkles, X, Loader2, CheckCircle2, Copy, CircleAlert, Clock } from 'lucide-react';
 import { useSubscriptionStore } from '@shared/stores/subscriptionStore';
 import { useAuthStore } from '@shared/stores/authStore';
 import { toast } from '@store';
@@ -161,23 +161,37 @@ export default function PublishDomainModal({
     };
 
     if (publishResult) {
-        const pathUrl = publishResult.path_url;
-        const subdomainUrl = publishResult.subdomain_url;
+        const subdomainUrl = publishResult.subdomain_url || `https://${cleanSlug}.web.microdata.co.id`;
         const customUrl = publishResult.domain_type === 'custom'
             ? publishResult.published_url
             : null;
+        const isPending = publishResult.is_pending || publishResult.status === 'pending';
 
         return (
             <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
                 <div className="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-7 shadow-2xl border border-slate-100 space-y-5" role="dialog" aria-modal="true">
                     <div className="flex items-start justify-between gap-4 border-b border-slate-100 pb-4">
                         <div className="flex items-center gap-3">
-                            <CheckCircle2 className="h-8 w-8 text-emerald-600" />
+                            {isPending ? (
+                                <div className="p-2.5 rounded-2xl bg-amber-100 text-amber-700">
+                                    <Clock className="h-7 w-7" />
+                                </div>
+                            ) : (
+                                <div className="p-2.5 rounded-2xl bg-emerald-100 text-emerald-700">
+                                    <CheckCircle2 className="h-7 w-7" />
+                                </div>
+                            )}
                             <div>
                                 <h3 className="text-lg font-extrabold text-slate-900">
-                                    {publishResult.publish_action === 'new' ? 'Subdomain baru berhasil dibuat' : 'Website berhasil diperbarui'}
+                                    {isPending
+                                        ? 'Permintaan Publikasi Terkirim!'
+                                        : (publishResult.publish_action === 'new' ? 'Subdomain baru berhasil dibuat' : 'Website berhasil dipublikasikan')}
                                 </h3>
-                                <p className="text-xs text-slate-500 mt-1">Website dapat diakses melalui URL berikut.</p>
+                                <p className="text-xs text-slate-500 mt-1">
+                                    {isPending
+                                        ? 'Website Anda sedang menunggu konfirmasi admin sebelum aktif di subdomain.'
+                                        : 'Website Anda telah aktif dan dapat diakses publik.'}
+                                </p>
                             </div>
                         </div>
                         <button type="button" onClick={onClose} className="text-slate-400 hover:text-slate-600 p-1.5 rounded-xl hover:bg-slate-100">
@@ -185,20 +199,54 @@ export default function PublishDomainModal({
                         </button>
                     </div>
 
-                    {[['URL Path', pathUrl], ['Subdomain', subdomainUrl], ...(customUrl ? [['Custom domain', customUrl]] : [])].map(([label, url]) => (
-                        <div key={label} className="p-3 rounded-xl border border-slate-200 space-y-2">
-                            <p className="text-[11px] font-bold text-slate-500">{label}</p>
+                    {/* Subdomain Card */}
+                    <div className="p-4 rounded-2xl bg-indigo-50/50 border border-indigo-100 space-y-2">
+                        <div className="flex items-center justify-between">
+                            <p className="text-xs font-bold text-slate-700">Alamat Subdomain:</p>
+                            {isPending && (
+                                <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-extrabold text-[10px]">
+                                    Menunggu Persetujuan
+                                </span>
+                            )}
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <a href={subdomainUrl} target="_blank" rel="noreferrer" className="text-xs text-indigo-700 font-bold underline truncate flex-1">
+                                {subdomainUrl}
+                            </a>
+                            <button type="button" onClick={() => handleCopyUrl(subdomainUrl)} className="p-2 rounded-xl bg-white border border-indigo-200 text-slate-600 hover:bg-indigo-50" aria-label="Salin Subdomain">
+                                <Copy className="h-4 w-4 text-indigo-600" />
+                            </button>
+                        </div>
+                    </div>
+
+                    {customUrl && (
+                        <div className="p-3 rounded-xl border border-slate-200 space-y-2">
+                            <p className="text-[11px] font-bold text-slate-500">Custom Domain</p>
                             <div className="flex items-center gap-2">
-                                <a href={url} target="_blank" rel="noreferrer" className="text-xs text-indigo-700 font-semibold underline truncate flex-1">{url}</a>
-                                <button type="button" onClick={() => handleCopyUrl(url)} className="p-2 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50" aria-label={`Salin ${label}`}>
+                                <a href={customUrl} target="_blank" rel="noreferrer" className="text-xs text-indigo-700 font-semibold underline truncate flex-1">{customUrl}</a>
+                                <button type="button" onClick={() => handleCopyUrl(customUrl)} className="p-2 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50" aria-label="Salin Custom Domain">
                                     <Copy className="h-4 w-4" />
                                 </button>
                             </div>
                         </div>
-                    ))}
+                    )}
+
+                    {isPending && (
+                        <div className="p-3 rounded-xl bg-amber-50 border border-amber-200/80 text-xs text-amber-900 space-y-1">
+                            <p className="font-bold flex items-center gap-1.5">
+                                <Clock className="h-4 w-4 text-amber-600" />
+                                Proses Verifikasi Admin
+                            </p>
+                            <p className="text-[11px] text-amber-800 leading-relaxed">
+                                Notifikasi akan otomatis masuk ke akun Anda setelah admin menyetujui penerbitan subdomain ini.
+                            </p>
+                        </div>
+                    )}
 
                     <div className="flex justify-end pt-2">
-                        <button type="button" onClick={onClose} className="px-5 py-2.5 rounded-xl text-xs font-extrabold text-white bg-indigo-600 hover:bg-indigo-700">Selesai</button>
+                        <button type="button" onClick={onClose} className="px-5 py-2.5 rounded-xl text-xs font-extrabold text-white bg-indigo-600 hover:bg-indigo-700 cursor-pointer">
+                            Selesai & Tutup
+                        </button>
                     </div>
                 </div>
             </div>
@@ -221,14 +269,16 @@ export default function PublishDomainModal({
                         <div>
                             <div className="flex items-center gap-2">
                                 <h3 className="text-lg font-extrabold text-slate-900 tracking-tight">
-                                    Terbitkan Website Perusahaan
+                                    {isAdmin ? 'Terbitkan Website Perusahaan' : 'Ajukan Publikasi Subdomain'}
                                 </h3>
-                                <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-black uppercase tracking-wider border border-emerald-200">
-                                    Live
+                                <span className="px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 text-[10px] font-black uppercase tracking-wider border border-indigo-200">
+                                    Subdomain
                                 </span>
                             </div>
                             <p className="text-xs text-slate-500 mt-0.5">
-                                Pilih konfigurasi domain yang akan digunakan publik untuk mengakses website Anda.
+                                {isAdmin
+                                    ? 'Publikasikan website langsung ke subdomain perusahaan.'
+                                    : 'Kirim permintaan publikasi website agar disetujui admin dan aktif pada subdomain.'}
                             </p>
                         </div>
                     </div>
@@ -313,14 +363,14 @@ export default function PublishDomainModal({
                                 <div>
                                     <div className="flex items-center gap-2">
                                         <span className="text-sm font-extrabold text-slate-900">
-                                            Subdomain Microdata (.microdata.co.id)
+                                            Subdomain Microdata (.web.microdata.co.id)
                                         </span>
                                         <span className="px-2 py-0.5 rounded-md bg-indigo-100 text-indigo-700 text-[10px] font-bold">
                                             GRATIS
                                         </span>
                                     </div>
                                     <p className="text-xs text-slate-500 mt-1">
-                                        Subdomain siap pakai tanpa konfigurasi tambahan. Tersedia untuk semua paket.
+                                        Subdomain siap pakai. Setelah diajukan, admin akan mengonfirmasi agar website dapat diakses publik.
                                     </p>
                                 </div>
                             </div>
@@ -328,7 +378,7 @@ export default function PublishDomainModal({
 
                         {domainType === 'subdomain' && (
                             <div className="mt-4 pt-3 border-t border-indigo-100/80 space-y-2">
-                                <label className="block text-xs font-bold text-slate-700">Subdomain Prefix</label>
+                                <label className="block text-xs font-bold text-slate-700">Nama Subdomain</label>
                                 <div className="flex items-center">
                                     <input
                                         type="text"
@@ -340,7 +390,7 @@ export default function PublishDomainModal({
                                         className="flex-1 h-10 px-3 bg-white border border-slate-300 rounded-l-xl text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600"
                                     />
                                     <span className="h-10 px-3.5 bg-slate-100 border border-l-0 border-slate-300 rounded-r-xl text-xs font-bold text-slate-600 flex items-center">
-                                        .microdata.co.id
+                                        .web.microdata.co.id
                                     </span>
                                 </div>
                                 {initialIsPublished && publishAction === 'update' && (
@@ -362,9 +412,9 @@ export default function PublishDomainModal({
                                 )}
 
                                 <div className="p-2.5 bg-white rounded-xl border border-indigo-100 flex items-center justify-between text-xs">
-                                    <span className="text-slate-500 text-[11px] font-medium">URL Publik:</span>
+                                    <span className="text-slate-500 text-[11px] font-medium">Target Alamat:</span>
                                     <span className="font-extrabold text-indigo-600 truncate max-w-[280px]">
-                                        {`${window.location.origin}/p/${encodeURIComponent(cleanSlug || 'subdomain')}`}
+                                        {`https://${cleanSlug || 'subdomain'}.web.microdata.co.id`}
                                     </span>
                                 </div>
                             </div>
@@ -520,12 +570,16 @@ export default function PublishDomainModal({
                             {isPublishing ? (
                                 <>
                                     <Loader2 className="h-4 w-4 animate-spin text-white" />
-                                    <span>Menerbitkan Website...</span>
+                                    <span>Memproses Permintaan...</span>
                                 </>
                             ) : (
                                 <>
                                     <Globe className="h-4 w-4" />
-                                    <span>{publishAction === 'new' ? 'Terbitkan sebagai Website Baru' : 'Terbitkan Sekarang'}</span>
+                                    <span>
+                                        {publishAction === 'new'
+                                            ? (isAdmin ? 'Terbitkan sebagai Website Baru' : 'Ajukan sebagai Website Baru')
+                                            : (isAdmin ? 'Terbitkan Sekarang' : 'Kirim Permintaan Publikasi')}
+                                    </span>
                                 </>
                             )}
                         </button>
