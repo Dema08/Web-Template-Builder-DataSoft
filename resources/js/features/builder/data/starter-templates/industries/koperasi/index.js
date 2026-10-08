@@ -7,10 +7,12 @@
 import koperasiClassic from './koperasiClassic.js';
 import koperasiModern from './koperasiModern.js';
 import koperasiPremium from './koperasiPremium.js';
+import puskopoldaKoperasi from './puskopoldaKoperasi.js';
 
 export const category = {
   categoryName: 'Koperasi',
   templates: [
+    puskopoldaKoperasi,
     koperasiClassic,
     koperasiModern,
     koperasiPremium,
