@@ -37,7 +37,7 @@ return new class extends Migration
             [
               'id' => 'sec-puskopolda-nav',
               'type' => 'navbar',
-              'layout' => 'kop-nav-puskopolda',
+              'layout' => 'navbar-01',
               'components' => [
                 [
                   'id' => 'puskopolda-nav-logo',
@@ -138,7 +138,7 @@ return new class extends Migration
             [
               'id' => 'sec-puskopolda-hero',
               'type' => 'hero',
-              'layout' => 'kop-hero-puskopolda',
+              'layout' => 'hero-02',
               'components' => [
                 [
                   'id' => 'puskopolda-hero-badge',
@@ -237,7 +237,7 @@ return new class extends Migration
             [
               'id' => 'sec-puskopolda-about',
               'type' => 'about',
-              'layout' => 'kop-about-puskopolda',
+              'layout' => 'about-01',
               'components' => [
                 [
                   'id' => 'puskopolda-about-badge',
@@ -306,7 +306,7 @@ return new class extends Migration
             [
               'id' => 'sec-puskopolda-stats',
               'type' => 'statistics',
-              'layout' => 'kop-stats-puskopolda',
+              'layout' => 'statistics-01',
               'components' => [
                 [
                   'id' => 'puskopolda-stat1-card',
@@ -459,7 +459,7 @@ return new class extends Migration
             [
               'id' => 'sec-puskopolda-visimisi',
               'type' => 'features',
-              'layout' => 'kop-visimisi-puskopolda',
+              'layout' => 'about-02',
               'components' => [
                 [
                   'id' => 'puskopolda-vm-title',
@@ -600,7 +600,7 @@ return new class extends Migration
             [
               'id' => 'sec-puskopolda-services',
               'type' => 'services',
-              'layout' => 'kop-services-puskopolda',
+              'layout' => 'services-01',
               'components' => [
                 [
                   'id' => 'puskopolda-services-title',
@@ -801,7 +801,7 @@ return new class extends Migration
             [
               'id' => 'sec-puskopolda-keunggulan',
               'type' => 'features',
-              'layout' => 'kop-keunggulan-puskopolda',
+              'layout' => 'services-02',
               'components' => [
                 [
                   'id' => 'puskopolda-keunggulan-title',
@@ -998,7 +998,7 @@ return new class extends Migration
             [
               'id' => 'sec-puskopolda-news',
               'type' => 'blog',
-              'layout' => 'kop-news-puskopolda',
+              'layout' => 'services-03',
               'components' => [
                 [
                   'id' => 'puskopolda-news-title',
@@ -1259,7 +1259,7 @@ return new class extends Migration
             [
               'id' => 'sec-puskopolda-gallery',
               'type' => 'gallery',
-              'layout' => 'kop-gallery-puskopolda',
+              'layout' => 'gallery-01',
               'components' => [
                 [
                   'id' => 'puskopolda-gallery-title',
@@ -1352,7 +1352,7 @@ return new class extends Migration
             [
               'id' => 'sec-puskopolda-cta',
               'type' => 'cta',
-              'layout' => 'kop-cta-puskopolda',
+              'layout' => 'contact-01',
               'components' => [
                 [
                   'id' => 'puskopolda-cta-card',
@@ -1413,7 +1413,7 @@ return new class extends Migration
             [
               'id' => 'sec-puskopolda-footer',
               'type' => 'footer',
-              'layout' => 'kop-footer-puskopolda',
+              'layout' => 'footer-01',
               'components' => [
                 [
                   'id' => 'puskopolda-foot-title',
