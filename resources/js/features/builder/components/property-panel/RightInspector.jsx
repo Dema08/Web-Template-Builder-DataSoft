@@ -43,6 +43,7 @@ import {
   Mail,
   Phone,
   Hash,
+  ChevronDown,
 } from 'lucide-react';
 import { toast } from '@store';
 import NavbarEditor from '../sections/NavbarEditor';
