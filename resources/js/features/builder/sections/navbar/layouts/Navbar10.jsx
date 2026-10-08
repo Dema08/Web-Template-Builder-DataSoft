@@ -29,7 +29,7 @@ export default function Navbar10({ components = [], sectionId = null }) {
 
   return (
     <div className="px-4 sm:px-6 pt-4">
-      <nav className="relative max-w-6xl mx-auto overflow-hidden rounded-2xl border border-violet-400/30 bg-slate-950/60 backdrop-blur-2xl px-4 sm:px-5 py-3 shadow-[0_0_60px_-15px_rgba(139,92,246,0.5)]">
+      <nav className="relative max-w-6xl mx-auto rounded-2xl border border-violet-400/30 bg-slate-950/60 backdrop-blur-2xl px-4 sm:px-5 py-3 shadow-[0_0_60px_-15px_rgba(139,92,246,0.5)]">
         <div className="pointer-events-none absolute -top-20 -left-20 w-64 h-64 rounded-full bg-violet-600/40 blur-3xl animate-pulse" />
         <div className="pointer-events-none absolute -bottom-24 -right-16 w-72 h-72 rounded-full bg-cyan-500/30 blur-3xl animate-pulse" />
         <div className="relative flex items-center justify-between gap-4">

@@ -609,6 +609,122 @@ export default function ButtonInspector({ node, onUpdateNode, sectionId }) {
                 </div>
               </div>
             </div>
+
+            {/* ================= DROPDOWN MENU CONFIGURATION ================= */}
+            {(() => {
+              const currentHasDropdown = node.props?.hasDropdown !== undefined 
+                ? node.props.hasDropdown 
+                : (node.content?.hasDropdown !== undefined ? node.content.hasDropdown : true);
+              
+              const currentDropdownItems = node.props?.dropdownItems || node.content?.dropdownItems || [
+                { label: `${content.text || 'Menu'} Utama`, href: `#${String(content.text || 'menu').toLowerCase().replace(/\s+/g, '-')}-1`, type: 'section' },
+                { label: `${content.text || 'Menu'} Detail`, href: `#${String(content.text || 'menu').toLowerCase().replace(/\s+/g, '-')}-2`, type: 'section' },
+                { label: `${content.text || 'Menu'} Informasi`, href: `#${String(content.text || 'menu').toLowerCase().replace(/\s+/g, '-')}-3`, type: 'section' },
+              ];
+
+              const updateDropdownProps = (hasDd, ddItems) => {
+                onUpdateNode({
+                  ...node,
+                  props: {
+                    ...(node.props || {}),
+                    hasDropdown: hasDd,
+                    dropdownItems: ddItems,
+                  },
+                  content: typeof content === 'object' ? {
+                    ...content,
+                    hasDropdown: hasDd,
+                    dropdownItems: ddItems,
+                  } : content,
+                });
+              };
+
+              return (
+                <div className="space-y-3 pt-3 border-t border-slate-100">
+                  <div className="flex items-center justify-between">
+                    <label className="text-[11px] font-semibold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                      <ChevronDown className="w-3.5 h-3.5 text-indigo-600" />
+                      Fitur Dropdown Navbar
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => updateDropdownProps(!currentHasDropdown, currentDropdownItems)}
+                      className={`px-2.5 py-1 rounded-full text-[10px] font-bold transition cursor-pointer ${
+                        currentHasDropdown ? 'bg-indigo-600 text-white' : 'bg-slate-200 text-slate-600'
+                      }`}
+                    >
+                      {currentHasDropdown ? 'Aktif' : 'Non-aktif'}
+                    </button>
+                  </div>
+
+                  {currentHasDropdown && (
+                    <div className="p-3 bg-indigo-50/60 border border-indigo-100 rounded-xl space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-bold text-indigo-900 uppercase tracking-wider">
+                          Pilihan Sub-Menu ({currentDropdownItems.length})
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const nextIdx = currentDropdownItems.length + 1;
+                            const updated = [
+                              ...currentDropdownItems,
+                              { label: `Sub-Menu ${nextIdx}`, href: `#sub-${nextIdx}`, type: 'section' }
+                            ];
+                            updateDropdownProps(true, updated);
+                          }}
+                          className="text-[10px] bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-2 py-1 rounded-md transition flex items-center gap-1 cursor-pointer"
+                        >
+                          + Tambah Opsi
+                        </button>
+                      </div>
+
+                      <div className="space-y-2">
+                        {currentDropdownItems.map((item, idx) => (
+                          <div key={idx} className="p-2.5 bg-white border border-indigo-100 rounded-lg space-y-1.5 shadow-2xs">
+                            <div className="flex items-center justify-between gap-1">
+                              <span className="text-[10px] font-bold text-indigo-700">Sub-Menu #{idx + 1}</span>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const updated = currentDropdownItems.filter((_, i) => i !== idx);
+                                  updateDropdownProps(true, updated);
+                                }}
+                                className="text-slate-400 hover:text-rose-600 p-0.5 rounded transition cursor-pointer"
+                                title="Hapus Sub-Menu"
+                              >
+                                <X className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                            <input
+                              type="text"
+                              value={item.label || ''}
+                              onChange={(e) => {
+                                const updated = [...currentDropdownItems];
+                                updated[idx] = { ...updated[idx], label: e.target.value };
+                                updateDropdownProps(true, updated);
+                              }}
+                              placeholder="Nama Sub-Menu (misal: Layanan Utama)"
+                              className="w-full px-2.5 py-1 text-xs bg-slate-50 border border-slate-200 rounded-md font-medium text-slate-800"
+                            />
+                            <input
+                              type="text"
+                              value={item.href || ''}
+                              onChange={(e) => {
+                                const updated = [...currentDropdownItems];
+                                updated[idx] = { ...updated[idx], href: e.target.value };
+                                updateDropdownProps(true, updated);
+                              }}
+                              placeholder="Target Link / Anchor (#section-id atau URL)"
+                              className="w-full px-2.5 py-1 text-xs bg-slate-50 border border-slate-200 rounded-md font-mono text-slate-600"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
           </div>
         ) : (
           /* ================= SECTION B: STYLE & APPEARANCE ================= */
