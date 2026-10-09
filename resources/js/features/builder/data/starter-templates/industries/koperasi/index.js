@@ -7,7 +7,11 @@
 import koperasiClassic from './koperasiClassic.js';
 import koperasiModern from './koperasiModern.js';
 import koperasiPremium from './koperasiPremium.js';
+<<<<<<< Updated upstream
 import puskopoldaKoperasi from './puskopoldaKoperasi.js';
+=======
+import koperasiPuskopolda from './koperasiPuskopolda.js';
+>>>>>>> Stashed changes
 
 export const category = {
   categoryName: 'Koperasi',
@@ -16,5 +20,6 @@ export const category = {
     koperasiClassic,
     koperasiModern,
     koperasiPremium,
+    koperasiPuskopolda,
   ],
 };

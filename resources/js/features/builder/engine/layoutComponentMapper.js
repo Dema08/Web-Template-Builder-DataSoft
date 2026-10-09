@@ -626,6 +626,21 @@ import KopImpactAgri from '@builder/sections/koperasi-custom/agri/KopImpactAgri'
 import KopCtaAgri from '@builder/sections/koperasi-custom/agri/KopCtaAgri';
 import KopFooterAgri from '@builder/sections/koperasi-custom/agri/KopFooterAgri';
 
+// Custom Koperasi Layouts — Puskopolda (Kepolisian)
+import KopNavPuskopolda from '@builder/sections/koperasi-custom/puskopolda/KopNavPuskopolda';
+import KopHeroPuskopolda from '@builder/sections/koperasi-custom/puskopolda/KopHeroPuskopolda';
+import KopAboutPuskopolda from '@builder/sections/koperasi-custom/puskopolda/KopAboutPuskopolda';
+import KopStructurePuskopolda from '@builder/sections/koperasi-custom/puskopolda/KopStructurePuskopolda';
+import KopServicesPuskopolda from '@builder/sections/koperasi-custom/puskopolda/KopServicesPuskopolda';
+import KopMembershipPuskopolda from '@builder/sections/koperasi-custom/puskopolda/KopMembershipPuskopolda';
+import KopNewsPuskopolda from '@builder/sections/koperasi-custom/puskopolda/KopNewsPuskopolda';
+import KopGalleryPuskopolda from '@builder/sections/koperasi-custom/puskopolda/KopGalleryPuskopolda';
+import KopLegalityPuskopolda from '@builder/sections/koperasi-custom/puskopolda/KopLegalityPuskopolda';
+import KopPartnersPuskopolda from '@builder/sections/koperasi-custom/puskopolda/KopPartnersPuskopolda';
+import KopDocumentsPuskopolda from '@builder/sections/koperasi-custom/puskopolda/KopDocumentsPuskopolda';
+import KopContactPuskopolda from '@builder/sections/koperasi-custom/puskopolda/KopContactPuskopolda';
+import KopFooterPuskopolda from '@builder/sections/koperasi-custom/puskopolda/KopFooterPuskopolda';
+
 // Custom Perdagangan & Retail Layouts — B2B Wholesale & Supply Chain FMCG
 import RetailNavWholesale from '@builder/sections/retail-custom/wholesale/RetailNavWholesale';
 import RetailHeroWholesale from '@builder/sections/retail-custom/wholesale/RetailHeroWholesale';
@@ -933,6 +948,34 @@ export const LAYOUT_COMPONENTS = {
   'KopImpactAgri': KopImpactAgri,
   'KopCtaAgri': KopCtaAgri,
   'KopFooterAgri': KopFooterAgri,
+
+  // Custom Koperasi — Puskopolda (Kepolisian)
+  'KopNavPuskopolda': KopNavPuskopolda,
+  'KopHeroPuskopolda': KopHeroPuskopolda,
+  'KopAboutPuskopolda': KopAboutPuskopolda,
+  'KopStructurePuskopolda': KopStructurePuskopolda,
+  'KopServicesPuskopolda': KopServicesPuskopolda,
+  'KopMembershipPuskopolda': KopMembershipPuskopolda,
+  'KopNewsPuskopolda': KopNewsPuskopolda,
+  'KopGalleryPuskopolda': KopGalleryPuskopolda,
+  'KopLegalityPuskopolda': KopLegalityPuskopolda,
+  'KopPartnersPuskopolda': KopPartnersPuskopolda,
+  'KopDocumentsPuskopolda': KopDocumentsPuskopolda,
+  'KopContactPuskopolda': KopContactPuskopolda,
+  'KopFooterPuskopolda': KopFooterPuskopolda,
+  'kop-nav-puskopolda': KopNavPuskopolda,
+  'kop-hero-puskopolda': KopHeroPuskopolda,
+  'kop-about-puskopolda': KopAboutPuskopolda,
+  'kop-structure-puskopolda': KopStructurePuskopolda,
+  'kop-services-puskopolda': KopServicesPuskopolda,
+  'kop-membership-puskopolda': KopMembershipPuskopolda,
+  'kop-news-puskopolda': KopNewsPuskopolda,
+  'kop-gallery-puskopolda': KopGalleryPuskopolda,
+  'kop-legality-puskopolda': KopLegalityPuskopolda,
+  'kop-partners-puskopolda': KopPartnersPuskopolda,
+  'kop-documents-puskopolda': KopDocumentsPuskopolda,
+  'kop-contact-puskopolda': KopContactPuskopolda,
+  'kop-footer-puskopolda': KopFooterPuskopolda,
 
   // Custom Perdagangan & Retail — B2B Wholesale & Supply Chain FMCG
   'RetailNavWholesale': RetailNavWholesale,
