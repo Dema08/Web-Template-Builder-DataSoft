@@ -7,19 +7,16 @@
 import koperasiClassic from './koperasiClassic.js';
 import koperasiModern from './koperasiModern.js';
 import koperasiPremium from './koperasiPremium.js';
-<<<<<<< Updated upstream
-import puskopoldaKoperasi from './puskopoldaKoperasi.js';
-=======
 import koperasiPuskopolda from './koperasiPuskopolda.js';
->>>>>>> Stashed changes
+import puskopoldaKoperasi from './puskopoldaKoperasi.js';
 
 export const category = {
   categoryName: 'Koperasi',
   templates: [
-    puskopoldaKoperasi,
     koperasiClassic,
     koperasiModern,
     koperasiPremium,
     koperasiPuskopolda,
+    puskopoldaKoperasi,
   ],
 };
