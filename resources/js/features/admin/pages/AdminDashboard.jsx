@@ -50,6 +50,7 @@ export default function AdminDashboard() {
     const totalWebsites = stats?.total_websites ?? 0;
     const publishedWebsitesCount = stats?.published_count ?? 0;
     const pendingRequestsCount = stats?.pending_requests_count ?? (pending_requests?.length || 0);
+    const publishedWebsites = (websites || []).filter((site) => site.is_published || site.status === 'published');
 
     const approveMutation = useMutation({
         mutationFn: (id) => websiteApi.adminApproveHostingRequest(id),
@@ -311,30 +312,50 @@ export default function AdminDashboard() {
                                 Memuat website terbaru...
                             </div>
                         )}
-                        {!isLoading && websites?.slice(0, 5).map((site) => (
-                            <div
-                                key={site.id}
-                                className="flex items-center justify-between p-3 bg-[rgb(var(--color-surface-alt))] rounded-xl border border-[rgb(var(--color-border))] hover:border-indigo-500/30 transition"
-                            >
-                                <div className="flex items-center gap-3 min-w-0">
-                                    <div className="h-8 w-8 rounded-lg bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold text-xs shrink-0">
-                                        <Globe className="h-4 w-4" />
+                        {!isLoading && publishedWebsites.slice(0, 5).map((site) => {
+                            const publicUrl = site.subdomain_url || (site.slug ? `/p/${site.slug}` : null);
+                            return (
+                                <div
+                                    key={site.id}
+                                    className="flex items-center justify-between p-3 bg-[rgb(var(--color-surface-alt))] rounded-xl border border-[rgb(var(--color-border))] hover:border-indigo-500/30 transition group"
+                                >
+                                    <div className="flex items-center gap-3 min-w-0">
+                                        <div className="h-9 w-9 rounded-lg bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold text-xs shrink-0 overflow-hidden border border-indigo-100 dark:border-indigo-900/50">
+                                            {site.thumbnail_url ? (
+                                                <img src={site.thumbnail_url} alt={site.name} className="h-full w-full object-cover" />
+                                            ) : (
+                                                <Globe className="h-4 w-4" />
+                                            )}
+                                        </div>
+                                        <div className="min-w-0">
+                                            <div className="flex items-center gap-1.5">
+                                                <p className="text-xs font-extrabold text-[rgb(var(--color-text-primary))] truncate">{site.name}</p>
+                                                {publicUrl && (
+                                                    <a
+                                                        href={publicUrl}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="opacity-0 group-hover:opacity-100 text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 transition-opacity"
+                                                        title="Buka Website Live"
+                                                    >
+                                                        <ExternalLink className="h-3 w-3" />
+                                                    </a>
+                                                )}
+                                            </div>
+                                            <p className="text-[10px] text-[rgb(var(--color-text-tertiary))] truncate">
+                                                Pemilik: <span className="font-semibold text-[rgb(var(--color-text-secondary))]">{typeof site.owner === 'object' ? site.owner?.name : (site.owner || 'Unknown')}</span>
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div className="min-w-0">
-                                        <p className="text-xs font-extrabold text-[rgb(var(--color-text-primary))] truncate">{site.name}</p>
-                                        <p className="text-[10px] text-[rgb(var(--color-text-tertiary))] truncate">
-                                            Pemilik: <span className="font-semibold text-[rgb(var(--color-text-secondary))]">{typeof site.owner === 'object' ? site.owner?.name : (site.owner || 'Unknown')}</span>
-                                        </p>
-                                    </div>
+                                    <span className="px-2.5 py-1 rounded-full text-[10px] font-extrabold shrink-0 bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200/60 dark:border-emerald-800/60">
+                                        Dipublikasikan
+                                    </span>
                                 </div>
-                                <span className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold shrink-0 ${site.is_published ? 'bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300' : 'bg-amber-100 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300'}`}>
-                                    {site.is_published ? 'Dipublikasikan' : 'Draf'}
-                                </span>
-                            </div>
-                        ))}
-                        {!isLoading && (!websites || websites.length === 0) && (
+                            );
+                        })}
+                        {!isLoading && publishedWebsites.length === 0 && (
                             <div className="text-center py-8 text-xs text-[rgb(var(--color-text-tertiary))]">
-                                Belum ada website yang dibuat oleh pengguna.
+                                Belum ada website yang disetujui dan dipublikasikan.
                             </div>
                         )}
                     </div>

@@ -48,29 +48,32 @@ class DashboardService extends BaseService
                 $draftWebsitesCount = Website::where('status', 'draft')->count();
 
                 $websitesFormatted = Website::select([
-                    'id', 'user_id', 'category_id', 'template_id', 'name', 'slug', 'status', 'published_at', 'created_at', 'updated_at'
+                    'id', 'user_id', 'category_id', 'template_id', 'name', 'slug', 'thumbnail_path', 'status', 'published_at', 'created_at', 'updated_at'
                 ])
+                ->where('status', 'published')
                 ->with(['user', 'template'])
-                ->orderByDesc('created_at')
+                ->orderByRaw('COALESCE(published_at, updated_at, created_at) DESC')
                 ->limit(10)
                 ->get()
                 ->map(function($site) {
-                    $status = is_string($site->status) ? $site->status : ($site->status?->value ?? 'draft');
+                    $status = is_string($site->status) ? $site->status : ($site->status?->value ?? 'published');
                     return [
                         'id' => $site->id,
                         'name' => $site->name,
                         'slug' => $site->slug,
                         'subdomain' => $site->slug,
                         'subdomain_url' => $site->url_subdomain,
+                        'thumbnail_url' => $site->thumbnail_url,
                         'status' => $status,
-                        'is_published' => $status === 'published',
-                        'is_pending' => $status === 'pending',
-                        'is_rejected' => $status === 'rejected',
+                        'is_published' => true,
+                        'is_pending' => false,
+                        'is_rejected' => false,
                         'template' => $site->template?->name ?? 'Default Template',
                         'owner' => [
                             'name' => $site->user?->name ?? 'Unknown',
                             'email' => $site->user?->email ?? '',
                         ],
+                        'published_at' => $site->published_at?->toISOString(),
                         'created_at' => $site->created_at?->toISOString(),
                     ];
                 })
