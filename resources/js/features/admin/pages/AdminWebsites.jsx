@@ -68,8 +68,18 @@ export default function AdminWebsites() {
     const [statusFilter, setStatusFilter] = useState('all');
     const [deleteConfirm, setDeleteConfirm] = useState(null);
     const [deleteReason, setDeleteReason] = useState('');
+    const [takedownModal, setTakedownModal] = useState(null);
+    const [takedownReason, setTakedownReason] = useState('');
     const [detailModal, setDetailModal] = useState(null);
     const queryClient = useQueryClient();
+
+    const quickReasons = [
+        'Pelanggaran Ketentuan Layanan',
+        'Konten Tidak Pantas / Sensitif',
+        'Informasi Bisnis Menyesatkan',
+        'Pelanggaran Hak Cipta / Duplikasi',
+        'Permintaan Revisi & Perbaikan Konten',
+    ];
 
     const { data, isLoading, isError, refetch } = useQuery({
         queryKey: ['admin-websites', statusFilter, searchQuery],
@@ -84,11 +94,17 @@ export default function AdminWebsites() {
     const statsFromApi = data?.stats ?? {};
 
     const updateStatusMutation = useMutation({
-        mutationFn: ({ id, status }) => websiteApi.adminUpdateStatus(id, status),
-        onSuccess: () => {
+        mutationFn: ({ id, status, reason }) => websiteApi.adminUpdateStatus(id, status, reason),
+        onSuccess: (_, variables) => {
             queryClient.invalidateQueries(['admin-websites']);
             queryClient.invalidateQueries([['dashboard', 'admin']]);
-            toast.success('Status website berhasil diperbarui', 'Berhasil');
+            if (variables.status === 'suspended') {
+                toast.success('Publikasi website berhasil dibatalkan dan notifikasi telah dikirim ke pemilik website.', 'Take Down Berhasil');
+                setTakedownModal(null);
+                setTakedownReason('');
+            } else {
+                toast.success('Website berhasil dipublikasikan kembali.', 'Berhasil');
+            }
         },
         onError: (err) => {
             toast.error(err?.response?.data?.message ?? 'Gagal memperbarui status', 'Galat');
@@ -331,7 +347,11 @@ export default function AdminWebsites() {
                                                     <span className={`h-1.5 w-1.5 rounded-full ${statusCfg.dotColor}`} />
                                                     {statusCfg.label}
                                                 </span>
-                                                {site.published_at_formatted ? (
+                                                {site.status === 'suspended' && site.rejection_reason ? (
+                                                    <p className="text-[10px] text-rose-600 dark:text-rose-400 font-semibold truncate max-w-[170px]" title={`Alasan Take Down: ${site.rejection_reason}`}>
+                                                        Alasan: {site.rejection_reason}
+                                                    </p>
+                                                ) : site.published_at_formatted ? (
                                                     <p className="text-[10px] text-[rgb(var(--color-text-tertiary))] font-semibold">
                                                         Pub: {site.published_at_formatted}
                                                     </p>
@@ -375,17 +395,27 @@ export default function AdminWebsites() {
                                                     <Info className="h-4 w-4" />
                                                 </button>
 
-                                                {/* Quick Status Action */}
+                                                {/* Quick Status Action (Batal Publikasi / Publish) */}
                                                 <button
                                                     type="button"
                                                     disabled={updateStatusMutation.isPending}
-                                                    onClick={() =>
-                                                        updateStatusMutation.mutate({
-                                                            id: site.id,
-                                                            status: site.status === 'published' ? 'suspended' : 'published',
-                                                        })
-                                                    }
-                                                    className="px-2.5 py-1.5 bg-[rgb(var(--color-surface-alt))] hover:bg-indigo-50 dark:hover:bg-indigo-950/40 text-[rgb(var(--color-text-primary))] hover:text-indigo-600 border border-[rgb(var(--color-border))] rounded-xl text-xs font-bold transition disabled:opacity-50"
+                                                    onClick={() => {
+                                                        if (site.status === 'published') {
+                                                            setTakedownModal(site);
+                                                            setTakedownReason('');
+                                                        } else {
+                                                            updateStatusMutation.mutate({
+                                                                id: site.id,
+                                                                status: 'published',
+                                                            });
+                                                        }
+                                                    }}
+                                                    className={`px-2.5 py-1.5 rounded-xl text-xs font-bold transition disabled:opacity-50 cursor-pointer ${
+                                                        site.status === 'published'
+                                                            ? 'bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 hover:bg-rose-100 dark:hover:bg-rose-900/50 border border-rose-200 dark:border-rose-900/50'
+                                                            : 'bg-[rgb(var(--color-surface-alt))] hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-[rgb(var(--color-text-primary))] hover:text-emerald-600 border border-[rgb(var(--color-border))]'
+                                                    }`}
+                                                    title={site.status === 'published' ? 'Batalkan publikasi (Take Down)' : 'Publikasikan kembali'}
                                                 >
                                                     {site.status === 'published' ? 'Batal Publikasi' : 'Publish'}
                                                 </button>
@@ -517,6 +547,19 @@ export default function AdminWebsites() {
                                     </div>
                                 </div>
                             </div>
+
+                            {/* Alasan Batal Publikasi / Take Down (jika ada) */}
+                            {detailModal.status === 'suspended' && detailModal.rejection_reason && (
+                                <div className="bg-rose-50 dark:bg-rose-950/40 p-4 rounded-2xl border border-rose-200 dark:border-rose-900/50 space-y-1.5">
+                                    <p className="text-[11px] font-extrabold uppercase tracking-wider text-rose-700 dark:text-rose-400 flex items-center gap-1.5">
+                                        <AlertTriangle className="h-3.5 w-3.5" />
+                                        Alasan Batal Publikasi (Take Down Admin)
+                                    </p>
+                                    <p className="text-xs text-rose-900 dark:text-rose-200 whitespace-pre-wrap leading-relaxed font-medium">
+                                        {detailModal.rejection_reason}
+                                    </p>
+                                </div>
+                            )}
                         </div>
 
                         {/* Modal Footer Actions */}
@@ -610,6 +653,122 @@ export default function AdminWebsites() {
                                     <><Loader2 className="h-4 w-4 animate-spin" /> Menghapus...</>
                                 ) : (
                                     <><Trash2 className="h-4 w-4" /> Ya, Hapus Website</>
+                                )}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Take Down / Batal Publikasi Confirmation Modal */}
+            {takedownModal && (
+                <div className="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+                    <div className="bg-[rgb(var(--color-surface))] rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl border border-[rgb(var(--color-border))] space-y-5">
+                        <div className="flex items-center gap-3 border-b border-[rgb(var(--color-border))] pb-4">
+                            <div className="p-3 bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400 rounded-2xl shrink-0">
+                                <AlertTriangle className="h-6 w-6" />
+                            </div>
+                            <div>
+                                <h3 className="text-base sm:text-lg font-extrabold text-[rgb(var(--color-text-primary))]">
+                                    Konfirmasi Batal Publikasi (Take Down)
+                                </h3>
+                                <p className="text-xs text-[rgb(var(--color-text-secondary))] mt-0.5">
+                                    Website pengguna akan dinonaktifkan dari publikasi dan pemilik akan menerima notifikasi alasan take down.
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Target Info Summary */}
+                        <div className="bg-rose-50/60 dark:bg-rose-950/20 border border-rose-200/70 dark:border-rose-900/40 rounded-2xl p-4 space-y-2">
+                            <div className="flex items-start justify-between gap-2">
+                                <div className="min-w-0">
+                                    <p className="text-xs font-bold text-[rgb(var(--color-text-primary))] truncate">
+                                        Website: <span className="text-rose-600 dark:text-rose-400 font-extrabold">"{takedownModal.name}"</span>
+                                    </p>
+                                    <p className="text-[11px] text-[rgb(var(--color-text-tertiary))] font-mono mt-0.5 truncate">
+                                        Domain: {takedownModal.domain || takedownModal.url_path}
+                                    </p>
+                                </div>
+                                <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300 shrink-0">
+                                    Akan di-Take Down
+                                </span>
+                            </div>
+                            <div className="pt-2 border-t border-rose-200/50 dark:border-rose-900/30 flex items-center gap-2 text-[11px] text-[rgb(var(--color-text-secondary))]">
+                                <UserIcon className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+                                <span className="truncate">Pemilik: <strong>{takedownModal.owner?.name}</strong> ({takedownModal.owner?.email})</span>
+                            </div>
+                        </div>
+
+                        {/* Quick Preset Reason Chips */}
+                        <div className="space-y-1.5">
+                            <label className="text-[11px] font-bold text-[rgb(var(--color-text-secondary))] block">
+                                Pilih Template Alasan Cepat:
+                            </label>
+                            <div className="flex flex-wrap gap-1.5">
+                                {quickReasons.map((reason) => (
+                                    <button
+                                        key={reason}
+                                        type="button"
+                                        onClick={() => setTakedownReason(reason)}
+                                        className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold border transition cursor-pointer ${
+                                            takedownReason === reason
+                                                ? 'bg-rose-600 text-white border-rose-600 shadow-xs'
+                                                : 'bg-[rgb(var(--color-surface-alt))] text-[rgb(var(--color-text-secondary))] border-[rgb(var(--color-border))] hover:border-rose-400 hover:text-rose-600'
+                                        }`}
+                                    >
+                                        {reason}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Textarea Input Alasan */}
+                        <div className="space-y-1.5">
+                            <label className="text-xs font-bold text-[rgb(var(--color-text-primary))] flex items-center justify-between">
+                                <span>Alasan Pembatalan Publikasi / Take Down <span className="text-rose-500">*</span></span>
+                                <span className="text-[10px] text-[rgb(var(--color-text-tertiary))] font-normal">Wajib diisi</span>
+                            </label>
+                            <textarea
+                                rows={3}
+                                value={takedownReason}
+                                onChange={(e) => setTakedownReason(e.target.value)}
+                                placeholder="Jelaskan alasan website di-take down secara jelas dan spesifik agar pemilik website dapat melakukan perbaikan..."
+                                className="w-full p-3 text-xs bg-[rgb(var(--color-surface-alt))] border border-[rgb(var(--color-border))] rounded-xl focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 text-[rgb(var(--color-text-primary))] placeholder:text-[rgb(var(--color-text-tertiary))] transition"
+                            />
+                            <p className="text-[11px] text-amber-600 dark:text-amber-400 font-medium">
+                                ⚠️ Notifikasi resmi beserta catatan alasan ini akan langsung dikirimkan ke akun pengguna pemilik website.
+                            </p>
+                        </div>
+
+                        {/* Modal Action Buttons */}
+                        <div className="flex items-center justify-end gap-3 pt-2 border-t border-[rgb(var(--color-border))]">
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setTakedownModal(null);
+                                    setTakedownReason('');
+                                }}
+                                disabled={updateStatusMutation.isPending}
+                                className="px-4 py-2 text-xs font-bold text-[rgb(var(--color-text-secondary))] hover:bg-[rgb(var(--color-surface-alt))] rounded-xl transition disabled:opacity-50 cursor-pointer"
+                            >
+                                Batal
+                            </button>
+                            <button
+                                type="button"
+                                disabled={updateStatusMutation.isPending || !takedownReason.trim() || takedownReason.trim().length < 3}
+                                onClick={() =>
+                                    updateStatusMutation.mutate({
+                                        id: takedownModal.id,
+                                        status: 'suspended',
+                                        reason: takedownReason.trim(),
+                                    })
+                                }
+                                className="px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-extrabold rounded-xl shadow-md shadow-rose-600/20 transition flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                            >
+                                {updateStatusMutation.isPending ? (
+                                    <><Loader2 className="h-4 w-4 animate-spin" /> Memproses...</>
+                                ) : (
+                                    <><Ban className="h-4 w-4" /> Ya, Batalkan Publikasi</>
                                 )}
                             </button>
                         </div>

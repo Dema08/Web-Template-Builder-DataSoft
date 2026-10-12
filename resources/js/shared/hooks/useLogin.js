@@ -33,7 +33,13 @@ export function useLogin() {
             navigate(targetRoute, { replace: true });
         },
         onError: (error) => {
-            toast.error(error?.response?.data?.message || 'Tidak dapat masuk. Silakan coba lagi.', 'Gagal masuk');
+            const status = error?.response?.status;
+            const message = error?.response?.data?.message || 'Tidak dapat masuk. Silakan coba lagi.';
+            // Jika akun dinonaktifkan, pesan sudah ditampilkan secara jelas dan elegan di form login
+            if (status === 403 && message.toLowerCase().includes('dinonaktifkan')) {
+                return;
+            }
+            toast.error(message, 'Gagal masuk');
         },
     });
 }

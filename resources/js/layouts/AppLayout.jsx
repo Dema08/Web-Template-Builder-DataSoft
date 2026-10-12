@@ -27,6 +27,9 @@ import {
     CheckCheck,
     Info,
     Send,
+    Ban,
+    AlertTriangle,
+    CheckCircle2,
 } from 'lucide-react';
 import { useAuth } from '@hooks';
 import { ROUTES } from '@constants';
@@ -452,6 +455,18 @@ export default function AppLayout() {
                                                             {notif.tipe === 'website_deleted' ? (
                                                                 <div className="p-2 rounded-xl bg-red-100 dark:bg-red-950/50 text-red-600 dark:text-red-400">
                                                                     <Trash2 className="h-4 w-4" />
+                                                                </div>
+                                                            ) : notif.tipe === 'website_suspended' ? (
+                                                                <div className="p-2 rounded-xl bg-rose-100 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400">
+                                                                    <Ban className="h-4 w-4" />
+                                                                </div>
+                                                            ) : notif.tipe === 'website_rejected' ? (
+                                                                <div className="p-2 rounded-xl bg-amber-100 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400">
+                                                                    <AlertTriangle className="h-4 w-4" />
+                                                                </div>
+                                                            ) : notif.tipe === 'website_approved' ? (
+                                                                <div className="p-2 rounded-xl bg-emerald-100 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400">
+                                                                    <CheckCircle2 className="h-4 w-4" />
                                                                 </div>
                                                             ) : (
                                                                 <div className="p-2 rounded-xl bg-indigo-100 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400">

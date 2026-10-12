@@ -26,6 +26,7 @@ class AdminWebsiteController extends BaseController
             'thumbnail_path',
             'status',
             'settings',
+            'rejection_reason',
             'favicon',
             'logo',
             'published_at',
@@ -82,6 +83,7 @@ class AdminWebsiteController extends BaseController
                 'published_url'          => $publishedUrl,
                 'status'                 => $site->status,
                 'is_published'           => $site->status === 'published',
+                'rejection_reason'       => $site->rejection_reason,
                 'published_at'           => $site->published_at?->toIso8601String(),
                 'published_at_formatted' => $site->published_at ? $site->published_at->format('d M Y, H:i') : null,
                 'created_at'             => $site->created_at?->toIso8601String(),
@@ -119,18 +121,23 @@ class AdminWebsiteController extends BaseController
 
     /**
      * Update a website's status.
-     * When publishing a draft, checks the website owner's domain quota.
-     * Admin cannot bypass user quota limits when publishing.
+     * When publishing a draft/suspended site, checks the website owner's domain quota.
+     * When unpublishing/suspending (take down), admin must provide a reason which is sent as a notification to the user.
      */
     public function updateStatus(Request $request, Website $website): JsonResponse
     {
         $validated = $request->validate([
             'status' => 'required|in:published,draft,suspended,pending,rejected',
+            'reason' => 'required_if:status,suspended|nullable|string|min:3|max:1000',
+        ], [
+            'reason.required_if' => 'Alasan pembatalan publikasi (take down) wajib diisi.',
+            'reason.min'         => 'Alasan pembatalan publikasi minimal 3 karakter.',
+            'reason.max'         => 'Alasan pembatalan publikasi maksimal 1000 karakter.',
         ]);
 
         $newStatus = $validated['status'];
 
-        // Jika admin mencoba mempublish website yang masih draft/pending,
+        // Jika admin mencoba mempublish website yang masih draft/pending/suspended,
         // periksa apakah kuota domain user sudah penuh.
         if ($newStatus === 'published' && $website->status !== 'published') {
             $user = $website->user;
@@ -176,18 +183,43 @@ class AdminWebsiteController extends BaseController
                     'dibaca'  => false,
                 ]);
             }
+        } elseif ($newStatus === 'suspended') {
+            $reason = trim((string) ($request->input('reason') ?: $request->input('rejection_reason')));
+
+            $website->update([
+                'status'           => 'suspended',
+                'published_at'     => null,
+                'rejection_reason' => $reason,
+            ]);
+
+            $user = $website->user;
+            if ($user) {
+                $baseDomain = config('app.publish_domain', config('app.primary_host', 'web.microdata.co.id'));
+                $publicUrl = $website->url_subdomain ?: "https://{$website->slug}.{$baseDomain}";
+                Notification::create([
+                    'user_id' => $user->id,
+                    'judul'   => 'Publikasi Website Dibatalkan (Take Down) ⚠️',
+                    'pesan'   => "Website \"{$website->name}\" ({$publicUrl}) telah dibatalkan publikasinya (di-take down) oleh Admin.\n\nAlasan Take Down:\n\"{$reason}\"\n\nSilakan perbaiki atau sesuaikan website Anda melalui Builder sebelum mempublikasikan kembali.",
+                    'tipe'    => 'website_suspended',
+                    'dibaca'  => false,
+                ]);
+            }
         } else {
-            // Unpublish / suspend / reject: bebas dilakukan admin
+            // Unpublish / draft / reject: bebas dilakukan admin
             $updateData = ['status' => $newStatus];
             if ($newStatus !== 'published') {
                 $updateData['published_at'] = null;
+            }
+            if ($request->filled('reason')) {
+                $updateData['rejection_reason'] = $request->input('reason');
             }
             $website->update($updateData);
         }
 
         return $this->success([
-            'id'     => $website->id,
-            'status' => $website->fresh()->status,
+            'id'               => $website->id,
+            'status'           => $website->fresh()->status,
+            'rejection_reason' => $website->fresh()->rejection_reason,
         ], 'Website status updated successfully');
     }
 

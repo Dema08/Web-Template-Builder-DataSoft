@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useLocation } from 'react-router-dom';
-import { Eye, EyeOff, Sparkles, User, Lock, ArrowRight, ArrowLeft, Layers, ShieldCheck, Headphones, UserX } from 'lucide-react';
+import { Eye, EyeOff, Sparkles, User, Lock, ArrowRight, ArrowLeft, Layers, ShieldCheck, Headphones, UserX, XCircle } from 'lucide-react';
 import { Spinner, Alert, BrandLogo } from '@shared/components/ui';
 import { useLogin } from '@hooks';
 import { ROUTES } from '@constants';
@@ -106,20 +106,36 @@ export default function Login({ onSwitchToRegister }) {
 
                     {login.isError && (() => {
                         const status = login.error?.response?.status;
-                        const message = login.error?.response?.data?.message || 'Please check your credentials and try again.';
-                        const isDeactivated = status === 403 && message.toLowerCase().includes('dinonaktifkan');
+                        const rawMessage = login.error?.response?.data?.message || 'Email atau kata sandi yang Anda masukkan tidak sesuai.';
+                        const isDeactivated = status === 403 && rawMessage.toLowerCase().includes('dinonaktifkan');
 
                         if (isDeactivated) {
+                            const reasonMatch = rawMessage.match(/Alasan:\s*(.+)$/i);
+                            const reasonText = reasonMatch ? reasonMatch[1].trim() : null;
+
                             return (
-                                <div className="mb-4 ds-animate-fade-in">
-                                    <div className="rounded-2xl border border-red-200 bg-red-50 p-4 shadow-sm">
+                                <div className="mb-5 ds-animate-fade-in">
+                                    <div className="rounded-2xl border border-rose-200/90 bg-rose-50/70 p-4 shadow-xs">
                                         <div className="flex items-start gap-3">
-                                            <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-red-100">
-                                                <UserX className="h-4 w-4 text-red-600" />
+                                            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-rose-100 text-rose-600 mt-0.5">
+                                                <UserX className="h-4.5 w-4.5" />
                                             </div>
                                             <div className="flex-1 min-w-0">
-                                                <p className="text-sm font-extrabold text-red-700">Akun Dinonaktifkan oleh Admin</p>
-                                                <p className="mt-1 text-xs text-red-600 leading-relaxed whitespace-pre-line">{message}</p>
+                                                <p className="text-xs font-extrabold text-rose-950 tracking-tight">
+                                                    Akun Dinonaktifkan oleh Admin
+                                                </p>
+                                                <p className="mt-1 text-xs text-rose-700 leading-relaxed font-normal">
+                                                    Akun Anda saat ini tidak aktif dan tidak dapat mengakses dasbor.
+                                                </p>
+                                                {reasonText && (
+                                                    <div className="mt-2.5 inline-flex items-center gap-1.5 rounded-xl bg-rose-100/80 border border-rose-200/80 px-3 py-1.5 text-xs text-rose-900">
+                                                        <span className="font-extrabold text-rose-800">Alasan:</span>
+                                                        <span className="font-medium">{reasonText}</span>
+                                                    </div>
+                                                )}
+                                                <p className="mt-2 text-[11px] text-rose-500 font-medium">
+                                                    Silakan hubungi administrator jika Anda merasa ini adalah kekeliruan.
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
@@ -128,20 +144,18 @@ export default function Login({ onSwitchToRegister }) {
                         }
 
                         return (
-                            <div className="mb-4 ds-animate-fade-in">
-                                <Alert variant="error" title="Gagal Login">
-                                    {message}
-                                </Alert>
+                            <div className="mb-5 ds-animate-fade-in">
+                                <div className="flex items-center gap-3 rounded-2xl border border-rose-200/80 bg-rose-50/70 p-3.5 text-xs text-rose-800 shadow-xs">
+                                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-rose-100 text-rose-600">
+                                        <XCircle className="h-4 w-4" />
+                                    </div>
+                                    <p className="font-medium leading-relaxed flex-1">
+                                        {rawMessage}
+                                    </p>
+                                </div>
                             </div>
                         );
                     })()}
-                    {login.isError && (
-                        <div className="mb-4 ds-animate-fade-in">
-                            <Alert variant="error" title="Gagal Login">
-                                {login.error?.response?.data?.message || 'Periksa kredensial Anda dan coba lagi.'}
-                            </Alert>
-                        </div>
-                    )}
 
                     {/* Form */}
                     <form onSubmit={handleSubmit(onSubmit)} method="post" className="space-y-4" noValidate>

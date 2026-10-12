@@ -14,6 +14,7 @@ import {
     ExternalLink,
     Edit3,
     Camera,
+    Ban,
 } from 'lucide-react';
 import { useAuth, useDashboard } from '@hooks';
 import { Spinner, Card, StatusBadge, CreateSiteChoiceModal } from '@shared/components/ui';
@@ -186,6 +187,8 @@ export default function UserDashboard() {
                                                 <CheckCircle2 className="h-3 w-3 text-emerald-500 shrink-0" />
                                             ) : statusKey === 'pending' ? (
                                                 <Clock className="h-3 w-3 text-amber-500 shrink-0 animate-pulse" />
+                                            ) : statusKey === 'suspended' ? (
+                                                <Ban className="h-3 w-3 text-rose-500 shrink-0" />
                                             ) : (
                                                 <Globe className="h-3 w-3 text-slate-400 shrink-0" />
                                             )}
@@ -196,6 +199,8 @@ export default function UserDashboard() {
                                                     ? 'Menunggu Review Admin'
                                                     : statusKey === 'rejected'
                                                     ? 'Publikasi Ditolak'
+                                                    : statusKey === 'suspended'
+                                                    ? 'Publikasi Dibatalkan (Take Down)'
                                                     : 'Draf'}
                                             </span>
                                             {site.template && (
@@ -203,9 +208,11 @@ export default function UserDashboard() {
                                             )}
                                         </div>
 
-                                        {statusKey === 'rejected' && site.rejection_reason && (
+                                        {(statusKey === 'rejected' || statusKey === 'suspended') && site.rejection_reason && (
                                             <div className="mb-2 p-2 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 rounded-lg text-[11px] text-rose-700 dark:text-rose-300 leading-tight">
-                                                <span className="font-bold">Alasan Ditolak: </span>
+                                                <span className="font-bold">
+                                                    {statusKey === 'suspended' ? 'Alasan Take Down: ' : 'Alasan Ditolak: '}
+                                                </span>
                                                 {site.rejection_reason}
                                             </div>
                                         )}

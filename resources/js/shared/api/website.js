@@ -141,8 +141,10 @@ const websiteApi = {
     /**
      * Update a website's status (admin).
      */
-    async adminUpdateStatus(id, status) {
-        const { data } = await http.patch(`/admin/websites/${id}/status`, { status });
+    async adminUpdateStatus(id, status, reason = null) {
+        const payload = { status };
+        if (reason) payload.reason = reason;
+        const { data } = await http.patch(`/admin/websites/${id}/status`, payload);
         return data.data;
     },
 
