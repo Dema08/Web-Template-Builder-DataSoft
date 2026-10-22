@@ -9,6 +9,7 @@ export default function Card({
   borderWidth = '1px',
   borderStyle = 'solid',
   borderColor = '#e2e8f0',
+  borderTop = '',
   shadow = 'md',
   padding = '24px',
   margin = '0px',
@@ -22,9 +23,14 @@ export default function Card({
   justifyContent = 'flex-start',
   gap = '0px',
   overflow = 'hidden',
+  iconSvg = '',
   componentId = null,
   sectionId = null,
   children = null,
+  collapsible = false,
+  defaultOpen = false,
+  title = '',
+  contentHtml = '',
 }) {
   const shadowClasses = {
     none: 'shadow-none',
@@ -52,23 +58,60 @@ export default function Card({
     borderWidth: hasBorder ? borderWidth : '0px',
     borderColor: hasBorder ? (borderColor || '#e2e8f0') : 'transparent',
     borderStyle: hasBorder ? (borderStyle || 'solid') : 'none',
+    ...(borderTop ? { borderTop } : {}),
     padding: padding || '24px',
     margin: margin || '0px',
-    width: width || '100%',
-    height: height || 'auto',
-    maxWidth: '100%',
+    width: width && width !== '100%' ? width : '100%',
+    height: height && height !== 'auto' ? height : '100%',
+    minHeight: minHeight || undefined,
+    maxWidth: maxWidth || '100%',
     opacity: typeof opacity === 'number' ? opacity / 100 : (parseInt(opacity) / 100 || 1),
     alignItems: alignItems || 'stretch',
     justifyContent: justifyContent || 'flex-start',
     gap: gap || '0px',
     overflow: overflow || 'hidden',
+    boxSizing: 'border-box',
   };
+
+  const isAccordion = variant === 'accordion' || collapsible;
+
+  if (isAccordion) {
+    const accStyle = {
+      ...style,
+      padding: '0px',
+      height: 'auto',
+    };
+    return (
+      <details
+        className={`relative w-full max-w-full box-border ${shadowClasses[shadow] || ''}`}
+        style={accStyle}
+        open={defaultOpen ? true : undefined}
+      >
+        <summary>
+          {title ? <span>{title}</span> : null}
+          {Array.isArray(childrenComponents) && childrenComponents.length > 0
+            ? renderLayoutComponents([childrenComponents[0]], sectionId, componentId)
+            : null}
+        </summary>
+        <div className="acc-body">
+          {Array.isArray(childrenComponents) && childrenComponents.length > 1
+            ? renderLayoutComponents(childrenComponents.slice(1), sectionId, componentId)
+            : (contentHtml ? <div dangerouslySetInnerHTML={{ __html: contentHtml }} /> : children)}
+        </div>
+      </details>
+    );
+  }
 
   return (
     <div
-      className={`relative flex flex-col max-w-full box-border ${shadowClasses[shadow] || ''} ${hoverClasses[hoverEffect] || ''}`}
+      className={`relative flex flex-col w-full h-full max-w-full box-border ${shadowClasses[shadow] || ''} ${hoverClasses[hoverEffect] || ''}`}
       style={style}
     >
+      {/* Optional Icon */}
+      {iconSvg && (
+        <span className="ico" dangerouslySetInnerHTML={{ __html: iconSvg }} />
+      )}
+
       {/* If sub-components are provided, render them as editable components */}
       {Array.isArray(childrenComponents) && childrenComponents.length > 0
         ? renderLayoutComponents(childrenComponents, sectionId, componentId)

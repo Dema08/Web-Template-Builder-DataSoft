@@ -141,6 +141,11 @@ export const PROPERTY_ENGINE = {
     groups: ['content', 'size', 'color', 'spacing', 'border', 'shadow', 'animation', 'position'],
     props: COMPONENT_REGISTRY.card.props,
   },
+
+  chart: {
+    groups: ['content', 'size', 'color', 'spacing', 'border', 'shadow', 'position'],
+    props: COMPONENT_REGISTRY.chart.props,
+  },
 };
 
 // Get full property config for a component type

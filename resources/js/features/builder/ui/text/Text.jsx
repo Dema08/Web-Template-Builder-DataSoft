@@ -7,7 +7,7 @@ export default function Text({
   fontFamily = 'sans-serif',
   fontSize = '16px',
   fontWeight = '400',
-  color = '#000000',
+  color = 'inherit',
   lineHeight = '1.6',
   letterSpacing = 'normal',
   align = 'left',

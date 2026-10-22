@@ -73,9 +73,9 @@ export default function SectionRenderer({ section, isSelected, onClick, isPrevie
     }
   }, [isFooterSection, section.id, section.layout]);
 
-  // Auto-hydrate components from layout defaults if section components are empty
+  // Auto-hydrate components from layout defaults if section components are empty or missing default components
   useEffect(() => {
-    if (!isPreviewMode && (!section.components || section.components.length === 0) && section.layout) {
+    if (!isPreviewMode && section.layout) {
       const defaultComps = getLayoutDefaults(section.layout);
       if (defaultComps && defaultComps.length > 0) {
         const normalizeComponent = (c, idx = 0) => {
@@ -94,10 +94,43 @@ export default function SectionRenderer({ section, isSelected, onClick, isPrevie
           }
           return normalized;
         };
-        const populated = defaultComps.map((c, ci) => normalizeComponent(c, ci));
-        useBuilderStore.setState((state) => ({
-          sections: state.sections.map((s) => (s.id === section.id ? { ...s, components: populated } : s)),
-        }));
+
+        const existingComps = section.components || [];
+        if (existingComps.length === 0) {
+          const populated = defaultComps.map((c, ci) => normalizeComponent(c, ci));
+          useBuilderStore.setState((state) => ({
+            sections: state.sections.map((s) => (s.id === section.id ? { ...s, components: populated } : s)),
+          }));
+        } else {
+          const missingComps = defaultComps.filter(
+            dc => !existingComps.some(ec => ec.id === dc.id)
+          );
+          if (missingComps.length > 0) {
+            const populated = defaultComps.map((c, ci) => {
+              const found = existingComps.find(ec => ec.id === c.id);
+              if (found) return found;
+              const norm = normalizeComponent(c, ci);
+              if (norm.type === 'card' && Array.isArray(norm.childrenComponents)) {
+                norm.childrenComponents = norm.childrenComponents.map(child => {
+                  const existingChild = existingComps.find(ec => ec.id === child.id);
+                  return existingChild ? { ...child, props: { ...child.props, ...existingChild.props } } : child;
+                });
+              }
+              return norm;
+            });
+            const childIds = new Set(
+              populated
+                .filter(c => c.type === 'card' && Array.isArray(c.childrenComponents))
+                .flatMap(c => c.childrenComponents.map(ch => ch.id))
+            );
+            const extra = existingComps.filter(
+              ec => !defaultComps.some(dc => dc.id === ec.id) && !childIds.has(ec.id)
+            );
+            useBuilderStore.setState((state) => ({
+              sections: state.sections.map((s) => (s.id === section.id ? { ...s, components: [...populated, ...extra] } : s)),
+            }));
+          }
+        }
       }
     }
   }, [section.id, section.layout, section.components, isPreviewMode]);

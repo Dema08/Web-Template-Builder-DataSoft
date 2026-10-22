@@ -3,16 +3,20 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 /**
  * KopVisiMisiDompetkita — Visi & Misi KOPERASI DOMPETKITA BERSAMA
  * 100% exact match with KOPERASI_DOMPETKITA_BERSAMA_UIUX.html
+ * Every heading, lead, and mission item is fully editable in Right Inspector & Canvas.
  */
 export default function KopVisiMisiDompetkita({ components = [], sectionId = null }) {
   const defaultComponents = [
     { id: 'dompet-vm-title', type: 'heading', props: { content: 'Membangun kesejahteraan anggota melalui koperasi yang adil, transparan, dan bertanggung jawab.', level: 'h2' } },
-    { id: 'dompet-vm-lead', type: 'paragraph', props: { content: 'Itulah visi kami: anggota bekerja sama mengembangkan usaha dan memperoleh manfaat ekonomi secara bersama.' } },
+    { id: 'dompet-vm-lead', type: 'text', props: { content: 'Itulah visi kami: anggota bekerja sama mengembangkan usaha dan memperoleh manfaat ekonomi secara bersama.', fontSize: '17px', color: '#475569' } },
+    { id: 'dompet-misi-1', type: 'text', props: { content: 'Pengembangan layanan keuangan yang sesuai prinsip dan ketentuan yang dipilih serta disahkan koperasi.', fontSize: '16.5px', color: '#0F172A' } },
+    { id: 'dompet-misi-2', type: 'text', props: { content: 'Edukasi keuangan, pendampingan, dan pengembangan kesejahteraan karyawan.', fontSize: '16.5px', color: '#0F172A' } },
+    { id: 'dompet-misi-3', type: 'text', props: { content: 'Penyediaan kebutuhan sehari-hari dan layanan distribusi yang relevan bagi anggota.', fontSize: '16.5px', color: '#0F172A' } },
+    { id: 'dompet-misi-4', type: 'text', props: { content: 'Rasa memiliki, transparansi, dan semangat gotong royong dalam kegiatan koperasi.', fontSize: '16.5px', color: '#0F172A' } },
   ];
 
   const lc = components.length > 0 ? components : defaultComponents;
-  const titleC = lc.filter(c => c.id === 'dompet-vm-title');
-  const leadC = lc.filter(c => c.id === 'dompet-vm-lead');
+  const getComp = id => lc.filter(c => c.id === id);
 
   return (
     <div className="dk-root">
@@ -20,17 +24,25 @@ export default function KopVisiMisiDompetkita({ components = [], sectionId = nul
         <div className="wrap two">
           <div>
             <h2>
-              {titleC.length > 0 ? renderLayoutComponents(titleC, sectionId) : 'Membangun kesejahteraan anggota melalui koperasi yang adil, transparan, dan bertanggung jawab.'}
+              {renderLayoutComponents(getComp('dompet-vm-title'), sectionId)}
             </h2>
-            <p className="lead">
-              {leadC.length > 0 ? renderLayoutComponents(leadC, sectionId) : 'Itulah visi kami: anggota bekerja sama mengembangkan usaha dan memperoleh manfaat ekonomi secara bersama.'}
-            </p>
+            <div className="lead">
+              {renderLayoutComponents(getComp('dompet-vm-lead'), sectionId)}
+            </div>
           </div>
           <ul className="misi">
-            <li>Pengembangan layanan keuangan yang sesuai prinsip dan ketentuan yang dipilih serta disahkan koperasi.</li>
-            <li>Edukasi keuangan, pendampingan, dan pengembangan kesejahteraan karyawan.</li>
-            <li>Penyediaan kebutuhan sehari-hari dan layanan distribusi yang relevan bagi anggota.</li>
-            <li>Rasa memiliki, transparansi, dan semangat gotong royong dalam kegiatan koperasi.</li>
+            <li>
+              {renderLayoutComponents(getComp('dompet-misi-1'), sectionId)}
+            </li>
+            <li>
+              {renderLayoutComponents(getComp('dompet-misi-2'), sectionId)}
+            </li>
+            <li>
+              {renderLayoutComponents(getComp('dompet-misi-3'), sectionId)}
+            </li>
+            <li>
+              {renderLayoutComponents(getComp('dompet-misi-4'), sectionId)}
+            </li>
           </ul>
         </div>
       </section>

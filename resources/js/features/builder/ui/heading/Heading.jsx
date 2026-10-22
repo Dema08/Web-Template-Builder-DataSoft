@@ -27,7 +27,7 @@ export default function Heading({
   fontFamily = 'sans-serif',
   fontSize = '32px',
   fontWeight = '700',
-  color = '#000000',
+  color = 'inherit',
   align = 'left',
   margin = '0',
   padding = '0',

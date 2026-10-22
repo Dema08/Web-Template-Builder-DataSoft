@@ -2,6 +2,8 @@
 // Maps layout IDs to their default component definitions
 // Used to seed sections with initial components when added to the canvas
 
+import { DOMPETKITA_DEFAULTS } from '../data/starter-templates/industries/koperasi/dompetkitaDefaults';
+
 export const LAYOUT_DEFAULTS = {
 
   // === ABOUT LAYOUTS ===
@@ -58223,5 +58225,5 @@ export const LAYOUT_DEFAULTS = {
 };
 
 export const getLayoutDefaults = (layoutId) => {
-  return LAYOUT_DEFAULTS[layoutId] || [];
+  return DOMPETKITA_DEFAULTS[layoutId] || LAYOUT_DEFAULTS[layoutId] || [];
 };

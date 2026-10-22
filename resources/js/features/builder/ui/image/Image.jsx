@@ -7,6 +7,7 @@ const DEFAULT_FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1557804506-669
 export default function Image({
   src = '',
   alt = 'Image',
+  svgContent = '',
   width = '100%',
   height = 'auto',
   aspectRatio = 'auto',
@@ -70,9 +71,11 @@ export default function Image({
     borderColor: hasBorder ? (borderColor || '#e5e7eb') : 'transparent',
     borderStyle: hasBorder ? (borderStyle || 'solid') : 'none',
     filter: filterStyle,
+    boxSizing: 'border-box',
   };
 
-  const effectiveSrc = (imgError || !src || src.trim() === '') ? DEFAULT_FALLBACK_IMAGE : src;
+  const hasSvg = Boolean(svgContent && svgContent.trim() !== '' && (!src || src.trim() === ''));
+  const effectiveSrc = (imgError || !src || src.trim() === '') ? (hasSvg ? '' : DEFAULT_FALLBACK_IMAGE) : src;
 
   const handleFileUpload = (e) => {
     const file = e.target.files?.[0];
@@ -81,7 +84,7 @@ export default function Image({
     const reader = new FileReader();
     reader.onload = (event) => {
       setImgError(false);
-      updateComponentProps(sectionId, componentId, { src: event.target.result });
+      updateComponentProps(sectionId, componentId, { src: event.target.result, svgContent: '' });
     };
     reader.readAsDataURL(file);
   };
@@ -99,30 +102,46 @@ export default function Image({
 
   if (isPreviewMode) {
     return (
-      <div className="relative pointer-events-none select-none overflow-hidden max-w-full" style={{ borderRadius: borderRadius || '0' }}>
-        <img
-          src={effectiveSrc}
-          alt={alt || 'Image'}
-          style={style}
-          className={`${shadowStyles[shadow] || ''} ${hoverStyles[hoverEffect] || ''} transition-all duration-300`}
-        />
+      <div className="relative pointer-events-none select-none overflow-hidden max-w-full" style={{ borderRadius: borderRadius || '0', width: style.width, height: style.height }}>
+        {hasSvg ? (
+          <div
+            style={style}
+            className={`${shadowStyles[shadow] || ''} ${hoverStyles[hoverEffect] || ''} transition-all duration-300 [&>svg]:w-full [&>svg]:h-full [&>svg]:block`}
+            dangerouslySetInnerHTML={{ __html: svgContent }}
+          />
+        ) : (
+          <img
+            src={effectiveSrc}
+            alt={alt || 'Image'}
+            style={style}
+            className={`${shadowStyles[shadow] || ''} ${hoverStyles[hoverEffect] || ''} transition-all duration-300`}
+          />
+        )}
       </div>
     );
   }
 
   return (
     <div
-      className={`relative group cursor-pointer overflow-hidden max-w-full ${isSelected ? 'ring-2 ring-indigo-500 ring-offset-2' : ''}`}
-      style={{ borderRadius: borderRadius || '0' }}
+      className={`relative group cursor-pointer overflow-hidden max-w-full inline-block ${isSelected ? 'ring-2 ring-indigo-500 ring-offset-2' : ''}`}
+      style={{ borderRadius: borderRadius || '0', width: style.width, height: style.height }}
       onClick={handleImageClick}
     >
-      <img
-        src={effectiveSrc}
-        alt={alt || 'Image'}
-        style={style}
-        onError={() => setImgError(true)}
-        className={`${shadowStyles[shadow] || ''} ${hoverStyles[hoverEffect] || ''} bg-slate-800/10 transition-all duration-300 block`}
-      />
+      {hasSvg ? (
+        <div
+          style={style}
+          className={`${shadowStyles[shadow] || ''} ${hoverStyles[hoverEffect] || ''} transition-all duration-300 [&>svg]:w-full [&>svg]:h-full [&>svg]:block`}
+          dangerouslySetInnerHTML={{ __html: svgContent }}
+        />
+      ) : (
+        <img
+          src={effectiveSrc}
+          alt={alt || 'Image'}
+          style={style}
+          onError={() => setImgError(true)}
+          className={`${shadowStyles[shadow] || ''} ${hoverStyles[hoverEffect] || ''} bg-slate-800/10 transition-all duration-300 block`}
+        />
+      )}
 
       {/* Quick Action Floating Controls on Hover */}
       <div className="absolute top-2 right-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-20 pointer-events-auto">
@@ -163,7 +182,7 @@ export default function Image({
       </div>
 
       {/* Center Label on Empty/Fallback */}
-      {(!src || src.trim() === '') && (
+      {(!src || src.trim() === '') && !hasSvg && (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/50 backdrop-blur-xs text-white p-4 text-center pointer-events-none">
           <ImageIcon className="w-8 h-8 text-indigo-400 mb-1 animate-pulse" />
           <span className="text-xs font-bold text-white">Gambar Hero / Konten</span>

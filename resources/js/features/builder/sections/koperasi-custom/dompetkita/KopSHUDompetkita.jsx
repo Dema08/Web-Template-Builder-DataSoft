@@ -3,69 +3,90 @@ import { renderLayoutComponents } from '../../../engine/layoutRenderer.jsx';
 /**
  * KopSHUDompetkita — Pembagian Sisa Hasil Usaha (SHU)
  * 100% exact match with KOPERASI_DOMPETKITA_BERSAMA_UIUX.html
+ * Every heading, text, donut chart, and stacked bar chart is fully draggable, resizable, and editable.
  */
 export default function KopSHUDompetkita({ components = [], sectionId = null }) {
   const defaultComponents = [
     { id: 'dompet-shu-title', type: 'heading', props: { content: 'Pembagian Sisa Hasil Usaha', level: 'h2' } },
-    { id: 'dompet-shu-lead', type: 'paragraph', props: { content: 'Keuntungan tahunan dibagi menurut proporsi berikut. Besaran akhirnya ditetapkan Rapat Anggota.' } },
+    { id: 'dompet-shu-lead', type: 'text', props: { content: 'Keuntungan tahunan dibagi menurut proporsi berikut. Besaran akhirnya ditetapkan Rapat Anggota.' } },
+
+    // Resizable and Editable Donut Chart
+    {
+      id: 'dompet-shu-donut',
+      type: 'chart',
+      props: {
+        variant: 'donut',
+        val1: 30,
+        val2: 30,
+        val3: 20,
+        val4: 15,
+        val5: 5,
+        color1: '#0D9488',
+        color2: '#10B981',
+        color3: '#F59E0B',
+        color4: '#0F2942',
+        color5: '#475569',
+        centerTitle: 'SHU',
+        centerSubtitle: '5 bagian',
+        width: '100%',
+        height: 'auto',
+      },
+    },
+
+    // Resizable and Editable Stacked Bar Chart
+    {
+      id: 'dompet-shu-bar',
+      type: 'chart',
+      props: {
+        variant: 'stacked-bar',
+        val1: 30,
+        val2: 30,
+        val3: 20,
+        val4: 15,
+        val5: 5,
+        color1: '#0D9488',
+        color2: '#10B981',
+        color3: '#F59E0B',
+        color4: '#0F2942',
+        color5: '#475569',
+        width: '100%',
+        height: 'auto',
+      },
+    },
+
+    { id: 'dompet-shu-l1', type: 'text', props: { content: 'Dana cadangan, 30%' } },
+    { id: 'dompet-shu-l2', type: 'text', props: { content: 'Jasa anggota (sesuai transaksi), 30%' } },
+    { id: 'dompet-shu-l3', type: 'text', props: { content: 'Jasa simpanan (sesuai simpanan wajib), 20%' } },
+    { id: 'dompet-shu-l4', type: 'text', props: { content: 'Insentif Pengawas, Pengurus, Pengelola, 15%' } },
+    { id: 'dompet-shu-l5', type: 'text', props: { content: 'Dana sosial dan pendidikan, 5%' } },
   ];
 
   const lc = components.length > 0 ? components : defaultComponents;
-  const titleC = lc.filter(c => c.id === 'dompet-shu-title');
-  const leadC = lc.filter(c => c.id === 'dompet-shu-lead');
+  const getComp = id => lc.filter(c => c.id === id);
 
   return (
     <div className="dk-root">
       <section id="shu">
         <div className="wrap">
           <h2>
-            {titleC.length > 0 ? renderLayoutComponents(titleC, sectionId) : 'Pembagian Sisa Hasil Usaha'}
+            {renderLayoutComponents(getComp('dompet-shu-title'), sectionId)}
           </h2>
           <p className="lead">
-            {leadC.length > 0 ? renderLayoutComponents(leadC, sectionId) : 'Keuntungan tahunan dibagi menurut proporsi berikut. Besaran akhirnya ditetapkan Rapat Anggota.'}
+            {renderLayoutComponents(getComp('dompet-shu-lead'), sectionId)}
           </p>
 
           <div className="shu-grid">
-            <svg
-              className="donut"
-              viewBox="0 0 42 42"
-              role="img"
-              aria-label="Diagram donat pembagian SHU: dana cadangan 30 persen, jasa anggota 30 persen, jasa simpanan 20 persen, insentif 15 persen, dana sosial dan pendidikan 5 persen"
-            >
-              <circle cx="21" cy="21" r="15.9155" fill="none" className="s-line" strokeWidth="6" />
-              <g fill="none" strokeWidth="6" transform="rotate(0 21 21)">
-                <circle cx="21" cy="21" r="15.9155" stroke="#147D92" strokeDasharray="29.4 70.6" strokeDashoffset="25" />
-                <circle cx="21" cy="21" r="15.9155" stroke="#2F8878" strokeDasharray="29.4 70.6" strokeDashoffset="-5" />
-                <circle cx="21" cy="21" r="15.9155" stroke="#F4B544" strokeDasharray="19.4 80.6" strokeDashoffset="-35" />
-                <circle cx="21" cy="21" r="15.9155" stroke="#123B52" strokeDasharray="14.4 85.6" strokeDashoffset="-55" />
-                <circle cx="21" cy="21" r="15.9155" stroke="#627783" strokeDasharray="4.4 95.6" strokeDashoffset="-70" />
-              </g>
-              <text x="21" y="20.6" textAnchor="middle" fontSize="5.2" fontWeight="800" fontFamily='"Bricolage Grotesque",system-ui,sans-serif' className="t-ink">
-                SHU
-              </text>
-              <text x="21" y="25.6" textAnchor="middle" fontSize="2.7" fontFamily='"Source Sans 3",system-ui,sans-serif' className="t-mut">
-                5 bagian
-              </text>
-            </svg>
+            {renderLayoutComponents(getComp('dompet-shu-donut'), sectionId)}
 
             <div>
-              <div
-                className="shu"
-                role="img"
-                aria-label="Dana cadangan 30 persen, jasa anggota 30 persen, jasa simpanan 20 persen, insentif 15 persen, dana sosial dan pendidikan 5 persen"
-              >
-                <span style={{ flex: 30, background: '#147D92' }}>30%</span>
-                <span style={{ flex: 30, background: '#2F8878' }}>30%</span>
-                <span style={{ flex: 20, background: '#F4B544', color: '#173042' }}>20%</span>
-                <span style={{ flex: 15, background: '#123B52' }}>15%</span>
-                <span style={{ flex: 5, background: '#627783' }} />
-              </div>
+              {renderLayoutComponents(getComp('dompet-shu-bar'), sectionId)}
+
               <ul className="legend">
-                <li><i style={{ background: '#147D92' }} />Dana cadangan, 30%</li>
-                <li><i style={{ background: '#2F8878' }} />Jasa anggota (sesuai transaksi), 30%</li>
-                <li><i style={{ background: '#F4B544' }} />Jasa simpanan (sesuai simpanan wajib), 20%</li>
-                <li><i style={{ background: '#123B52' }} />Insentif Pengawas, Pengurus, Pengelola, 15%</li>
-                <li><i style={{ background: '#627783' }} />Dana sosial dan pendidikan, 5%</li>
+                <li><i style={{ background: '#0D9488' }} />{renderLayoutComponents(getComp('dompet-shu-l1'), sectionId)}</li>
+                <li><i style={{ background: '#10B981' }} />{renderLayoutComponents(getComp('dompet-shu-l2'), sectionId)}</li>
+                <li><i style={{ background: '#F59E0B' }} />{renderLayoutComponents(getComp('dompet-shu-l3'), sectionId)}</li>
+                <li><i style={{ background: '#0F2942' }} />{renderLayoutComponents(getComp('dompet-shu-l4'), sectionId)}</li>
+                <li><i style={{ background: '#475569' }} />{renderLayoutComponents(getComp('dompet-shu-l5'), sectionId)}</li>
               </ul>
             </div>
           </div>

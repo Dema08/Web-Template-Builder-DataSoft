@@ -266,13 +266,28 @@ export function useBuilderDnd() {
     if (activeData?.isCanvasComponent || activeId.startsWith('comp-') || activeId.startsWith('component-')) {
       const sourceSectionId = activeData?.sectionId;
       const targetSectionId = overData?.sectionId || (overIsSection ? overId : sourceSectionId);
-      const targetIndex = overData?.index !== undefined ? overData.index : -1;
-      const targetParentId = overData?.parentComponentId || null;
+      const targetSection = sections.find(s => s.id === targetSectionId);
+      let targetIndex = overData?.index !== undefined ? overData.index : -1;
+      let targetParentId = overData?.parentComponentId || null;
+
+      // If dropped over a component directly, compute sibling target index
+      const overCompId = overData?.componentId || (typeof overId === 'string' && overId.startsWith('comp-drop-') ? overId.replace('comp-drop-', '') : null);
+      if (overCompId && targetSection) {
+        const siblingIndex = (targetSection.components || []).findIndex(c => c.id === overCompId);
+        if (siblingIndex !== -1) {
+          if (activeData?.type === 'card') {
+            targetIndex = siblingIndex;
+            targetParentId = null; // Prevent card from nesting inside sibling card
+          } else if (targetIndex === -1 && !overData?.isContainer) {
+            targetIndex = siblingIndex;
+          }
+        }
+      }
 
       if (sourceSectionId && targetSectionId) {
         moveComponent(sourceSectionId, targetSectionId, activeId, targetIndex, targetParentId);
         selectComponent(activeId, targetSectionId);
-        toast.success('Component moved successfully', 'Repositioned');
+        toast.success('Posisi card berhasil diperbarui', 'Repositioned');
       }
     }
   }, [

@@ -44,6 +44,8 @@ import {
   Phone,
   Hash,
   ChevronDown,
+  PieChart,
+  BarChart3,
 } from 'lucide-react';
 import { toast } from '@store';
 import NavbarEditor from '../sections/NavbarEditor';
@@ -83,8 +85,10 @@ const COMPONENT_TABS = [
 
 const PROP_TAB_MAPPING = {
   content: 'content', label: 'content', src: 'content', alt: 'content', variant: 'content', level: 'content', value: 'content', href: 'content', linkType: 'content', linkTarget: 'content', icon: 'content', platforms: 'content', alignItems: 'content', justifyContent: 'content', gap: 'content', overflow: 'content',
+  val1: 'content', val2: 'content', val3: 'content', val4: 'content', val5: 'content', bar1: 'content', bar2: 'content', bar3: 'content', centerTitle: 'content', centerSubtitle: 'content',
   fontFamily: 'typography', fontSize: 'typography', fontWeight: 'typography', lineHeight: 'typography', letterSpacing: 'typography', textTransform: 'typography', align: 'typography',
   color: 'color', background: 'color', backgroundGradient: 'color', hoverBackground: 'color', hoverColor: 'color', borderColor: 'color', opacity: 'color',
+  color1: 'color', color2: 'color', color3: 'color', color4: 'color', color5: 'color', barColor: 'color', accentColor: 'color',
   padding: 'spacing', margin: 'spacing', width: 'spacing', height: 'spacing', minHeight: 'spacing', maxWidth: 'spacing',
   x: 'position', y: 'position', position: 'position',
   borderWidth: 'border', borderStyle: 'border', borderColor: 'border', borderRadius: 'border', radius: 'border',
@@ -2123,6 +2127,8 @@ export default function RightInspector() {
 
           {selectedComponent?.type === 'card' ? (
             renderCardInspector(activeTab, formValues, handleChange, setActiveTab)
+          ) : selectedComponent?.type === 'chart' ? (
+            renderChartInspector(activeTab, formValues, handleChange, setActiveTab)
           ) : selectedComponent?.type === 'social' ? (
             renderSocialInspector(activeTab, formValues, handleChange, setActiveTab)
           ) : selectedComponent?.type === 'form' ? (
@@ -2618,6 +2624,64 @@ const renderCardInspector = (activeTab, formValues, handleChange, setActiveTab) 
             </select>
           </div>
 
+          {/* Card Dimensions (Width & Height) */}
+          <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
+            <h4 className="text-xs font-extrabold text-slate-800 flex items-center justify-between">
+              <span>Card Dimensions (Ukuran)</span>
+              <span className="text-[10px] font-mono text-indigo-600 font-bold">{formValues.width || '100%'} × {formValues.height || 'auto'}</span>
+            </h4>
+            <div className="grid grid-cols-2 gap-2.5">
+              <div>
+                <label className="block text-[10px] font-bold text-slate-600 mb-1">Lebar (Width)</label>
+                <input
+                  type="text"
+                  value={formValues.width || '100%'}
+                  onChange={(e) => handleChange('width', e.target.value)}
+                  className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-mono font-bold"
+                  placeholder="100% or 320px"
+                />
+                <div className="flex gap-1 mt-1.5">
+                  {['100%', '320px', '280px', 'auto'].map(w => (
+                    <button
+                      key={w}
+                      type="button"
+                      onClick={() => handleChange('width', w)}
+                      className={`px-1.5 py-0.5 rounded text-[9px] font-bold border transition ${
+                        (formValues.width || '100%') === w ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-100'
+                      }`}
+                    >
+                      {w}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <label className="block text-[10px] font-bold text-slate-600 mb-1">Tinggi (Height)</label>
+                <input
+                  type="text"
+                  value={formValues.height || 'auto'}
+                  onChange={(e) => handleChange('height', e.target.value)}
+                  className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-mono font-bold"
+                  placeholder="auto or 320px"
+                />
+                <div className="flex gap-1 mt-1.5">
+                  {['auto', '260px', '320px', '100%'].map(h => (
+                    <button
+                      key={h}
+                      type="button"
+                      onClick={() => handleChange('height', h)}
+                      className={`px-1.5 py-0.5 rounded text-[9px] font-bold border transition ${
+                        (formValues.height || 'auto') === h ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-100'
+                      }`}
+                    >
+                      {h}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
             <h4 className="text-xs font-extrabold text-slate-800">Content Alignment</h4>
             <div className="grid grid-cols-2 gap-2">
@@ -3083,6 +3147,389 @@ const renderCardInspector = (activeTab, formValues, handleChange, setActiveTab) 
             </div>
             <div>
               <label className="block text-[10px] font-bold text-slate-600 mb-1">Y Position (px)</label>
+              <input
+                type="number"
+                value={formValues.y || 0}
+                onChange={(e) => handleChange('y', parseInt(e.target.value) || 0)}
+                className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-mono"
+              />
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const renderChartInspector = (activeTab, formValues, handleChange, setActiveTab) => {
+  const currentVariant = formValues.variant || 'donut';
+
+  const v1 = Number(formValues.val1 ?? 30);
+  const v2 = Number(formValues.val2 ?? 30);
+  const v3 = Number(formValues.val3 ?? 20);
+  const v4 = Number(formValues.val4 ?? 15);
+  const v5 = Number(formValues.val5 ?? 5);
+  const totalVal = v1 + v2 + v3 + v4 + v5;
+
+  return (
+    <div className="space-y-4">
+      {/* 1. CONTENT / ALL TABS */}
+      {(activeTab === 'content' || activeTab === 'all') && (
+        <div className="space-y-4">
+          {/* Chart Type Selector */}
+          <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-2.5">
+            <h4 className="text-xs font-extrabold text-slate-800 uppercase tracking-wider flex items-center justify-between">
+              <span>Tipe Diagram / Chart</span>
+              <span className="text-[10px] font-mono text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full font-bold">
+                {currentVariant}
+              </span>
+            </h4>
+            <div className="grid grid-cols-3 gap-1.5">
+              {[
+                { id: 'donut', label: '🍩 Donat', desc: 'SHU / Proporsi' },
+                { id: 'stacked-bar', label: '📊 Bar Segmen', desc: 'Proporsi Horisontal' },
+                { id: 'growth-bar', label: '📈 Pertumbuhan', desc: 'Batang & Garis Tren' },
+              ].map(t => (
+                <button
+                  key={t.id}
+                  type="button"
+                  onClick={() => handleChange('variant', t.id)}
+                  className={`p-2 rounded-xl text-left border transition text-xs font-bold ${
+                    currentVariant === t.id
+                      ? 'bg-indigo-600 text-white border-indigo-600 shadow-xs'
+                      : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-100'
+                  }`}
+                >
+                  <div>{t.label}</div>
+                  <div className={`text-[9px] font-normal ${currentVariant === t.id ? 'text-indigo-100' : 'text-slate-500'}`}>
+                    {t.desc}
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* DONUT & STACKED-BAR SETTINGS */}
+          {(currentVariant === 'donut' || currentVariant === 'stacked-bar') && (
+            <>
+              {currentVariant === 'donut' && (
+                <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
+                  <h4 className="text-xs font-extrabold text-slate-800">Teks Tengah Diagram (Donut Center)</h4>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-600 mb-1">Judul Tengah</label>
+                      <input
+                        type="text"
+                        value={formValues.centerTitle ?? 'SHU'}
+                        onChange={(e) => handleChange('centerTitle', e.target.value)}
+                        placeholder="Contoh: SHU"
+                        className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-800"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-600 mb-1">Subjudul Tengah</label>
+                      <input
+                        type="text"
+                        value={formValues.centerSubtitle ?? '5 bagian'}
+                        onChange={(e) => handleChange('centerSubtitle', e.target.value)}
+                        placeholder="Contoh: 5 bagian"
+                        className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-bold text-slate-800"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* 5 Slices / Segments */}
+              <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-extrabold text-slate-800">5 Bagian / Proporsi Persentase</h4>
+                  <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full font-bold ${totalVal === 100 ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>
+                    Total: {totalVal}%
+                  </span>
+                </div>
+
+                {[
+                  { keyVal: 'val1', keyColor: 'color1', label: 'Bagian 1 (Cadangan Modal)', defVal: 30, defColor: '#0D9488' },
+                  { keyVal: 'val2', keyColor: 'color2', label: 'Bagian 2 (Jasa Modal Anggota)', defVal: 30, defColor: '#10B981' },
+                  { keyVal: 'val3', keyColor: 'color3', label: 'Bagian 3 (Jasa Usaha Anggota)', defVal: 20, defColor: '#F59E0B' },
+                  { keyVal: 'val4', keyColor: 'color4', label: 'Bagian 4 (Pengurus & Pengawas)', defVal: 15, defColor: '#0F2942' },
+                  { keyVal: 'val5', keyColor: 'color5', label: 'Bagian 5 (Sosial & Pendidikan)', defVal: 5, defColor: '#64748B' },
+                ].map((item, idx) => {
+                  const val = formValues[item.keyVal] !== undefined ? Number(formValues[item.keyVal]) : item.defVal;
+                  const col = formValues[item.keyColor] || item.defColor;
+
+                  return (
+                    <div key={item.keyVal} className="p-2.5 bg-white border border-slate-200 rounded-xl space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[11px] font-bold text-slate-800 flex items-center gap-1.5">
+                          <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: col }} />
+                          <span>#{idx + 1} {item.label}</span>
+                        </span>
+                        <div className="flex items-center gap-1">
+                          <input
+                            type="number"
+                            min="0"
+                            max="100"
+                            value={val}
+                            onChange={(e) => handleChange(item.keyVal, Number(e.target.value) || 0)}
+                            className="w-14 px-1.5 py-0.5 bg-slate-50 border border-slate-200 rounded text-xs font-mono font-bold text-right"
+                          />
+                          <span className="text-xs text-slate-500 font-bold">%</span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-3">
+                        <input
+                          type="range"
+                          min="0"
+                          max="100"
+                          value={val}
+                          onChange={(e) => handleChange(item.keyVal, Number(e.target.value) || 0)}
+                          className="flex-1 accent-indigo-600 cursor-pointer"
+                        />
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          <input
+                            type="color"
+                            value={col}
+                            onChange={(e) => handleChange(item.keyColor, e.target.value)}
+                            className="w-7 h-7 rounded-lg border border-slate-200 cursor-pointer p-0.5 bg-white shadow-2xs"
+                            title="Pilih Warna Bagian"
+                          />
+                          <input
+                            type="text"
+                            value={col}
+                            onChange={(e) => handleChange(item.keyColor, e.target.value)}
+                            className="w-20 px-1.5 py-0.5 bg-slate-50 border border-slate-200 rounded text-[10px] font-mono font-bold text-slate-700"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          )}
+
+          {/* GROWTH-BAR SETTINGS */}
+          {currentVariant === 'growth-bar' && (
+            <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
+              <h4 className="text-xs font-extrabold text-slate-800">Tinggi 3 Batang Pertumbuhan</h4>
+
+              {[
+                { key: 'bar1', label: 'Batang 1 (Awal / Modal Pokok)', def: 40 },
+                { key: 'bar2', label: 'Batang 2 (Berkembang / Modal Wajib)', def: 70 },
+                { key: 'bar3', label: 'Batang 3 (Mapan / Modal Usaha)', def: 105 },
+              ].map(barItem => {
+                const bVal = formValues[barItem.key] !== undefined ? Number(formValues[barItem.key]) : barItem.def;
+                return (
+                  <div key={barItem.key} className="p-2.5 bg-white border border-slate-200 rounded-xl space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-bold text-slate-700">{barItem.label}</span>
+                      <div className="flex items-center gap-1">
+                        <input
+                          type="number"
+                          min="10"
+                          max="135"
+                          value={bVal}
+                          onChange={(e) => handleChange(barItem.key, Number(e.target.value) || 10)}
+                          className="w-14 px-1.5 py-0.5 bg-slate-50 border border-slate-200 rounded text-xs font-mono font-bold text-right"
+                        />
+                        <span className="text-xs text-slate-500 font-bold">px</span>
+                      </div>
+                    </div>
+                    <input
+                      type="range"
+                      min="10"
+                      max="135"
+                      value={bVal}
+                      onChange={(e) => handleChange(barItem.key, Number(e.target.value) || 10)}
+                      className="w-full accent-indigo-600 cursor-pointer"
+                    />
+                  </div>
+                );
+              })}
+
+              <div className="pt-2 border-t border-slate-200/80 space-y-2">
+                <h5 className="text-[11px] font-bold text-slate-700">Warna Batang & Aksen Emas</h5>
+                <div className="grid grid-cols-2 gap-2">
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-600 mb-1">Warna Batang</label>
+                    <div className="flex items-center gap-1.5">
+                      <input
+                        type="color"
+                        value={formValues.barColor || '#0D9488'}
+                        onChange={(e) => handleChange('barColor', e.target.value)}
+                        className="w-7 h-7 rounded-lg border border-slate-200 cursor-pointer p-0.5 bg-white"
+                      />
+                      <input
+                        type="text"
+                        value={formValues.barColor || '#0D9488'}
+                        onChange={(e) => handleChange('barColor', e.target.value)}
+                        className="w-full px-1.5 py-1 bg-white border border-slate-200 rounded text-[10px] font-mono font-bold"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-600 mb-1">Warna Aksen / Titik</label>
+                    <div className="flex items-center gap-1.5">
+                      <input
+                        type="color"
+                        value={formValues.accentColor || '#F59E0B'}
+                        onChange={(e) => handleChange('accentColor', e.target.value)}
+                        className="w-7 h-7 rounded-lg border border-slate-200 cursor-pointer p-0.5 bg-white"
+                      />
+                      <input
+                        type="text"
+                        value={formValues.accentColor || '#F59E0B'}
+                        onChange={(e) => handleChange('accentColor', e.target.value)}
+                        className="w-full px-1.5 py-1 bg-white border border-slate-200 rounded text-[10px] font-mono font-bold"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Chart Dimensions */}
+          <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
+            <h4 className="text-xs font-extrabold text-slate-800">Ukuran Diagram (Width / Height)</h4>
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="block text-[10px] font-bold text-slate-600 mb-1">Lebar (Width)</label>
+                <input
+                  type="text"
+                  value={formValues.width || (currentVariant === 'growth-bar' ? '220px' : '100%')}
+                  onChange={(e) => handleChange('width', e.target.value)}
+                  placeholder="e.g. 100%, 280px"
+                  className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-mono font-bold"
+                />
+              </div>
+              <div>
+                <label className="block text-[10px] font-bold text-slate-600 mb-1">Tinggi (Height)</label>
+                <input
+                  type="text"
+                  value={formValues.height || (currentVariant === 'growth-bar' ? '180px' : 'auto')}
+                  onChange={(e) => handleChange('height', e.target.value)}
+                  placeholder="e.g. auto, 180px"
+                  className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-mono font-bold"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 2. COLOR TAB */}
+      {activeTab === 'color' && (
+        <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
+          <h4 className="text-xs font-extrabold text-slate-800">Palet Warna Diagram</h4>
+          {(currentVariant === 'donut' || currentVariant === 'stacked-bar') ? (
+            <div className="space-y-2">
+              {[
+                { k: 'color1', label: 'Warna Bagian 1', def: '#0D9488' },
+                { k: 'color2', label: 'Warna Bagian 2', def: '#10B981' },
+                { k: 'color3', label: 'Warna Bagian 3', def: '#F59E0B' },
+                { k: 'color4', label: 'Warna Bagian 4', def: '#0F2942' },
+                { k: 'color5', label: 'Warna Bagian 5', def: '#64748B' },
+              ].map(c => (
+                <div key={c.k} className="flex items-center justify-between p-2 bg-white rounded-xl border border-slate-200">
+                  <span className="text-xs font-bold text-slate-700">{c.label}</span>
+                  <div className="flex items-center gap-1.5">
+                    <input
+                      type="color"
+                      value={formValues[c.k] || c.def}
+                      onChange={(e) => handleChange(c.k, e.target.value)}
+                      className="w-7 h-7 rounded-lg border border-slate-200 cursor-pointer p-0.5 bg-white"
+                    />
+                    <input
+                      type="text"
+                      value={formValues[c.k] || c.def}
+                      onChange={(e) => handleChange(c.k, e.target.value)}
+                      className="w-20 px-1.5 py-0.5 bg-slate-50 border border-slate-200 rounded text-[10px] font-mono font-bold"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between p-2 bg-white rounded-xl border border-slate-200">
+                <span className="text-xs font-bold text-slate-700">Warna Batang</span>
+                <div className="flex items-center gap-1.5">
+                  <input
+                    type="color"
+                    value={formValues.barColor || '#0D9488'}
+                    onChange={(e) => handleChange('barColor', e.target.value)}
+                    className="w-7 h-7 rounded-lg border border-slate-200 cursor-pointer p-0.5 bg-white"
+                  />
+                  <input
+                    type="text"
+                    value={formValues.barColor || '#0D9488'}
+                    onChange={(e) => handleChange('barColor', e.target.value)}
+                    className="w-20 px-1.5 py-0.5 bg-slate-50 border border-slate-200 rounded text-[10px] font-mono font-bold"
+                  />
+                </div>
+              </div>
+              <div className="flex items-center justify-between p-2 bg-white rounded-xl border border-slate-200">
+                <span className="text-xs font-bold text-slate-700">Warna Aksen / Titik</span>
+                <div className="flex items-center gap-1.5">
+                  <input
+                    type="color"
+                    value={formValues.accentColor || '#F59E0B'}
+                    onChange={(e) => handleChange('accentColor', e.target.value)}
+                    className="w-7 h-7 rounded-lg border border-slate-200 cursor-pointer p-0.5 bg-white"
+                  />
+                  <input
+                    type="text"
+                    value={formValues.accentColor || '#F59E0B'}
+                    onChange={(e) => handleChange('accentColor', e.target.value)}
+                    className="w-20 px-1.5 py-0.5 bg-slate-50 border border-slate-200 rounded text-[10px] font-mono font-bold"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* 3. SPACING / POSITION TAB */}
+      {(activeTab === 'spacing' || activeTab === 'position') && (
+        <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-3">
+          <h4 className="text-xs font-extrabold text-slate-800">Dimensi & Posisi Diagram</h4>
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <label className="block text-[10px] font-bold text-slate-600 mb-1">Width</label>
+              <input
+                type="text"
+                value={formValues.width || ''}
+                onChange={(e) => handleChange('width', e.target.value)}
+                className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-mono font-bold"
+              />
+            </div>
+            <div>
+              <label className="block text-[10px] font-bold text-slate-600 mb-1">Height</label>
+              <input
+                type="text"
+                value={formValues.height || ''}
+                onChange={(e) => handleChange('height', e.target.value)}
+                className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-mono font-bold"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-2 pt-1">
+            <div>
+              <label className="block text-[10px] font-bold text-slate-600 mb-1">X Offset (px)</label>
+              <input
+                type="number"
+                value={formValues.x || 0}
+                onChange={(e) => handleChange('x', parseInt(e.target.value) || 0)}
+                className="w-full px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-mono"
+              />
+            </div>
+            <div>
+              <label className="block text-[10px] font-bold text-slate-600 mb-1">Y Offset (px)</label>
               <input
                 type="number"
                 value={formValues.y || 0}

@@ -1,3 +1,5 @@
+import { DOMPETKITA_DEFAULTS } from './dompetkitaDefaults';
+
 /**
  * Koperasi Dompetkita Bersama — Starter Template
  * Template resmi untuk KOPERASI DOMPETKITA BERSAMA (koperasi umum karyawan berbasis Dompetkita.id).
@@ -30,14 +32,14 @@ export default {
   thumbnail: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&auto=format&fit=crop&q=80',
   tags: ['Koperasi', 'Dompetkita', 'Karyawan', 'Simpan Pinjam', 'SHU', 'Keanggotaan', 'Umum', 'Premium'],
   theme: {
-    primaryColor: '#147D92',
-    secondaryColor: '#123B52',
-    accentColor: '#F4B544',
+    primaryColor: '#0D9488',
+    secondaryColor: '#0F2942',
+    accentColor: '#F59E0B',
     dark: false,
     surface: '#FFFFFF',
-    text: '#173042',
-    muted: '#627783',
-    border: '#DCE7EC',
+    text: '#0F172A',
+    muted: '#475569',
+    border: '#E2E8F0',
     radius: 'lg',
     font: 'Bricolage Grotesque, Source Sans 3, system-ui, sans-serif',
   },
@@ -47,124 +49,73 @@ export default {
       id: 'sec-dompet-nav',
       type: 'navbar',
       layout: 'kop-nav-dompetkita',
-      components: [
-        { id: 'dompet-nav-logo', type: 'heading', props: { content: 'KOPERASI DOMPETKITA BERSAMA', level: 'h2', fontSize: '15px', fontWeight: '800', color: '#ffffff', letterSpacing: '0.03em' } },
-        { id: 'dompet-nav-1', type: 'button', props: { label: 'Visi', href: '#misi', variant: 'ghost', size: 'small', background: 'transparent', color: '#D7F1F3', fontWeight: '600' } },
-        { id: 'dompet-nav-2', type: 'button', props: { label: 'Lambang', href: '#lambang', variant: 'ghost', size: 'small', background: 'transparent', color: '#D7F1F3', fontWeight: '600' } },
-        { id: 'dompet-nav-3', type: 'button', props: { label: 'Usaha', href: '#usaha', variant: 'ghost', size: 'small', background: 'transparent', color: '#D7F1F3', fontWeight: '600' } },
-        { id: 'dompet-nav-4', type: 'button', props: { label: 'Modal', href: '#modal', variant: 'ghost', size: 'small', background: 'transparent', color: '#D7F1F3', fontWeight: '600' } },
-        { id: 'dompet-nav-5', type: 'button', props: { label: 'Anggota', href: '#anggota', variant: 'ghost', size: 'small', background: 'transparent', color: '#D7F1F3', fontWeight: '600' } },
-        { id: 'dompet-nav-6', type: 'button', props: { label: 'Rapat', href: '#rapat', variant: 'ghost', size: 'small', background: 'transparent', color: '#D7F1F3', fontWeight: '600' } },
-        { id: 'dompet-nav-7', type: 'button', props: { label: 'SHU', href: '#shu', variant: 'ghost', size: 'small', background: 'transparent', color: '#D7F1F3', fontWeight: '600' } },
-        { id: 'dompet-nav-8', type: 'button', props: { label: 'Struktur', href: '#struktur', variant: 'ghost', size: 'small', background: 'transparent', color: '#D7F1F3', fontWeight: '600' } },
-        { id: 'dompet-nav-9', type: 'button', props: { label: 'Tugas', href: '#tugas', variant: 'ghost', size: 'small', background: 'transparent', color: '#D7F1F3', fontWeight: '600' } },
-        { id: 'dompet-nav-10', type: 'button', props: { label: 'Kerja sama', href: '#kerjasama', variant: 'ghost', size: 'small', background: 'transparent', color: '#D7F1F3', fontWeight: '600' } },
-        { id: 'dompet-nav-11', type: 'button', props: { label: 'FAQ', href: '#faq', variant: 'ghost', size: 'small', background: 'transparent', color: '#D7F1F3', fontWeight: '600' } },
-      ],
+      components: DOMPETKITA_DEFAULTS['kop-nav-dompetkita'],
     },
     {
       id: 'sec-dompet-hero',
       type: 'hero',
       layout: 'kop-hero-dompetkita',
-      components: [
-        { id: 'dompet-hero-eyebrow', type: 'badge', props: { text: 'Koperasi untuk tumbuh bersama', variant: 'outline', background: 'rgba(244,181,68,0.15)', color: '#D7F1F3', borderColor: 'rgba(244,181,68,0.4)' } },
-        { id: 'dompet-hero-title', type: 'heading', props: { content: 'Koperasi DOMPETKITA BERSAMA.', level: 'h1', fontSize: 'clamp(42px,5.5vw,72px)', fontWeight: '800', color: '#ffffff', letterSpacing: '-0.045em' } },
-        { id: 'dompet-hero-desc', type: 'paragraph', props: { content: 'KOPERASI DOMPETKITA BERSAMA adalah koperasi umum yang menghimpun anggota dari kalangan karyawan perusahaan yang telah memiliki akun Dompetkita.id. Koperasi mengembangkan usaha dan layanan berdasarkan kebutuhan anggota, dengan tata kelola yang transparan, bertanggung jawab, dan berorientasi pada kesejahteraan bersama.', fontSize: '17px', color: '#E5F5F7' } },
-        { id: 'dompet-hero-btn1', type: 'button', props: { label: 'Pelajari keanggotaan ↗', href: '#anggota', variant: 'primary', size: 'large', radius: 'full', background: '#ffffff', color: '#123B52', fontWeight: '700' } },
-        { id: 'dompet-hero-btn2', type: 'button', props: { label: 'Jelajahi unit usaha →', href: '#usaha', variant: 'outline', size: 'large', radius: 'full', background: 'transparent', color: '#ffffff', borderColor: 'rgba(255,255,255,0.55)', fontWeight: '600' } },
-        {
-          id: 'dompet-stat1-card', type: 'card',
-          props: { background: 'rgba(255,255,255,0.08)', borderColor: 'rgba(255,255,255,0.18)', borderWidth: '1px', borderRadius: '13px', padding: '19px 17px 18px' },
-          childrenComponents: [
-            { id: 'dompet-stat1-val', type: 'heading', props: { content: '1 orang = 1 suara', level: 'h3', fontSize: 'clamp(18px,2vw,24px)', fontWeight: '800', color: '#ffffff', lineHeight: '1.2' } },
-            { id: 'dompet-stat1-lbl', type: 'paragraph', props: { content: 'di Rapat Anggota', fontSize: '14px', color: '#D7F1F3', fontWeight: '500' } },
-          ]
-        },
-        {
-          id: 'dompet-stat2-card', type: 'card',
-          props: { background: 'rgba(255,255,255,0.08)', borderColor: 'rgba(255,255,255,0.18)', borderWidth: '1px', borderRadius: '13px', padding: '19px 17px 18px' },
-          childrenComponents: [
-            { id: 'dompet-stat2-val', type: 'heading', props: { content: '5 tahun', level: 'h3', fontSize: 'clamp(18px,2vw,24px)', fontWeight: '800', color: '#ffffff', lineHeight: '1.2' } },
-            { id: 'dompet-stat2-lbl', type: 'paragraph', props: { content: 'masa jabatan pengurus', fontSize: '14px', color: '#D7F1F3', fontWeight: '500' } },
-          ]
-        },
-        {
-          id: 'dompet-stat3-card', type: 'card',
-          props: { background: 'rgba(255,255,255,0.08)', borderColor: 'rgba(255,255,255,0.18)', borderWidth: '1px', borderRadius: '13px', padding: '19px 17px 18px' },
-          childrenComponents: [
-            { id: 'dompet-stat3-val', type: 'heading', props: { content: 'Min. 1×/tahun', level: 'h3', fontSize: 'clamp(18px,2vw,24px)', fontWeight: '800', color: '#ffffff', lineHeight: '1.2' } },
-            { id: 'dompet-stat3-lbl', type: 'paragraph', props: { content: 'Rapat Anggota Tahunan', fontSize: '14px', color: '#D7F1F3', fontWeight: '500' } },
-          ]
-        },
-        {
-          id: 'dompet-stat4-card', type: 'card',
-          props: { background: 'rgba(255,255,255,0.08)', borderColor: 'rgba(255,255,255,0.18)', borderWidth: '1px', borderRadius: '13px', padding: '19px 17px 18px' },
-          childrenComponents: [
-            { id: 'dompet-stat4-val', type: 'heading', props: { content: '5 bagian', level: 'h3', fontSize: 'clamp(18px,2vw,24px)', fontWeight: '800', color: '#ffffff', lineHeight: '1.2' } },
-            { id: 'dompet-stat4-lbl', type: 'paragraph', props: { content: 'pembagian SHU', fontSize: '14px', color: '#D7F1F3', fontWeight: '500' } },
-          ]
-        },
-      ],
+      components: DOMPETKITA_DEFAULTS['kop-hero-dompetkita'],
     },
     {
       id: 'sec-dompet-visimisi',
       type: 'about',
       layout: 'kop-visimisi-dompetkita',
-      components: [],
+      components: DOMPETKITA_DEFAULTS['kop-visimisi-dompetkita'],
     },
     {
       id: 'sec-dompet-lambang',
       type: 'feature',
       layout: 'kop-lambang-dompetkita',
-      components: [],
+      components: DOMPETKITA_DEFAULTS['kop-lambang-dompetkita'],
     },
     {
       id: 'sec-dompet-unitusaha',
       type: 'services',
       layout: 'kop-unitusaha-dompetkita',
-      components: [],
+      components: DOMPETKITA_DEFAULTS['kop-unitusaha-dompetkita'],
     },
     {
       id: 'sec-dompet-keanggotaan',
       type: 'feature',
       layout: 'kop-keanggotaan-dompetkita',
-      components: [],
+      components: DOMPETKITA_DEFAULTS['kop-keanggotaan-dompetkita'],
     },
     {
       id: 'sec-dompet-permodalan',
       type: 'stats',
       layout: 'kop-permodalan-dompetkita',
-      components: [],
+      components: DOMPETKITA_DEFAULTS['kop-permodalan-dompetkita'],
     },
     {
       id: 'sec-dompet-rapat',
       type: 'content',
       layout: 'kop-rapat-dompetkita',
-      components: [],
+      components: DOMPETKITA_DEFAULTS['kop-rapat-dompetkita'],
     },
     {
       id: 'sec-dompet-shu',
       type: 'stats',
       layout: 'kop-shu-dompetkita',
-      components: [],
+      components: DOMPETKITA_DEFAULTS['kop-shu-dompetkita'],
     },
     {
       id: 'sec-dompet-struktur',
       type: 'team',
       layout: 'kop-struktur-dompetkita',
-      components: [],
+      components: DOMPETKITA_DEFAULTS['kop-struktur-dompetkita'],
     },
     {
       id: 'sec-dompet-faq',
       type: 'faq',
       layout: 'kop-faq-dompetkita',
-      components: [],
+      components: DOMPETKITA_DEFAULTS['kop-faq-dompetkita'],
     },
     {
       id: 'sec-dompet-footer',
       type: 'footer',
       layout: 'kop-footer-dompetkita',
-      components: [],
+      components: DOMPETKITA_DEFAULTS['kop-footer-dompetkita'],
     },
   ],
 };

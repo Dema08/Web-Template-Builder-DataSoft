@@ -821,6 +821,43 @@ export const COMPONENT_REGISTRY = {
       margin: { type: 'string', label: 'Margin', default: '0' },
     },
   },
+
+  chart: {
+    type: 'chart',
+    label: 'Chart',
+    icon: 'BarChart2',
+    category: 'display',
+    editable: true,
+    draggable: true,
+    resizable: true,
+    props: {
+      variant: {
+        type: 'select',
+        label: 'Chart Type',
+        default: 'donut',
+        options: ['donut', 'stacked-bar', 'growth-bar'],
+      },
+      val1: { type: 'number', label: 'Value 1 (%)', default: 30 },
+      val2: { type: 'number', label: 'Value 2 (%)', default: 30 },
+      val3: { type: 'number', label: 'Value 3 (%)', default: 20 },
+      val4: { type: 'number', label: 'Value 4 (%)', default: 15 },
+      val5: { type: 'number', label: 'Value 5 (%)', default: 5 },
+      bar1: { type: 'number', label: 'Bar 1 Height', default: 40 },
+      bar2: { type: 'number', label: 'Bar 2 Height', default: 70 },
+      bar3: { type: 'number', label: 'Bar 3 Height', default: 105 },
+      color1: { type: 'color', label: 'Color 1', default: '#147D92' },
+      color2: { type: 'color', label: 'Color 2', default: '#2F8878' },
+      color3: { type: 'color', label: 'Color 3', default: '#F4B544' },
+      color4: { type: 'color', label: 'Color 4', default: '#123B52' },
+      color5: { type: 'color', label: 'Color 5', default: '#627783' },
+      barColor: { type: 'color', label: 'Bar Color', default: '#147D92' },
+      accentColor: { type: 'color', label: 'Accent Color', default: '#F4B544' },
+      centerTitle: { type: 'string', label: 'Center Title', default: 'SHU' },
+      centerSubtitle: { type: 'string', label: 'Center Subtitle', default: '5 bagian' },
+      width: { type: 'string', label: 'Width', default: '100%' },
+      height: { type: 'string', label: 'Height', default: 'auto' },
+    },
+  },
 };
 
 export const getComponentConfig = (componentType) => {
