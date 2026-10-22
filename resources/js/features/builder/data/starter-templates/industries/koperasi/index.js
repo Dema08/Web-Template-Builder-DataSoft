@@ -9,6 +9,7 @@ import koperasiModern from './koperasiModern.js';
 import koperasiPremium from './koperasiPremium.js';
 import koperasiPuskopolda from './koperasiPuskopolda.js';
 import puskopoldaKoperasi from './puskopoldaKoperasi.js';
+import koperasiDompetkita from './koperasiDompetkita.js';
 
 export const category = {
   categoryName: 'Koperasi',
@@ -18,5 +19,6 @@ export const category = {
     koperasiPremium,
     koperasiPuskopolda,
     puskopoldaKoperasi,
+    koperasiDompetkita,
   ],
 };

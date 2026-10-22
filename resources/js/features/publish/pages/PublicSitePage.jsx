@@ -531,9 +531,22 @@ export default function PublicSitePage() {
 
         // Modern mode: website disimpan sebagai JSON sections
         if (sections && sections.length > 0) {
-            const activeSections = currentPreviewPageId === 'landing'
+            let activeSections = currentPreviewPageId === 'landing'
                 ? sections
                 : (pages[currentPreviewPageId]?.sections || []);
+
+            const fullPageSection = activeSections.find(s => s?.layout === 'kop-dompetkita-full' || s?.layout === 'KopDompetkitaFull' || s?.type === 'full-page');
+            if (fullPageSection) {
+                activeSections = [fullPageSection];
+            } else {
+                const seen = new Set();
+                activeSections = activeSections.filter(s => {
+                    if (!s || !s.id) return false;
+                    if (seen.has(s.id)) return false;
+                    seen.add(s.id);
+                    return true;
+                });
+            }
 
             return (
                 <div className="public-site-wrapper w-full">

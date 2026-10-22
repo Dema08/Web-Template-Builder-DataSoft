@@ -188,4 +188,10 @@ if (!container) {
     throw new Error('Root element #app not found. Ensure the Blade layout includes <div id="app"></div>.');
 }
 
-createRoot(container).render(<App />);
+// Ensure React root is a singleton. Prevents duplicate root creation during HMR or multiple script loads,
+// which previously caused the entire app/landing page to be rendered twice into #app.
+if (!window.__react_app_root__) {
+    window.__react_app_root__ = createRoot(container);
+}
+
+window.__react_app_root__.render(<App />);

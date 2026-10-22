@@ -1412,14 +1412,22 @@ html, body, * {
     min-width: 0 !important;
 }
 
-.builder-canvas-mobile .section-renderer-content :is(h1, [data-component-type="heading"] h1) {
+.builder-canvas-mobile .section-renderer-content :is(h1, [data-component-type="heading"] h1):not(nav *) {
     font-size: clamp(1.75rem, 8cqi, 2.5rem) !important;
     line-height: 1.15 !important;
 }
 
-.builder-canvas-mobile .section-renderer-content :is(h2, [data-component-type="heading"] h2) {
+.builder-canvas-mobile .section-renderer-content :is(h2, [data-component-type="heading"] h2):not(nav *) {
     font-size: clamp(1.375rem, 6cqi, 2rem) !important;
     line-height: 1.2 !important;
+}
+
+.builder-canvas-mobile .section-renderer-content nav :is(h1, h2, h3, [data-component-type="heading"] *) {
+    font-size: 14px !important;
+    line-height: 1.25 !important;
+    white-space: normal !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
 }
 
 .builder-canvas-mobile .section-renderer-content :is(p, [data-component-type="text"]) {
@@ -1443,7 +1451,7 @@ html, body, * {
     min-height: auto !important;
 }
 
-.builder-canvas-mobile .section-renderer-content [class*="whitespace-nowrap"] {
+.builder-canvas-mobile .section-renderer-content [class*="whitespace-nowrap"]:not(nav *):not(header *) {
     white-space: normal !important;
     overflow-wrap: anywhere;
 }
@@ -1452,20 +1460,20 @@ html, body, * {
     flex-wrap: wrap !important;
 }
 
-/* Navbar HP: paksa menu desktop sembunyi + hamburger muncul */
-.builder-canvas-mobile .section-renderer-content nav :is([class*="hidden md:flex"], [class*="hidden lg:flex"], [class*="hidden xl:flex"], [class*="hidden sm:flex"]) {
+/* Navbar HP: paksa menu desktop sembunyi + hamburger muncul (baik di builder maupun template preview) */
+:is(.builder-canvas-mobile, .preview-viewport-mobile) :is(nav, header) :is([class*="hidden md:flex"], [class*="hidden lg:flex"], [class*="hidden xl:flex"], [class*="hidden sm:flex"], [class*="xl:flex"], [class*="lg:flex"], [class*="md:flex"], .dk-nav-links:not(.open)) {
     display: none !important;
 }
 
-.builder-canvas-mobile .section-renderer-content nav [class*="hidden sm:block"] {
+:is(.builder-canvas-mobile, .preview-viewport-mobile) :is(nav, header) [class*="hidden sm:block"] {
     display: none !important;
 }
 
-.builder-canvas-mobile .section-renderer-content nav button:is([class*="sm:hidden"], [class*="md:hidden"], [class*="lg:hidden"], [class*="xl:hidden"]) {
+:is(.builder-canvas-mobile, .preview-viewport-mobile) :is(nav, header) button:is([class*="sm:hidden"], [class*="md:hidden"], [class*="lg:hidden"], [class*="xl:hidden"], .dk-menu-btn) {
     display: inline-flex !important;
 }
 
-.builder-canvas-mobile .section-renderer-content nav :is([class*="sm:hidden"], [class*="md:hidden"], [class*="lg:hidden"], [class*="xl:hidden"]):not(button) {
+:is(.builder-canvas-mobile, .preview-viewport-mobile) :is(nav, header) :is([class*="sm:hidden"], [class*="md:hidden"], [class*="lg:hidden"], [class*="xl:hidden"]):not(button) {
     display: flex !important;
 }
 

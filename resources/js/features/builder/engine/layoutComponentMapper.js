@@ -641,6 +641,21 @@ import KopDocumentsPuskopolda from '@builder/sections/koperasi-custom/puskopolda
 import KopContactPuskopolda from '@builder/sections/koperasi-custom/puskopolda/KopContactPuskopolda';
 import KopFooterPuskopolda from '@builder/sections/koperasi-custom/puskopolda/KopFooterPuskopolda';
 
+// Custom Koperasi Layouts — Dompetkita Bersama (Koperasi Umum Karyawan)
+import KopNavDompetkita from '@builder/sections/koperasi-custom/dompetkita/KopNavDompetkita';
+import KopHeroDompetkita from '@builder/sections/koperasi-custom/dompetkita/KopHeroDompetkita';
+import KopVisiMisiDompetkita from '@builder/sections/koperasi-custom/dompetkita/KopVisiMisiDompetkita';
+import KopLambangDompetkita from '@builder/sections/koperasi-custom/dompetkita/KopLambangDompetkita';
+import KopUnitUsahaDompetkita from '@builder/sections/koperasi-custom/dompetkita/KopUnitUsahaDompetkita';
+import KopKeanggotaanDompetkita from '@builder/sections/koperasi-custom/dompetkita/KopKeanggotaanDompetkita';
+import KopPermodalanDompetkita from '@builder/sections/koperasi-custom/dompetkita/KopPermodalanDompetkita';
+import KopRapatDompetkita from '@builder/sections/koperasi-custom/dompetkita/KopRapatDompetkita';
+import KopSHUDompetkita from '@builder/sections/koperasi-custom/dompetkita/KopSHUDompetkita';
+import KopStrukturDompetkita from '@builder/sections/koperasi-custom/dompetkita/KopStrukturDompetkita';
+import KopFAQDompetkita from '@builder/sections/koperasi-custom/dompetkita/KopFAQDompetkita';
+import KopFooterDompetkita from '@builder/sections/koperasi-custom/dompetkita/KopFooterDompetkita';
+import KopDompetkitaFull from '@builder/sections/koperasi-custom/dompetkita/KopDompetkitaFull';
+
 // Custom Perdagangan & Retail Layouts — B2B Wholesale & Supply Chain FMCG
 import RetailNavWholesale from '@builder/sections/retail-custom/wholesale/RetailNavWholesale';
 import RetailHeroWholesale from '@builder/sections/retail-custom/wholesale/RetailHeroWholesale';
@@ -976,6 +991,34 @@ export const LAYOUT_COMPONENTS = {
   'kop-documents-puskopolda': KopDocumentsPuskopolda,
   'kop-contact-puskopolda': KopContactPuskopolda,
   'kop-footer-puskopolda': KopFooterPuskopolda,
+
+  // Custom Koperasi — Dompetkita Bersama (Koperasi Umum Karyawan)
+  'KopNavDompetkita': KopNavDompetkita,
+  'KopHeroDompetkita': KopHeroDompetkita,
+  'KopVisiMisiDompetkita': KopVisiMisiDompetkita,
+  'KopLambangDompetkita': KopLambangDompetkita,
+  'KopUnitUsahaDompetkita': KopUnitUsahaDompetkita,
+  'KopKeanggotaanDompetkita': KopKeanggotaanDompetkita,
+  'KopPermodalanDompetkita': KopPermodalanDompetkita,
+  'KopRapatDompetkita': KopRapatDompetkita,
+  'KopSHUDompetkita': KopSHUDompetkita,
+  'KopStrukturDompetkita': KopStrukturDompetkita,
+  'KopFAQDompetkita': KopFAQDompetkita,
+  'KopFooterDompetkita': KopFooterDompetkita,
+  'kop-nav-dompetkita': KopNavDompetkita,
+  'kop-hero-dompetkita': KopHeroDompetkita,
+  'kop-visimisi-dompetkita': KopVisiMisiDompetkita,
+  'kop-lambang-dompetkita': KopLambangDompetkita,
+  'kop-unitusaha-dompetkita': KopUnitUsahaDompetkita,
+  'kop-keanggotaan-dompetkita': KopKeanggotaanDompetkita,
+  'kop-permodalan-dompetkita': KopPermodalanDompetkita,
+  'kop-rapat-dompetkita': KopRapatDompetkita,
+  'kop-shu-dompetkita': KopSHUDompetkita,
+  'kop-struktur-dompetkita': KopStrukturDompetkita,
+  'kop-faq-dompetkita': KopFAQDompetkita,
+  'kop-footer-dompetkita': KopFooterDompetkita,
+  'KopDompetkitaFull': KopDompetkitaFull,
+  'kop-dompetkita-full': KopDompetkitaFull,
 
   // Custom Perdagangan & Retail — B2B Wholesale & Supply Chain FMCG
   'RetailNavWholesale': RetailNavWholesale,

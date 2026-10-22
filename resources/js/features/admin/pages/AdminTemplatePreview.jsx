@@ -324,10 +324,28 @@ export default function AdminTemplatePreview() {
   };
 
   const getActiveSections = () => {
-    if (currentPreviewPageId && currentPreviewPageId !== 'landing') {
-      return pages?.[currentPreviewPageId]?.sections || [];
+    const raw = (currentPreviewPageId && currentPreviewPageId !== 'landing')
+      ? (pages?.[currentPreviewPageId]?.sections || [])
+      : (sections || []);
+
+    if (!Array.isArray(raw)) return [];
+
+    // Jika template memiliki section monolitik/full-page (seperti kop-dompetkita-full),
+    // komponen tersebut sudah mencakup seluruh halaman dari Hero sampai Footer.
+    // Cukup render section full-page tersebut agar tidak terjadi duplikasi/loop konten setelah footer!
+    const fullPageSection = raw.find(s => s?.layout === 'kop-dompetkita-full' || s?.layout === 'KopDompetkitaFull' || s?.type === 'full-page');
+    if (fullPageSection) {
+      return [fullPageSection];
     }
-    return sections || [];
+
+    // Deduplikasi section berdasarkan ID agar tidak ada render ganda
+    const seen = new Set();
+    return raw.filter(s => {
+      if (!s || !s.id) return false;
+      if (seen.has(s.id)) return false;
+      seen.add(s.id);
+      return true;
+    });
   };
 
   const renderActiveSections = () => {
