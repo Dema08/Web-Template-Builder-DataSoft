@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { toast } from '@store';
 import { templateApi, categoryApi } from '@api';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -28,6 +28,7 @@ import ThumbnailUploader from '@features/admin/components/ThumbnailUploader';
 
 export default function AdminTemplateBuilder() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { id } = useParams();
   const queryClient = useQueryClient();
 
@@ -90,23 +91,14 @@ export default function AdminTemplateBuilder() {
     // Bersihkan sisa seleksi kategori dari template sebelumnya
     setSelectedCategoryId('');
     setSelectedCategoryObj(null);
-  }, [id]);
+    setModalStep(1);
+    setShowIndustryModal(false);
 
-  // Restore unsaved local draft untuk route /create (belum ada template id).
-  useEffect(() => {
-    const localDraft = loadLocalDraft(id);
-    if (localDraft && (localDraft.sections?.length > 0 || localDraft.industryId)) {
-      if (!id) {
-        // Restoring draft for /create route
-        if (localDraft.industryId) {
-          setIndustry(localDraft.industryId, localDraft.industrySlug, localDraft.industryName);
-          setSelectedCategoryId(localDraft.industryId);
-        }
-        if (localDraft.templateName) setTemplateName(localDraft.templateName);
-        if (localDraft.sections?.length > 0) loadSections(localDraft.sections);
-      }
+    // Jika masuk route /create, hapus draft create lama agar pengguna selalu diarahkan ke pemilihan kategori
+    if (!id) {
+      clearLocalDraft(null);
     }
-  }, [id, setIndustry, setTemplateName, loadSections]);
+  }, [id]);
 
   // Load template data into store if editing an existing template.
   // Server selalu menang atas local draft basi: local draft hanya dipakai

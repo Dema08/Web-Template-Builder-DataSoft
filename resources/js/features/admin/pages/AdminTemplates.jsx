@@ -28,6 +28,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import ThumbnailUploader from '@features/admin/components/ThumbnailUploader';
 import { getTemplateImage, handleImageError } from '@utils/templateHelpers';
+import { clearLocalDraft } from '@builder/hooks/useAutosave';
+import { useBuilderStore } from '@builder/stores/builderStore';
 
 function TemplateCardThumbnail({ template }) {
     const [imgLoaded, setImgLoaded] = useState(false);
@@ -438,7 +440,11 @@ export default function AdminTemplates() {
 
                 <button
                     type="button"
-                    onClick={() => navigate('/admin/templates/builder/create')}
+                    onClick={() => {
+                        clearLocalDraft(null);
+                        useBuilderStore.getState().resetBuilder();
+                        navigate('/admin/templates/builder/create', { state: { fresh: true } });
+                    }}
                     className="flex items-center justify-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-sm shadow-md shadow-indigo-600/20 transition-all"
                 >
                     <Plus className="h-4 w-4 stroke-[3]" />
