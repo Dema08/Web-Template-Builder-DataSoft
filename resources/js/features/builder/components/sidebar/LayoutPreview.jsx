@@ -5,14 +5,15 @@ import { getLayoutDefaults } from '../../engine/layoutDefaults';
 const layoutIdToComponentName = (layoutId) => {
   if (!layoutId) return null;
   return layoutId
-    .split('-')
+    .split(/[-_\s]+/)
+    .filter(Boolean)
     .map(part => part.charAt(0).toUpperCase() + part.slice(1))
     .join('');
 };
 
 export default function LayoutPreview({ layoutId, height = 'h-24' }) {
   const componentName = layoutIdToComponentName(layoutId);
-  const LayoutComponent = getLayoutComponent(componentName);
+  const LayoutComponent = getLayoutComponent(layoutId) || getLayoutComponent(componentName);
   const defaultComponents = getLayoutDefaults(layoutId);
 
   if (!LayoutComponent) {

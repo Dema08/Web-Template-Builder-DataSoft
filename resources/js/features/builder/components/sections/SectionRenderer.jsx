@@ -13,11 +13,12 @@ import { toast } from '@store';
 
 import FooterSupportBadge from '@builder/sections/footer/FooterSupportBadge';
 
-// Convert layout ID like "hero-01" to component name "Hero01"
+// Convert layout ID like "hero-01" or "kop faq dompetkita" to component name "Hero01" / "KopFaqDompetkita"
 const layoutIdToComponentName = (layoutId) => {
   if (!layoutId) return null;
   return layoutId
-    .split('-')
+    .split(/[-_\s]+/)
+    .filter(Boolean)
     .map(part => part.charAt(0).toUpperCase() + part.slice(1))
     .join('');
 };
@@ -333,7 +334,7 @@ export default function SectionRenderer({ section, isSelected, onClick, isPrevie
   if (isPreviewMode) {
     if (section.isHidden) return null;
     const componentName = layoutIdToComponentName(section.layout);
-    const LayoutComponent = getLayoutComponent(componentName);
+    const LayoutComponent = getLayoutComponent(section.layout) || getLayoutComponent(componentName);
 
     if (!LayoutComponent) return null;
 
@@ -369,7 +370,7 @@ export default function SectionRenderer({ section, isSelected, onClick, isPrevie
 
   // Get the layout component - convert layout ID to component name
   const componentName = layoutIdToComponentName(section.layout);
-  const LayoutComponent = getLayoutComponent(componentName);
+  const LayoutComponent = getLayoutComponent(section.layout) || getLayoutComponent(componentName);
 
   const handleSectionClick = (e) => {
     if (isPreviewMode) return;

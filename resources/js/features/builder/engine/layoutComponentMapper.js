@@ -1002,21 +1002,41 @@ export const LAYOUT_COMPONENTS = {
   'KopPermodalanDompetkita': KopPermodalanDompetkita,
   'KopRapatDompetkita': KopRapatDompetkita,
   'KopSHUDompetkita': KopSHUDompetkita,
+  'KopShuDompetkita': KopSHUDompetkita,
   'KopStrukturDompetkita': KopStrukturDompetkita,
   'KopFAQDompetkita': KopFAQDompetkita,
+  'KopFaqDompetkita': KopFAQDompetkita,
   'KopFooterDompetkita': KopFooterDompetkita,
   'kop-nav-dompetkita': KopNavDompetkita,
+  'kop nav dompetkita': KopNavDompetkita,
   'kop-hero-dompetkita': KopHeroDompetkita,
+  'kop hero dompetkita': KopHeroDompetkita,
   'kop-visimisi-dompetkita': KopVisiMisiDompetkita,
+  'kop visimisi dompetkita': KopVisiMisiDompetkita,
   'kop-lambang-dompetkita': KopLambangDompetkita,
+  'kop lambang dompetkita': KopLambangDompetkita,
   'kop-unitusaha-dompetkita': KopUnitUsahaDompetkita,
+  'kop unitusaha dompetkita': KopUnitUsahaDompetkita,
+  'kop unit usaha dompetkita': KopUnitUsahaDompetkita,
   'kop-keanggotaan-dompetkita': KopKeanggotaanDompetkita,
+  'kop keanggotaan dompetkita': KopKeanggotaanDompetkita,
   'kop-permodalan-dompetkita': KopPermodalanDompetkita,
+  'kop permodalan dompetkita': KopPermodalanDompetkita,
   'kop-rapat-dompetkita': KopRapatDompetkita,
+  'kop rapat dompetkita': KopRapatDompetkita,
   'kop-shu-dompetkita': KopSHUDompetkita,
+  'kop shu dompetkita': KopSHUDompetkita,
   'kop-struktur-dompetkita': KopStrukturDompetkita,
+  'kop struktur dompetkita': KopStrukturDompetkita,
   'kop-faq-dompetkita': KopFAQDompetkita,
+  'kop faq dompetkita': KopFAQDompetkita,
   'kop-footer-dompetkita': KopFooterDompetkita,
+  'kop-tugas-dompetkita': KopStrukturDompetkita,
+  'kop tugas dompetkita': KopStrukturDompetkita,
+  'KopTugasDompetkita': KopStrukturDompetkita,
+  'kop-kerjasama-dompetkita': KopStrukturDompetkita,
+  'kop kerjasama dompetkita': KopStrukturDompetkita,
+  'KopKerjasamaDompetkita': KopStrukturDompetkita,
   'KopDompetkitaFull': KopDompetkitaFull,
   'kop-dompetkita-full': KopDompetkitaFull,
 
@@ -1511,6 +1531,21 @@ export const LAYOUT_COMPONENTS = {
   'Map20': Map20,
 };
 
-export const getLayoutComponent = (componentName) => {
-  return LAYOUT_COMPONENTS[componentName] || null;
+// Pre-computed normalized lookup map for resilient case-insensitive, dash- and space-insensitive matching
+const NORMALIZED_LAYOUT_COMPONENTS = {};
+for (const [key, comp] of Object.entries(LAYOUT_COMPONENTS)) {
+  const norm = String(key).toLowerCase().replace(/[\s_-]+/g, '');
+  if (!NORMALIZED_LAYOUT_COMPONENTS[norm]) {
+    NORMALIZED_LAYOUT_COMPONENTS[norm] = comp;
+  }
+}
+
+export const getLayoutComponent = (nameOrLayoutId) => {
+  if (!nameOrLayoutId) return null;
+  if (LAYOUT_COMPONENTS[nameOrLayoutId]) return LAYOUT_COMPONENTS[nameOrLayoutId];
+
+  const norm = String(nameOrLayoutId).toLowerCase().replace(/[\s_-]+/g, '');
+  if (NORMALIZED_LAYOUT_COMPONENTS[norm]) return NORMALIZED_LAYOUT_COMPONENTS[norm];
+
+  return null;
 };
