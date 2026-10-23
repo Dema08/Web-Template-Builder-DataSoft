@@ -192,12 +192,12 @@ export default function KopLambangDompetkita({ components = [], sectionId = null
             </div>
           </div>
 
-          <div className="two" style={{ marginTop: '24px' }}>
+          <div className="two grid grid-cols-1 md:grid-cols-2 gap-5" style={{ marginTop: '24px' }}>
             {renderLayoutComponents(objCards, sectionId)}
           </div>
 
           <h3 style={{ marginTop: '48px', marginBottom: '14px', fontFamily: '"Bricolage Grotesque",system-ui,sans-serif' }}>Arti lambang</h3>
-          <div className="arti-grid">
+          <div className="arti-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
             {renderLayoutComponents(artiCards, sectionId)}
           </div>
         </div>

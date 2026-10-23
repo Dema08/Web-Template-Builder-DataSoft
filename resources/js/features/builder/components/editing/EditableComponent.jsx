@@ -416,7 +416,11 @@ export default function EditableComponent({
 
   // Exact width and height preserved at 100% scale without shrinking
   const activeWidth = (isMobileOrTablet && !isDraggingLocal)
-    ? (isInline ? 'fit-content' : '100%')
+    ? (isInline 
+        ? 'fit-content' 
+        : (component.type === 'image' && component.props?.width && !String(component.props.width).includes('%') && parseInt(component.props.width) <= 200
+            ? component.props.width
+            : '100%'))
     : (lockedSize 
         ? `${lockedSize.width}px` 
         : (component.position?.width || component.props?.width || (isInline ? 'fit-content' : '100%')));
@@ -547,6 +551,14 @@ export default function EditableComponent({
           data-drag-handle="true"
           onPointerDown={handleDragStart}
           className="absolute -top-3.5 left-2 z-30 bg-indigo-600 hover:bg-indigo-700 text-white p-1 rounded-md shadow-md cursor-grab active:cursor-grabbing flex items-center justify-center transition-transform select-none"
+          style={{
+            boxSizing: 'border-box',
+            padding: '4px',
+            border: 'none',
+            borderRadius: '6px',
+            background: '#4f46e5',
+            color: '#ffffff',
+          }}
           title="Geser / Pindahkan posisi"
         >
           <Move className="h-3.5 w-3.5" />

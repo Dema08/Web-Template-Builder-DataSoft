@@ -58,9 +58,11 @@ export default function KopFooterDompetkita({ components = [], sectionId = null 
 
       {/* Footer */}
       <footer>
-        <div className="wrap">
-          {renderLayoutComponents(getComp('dompet-footer-logo-img'), sectionId)}
-          <span>
+        <div className="wrap flex items-start gap-3.5">
+          <div className="shrink-0 flex-none">
+            {renderLayoutComponents(getComp('dompet-footer-logo-img'), sectionId)}
+          </div>
+          <span className="flex-1 min-w-0 block">
             {renderLayoutComponents(getComp('dompet-ft-desc'), sectionId)}
           </span>
         </div>

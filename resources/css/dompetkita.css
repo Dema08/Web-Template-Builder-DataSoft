@@ -296,7 +296,10 @@
   margin-top: 56px;
 }
 
-.dk-root .nums div, [data-dk] .nums div {
+.dk-root .nums > div:not([data-component-id]),
+.dk-root .nums > div[data-component-id] > div:first-child,
+[data-dk] .nums > div:not([data-component-id]),
+[data-dk] .nums > div[data-component-id] > div:first-child {
   background: rgba(255,255,255,0.045);
   border: 1px solid rgba(255,255,255,0.14);
   border-top: 3px solid var(--gold);
@@ -305,6 +308,19 @@
   color: #E2E8F0;
   font-size: 15px;
   line-height: 1.35;
+}
+
+.dk-root .nums [data-resize-handle],
+.dk-root .nums [data-drag-handle],
+.dk-root .nums [data-builder-resize-container],
+[data-dk] .nums [data-resize-handle],
+[data-dk] .nums [data-drag-handle],
+[data-dk] .nums [data-builder-resize-container] {
+  background: transparent !important;
+  border-top: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
 }
 
 .dk-root .nums b, [data-dk] .nums b {
@@ -465,14 +481,32 @@
 .dk-root .brand > div[data-component-id],
 [data-dk] .brand > div[data-component-id],
 .dk-root .logo-show > div[data-component-id],
-[data-dk] .logo-show > div[data-component-id],
-.dk-root footer .wrap > div[data-component-id],
-[data-dk] footer .wrap > div[data-component-id] {
+[data-dk] .logo-show > div[data-component-id] {
   flex: none;
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
   display: inline-flex;
+}
+
+.dk-root footer .wrap > div[data-component-id],
+[data-dk] footer .wrap > div[data-component-id],
+.dk-root footer .wrap > div > div[data-component-id],
+[data-dk] footer .wrap > div > div[data-component-id] {
+  flex: 0 0 auto !important;
+  width: auto !important;
+  max-width: fit-content !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  display: inline-flex;
+}
+
+.dk-root footer .wrap > span,
+[data-dk] footer .wrap > span {
+  flex: 1 1 0% !important;
+  min-width: 0 !important;
+  display: block;
 }
 
 .dk-root .hero-art > div[data-component-id],
@@ -1211,6 +1245,7 @@
   .dk-root .head-row svg, [data-dk] .head-row svg { max-width: 200px; order: -1; }
   .dk-root .shu-grid, [data-dk] .shu-grid { grid-template-columns: 1fr; gap: 24px; }
   .dk-root .logo-show, [data-dk] .logo-show { flex-direction: column; text-align: center; }
+  .dk-root .arti-grid, [data-dk] .arti-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 760px) {
@@ -1235,13 +1270,18 @@
   .dk-root .btn, [data-dk] .btn { width: 100%; }
   .dk-root .hero-art, [data-dk] .hero-art { max-width: 320px; }
   .dk-root .nums, [data-dk] .nums { gap: 9px; }
-  .dk-root .nums div, [data-dk] .nums div { padding: 14px 13px; font-size: 12.5px; }
+  .dk-root .nums > div:not([data-component-id]),
+  .dk-root .nums > div[data-component-id] > div:first-child,
+  [data-dk] .nums > div:not([data-component-id]),
+  [data-dk] .nums > div[data-component-id] > div:first-child { padding: 14px 13px; font-size: 12.5px; }
   .dk-root .nums b, [data-dk] .nums b { font-size: 20px; }
   .dk-root .section-nav-inner, [data-dk] .section-nav-inner { min-height: 57px; }
   .dk-root .section-nav-links a, [data-dk] .section-nav-links a { font-size: 13px; padding: 8px 12px; }
   .dk-root section, [data-dk] section { padding: 54px 0; }
   .dk-root .units, [data-dk] .units { grid-template-columns: 1fr; }
   .dk-root .units > div, [data-dk] .units > div { padding: 22px; }
+  .dk-root .arti-grid, [data-dk] .arti-grid { grid-template-columns: 1fr; gap: 14px; }
+  .dk-root .arti-grid > div[data-component-id] > div, [data-dk] .arti-grid > div[data-component-id] > div { padding: 20px 18px !important; }
   .dk-root .card, [data-dk] .card { padding: 20px; }
   .dk-root .head-row svg, [data-dk] .head-row svg { max-width: 150px; }
   .dk-root .logo-show, [data-dk] .logo-show { padding: 23px; }
@@ -1261,6 +1301,7 @@
   .dk-root .nums, [data-dk] .nums { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .dk-root .units, [data-dk] .units { grid-template-columns: 1fr; }
   .dk-root .two, [data-dk] .two { grid-template-columns: 1fr; }
+  .dk-root .arti-grid, [data-dk] .arti-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .dk-root .head-row, [data-dk] .head-row { grid-template-columns: 1fr; }
   .dk-root .head-row svg, [data-dk] .head-row svg { max-width: 180px; order: -1; }
   .dk-root .shu-grid, [data-dk] .shu-grid { grid-template-columns: 1fr; }
@@ -1268,4 +1309,73 @@
   .dk-root .menu-btn, [data-dk] .menu-btn { display: inline-flex; }
   .dk-root nav .links, [data-dk] nav .links { display: none; width: 100%; flex-basis: 100%; }
   .dk-root nav .links.open, [data-dk] nav .links.open { display: grid; }
+}
+
+@container (max-width: 640px) {
+  .dk-root .arti-grid, [data-dk] .arti-grid { grid-template-columns: 1fr !important; gap: 14px !important; }
+  .dk-root .arti-grid > div[data-component-id] > div, [data-dk] .arti-grid > div[data-component-id] > div { padding: 20px 18px !important; }
+  .dk-root .two, [data-dk] .two { grid-template-columns: 1fr !important; }
+  .dk-root .units, [data-dk] .units { grid-template-columns: 1fr !important; }
+}
+
+/* Builder Canvas & Mobile/Tablet Preview Viewport overrides */
+:is(.builder-canvas-mobile, .preview-viewport-mobile) .dk-root .arti-grid,
+:is(.builder-canvas-mobile, .preview-viewport-mobile) [data-dk] .arti-grid {
+  grid-template-columns: 1fr !important;
+  gap: 14px !important;
+}
+
+:is(.builder-canvas-mobile, .preview-viewport-mobile) .dk-root .arti-grid > div[data-component-id] > div,
+:is(.builder-canvas-mobile, .preview-viewport-mobile) [data-dk] .arti-grid > div[data-component-id] > div,
+:is(.builder-canvas-mobile, .preview-viewport-mobile) .dk-root .arti-grid .card,
+:is(.builder-canvas-mobile, .preview-viewport-mobile) [data-dk] .arti-grid .card {
+  padding: 20px 18px !important;
+}
+
+:is(.builder-canvas-mobile, .preview-viewport-mobile) .dk-root .two,
+:is(.builder-canvas-mobile, .preview-viewport-mobile) [data-dk] .two {
+  grid-template-columns: 1fr !important;
+  gap: 16px !important;
+}
+
+:is(.builder-canvas-mobile, .preview-viewport-mobile) .dk-root .units,
+:is(.builder-canvas-mobile, .preview-viewport-mobile) [data-dk] .units {
+  grid-template-columns: 1fr !important;
+}
+
+:is(.builder-canvas-mobile, .preview-viewport-mobile) .dk-root .head-row,
+:is(.builder-canvas-mobile, .preview-viewport-mobile) [data-dk] .head-row {
+  grid-template-columns: 1fr !important;
+}
+
+:is(.builder-canvas-mobile, .preview-viewport-mobile) .dk-root .logo-show,
+:is(.builder-canvas-mobile, .preview-viewport-mobile) [data-dk] .logo-show {
+  flex-direction: column !important;
+  text-align: center !important;
+}
+
+:is(.builder-canvas-mobile, .preview-viewport-mobile) .dk-root footer .wrap,
+:is(.builder-canvas-mobile, .preview-viewport-mobile) [data-dk] footer .wrap {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 14px !important;
+}
+
+:is(.builder-canvas-mobile, .preview-viewport-mobile) .dk-root footer .wrap > div,
+:is(.builder-canvas-mobile, .preview-viewport-mobile) [data-dk] footer .wrap > div {
+  flex: 0 0 auto !important;
+  width: auto !important;
+}
+
+:is(.builder-canvas-mobile, .preview-viewport-mobile) .dk-root footer .wrap > span,
+:is(.builder-canvas-mobile, .preview-viewport-mobile) [data-dk] footer .wrap > span {
+  flex: 1 1 0% !important;
+  min-width: 0 !important;
+  display: block !important;
+}
+
+:is(.builder-canvas-tablet, .preview-viewport-tablet) .dk-root .arti-grid,
+:is(.builder-canvas-tablet, .preview-viewport-tablet) [data-dk] .arti-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 14px !important;
 }

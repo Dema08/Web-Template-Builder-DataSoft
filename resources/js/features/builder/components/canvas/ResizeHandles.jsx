@@ -11,16 +11,41 @@ export default function ResizeHandles({ onResizeStart }) {
   ];
 
   return (
-    <div className="absolute inset-0 pointer-events-none z-40">
+    <div
+      className="absolute inset-0 pointer-events-none z-40"
+      data-builder-resize-container="true"
+      style={{
+        background: 'transparent',
+        border: 'none',
+        padding: 0,
+        margin: 0,
+        boxShadow: 'none',
+      }}
+    >
       {handles.map((h) => (
         <div
           key={h.id}
+          data-resize-handle="true"
           onPointerDown={(e) => {
             e.stopPropagation();
             onResizeStart(e, h.id);
           }}
-          className={`absolute w-2.5 h-2.5 bg-white border-2 border-indigo-600 rounded-full pointer-events-auto shadow-sm hover:scale-125 transition-transform ${h.className}`}
-          style={{ cursor: h.cursor }}
+          className={`absolute pointer-events-auto shadow-sm hover:scale-125 transition-transform ${h.className}`}
+          style={{
+            cursor: h.cursor,
+            boxSizing: 'border-box',
+            width: '10px',
+            height: '10px',
+            minWidth: '10px',
+            minHeight: '10px',
+            maxWidth: '10px',
+            maxHeight: '10px',
+            padding: 0,
+            margin: 0,
+            backgroundColor: '#ffffff',
+            border: '2px solid #4f46e5',
+            borderRadius: '9999px',
+          }}
           title={`Resize ${h.id.toUpperCase()}`}
         />
       ))}
