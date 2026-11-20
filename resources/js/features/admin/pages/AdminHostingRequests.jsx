@@ -63,7 +63,7 @@ export default function AdminHostingRequests() {
             queryClient.invalidateQueries(['admin-hosting-requests']);
             queryClient.invalidateQueries(['admin-websites']);
             queryClient.invalidateQueries([['dashboard', 'admin']]);
-            toast.success('Permintaan publikasi subdomain berhasil disetujui! Website kini aktif.', 'Disetujui');
+            toast.success('Permintaan publikasi website berhasil disetujui! Website kini aktif.', 'Disetujui');
         },
         onError: (err) => {
             toast.error(err?.response?.data?.message ?? 'Gagal menyetujui permintaan', 'Galat');
@@ -351,14 +351,30 @@ export default function AdminHostingRequests() {
                                                     )}
                                                 </div>
 
-                                                {/* Subdomain URL pill with copy button */}
-                                                <div className="flex items-center gap-2 text-xs">
+                                                {/* Domain URL pill with copy button and domain type badge */}
+                                                <div className="flex flex-wrap items-center gap-2 text-xs">
                                                     <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[rgb(var(--color-surface-alt))] rounded-lg border border-[rgb(var(--color-border))] text-[rgb(var(--color-text-secondary))] font-mono text-xs">
                                                         <Globe className="h-3.5 w-3.5 text-indigo-500 shrink-0" />
                                                         <span className="font-extrabold text-indigo-600 dark:text-indigo-400">
                                                             {item.domain}
                                                         </span>
                                                     </div>
+
+                                                    {item.domain_type === 'custom' && (
+                                                        <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-purple-100 text-purple-800 border border-purple-200">
+                                                            Custom Domain
+                                                        </span>
+                                                    )}
+                                                    {(item.domain_type === 'subprefix' || item.domain_type === 'path') && (
+                                                        <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                                                            Sub-Prefix
+                                                        </span>
+                                                    )}
+                                                    {(!item.domain_type || item.domain_type === 'subdomain') && (
+                                                        <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-indigo-100 text-indigo-800 border border-indigo-200">
+                                                            Subdomain
+                                                        </span>
+                                                    )}
 
                                                     <button
                                                         type="button"

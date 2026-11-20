@@ -38,15 +38,14 @@ import {
 import { ProtectedRoute, GuestRoute } from './guards';
 import { ROUTES } from '@constants';
 
-function isSubdomainHost() {
+function isPublishedSiteHost() {
     if (typeof window === 'undefined') return false;
     const host = window.location.hostname.toLowerCase();
     if (host === 'localhost' || host === '127.0.0.1' || host === 'web.microdata.co.id' || host === 'microdata.co.id') {
         return false;
     }
-    return host.endsWith('.web.microdata.co.id')
-        || host.endsWith('.localhost')
-        || (host.endsWith('.microdata.co.id') && !host.endsWith('web.microdata.co.id'));
+    // Any other host accessing the application (subdomain or custom domain) is a published site
+    return true;
 }
 
 function ScrollToTop() {
@@ -60,15 +59,15 @@ function ScrollToTop() {
 }
 
 export default function AppRouter() {
-    const isSubdomain = isSubdomainHost();
+    const isPublishedSite = isPublishedSiteHost();
 
     return (
         <BrowserRouter>
             <ScrollToTop />
             <Suspense fallback={<PageLoader fullScreen />}>
                 <Routes>
-                    {/* Public Landing Page or Subdomain Website Viewer */}
-                <Route path="/" element={isSubdomain ? <PublicSitePage /> : <LandingPage />} />
+                    {/* Public Landing Page or Subdomain/Custom Domain Website Viewer */}
+                <Route path="/" element={isPublishedSite ? <PublicSitePage /> : <LandingPage />} />
 
                 {/* Public Site Viewer — renders a user's published website by slug */}
                 <Route path="/public/site" element={<PublicSitePage />} />

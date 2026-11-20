@@ -51,6 +51,18 @@ class PublishWebsiteRequest extends FormRequest
         return $this->user() !== null;
     }
 
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('custom_domain') && is_string($this->custom_domain)) {
+            $domain = strtolower(trim($this->custom_domain));
+            $domain = preg_replace('#^https?://#i', '', $domain);
+            $domain = rtrim($domain, '/');
+            $domain = explode('/', $domain)[0];
+            $domain = explode(':', $domain)[0];
+            $this->merge(['custom_domain' => $domain]);
+        }
+    }
+
     public function rules(): array
     {
         $websiteId = Website::where('user_id', $this->user()->id)
@@ -82,7 +94,31 @@ class PublishWebsiteRequest extends FormRequest
             'source_template_id' => ['nullable', 'integer', Rule::exists('template', 'id')],
             'slug' => $slugRules,
             'domain_type' => ['required', Rule::in(['subdomain', 'custom', 'subprefix', 'path'])],
-            'custom_domain' => ['required_if:domain_type,custom', 'nullable', 'string', 'max:253'],
+            'custom_domain' => [
+                'required_if:domain_type,custom',
+                'nullable',
+                'string',
+                'max:253',
+                'regex:/^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)+$/i',
+                function ($attribute, $value, $fail) use ($websiteId) {
+                    if ($this->input('domain_type') !== 'custom' || empty($value)) {
+                        return;
+                    }
+                    $clean = strtolower(trim($value));
+                    $exists = Website::where('status', '!=', 'rejected')
+                        ->when($websiteId, fn ($q) => $q->where('id', '!=', $websiteId))
+                        ->where(function ($q) use ($clean) {
+                            $q->where('settings->custom_domain', $clean)
+                              ->orWhere('settings->custom_domain', 'www.' . $clean)
+                              ->orWhere('settings->custom_domain', preg_replace('/^www\./', '', $clean));
+                        })
+                        ->exists();
+
+                    if ($exists) {
+                        $fail('Domain tersebut sudah digunakan atau diajukan oleh website lain.');
+                    }
+                },
+            ],
         ];
     }
 
@@ -100,6 +136,7 @@ class PublishWebsiteRequest extends FormRequest
             'domain_type.in' => 'Jenis domain tidak valid.',
             'custom_domain.required_if' => 'Custom domain wajib diisi.',
             'custom_domain.max' => 'Custom domain maksimal 253 karakter.',
+            'custom_domain.regex' => 'Format domain tidak valid (contoh yang benar: www.perusahaan.com atau bisnis.id).',
         ];
     }
 }

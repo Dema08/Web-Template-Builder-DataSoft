@@ -51,6 +51,9 @@ class PublicSiteController extends BaseController
                     'status' => 'pending',
                     'site_name' => $website->name,
                     'subdomain' => $website->slug,
+                    'domain_type' => $website->domain_type,
+                    'custom_domain' => $website->custom_domain,
+                    'published_url' => $website->published_url,
                     'requested_at' => $website->requested_at?->toISOString(),
                 ], 'Website is pending admin approval');
             }
@@ -60,6 +63,9 @@ class PublicSiteController extends BaseController
                     'status' => 'rejected',
                     'site_name' => $website->name,
                     'subdomain' => $website->slug,
+                    'domain_type' => $website->domain_type,
+                    'custom_domain' => $website->custom_domain,
+                    'published_url' => $website->published_url,
                     'rejection_reason' => $website->rejection_reason,
                 ], 'Website publication was rejected');
             }

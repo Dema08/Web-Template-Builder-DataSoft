@@ -401,10 +401,17 @@ class AdminWebsiteController extends BaseController
         if ($user) {
             $baseDomain = config('app.publish_domain', config('app.primary_host', 'web.microdata.co.id'));
             $subdomainFull = "{$website->slug}.{$baseDomain}";
+            $targetUrl = $website->published_url;
+            $typeLabel = match ($website->domain_type) {
+                'custom' => "domain kustom {$website->custom_domain}",
+                'subprefix', 'path' => "sub-prefix path {$website->url_path}",
+                default => "subdomain https://{$subdomainFull}",
+            };
+
             Notification::create([
                 'user_id' => $user->id,
-                'judul'   => 'Permintaan Hosting Subdomain Disetujui! 🎉',
-                'pesan'   => "Selamat! Permintaan publikasi website \"{$website->name}\" telah disetujui oleh admin.\nWebsite Anda kini live dan dapat diakses publik di https://{$subdomainFull}",
+                'judul'   => 'Publikasi Website Disetujui! 🎉',
+                'pesan'   => "Selamat! Permintaan publikasi website \"{$website->name}\" untuk {$typeLabel} telah disetujui oleh admin.\nWebsite Anda kini live dan dapat diakses di {$targetUrl}",
                 'tipe'    => 'website_approved',
                 'dibaca'  => false,
             ]);
@@ -413,8 +420,8 @@ class AdminWebsiteController extends BaseController
         return $this->success([
             'id'     => $website->id,
             'status' => 'published',
-            'url'    => $website->url_subdomain,
-        ], 'Permintaan publikasi subdomain berhasil disetujui.');
+            'url'    => $website->published_url,
+        ], 'Permintaan publikasi website berhasil disetujui.');
     }
 
     /**

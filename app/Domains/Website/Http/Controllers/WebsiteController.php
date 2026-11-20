@@ -302,7 +302,12 @@ class WebsiteController extends BaseController
                 unset($settings['custom_domain']);
             }
             if ($customDomain && $domainType === 'custom') {
-                $settings['custom_domain'] = $customDomain;
+                $cleanCustomDomain = strtolower(trim($customDomain));
+                $cleanCustomDomain = preg_replace('#^https?://#i', '', $cleanCustomDomain);
+                $cleanCustomDomain = rtrim($cleanCustomDomain, '/');
+                $cleanCustomDomain = explode('/', $cleanCustomDomain)[0];
+                $cleanCustomDomain = explode(':', $cleanCustomDomain)[0];
+                $settings['custom_domain'] = $cleanCustomDomain;
             }
 
             $saveData = [
@@ -323,10 +328,8 @@ class WebsiteController extends BaseController
             $website->fill($saveData);
             $website->save();
 
-            if (in_array($domainType, ['subdomain', 'subprefix', 'path'])) {
-                app(\App\Domains\Template\Services\TemplateAccessService::class)
-                    ->recordTemplateUsage($user, $validated['source_template_id'] ?? null);
-            }
+            app(\App\Domains\Template\Services\TemplateAccessService::class)
+                ->recordTemplateUsage($user, $validated['source_template_id'] ?? null);
 
             return $website;
         });

@@ -316,7 +316,7 @@ export default function PublicSitePage() {
                         {siteData.site_name || 'Website'} Sedang Ditinjau
                     </h1>
                     <p style={{ fontSize: '14px', color: '#64748b', margin: '0 0 24px', lineHeight: 1.6 }}>
-                        Subdomain <strong style={{ color: '#4f46e5' }}>{siteData.subdomain}.web.microdata.co.id</strong> telah berhasil diajukan untuk publikasi dan saat ini sedang dalam proses review oleh Administrator.
+                        Alamat website <strong style={{ color: '#4f46e5' }}>{siteData.custom_domain || (siteData.domain_type === 'subprefix' ? `/${siteData.subdomain}` : `${siteData.subdomain}.web.microdata.co.id`)}</strong> telah berhasil diajukan untuk publikasi dan saat ini sedang dalam proses review oleh Administrator.
                     </p>
                     <div style={{
                         backgroundColor: '#f8fafc',
