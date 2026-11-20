@@ -97,7 +97,7 @@ export default function UserDashboard() {
                     <div>
                         <h2 className="text-lg font-extrabold text-[rgb(var(--color-text-primary))]">Website Saya</h2>
                         <p className="text-xs text-[rgb(var(--color-text-secondary))] mt-0.5">
-                            Daftar website Anda, status publikasi, dan tautan subdomain.
+                            Daftar website Anda, status publikasi, dan tautan website.
                         </p>
                     </div>
                     <Link
@@ -113,7 +113,7 @@ export default function UserDashboard() {
                         <Globe className="h-10 w-10 text-[rgb(var(--color-text-tertiary))] opacity-30" />
                         <p className="text-sm font-bold text-[rgb(var(--color-text-secondary))]">Belum ada website</p>
                         <p className="text-xs text-[rgb(var(--color-text-tertiary))]">
-                            Buat website pertama Anda melalui builder untuk mempublikasikannya ke subdomain.
+                            Buat website pertama Anda melalui builder untuk mempublikasikannya ke domain atau sub-prefix Anda.
                         </p>
                         <button
                             type="button"
@@ -129,7 +129,30 @@ export default function UserDashboard() {
                         {userWebsites.slice(0, 6).map((site) => {
                             const slug = site.subdomain || site.slug || 'my-website';
                             const statusKey = site.status || (site.is_published ? 'published' : 'draft');
-                            const liveUrl = site.url_subdomain || `https://${encodeURIComponent(slug)}.web.microdata.co.id`;
+                            const domainType = site.domain_type || site.settings?.domain_type || 'subdomain';
+
+                            // Determine live published URL accurately
+                            let liveUrl = site.published_url;
+                            if (!liveUrl) {
+                                if (domainType === 'custom' && site.custom_domain) {
+                                    liveUrl = site.custom_domain.startsWith('http') ? site.custom_domain : `https://${site.custom_domain}`;
+                                } else if (domainType === 'subprefix' || domainType === 'path') {
+                                    liveUrl = `${window.location.origin}/${slug}`;
+                                } else {
+                                    liveUrl = site.subdomain_url || `https://${encodeURIComponent(slug)}.web.microdata.co.id`;
+                                }
+                            }
+
+                            // Determine user-friendly display link
+                            let displayDomain = (site.published_url || liveUrl).replace(/^https?:\/\//, '');
+                            if (domainType === 'subprefix' || domainType === 'path') {
+                                displayDomain = `${window.location.host}/${slug}`;
+                            } else if (domainType === 'custom' && site.custom_domain) {
+                                displayDomain = site.custom_domain.replace(/^https?:\/\//, '');
+                            } else if (domainType === 'subdomain') {
+                                displayDomain = `${slug}.web.microdata.co.id`;
+                            }
+
                             const previewUrl = `/p/${encodeURIComponent(slug)}?preview=true`;
                             const targetUrl = statusKey === 'published' ? liveUrl : previewUrl;
 
@@ -174,7 +197,7 @@ export default function UserDashboard() {
                                                     title={`Buka ${targetUrl} di tab baru`}
                                                 >
                                                     <Globe className="h-3 w-3 shrink-0" />
-                                                    <span className="truncate">{slug}.web.microdata.co.id</span>
+                                                    <span className="truncate">{displayDomain}</span>
                                                 </a>
                                             </div>
                                             <StatusBadge status={statusKey} />

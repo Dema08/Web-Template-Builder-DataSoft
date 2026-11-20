@@ -48,7 +48,7 @@ class DashboardService extends BaseService
                 $draftWebsitesCount = Website::where('status', 'draft')->count();
 
                 $websitesFormatted = Website::select([
-                    'id', 'user_id', 'category_id', 'template_id', 'name', 'slug', 'thumbnail_path', 'status', 'published_at', 'created_at', 'updated_at'
+                    'id', 'user_id', 'category_id', 'template_id', 'name', 'slug', 'thumbnail_path', 'status', 'settings', 'published_at', 'created_at', 'updated_at'
                 ])
                 ->where('status', 'published')
                 ->with(['user', 'template'])
@@ -62,6 +62,8 @@ class DashboardService extends BaseService
                         'name' => $site->name,
                         'slug' => $site->slug,
                         'subdomain' => $site->slug,
+                        'domain_type' => $site->domain_type,
+                        'published_url' => $site->published_url,
                         'subdomain_url' => $site->url_subdomain,
                         'thumbnail_url' => $site->thumbnail_url,
                         'status' => $status,
@@ -80,7 +82,7 @@ class DashboardService extends BaseService
                 ->toArray();
 
                 $pendingRequests = Website::select([
-                    'id', 'user_id', 'category_id', 'template_id', 'name', 'slug', 'status', 'thumbnail_path', 'requested_at', 'created_at', 'updated_at'
+                    'id', 'user_id', 'category_id', 'template_id', 'name', 'slug', 'status', 'settings', 'thumbnail_path', 'requested_at', 'created_at', 'updated_at'
                 ])
                 ->where('status', 'pending')
                 ->with(['user.pricelist', 'template'])
@@ -89,13 +91,21 @@ class DashboardService extends BaseService
                 ->get()
                 ->map(function($site) {
                     $status = is_string($site->status) ? $site->status : ($site->status?->value ?? 'pending');
+                    $baseDomain = config('app.publish_domain', config('app.primary_host', 'web.microdata.co.id'));
+                    $domainDisplay = match ($site->domain_type) {
+                        'custom' => $site->custom_domain ?: ($site->slug . '.' . $baseDomain),
+                        'subprefix', 'path' => preg_replace('#^https?://#', '', $site->published_url),
+                        default => $site->slug . '.' . $baseDomain,
+                    };
+
                     return [
                         'id' => $site->id,
                         'name' => $site->name,
                         'slug' => $site->slug,
                         'subdomain' => $site->slug,
-                        'domain' => $site->slug . '.' . config('app.publish_domain', 'web.microdata.co.id'),
-                        'published_url' => $site->url_subdomain,
+                        'domain_type' => $site->domain_type,
+                        'domain' => $domainDisplay,
+                        'published_url' => $site->published_url,
                         'subdomain_url' => $site->url_subdomain,
                         'thumbnail_url' => $site->thumbnail_url,
                         'status' => $status,
@@ -199,8 +209,13 @@ class DashboardService extends BaseService
                 $websitesFormatted[] = [
                     'id' => $website->id,
                     'name' => $website->name,
+                    'slug' => $website->slug,
                     'subdomain' => $website->slug,
+                    'domain_type' => $website->domain_type,
+                    'custom_domain' => $website->custom_domain,
+                    'published_url' => $website->published_url,
                     'subdomain_url' => $website->url_subdomain,
+                    'url_path' => $website->url_path,
                     'thumbnail_url' => $website->thumbnail_url,
                     'status' => $status,
                     'is_published' => $status === 'published',
@@ -308,12 +323,20 @@ class DashboardService extends BaseService
             }
 
             $publishedWebsitesFormatted = $publishedWebsites->map(function ($w) use ($baseDomain) {
+                $domainType = $w->domain_type;
+                $domain = match ($domainType) {
+                    'custom' => $w->custom_domain ?: ($w->slug . '.' . $baseDomain),
+                    'subprefix', 'path' => preg_replace('#^https?://#', '', $w->published_url),
+                    default => $w->slug . '.' . $baseDomain,
+                };
+
                 return [
                     'id' => $w->id,
                     'name' => $w->name,
-                    'domain' => ($w->settings['domain_type'] ?? '') === 'custom' && !empty($w->settings['custom_domain'])
-                        ? $w->settings['custom_domain']
-                        : ($w->slug . '.' . $baseDomain),
+                    'slug' => $w->slug,
+                    'domain_type' => $domainType,
+                    'published_url' => $w->published_url,
+                    'domain' => $domain,
                 ];
             })->values()->all();
 

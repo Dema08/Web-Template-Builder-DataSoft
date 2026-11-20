@@ -46,7 +46,7 @@ export default function Websites() {
     const websitesList = useMemo(() => {
         return websites.map((website) => {
             const slug = website.slug || 'my-website';
-            const publicUrl = website.url_subdomain || `https://${encodeURIComponent(slug)}.web.microdata.co.id`;
+            const publicUrl = website.published_url || website.url_subdomain || `https://${encodeURIComponent(slug)}.web.microdata.co.id`;
             const statusKey = website.status || 'draft';
 
             return {

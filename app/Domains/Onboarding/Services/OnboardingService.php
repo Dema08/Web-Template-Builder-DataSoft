@@ -92,6 +92,14 @@ class OnboardingService
             ];
         }
 
+        if (in_array($slug, \App\Domains\Publish\Http\Requests\PublishWebsiteRequest::RESERVED_SLUGS, true)) {
+            return [
+                'available' => false,
+                'slug' => $slug,
+                'message' => 'This slug is reserved by the system and cannot be used.',
+            ];
+        }
+
         $existing = $this->websiteRepository->findBySlug($slug);
 
         if ($existing) {

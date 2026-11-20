@@ -24,7 +24,27 @@ class WebsiteController extends BaseController
     {
         $hasViewsTable = \Illuminate\Support\Facades\Schema::hasTable('website_view');
 
-        $query = Website::where('user_id', $request->user()->id)
+        $query = Website::query()
+            ->select([
+                'id',
+                'user_id',
+                'category_id',
+                'template_id',
+                'name',
+                'slug',
+                'thumbnail_path',
+                'status',
+                'rejection_reason',
+                'requested_at',
+                'approved_at',
+                'settings',
+                'favicon',
+                'logo',
+                'published_at',
+                'created_at',
+                'updated_at',
+            ])
+            ->where('user_id', $request->user()->id)
             ->orderByDesc('updated_at');
 
         if ($hasViewsTable) {
@@ -83,10 +103,7 @@ class WebsiteController extends BaseController
             'ignore_current_website' => ['sometimes', 'boolean'],
         ]);
 
-        $reservedSlugs = [
-            'admin', 'api', 'www', 'app', 'mail', 'ftp', 'cdn', 'static',
-            'assets', 'public', 'storage', 'p', 'dashboard', 'web',
-        ];
+        $reservedSlugs = \App\Domains\Publish\Http\Requests\PublishWebsiteRequest::RESERVED_SLUGS;
         $slug = $validated['slug'];
         $websiteId = $request->query('website_id');
         $user = $request->user();
@@ -227,7 +244,7 @@ class WebsiteController extends BaseController
         $sourceWebsite = $user->websites()->findOrFail($validated['website_id']);
         $publishAction = $validated['publish_action'] ?? 'update';
         $isCreatingNew = $publishAction === 'new';
-        $domainType = $isCreatingNew ? 'subdomain' : $validated['domain_type'];
+        $domainType = $validated['domain_type'] ?? ($isCreatingNew ? 'subprefix' : 'subdomain');
         $customDomain = trim((string) ($validated['custom_domain'] ?? ''));
         $slug = $validated['slug'];
         $draftJson = $validated['draft_json'] ?? $sourceWebsite->draft_json;
@@ -264,9 +281,12 @@ class WebsiteController extends BaseController
         }
 
         $isAdmin = $user->isAdmin();
-        $targetStatus = $isAdmin ? 'published' : 'pending';
+        // Sub-Prefix works directly on domain utama without requiring virtual host / DNS setup,
+        // so it activates immediately. Subdomain and custom domain follow admin moderation.
+        $isInstantPublish = $isAdmin || $domainType === 'subprefix' || $domainType === 'path';
+        $targetStatus = $isInstantPublish ? 'published' : 'pending';
 
-        $website = DB::transaction(function () use ($sourceWebsite, $isCreatingNew, $slug, $domainType, $customDomain, $draftJson, $user, $validated, $targetStatus, $isAdmin) {
+        $website = DB::transaction(function () use ($sourceWebsite, $isCreatingNew, $slug, $domainType, $customDomain, $draftJson, $user, $validated, $targetStatus, $isInstantPublish) {
             $website = $sourceWebsite;
             $settings = $sourceWebsite->settings ?? [];
 
@@ -278,10 +298,10 @@ class WebsiteController extends BaseController
             }
 
             $settings['domain_type'] = $domainType;
-            if ($domainType === 'subdomain') {
+            if ($domainType === 'subdomain' || $domainType === 'subprefix' || $domainType === 'path') {
                 unset($settings['custom_domain']);
             }
-            if ($customDomain) {
+            if ($customDomain && $domainType === 'custom') {
                 $settings['custom_domain'] = $customDomain;
             }
 
@@ -294,7 +314,7 @@ class WebsiteController extends BaseController
                 'settings' => $settings,
             ];
 
-            if ($isAdmin) {
+            if ($isInstantPublish) {
                 $saveData['published_at'] = now();
                 $saveData['approved_at'] = now();
                 $saveData['approved_by'] = $user->id;
@@ -303,7 +323,7 @@ class WebsiteController extends BaseController
             $website->fill($saveData);
             $website->save();
 
-            if ($domainType === 'subdomain') {
+            if (in_array($domainType, ['subdomain', 'subprefix', 'path'])) {
                 app(\App\Domains\Template\Services\TemplateAccessService::class)
                     ->recordTemplateUsage($user, $validated['source_template_id'] ?? null);
             }
@@ -311,15 +331,19 @@ class WebsiteController extends BaseController
             return $website;
         });
 
-        // Notify admins if requested by regular user
-        if (!$isAdmin) {
+        // Notify admins if requested by regular user for subdomain/custom domain
+        if (!$isAdmin && $targetStatus === 'pending') {
             $adminUsers = \App\Domains\User\Models\User::where('peran', 'admin')->get();
             $baseDomain = config('app.publish_domain', config('app.primary_host', 'web.microdata.co.id'));
+            $domainLabel = $domainType === 'custom'
+                ? "custom domain {$customDomain}"
+                : "subdomain {$website->slug}.{$baseDomain}";
+
             foreach ($adminUsers as $admin) {
                 \App\Domains\Notification\Models\Notification::create([
                     'user_id' => $admin->id,
-                    'judul' => 'Permintaan Hosting Subdomain Baru',
-                    'pesan' => "Pengguna \"{$user->name}\" ({$user->email}) mengajukan publikasi website \"{$website->name}\" pada subdomain {$website->slug}.{$baseDomain}.",
+                    'judul' => 'Permintaan Hosting Baru',
+                    'pesan' => "Pengguna \"{$user->name}\" ({$user->email}) mengajukan publikasi website \"{$website->name}\" pada {$domainLabel}.",
                     'tipe' => 'website_publish_request',
                     'dibaca' => false,
                 ]);
@@ -327,19 +351,22 @@ class WebsiteController extends BaseController
         }
 
         $subdomainUrl = $website->url_subdomain;
-        $publishedUrl = ($domainType === 'custom' && $customDomain)
-            ? (str_starts_with($customDomain, 'http') ? $customDomain : 'https://' . $customDomain)
-            : $subdomainUrl;
+        $pathUrl = $website->url_path;
+        $publishedUrl = match ($domainType) {
+            'custom' => ($customDomain ? (str_starts_with($customDomain, 'http') ? $customDomain : 'https://' . $customDomain) : $subdomainUrl),
+            'subprefix', 'path' => $pathUrl,
+            default => $subdomainUrl,
+        };
 
-        $responseMessage = $isAdmin
-            ? 'Website berhasil dipublikasikan dan dapat diakses di subdomain.'
+        $responseMessage = $targetStatus === 'published'
+            ? 'Website berhasil dipublikasikan dan langsung dapat diakses.'
             : 'Permintaan publikasi berhasil dikirim! Website Anda sedang menunggu konfirmasi admin sebelum aktif di subdomain.';
 
         return $this->success([
             'publish_action' => $publishAction,
             'published_url' => $publishedUrl,
             'subdomain_url' => $subdomainUrl,
-            'path_url' => $subdomainUrl,
+            'path_url' => $pathUrl,
             'status' => $targetStatus,
             'is_pending' => $targetStatus === 'pending',
             'domain_type' => $domainType,

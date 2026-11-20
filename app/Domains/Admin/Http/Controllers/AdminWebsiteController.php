@@ -62,10 +62,17 @@ class AdminWebsiteController extends BaseController
             $domainType = $settings['domain_type'] ?? 'subdomain';
             $customDomain = $settings['custom_domain'] ?? null;
             $subdomainUrl = $site->url_subdomain ?: 'https://' . $site->slug . '.' . config('app.main_domain', 'microdata.co.id');
-            $publishedUrl = ($domainType === 'custom' && $customDomain)
-                ? (str_starts_with($customDomain, 'http') ? $customDomain : 'https://' . $customDomain)
-                : $subdomainUrl;
-            $displayDomain = $customDomain ?: str_replace(['https://', 'http://'], '', $subdomainUrl);
+            $pathUrl = $site->url_path;
+            $publishedUrl = match ($domainType) {
+                'custom' => ($customDomain ? (str_starts_with($customDomain, 'http') ? $customDomain : 'https://' . $customDomain) : $subdomainUrl),
+                'subprefix', 'path' => $pathUrl,
+                default => $subdomainUrl,
+            };
+            $displayDomain = match ($domainType) {
+                'custom' => $customDomain,
+                'subprefix', 'path' => str_replace(['https://', 'http://'], '', $pathUrl),
+                default => str_replace(['https://', 'http://'], '', $subdomainUrl),
+            };
 
             $user = $site->user;
             $plan = $user?->effective_pricelist;
@@ -280,10 +287,17 @@ class AdminWebsiteController extends BaseController
             $domainType = $settings['domain_type'] ?? 'subdomain';
             $customDomain = $settings['custom_domain'] ?? null;
             $subdomainUrl = "https://{$site->slug}.{$baseDomain}";
-            $publishedUrl = ($domainType === 'custom' && $customDomain)
-                ? (str_starts_with($customDomain, 'http') ? $customDomain : 'https://' . $customDomain)
-                : $subdomainUrl;
-            $displayDomain = "{$site->slug}.{$baseDomain}";
+            $pathUrl = $site->url_path;
+            $publishedUrl = match ($domainType) {
+                'custom' => ($customDomain ? (str_starts_with($customDomain, 'http') ? $customDomain : 'https://' . $customDomain) : $subdomainUrl),
+                'subprefix', 'path' => $pathUrl,
+                default => $subdomainUrl,
+            };
+            $displayDomain = match ($domainType) {
+                'custom' => $customDomain,
+                'subprefix', 'path' => str_replace(['https://', 'http://'], '', $pathUrl),
+                default => "{$site->slug}.{$baseDomain}",
+            };
 
             $user = $site->user;
             $plan = $user?->effective_pricelist;

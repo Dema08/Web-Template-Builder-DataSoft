@@ -8,21 +8,42 @@ use Illuminate\Validation\Rule;
 
 class PublishWebsiteRequest extends FormRequest
 {
-    private const RESERVED_SLUGS = [
+    public const RESERVED_SLUGS = [
         'admin',
         'api',
-        'www',
         'app',
-        'mail',
-        'ftp',
-        'cdn',
-        'static',
         'assets',
-        'public',
-        'storage',
-        'p',
+        'auth',
+        'billing',
+        'builder',
+        'cdn',
         'dashboard',
+        'forgot-password',
+        'ftp',
+        'home',
+        'login',
+        'mail',
+        'my-templates',
+        'onboarding',
+        'p',
+        'preview',
+        'profile',
+        'public',
+        'register',
+        'reset-password',
+        'settings',
+        'site',
+        'static',
+        'storage',
+        'templates',
+        'templates-gallery',
+        'up',
+        'user',
+        'verify-otp',
         'web',
+        'websites',
+        'welcome',
+        'www',
     ];
 
     public function authorize(): bool
@@ -60,7 +81,7 @@ class PublishWebsiteRequest extends FormRequest
             'draft_json' => ['sometimes', 'array'],
             'source_template_id' => ['nullable', 'integer', Rule::exists('template', 'id')],
             'slug' => $slugRules,
-            'domain_type' => ['required', Rule::in(['subdomain', 'custom'])],
+            'domain_type' => ['required', Rule::in(['subdomain', 'custom', 'subprefix', 'path'])],
             'custom_domain' => ['required_if:domain_type,custom', 'nullable', 'string', 'max:253'],
         ];
     }

@@ -26,6 +26,15 @@ import {
  * dashboard agar tidak mempengaruhi tampilan website yang dipublish.
  * Semua garis/border/ring dari builder UI dihilangkan sepenuhnya.
  */
+const RESERVED_SLUGS = [
+    'admin', 'api', 'app', 'assets', 'auth', 'billing', 'builder',
+    'cdn', 'dashboard', 'forgot-password', 'ftp', 'home', 'login',
+    'mail', 'my-templates', 'onboarding', 'p', 'preview', 'profile',
+    'public', 'register', 'reset-password', 'settings', 'site',
+    'static', 'storage', 'templates', 'templates-gallery', 'up',
+    'user', 'verify-otp', 'web', 'websites', 'welcome', 'www',
+];
+
 export default function PublicSitePage() {
     const { slug: pathSlug } = useParams();
     const [searchParams] = useSearchParams();
@@ -45,6 +54,21 @@ export default function PublicSitePage() {
     const pages = useBuilderStore((state) => state.pages);
     const loadSections = useBuilderStore((state) => state.loadSections);
     const switchPreviewPage = useBuilderStore((state) => state.switchPreviewPage);
+
+    // Keep internal links that point to root inside the website when viewed under a sub-prefix
+    useEffect(() => {
+        const handleLinkClick = (e) => {
+            const anchor = e.target.closest('a');
+            if (!anchor) return;
+            const href = anchor.getAttribute('href');
+            if (href === '/' && slug) {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+        document.addEventListener('click', handleLinkClick);
+        return () => document.removeEventListener('click', handleLinkClick);
+    }, [slug]);
 
     useEffect(() => {
         const store = useBuilderStore.getState();
@@ -111,6 +135,13 @@ export default function PublicSitePage() {
         const fetchSite = async () => {
             setIsLoading(true);
             setError(null);
+
+            if (slug && RESERVED_SLUGS.includes(slug.toLowerCase())) {
+                setError('Website tidak ditemukan atau belum dipublish.');
+                setIsLoading(false);
+                return;
+            }
+
             try {
                 let url = '/public/site';
                 const queryParts = [];

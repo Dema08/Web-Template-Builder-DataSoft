@@ -162,6 +162,9 @@ export default function AppRouter() {
                     }
                 />
 
+                {/* Sub-Prefix Website Route — public website accessible directly via /:slug */}
+                <Route path="/:slug" element={<PublicSitePage />} />
+
                 {/* Fallback — redirect to landing page */}
                 <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>

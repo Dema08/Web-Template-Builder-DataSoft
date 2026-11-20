@@ -239,7 +239,7 @@ export default function AdminDashboard() {
                                     <div className="min-w-0 space-y-0.5">
                                         <p className="text-sm font-extrabold text-[rgb(var(--color-text-primary))] truncate">{site.name}</p>
                                         <p className="text-xs font-mono font-bold text-indigo-600 dark:text-indigo-400 truncate">
-                                            {site.subdomain}.web.microdata.co.id
+                                            {site.domain || site.published_url?.replace(/^https?:\/\//, '') || `${site.subdomain}.web.microdata.co.id`}
                                         </p>
                                         <p className="text-[11px] text-[rgb(var(--color-text-tertiary))] truncate">
                                             Pemilik: <strong className="text-[rgb(var(--color-text-secondary))]">{site.owner?.name}</strong> ({site.owner?.email}) • Paket: <span className="font-semibold">{site.owner?.plan}</span>

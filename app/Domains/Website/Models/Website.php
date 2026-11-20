@@ -83,6 +83,16 @@ class Website extends Model
         return $query->where('status', 'rejected');
     }
 
+    public function getDomainTypeAttribute(): string
+    {
+        return $this->settings['domain_type'] ?? 'subdomain';
+    }
+
+    public function getCustomDomainAttribute(): ?string
+    {
+        return $this->settings['custom_domain'] ?? null;
+    }
+
     public function getUrlSubdomainAttribute(): ?string
     {
         if (!$this->slug) {
@@ -96,7 +106,39 @@ class Website extends Model
 
     public function getUrlPathAttribute(): string
     {
-        return $this->url_subdomain ?: ('/p/'.$this->slug);
+        if (!$this->slug) {
+            return '';
+        }
+
+        if (app()->runningInConsole() || !request()) {
+            $base = rtrim(config('app.url', 'http://localhost:8000'), '/');
+            return "{$base}/{$this->slug}";
+        }
+
+        $scheme = request()->getScheme();
+        $host = request()->getHost();
+        $port = request()->getPort();
+        $portStr = ($port && !in_array($port, [80, 443])) ? ":{$port}" : '';
+
+        return "{$scheme}://{$host}{$portStr}/{$this->slug}";
+    }
+
+    public function getPublishedUrlAttribute(): string
+    {
+        $domainType = $this->domain_type ?? ($this->settings['domain_type'] ?? 'subdomain');
+
+        if ($domainType === 'custom') {
+            $custom = $this->custom_domain ?? ($this->settings['custom_domain'] ?? null);
+            if (!empty($custom)) {
+                return str_starts_with($custom, 'http') ? $custom : "https://{$custom}";
+            }
+        }
+
+        if ($domainType === 'subprefix' || $domainType === 'path') {
+            return $this->url_path;
+        }
+
+        return $this->url_subdomain ?? $this->url_path;
     }
 
     public function getThumbnailUrlAttribute(): ?string

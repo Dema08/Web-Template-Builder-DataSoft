@@ -1,9 +1,41 @@
 import { useState, useEffect } from 'react';
-import { Globe, Lock, ArrowUpRight, Sparkles, X, Loader2, CheckCircle2, Copy, CircleAlert, Clock } from 'lucide-react';
+import { Globe, Lock, ArrowUpRight, Sparkles, X, Loader2, CheckCircle2, Copy, CircleAlert, Clock, Link2, ExternalLink } from 'lucide-react';
 import { useSubscriptionStore } from '@shared/stores/subscriptionStore';
 import { useAuthStore } from '@shared/stores/authStore';
 import { toast } from '@store';
 import { websiteApi } from '@api';
+
+function getPrimaryDomainUrl() {
+    if (typeof window === 'undefined') return 'https://web.microdata.co.id';
+    const host = window.location.hostname.toLowerCase();
+    const port = window.location.port ? `:${window.location.port}` : '';
+    if (host === 'localhost' || host === '127.0.0.1' || host.endsWith('.localhost')) {
+        return `${window.location.protocol}//localhost${port}`;
+    }
+    if (host.endsWith('.web.microdata.co.id')) {
+        return 'https://web.microdata.co.id';
+    }
+    if (host.endsWith('.microdata.co.id')) {
+        return 'https://microdata.co.id';
+    }
+    return window.location.origin;
+}
+
+function getPrimaryDomainName() {
+    if (typeof window === 'undefined') return 'domainutama.com';
+    const host = window.location.hostname.toLowerCase();
+    const port = window.location.port ? `:${window.location.port}` : '';
+    if (host === 'localhost' || host === '127.0.0.1' || host.endsWith('.localhost')) {
+        return `localhost${port}`;
+    }
+    if (host.endsWith('.web.microdata.co.id')) {
+        return 'web.microdata.co.id';
+    }
+    if (host.endsWith('.microdata.co.id')) {
+        return 'microdata.co.id';
+    }
+    return window.location.host;
+}
 
 export default function PublishDomainModal({
     isOpen,
@@ -21,7 +53,11 @@ export default function PublishDomainModal({
     const { openUpgradeModal } = useSubscriptionStore();
     const isAdmin = user?.role === 'admin';
 
-    const [domainType, setDomainType] = useState(initialDomainType || 'subdomain');
+    const normalizedInitialType = (initialDomainType === 'path' || initialDomainType === 'subprefix')
+        ? 'subprefix'
+        : (initialDomainType || 'subdomain');
+
+    const [domainType, setDomainType] = useState(normalizedInitialType);
     const [publishAction, setPublishAction] = useState('update');
     const [slug, setSlug] = useState(initialSlug || '');
     const [customDomain, setCustomDomain] = useState(initialCustomDomain || '');
@@ -29,6 +65,9 @@ export default function PublishDomainModal({
     const [quota, setQuota] = useState(null);
     const [quotaError, setQuotaError] = useState('');
     const [quotaLoading, setQuotaLoading] = useState(false);
+
+    const primaryBaseUrl = getPrimaryDomainUrl();
+    const primaryDomainName = getPrimaryDomainName();
 
     useEffect(() => {
         if (isOpen) {
@@ -39,9 +78,9 @@ export default function PublishDomainModal({
             setQuota(null);
             setQuotaError('');
             setQuotaLoading(true);
-            setDomainType(initialDomainType || 'subdomain');
+            setDomainType(normalizedInitialType);
         }
-    }, [isOpen, initialSlug, initialCustomDomain, initialDomainType]);
+    }, [isOpen, initialSlug, initialCustomDomain, normalizedInitialType]);
 
     useEffect(() => {
         if (!isOpen) return undefined;
@@ -69,8 +108,10 @@ export default function PublishDomainModal({
         && slug.trim().toLowerCase() === cleanSlug
         && /^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/.test(cleanSlug);
 
+    const isSlugDomain = domainType === 'subdomain' || domainType === 'subprefix';
+
     useEffect(() => {
-        if (!isOpen || domainType !== 'subdomain') {
+        if (!isOpen || !isSlugDomain) {
             setSlugCheck({ status: 'idle', message: '' });
             return undefined;
         }
@@ -84,7 +125,7 @@ export default function PublishDomainModal({
         }
 
         let active = true;
-        setSlugCheck({ status: 'checking', message: 'Memeriksa ketersediaan slug...' });
+        setSlugCheck({ status: 'checking', message: 'Memeriksa ketersediaan alamat...' });
         const timeoutId = window.setTimeout(() => {
             websiteApi.checkSlug(
                 cleanSlug,
@@ -103,17 +144,17 @@ export default function PublishDomainModal({
                     if (active) {
                         setSlugCheck({
                             status: 'error',
-                            message: error.response?.data?.message || 'Slug gagal diperiksa. Coba lagi.',
+                            message: error.response?.data?.message || 'Alamat gagal diperiksa. Coba lagi.',
                         });
                     }
                 });
-        }, 500);
+        }, 400);
 
         return () => {
             active = false;
             window.clearTimeout(timeoutId);
         };
-    }, [isOpen, domainType, publishAction, cleanSlug, isSlugFormatValid, initialWebsiteId]);
+    }, [isOpen, domainType, isSlugDomain, publishAction, cleanSlug, isSlugFormatValid, initialWebsiteId]);
 
     if (!isOpen) return null;
 
@@ -127,7 +168,7 @@ export default function PublishDomainModal({
             return;
         }
 
-        if (domainType === 'subdomain' && (!isSlugFormatValid || slugCheck.status !== 'available')) {
+        if (isSlugDomain && (!isSlugFormatValid || slugCheck.status !== 'available')) {
             return;
         }
 
@@ -161,15 +202,18 @@ export default function PublishDomainModal({
     };
 
     if (publishResult) {
-        const subdomainUrl = publishResult.subdomain_url || `https://${cleanSlug}.web.microdata.co.id`;
-        const customUrl = publishResult.domain_type === 'custom'
-            ? publishResult.published_url
-            : null;
+        const isSubprefix = publishResult.domain_type === 'subprefix' || publishResult.domain_type === 'path';
+        const isCustom = publishResult.domain_type === 'custom';
         const isPending = publishResult.is_pending || publishResult.status === 'pending';
+
+        const subdomainUrl = publishResult.subdomain_url || `https://${cleanSlug}.web.microdata.co.id`;
+        const pathUrl = publishResult.path_url || `${primaryBaseUrl}/${cleanSlug}`;
+        const customUrl = isCustom ? publishResult.published_url : null;
+        const targetActiveUrl = isSubprefix ? pathUrl : (isCustom ? customUrl : subdomainUrl);
 
         return (
             <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-                <div className="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-7 shadow-2xl border border-slate-100 space-y-5" role="dialog" aria-modal="true">
+                <div className="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-7 shadow-2xl border border-slate-100 space-y-5 animate-in fade-in zoom-in-95 duration-150" role="dialog" aria-modal="true">
                     <div className="flex items-start justify-between gap-4 border-b border-slate-100 pb-4">
                         <div className="flex items-center gap-3">
                             {isPending ? (
@@ -185,12 +229,12 @@ export default function PublishDomainModal({
                                 <h3 className="text-lg font-extrabold text-slate-900">
                                     {isPending
                                         ? 'Permintaan Publikasi Terkirim!'
-                                        : (publishResult.publish_action === 'new' ? 'Subdomain baru berhasil dibuat' : 'Website berhasil dipublikasikan')}
+                                        : (publishResult.publish_action === 'new' ? 'Website Baru Berhasil Dibuat' : 'Website Berhasil Dipublikasikan!')}
                                 </h3>
                                 <p className="text-xs text-slate-500 mt-1">
                                     {isPending
                                         ? 'Website Anda sedang menunggu konfirmasi admin sebelum aktif di subdomain.'
-                                        : 'Website Anda telah aktif dan dapat diakses publik.'}
+                                        : 'Website Anda telah aktif dan dapat langsung diakses oleh publik.'}
                                 </p>
                             </div>
                         </div>
@@ -199,33 +243,84 @@ export default function PublishDomainModal({
                         </button>
                     </div>
 
-                    {/* Subdomain Card */}
-                    <div className="p-4 rounded-2xl bg-indigo-50/50 border border-indigo-100 space-y-2">
-                        <div className="flex items-center justify-between">
-                            <p className="text-xs font-bold text-slate-700">Alamat Subdomain:</p>
-                            {isPending && (
-                                <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-extrabold text-[10px]">
-                                    Menunggu Persetujuan
+                    {/* Sub-Prefix Success Card */}
+                    {isSubprefix && (
+                        <div className="p-4 rounded-2xl bg-emerald-50/60 border border-emerald-200/80 space-y-2">
+                            <div className="flex items-center justify-between">
+                                <p className="text-xs font-bold text-emerald-900 flex items-center gap-1.5">
+                                    <Link2 className="h-3.5 w-3.5 text-emerald-600" />
+                                    Alamat Website (Sub-Prefix):
+                                </p>
+                                <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-extrabold text-[10px]">
+                                    Langsung Aktif
                                 </span>
-                            )}
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <a href={subdomainUrl} target="_blank" rel="noreferrer" className="text-xs text-indigo-700 font-bold underline truncate flex-1">
-                                {subdomainUrl}
-                            </a>
-                            <button type="button" onClick={() => handleCopyUrl(subdomainUrl)} className="p-2 rounded-xl bg-white border border-indigo-200 text-slate-600 hover:bg-indigo-50" aria-label="Salin Subdomain">
-                                <Copy className="h-4 w-4 text-indigo-600" />
-                            </button>
-                        </div>
-                    </div>
-
-                    {customUrl && (
-                        <div className="p-3 rounded-xl border border-slate-200 space-y-2">
-                            <p className="text-[11px] font-bold text-slate-500">Custom Domain</p>
+                            </div>
                             <div className="flex items-center gap-2">
-                                <a href={customUrl} target="_blank" rel="noreferrer" className="text-xs text-indigo-700 font-semibold underline truncate flex-1">{customUrl}</a>
-                                <button type="button" onClick={() => handleCopyUrl(customUrl)} className="p-2 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50" aria-label="Salin Custom Domain">
-                                    <Copy className="h-4 w-4" />
+                                <a href={pathUrl} target="_blank" rel="noreferrer" className="text-xs text-emerald-700 font-bold underline truncate flex-1 hover:text-emerald-800">
+                                    {pathUrl}
+                                </a>
+                                <button type="button" onClick={() => handleCopyUrl(pathUrl)} className="p-2 rounded-xl bg-white border border-emerald-200 text-slate-600 hover:bg-emerald-50 transition" title="Salin URL">
+                                    <Copy className="h-4 w-4 text-emerald-600" />
+                                </button>
+                                <a href={pathUrl} target="_blank" rel="noreferrer" className="p-2 rounded-xl bg-white border border-emerald-200 text-slate-600 hover:bg-emerald-50 transition" title="Buka Website">
+                                    <ExternalLink className="h-4 w-4 text-emerald-600" />
+                                </a>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Subdomain Success Card */}
+                    {!isSubprefix && !isCustom && (
+                        <div className="p-4 rounded-2xl bg-indigo-50/50 border border-indigo-100 space-y-2">
+                            <div className="flex items-center justify-between">
+                                <p className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                                    <Globe className="h-3.5 w-3.5 text-indigo-600" />
+                                    Alamat Subdomain:
+                                </p>
+                                {isPending ? (
+                                    <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-extrabold text-[10px]">
+                                        Menunggu Persetujuan
+                                    </span>
+                                ) : (
+                                    <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-extrabold text-[10px]">
+                                        Aktif
+                                    </span>
+                                )}
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <a href={subdomainUrl} target="_blank" rel="noreferrer" className="text-xs text-indigo-700 font-bold underline truncate flex-1 hover:text-indigo-800">
+                                    {subdomainUrl}
+                                </a>
+                                <button type="button" onClick={() => handleCopyUrl(subdomainUrl)} className="p-2 rounded-xl bg-white border border-indigo-200 text-slate-600 hover:bg-indigo-50 transition" title="Salin Subdomain">
+                                    <Copy className="h-4 w-4 text-indigo-600" />
+                                </button>
+                                {!isPending && (
+                                    <a href={subdomainUrl} target="_blank" rel="noreferrer" className="p-2 rounded-xl bg-white border border-indigo-200 text-slate-600 hover:bg-indigo-50 transition" title="Buka Website">
+                                        <ExternalLink className="h-4 w-4 text-indigo-600" />
+                                    </a>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Custom Domain Success Card */}
+                    {customUrl && (
+                        <div className="p-4 rounded-2xl bg-indigo-50/50 border border-indigo-100 space-y-2">
+                            <div className="flex items-center justify-between">
+                                <p className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                                    <Globe className="h-3.5 w-3.5 text-indigo-600" />
+                                    Custom Domain:
+                                </p>
+                                {isPending && (
+                                    <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-extrabold text-[10px]">
+                                        Menunggu Verifikasi DNS
+                                    </span>
+                                )}
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <a href={customUrl} target="_blank" rel="noreferrer" className="text-xs text-indigo-700 font-semibold underline truncate flex-1 hover:text-indigo-800">{customUrl}</a>
+                                <button type="button" onClick={() => handleCopyUrl(customUrl)} className="p-2 rounded-xl bg-white border border-indigo-200 text-slate-600 hover:bg-indigo-50 transition" title="Salin Custom Domain">
+                                    <Copy className="h-4 w-4 text-indigo-600" />
                                 </button>
                             </div>
                         </div>
@@ -235,16 +330,28 @@ export default function PublishDomainModal({
                         <div className="p-3 rounded-xl bg-amber-50 border border-amber-200/80 text-xs text-amber-900 space-y-1">
                             <p className="font-bold flex items-center gap-1.5">
                                 <Clock className="h-4 w-4 text-amber-600" />
-                                Proses Verifikasi Admin
+                                Proses Verifikasi Administrator
                             </p>
                             <p className="text-[11px] text-amber-800 leading-relaxed">
-                                Notifikasi akan otomatis masuk ke akun Anda setelah admin menyetujui penerbitan subdomain ini.
+                                Notifikasi akan otomatis masuk ke akun Anda setelah admin menyetujui penerbitan alamat ini.
                             </p>
                         </div>
                     )}
 
-                    <div className="flex justify-end pt-2">
-                        <button type="button" onClick={onClose} className="px-5 py-2.5 rounded-xl text-xs font-extrabold text-white bg-indigo-600 hover:bg-indigo-700 cursor-pointer">
+                    <div className="flex items-center justify-between pt-2">
+                        {targetActiveUrl && !isPending ? (
+                            <a
+                                href={targetActiveUrl}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="inline-flex items-center gap-1.5 text-xs font-extrabold text-indigo-600 hover:text-indigo-800"
+                            >
+                                <span>Kunjungi Website Sekarang</span>
+                                <ExternalLink className="h-3.5 w-3.5" />
+                            </a>
+                        ) : <div />}
+
+                        <button type="button" onClick={onClose} className="px-5 py-2.5 rounded-xl text-xs font-extrabold text-white bg-indigo-600 hover:bg-indigo-700 cursor-pointer transition shadow-md shadow-indigo-600/20">
                             Selesai & Tutup
                         </button>
                     </div>
@@ -269,16 +376,14 @@ export default function PublishDomainModal({
                         <div>
                             <div className="flex items-center gap-2">
                                 <h3 className="text-lg font-extrabold text-slate-900 tracking-tight">
-                                    {isAdmin ? 'Terbitkan Website Perusahaan' : 'Ajukan Publikasi Subdomain'}
+                                    Publikasikan Website
                                 </h3>
                                 <span className="px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 text-[10px] font-black uppercase tracking-wider border border-indigo-200">
-                                    Subdomain
+                                    3 Pilihan Alamat
                                 </span>
                             </div>
                             <p className="text-xs text-slate-500 mt-0.5">
-                                {isAdmin
-                                    ? 'Publikasikan website langsung ke subdomain perusahaan.'
-                                    : 'Kirim permintaan publikasi website agar disetujui admin dan aktif pada subdomain.'}
+                                Pilih metode publikasi: Subdomain, Sub-Prefix (Path URL), atau Domain Sendiri.
                             </p>
                         </div>
                     </div>
@@ -308,7 +413,7 @@ export default function PublishDomainModal({
                                     onChange={() => {
                                         setPublishAction('update');
                                         setSlug(initialSlug || '');
-                                        setDomainType(initialDomainType || 'subdomain');
+                                        setDomainType(normalizedInitialType);
                                     }}
                                     className="mt-1 h-4 w-4 text-indigo-600"
                                 />
@@ -327,14 +432,14 @@ export default function PublishDomainModal({
                                     checked={publishAction === 'new'}
                                     onChange={() => {
                                         setPublishAction('new');
-                                        setDomainType('subdomain');
+                                        if (domainType === 'custom') setDomainType('subprefix');
                                         const baseSlug = (initialSlug || 'website').slice(0, 45);
                                         setSlug(`${baseSlug}-baru`);
                                     }}
                                     className="mt-1 h-4 w-4 text-indigo-600"
                                 />
                                 <span>
-                                    <span className="block text-sm font-extrabold text-slate-900">Buat subdomain baru</span>
+                                    <span className="block text-sm font-extrabold text-slate-900">Buat website baru</span>
                                     <span className="mt-1 block text-xs text-slate-500">Website lama tetap aktif; konten saat ini diterbitkan sebagai website baru dengan alamat terpisah.</span>
                                 </span>
                             </label>
@@ -363,14 +468,14 @@ export default function PublishDomainModal({
                                 <div>
                                     <div className="flex items-center gap-2">
                                         <span className="text-sm font-extrabold text-slate-900">
-                                            Subdomain Microdata (.web.microdata.co.id)
+                                            1. Menggunakan Subdomain (.web.microdata.co.id)
                                         </span>
                                         <span className="px-2 py-0.5 rounded-md bg-indigo-100 text-indigo-700 text-[10px] font-bold">
                                             GRATIS
                                         </span>
                                     </div>
                                     <p className="text-xs text-slate-500 mt-1">
-                                        Subdomain siap pakai. Setelah diajukan, admin akan mengonfirmasi agar website dapat diakses publik.
+                                        Alamat website menggunakan subdomain terpisah (contoh: <code className="text-indigo-600 font-semibold">perusahaan.web.microdata.co.id</code>).
                                     </p>
                                 </div>
                             </div>
@@ -412,24 +517,22 @@ export default function PublishDomainModal({
                                 )}
 
                                 <div className="p-2.5 bg-white rounded-xl border border-indigo-100 flex items-center justify-between text-xs">
-                                    <span className="text-slate-500 text-[11px] font-medium">Target Alamat:</span>
+                                    <span className="text-slate-500 text-[11px] font-medium">Preview URL:</span>
                                     <span className="font-extrabold text-indigo-600 truncate max-w-[280px]">
-                                        {`https://${cleanSlug || 'subdomain'}.web.microdata.co.id`}
+                                        {`https://${cleanSlug || 'nama-perusahaan'}.web.microdata.co.id`}
                                     </span>
                                 </div>
                             </div>
                         )}
                     </div>
 
-                    {/* Domain Choice 2: Domain Sendiri / Domain Kustom */}
-                    {publishAction === 'update' && <div
-                        onClick={handleSelectCustomDomain}
-                        className={`p-4 rounded-2xl border-2 transition-all relative ${
-                            !canUseCustomDomain
-                                ? 'bg-slate-50/70 border-slate-200 opacity-95 cursor-not-allowed'
-                                : domainType === 'custom'
-                                ? 'bg-indigo-50/40 border-indigo-600 shadow-sm cursor-pointer'
-                                : 'bg-white border-slate-200/80 hover:border-slate-300 cursor-pointer'
+                    {/* Domain Choice 2: Menggunakan Sub-Prefix (Path URL) */}
+                    <div
+                        onClick={() => setDomainType('subprefix')}
+                        className={`p-4 rounded-2xl border-2 transition-all cursor-pointer relative ${
+                            domainType === 'subprefix'
+                                ? 'bg-indigo-50/40 border-indigo-600 shadow-sm'
+                                : 'bg-white border-slate-200/80 hover:border-slate-300'
                         }`}
                     >
                         <div className="flex items-start justify-between gap-3">
@@ -437,87 +540,169 @@ export default function PublishDomainModal({
                                 <input
                                     type="radio"
                                     name="domain_type"
-                                    value="custom"
-                                    disabled={!canUseCustomDomain}
-                                    checked={domainType === 'custom'}
-                                    onChange={() => canUseCustomDomain && setDomainType('custom')}
-                                    className="mt-1 h-4 w-4 text-indigo-600 focus:ring-indigo-500 cursor-pointer disabled:opacity-50"
+                                    value="subprefix"
+                                    checked={domainType === 'subprefix'}
+                                    onChange={() => setDomainType('subprefix')}
+                                    className="mt-1 h-4 w-4 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
                                 />
                                 <div>
                                     <div className="flex items-center gap-2">
-                                        <span className={`text-sm font-extrabold ${!canUseCustomDomain ? 'text-slate-500' : 'text-slate-900'}`}>
-                                            Domain Sendiri (Domain Kustom)
+                                        <span className="text-sm font-extrabold text-slate-900">
+                                            2. Menggunakan Sub-Prefix (Path URL)
                                         </span>
-                                        {!canUseCustomDomain ? (
-                                            <span className="px-2 py-0.5 rounded-md bg-amber-100 text-amber-800 text-[10px] font-extrabold flex items-center gap-1">
-                                                <Lock className="h-3 w-3" />
-                                                PRO / STARTER
-                                            </span>
-                                        ) : (
-                                            <span className="px-2 py-0.5 rounded-md bg-indigo-100 text-indigo-700 text-[10px] font-bold">
-                                                CUSTOM DOMAIN
-                                            </span>
-                                        )}
+                                        <span className="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-700 text-[10px] font-bold">
+                                            GRATIS & LANGSUNG AKTIF
+                                        </span>
                                     </div>
                                     <p className="text-xs text-slate-500 mt-1">
-                                        Gunakan domain utama atau subdomain milik bisnis Anda (contoh: www.perusahaan.com).
+                                        Publikasikan website langsung pada direktori domain utama (contoh: <code className="text-indigo-600 font-semibold">{primaryDomainName}/portfolio</code>). Tanpa konfigurasi DNS dan langsung live.
                                     </p>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Free Account Lock Restriction & Upgrade Trigger */}
-                        {!canUseCustomDomain ? (
-                            <div className="mt-3.5 p-3.5 bg-amber-50/80 border border-amber-200/80 rounded-xl space-y-2.5">
-                                <div className="flex items-start gap-2.5">
-                                    <Lock className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
-                                    <div className="text-xs text-amber-900">
-                                        <p className="font-bold">Domain Sendiri Tidak Tersedia pada Paket Free</p>
-                                        <p className="text-[11px] text-amber-700 mt-0.5 leading-relaxed">
-                                            Fitur menghubungkan domain sendiri khusus untuk pengguna paket Starter & Unlimited. Silakan upgrade paket Anda untuk membuka fitur ini.
+                        {domainType === 'subprefix' && (
+                            <div className="mt-4 pt-3 border-t border-indigo-100/80 space-y-2">
+                                <label className="block text-xs font-bold text-slate-700">Alamat Website</label>
+                                <div className="flex items-center">
+                                    <span className="h-10 px-3 bg-slate-100 border border-r-0 border-slate-300 rounded-l-xl text-xs font-bold text-slate-600 flex items-center shrink-0">
+                                        {primaryBaseUrl}/
+                                    </span>
+                                    <input
+                                        type="text"
+                                        value={slug}
+                                        onChange={(e) => setSlug(e.target.value)}
+                                        placeholder="portfolio"
+                                        required
+                                        disabled={initialIsPublished && publishAction === 'update'}
+                                        className="flex-1 h-10 px-3 bg-white border border-slate-300 rounded-r-xl text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 min-w-0"
+                                    />
+                                </div>
+                                {initialIsPublished && publishAction === 'update' && (
+                                    <p className="text-[11px] text-slate-500">
+                                        Alamat website yang sudah aktif akan dipertahankan saat diperbarui.
+                                    </p>
+                                )}
+                                {slugCheck.message && (
+                                    <p className={`text-[11px] font-semibold flex items-center gap-1 ${
+                                        slugCheck.status === 'available' ? 'text-emerald-700'
+                                            : ['unavailable', 'invalid', 'error'].includes(slugCheck.status) ? 'text-red-600'
+                                                : 'text-slate-500'
+                                    }`}>
+                                        {slugCheck.status === 'checking' && <Loader2 className="h-3 w-3 animate-spin" />}
+                                        {['unavailable', 'invalid', 'error'].includes(slugCheck.status) && <CircleAlert className="h-3 w-3" />}
+                                        {slugCheck.status === 'available' && <CheckCircle2 className="h-3 w-3" />}
+                                        {slugCheck.message}
+                                    </p>
+                                )}
+
+                                <div className="p-2.5 bg-white rounded-xl border border-indigo-100 flex items-center justify-between text-xs">
+                                    <span className="text-slate-500 text-[11px] font-medium">Preview:</span>
+                                    <span className="font-extrabold text-indigo-600 truncate max-w-[280px]">
+                                        {`${primaryBaseUrl}/${cleanSlug || 'portfolio'}`}
+                                    </span>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Domain Choice 3: Domain Sendiri / Custom Domain */}
+                    {publishAction === 'update' && (
+                        <div
+                            onClick={handleSelectCustomDomain}
+                            className={`p-4 rounded-2xl border-2 transition-all relative ${
+                                !canUseCustomDomain
+                                    ? 'bg-slate-50/70 border-slate-200 opacity-95 cursor-not-allowed'
+                                    : domainType === 'custom'
+                                    ? 'bg-indigo-50/40 border-indigo-600 shadow-sm cursor-pointer'
+                                    : 'bg-white border-slate-200/80 hover:border-slate-300 cursor-pointer'
+                            }`}
+                        >
+                            <div className="flex items-start justify-between gap-3">
+                                <div className="flex items-start gap-3">
+                                    <input
+                                        type="radio"
+                                        name="domain_type"
+                                        value="custom"
+                                        disabled={!canUseCustomDomain}
+                                        checked={domainType === 'custom'}
+                                        onChange={() => canUseCustomDomain && setDomainType('custom')}
+                                        className="mt-1 h-4 w-4 text-indigo-600 focus:ring-indigo-500 cursor-pointer disabled:opacity-50"
+                                    />
+                                    <div>
+                                        <div className="flex items-center gap-2">
+                                            <span className={`text-sm font-extrabold ${!canUseCustomDomain ? 'text-slate-500' : 'text-slate-900'}`}>
+                                                3. Menggunakan Domain Sendiri (Custom Domain)
+                                            </span>
+                                            {!canUseCustomDomain ? (
+                                                <span className="px-2 py-0.5 rounded-md bg-amber-100 text-amber-800 text-[10px] font-extrabold flex items-center gap-1">
+                                                    <Lock className="h-3 w-3" />
+                                                    PRO / STARTER
+                                                </span>
+                                            ) : (
+                                                <span className="px-2 py-0.5 rounded-md bg-indigo-100 text-indigo-700 text-[10px] font-bold">
+                                                    CUSTOM DOMAIN
+                                                </span>
+                                            )}
+                                        </div>
+                                        <p className="text-xs text-slate-500 mt-1">
+                                            Gunakan domain utama atau subdomain milik bisnis Anda sendiri (contoh: <code className="text-indigo-600 font-semibold">www.perusahaan.com</code>).
                                         </p>
                                     </div>
                                 </div>
-
-                                <button
-                                    type="button"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        onClose();
-                                        openUpgradeModal({
-                                            title: 'Upgrade ke Paket Starter / Unlimited',
-                                            message: 'Buka fitur Domain Sendiri (Domain Kustom) untuk memberikan kesan profesional pada bisnis Anda.',
-                                            targetPlan: 'starter',
-                                        });
-                                    }}
-                                    className="w-full py-2 bg-gradient-to-r from-amber-600 to-indigo-600 hover:from-amber-700 hover:to-indigo-700 text-white rounded-lg text-xs font-extrabold shadow-sm flex items-center justify-center gap-1.5 transition"
-                                >
-                                    <Sparkles className="h-3.5 w-3.5" />
-                                    <span>Upgrade Paket Sekarang</span>
-                                    <ArrowUpRight className="h-3.5 w-3.5" />
-                                </button>
                             </div>
-                        ) : (
-                            domainType === 'custom' && (
-                                <div className="mt-4 pt-3 border-t border-indigo-100/80 space-y-2">
-                                    <label className="block text-xs font-bold text-slate-700">Nama Domain Sendiri</label>
-                                    <input
-                                        type="text"
-                                        value={customDomain}
-                                        onChange={(e) => setCustomDomain(e.target.value)}
-                                        placeholder="www.perusahaan.com atau perusahaan.co.id"
-                                        required={domainType === 'custom'}
-                                        className="w-full h-10 px-3 bg-white border border-slate-300 rounded-xl text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600"
-                                    />
-                                    <p className="text-[11px] text-slate-500">
-                                        Masukkan domain lengkap (contoh: <code className="bg-slate-100 px-1 py-0.5 rounded text-indigo-600 font-bold">www.perusahaan.com</code>).
-                                    </p>
+
+                            {/* Free Account Lock Restriction & Upgrade Trigger */}
+                            {!canUseCustomDomain ? (
+                                <div className="mt-3.5 p-3.5 bg-amber-50/80 border border-amber-200/80 rounded-xl space-y-2.5">
+                                    <div className="flex items-start gap-2.5">
+                                        <Lock className="h-4 w-4 text-amber-600 shrink-0 mt-0.5" />
+                                        <div className="text-xs text-amber-900">
+                                            <p className="font-bold">Domain Sendiri Tidak Tersedia pada Paket Free</p>
+                                            <p className="text-[11px] text-amber-700 mt-0.5 leading-relaxed">
+                                                Fitur menghubungkan domain sendiri khusus untuk pengguna paket Starter & Unlimited. Silakan upgrade paket Anda untuk membuka fitur ini.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <button
+                                        type="button"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            onClose();
+                                            openUpgradeModal({
+                                                title: 'Upgrade ke Paket Starter / Unlimited',
+                                                message: 'Buka fitur Domain Sendiri (Domain Kustom) untuk memberikan kesan profesional pada bisnis Anda.',
+                                                targetPlan: 'starter',
+                                            });
+                                        }}
+                                        className="w-full py-2 bg-gradient-to-r from-amber-600 to-indigo-600 hover:from-amber-700 hover:to-indigo-700 text-white rounded-lg text-xs font-extrabold shadow-sm flex items-center justify-center gap-1.5 transition"
+                                    >
+                                        <Sparkles className="h-3.5 w-3.5" />
+                                        <span>Upgrade Paket Sekarang</span>
+                                        <ArrowUpRight className="h-3.5 w-3.5" />
+                                    </button>
                                 </div>
-                            )
-                        )}
-                    </div>}
-
-
+                            ) : (
+                                domainType === 'custom' && (
+                                    <div className="mt-4 pt-3 border-t border-indigo-100/80 space-y-2">
+                                        <label className="block text-xs font-bold text-slate-700">Nama Domain Sendiri</label>
+                                        <input
+                                            type="text"
+                                            value={customDomain}
+                                            onChange={(e) => setCustomDomain(e.target.value)}
+                                            placeholder="www.perusahaan.com atau perusahaan.co.id"
+                                            required={domainType === 'custom'}
+                                            className="w-full h-10 px-3 bg-white border border-slate-300 rounded-xl text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600"
+                                        />
+                                        <p className="text-[11px] text-slate-500">
+                                            Masukkan domain lengkap (contoh: <code className="bg-slate-100 px-1 py-0.5 rounded text-indigo-600 font-bold">www.perusahaan.com</code>).
+                                        </p>
+                                    </div>
+                                )
+                            )}
+                        </div>
+                    )}
 
                     {quota && (
                         <div className={`p-3 rounded-xl border text-xs ${
@@ -559,7 +744,7 @@ export default function PublishDomainModal({
                             type="submit"
                             disabled={
                                 isPublishing
-                                || (domainType === 'subdomain' && (!isSlugFormatValid || slugCheck.status !== 'available'))
+                                || (isSlugDomain && (!isSlugFormatValid || slugCheck.status !== 'available'))
                                 || (domainType === 'custom' && (!canUseCustomDomain || !customDomain.trim()))
                                 || quotaLoading
                                 || (publishAction === 'update' && quota?.can_publish === false)
@@ -577,8 +762,8 @@ export default function PublishDomainModal({
                                     <Globe className="h-4 w-4" />
                                     <span>
                                         {publishAction === 'new'
-                                            ? (isAdmin ? 'Terbitkan sebagai Website Baru' : 'Ajukan sebagai Website Baru')
-                                            : (isAdmin ? 'Terbitkan Sekarang' : 'Kirim Permintaan Publikasi')}
+                                            ? (isAdmin || domainType === 'subprefix' ? 'Terbitkan sebagai Website Baru' : 'Ajukan sebagai Website Baru')
+                                            : (isAdmin || domainType === 'subprefix' ? 'Terbitkan Sekarang' : 'Kirim Permintaan Publikasi')}
                                     </span>
                                 </>
                             )}

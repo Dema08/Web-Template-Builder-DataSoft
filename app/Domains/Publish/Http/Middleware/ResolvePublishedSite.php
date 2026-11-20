@@ -51,6 +51,20 @@ class ResolvePublishedSite
             }
         } elseif (str_ends_with($host, '.localhost')) {
             $subdomain = substr($host, 0, -strlen('.localhost'));
+        } else {
+            // Check for matched custom domain
+            $customSite = \App\Domains\Website\Models\Website::where('status', 'published')
+                ->where(function ($q) use ($host) {
+                    $q->where('settings->custom_domain', $host)
+                      ->orWhere('settings->custom_domain', 'www.' . $host)
+                      ->orWhere('settings->custom_domain', preg_replace('/^www\./', '', $host));
+                })->first();
+
+            if ($customSite) {
+                $request->attributes->set('published_slug', $customSite->slug);
+                $request->attributes->set('published_source', 'custom_domain');
+                return $next($request);
+            }
         }
 
         if ($subdomain !== null) {

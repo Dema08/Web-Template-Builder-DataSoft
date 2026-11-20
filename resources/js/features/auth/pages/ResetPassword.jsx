@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, Sparkles, Lock, ShieldCheck, ArrowRight, Layers, Headphones } from 'lucide-react';
+import { Eye, EyeOff, Sparkles, Lock, ShieldCheck, ArrowRight, ArrowLeft, Layers, Headphones } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { Spinner, Alert, BrandLogo } from '@shared/components/ui';
 import { ROUTES } from '@constants';

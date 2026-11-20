@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Sparkles, Mail, ArrowRight, Layers, ShieldCheck, Headphones } from 'lucide-react';
+import { Sparkles, Mail, ArrowRight, ArrowLeft, Layers, ShieldCheck, Headphones } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { Spinner, Alert, BrandLogo } from '@shared/components/ui';
 import { ROUTES } from '@constants';
